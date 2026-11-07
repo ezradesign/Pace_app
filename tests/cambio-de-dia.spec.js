@@ -211,3 +211,26 @@ test('CONTROL: si el día no cambia, volver a la pestaña o dejar pasar los minu
   expect(await page.evaluate(() => window.__escriturasEstado), 'el estado se reescribió sin haber cambiado el día').toBe(0);
   await expect(celdaAgua(page)).toHaveAttribute('data-cero', '0');
 });
+
+/* LA PAUSA DE AYER SE CIERRA SOLA AL CAMBIAR DE DÍA (Ez, 3A del 7 nov. 2026, del recorrido del 6 nov.).
+   Quien acababa un Foco por la tarde y no tocaba nada encontraba a las 8:40 la ventana de ayer
+   («Has cerrado un bloque. Elige tu pausa.») y el aro en «Ciclo completado». La que se abre hoy no
+   se toca: se mira a la media hora, el mismo día, antes de cruzar la medianoche. */
+test('la ventana de la pausa de ayer se cierra al cambiar de día, y la de hoy no', async ({ page, context }) => {
+  const TARDE = new Date('2026-10-07T18:00:00+02:00');
+  await sembrar(context, { lastActiveDay: TARDE.toDateString() });
+  await page.clock.install({ time: TARDE });
+  await irAlArtefacto(page);
+  await page.locator('[data-pace-cta]').filter({ visible: true }).first().click();
+  const fin = await page.evaluate(() => JSON.parse(localStorage.getItem('pace.timer.v1')).endsAt);
+  await page.clock.fastForward(fin - await page.evaluate(() => Date.now()) + 1000);
+  const ventana = page.locator('[data-pace-break-shortcut]');
+  await expect(ventana, 'GUARD: no se abrió la pausa').toHaveCount(1);
+  await page.clock.fastForward(30 * 60 * 1000);
+  await page.waitForTimeout(400);
+  await expect(ventana, 'la pausa de hoy se cerró sola').toHaveCount(1);
+  for (let i = 0; i < 28; i++) { await page.clock.fastForward(30 * 60 * 1000); await page.waitForTimeout(20); }
+  await expect.poll(() => page.evaluate(() => getState().lastActiveDay), { message: 'GUARD: el día no cambió' }).toBe('Thu Oct 08 2026');
+  await expect(ventana, 'la pausa de ayer sigue abierta por la mañana').toHaveCount(0);
+  await expect(page.locator('[data-pace-dial-subtitle]').first(), 'el aro sigue en el «Ciclo completado» de ayer').not.toHaveText('Ciclo completado');
+});

@@ -2200,6 +2200,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'hydrate.glasses.today': 'Vasos hoy',
   'hydrate.less': 'Un vaso menos',
   'hydrate.more': 'Un vaso más',
+  'hydrate.glass': 'Vaso {n} de {m}',
   'hydrate.tip.label': 'Tip:',
   'hydrate.tip': 'Llena una botella de 500 ml por la mañana y otra después de comer. Dos botellas = 4 vasos. Hecho.',
 
@@ -2395,6 +2396,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'hydrate.glasses.today': 'Glasses today',
   'hydrate.less': 'One less glass',
   'hydrate.more': 'One more glass',
+  'hydrate.glass': 'Glass {n} of {m}',
   'hydrate.tip.label': 'Tip:',
   'hydrate.tip': 'Fill a 500 ml bottle in the morning and another after lunch. Two bottles = 4 glasses. Done.',
 
@@ -2554,6 +2556,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'lib.where.either': 'sentado o de pie',
   'lib.gear.stableDesk': 'con mesa',
   'lib.gear.stableChair': 'con silla',
+  'lib.gear.chair': 'con silla',
   'lib.gear.bar': 'con barra',
   'lib.gear.wall': 'contra la pared',
   'lib.gear.cushionOptional': 'cojín opcional',
@@ -2735,6 +2738,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'lib.where.either': 'seated or standing',
   'lib.gear.stableDesk': 'with a desk',
   'lib.gear.stableChair': 'with a chair',
+  'lib.gear.chair': 'with a chair',
   'lib.gear.bar': 'with a bar',
   'lib.gear.wall': 'against a wall',
   'lib.gear.cushionOptional': 'cushion optional',
@@ -3990,6 +3994,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.zona.manos': 'Manos',
   'ritmo.hecho': 'Jornada cerrada',
   'ritmo.hecho.sub': '{f} de foco. Lo que queda del día es tuyo.',
+  'ritmo.aro.hecho': '{f} de foco',
   'ritmo.aro.bloque': 'Bloque {n} de {m}',
   'ritmo.aro.empezar': 'Empezar jornada',
   'ritmo.aro.siguiente': 'Empezar bloque {n}',
@@ -4174,6 +4179,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.zona.manos': 'Hands',
   'ritmo.hecho': 'Day complete',
   'ritmo.hecho.sub': '{f} of focus. The rest of the day is yours.',
+  'ritmo.aro.hecho': '{f} of focus',
   'ritmo.aro.bloque': 'Block {n} of {m}',
   'ritmo.aro.empezar': 'Start the day',
   'ritmo.aro.siguiente': 'Start block {n}',
@@ -7517,7 +7523,9 @@ function onToast(listener) {
   return () => _toastListeners.delete(listener);
 }
 
-Object.assign(window, { showToast, onToast, setCaminoUiActive });
+
+
+Object.assign(window, { showToast, onToast, setCaminoUiActive, paceAvisoTaparia: _avisoTaparia });
 ;Object.assign(window, { _avisoTaparia, _intentarAvisos, _esperarHueco, _emitToast, showToast, setCaminoUiActive, onToast });
 })();
 </script>
@@ -10562,7 +10570,12 @@ function ritmoComponer(opcion, horario, pozos, cambios, metaAgua, previos) {
   var focos = dia.items.filter(function (it) {return it.tipo === 'foco';});
   return {
     opcion: opcion, desde: desde, habitual: inicio, tarde: ahora > inicio, hasta: dia.hasta,
-    salida: salida, comida: comidas.length ? comeA : null, comidaDur: comidaDur, items: dia.items,
+
+
+
+
+    salida: salida, fin: Math.min(fin, 24 * 60), finDesde: forma.reloj && fin === arranque + forma.reloj && fin < 24 * 60 ? arranque : null,
+    comida: comidas.length ? comeA : null, comidaDur: comidaDur, items: dia.items,
     sinComida: !!horario.sinComida,
     focos: focos, pausas: pausas.length, focoMin: dia.foco,
     vasos: dia.items.filter(function (it) {return it.agua;}).length
@@ -11497,7 +11510,8 @@ Object.assign(window, {
 function ritmoAviso(s, t, tn, lang) {
   if (typeof ritmoPlan !== 'function' || typeof ritmoDetras !== 'function') return null;
   var p = ritmoPlan(s);
-  return p && p.hechos >= 1 ? ritmoAvisoTras(p, p.hechos, t, tn, lang) : null;
+
+  return p && p.hechos >= 1 && !p.cerrado && !p.deMas ? ritmoAvisoTras(p, p.hechos, t, tn, lang) : null;
 }
 
 
@@ -13332,7 +13346,7 @@ function ritmoMenu(s, opcion, cambios, desde, pasado, primerBloque, pausaPendien
 
 
 
-function ritmoPlan(s, o) {
+function ritmoPlanBase(s, o) {
   var R = ritmoDe(s);
   if (R.libre || !R.dia) return null;
   var ahora = !(o && o.comoSeEligio) && typeof ritmoDesdeSinEmpezar === 'function' ? ritmoDesdeSinEmpezar(s, R) : null;
@@ -13340,12 +13354,23 @@ function ritmoPlan(s, o) {
   var m = ahora != null ? menu(ahora) : null;
   if (!m || !m.focos.length) {ahora = null;m = menu(R.dia.desde);}
   if (!m) return null;
-  var hechos = Math.max(0, Math.min(m.focos.length, (Number((s || {}).cycle) || 0) - (R.dia.cicloBase || 0)));
+  var crudos = (Number((s || {}).cycle) || 0) - (R.dia.cicloBase || 0);
+  var hechos = Math.max(0, Math.min(m.focos.length, crudos));
   var actual = m.focos[hechos] || null;
   var pausa = hechos > 0 && R.dia.pausa === hechos ? ritmoDetras(m, m.focos[hechos - 1]) : null;
   if (pausa && pausa.tipo === 'foco') pausa = null;
 
-  return { m: m, hechos: hechos, actual: actual, total: m.focos.length, terminado: !actual, pausa: pausa, estados: R.dia.estados || {}, desdeAhora: ahora };
+
+  return { m: m, hechos: hechos, actual: actual, total: m.focos.length, terminado: !actual, pausa: pausa, estados: R.dia.estados || {}, desdeAhora: ahora,
+    deMas: crudos > m.focos.length };
+}
+
+function ritmoPlan(s, o) {
+  var p = ritmoPlanBase(s, o);
+  if (p && typeof ritmoPasadaLaSalida === 'function' && ritmoPasadaLaSalida(p)) {
+    p.cerrado = true;p.actual = null;p.terminado = true;p.pausa = null;
+  }
+  return p;
 }
 
 
@@ -13388,7 +13413,8 @@ function ritmoAro(s, t, tn) {
 var RITMO_A_MENU = { estira: 'extra', mueve: 'move', respira: 'breathe', cierre: 'breathe' };
 function ritmoPropuesta(s) {
   var p = ritmoPlan(s);
-  if (!p || p.hechos < 1) return null;
+
+  if (!p || p.hechos < 1 || p.cerrado || p.deMas) return null;
   var it = ritmoDetras(p.m, p.m.focos[p.hechos - 1]);
   if (!it) return null;
   if (it.tipo === 'comida') return { modulo: 'water', porque: 'ritmo.comida', rutina: null, datos: {} };
@@ -13507,13 +13533,13 @@ function ritmoHorario(campo, valor) {
 }
 
 Object.assign(window, {
-  ritmoHorarioInicial, ritmoMedia, ritmoDe, ritmoPozos, ritmoMenu, ritmoPlan, ritmoDetras, ritmoAhoraExacto,
+  ritmoHorarioInicial, ritmoMedia, ritmoDe, ritmoPozos, ritmoMenu, ritmoPlanBase, ritmoPlan, ritmoDetras, ritmoAhoraExacto,
   ritmoPrevios, ritmoCongelar, ritmoHidratar, ritmoRutinaPorId,
   ritmoAro, ritmoPropuesta, ritmoSiguiente, ritmoSincronizar, ritmoFocoCorriendo,
   ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario,
   ritmoOrdinal
 });
-;Object.assign(window, { RITMO_TIMER_KEY, RITMO_COMIDA_REGION, ritmoHorarioInicial, RITMO_MEDIA_DUR, ritmoMedia, ritmoHoy, ritmoAhora, ritmoAhoraExacto, ritmoDe, ritmoPozos, ritmoPrevios, ritmoCongelar, ritmoRutinaPorId, ritmoHidratar, ritmoMenu, ritmoPlan, ritmoOrdinal, ritmoDetras, ritmoAro, RITMO_A_MENU, ritmoPropuesta, ritmoSiguiente, ritmoFocoCorriendo, ritmoSincronizar, ritmoGuardar, ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario });
+;Object.assign(window, { RITMO_TIMER_KEY, RITMO_COMIDA_REGION, ritmoHorarioInicial, RITMO_MEDIA_DUR, ritmoMedia, ritmoHoy, ritmoAhora, ritmoAhoraExacto, ritmoDe, ritmoPozos, ritmoPrevios, ritmoCongelar, ritmoRutinaPorId, ritmoHidratar, ritmoMenu, ritmoPlanBase, ritmoPlan, ritmoOrdinal, ritmoDetras, ritmoAro, RITMO_A_MENU, ritmoPropuesta, ritmoSiguiente, ritmoFocoCorriendo, ritmoSincronizar, ritmoGuardar, ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario });
 })();
 </script>
   <!-- Terminar y empezar un bloque: la pausa, recolocar el día y el cambio de hora. -->
@@ -13555,8 +13581,13 @@ function ritmoDesfase(ms, hasta) {
 
 
 function ritmoBloqueTerminado(inicioMs, finMs) {
-  var p = ritmoPlan(getState());
+
+  var p = ritmoPlanBase(getState());
   if (!p || p.hechos < 1) return;
+
+
+
+  if (p.deMas || typeof inicioMs === 'number' && isFinite(inicioMs) && ritmoTrasElFin(p.m, inicioMs)) return;
   var cambios = { pausa: p.hechos };
 
 
@@ -13626,8 +13657,71 @@ function ritmoBloqueEmpezado(minutos) {
   ritmoGuardar(function (r) {return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {};});
 }
 
-Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado });
-;Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado });
+
+
+
+
+
+
+function ritmoPasadaLaSalida(p) {
+  if (!p || !p.m || !ritmoTrasElFin(p.m, Date.now())) return false;
+  var t = ritmoAhoraExacto();
+  if (p.pausa && t < p.pausa.desde + p.pausa.dur) return false;
+  var empezo = ritmoFocoEmpezo();
+  return !(empezo != null && !ritmoTrasElFin(p.m, empezo));
+}
+
+
+
+
+
+function ritmoTrasElFin(m, ms) {
+  if (!m || m.fin == null) return false;
+  var d = new Date(ms);
+  var min = d.getHours() * 60 + d.getMinutes();
+  if (m.finDesde != null) {
+    var desde = new Date(ms);
+    desde.setHours(0, m.finDesde, 0, 0);
+    min += d.getTimezoneOffset() - desde.getTimezoneOffset();
+  }
+  return min >= m.fin;
+}
+
+
+
+
+
+
+var _ritmoCierrePintado = null;
+function ritmoMirarSalida() {
+  try {
+    if (document.visibilityState === 'hidden') return;
+    var s = getState(),p = ritmoPlan(s);
+    if (!p || !p.cerrado || s === _ritmoCierrePintado || typeof paceAdoptarEstado !== 'function') return;
+    _ritmoCierrePintado = Object.assign({}, s);
+    paceAdoptarEstado(_ritmoCierrePintado);
+  } catch (e) {}
+}
+document.addEventListener('visibilitychange', ritmoMirarSalida);
+setInterval(ritmoMirarSalida, typeof PACE_DIA_CADA_MS === 'number' ? PACE_DIA_CADA_MS : 60 * 1000);
+
+
+function ritmoFocoEmpezo() {
+  try {
+    var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
+    if (!v) return null;
+    if (v.endsAt && v.endsAt > Date.now()) return v.endsAt - (Number(v.minutes) || 0) * 60000;
+    return v.pausaMs > 0 && v.dia === new Date().toDateString() ? v.inicio || null : null;
+  } catch (e) {return null;}
+}
+
+
+function ritmoFocoHecho(p) {
+  return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) {return a + (f.dur || 0);}, 0) : 0;
+}
+
+Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho });
+;Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, _ritmoCierrePintado, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho });
 })();
 </script>
   <!-- El día elegido y sin empezar se lee desde ahora (Ez, E1 A del 7 nov. 2026). -->
@@ -22329,11 +22423,26 @@ function toastHuecoDelAro() {
     return { x: x, y: y, ancho: Math.round(ancho), fs: fs };
   } catch (e) {return null;}
 }
+
+
+
+
+const TOAST_TAPADO = 'html:has([data-pace-modal-backdrop], [data-pace-session-root], [role="dialog"])';
 if (!document.getElementById('pace-toast-css')) {
   const st = document.createElement('style');
   st.id = 'pace-toast-css';
-  st.textContent = '[data-pace-sello-en-aro] [data-pace-dial-subtitle] { visibility: hidden; }';
+  st.textContent = '[data-pace-sello-en-aro] [data-pace-dial-subtitle] { visibility: hidden; }' +
+  TOAST_TAPADO + ' [data-pace-sello-aro], ' + TOAST_TAPADO + ' [data-pace-toast] { visibility: hidden; }';
   document.head.appendChild(st);
+}
+
+
+
+function toastTapado() {
+  try {
+    if (typeof paceAvisoTaparia === 'function' && paceAvisoTaparia()) return true;
+    return [...document.querySelectorAll('[role="dialog"]')].some((d) => d.getClientRects().length > 0);
+  } catch (e) {return false;}
 }
 
 
@@ -22389,8 +22498,14 @@ function ToastHost() {
   const colaRef = useRefTO([]);
   const activoRef = useRefTO(false);
   const siguienteRef = useRefTO(null);
+  const esperaRef = useRefTO(null);
   siguienteRef.current = () => {
     if (activoRef.current || !colaRef.current.length) return;
+
+    if (toastTapado()) {
+      if (!esperaRef.current) esperaRef.current = setTimeout(() => {esperaRef.current = null;siguienteRef.current();}, 500);
+      return;
+    }
     const sig = colaRef.current.shift();
     const full = Object.assign({}, sig, { aro: sig.licencia ? null : toastHuecoDelAro() });
     activoRef.current = true;
@@ -22505,7 +22620,7 @@ function ToastHost() {
 }
 
 Object.assign(window, { ToastHost });
-;Object.assign(window, { toastHuecoDelAro, SelloEnAro, ToastHost });
+;Object.assign(window, { toastHuecoDelAro, toastTapado, SelloEnAro, ToastHost });
 })();
 </script>
   <!-- La invitación a PACE completo: se abre al tocar algo cerrado. -->
@@ -24705,9 +24820,12 @@ function paceFocoPausaPendiente(id) {
 
 const PAUSA_REINTENTO_MS = 500;
 
-function usePausaALaVista(pendiente, abrir) {
+function usePausaALaVista(pendiente, abrir, cerrar, hoy) {
   const abrirRef = useRefFTP(abrir);
   abrirRef.current = abrir;
+  const cerrarRef = useRefFTP(cerrar);
+  cerrarRef.current = cerrar;
+  const diaRef = useRefFTP(null);
   useEffectFTP(() => {
     let reintento = null;
     const intentar = () => {
@@ -24719,6 +24837,7 @@ function usePausaALaVista(pendiente, abrir) {
         const s = getState();
         if (!s.focoPausa || s.focoPausa.id !== p.id) return false;
         setState((prev) => ({ ...prev, focoPausa: null }));
+        diaRef.current = p.dia;
         abrirRef.current();
         return true;
       };
@@ -24733,6 +24852,15 @@ function usePausaALaVista(pendiente, abrir) {
     document.addEventListener('visibilitychange', intentar);
     return () => {document.removeEventListener('visibilitychange', intentar);if (reintento) clearTimeout(reintento);};
   }, [pendiente]);
+
+
+
+
+  useEffectFTP(() => {
+    if (!diaRef.current || !hoy || diaRef.current === hoy) return;
+    diaRef.current = null;
+    if (cerrarRef.current) cerrarRef.current();
+  }, [hoy]);
 }
 
 
@@ -29953,6 +30081,16 @@ function aroDespues(s, t, tn) {
 
 
 
+
+function aroCerrado(s, t, tn) {
+  const p = typeof ritmoPlan === 'function' ? ritmoPlan(s) : null;
+  if (!p || !p.cerrado) return null;
+  const f = ritmoFocoHecho(p);
+  return { label: t('ritmo.fuera'), hecho: f > 0 ? tn('ritmo.aro.hecho', { f: ritmoDuracion(f) }) : null };
+}
+
+
+
 function aroJornada(_ref) {let { state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa } = _ref;
   if (enPausaRitmo) {
     const plato = aroPlatoPendiente(state);
@@ -30015,8 +30153,8 @@ function AroFila(_ref2) {let { cycle, cycleLabel, oculta, fila } = _ref2;
   document.head.appendChild(s);
 })();
 
-Object.assign(window, { aroJornada, aroPausaTerminada, aroPlatoPendiente, aroDespues, AroFila });
-;Object.assign(window, { aroPlatoPendiente, aroPausaTerminada, aroDespues, aroJornada, AroFila });
+Object.assign(window, { aroJornada, aroPausaTerminada, aroPlatoPendiente, aroDespues, aroCerrado, AroFila });
+;Object.assign(window, { aroPlatoPendiente, aroPausaTerminada, aroDespues, aroCerrado, aroJornada, AroFila });
 })();
 </script>
   <script>
@@ -30168,6 +30306,10 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
     if (state.focusMode === 'foco') avisarPestanas({ tipo: 'corre', id: bloqueRef.current, endsAt });
   }, [running, endsAt]);
 
+  const completadoRef = useRefFT(null);
+  useEffectFT(() => {completadoRef.current = status === 'completed' ? state.lastActiveDay : null;}, [status]);
+  useEffectFT(() => {if (status === 'completed' && completadoRef.current && completadoRef.current !== state.lastActiveDay) reset();}, [state.lastActiveDay]);
+
 
 
 
@@ -30219,6 +30361,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
   const aro = state.focusMode === 'foco' && typeof ritmoAro === 'function' ? ritmoAro(state, t, tn) : null;
+  const cerrada = !aro && state.focusMode === 'foco' && status !== 'running' && status !== 'paused' && typeof aroCerrado === 'function' ? aroCerrado(state, t, tn) : null;
   const siguienteDelPlan = status === 'completed' && !!aro;
   const mostrado = siguienteDelPlan ? durationSec : remaining;
   const mins = Math.floor(mostrado / 60);
@@ -30230,7 +30373,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
 
-  const modeLabel = aro ? aro.label : state.focusMode === 'foco' ? t('focus.manual.label') :
+  const modeLabel = aro ? aro.label : cerrada ? cerrada.label : state.focusMode === 'foco' ? t('focus.manual.label') :
   state.focusMode === 'pausa' ? t('focus.mode.pause') :
   t('focus.mode.long');
 
@@ -30460,7 +30603,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
       progress: progress,
       mode: state.focusMode,
       modeLabel: modeLabel,
-      hasta: aro ? aro.hasta : null,
+      hasta: aro ? aro.hasta : cerrada ? cerrada.hecho : null,
       subtitle: subtitle,
       inner: isAro ? innerForAro : null,
       running: running,
@@ -37023,7 +37166,7 @@ window.resolveBodyRoutine = resolveBodyRoutine;
 
 function HydrateTracker(_ref) {let { open, onClose } = _ref;
   const [state] = usePace();
-  const { t } = useT();
+  const { t, tn } = useT();
   const { today, goal } = state.water;
   const pct = Math.min(100, today / goal * 100);
 
@@ -37046,7 +37189,7 @@ function HydrateTracker(_ref) {let { open, onClose } = _ref;
 
     React.createElement("div", { style: { display: 'grid', gridTemplateColumns: `repeat(${goal > 8 ? Math.ceil(goal / 2) : goal}, 1fr)`, gap: 8, marginBottom: 24 } },
     Array.from({ length: goal }).map((_, i) =>
-    React.createElement("button", { key: i,
+    React.createElement("button", { key: i, "aria-label": tn('hydrate.glass', { n: i + 1, m: goal }),
       onClick: () => {if (i < today) {addWaterGlass(-1);} else {addWaterGlass(1);try {playSound(today < goal && today + 1 >= goal ? 'hydrate.goal' : 'hydrate.sip');} catch (e) {}}},
       style: {
         aspectRatio: '1/1.3',
@@ -37552,7 +37695,10 @@ function BreakMenuRitmo(_ref2) {let { open, onClose, onChoose, onSeguir, onPropu
     React.createElement("button", { type: "button", className: "pace-break-pildora pace-break-llena", style: { '--c': plato.boton }, onClick: onPropuesta },
     t(comida ? 'break.ritmo.comer' : 'break.ritmo.hacer')
     ),
+
+    plan.hechos < plan.total &&
     React.createElement("button", { type: "button", className: "pace-break-pildora pace-break-tonal", onClick: onSeguir }, tn('break.ritmo.seguir', { n: plan.hechos + 1 }))
+
     ),
 
     agua && !comida &&
@@ -47295,7 +47441,10 @@ function RitmoHecho(_ref1) {let { plan } = _ref1;
     React.createElement("div", { className: "pace-rt-cab" },
     React.createElement("div", null,
     React.createElement("div", { className: "pace-rt-titulo" }, t('ritmo.hecho')),
-    React.createElement("div", { className: "pace-rt-sub" }, tn('ritmo.hecho.sub', { f: ritmoDuracion(plan.m.focoMin) }))
+
+    (!plan.cerrado || ritmoFocoHecho(plan) > 0) &&
+    React.createElement("div", { className: "pace-rt-sub" }, tn('ritmo.hecho.sub', { f: ritmoDuracion(plan.cerrado ? ritmoFocoHecho(plan) : plan.m.focoMin) }))
+
     ),
     React.createElement("div", { className: "pace-rt-der" },
     React.createElement("button", { className: "pace-rt-enlace", onClick: ritmoPreguntar }, t('ritmo.cambiar')),
@@ -50654,7 +50803,7 @@ function PaceApp() {
   const [openTweaks, setOpenTweaks] = useStateMain(false);
   const [openBreakMenu, setOpenBreakMenu] = useStateMain(false);
 
-  usePausaALaVista(state.focoPausa && state.focoPausa.id, () => setOpenBreakMenu(true));
+  usePausaALaVista(state.focoPausa && state.focoPausa.id, () => setOpenBreakMenu(true), () => setOpenBreakMenu(false), state.lastActiveDay);
   const [openSupport, setOpenSupport] = useStateMain(false);
 
 

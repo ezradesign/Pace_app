@@ -274,7 +274,7 @@ function ritmoMenu(s, opcion, cambios, desde, pasado, primerBloque, pausaPendien
    SIN EMPEZAR, el día se lee desde ahora (`desdeAhora`, state-ritmo.ahora.jsx); con
    `o.comoSeEligio`, desde la hora guardada. Si desde ahora ya no cabe un bloque, manda la
    guardada. */
-function ritmoPlan(s, o) {
+function ritmoPlanBase(s, o) {
   var R = ritmoDe(s);
   if (R.libre || !R.dia) return null;
   var ahora = !(o && o.comoSeEligio) && typeof ritmoDesdeSinEmpezar === 'function' ? ritmoDesdeSinEmpezar(s, R) : null;
@@ -282,12 +282,23 @@ function ritmoPlan(s, o) {
   var m = ahora != null ? menu(ahora) : null;
   if (!m || !m.focos.length) { ahora = null; m = menu(R.dia.desde); }
   if (!m) return null;
-  var hechos = Math.max(0, Math.min(m.focos.length, (Number((s || {}).cycle) || 0) - (R.dia.cicloBase || 0)));
+  var crudos = (Number((s || {}).cycle) || 0) - (R.dia.cicloBase || 0);
+  var hechos = Math.max(0, Math.min(m.focos.length, crudos));
   var actual = m.focos[hechos] || null;
   var pausa = hechos > 0 && R.dia.pausa === hechos ? ritmoDetras(m, m.focos[hechos - 1]) : null;
   if (pausa && pausa.tipo === 'foco') pausa = null;   /* bloques cortos juntos: no hay parada */
-  /* s195: `estados` = { n: 'hecha' | 'saltada' } por ordinal de parada (pausa o cierre) */
-  return { m: m, hechos: hechos, actual: actual, total: m.focos.length, terminado: !actual, pausa: pausa, estados: R.dia.estados || {}, desdeAhora: ahora };
+  /* s195: `estados` = { n: 'hecha' | 'saltada' } por ordinal de parada (pausa o cierre).
+     `deMas`: el último Foco terminado ya no era del plan (uno por libre tras el último bloque). */
+  return { m: m, hechos: hechos, actual: actual, total: m.focos.length, terminado: !actual, pausa: pausa, estados: R.dia.estados || {}, desdeAhora: ahora,
+           deMas: crudos > m.focos.length };
+}
+/* El plan tal como se ve: pasada la salida, el día está cerrado (state-ritmo.recolocar.jsx). */
+function ritmoPlan(s, o) {
+  var p = ritmoPlanBase(s, o);
+  if (p && typeof ritmoPasadaLaSalida === 'function' && ritmoPasadaLaSalida(p)) {
+    p.cerrado = true; p.actual = null; p.terminado = true; p.pausa = null;
+  }
+  return p;
 }
 
 /* El ordinal de una parada (pausa o cierre) entre las del día: es la clave de
@@ -330,7 +341,8 @@ function ritmoAro(s, t, tn) {
 var RITMO_A_MENU = { estira: 'extra', mueve: 'move', respira: 'breathe', cierre: 'breathe' };
 function ritmoPropuesta(s) {
   var p = ritmoPlan(s);
-  if (!p || p.hechos < 1) return null;
+  /* Con el día cerrado, o tras un Foco por libre después del último bloque, la pausa es la de siempre. */
+  if (!p || p.hechos < 1 || p.cerrado || p.deMas) return null;
   var it = ritmoDetras(p.m, p.m.focos[p.hechos - 1]);
   if (!it) return null;
   if (it.tipo === 'comida') return { modulo: 'water', porque: 'ritmo.comida', rutina: null, datos: {} };
@@ -449,7 +461,7 @@ function ritmoHorario(campo, valor) {
 }
 
 Object.assign(window, {
-  ritmoHorarioInicial, ritmoMedia, ritmoDe, ritmoPozos, ritmoMenu, ritmoPlan, ritmoDetras, ritmoAhoraExacto,
+  ritmoHorarioInicial, ritmoMedia, ritmoDe, ritmoPozos, ritmoMenu, ritmoPlanBase, ritmoPlan, ritmoDetras, ritmoAhoraExacto,
   ritmoPrevios, ritmoCongelar, ritmoHidratar, ritmoRutinaPorId,
   ritmoAro, ritmoPropuesta, ritmoSiguiente, ritmoSincronizar, ritmoFocoCorriendo,
   ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario,

@@ -2,7 +2,7 @@
 
 function HydrateTracker({ open, onClose }) {
   const [state] = usePace();
-  const { t } = useT();
+  const { t, tn } = useT();
   const { today, goal } = state.water;
   const pct = Math.min(100, (today / goal) * 100);
 
@@ -25,7 +25,7 @@ function HydrateTracker({ open, onClose }) {
       {/* Vasos visuales */}
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(${goal > 8 ? Math.ceil(goal / 2) : goal}, 1fr)`, gap: 8, marginBottom: 24 }}>
         {Array.from({ length: goal }).map((_, i) => (
-          <button key={i}
+          <button key={i} aria-label={tn('hydrate.glass', { n: i + 1, m: goal })}
             onClick={() => { if (i < today) { addWaterGlass(-1); } else { addWaterGlass(1); try { playSound(today < goal && today + 1 >= goal ? 'hydrate.goal' : 'hydrate.sip'); } catch (e) {} } }}
             style={{
               aspectRatio: '1/1.3',

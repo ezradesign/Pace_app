@@ -97,4 +97,6 @@ function onToast(listener) {
   return () => _toastListeners.delete(listener);
 }
 
-Object.assign(window, { showToast, onToast, setCaminoUiActive });
+/* `paceAvisoTaparia` lo mira también la fila de ToastHost (ui/Toast.jsx) antes de sacar el
+   siguiente sello: esta espera solo cubre la salida del primero. */
+Object.assign(window, { showToast, onToast, setCaminoUiActive, paceAvisoTaparia: _avisoTaparia });

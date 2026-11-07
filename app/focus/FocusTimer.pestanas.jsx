@@ -64,9 +64,12 @@ function paceFocoPausaPendiente(id) {
    de logro, hasta que la sesión se acaba o se sale de ella: entonces sale una sola vez. */
 const PAUSA_REINTENTO_MS = 500;
 
-function usePausaALaVista(pendiente, abrir) {
+function usePausaALaVista(pendiente, abrir, cerrar, hoy) {
   const abrirRef = useRefFTP(abrir);
   abrirRef.current = abrir;
+  const cerrarRef = useRefFTP(cerrar);
+  cerrarRef.current = cerrar;
+  const diaRef = useRefFTP(null);   /* el día de la pausa que se abrió */
   useEffectFTP(() => {
     let reintento = null;
     const intentar = () => {
@@ -78,6 +81,7 @@ function usePausaALaVista(pendiente, abrir) {
         const s = getState();
         if (!s.focoPausa || s.focoPausa.id !== p.id) return false;
         setState(prev => ({ ...prev, focoPausa: null }));
+        diaRef.current = p.dia;
         abrirRef.current();
         return true;
       };
@@ -92,6 +96,15 @@ function usePausaALaVista(pendiente, abrir) {
     document.addEventListener('visibilitychange', intentar);
     return () => { document.removeEventListener('visibilitychange', intentar); if (reintento) clearTimeout(reintento); };
   }, [pendiente]);
+  /* AL CAMBIAR DE DÍA, LA PAUSA DE AYER SE CIERRA SOLA (Ez, 3A del 7 nov. 2026). Quien acababa un
+     Foco por la tarde y no tocaba nada encontraba a la mañana «Has cerrado un bloque. Elige tu
+     pausa.». `hoy` es `lastActiveDay`, que mueve el relevo del día (state-core.dia.js); la pausa
+     guarda su día al abrirse, así que la del Foco que acaba pasada la medianoche no se cierra. */
+  useEffectFTP(() => {
+    if (!diaRef.current || !hoy || diaRef.current === hoy) return;
+    diaRef.current = null;
+    if (cerrarRef.current) cerrarRef.current();
+  }, [hoy]);
 }
 
 /* El canal. Devuelve `avisar(mensaje)`, que las acciones de ESTA pestaña llaman; lo que llega de

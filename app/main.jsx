@@ -40,7 +40,7 @@ function PaceApp() {
   const [openTweaks, setOpenTweaks] = useStateMain(false);
   const [openBreakMenu, setOpenBreakMenu] = useStateMain(false);
   /* La pausa de un bloque terminado sale en la pestaña que miras (FocusTimer.pestanas.jsx). */
-  usePausaALaVista(state.focoPausa && state.focoPausa.id, () => setOpenBreakMenu(true));
+  usePausaALaVista(state.focoPausa && state.focoPausa.id, () => setOpenBreakMenu(true), () => setOpenBreakMenu(false), state.lastActiveDay);
   const [openSupport, setOpenSupport] = useStateMain(false);
 
   // Flujo de seguridad para respiración
