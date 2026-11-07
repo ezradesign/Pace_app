@@ -4,6 +4,32 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 6 de noviembre de 2026, v0.191.1.
 
+## AL RELEVO (7 nov., ~10:45): EcLj6… al 92 %; se sigue en 5iWBf…. Empieza aquí; manda sobre todo lo de abajo
+
+Coordinaba `local_bb93541e-f0d1-4080-bec4-823c62e52373` en EcLj6…. `main` = origin en v0.192.0 (CI de 6a75e948 en verde entero) más este commit de documentos. **Nada sin subir:** las cinco ramas vivas están en origin. Ninguna se ha juntado: todas esperan el «júntalo» de Ez.
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (7 nov., ~10:45)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Mira el estado de las cinco ramas, retoma las que quedaron a medias y republica mi hoja de pasos en esta cuenta.
+```
+
+| Rama | Sesión (EcLj6…) | Estado | Lo que falta |
+|---|---|---|---|
+| `claude/recorrido-6nov-645d6b` | `local_09cd451b…` | 3 arreglos del recorrido + lo que eligió Ez (1A 2A 3A 5A; 4C sin tocar), ya con `main` 0.192.0 dentro. WIP d7995d2e: cinco mutantes en rojo y `verify` en verde | Las pruebas vecinas (`aro-jornada`, `ritmo-*`, `hora-y-medianoche`, `bloques-cortos`) y las fotos del después en la página de Ez (Pd8CZq71NjTMimaydP3caM, en EcLj6: en 5iWBf, republicar `docs/traspaso/archivos/recorrido-6nov/pagina-ez.html`). Después, la suite entera y enseñárselo a Ez para su «júntalo» |
+| `claude/abierta-horas-7nov-a2419d` | `local_d3dda760…` | PACE abierto horas: tres fallos arreglados con prueba (e30c0015) y el informe en WIP (3c404579), en `docs/audits/abierta-horas-7nov.md` | `npm run verify`, las pruebas vecinas y el banco del service worker sin red |
+| `claude/accesibilidad-7nov-e36d06` | `local_b7d2e5c1…` | A medias: tres pruebas nuevas (nombres, teclado y movimiento reducido) y cambios en `app/`; WIP guardado por la coordinadora (828d6060 y e1432c8a) | Leer el informe `docs/audits/accesibilidad-7nov.md` (si lo hay) y el diff; terminar, `verify`, sus pruebas y la página para Ez con lo visual (contraste) |
+| `claude/guardar-atomico-166e3f` | `local_84fe474b…` | Terminado: un periodo por llave en `cobro/mensual.js`, 89 del cobro en verde, dos mutantes | Espera la revisión de ChatGPT (Ez tiene el texto, que también pide revisar este arreglo) y su «júntalo» |
+| `claude/landing-web-5ec1e5` | — | Propuesta | Las letras de Ez (en 5iWBf, su página es E3tcsR3FnywQNmnCpymxrp) |
+
+Se retoman con sesión nueva, `cwd` en su carpeta de `.claude/worktrees/` y `use_worktree: false`, leyendo su informe; puertos del 8882 en adelante. No más de tres sesiones a la vez. Al juntar: un `git merge` de cada rama (tiene `main` dentro o casi), `index.html` rehecho con el build, `PACE_standalone.html` como estaba, el censo de `verify.integridad.js` sumado a mano y la suite entera.
+
+**Espera a Ez:** qué versión sube a Play (0.191.1, ya bajada y en TestFlight, que es la recomendada; o 0.192.0, que pide bajar su AAB, otro TestFlight, notas con la jornada y capturas nuevas); pasar a ChatGPT la revisión del cobro y lo legal y la de los textos en inglés (los dos textos, en la hoja); y las letras de lo visual que traigan accesibilidad y el recorrido.
+
+**La hoja de 5iWBf** (5iWBfHE7kD3dUVocdskmb6): publica `docs/traspaso/hoja-de-ruta-20oct.html` allí (léela antes con `action: read`). Lleva ids de EcLj6 que dan 404 en 5iWBf: las fotos de la jornada G4kprWWqpUfjEbGnvhVh1c → 5P7oysx4zRBMe7qvhRjFgZ, la landing JwFknwwkJhmypQwiZ7npnB → E3tcsR3FnywQNmnCpymxrp, los seis del plegado al revés que en 7903bbb8 (VDdAWeb8…→9MnNL8b5…, Mk11GDb9…→56cDi1KJ…, 7Hj5sHmF…→9BKgTENw…, MVctqCpa…→Mtv9tKsU…, U1mVU44s…→LD2aRGw2…, R4hc4PDH…→REAWxKaA…), y la página del recorrido Pd8CZq71NjTMimaydP3caM, que hay que publicar de nuevo allí.
+
+**Trampas de hoy:** en PowerShell, `Remove-Item` está bloqueado; para quitar un worktree con `node_modules` enlazado, primero `cmd /c rmdir <carpeta>\node_modules` (quita solo el enlace) y después `git worktree remove`. Un `cd` en Bash a una carpeta de worktree mueve la sesión: usa `git -C` o `( cd … )`. `logros-sin-pronto-ddf6d6` y `sweet-moser-38e06d` quedan vacías y bloqueadas.
+
 ## 6 nov., ~23:40: v0.192.0 en `main`; guardar() y el recorrido, en sus ramas
 
 Con el «Júntalo» de Ez: la tanda (`claude/tanda-jornada-catalogo`: la jornada 1A 2B y X, y catálogo, cifras y Auto B) entró por avance rápido y subió a 0.192.0. La suite de la tanda, 1315 en verde: dos pruebas de avisos esperaban «Pausar» y dentro de la jornada es «Pausar foco» (puestas al día); con la versión subida, 83 de artefacto, jornada, Caminos y pago, en verde. **En sus ramas:** `claude/guardar-atomico-166e3f` (sesión `local_84fe474b…`, parada), con `guardar()` arreglado (un periodo por llave en `cobro/mensual.js`, 89 del cobro en verde y dos mutantes en rojo), espera la revisión de ChatGPT (Ez la pasa con el texto de la hoja, que también pide revisar ese arreglo) y su «júntalo»; `claude/recorrido-6nov-645d6b` (sesión `local_09cd451b…`, en marcha, puerto 8876), el recorrido entero sobre la tanda: arregla fallos claros y deja lo visual en una página para Ez. Quitados los worktrees ya juntados, con `backups/ramas-6nov-2026.bundle` antes; `logros-sin-pronto-ddf6d6` y `sweet-moser-38e06d` quedan vacías y bloqueadas por Windows. La 0.191.1 sigue siendo la versión de prueba: Ez dijo «más tarde» a subirla a Play.
