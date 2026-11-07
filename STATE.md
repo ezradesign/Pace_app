@@ -55,8 +55,9 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   vez, con la jornada dentro. El logo se queda como está por ahora (Ez, 4 nov.), aunque «EVEN» se lea «FVFN» (`app/ui/pace-logo.png`).
 - **El recorrido y el inglés, en `main` con la 0.193.0** (7 nov., con el «Júntalos» de Ez), con la novedad del sobre
   `jornada-cerrada`. Si Play se sube el domingo con la 0.191.1, esta llega como actualización.
-- **Cuatro letras del día de v1** (`claude/caza-v1-compra-79e3e4`, hecha: importar una copia vieja ya no reabre otra semana de
-  PACE completo; recomendadas 1A 2A 3A 4A).
+- **El día de v1, con sus letras (1B 2A 3B 4A, 7 nov.), sin montar** (`claude/caza-v1-compra-79e3e4`: importar una copia vieja
+  ya no reabre otra semana de PACE completo). Qué es cada letra, en el relevo de `docs/traspaso/LEEME.md`.
+- **ChatGPT**: Ez le pasa la revisión del cobro y lo legal (el texto, en su hoja); la de la jornada, cuando entren abierta-horas y la semana.
 - **En marcha, con las letras de Ez** (7 nov.): 1B 2B 3B del contraste en `claude/accesibilidad-7nov-e36d06`; E1 A, y sobre el
   recorrido V1 A y V2 A, en `claude/abierta-horas-7nov-a2419d`; y la caza de la semana (`claude/caza-semana-21914d`, tres fallos
   arreglados). El detalle, en el relevo de `docs/traspaso/LEEME.md`.

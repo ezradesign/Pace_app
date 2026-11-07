@@ -4,7 +4,38 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de noviembre de 2026, v0.193.0.
 
-## AL RELEVO (7 nov., ~19:25): 5iWBf… al 80 % de las 5 h; la 0.193.0, en `main` y con su CI en marcha
+## AL RELEVO (7 nov., ~19:50): 5iWBf… al 85 %; se sigue en EcLj6…. Empieza aquí; manda sobre todo lo de abajo
+
+`main` = origin, la 0.193.0 con su CI en verde entero. Nada sin subir: las cuatro ramas vivas están en origin y ninguna
+sesión corre. **Ez, 7 nov., ~19:45: las letras del día de v1, 1B · 2A · 3B · 4A** (página 6stHAifXWoCnzX58mhL8Pz en 5iWBf,
+1AzBCEn8XpnhWVKbMJRSdg en EcLj6). Se montan en `claude/caza-v1-compra-79e3e4` (876f2c36), con sesión nueva en su carpeta,
+trayendo antes `origin/main`; cada una con prueba y mutante:
+- **1B**: «Borrar todo» no quita el código de PACE completo (el aviso sigue diciendo «tus días, tus rutinas y tus logros»).
+- **2A**: el aviso del día de v1, a quien tenga rutinas propias, añade una línea: «Tus rutinas propias se quedan guardadas; desde
+  el (fecha) se abren con PACE completo» (y en inglés).
+- **3B**: en una app sin su tienda lista, la hoja de PACE completo dice «Pronto podrás tenerlo aquí» en lugar de «Llega con la
+  versión 1» (Ez eligió B, no la A recomendada: lo de pago se cierra igual).
+- **4A**: una lista para el día de v1 que cambie juntos los textos «hasta v1» (la nota de /premium, el plato del mensual, la hoja
+  de la app y la bienvenida), vigilada por `verify` para que no se quede ninguno.
+
+**ChatGPT (Ez preguntó qué auditar):** ahora, la revisión del cobro y lo legal, que ya está escrita en su hoja (también revisa
+`guardar-atomico`) y es lo que bloquea encender la venta. Cuando entren abierta-horas y la caza de la semana, otra de la jornada
+entera (el cierre a la salida, volver tras horas fuera, la medianoche y lo que aprende la carta): prepararle ese texto entonces.
+
+**Orden para la otra cuenta:** 1) la caza del día de v1 con las cuatro letras; 2) abierta-horas: la suite entera y las fotos
+del después, a Ez para su «júntalo»; 3) contraste: la sección «Montado» de su página y `verify`, a Ez; 4) caza de la semana:
+repetir «oficina» y su página. No más de tres sesiones a la vez, y con tres arrancando la cuenta sube ~2 puntos por minuto.
+**La hoja:** en EcLj6io4wM9pGjtQ5wd1CT, publicar `docs/traspaso/hoja-de-ruta-20oct.html` dando la vuelta a los catorce ids de
+5iWBf (los doce del bloque de las 16:20, más QNng9nK83cABewcErossmJ → RaUErpS4TGbnmUcdgwv9Bp y 6stHAifXWoCnzX58mhL8Pz →
+1AzBCEn8XpnhWVKbMJRSdg).
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (7 nov., ~19:50)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Monta mis letras del día de v1 (1B 2A 3B 4A), retoma las tres sesiones donde pararon y republica mi hoja de pasos en esta cuenta.
+```
+
+## 7 nov., ~19:25: 5iWBf… al 80 % de las 5 h; la 0.193.0, en `main` y con su CI en marcha
 
 **Ez, 7 nov., ~18:50: «Júntalos»** (el recorrido y el inglés). En `main` y subido (c7d23fff): `git merge --no-ff` de las dos
 ramas (sin choques), la novedad `jornada-cerrada` PRIMERA en `app/shell/novedades.data.js` (`desde` 2026-11-07),
