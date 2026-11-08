@@ -2,7 +2,23 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de noviembre de 2026, ~21:10, v0.193.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de noviembre de 2026, ~11:45, v0.193.0.
+
+## 8 nov., ~11:45: coordina EcLj6… (5 h al 2 %, semana al 65 %); tres sesiones en marcha y la suite de abierta-horas
+
+Ez: «Retoma la sesión desde exactamente donde la dejamos» = el «Arráncalas». Las cuatro ramas estaban limpias y en origin.
+**abierta-horas** lo lleva la coordinadora: `origin/main` traído sin choques (8fd817b1, `verify` en verde, en origin) y la suite
+entera con un worker en el 8884 (log en el scratchpad de la coordinadora). Las tres sesiones, con `cwd` en su carpeta, WIP y push al
+75 % de las 5 h y parada al 80 %:
+
+| Rama | Sesión | Puerto | Encargo |
+|---|---|---|---|
+| `claude/caza-v1-compra-79e3e4` | `letras-v1`, `local_e9fe4cc5…` | 8891 | Traer main; 1B 2A 3B 4A con prueba y mutante; «Montado» en 1AzBCEn8XpnhWVKbMJRSdg |
+| `claude/accesibilidad-7nov-e36d06` | `contraste`, `local_9ba0c618…` | 8886-8887 | Traer main; `verify`; su zona; «Montado» con la A y la D lado a lado |
+| `claude/caza-semana-21914d` | `caza-semana`, `local_dbc1b9ca…` | 8892-8893 | Traer abierta-horas (lleva main); repetir oficina; página de Ez con S3, la comida y S6 |
+
+Orden al juntar, con el «júntalo» de Ez: abierta-horas, luego caza-semana (encima), contraste y letras-v1; suite entera al final.
+**Ojo con la fecha de Play:** Ez dijo «el domingo 9», pero el domingo es el 8 (hoy) y el 9 es lunes: se le preguntó.
 
 ## 7 nov., ~21:10: coordina EcLj6…; las 5 h, repuestas a las 21:00; las tres sesiones esperan el «Arráncalas» de Ez
 
