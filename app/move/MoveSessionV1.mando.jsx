@@ -42,7 +42,7 @@ function MandoV1({ accent, paused, onPause, prev, next, textos, anillo, espera, 
         <span className="pace-v1-rotulo">{etiqueta(textos.prev)}</span>
       </button>
       <button type="button" className="pace-v1-redondo pace-v1-redondo-centro" data-pace-v1-btn="pausa" onClick={pulsa(onPause)}
-        title={etiqueta(paused ? textos.resume : textos.pause)} style={{ background: accent, borderColor: accent }}>
+        title={etiqueta(paused ? textos.resume : textos.pause)} style={{ background: letraDe(accent), borderColor: letraDe(accent) }}>
         {paused
           ? <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6.5v11l9-5.5z" className="pace-v1-relleno" /></svg>
           : <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6.5v11M15 6.5v11" /></svg>}

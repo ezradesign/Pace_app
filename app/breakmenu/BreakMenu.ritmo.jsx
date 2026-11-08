@@ -48,7 +48,7 @@ function breakGlifo(modulo, rutina) {
    sin él (BreakMenu.jsx, que pone dentro su botón). */
 function BreakPlato({ color, glifo, motivo, nombre, ctx, children, datos }) {
   return (
-    <div className={'pace-break-plato' + (glifo ? '' : ' pace-break-sin-glifo')} style={{ '--c': color }} {...datos}>
+    <div className={'pace-break-plato' + (glifo ? '' : ' pace-break-sin-glifo')} style={{ '--c': color, '--cd': letraDe(color) }} {...datos}>
       {glifo && (
         <div className={'pace-break-glifo' + (glifo.modulo ? ' pace-break-glifo-mod' : '')} style={{ gridRow: 'span 3' }} data-pace-break-glifo>
           {glifo.nodo}
@@ -90,7 +90,7 @@ function BreakMenuRitmo({ open, onClose, onChoose, onSeguir, onPropuesta, prop, 
       <BreakPlato color={plato.color} glifo={plato.glifo} motivo={(!comida && pausa && typeof ritmoFrase === 'function' && ritmoFrase(pausa, t, tn)) || t('break.prop.' + prop.porque)} nombre={plato.nombre} ctx={plato.ctx}
         datos={{ 'data-pace-break-prop': '', 'data-pace-break-ritmo': '' }} />
       <div data-pace-break-acciones className="pace-break-acciones" style={{ marginTop: 16 }}>
-        <button type="button" className="pace-break-pildora pace-break-llena" style={{ '--c': plato.boton }} onClick={onPropuesta}>
+        <button type="button" className="pace-break-pildora pace-break-llena" style={{ '--cd': letraDe(plato.boton) }} onClick={onPropuesta}>
           {t(comida ? 'break.ritmo.comer' : 'break.ritmo.hacer')}
         </button>
         {/* Tras el último bloque no hay otro con el que seguir: solo queda la pausa de cierre. */}

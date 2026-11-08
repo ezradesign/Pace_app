@@ -56,7 +56,7 @@ function v1Reservas(routine, t, tn, tStep, tInstr) {
 function CueV1({ lead, text, accent, ...resto }) {
   return (
     <p {...resto}>
-      {lead && <strong style={{ color: accent, fontWeight: 600 }}>{lead}. </strong>}
+      {lead && <strong style={{ color: letraDe(accent), fontWeight: 600 }}>{lead}. </strong>}
       {text}
     </p>
   );

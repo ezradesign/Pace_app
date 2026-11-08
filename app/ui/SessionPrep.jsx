@@ -76,7 +76,7 @@ function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip, atmosph
              tocaba el caption en el móvil (y a 1280×520 se montaba). El aire va
              en em para que crezca y mengüe con cada tamaño del numeral. */
           paddingBottom: '0.12em',
-          color: accent,
+          color: letraDe(accent),   /* la cifra es letra: el hondo del módulo (Ez, 2B) */
           fontVariantNumeric: 'tabular-nums',
         }}>{prepCount > 0 ? prepCount : '·'}</div>
         <div data-pace-session-prep-copy style={{

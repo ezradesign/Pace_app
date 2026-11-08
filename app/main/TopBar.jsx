@@ -64,8 +64,9 @@ function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
         padding: 3,
         gap: 2,
       }}>
+        {/* El modo puesto se ve por el relleno; el lector de pantalla lo oye por `aria-pressed`. */}
         {modes.map(m => (
-          <button key={m.v} onClick={() => elegirModo(m.v)}
+          <button key={m.v} onClick={() => elegirModo(m.v)} aria-pressed={state.focusMode === m.v}
             style={{
               padding: '6px 18px',
               fontSize: 11,

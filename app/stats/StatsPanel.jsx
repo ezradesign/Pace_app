@@ -285,6 +285,7 @@ function StatsPanel({ open, onClose }) {
       /* Sin Caminos (SHOW_CAMINOS, app/flags.js) su pestaña no se ofrece. */
       ].filter(({ key }) => key !== 'paths' || window.SHOW_CAMINOS !== false).map(({ key, label }) => (
         <button key={key} style={statsPanelTabStyles.tab(tab===key)} data-pace-stats-tab={key}
+          aria-pressed={tab === key}
           data-pace-stats-cerrada={cerrada(key) ? '' : undefined}
           aria-label={cerrada(key) ? label + ' · ' + t('stats.cerrado') : undefined}
           onClick={()=>{ if (cerrada(key)) { paceAbrirPremium({ nombre: label }); return; } setTab(key); }}>

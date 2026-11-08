@@ -17,7 +17,7 @@ const { test, expect } = require('@playwright/test');
 const { sembrar, irAlArtefacto } = require('./helpers');
 
 async function bloqueDe15(page) {
-  await page.getByRole('button', { name: /^15$/ }).filter({ visible: true }).first().click();
+  await page.getByRole('button', { name: '15 minutos', exact: true }).filter({ visible: true }).first().click();
   await page.locator('[data-pace-cta]').click();
   await page.clock.runFor(15 * 60 * 1000 + 2000);
   await page.keyboard.press('Escape');

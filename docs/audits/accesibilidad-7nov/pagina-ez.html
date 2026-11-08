@@ -1,0 +1,465 @@
+<title>Contraste de PACE</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una hoja de cuaderno de PACE: una columna de lectura, y cada pregunta con sus opciones en fichas
+   que llevan la foto de la app. Los colores son los de la app; el gris de esta página pasa el mínimo. */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --muted: #625B4C;
+  --line: #C9C0A8; --accent: #3E5A3A; --accent-soft: rgba(62, 90, 58, 0.10); --mal: #8A3B22; --bien: #2F5A2B;
+  --serif: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  --sans: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --muted: #B2A995;
+  --line: #4d4536; --accent: #98B58B; --accent-soft: rgba(152, 181, 139, 0.12); --mal: #E8A98F; --bien: #A9C79C; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --muted: #B2A995;
+  --line: #4d4536; --accent: #98B58B; --accent-soft: rgba(152, 181, 139, 0.12); --mal: #E8A98F; --bien: #A9C79C; color-scheme: dark }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--sans); }
+.hoja { max-width: 64rem; margin: 0 auto; padding-block: 40px 72px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 44px; }
+h1, h2, h3 { font-family: var(--serif); font-style: italic; font-weight: 500; margin: 0; line-height: 1.12; text-wrap: balance; }
+h1 { font-size: clamp(2.2rem, 6vw, 3.2rem); }
+h2 { font-size: clamp(1.6rem, 4vw, 2rem); }
+h3 { font-size: 1.3rem; }
+p { margin: 0; max-width: 66ch; }
+.rotulo { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.lede { font-size: 1.08rem; color: var(--ink-2); }
+section { display: grid; gap: 18px; }
+.cab { display: grid; gap: 12px; }
+.num { font-variant-numeric: tabular-nums; }
+.mal { color: var(--mal); font-weight: 600; }
+.bien { color: var(--bien); font-weight: 600; }
+
+/* La regla, en un cuadro aparte: es lo único que hay que saber para leer las cifras. */
+.regla { border: 1px solid var(--line); border-radius: var(--r); padding: 16px 18px; display: grid; gap: 8px; background: var(--paper-2); }
+.regla p { color: var(--ink-2); font-size: 0.95rem; }
+
+/* Los mandos de la foto: un solo sitio cambia todas las fotos de la página. */
+.mandos { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--paper);
+  border-bottom: 1px solid var(--line); padding-block: 10px; display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper); }
+.grupo { display: inline-flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+.grupo > span { font-size: 0.8rem; color: var(--muted); margin-right: 6px; }
+.pild { font: 500 0.85rem/1 var(--sans); padding: 8px 14px; min-height: 36px; border-radius: 999px; border: 1px solid var(--line);
+  background: transparent; color: var(--ink); cursor: pointer; }
+.pild[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.pild:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.pregunta { display: grid; gap: 18px; padding-top: 8px; border-top: 1px solid var(--line); }
+.pregunta .cab { padding-top: 22px; }
+.datos { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.9rem; color: var(--ink-2); }
+.datos li { list-style: none; }
+.datos { padding: 0; margin: 0; }
+
+.opciones { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); align-items: start; }
+body[data-ancho="1280"] .opciones { grid-template-columns: 1fr; }
+.ficha { border: 1px solid var(--line); border-radius: var(--r); padding: 14px; display: grid; gap: 10px; min-width: 0; }
+.ficha[data-elegida] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: var(--accent-soft); }
+.ficha .tit { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.letra { font-family: var(--serif); font-style: italic; font-size: 1.6rem; line-height: 1; color: var(--accent); min-width: 1.4ch; }
+.ficha .que { font-weight: 600; }
+.reco { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; color: var(--accent);
+  border: 1px solid var(--accent); border-radius: 999px; padding: 3px 8px; }
+.ficha p { font-size: 0.92rem; color: var(--ink-2); }
+.fotos { display: grid; gap: 10px; }
+body[data-ancho="1280"] .fotos { grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
+figure { margin: 0; display: grid; gap: 6px; min-width: 0; }
+figure img { width: 100%; max-width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 8px; background: var(--paper-2); }
+body[data-ancho="1280"] figure img { max-width: 760px; }
+figcaption { font-size: 0.82rem; color: var(--muted); }
+/* Montado: cada caso con la foto de antes y la de ahora, una al lado de la otra. */
+.montado { display: grid; gap: 26px; }
+.caso { display: grid; gap: 10px; padding-top: 20px; border-top: 1px solid var(--line); min-width: 0; }
+.caso p { font-size: 0.95rem; color: var(--ink-2); }
+.cifras { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 0.9rem; color: var(--ink-2); padding: 0; margin: 0; }
+.cifras li { list-style: none; }
+.igual { color: var(--ink); font-weight: 600; }
+.par { display: grid; gap: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+body[data-ancho="1280"] .par { grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
+.par figcaption b { color: var(--ink); font-weight: 600; }
+.nocambia { border-left: 2px solid var(--accent); padding-left: 14px; display: grid; gap: 6px; }
+.nocambia p { color: var(--ink-2); font-size: 0.95rem; }
+.solo-escritorio { display: none; }
+body[data-ancho="1280"] .solo-escritorio { display: grid; }
+body[data-ancho="1280"] .solo-movil { display: none; }
+.nota-movil { font-size: 0.82rem; color: var(--muted); font-style: italic; }
+
+/* Las muestras de color: hoy y la versión honda, con su cifra. */
+.muestras { overflow-x: auto; }
+table { border-collapse: collapse; font-size: 0.9rem; min-width: 34rem; }
+th, td { text-align: left; padding: 7px 12px 7px 0; border-bottom: 1px solid var(--line); vertical-align: middle; }
+th { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.chip { display: inline-flex; align-items: center; gap: 8px; }
+.chip i { width: 14px; height: 14px; border-radius: 50%; display: inline-block; border: 1px solid var(--line); }
+.chip b { font-family: var(--serif); font-style: italic; font-size: 1.1rem; font-weight: 500; }
+
+.respuesta { border: 1px solid var(--accent); border-radius: var(--r); padding: 18px; display: grid; gap: 12px; }
+.respuesta .linea { font-family: var(--serif); font-style: italic; font-size: 2rem; line-height: 1.1; }
+.quieto { border-left: 2px solid var(--line); padding-left: 14px; display: grid; gap: 8px; }
+.quieto p { color: var(--ink-2); font-size: 0.95rem; }
+code { font-size: 0.85em; background: var(--paper-2); border-radius: 4px; padding: 1px 5px; }
+@media (prefers-reduced-motion: no-preference) { .ficha, .pild { transition: background-color 160ms, border-color 160ms; } }
+</style>
+
+<main class="hoja" id="hoja">
+  <header class="cab">
+    <div class="rotulo">PACE · auditoría de accesibilidad · 7 y 8 nov. 2026</div>
+    <h1>Lo que cuesta leer</h1>
+    <p class="lede">Elegiste 1B · 2B · 3B y ya está montado, con sus pruebas, en una rama aparte: todavía no está en
+      la app. Primero tienes cada caso con la foto de antes y la de ahora. Debajo siguen las tres preguntas como te
+      las hice.</p>
+  </header>
+
+  <div class="regla">
+    <div class="rotulo">Cómo leer las cifras</div>
+    <p>El contraste es cuánto se separa la letra de su fondo. La norma de accesibilidad de la web (WCAG, nivel AA)
+      pide <b>4,5 a 1</b> para la letra normal y <b>3 a 1</b> para la grande, de 24 px o más. La tinta de PACE
+      sobre el crema da 15 a 1. Las cifras en <span class="mal">terracota</span> no llegan; las que van en
+      <span class="bien">verde</span>, sí.</p>
+  </div>
+
+  <div class="mandos" role="group" aria-label="Qué fotos ver">
+    <div class="grupo" role="group" aria-label="Ancho">
+      <span>Ancho</span>
+      <button class="pild" type="button" id="ver-360" data-ancho="360" aria-pressed="true">Móvil · 360</button>
+      <button class="pild" type="button" id="ver-1280" data-ancho="1280" aria-pressed="false">Escritorio · 1280</button>
+    </div>
+    <div class="grupo" role="group" aria-label="Tema">
+      <span>Tema</span>
+      <button class="pild" type="button" id="ver-crema" data-tema="crema" aria-pressed="true">Claro</button>
+      <button class="pild" type="button" id="ver-oscuro" data-tema="oscuro" aria-pressed="false">Oscuro</button>
+    </div>
+  </div>
+
+  <section class="montado" id="montado" aria-labelledby="montado-t">
+    <div class="cab">
+      <div class="rotulo">Montado · 1B · 2B · 3B</div>
+      <h2 id="montado-t">Antes y ahora, caso por caso</h2>
+      <p>Cada módulo tiene ahora una versión más honda de su color, solo para la letra y para el relleno de sus
+        botones. Con los botones de arriba cambias todas las fotos a móvil o escritorio y a claro u oscuro. Las cifras
+        son el contraste del peor fondo de cada caso: el mínimo es <b>4,5 a 1</b>.</p>
+    </div>
+
+    <article class="caso" id="m-apagado-logros">
+      <h3>Logros que aún no tienes</h3>
+      <p>El dibujo y el borde de puntos siguen apagados, y así se ve de un vistazo qué te falta. El nombre y la frase
+        ya no van apagados: van en el gris de los rótulos y se leen.</p>
+      <ul class="cifras num">
+        <li>Claro: <span class="mal">2,0</span> → <span class="igual">3,9</span></li>
+        <li>Oscuro: <span class="mal">3,2</span> → <span class="bien">5,5</span></li>
+      </ul>
+      <div class="par">
+        <figure><img alt="Logros sin ganar, antes: todo apagado" data-foto="apagado-logros-A"><figcaption><b>Antes</b></figcaption></figure>
+        <figure><img alt="Logros sin ganar, ahora: el nombre y la frase en gris" data-foto="apagado-logros-D"><figcaption><b>Ahora</b></figcaption></figure>
+      </div>
+      <p class="nota-movil">El 3,9 es el gris que elegiste el 16 de octubre para los rótulos, sobre el fondo del panel
+        de Logros. Se queda como lo elegiste.</p>
+    </article>
+
+    <article class="caso" id="m-apagado-fecha">
+      <h3>La fecha de la barra lateral</h3>
+      <p>«sáb 7 nov» ya no es transparente: va en el mismo gris. La foto de ahora dice otro día porque se sacó con
+        el reloj puesto en septiembre; lo que cuenta es el gris.</p>
+      <ul class="cifras num">
+        <li>Claro: <span class="mal">2,6</span> → <span class="igual">3,9</span></li>
+        <li>Oscuro: <span class="mal">4,48</span> → <span class="bien">6,9</span></li>
+      </ul>
+      <div class="solo-escritorio">
+        <div class="par">
+          <figure><img alt="La barra lateral antes, con la fecha transparente" data-foto="apagado-fecha-A"><figcaption><b>Antes</b></figcaption></figure>
+          <figure><img alt="La barra lateral ahora, con la fecha entera" data-foto="apagado-fecha-D"><figcaption><b>Ahora</b></figcaption></figure>
+        </div>
+      </div>
+      <p class="nota-movil solo-movil">En el móvil la fecha va dentro del panel lateral: se ve en Escritorio.</p>
+    </article>
+
+    <article class="caso" id="m-letra-respira">
+      <h3>Respira · «¿Es tu primera vez? Empieza aquí»</h3>
+      <p>El terracota de la letra es más hondo. El punto de color y los dibujos siguen en el de siempre.</p>
+      <ul class="cifras num">
+        <li>Claro: <span class="mal">2,8</span> → <span class="bien">5,6</span></li>
+        <li>Oscuro: ya se leía (<span class="bien">7,0</span>) y no cambia</li>
+      </ul>
+      <div class="par">
+        <figure><img alt="La biblioteca de Respira antes" data-foto="letra-respira-A"><figcaption><b>Antes</b></figcaption></figure>
+        <figure><img alt="La biblioteca de Respira ahora, con la letra más honda" data-foto="letra-respira-D"><figcaption><b>Ahora</b></figcaption></figure>
+      </div>
+    </article>
+
+    <article class="caso" id="m-letra-logros">
+      <h3>Logros · el título de cada familia</h3>
+      <p>«Maestría», «Exploración», «La jornada» y los demás: el oro de la letra tira hacia el bronce. Los sellos
+        siguen en oro.</p>
+      <ul class="cifras num">
+        <li>Claro: <span class="mal">2,5–3,4</span> → <span class="bien">5,5–5,6</span></li>
+        <li>Oscuro: <span class="mal">4,4</span>–7,0 → <span class="bien">5,8–7,0</span></li>
+      </ul>
+      <div class="par">
+        <figure><img alt="El título «Maestría» en Logros, antes" data-foto="letra-logros-A"><figcaption><b>Antes</b></figcaption></figure>
+        <figure><img alt="El título «Maestría» en Logros, ahora" data-foto="letra-logros-D"><figcaption><b>Ahora</b></figcaption></figure>
+      </div>
+    </article>
+
+    <article class="caso" id="m-letra-barra">
+      <h3>La barra lateral · «+ vaso»</h3>
+      <p>El azul del agua, más hondo en claro y un poco más claro en oscuro.</p>
+      <ul class="cifras num">
+        <li>Claro: <span class="mal">2,6</span> → <span class="bien">4,6</span></li>
+        <li>Oscuro: <span class="mal">3,7</span> → <span class="bien">4,6</span></li>
+      </ul>
+      <div class="solo-escritorio">
+        <div class="par">
+          <figure><img alt="«+ vaso» en la barra lateral, antes" data-foto="letra-barra-A"><figcaption><b>Antes</b></figcaption></figure>
+          <figure><img alt="«+ vaso» en la barra lateral, ahora" data-foto="letra-barra-D"><figcaption><b>Ahora</b></figcaption></figure>
+        </div>
+      </div>
+      <p class="nota-movil solo-movil">En el móvil la barra va dentro del panel lateral: se ve en Escritorio.</p>
+    </article>
+
+    <article class="caso" id="m-boton-pausa">
+      <h3>La ventana de la pausa · «Empezar»</h3>
+      <p>El botón va relleno del color hondo del módulo que te propone (aquí Estira), y la letra clara se lee. Con
+        Mueve, Respira o Hidrátate pasa lo mismo, cada uno con su color.</p>
+      <ul class="cifras num">
+        <li>Claro: <span class="mal">3,7</span> → <span class="bien">5,7</span></li>
+        <li>Oscuro: <span class="mal">4,0</span> → <span class="bien">5,8</span></li>
+      </ul>
+      <div class="par">
+        <figure><img alt="La ventana de la pausa antes" data-foto="boton-pausa-A"><figcaption><b>Antes</b></figcaption></figure>
+        <figure><img alt="La ventana de la pausa ahora, con el botón más hondo" data-foto="boton-pausa-D"><figcaption><b>Ahora</b></figcaption></figure>
+      </div>
+    </article>
+
+    <article class="caso" id="m-boton-mueve">
+      <h3>«Antes de empezar» de Mueve · «Empezar»</h3>
+      <p>El mismo cambio en el botón que arranca la rutina. En Estira, igual con su azul.</p>
+      <ul class="cifras num">
+        <li>Claro: <span class="mal">3,4</span> → <span class="bien">5,6</span></li>
+        <li>Oscuro: <span class="mal">4,4</span> → <span class="bien">5,8</span></li>
+      </ul>
+      <div class="par">
+        <figure><img alt="«Antes de empezar» de Mueve, antes" data-foto="boton-mueve-A"><figcaption><b>Antes</b></figcaption></figure>
+        <figure><img alt="«Antes de empezar» de Mueve, ahora" data-foto="boton-mueve-D"><figcaption><b>Ahora</b></figcaption></figure>
+      </div>
+    </article>
+
+    <article class="caso" id="m-boton-agua">
+      <h3>Hidrátate · «Un vaso más»</h3>
+      <p>El botón, en el azul hondo del agua. Los vasos llenos siguen en el azul de siempre.</p>
+      <ul class="cifras num">
+        <li>Claro: <span class="mal">3,2</span> → <span class="bien">5,6</span></li>
+        <li>Oscuro: <span class="bien">4,6</span> → <span class="bien">5,8</span></li>
+      </ul>
+      <div class="par">
+        <figure><img alt="Hidrátate antes" data-foto="boton-agua-A"><figcaption><b>Antes</b></figcaption></figure>
+        <figure><img alt="Hidrátate ahora, con el botón más hondo" data-foto="boton-agua-D"><figcaption><b>Ahora</b></figcaption></figure>
+      </div>
+    </article>
+
+    <div class="nocambia">
+      <div class="rotulo">Lo que no cambia</div>
+      <p>Los dibujos, los puntos de color, los filos, las barras y los fondos suaves de cada módulo siguen en su
+        color de siempre. «Empezar foco» tampoco cambia: su oliva ya se leía. Si en un par de fotos cambia también algún
+        texto, es de lo que se juntó después (los textos nuevos de Respira y el inglés), que no toca ningún color.</p>
+    </div>
+  </section>
+
+  <div class="cab">
+    <div class="rotulo">Lo que te pregunté el 7 nov.</div>
+    <h2>Las tres preguntas</h2>
+  </div>
+
+  <!-- 1 -->
+  <section class="pregunta" id="apagado" data-pregunta="1">
+    <div class="cab">
+      <div class="rotulo">Pregunta 1</div>
+      <h2>Lo que va apagado a propósito</h2>
+      <p>Los logros que aún no tienes van al 55 % de opacidad: el dibujo, el nombre y la frase. Así se ve qué te
+        falta, pero el nombre y la frase casi no se leen. La fecha de la barra lateral («sáb 7 nov») va igual, al 75 %.</p>
+      <ul class="datos num">
+        <li>Logro sin ganar, claro: <span class="mal">2,0 a 1</span></li>
+        <li>Oscuro: <span class="mal">3,2 a 1</span></li>
+        <li>La fecha, claro: <span class="mal">2,6 a 1</span></li>
+        <li>Oscuro: <span class="mal">4,48 a 1</span>, a un pelo</li>
+      </ul>
+    </div>
+    <div class="opciones">
+      <article class="ficha" id="op-1A" data-op="1A">
+        <div class="tit"><span class="letra">A</span><span class="que">Como está</span></div>
+        <p>Todo el logro apagado.</p>
+        <div class="fotos">
+          <figure><img alt="Logros de hoy" data-foto="apagado-logros-A"><figcaption>Logros</figcaption></figure>
+          <figure class="solo-escritorio"><img alt="La barra lateral de hoy, con la fecha" data-foto="apagado-fecha-A"><figcaption>La fecha de la barra</figcaption></figure>
+        </div>
+      </article>
+      <article class="ficha" id="op-1B" data-op="1B" data-elegida>
+        <div class="tit"><span class="letra">B</span><span class="que">Se apaga el dibujo, no las palabras</span><span class="reco">Elegida</span></div>
+        <p>El sello y el borde de puntos siguen apagados; el nombre y la frase van en el gris de siempre
+          (<span class="num">4,2 a 1</span>). La fecha, sin transparencia (<span class="num">3,9</span>).</p>
+        <div class="fotos">
+          <figure><img alt="Logros con las palabras en gris" data-foto="apagado-logros-B"><figcaption>Logros</figcaption></figure>
+          <figure class="solo-escritorio"><img alt="La barra lateral con la fecha sin transparencia" data-foto="apagado-fecha-B"><figcaption>La fecha de la barra</figcaption></figure>
+        </div>
+      </article>
+    </div>
+    <p class="nota-movil solo-movil">En el móvil la fecha va dentro del panel lateral: se ve en Escritorio.</p>
+    <p><b>Por qué te recomendé la B:</b> se sigue viendo de un vistazo qué te falta, por el dibujo apagado y el borde de puntos,
+      y se puede leer qué es y cómo se gana, que es lo que invita a cazarlo.</p>
+  </section>
+
+  <!-- 2 -->
+  <section class="pregunta" id="letra" data-pregunta="2">
+    <div class="cab">
+      <div class="rotulo">Pregunta 2</div>
+      <h2>La letra pequeña en el color del módulo</h2>
+      <p>Algunos títulos y marcas van en el color de su módulo: «¿Es tu primera vez? Empieza aquí» y «Para ahora» en
+        las bibliotecas, «Premium» en las tarjetas, el aviso de seguridad de las técnicas con apnea, «+ vaso» en la
+        barra y los títulos de cada familia de Logros. El terracota, el ocre y el oro son claros, y sobre el crema
+        no llegan.</p>
+      <ul class="datos num">
+        <li>Respira, claro: <span class="mal">2,3–2,8</span></li>
+        <li>Mueve: <span class="mal">2,8–3,4</span></li>
+        <li>Estira: <span class="mal">3,0–3,7</span></li>
+        <li>Hidrátate: <span class="mal">2,6–3,2</span></li>
+        <li>Logros (oro): <span class="mal">2,1–2,5</span></li>
+        <li>Premium: <span class="mal">3,2–3,9</span></li>
+        <li>En oscuro fallan Mueve, Estira e Hidrátate: <span class="mal">3,2–4,4</span></li>
+      </ul>
+    </div>
+    <div class="opciones">
+      <article class="ficha" id="op-2A" data-op="2A">
+        <div class="tit"><span class="letra">A</span><span class="que">Como está</span></div>
+        <p>El color de cada módulo, igual en la letra que en los dibujos.</p>
+        <div class="fotos">
+          <figure><img alt="Biblioteca de Respira hoy" data-foto="letra-respira-A"><figcaption>Biblioteca de Respira</figcaption></figure>
+          <figure><img alt="Un título de familia en Logros hoy" data-foto="letra-logros-A"><figcaption>Logros · «Maestría»</figcaption></figure>
+          <figure class="solo-escritorio"><img alt="La barra lateral hoy" data-foto="letra-barra-A"><figcaption>La barra · «+ vaso»</figcaption></figure>
+        </div>
+      </article>
+      <article class="ficha" id="op-2B" data-op="2B" data-elegida>
+        <div class="tit"><span class="letra">B</span><span class="que">El mismo color, más hondo, solo en la letra</span><span class="reco">Elegida</span></div>
+        <p>Cada módulo tiene una versión de su color para la letra: más oscura en claro y más clara en oscuro, con el
+          mismo tono. Los puntos, los dibujos y los fondos suaves no cambian. Llega al menos a 4,6 a 1 en cualquier fondo.</p>
+        <div class="fotos">
+          <figure><img alt="Biblioteca de Respira con la letra más honda" data-foto="letra-respira-B"><figcaption>Biblioteca de Respira</figcaption></figure>
+          <figure><img alt="Un título de familia en Logros más hondo" data-foto="letra-logros-B"><figcaption>Logros · «Maestría»</figcaption></figure>
+          <figure class="solo-escritorio"><img alt="La barra lateral con la letra más honda" data-foto="letra-barra-B"><figcaption>La barra · «+ vaso»</figcaption></figure>
+        </div>
+      </article>
+      <article class="ficha" id="op-2C" data-op="2C">
+        <div class="tit"><span class="letra">C</span><span class="que">La letra en tinta, el color en el dibujo</span></div>
+        <p>Esa letra pasa a la tinta secundaria, como el resto del texto, y el color se queda en los puntos y los
+          dibujos de al lado. Es la que más se lee y la que más quita de cada módulo.</p>
+        <div class="fotos">
+          <figure><img alt="Biblioteca de Respira con la letra en tinta" data-foto="letra-respira-C"><figcaption>Biblioteca de Respira</figcaption></figure>
+          <figure><img alt="Un título de familia en Logros en tinta" data-foto="letra-logros-C"><figcaption>Logros · «Maestría»</figcaption></figure>
+          <figure class="solo-escritorio"><img alt="La barra lateral con la letra en tinta" data-foto="letra-barra-C"><figcaption>La barra · «+ vaso»</figcaption></figure>
+        </div>
+      </article>
+    </div>
+    <p class="nota-movil solo-movil">En el móvil la barra con «+ vaso» va dentro del panel lateral: se ve en Escritorio.</p>
+    <div class="muestras">
+      <table class="num">
+        <thead><tr><th>Color</th><th>Hoy, en claro</th><th>2B, en claro</th><th>Hoy, en oscuro</th><th>2B, en oscuro</th></tr></thead>
+        <tbody>
+          <tr><td>Respira</td><td><span class="chip"><i style="background:#C97A5D"></i><span class="mal">2,3</span></span></td><td><span class="chip"><i style="background:#93492D"></i><span class="bien">4,6</span></span></td><td><span class="chip"><i style="background:#D99477"></i><span class="bien">5,2</span></span></td><td>sin cambio</td></tr>
+          <tr><td>Mueve</td><td><span class="chip"><i style="background:#9A7B4F"></i><span class="mal">2,8</span></span></td><td><span class="chip"><i style="background:#75582C"></i><span class="bien">4,6</span></span></td><td><span class="chip"><i style="background:#9A7B4F"></i><span class="mal">3,5</span></span></td><td><span class="chip"><i style="background:#B09063"></i><span class="bien">4,6</span></span></td></tr>
+          <tr><td>Estira</td><td><span class="chip"><i style="background:#6B7A8F"></i><span class="mal">3,0</span></span></td><td><span class="chip"><i style="background:#4F5E72"></i><span class="bien">4,6</span></span></td><td><span class="chip"><i style="background:#6B7A8F"></i><span class="mal">3,2</span></span></td><td><span class="chip"><i style="background:#8696AB"></i><span class="bien">4,6</span></span></td></tr>
+          <tr><td>Hidrátate</td><td><span class="chip"><i style="background:#5F8A9B"></i><span class="mal">2,6</span></span></td><td><span class="chip"><i style="background:#396373"></i><span class="bien">4,6</span></span></td><td><span class="chip"><i style="background:#5F8A9B"></i><span class="mal">3,7</span></span></td><td><span class="chip"><i style="background:#719CAE"></i><span class="bien">4,6</span></span></td></tr>
+          <tr><td>Logros</td><td><span class="chip"><i style="background:#B8934A"></i><span class="mal">2,1</span></span></td><td><span class="chip"><i style="background:#7B5900"></i><span class="bien">4,6</span></span></td><td><span class="chip"><i style="background:#B8934A"></i><span class="bien">4,6</span></span></td><td>sin cambio</td></tr>
+          <tr><td>Premium</td><td><span class="chip"><i style="background:#9C6B2E"></i><span class="mal">3,2</span></span></td><td><span class="chip"><i style="background:#81520D"></i><span class="bien">4,6</span></span></td><td><span class="chip"><i style="background:#C99A5B"></i><span class="bien">5,1</span></span></td><td>sin cambio</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="nota-movil">Las cifras de la tabla son el peor fondo de cada color: el papel, las tarjetas o su fondo suave.</p>
+    <p><b>Por qué te recomendé la B:</b> cada módulo sigue teniendo su color y se lee. La C se lee igual de bien, pero las
+      bibliotecas y Logros pierden el tono que las distingue; y el oro de Logros, que en la B se va hacia el bronce,
+      es el que más cambia: si no te gusta ahí, se puede dejar la B en todo menos en los títulos de Logros.</p>
+  </section>
+
+  <!-- 3 -->
+  <section class="pregunta" id="boton" data-pregunta="3">
+    <div class="cab">
+      <div class="rotulo">Pregunta 3</div>
+      <h2>Los botones de color con letra clara</h2>
+      <p>«Hacer la pausa» en la ventana de la pausa, «Empezar» en «Antes de empezar» de Mueve y Estira, y «Un vaso
+        más» en Hidrátate van rellenos del color del módulo con la letra del papel encima. «Empezar foco», en oliva, sí llega (5,6).</p>
+      <ul class="datos num">
+        <li>«Hacer la pausa», claro: <span class="mal">2,8–3,7</span> según el módulo</li>
+        <li>«Empezar» de Mueve: <span class="mal">3,4</span>; de Estira: <span class="mal">3,7</span></li>
+        <li>«Un vaso más»: <span class="mal">3,2</span></li>
+        <li>En oscuro, Mueve y Estira: <span class="mal">4,0–4,4</span></li>
+      </ul>
+    </div>
+    <div class="opciones">
+      <article class="ficha" id="op-3A" data-op="3A">
+        <div class="tit"><span class="letra">A</span><span class="que">Como está</span></div>
+        <p>El relleno en el color de siempre.</p>
+        <div class="fotos">
+          <figure><img alt="La ventana de la pausa hoy" data-foto="boton-pausa-A"><figcaption>La pausa · «Hacer la pausa»</figcaption></figure>
+          <figure><img alt="Antes de empezar de Mueve hoy" data-foto="boton-mueve-A"><figcaption>Mueve · «Empezar»</figcaption></figure>
+          <figure><img alt="Hidrátate hoy" data-foto="boton-agua-A"><figcaption>Hidrátate · «Un vaso más»</figcaption></figure>
+        </div>
+      </article>
+      <article class="ficha" id="op-3B" data-op="3B" data-elegida>
+        <div class="tit"><span class="letra">B</span><span class="que">El relleno en el color hondo</span><span class="reco">Elegida</span></div>
+        <p>El mismo color hondo de la 2B, ahora de fondo: la letra clara se lee (5,5 a 1 o más; en oscuro, 5,8). Vale aunque elijas la
+          2A o la 2C.</p>
+        <div class="fotos">
+          <figure><img alt="La ventana de la pausa con el botón más hondo" data-foto="boton-pausa-B"><figcaption>La pausa · «Hacer la pausa»</figcaption></figure>
+          <figure><img alt="Antes de empezar de Mueve con el botón más hondo" data-foto="boton-mueve-B"><figcaption>Mueve · «Empezar»</figcaption></figure>
+          <figure><img alt="Hidrátate con el botón más hondo" data-foto="boton-agua-B"><figcaption>Hidrátate · «Un vaso más»</figcaption></figure>
+        </div>
+      </article>
+    </div>
+    <p><b>Por qué te recomendé la B:</b> son los botones que más se pulsan después de «Empezar foco», y hoy son los que peor se leen.
+      El color hondo los deja con el peso de «Empezar foco», que ya es oliva oscuro.</p>
+  </section>
+
+  <section class="quieto">
+    <div class="rotulo">Lo que no pregunto</div>
+    <h3>El gris de los rótulos se queda como lo elegiste</h3>
+    <p>El 16 de octubre elegiste el gris intermedio: da <span class="num">4,2 a 1</span> sobre el crema y
+      <span class="num">3,9</span> sobre la barra lateral y las tarjetas, un poco por debajo del mínimo. Es casi toda
+      la letra pequeña de la app («Hoy», «Para ahora», los días de la semana, «Min»), así que no lo vuelvo a
+      preguntar: queda apuntado en el informe. En /premium y /beta pasa lo mismo (<span class="num">4,4</span>).</p>
+  </section>
+
+  <section class="respuesta">
+    <div class="rotulo">Lo que falta</div>
+    <div class="linea">Que lo veas</div>
+    <p>Si te parece bien, dile «júntalo» a la coordinadora: entra en la app junto con lo demás de la auditoría, que
+      es lo que oye quien usa un lector de pantalla y lo que hace quien va con teclado. Si un caso no te convence,
+      dime cuál y lo cambio antes de juntarlo.</p>
+  </section>
+</main>
+
+<script>
+(function () {
+  var cuerpo = document.body;
+  var ver = { ancho: '360', tema: 'crema' };
+  function fotos() {
+    cuerpo.setAttribute('data-ancho', ver.ancho);
+    document.querySelectorAll('img[data-foto]').forEach(function (im) {
+      im.src = 'fotos/' + im.getAttribute('data-foto') + '-' + ver.tema + '-' + ver.ancho + '.webp';
+    });
+  }
+  document.querySelectorAll('.pild').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var k = b.hasAttribute('data-ancho') ? 'ancho' : 'tema';
+      ver[k] = b.getAttribute('data-' + k);
+      document.querySelectorAll('.pild[data-' + k + ']').forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); });
+      fotos();
+    });
+  });
+  fotos();
+})();
+</script>

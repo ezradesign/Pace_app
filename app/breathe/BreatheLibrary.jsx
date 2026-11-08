@@ -153,18 +153,20 @@ function BreatheSafety({ routine, onAccept, onCancel }) {
   const { t, lang } = useT();
   const [checked, setChecked] = useState(false);
   if (!routine) return null;
+  const nombre = lang === 'en' && t(routine.id + '.name') !== routine.id + '.name' ? t(routine.id + '.name') : routine.name;
+  /* El aviso se llama «Antes de empezar · Tolerancia CO₂», como se lee arriba; el ⚠ es adorno. */
   return (
-    <Modal open={true} onClose={onCancel} maxWidth={520}>
+    <Modal open={true} onClose={onCancel} maxWidth={520} ariaLabel={t('breathe.safety.before') + ' · ' + nombre}>
       <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 18 }}>
         <div style={{
           width: 40, height: 40, borderRadius: 'var(--r-md)',
           background: 'var(--breathe-soft)',
           display: 'grid', placeItems: 'center',
-          color: 'var(--breathe)', fontSize: 20, flexShrink: 0,
-        }}>⚠</div>
+          color: 'var(--breathe-deep)', fontSize: 20, flexShrink: 0,
+        }} aria-hidden="true">⚠</div>
         <div>
           <div className="pace-meta" style={{ marginBottom: 4 }}>{t('breathe.safety.before')}</div>
-          <h3 style={{ ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500 }}>{lang === 'en' && t(routine.id + '.name') !== routine.id + '.name' ? t(routine.id + '.name') : routine.name}</h3>
+          <h3 style={{ ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500 }}>{nombre}</h3>
         </div>
       </div>
       <p style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--ink-2)', margin: '0 0 14px' }}>

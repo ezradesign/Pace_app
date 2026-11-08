@@ -96,7 +96,7 @@ test('«Ahora no, quiero probar primero» guarda que no hay semana y la app sigu
 test('en inglés la pregunta habla inglés', async ({ page }) => {
   await page.goto(RUTA_ARTEFACTO);
   await page.locator(BIENVENIDA).waitFor({ state: 'visible' });
-  await page.locator(BIENVENIDA).getByRole('button', { name: 'ES · EN' }).click();
+  await page.locator(BIENVENIDA).getByRole('button', { name: 'Cambiar a English' }).click();
   await page.locator(BIENVENIDA + ' [data-pace-cta]').click();
   await page.locator(EDITOR).waitFor({ state: 'visible' });
   await expect(page.locator(BIENVENIDA)).toContainText("What's your week like?");

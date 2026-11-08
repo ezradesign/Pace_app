@@ -18,7 +18,7 @@
 
 Object.assign(window.PACE_STRINGS.es, {
     // Session (compartido: shell + prep + done)
-    'session.exit':                    '× Salir',
+    'session.exit':                    'Salir',
     'session.prep':                    'Prepárate',
     'session.startNow':                'Empezar ahora',
     'session.backToHome':              'Volver al inicio',
@@ -54,6 +54,8 @@ Object.assign(window.PACE_STRINGS.es, {
 
     // Focus
     'focus.minutes.custom.title':      'Minutos personalizados (5–180)',
+    'focus.minutes.grupo':             'Minutos del bloque de foco',
+    'focus.minutes.n':                 '{n} minutos',
     'focus.cycle':                     'Ciclo',
     'focus.cycleOf':                   'Ciclo {n} / 4',
     'focus.cycleNext':                 'Siguiente · Ciclo {n} / 4',
@@ -150,7 +152,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'hydrate.glasses.today':           'Vasos hoy',
     'hydrate.less':                    'Un vaso menos',
     'hydrate.more':                    'Un vaso más',
-    'hydrate.glass':                   'Vaso {n} de {m}',
+    'hydrate.vaso.lleno':              'Vaso {n} de {total}, lleno',
+    'hydrate.vaso.vacio':              'Vaso {n} de {total}, vacío',
     'hydrate.tip.label':               'Tip:',
     'hydrate.tip':                     'Llena una botella de 500 ml por la mañana y otra después de comer. Dos botellas = 4 vasos. Hecho.',
 
@@ -222,7 +225,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
 Object.assign(window.PACE_STRINGS.en, {
     // Session (shared: shell + prep + done)
-    'session.exit':                    '× Exit',
+    'session.exit':                    'Exit',
     'session.prep':                    'Get ready',
     'session.startNow':                'Start now',
     'session.backToHome':              'Back to Home',
@@ -258,6 +261,8 @@ Object.assign(window.PACE_STRINGS.en, {
 
     // Focus
     'focus.minutes.custom.title':      'Custom duration (5–180 min)',
+    'focus.minutes.grupo':             'Focus block minutes',
+    'focus.minutes.n':                 '{n} minutes',
     'focus.cycle':                     'Cycle',
     'focus.cycleOf':                   'Cycle {n} / 4',
     'focus.cycleNext':                 'Next · Cycle {n} / 4',
@@ -346,7 +351,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'hydrate.glasses.today':           'Glasses today',
     'hydrate.less':                    'One less glass',
     'hydrate.more':                    'One more glass',
-    'hydrate.glass':                   'Glass {n} of {m}',
+    'hydrate.vaso.lleno':              'Glass {n} of {total}, full',
+    'hydrate.vaso.vacio':              'Glass {n} of {total}, empty',
     'hydrate.tip.label':               'Tip:',
     'hydrate.tip':                     'Fill a 500 ml bottle in the morning and another after lunch. Two bottles = 4 glasses. Done.',
 

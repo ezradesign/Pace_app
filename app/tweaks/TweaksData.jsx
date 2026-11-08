@@ -321,7 +321,7 @@ function TweaksDataSection({ onReset, isWeb }) {
         }}
       />
       {msg && (
-        <div className="pace-aj-msg" role="status" style={{ color: msg.kind === 'err' ? 'var(--breathe)' : 'var(--focus)' }}>{msg.text}</div>
+        <div className="pace-aj-msg" role="status" style={{ color: msg.kind === 'err' ? 'var(--breathe-deep)' : 'var(--focus)' }}>{msg.text}</div>
       )}
       {rescate && (
         <AjustesAccion onClick={bajarRescate} title={t('settings.data.rescate.title')} derecha={<DownloadIcon />}>

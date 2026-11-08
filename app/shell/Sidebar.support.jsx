@@ -164,14 +164,16 @@ const sidebarStyles = {
 
   /* Cabecera centrada + la fecha. La fecha va al MISMO cuerpo que el rotulo
      (11 px) y no a 10: con 10 compartian linea base pero se veia mas baja,
-     porque su altura de x es menor. Lo unico que la separa es el color. */
+     porque su altura de x es menor. Lo unico que la separa es el peso: el
+     rotulo va en 500 y la fecha en 400. Sin transparencia: al 75 % daba
+     2,6 a 1 en claro (Ez, 1B · 7 nov. 2026). */
   sectionHeaderCentro: {
     display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: 7,
     marginBottom: 9,
   },
   fecha: {
     fontSize: 'var(--size-meta)', letterSpacing: 'var(--track-meta)',
-    textTransform: 'uppercase', color: 'var(--ink-3)', opacity: 0.75,
+    textTransform: 'uppercase', color: 'var(--ink-3)',
   },
 
   /* La cantidad de cada frase va en tinta entera; el resto, en la secundaria. */
@@ -186,8 +188,9 @@ const sidebarStyles = {
   lineaIc:   { width: 16, height: 16, flex: 'none', display: 'inline-grid', placeItems: 'center' },
   /* La línea del agua es un botón: hereda la línea y se quita lo de botón. */
   lineaAgua: { width: '100%', textAlign: 'left', background: 'none', border: 0, padding: 0, cursor: 'pointer' },
+  /* «+ vaso» es letra: en el hondo de Hidrátate, con su filo (Ez, 2B · 7 nov. 2026); la gota sigue en --hydrate. */
   vaso:      { marginLeft: 'auto', flex: 'none', fontFamily: 'var(--font-ui)', fontStyle: 'normal', fontSize: 11, lineHeight: 1.2,
-               color: 'var(--hydrate)', border: '1px solid var(--hydrate)', borderRadius: 'var(--r-pill)', padding: '3px 9px',
+               color: 'var(--hydrate-deep)', border: '1px solid var(--hydrate-deep)', borderRadius: 'var(--r-pill)', padding: '3px 9px',
                whiteSpace: 'nowrap', background: 'var(--hydrate-soft)' },
   vacioCopy: { margin: '0 0 4px', fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, lineHeight: 1.4,
                color: 'var(--ink-3)', textAlign: 'center', padding: '0 6px', textWrap: 'balance' },

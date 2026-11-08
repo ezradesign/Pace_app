@@ -258,7 +258,7 @@ function RitmoLinea({ plan }) {
               aria-expanded={!pasado && !abierta ? !!(fichaVale && ficha.i === i) : undefined}
               data-pace-ritmo-estado-parada={estado || undefined}
               className={'pace-rt-nodo' + (it.larga ? ' pace-rt-larga' : '') + (pasado ? ' pace-rt-pasado' : ' pace-rt-toca') + (abierta ? ' pace-rt-ahora' : '') + (estado ? ' pace-rt-' + estado : '')}
-              style={{ '--c': RITMO_COLOR[it.platos[0].modulo] }}
+              style={{ '--c': RITMO_COLOR[it.platos[0].modulo], '--cd': letraDe(RITMO_COLOR[it.platos[0].modulo]) }}
               title={pasado ? nombres + (estado ? ' · ' + t('ritmo.' + estado) : '') : nombres + ' · ' + t(abierta ? 'ritmo.empieza' : 'ritmo.toca')}
               aria-label={ritmoHora(it.desde) + ' · ' + nombres + (abierta ? ' · ' + t('ritmo.ahora') : '') + (estado ? ' · ' + t('ritmo.' + estado) : '')}
               disabled={pasado}

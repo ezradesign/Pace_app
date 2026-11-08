@@ -292,7 +292,7 @@ function CustomBuilder({ editId, onClose }) {
           <Button
             onClick={save}
             disabled={!canSave}
-            style={{ background: 'var(--move)', borderColor: 'var(--move)' }}
+            style={{ background: 'var(--move-deep)', borderColor: 'var(--move-deep)' }}
           >{t('custom.builder.save')}</Button>
         </div>
       </div>

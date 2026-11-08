@@ -70,7 +70,7 @@ function statsHoyTotales(state, t) {
 function StatsHoyTarjeta({ modulos, nombre, hora, meta, estado, larga }) {
   return (
     <div className={'pace-sh-t' + (estado ? ' pace-sh-' + estado : '')} data-pace-hoy-parada={estado || 'luego'}
-      style={{ '--c': RITMO_COLOR[modulos[0]] }}>
+      style={{ '--c': RITMO_COLOR[modulos[0]], '--cd': letraDe(RITMO_COLOR[modulos[0]]) }}>
       <i className={'pace-sh-aro' + (larga ? ' pace-sh-larga' : '')}>
         {modulos.map((m, k) => <RitmoGlifo key={k} modulo={m} />)}
       </i>

@@ -65,6 +65,7 @@ PACE tiene un tono calmado, artesanal y cuidado. No gamificación agresiva.
 | `--achievement-soft` | `rgba(184,147,74,0.12)` | Fondos sutiles Logros |
 | `--premium` | `#9C6B2E` | **Sello PREMIUM** / gating de contenido (s87, bloque Contenido+Premium F3a). Bronce profundo, deliberadamente más oscuro que `--achievement` y `--move` para no confundirse a simple vista. Lo usa `PremiumSeal` (Primitives) |
 | `--premium-soft` | `rgba(156,107,46,0.12)` | Fondo sutil del sello PREMIUM |
+| `--breathe-deep` … `--premium-deep` | Respira `#93492D` · Mueve `#75582C` · Estira `#4F5E72` · Hidrátate `#396373` · Logros `#7B5900` · Premium `#81520D`; en oscuro Respira `#D99477` · Mueve `#B09063` · Estira `#8696AB` · Hidrátate `#719CAE` · Logros `#B8934A` · Premium `#C99A5B` | **El color hondo de cada módulo** (Ez, 2B y 3B · 7 nov. 2026): mismo tono y croma en OKLCH, otra luz. Solo para la **letra de color** (rótulos, títulos de familia, «Premium», el ⚠, «+ vaso», cifras) y el **relleno de los botones de color** con la letra del papel («Hacer la pausa», «Empezar», «Un vaso más»): letra de 4,6 a 1 o más sobre papel, tarjeta y fondo suave; botón de 5,5 (5,8 en oscuro). Dibujos, puntos, filos, barras y fondos suaves siguen en el color de módulo. Con el color como prop: `letraDe(color)` (Primitives) |
 
 ### Oscuro noche
 
@@ -928,7 +929,7 @@ Estilos definidos en `app/tokens.css` que afectan al documento entero:
 ### Focus visible
 - `:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: var(--r-xs); }` — accesibilidad de teclado con aro finito en color de foco.
 - **s198 · los contenedores que reciben foco al abrirse no pintan aro**: la tarjeta del `Modal`, la raíz de una
-  sesión (`SessionShell`), el onboarding. Llevan `tabIndex={-1}` y `outline: none` en línea, porque ese foco lo
+  sesión (`SessionShell`), el onboarding y, desde la auditoría del 7 nov. 2026, el panel de Ajustes. Llevan `tabIndex={-1}` y `outline: none` en línea, porque ese foco lo
   pone la app (`usePaceDialogo`, `app/ui/Dialogo.jsx`), no la persona; el aro aparece en cuanto Tab entra en un
   control. Ningún otro elemento puede quitarse el aro.
 

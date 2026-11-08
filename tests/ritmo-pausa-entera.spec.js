@@ -128,7 +128,7 @@ test('salir con la X tras Respira: la barra y la parada ofrecen la Estira, no Re
   await expect(sesion(page)).toContainText('Exhalación 4·6');
   await hastaElCierre(page);
   await expect(sesion(page).getByRole('button', { name: 'Seguir con Estira', exact: true })).toBeVisible();
-  await sesion(page).getByRole('button', { name: '× Salir', exact: true }).click();
+  await sesion(page).getByRole('button', { name: 'Salir', exact: true }).click();
   await expect(sesion(page), 'la X vuelve a la home').toHaveCount(0);
 
   await expect(vis(page, '[data-pace-sidebar]'), 'la barra ofrece ya la Estira').toContainText('Espalda de pie');

@@ -143,10 +143,11 @@ function pfBtn(accent, soft) {
     borderRadius: 'var(--r-sm)',
     padding: '10px 22px',
     background: soft,
-    border: '1px solid ' + accent,
-    color: accent,
+    /* Borde, letra y relleno del hover van en el hondo de su módulo (Ez, 2B y 3B · 7 nov. 2026). */
+    border: '1px solid ' + letraDe(accent),
+    color: letraDe(accent),
     transition: 'all 180ms var(--ease)',
-    '--pfbtn': accent,
+    '--pfbtn': letraDe(accent),
   };
 }
 

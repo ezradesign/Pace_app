@@ -19,7 +19,7 @@ const { useState: useStateFP, useEffect: useEffectFP, useRef: useRefFP } = React
    Rango FOCO_MINIMO (5)–180: por debajo de 5, «A tu ritmo» no puede repartir el día, así
    que un 1–4 escrito se queda en 5 en vez de descartarse. */
 function MinutesPicker({ value, onChange }) {
-  const { t } = useT();
+  const { t, tn } = useT();
   const presets = [15, 25, 35, 45];
   const isCustom = !presets.includes(value);
   const [editing, setEditing] = useStateFP(false);
@@ -67,14 +67,18 @@ function MinutesPicker({ value, onChange }) {
     justifyContent: 'center',
   };
 
+  /* El lector de pantalla oía «15, botón» y no sabía cuál estaba puesto: cada cifra lleva su
+     unidad y su estado, y el grupo dice qué se elige. «Min» ya lo dice el grupo. */
   return (
-    <div style={{ display: 'flex', gap: 4, alignItems: 'center', justifyContent: 'center' }}>
-      <span style={{
+    <div data-pace-minutos role="group" aria-label={t('focus.minutes.grupo')}
+      style={{ display: 'flex', gap: 4, alignItems: 'center', justifyContent: 'center' }}>
+      <span aria-hidden="true" style={{
         fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase',
         color: 'var(--ink-3)', marginRight: 10, fontWeight: 500,
       }}>{t('focus.min')}</span>
       {presets.map(m => (
         <button key={m} data-pace-toque onClick={() => { onChange(m); setEditing(false); }}
+          aria-label={tn('focus.minutes.n', { n: m })} aria-pressed={value === m}
           style={{
             ...pillBase,
             fontWeight: value === m ? 600 : 400,
@@ -95,6 +99,7 @@ function MinutesPicker({ value, onChange }) {
             if (e.key === 'Enter') commit();
             else if (e.key === 'Escape') cancel();
           }}
+          aria-label={t('focus.minutes.custom.title')}
           style={{
             ...pillBase,
             width: 52,
@@ -111,6 +116,7 @@ function MinutesPicker({ value, onChange }) {
         <button data-pace-toque
           onClick={() => setEditing(true)}
           title={t('focus.minutes.custom.title')}
+          aria-label={tn('focus.minutes.n', { n: value })} aria-pressed={true}
           style={{
             ...pillBase,
             fontWeight: 600,

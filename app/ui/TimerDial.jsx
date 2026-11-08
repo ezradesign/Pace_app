@@ -191,7 +191,7 @@ function TimerDialPunto({ giro, angulo, color, nace, deGolpe }) {
   const naceRef = useRefTD(nace);
   const R = DIAL_R;
   return (
-    <div data-pace-dial-punto data-pace-dial-punto-nace={naceRef.current ? '' : undefined}
+    <div data-pace-dial-punto aria-hidden="true" data-pace-dial-punto-nace={naceRef.current ? '' : undefined}
          style={timerDialStyles.ringLayer}>
       <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
@@ -275,8 +275,8 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, hasta, subtitle, inn
           Tampoco puede ir en el marco, que contiene el numero y el CTA. Va
           aqui, en una capa que solo envuelve al anillo.
           La regla la pone _responsive.js y SOLO bajo [data-pace-dial-fit]:
-          Caminos no lo lleva y su anillo queda intacto. */}
-      <div data-pace-dial-ring style={timerDialStyles.ringLayer}>
+          Caminos no lo lleva y su anillo queda intacto. El lector no lo oye: el tiempo ya lo dice el número. */}
+      <div data-pace-dial-ring aria-hidden="true" style={timerDialStyles.ringLayer}>
       {ticks ? (
         <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>

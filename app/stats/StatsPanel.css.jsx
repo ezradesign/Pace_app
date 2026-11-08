@@ -162,7 +162,7 @@
     .pace-sh-saltada { opacity: 0.45; }
     .pace-sh-saltada .pace-sh-aro { border-style: dashed; }
     .pace-sh-ahora { box-shadow: inset 0 0 0 1.5px var(--c); background: color-mix(in srgb, var(--c) 12%, var(--paper-2)); }
-    .pace-sh-ahora .pace-sh-m { color: var(--c); font-weight: 500; }
+    .pace-sh-ahora .pace-sh-m { color: var(--cd, var(--c)); font-weight: 500; }   /* letra: el hondo (Ez, 2B) */
     .pace-sh-comida .pace-sh-aro { border-style: dotted; }
     .pace-sh-txt { min-width: 0; flex: 1; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
     .pace-sh-n { font-family: var(--font-display); font-style: italic; font-size: 15px; line-height: 1.15; color: var(--ink);

@@ -184,6 +184,20 @@
   --premium: #9C6B2E;
   --premium-soft: rgba(156, 107, 46, 0.12);
 
+  /* EL COLOR HONDO DE CADA MÓDULO (Ez, 2B y 3B · 7 nov. 2026). El color de módulo es claro para
+     ser dibujo, y como letra sobre el crema no llegaba al mínimo de lectura (Respira 2,3 a 1,
+     Logros 2,1). Esta es su versión para la LETRA de color (títulos, rótulos y marcas) y para el
+     RELLENO de los botones de color con la letra del papel encima: mismo tono y croma en OKLCH,
+     menos luz. Da 4,6 a 1 o más sobre el papel, las tarjetas y su fondo suave, y el botón, 5,5.
+     Nunca en dibujos, puntos, filos ni fondos suaves: ahí sigue el color de siempre. Lo vigila
+     tests/contraste-modulos.spec.js. */
+  --breathe-deep: #93492D;
+  --move-deep: #75582C;
+  --extra-deep: #4F5E72;
+  --hydrate-deep: #396373;
+  --achievement-deep: #7B5900;
+  --premium-deep: #81520D;
+
   /* TIPOGRAFÍA */
   --font-display: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
   --font-ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
@@ -292,6 +306,15 @@
      3,9:1; al 8 % da 4,8. */
   --premium: #C99A5B;
   --premium-soft: rgba(201, 154, 91, 0.08);
+  /* El color hondo en oscuro es MÁS CLARO que el de módulo: Mueve, Estira e Hidrátate daban
+     3,2-4,4 como letra y sus botones 4,0-4,4. Respira, Logros y Premium ya pasaban y se
+     quedan en su color; se escriben igual para que el claro no se cuele aquí. */
+  --breathe-deep: #D99477;
+  --move-deep: #B09063;
+  --extra-deep: #8696AB;
+  --hydrate-deep: #719CAE;
+  --achievement-deep: #B8934A;
+  --premium-deep: #C99A5B;
   /* Las horas del sol en oscuro (s158). Sobre papel oscuro la misma luz
      necesita algo más de cuerpo para no desaparecer, y los tonos suben de
      valor: un azul profundo de paleta clara sobre #1d1a14 sería un agujero
@@ -609,12 +632,17 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
    breathwork guiado perdia su funcion. WCAG 2.3.3 exime el motion ESENCIAL
    a la funcionalidad. Convencion: un subtree marcado data-pace-essential
    queda exento del kill; todo lo decorativo (fades, slide-ups, pulsos,
-   anillos de timer) sigue congelado. */
+   anillos de timer) sigue congelado.
+   UNA VUELTA, NO INFINITAS: aplastar la duracion de una animacion infinita
+   no la para, la hace dar cien mil vueltas por segundo, y cada fotograma
+   pinta un punto cualquiera de ella. El pulso de «Retén» de Respira
+   temblaba asi entre 0,96 y 1,05. Con una sola vuelta acaba quieto. */
 @media (prefers-reduced-motion: reduce) {
   *:not([data-pace-essential], [data-pace-essential] *),
   *:not([data-pace-essential], [data-pace-essential] *)::before,
   *:not([data-pace-essential], [data-pace-essential] *)::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
@@ -2068,7 +2096,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
 Object.assign(window.PACE_STRINGS.es, {
 
-  'session.exit': '× Salir',
+  'session.exit': 'Salir',
   'session.prep': 'Prepárate',
   'session.startNow': 'Empezar ahora',
   'session.backToHome': 'Volver al inicio',
@@ -2104,6 +2132,8 @@ Object.assign(window.PACE_STRINGS.es, {
 
 
   'focus.minutes.custom.title': 'Minutos personalizados (5–180)',
+  'focus.minutes.grupo': 'Minutos del bloque de foco',
+  'focus.minutes.n': '{n} minutos',
   'focus.cycle': 'Ciclo',
   'focus.cycleOf': 'Ciclo {n} / 4',
   'focus.cycleNext': 'Siguiente · Ciclo {n} / 4',
@@ -2200,7 +2230,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'hydrate.glasses.today': 'Vasos hoy',
   'hydrate.less': 'Un vaso menos',
   'hydrate.more': 'Un vaso más',
-  'hydrate.glass': 'Vaso {n} de {m}',
+  'hydrate.vaso.lleno': 'Vaso {n} de {total}, lleno',
+  'hydrate.vaso.vacio': 'Vaso {n} de {total}, vacío',
   'hydrate.tip.label': 'Tip:',
   'hydrate.tip': 'Llena una botella de 500 ml por la mañana y otra después de comer. Dos botellas = 4 vasos. Hecho.',
 
@@ -2272,7 +2303,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
 Object.assign(window.PACE_STRINGS.en, {
 
-  'session.exit': '× Exit',
+  'session.exit': 'Exit',
   'session.prep': 'Get ready',
   'session.startNow': 'Start now',
   'session.backToHome': 'Back to Home',
@@ -2308,6 +2339,8 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
   'focus.minutes.custom.title': 'Custom duration (5–180 min)',
+  'focus.minutes.grupo': 'Focus block minutes',
+  'focus.minutes.n': '{n} minutes',
   'focus.cycle': 'Cycle',
   'focus.cycleOf': 'Cycle {n} / 4',
   'focus.cycleNext': 'Next · Cycle {n} / 4',
@@ -2396,7 +2429,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'hydrate.glasses.today': 'Glasses today',
   'hydrate.less': 'One less glass',
   'hydrate.more': 'One more glass',
-  'hydrate.glass': 'Glass {n} of {m}',
+  'hydrate.vaso.lleno': 'Glass {n} of {total}, full',
+  'hydrate.vaso.vacio': 'Glass {n} of {total}, empty',
   'hydrate.tip.label': 'Tip:',
   'hydrate.tip': 'Fill a 500 ml bottle in the morning and another after lunch. Two bottles = 4 glasses. Done.',
 
@@ -17356,7 +17390,11 @@ Object.assign(window, {
    4. DEVOLVER EL FOCO al cerrar, a quien lo tenia al abrir — SALVO que ya lo
       tenga otro (el dialogo de debajo, o una SESION que acaba de montarse: el
       foco en un boton de la home detras de una sesion es justo el defecto de
-      «Espacio no pausa», ver SessionShell.jsx).
+      «Espacio no pausa», ver SessionShell.jsx). Si quien lo tenia ya no existe,
+      a quien abrio el dialogo de debajo: una sesion se empieza desde una
+      tarjeta de la biblioteca, la biblioteca se cierra, y al salir de la sesion
+      el foco caia en <body> (auditoria del 7 nov.); ahora vuelve al chip que
+      abrio la biblioteca.
 
    LO QUE NO HACE: no decide que se ve. Ni un pixel cambia — el contenedor lleva
    `outline: none` porque el foco programatico no es una seleccion del usuario.
@@ -17369,6 +17407,12 @@ Object.assign(window, {
 const { useEffect: useEffectDlg, useRef: useRefDlg } = React;
 
 const _paceDialogos = [];
+
+
+
+
+
+let _paceCadenaSuelta = null;
 
 function paceDialogoArriba(yo) {
   return _paceDialogos.length > 0 && _paceDialogos[_paceDialogos.length - 1] === yo;
@@ -17421,10 +17465,14 @@ function usePaceDialogo(ref, abierto, opciones) {
 
   useEffectDlg(() => {
     if (!abierto) return undefined;
-    const yo = { sesion: op.sesion === true };
-    _paceDialogos.push(yo);
     const previo = document.activeElement;
     const cont = ref.current;
+
+
+    const dueno = _paceDialogos.slice().reverse().find((d) => d.cont && previo && d.cont.contains(previo));
+    const suelta = !previo || previo === document.body ? _paceCadenaSuelta : null;
+    const yo = { sesion: op.sesion === true, cont, cadena: [previo].concat(dueno ? dueno.cadena : suelta || []) };
+    _paceDialogos.push(yo);
     if (cont && !cont.contains(document.activeElement)) {
       try {cont.focus({ preventScroll: true });} catch (e) {}
     }
@@ -17465,14 +17513,18 @@ function usePaceDialogo(ref, abierto, opciones) {
 
       const ahora = document.activeElement;
       const libre = !ahora || ahora === document.body || cont && cont.contains(ahora);
-      if (libre && paceFocoDevolvible(previo)) {
-        try {previo.focus({ preventScroll: true });} catch (e) {}
+      const destino = libre ? yo.cadena.find(paceFocoDevolvible) : null;
+      if (destino) {
+        try {destino.focus({ preventScroll: true });} catch (e) {}
+      } else if (libre) {
+        _paceCadenaSuelta = yo.cadena;
+        setTimeout(() => {_paceCadenaSuelta = null;}, 0);
       }
     };
   }, [abierto]);
 }
 
-Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceEscapeDeSesion, paceEnfocables });
+Object.assign(window, { usePaceDialogo, paceDialogoArriba, paceHayDialogo, paceEscapeDeSesion, paceEnfocables, paceFocoDevolvible });
 ;Object.assign(window, { paceDialogoArriba, paceHayDialogo, paceEscapeDeSesion, paceEnfocables, paceFocoDevolvible, usePaceDialogo });
 })();
 </script>
@@ -18761,6 +18813,15 @@ const displayItalic = {
   fontStyle: 'italic'
 };
 
+
+
+
+
+function letraDe(color) {
+  const m = /^var\(--(breathe|move|extra|hydrate|achievement|premium)\)$/.exec(String(color || '').trim());
+  return m ? 'var(--' + m[1] + '-deep)' : color;
+}
+
 function Modal(_ref) {let { open, onClose, children, maxWidth = 680, tagLabel, title, subtitle, ariaLabel, cabecera, relleno, capa = 100 } = _ref;
   const { t } = useT();
 
@@ -18900,6 +18961,7 @@ function Card(_ref2) {let { children, onClick, accent, padded = true, style = {}
 }
 
 function Tag(_ref3) {let { children, color = 'var(--ink-2)', muted = false } = _ref3;
+  const tono = letraDe(color);
   return (
     React.createElement("span", { style: {
         display: 'inline-flex',
@@ -18908,8 +18970,8 @@ function Tag(_ref3) {let { children, color = 'var(--ink-2)', muted = false } = _
         letterSpacing: '0.12em',
         textTransform: 'uppercase',
         borderRadius: 'var(--r-pill)',
-        border: `1px solid ${muted ? 'var(--line)' : color}`,
-        color: muted ? 'var(--ink-3)' : color,
+        border: `1px solid ${muted ? 'var(--line)' : tono}`,
+        color: muted ? 'var(--ink-3)' : tono,
         fontWeight: 500,
         background: 'transparent'
       } }, children));
@@ -18938,10 +19000,12 @@ function Button(_ref4) {let { children, onClick, variant = 'primary', size = 'md
       color: 'var(--ink-2)',
       border: '1px solid transparent'
     },
+
+
     terracota: {
-      background: 'var(--breathe)',
+      background: 'var(--breathe-deep)',
       color: 'var(--paper)',
-      border: '1px solid var(--breathe)'
+      border: '1px solid var(--breathe-deep)'
     }
   };
   return (
@@ -18973,7 +19037,7 @@ function Button(_ref4) {let { children, onClick, variant = 'primary', size = 'md
         if (variant === 'primary') e.currentTarget.style.background = 'var(--focus-2)';
         if (variant === 'secondary') e.currentTarget.style.background = 'var(--paper-2)';
         if (variant === 'ghost') e.currentTarget.style.background = 'var(--paper-2)';
-        if (variant === 'terracota') e.currentTarget.style.background = 'var(--breathe-2)';
+        if (variant === 'terracota') e.currentTarget.style.background = 'color-mix(in srgb, var(--breathe-deep) 78%, var(--ink))';
       },
       onMouseLeave: (e) => {
         if (disabled) return;
@@ -19010,6 +19074,7 @@ function Meta(_ref6) {let { children, style = {} } = _ref6;
 
 
 
+
 function PremiumSeal(_ref7) {let { label, style = {} } = _ref7;
   const { t } = useT();
   return (
@@ -19018,8 +19083,8 @@ function PremiumSeal(_ref7) {let { label, style = {} } = _ref7;
         padding: '3px 9px',
         fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase',
         borderRadius: 'var(--r-pill)',
-        border: '1px solid var(--premium)',
-        color: 'var(--premium)',
+        border: '1px solid var(--premium-deep)',
+        color: 'var(--premium-deep)',
         background: 'var(--premium-soft)',
         fontWeight: 600,
         ...style
@@ -19119,8 +19184,8 @@ function PaceConIcono(_ref8) {let { texto } = _ref8;
   return React.createElement(React.Fragment, null, m[3], " ", React.createElement("span", { "aria-hidden": "true" }, m[4]));
 }
 
-Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic, paceSinIcono, PaceConIcono });
-;Object.assign(window, { _extends, Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, paceSinIcono, PaceConIcono });
+Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic, letraDe, paceSinIcono, PaceConIcono });
+;Object.assign(window, { _extends, letraDe, Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, paceSinIcono, PaceConIcono });
 })();
 </script>
   <script>
@@ -19806,7 +19871,8 @@ function SessionHeader(_ref3) {let { routine, onExit, extra } = _ref3;
     ),
     React.createElement("div", { style: { display: 'flex', alignItems: 'center', gap: 16 } },
     extra,
-    React.createElement("button", { "data-pace-toque": true, onClick: () => onExit('exit'), style: sessionShellStyles.exitBtn }, t('session.exit'))
+
+    React.createElement("button", { "data-pace-toque": true, onClick: () => onExit('exit'), style: sessionShellStyles.exitBtn }, React.createElement("span", { "aria-hidden": "true" }, "\xD7 "), t('session.exit'))
     )
     ));
 
@@ -20091,7 +20157,7 @@ function SessionPrep(_ref) {let { routine, onExit, accent, prepCount, copy, onSk
 
 
         paddingBottom: '0.12em',
-        color: accent,
+        color: letraDe(accent),
         fontVariantNumeric: 'tabular-nums'
       } }, prepCount > 0 ? prepCount : '·'),
     React.createElement("div", { "data-pace-session-prep-copy": true, style: {
@@ -20524,7 +20590,7 @@ function SessionFeedback(_ref) {let { routineId, kind = 'move', accent = 'var(--
   const wrapStyle = {
     ...sessionFeedbackStyles.wrap,
 
-    '--pace-fb-accent': accent
+    '--pace-fb-accent': letraDe(accent)
   };
 
   return (
@@ -22386,7 +22452,7 @@ function SelloEnAro(_ref) {let { toast, t } = _ref;
         position: 'fixed', left: toast.aro.x, top: toast.aro.y,
         transform: 'translate(-50%, -50%)', maxWidth: toast.aro.ancho,
         display: 'flex', alignItems: 'center',
-        whiteSpace: 'nowrap', color: 'var(--achievement)',
+        whiteSpace: 'nowrap', color: 'var(--achievement-deep)',
         fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: fs * ajuste.escala, lineHeight: 1.2,
         animation: 'pace-fade-in 320ms var(--ease)',
         opacity: toast.exiting ? 0 : 1, transition: 'opacity 300ms ease-out'
@@ -22822,12 +22888,12 @@ const premiumInvitacionStyles = {
   v1: { ...displayItalic, fontSize: 18, color: 'var(--ink)', margin: '0 0 14px' },
   ancho: { width: '100%', justifyContent: 'center', borderRadius: 'var(--r-pill)' },
   enlace: { display: 'block', margin: '14px auto 0', background: 'none', border: 0, cursor: 'pointer',
-    ...displayItalic, fontSize: 16, color: 'var(--premium)' },
+    ...displayItalic, fontSize: 16, color: 'var(--premium-deep)' },
   etiqueta: { display: 'block', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 6 },
   campo: { width: '100%', boxSizing: 'border-box', padding: '10px 12px', marginBottom: 10, fontSize: 14,
     fontFamily: 'var(--font-mono)', color: 'var(--ink)', background: 'var(--paper-2)',
     border: '1px solid var(--line-2)', borderRadius: 'var(--r-sm)' },
-  error: { fontSize: 13, color: 'var(--breathe-2)', margin: '0 0 10px', lineHeight: 1.45 },
+  error: { fontSize: 13, color: 'var(--breathe-deep)', margin: '0 0 10px', lineHeight: 1.45 },
   titulo: { ...displayItalic, fontSize: 28, fontWeight: 500, lineHeight: 1.15, margin: '12px 36px 2px 0' },
 
   par: { display: 'flex', flexWrap: 'wrap', gap: 10, width: '100%' },
@@ -22837,7 +22903,7 @@ const premiumInvitacionStyles = {
     ...displayItalic, fontSize: 15, color: 'var(--ink-2)' },
 
   enlaceA: { display: 'block', width: 'fit-content', margin: '14px auto 0', textAlign: 'center', textDecoration: 'none',
-    ...displayItalic, fontSize: 16, color: 'var(--premium)' },
+    ...displayItalic, fontSize: 16, color: 'var(--premium-deep)' },
   tuyas: { fontSize: 13, color: 'var(--ink-2)', margin: '0 0 6px' },
   mas: { fontSize: 13, color: 'var(--ink-3)', margin: '-8px 0 16px' }
 };
@@ -23285,7 +23351,7 @@ function TimerDialPunto(_ref2) {let { giro, angulo, color, nace, deGolpe } = _re
   const naceRef = useRefTD(nace);
   const R = DIAL_R;
   return (
-    React.createElement("div", { "data-pace-dial-punto": true, "data-pace-dial-punto-nace": naceRef.current ? '' : undefined,
+    React.createElement("div", { "data-pace-dial-punto": true, "aria-hidden": "true", "data-pace-dial-punto-nace": naceRef.current ? '' : undefined,
       style: timerDialStyles.ringLayer },
     React.createElement("svg", { viewBox: "0 0 100 100", preserveAspectRatio: "xMidYMid meet",
       style: { position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' } },
@@ -23370,7 +23436,7 @@ function TimerDial(_ref3) {let { mins, secs, progress, mode, modeLabel, hasta, s
 
 
 
-    React.createElement("div", { "data-pace-dial-ring": true, style: timerDialStyles.ringLayer },
+    React.createElement("div", { "data-pace-dial-ring": true, "aria-hidden": "true", style: timerDialStyles.ringLayer },
     ticks ?
     React.createElement("svg", { viewBox: "0 0 100 100", preserveAspectRatio: "xMidYMid meet",
       style: { position: 'absolute', inset: 0, width: '100%', height: '100%' } },
@@ -24204,7 +24270,7 @@ const { useState: useStateFP, useEffect: useEffectFP, useRef: useRefFP } = React
 
 
 function MinutesPicker(_ref) {let { value, onChange } = _ref;
-  const { t } = useT();
+  const { t, tn } = useT();
   const presets = [15, 25, 35, 45];
   const isCustom = !presets.includes(value);
   const [editing, setEditing] = useStateFP(false);
@@ -24252,14 +24318,18 @@ function MinutesPicker(_ref) {let { value, onChange } = _ref;
     justifyContent: 'center'
   };
 
+
+
   return (
-    React.createElement("div", { style: { display: 'flex', gap: 4, alignItems: 'center', justifyContent: 'center' } },
-    React.createElement("span", { style: {
+    React.createElement("div", { "data-pace-minutos": true, role: "group", "aria-label": t('focus.minutes.grupo'),
+      style: { display: 'flex', gap: 4, alignItems: 'center', justifyContent: 'center' } },
+    React.createElement("span", { "aria-hidden": "true", style: {
         fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase',
         color: 'var(--ink-3)', marginRight: 10, fontWeight: 500
       } }, t('focus.min')),
     presets.map((m) =>
     React.createElement("button", { key: m, "data-pace-toque": true, onClick: () => {onChange(m);setEditing(false);},
+      "aria-label": tn('focus.minutes.n', { n: m }), "aria-pressed": value === m,
       style: {
         ...pillBase,
         fontWeight: value === m ? 600 : 400,
@@ -24280,6 +24350,7 @@ function MinutesPicker(_ref) {let { value, onChange } = _ref;
         if (e.key === 'Enter') commit();else
         if (e.key === 'Escape') cancel();
       },
+      "aria-label": t('focus.minutes.custom.title'),
       style: {
         ...pillBase,
         width: 52,
@@ -24296,6 +24367,7 @@ function MinutesPicker(_ref) {let { value, onChange } = _ref;
     React.createElement("button", { "data-pace-toque": true,
       onClick: () => setEditing(true),
       title: t('focus.minutes.custom.title'),
+      "aria-label": tn('focus.minutes.n', { n: value }), "aria-pressed": true,
       style: {
         ...pillBase,
         fontWeight: 600,
@@ -25043,7 +25115,7 @@ function SupportModal(_ref4) {let { open, onClose } = _ref4;
   };
 
   return (
-    React.createElement(Modal, { open: open, onClose: onClose, maxWidth: 540 },
+    React.createElement(Modal, { open: open, onClose: onClose, maxWidth: 540, ariaLabel: t('support.title.main') },
     React.createElement("div", { style: supportStyles.inner },
 
     React.createElement("div", { style: supportStyles.heroIcon },
@@ -25996,13 +26068,15 @@ const sidebarStyles = {
 
 
 
+
+
   sectionHeaderCentro: {
     display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: 7,
     marginBottom: 9
   },
   fecha: {
     fontSize: 'var(--size-meta)', letterSpacing: 'var(--track-meta)',
-    textTransform: 'uppercase', color: 'var(--ink-3)', opacity: 0.75
+    textTransform: 'uppercase', color: 'var(--ink-3)'
   },
 
 
@@ -26017,8 +26091,9 @@ const sidebarStyles = {
   lineaIc: { width: 16, height: 16, flex: 'none', display: 'inline-grid', placeItems: 'center' },
 
   lineaAgua: { width: '100%', textAlign: 'left', background: 'none', border: 0, padding: 0, cursor: 'pointer' },
+
   vaso: { marginLeft: 'auto', flex: 'none', fontFamily: 'var(--font-ui)', fontStyle: 'normal', fontSize: 11, lineHeight: 1.2,
-    color: 'var(--hydrate)', border: '1px solid var(--hydrate)', borderRadius: 'var(--r-pill)', padding: '3px 9px',
+    color: 'var(--hydrate-deep)', border: '1px solid var(--hydrate-deep)', borderRadius: 'var(--r-pill)', padding: '3px 9px',
     whiteSpace: 'nowrap', background: 'var(--hydrate-soft)' },
   vacioCopy: { margin: '0 0 4px', fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, lineHeight: 1.4,
     color: 'var(--ink-3)', textAlign: 'center', padding: '0 6px', textWrap: 'balance' },
@@ -26675,7 +26750,7 @@ function SidebarLatestAchievement(_ref7) {let { ultimo, onOpen } = _ref7;
   if (!ultimo) {
     return (
       React.createElement("button", { style: sidebarStyles.logroFila, onClick: onOpen, "data-pace-sidebar-ultimo": "" },
-      React.createElement("span", { style: { ...sidebarStyles.logroSello, opacity: 0.6 } }, "\xB7"),
+      React.createElement("span", { style: { ...sidebarStyles.logroSello, opacity: 0.6 }, "aria-hidden": "true" }, "\xB7"),
       React.createElement("span", { style: sidebarStyles.logroTexto },
       React.createElement("span", { style: { ...sidebarStyles.logroTitulo, color: 'var(--ink-3)' } }, t('sidebar.latest.none')),
       enlace
@@ -26686,7 +26761,7 @@ function SidebarLatestAchievement(_ref7) {let { ultimo, onOpen } = _ref7;
   const mini = achMini(ultimo.id, tR);
   return (
     React.createElement("button", { style: sidebarStyles.logroFila, onClick: onOpen, title: mini.title, "data-pace-sidebar-ultimo": ultimo.id },
-    React.createElement("span", { style: sidebarStyles.logroSello }, mini.nodo),
+    React.createElement("span", { style: sidebarStyles.logroSello, "aria-hidden": "true" }, mini.nodo),
     React.createElement("span", { style: sidebarStyles.logroTexto },
     React.createElement("span", { style: sidebarStyles.logroTitulo, "data-pace-sidebar-ultimo-titulo": true }, mini.title),
     mini.desc ? React.createElement("span", { style: sidebarStyles.logroDesc }, mini.desc) : null,
@@ -28608,9 +28683,10 @@ function RoutinePreview(_ref) {let { routine, kind = 'move', onStart, onClose } 
     t('preview.aviso')
     ),
 
+
     React.createElement("button", { onClick: onStart, "data-pace-cta": true, style: {
         width: '100%', marginTop: 6, padding: '13px 20px',
-        background: accent, color: 'var(--paper)', border: 'none',
+        background: letraDe(accent), color: 'var(--paper)', border: 'none',
         borderRadius: 'var(--r-pill)', cursor: 'pointer', minHeight: 44,
         fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, fontWeight: 500
       } }, t('preview.start'))
@@ -29026,7 +29102,7 @@ Object.assign(window, {
 .pace-lib-link {
   background: none; border: 0; padding: 0; cursor: pointer;
   font-family: var(--font-display); font-style: italic; font-size: 15px;
-  color: var(--premium); white-space: nowrap;
+  color: var(--premium-deep); white-space: nowrap;
 }
 .pace-lib-link::after { content: ' \\203A'; }
 
@@ -29061,9 +29137,11 @@ Object.assign(window, {
   font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
   color: var(--ink-3); font-weight: 500; margin: 18px 0 8px;
 }
+/* LA LETRA DE COLOR va en el hondo del módulo (--tone-deep, Ez 2B · 7 nov. 2026): en el
+   color de siempre, «Para ahora» daba 2,3 a 1 en Respira. Filos y dibujos siguen en --tone. */
 .pace-lib-now {
   font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
-  color: var(--tone); font-weight: 500; margin: 14px 0 9px;
+  color: var(--tone-deep); font-weight: 500; margin: 14px 0 9px;
 }
 .pace-lib-vacio {
   margin: 0 0 14px; font-family: var(--font-display); font-style: italic;
@@ -29075,7 +29153,7 @@ Object.assign(window, {
 }
 .pace-lib-quitar {
   background: none; border: 0; padding: 0; font: inherit; cursor: pointer;
-  color: var(--tone); border-bottom: 1px solid currentColor;
+  color: var(--tone-deep); border-bottom: 1px solid currentColor;
 }
 .pace-lib-quitar::after { content: ' \\203A'; }
 
@@ -29151,8 +29229,8 @@ Object.assign(window, {
 .pace-lib-ctx em:not(:last-child)::after {
   content: '\\B7'; color: var(--line-2); font-style: normal; margin-left: .34em;
 }
-.pace-lib-ctx .pace-lib-pre { color: var(--premium); }
-.pace-lib-ctx .pace-lib-soon { color: var(--premium); font-weight: 500; }
+.pace-lib-ctx .pace-lib-pre { color: var(--premium-deep); }
+.pace-lib-ctx .pace-lib-soon { color: var(--premium-deep); font-weight: 500; }
 /* La tira: la capitular a 62 px y el resto a 20. El 55 % de opacidad NO valía
    -- el usuario no los registraba y reportó «sólo muestra un glifo». Si no se
    leen, no están. */
@@ -29167,7 +29245,7 @@ Object.assign(window, {
    respiración rápida (medido en s174 -- son SEIS, no cinco). */
 .pace-lib-safety {
   position: absolute; top: 11px; right: 11px; width: 18px; height: 18px;
-  border-radius: 50%; background: var(--breathe-soft); color: var(--breathe);
+  border-radius: 50%; background: var(--breathe-soft); color: var(--breathe-deep);
   display: grid; place-items: center; font-size: 11px; font-weight: 600;
 }
 .pace-lib-card-resp { padding-right: 34px; }
@@ -29194,7 +29272,7 @@ Object.assign(window, {
    s174 y otra aqui.) */
 .pace-lib-viajes {
   font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
-  color: var(--tone); font-weight: 500;
+  color: var(--tone-deep); font-weight: 500;
   margin: 14px 0 9px;
 }
 .pace-lib-card-viaje {
@@ -29205,7 +29283,7 @@ Object.assign(window, {
 }
 .pace-lib-card-viaje h4 { font-size: 24px; }
 .pace-lib-card-viaje .pace-lib-txt { position: relative; z-index: 1; }
-.pace-lib-card-viaje .pace-lib-ctx b { color: var(--breathe-2); }
+.pace-lib-card-viaje .pace-lib-ctx b { color: var(--breathe-deep); }
 .pace-lib-viaje-marca {
   position: absolute; right: -42px; bottom: -27px;
   width: 168px; height: 168px; z-index: 0; pointer-events: none;
@@ -29442,7 +29520,7 @@ function RoutineCard(_ref) {let { routine, color, onClick, variant = 'body' } = 
       esViaje ? ' pace-lib-card-viaje' : ''),
       "data-pace-lib-card": routine.id,
       "data-locked": isLocked ? '1' : undefined,
-      style: { '--tone': color } },
+      style: { '--tone': color, '--tone-deep': letraDe(color) } },
 
     esViaje && typeof window.ABBreathe === 'function' &&
 
@@ -29451,7 +29529,7 @@ function RoutineCard(_ref) {let { routine, color, onClick, variant = 'body' } = 
     React.createElement("span", { className: "pace-lib-viaje-marca", "aria-hidden": "true" }, React.createElement(window.ABBreathe)),
 
     routine.safety &&
-    React.createElement("i", { className: "pace-lib-safety", title: t('breathe.safety.required'), "aria-label": t('breathe.safety.required') }, "\u26A0"),
+    React.createElement("i", { className: "pace-lib-safety", role: "img", title: t('breathe.safety.required'), "aria-label": t('breathe.safety.required') }, "\u26A0"),
 
     glifos.length > 0 &&
     React.createElement("span", { className: "pace-lib-cap", "aria-hidden": "true" },
@@ -29639,9 +29717,11 @@ function LibraryShell(_ref)
 
   const chips =
   React.createElement("div", { className: "pace-lib-chips", role: "group", "aria-label": t('lib.filter.title') },
+
   listaFiltros.map((k) =>
   React.createElement("button", { key: k, type: "button", className: "pace-lib-chip",
     "aria-pressed": activos.indexOf(k) !== -1,
+    "aria-label": nombreChip(k) + ' (' + cuenta(k) + ')',
     onClick: () => alterna(k) },
   nombreChip(k), React.createElement("b", null, cuenta(k))
   )
@@ -29740,8 +29820,10 @@ function LibraryShell(_ref)
   null;
 
   return (
-    React.createElement(Modal, { open: open && !enPausa, onClose: onClose, maxWidth: ancho },
-    React.createElement("div", { className: "pace-lib", style: { '--tone': tone } },
+
+    React.createElement(Modal, { open: open && !enPausa, onClose: onClose, maxWidth: ancho, ariaLabel: title },
+
+    React.createElement("div", { className: "pace-lib", style: { '--tone': tone, '--tone-deep': letraDe(tone) } },
     React.createElement("div", { className: "pace-lib-cuerpo" },
 
 
@@ -31315,18 +31397,20 @@ function BreatheSafety(_ref2) {let { routine, onAccept, onCancel } = _ref2;
   const { t, lang } = useT();
   const [checked, setChecked] = useState(false);
   if (!routine) return null;
+  const nombre = lang === 'en' && t(routine.id + '.name') !== routine.id + '.name' ? t(routine.id + '.name') : routine.name;
+
   return (
-    React.createElement(Modal, { open: true, onClose: onCancel, maxWidth: 520 },
+    React.createElement(Modal, { open: true, onClose: onCancel, maxWidth: 520, ariaLabel: t('breathe.safety.before') + ' · ' + nombre },
     React.createElement("div", { style: { display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 18 } },
     React.createElement("div", { style: {
         width: 40, height: 40, borderRadius: 'var(--r-md)',
         background: 'var(--breathe-soft)',
         display: 'grid', placeItems: 'center',
-        color: 'var(--breathe)', fontSize: 20, flexShrink: 0
-      } }, "\u26A0"),
+        color: 'var(--breathe-deep)', fontSize: 20, flexShrink: 0
+      }, "aria-hidden": "true" }, "\u26A0"),
     React.createElement("div", null,
     React.createElement("div", { className: "pace-meta", style: { marginBottom: 4 } }, t('breathe.safety.before')),
-    React.createElement("h3", { style: { ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500 } }, lang === 'en' && t(routine.id + '.name') !== routine.id + '.name' ? t(routine.id + '.name') : routine.name)
+    React.createElement("h3", { style: { ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500 } }, nombre)
     )
     ),
     React.createElement("p", { style: { fontSize: 14, lineHeight: 1.6, color: 'var(--ink-2)', margin: '0 0 14px' } },
@@ -32167,12 +32251,12 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
         routine: displayRoutine,
         onExit: onExit,
         atmosphere: atmo,
-        headerExtra: React.createElement("div", { "data-pace-breathe-round-label": true, style: { fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--breathe)' } }, t('session.round'), " ", round, " / ", routine.rounds),
+        headerExtra: React.createElement("div", { "data-pace-breathe-round-label": true, style: { fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--breathe-deep)' } }, t('session.round'), " ", round, " / ", routine.rounds),
         footer: React.createElement(Button, { variant: "terracota", onClick: releaseHold }, t('session.breatheAgain')) },
 
       React.createElement("div", { style: { textAlign: 'center', maxWidth: 520 } },
       React.createElement("style", null, `@keyframes pace-hold-pulse { from { transform: scale(0.96); opacity: 0.85; } to { transform: scale(1.05); opacity: 1; } }`),
-      React.createElement("div", { style: { fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--breathe)', marginBottom: 30, fontWeight: 500 } },
+      React.createElement("div", { style: { fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--breathe-deep)', marginBottom: 30, fontWeight: 500 } },
       t('session.hold')
       ),
 
@@ -32289,7 +32373,7 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
     anyLongPhase &&
     React.createElement("div", { "data-pace-breathe-countdown": showCountdown ? String(remaining) : '', style: {
         ...displayItalic,
-        fontSize: 28, color: 'var(--breathe)',
+        fontSize: 28, color: 'var(--breathe-deep)',
         fontVariantNumeric: 'tabular-nums', marginTop: 4,
         visibility: showCountdown ? 'visible' : 'hidden'
       } }, showCountdown ? remaining : '0'),
@@ -33160,7 +33244,7 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
     React.createElement("div", { "data-pace-v1-body": true, style: { textAlign: 'center', maxWidth: 620 } },
     React.createElement(StepGlyph, { stepName: step.name, accent: accent, accentSoft: accentSoft,
       size: typeof v1GlyphSizeAhora === 'function' ? v1GlyphSizeAhora() : 72 }),
-    React.createElement("div", { style: { fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: accent, marginBottom: 12, fontWeight: 500 } },
+    React.createElement("div", { style: { fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: letraDe(accent), marginBottom: 12, fontWeight: 500 } },
     tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })
     ),
     React.createElement("h1", { style: {
@@ -34098,7 +34182,7 @@ function MandoV1(_ref) {let { accent, paused, onPause, prev, next, textos, anill
     React.createElement("span", { className: "pace-v1-rotulo" }, etiqueta(textos.prev))
     ),
     React.createElement("button", { type: "button", className: "pace-v1-redondo pace-v1-redondo-centro", "data-pace-v1-btn": "pausa", onClick: pulsa(onPause),
-      title: etiqueta(paused ? textos.resume : textos.pause), style: { background: accent, borderColor: accent } },
+      title: etiqueta(paused ? textos.resume : textos.pause), style: { background: letraDe(accent), borderColor: letraDe(accent) } },
     paused ?
     React.createElement("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }, React.createElement("path", { d: "M9 6.5v11l9-5.5z", className: "pace-v1-relleno" })) :
     React.createElement("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }, React.createElement("path", { d: "M9 6.5v11M15 6.5v11" })),
@@ -34185,7 +34269,7 @@ function v1Reservas(routine, t, tn, tStep, tInstr) {
 function CueV1(_ref) {let { lead, text, accent, ...resto } = _ref;
   return (
     React.createElement("p", resto,
-    lead && React.createElement("strong", { style: { color: accent, fontWeight: 600 } }, lead, ". "),
+    lead && React.createElement("strong", { style: { color: letraDe(accent), fontWeight: 600 } }, lead, ". "),
     text
     ));
 
@@ -36438,7 +36522,7 @@ function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = 
       onMouseLeave: (e) => {e.currentTarget.style.borderColor = 'var(--line-2)';e.currentTarget.style.color = 'var(--ink-2)';} },
 
     React.createElement("span", { style: { display: 'block', textAlign: 'center', padding: '8px 14px' } },
-    React.createElement("span", { style: { display: 'block', fontSize: 24, lineHeight: 1, marginBottom: 6, color: accent } }, "+"),
+    React.createElement("span", { style: { display: 'block', fontSize: 24, lineHeight: 1, marginBottom: 6, color: letraDe(accent) } }, "+"),
     React.createElement("span", { style: { display: 'block', ...displayItalic, fontSize: 17, fontWeight: 500 } }, t('custom.draft.seguir')),
     React.createElement("span", { style: { display: 'block', fontSize: 12, color: 'var(--ink-3)', margin: '8px 0 0', lineHeight: 1.5 } },
     [borrador.name.trim(),
@@ -36459,7 +36543,7 @@ function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = 
 
 
     React.createElement("span", { style: { display: 'block', textAlign: 'center', padding: '8px 14px' } },
-    React.createElement("span", { style: { display: 'block', fontSize: 24, lineHeight: 1, marginBottom: 6, color: accent } }, "+"),
+    React.createElement("span", { style: { display: 'block', fontSize: 24, lineHeight: 1, marginBottom: 6, color: letraDe(accent) } }, "+"),
     React.createElement("span", { style: { display: 'block', ...displayItalic, fontSize: 17, fontWeight: 500 } }, t('custom.create')),
     routines.length === 0 &&
     React.createElement("span", { style: { display: 'block', fontSize: 12, color: 'var(--ink-3)', margin: '8px 0 0', lineHeight: 1.5 } },
@@ -36528,9 +36612,9 @@ function CustomRoutineCard(_ref2) {let { routine, locked, onClick, onEdit, accen
     t('custom.code')
     ),
     locked ?
-    React.createElement("span", { style: { ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 } }, React.createElement(PaceCandado, null), t('lib.premium')) :
+    React.createElement("span", { style: { ...displayItalic, fontSize: 16, color: 'var(--premium-deep)', fontWeight: 500 } }, React.createElement(PaceCandado, null), t('lib.premium')) :
 
-    React.createElement("span", { style: { ...displayItalic, fontSize: 16, color: accent, fontWeight: 500 } }, minutos, " min")
+    React.createElement("span", { style: { ...displayItalic, fontSize: 16, color: letraDe(accent), fontWeight: 500 } }, minutos, " min")
 
     )
     ));
@@ -36551,7 +36635,7 @@ const customRoutinesStyles = {
     transition: 'all 220ms var(--ease)'
   },
   candado: {
-    ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500,
+    ...displayItalic, fontSize: 16, color: 'var(--premium-deep)', fontWeight: 500,
     background: 'none', border: 0, padding: 0, cursor: 'pointer'
   },
   editBtn: {
@@ -36867,7 +36951,7 @@ function CustomBuilder(_ref) {let { editId, onClose } = _ref;
     React.createElement(Button, {
       onClick: save,
       disabled: !canSave,
-      style: { background: 'var(--move)', borderColor: 'var(--move)' } },
+      style: { background: 'var(--move-deep)', borderColor: 'var(--move-deep)' } },
     t('custom.builder.save'))
     )
     )
@@ -37106,7 +37190,7 @@ function HydrateTracker(_ref) {let { open, onClose } = _ref;
         fontStyle: 'italic',
         fontSize: 96, fontWeight: 400, lineHeight: 1,
         paddingBottom: '0.12em',
-        color: 'var(--hydrate)'
+        color: 'var(--hydrate-deep)'
       } },
     today, React.createElement("span", { style: { color: 'var(--ink-3)', fontSize: 40 } }, " / ", goal)
     ),
@@ -37116,7 +37200,7 @@ function HydrateTracker(_ref) {let { open, onClose } = _ref;
 
     React.createElement("div", { style: { display: 'grid', gridTemplateColumns: `repeat(${goal > 8 ? Math.ceil(goal / 2) : goal}, 1fr)`, gap: 8, marginBottom: 24 } },
     Array.from({ length: goal }).map((_, i) =>
-    React.createElement("button", { key: i, "aria-label": tn('hydrate.glass', { n: i + 1, m: goal }),
+    React.createElement("button", { key: i, "aria-label": tn(i < today ? 'hydrate.vaso.lleno' : 'hydrate.vaso.vacio', { n: i + 1, total: goal }),
       onClick: () => {if (i < today) {addWaterGlass(-1);} else {addWaterGlass(1);try {playSound(today < goal && today + 1 >= goal ? 'hydrate.goal' : 'hydrate.sip');} catch (e) {}}},
       style: {
         aspectRatio: '1/1.3',
@@ -37126,7 +37210,7 @@ function HydrateTracker(_ref) {let { open, onClose } = _ref;
         display: 'grid', placeItems: 'end center',
         padding: '0 0 8px',
         fontSize: 10,
-        color: i < today ? 'var(--hydrate)' : 'var(--ink-3)',
+        color: i < today ? 'var(--hydrate-deep)' : 'var(--ink-3)',
         letterSpacing: '0.1em',
         fontWeight: 500,
         transition: 'all 200ms',
@@ -37158,8 +37242,9 @@ function HydrateTracker(_ref) {let { open, onClose } = _ref;
 
     React.createElement("div", { "data-pace-hidr-acciones": true, style: { display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' } },
     React.createElement(Button, { variant: "secondary", onClick: () => addWaterGlass(-1), icon: "\u2212", size: "md", style: { whiteSpace: 'nowrap' } }, t('hydrate.less')),
+
     React.createElement(Button, { onClick: () => {addWaterGlass(1);try {playSound(today < goal && today + 1 >= goal ? 'hydrate.goal' : 'hydrate.sip');} catch (e) {}}, icon: "+", size: "md",
-      style: { background: 'var(--hydrate)', borderColor: 'var(--hydrate)', whiteSpace: 'nowrap' } }, t('hydrate.more'))
+      style: { background: 'var(--hydrate-deep)', borderColor: 'var(--hydrate-deep)', whiteSpace: 'nowrap' } }, t('hydrate.more'))
     ),
 
     React.createElement(Divider, { style: { margin: '24px 0 16px' } }),
@@ -37211,13 +37296,15 @@ Object.assign(window, { HydrateTracker });
 
 
 
+
+
 (function () {
   if (document.getElementById('pace-break-css')) return;
   var s = document.createElement('style');
   s.id = 'pace-break-css';
   s.textContent = `
 .pace-break-plato {
-  --c: var(--extra);
+  --c: var(--extra); --cd: var(--extra-deep);
   background: var(--paper-2); border-radius: var(--r-md); border-left: 3px solid var(--c);
   padding: 14px 16px 14px 14px; display: grid; grid-template-columns: 60px minmax(0, 1fr);
   gap: 0 16px; align-items: center; color: var(--ink);
@@ -37229,7 +37316,7 @@ Object.assign(window, { HydrateTracker });
 .pace-break-glifo-mod > svg { width: 74%; height: 74%; }
 .pace-break-motivo {
   font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; font-weight: 500;
-  color: var(--c); line-height: 1.35;
+  color: var(--cd); line-height: 1.35;
 }
 .pace-break-nombre {
   font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 26px;
@@ -37243,8 +37330,8 @@ Object.assign(window, { HydrateTracker });
   line-height: 1; white-space: nowrap;
   transition: background var(--dur-quick) var(--ease), border-color var(--dur-quick) var(--ease);
 }
-.pace-break-llena { --c: var(--extra); background: var(--c); color: var(--paper); border: 1px solid var(--c); }
-.pace-break-llena:hover { background: color-mix(in srgb, var(--c) 86%, var(--ink)); }
+.pace-break-llena { --cd: var(--extra-deep); background: var(--cd); color: var(--paper); border: 1px solid var(--cd); }
+.pace-break-llena:hover { background: color-mix(in srgb, var(--cd) 86%, var(--ink)); }
 .pace-break-tonal { background: var(--paper-2); color: var(--ink); border: 1px solid var(--line-2); }
 .pace-break-tonal:hover { border-color: var(--ink-3); }
 .pace-break-pildora:focus-visible, .pace-break-agua:focus-visible, .pace-break-saltar:focus-visible {
@@ -37577,7 +37664,7 @@ function breakGlifo(modulo, rutina) {
 
 function BreakPlato(_ref) {let { color, glifo, motivo, nombre, ctx, children, datos } = _ref;
   return (
-    React.createElement("div", _extends({ className: 'pace-break-plato' + (glifo ? '' : ' pace-break-sin-glifo'), style: { '--c': color } }, datos),
+    React.createElement("div", _extends({ className: 'pace-break-plato' + (glifo ? '' : ' pace-break-sin-glifo'), style: { '--c': color, '--cd': letraDe(color) } }, datos),
     glifo &&
     React.createElement("div", { className: 'pace-break-glifo' + (glifo.modulo ? ' pace-break-glifo-mod' : ''), style: { gridRow: 'span 3' }, "data-pace-break-glifo": true },
     glifo.nodo
@@ -37619,7 +37706,7 @@ function BreakMenuRitmo(_ref2) {let { open, onClose, onChoose, onSeguir, onPropu
     React.createElement(BreakPlato, { color: plato.color, glifo: plato.glifo, motivo: !comida && pausa && typeof ritmoFrase === 'function' && ritmoFrase(pausa, t, tn) || t('break.prop.' + prop.porque), nombre: plato.nombre, ctx: plato.ctx,
       datos: { 'data-pace-break-prop': '', 'data-pace-break-ritmo': '' } }),
     React.createElement("div", { "data-pace-break-acciones": true, className: "pace-break-acciones", style: { marginTop: 16 } },
-    React.createElement("button", { type: "button", className: "pace-break-pildora pace-break-llena", style: { '--c': plato.boton }, onClick: onPropuesta },
+    React.createElement("button", { type: "button", className: "pace-break-pildora pace-break-llena", style: { '--cd': letraDe(plato.boton) }, onClick: onPropuesta },
     t(comida ? 'break.ritmo.comer' : 'break.ritmo.hacer')
     ),
 
@@ -37805,7 +37892,7 @@ function BreakMenu(_ref) {let { open, onClose, onChoose, onSeguir } = _ref;
       nombre: nombreProp || (prop.modulo === 'water' ? t('break.water.label') : null),
       ctx: rutinaProp ? React.createElement(React.Fragment, null, React.createElement("b", null, rutinaProp.min), React.createElement("u", null, t('lib.min')), React.createElement("em", null, t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label'))) : null },
     React.createElement("div", { className: "pace-break-acciones", style: { marginTop: 12 } },
-    React.createElement("button", { type: "button", className: "pace-break-pildora pace-break-llena", style: { '--c': colorProp }, onClick: () => elegirPropuesta(prop) },
+    React.createElement("button", { type: "button", className: "pace-break-pildora pace-break-llena", style: { '--cd': letraDe(colorProp) }, onClick: () => elegirPropuesta(prop) },
     t(prop.modulo === 'water' ? 'hydrate.more' : 'break.prop.start')
     )
     )
@@ -38531,7 +38618,7 @@ function Achievements(_ref) {let { open, onClose } = _ref;
       return (
         React.createElement("div", { key: cat, "data-pace-ach-cat": cat, style: { marginBottom: 28 } },
         React.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 12 } },
-        React.createElement("h3", { style: { ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500, color: meta.color } }, t(meta.labelKey)),
+        React.createElement("h3", { style: { ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500, color: letraDe(meta.color) } }, t(meta.labelKey)),
         React.createElement(Meta, null, gotThisCat, " / ", items.length)
         ),
         React.createElement("div", { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(128px, 1fr))', gap: 12 } },
@@ -38557,6 +38644,8 @@ function Achievements(_ref) {let { open, onClose } = _ref;
 
 
 
+
+
 function Seal(_ref3) {let { achievement, unlocked, color } = _ref3;
   const { t, lang } = useT();
 
@@ -38569,7 +38658,8 @@ function Seal(_ref3) {let { achievement, unlocked, color } = _ref3;
   const isSecret = a.secret && !unlocked;
 
   const borderStyle = unlocked ? 'solid' : 'dashed';
-  const borderColor = unlocked ? color : 'var(--line)';
+
+  const borderColor = unlocked ? color : 'color-mix(in srgb, var(--line) 55%, transparent)';
   const opacity = unlocked ? 1 : 0.55;
 
   return (
@@ -38609,7 +38699,6 @@ function Seal(_ref3) {let { achievement, unlocked, color } = _ref3;
         border: `1px ${borderStyle} ${borderColor}`,
         borderRadius: 'var(--r-md)',
         background: unlocked ? 'var(--paper)' : 'transparent',
-        opacity,
         position: 'relative',
         transition: 'all 220ms',
         cursor: 'default',
@@ -38618,7 +38707,8 @@ function Seal(_ref3) {let { achievement, unlocked, color } = _ref3;
       title: tR('ach.item.' + a.id + '.desc', a.desc) },
 
 
-    React.createElement("div", { style: {
+    React.createElement("div", { "data-pace-ach-sello": true, style: {
+        opacity,
         width: 56, height: 56,
         borderRadius: '50%',
         border: `1.2px solid ${unlocked ? color : 'var(--line-2)'}`,
@@ -38980,7 +39070,7 @@ function statsHoyTotales(state, t) {
 function StatsHoyTarjeta(_ref) {let { modulos, nombre, hora, meta, estado, larga } = _ref;
   return (
     React.createElement("div", { className: 'pace-sh-t' + (estado ? ' pace-sh-' + estado : ''), "data-pace-hoy-parada": estado || 'luego',
-      style: { '--c': RITMO_COLOR[modulos[0]] } },
+      style: { '--c': RITMO_COLOR[modulos[0]], '--cd': letraDe(RITMO_COLOR[modulos[0]]) } },
     React.createElement("i", { className: 'pace-sh-aro' + (larga ? ' pace-sh-larga' : '') },
     modulos.map((m, k) => React.createElement(RitmoGlifo, { key: k, modulo: m }))
     ),
@@ -40244,7 +40334,7 @@ Object.assign(window, { PathStats });
     .pace-sh-saltada { opacity: 0.45; }
     .pace-sh-saltada .pace-sh-aro { border-style: dashed; }
     .pace-sh-ahora { box-shadow: inset 0 0 0 1.5px var(--c); background: color-mix(in srgb, var(--c) 12%, var(--paper-2)); }
-    .pace-sh-ahora .pace-sh-m { color: var(--c); font-weight: 500; }
+    .pace-sh-ahora .pace-sh-m { color: var(--cd, var(--c)); font-weight: 500; }   /* letra: el hondo (Ez, 2B) */
     .pace-sh-comida .pace-sh-aro { border-style: dotted; }
     .pace-sh-txt { min-width: 0; flex: 1; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
     .pace-sh-n { font-family: var(--font-display); font-style: italic; font-size: 15px; line-height: 1.15; color: var(--ink);
@@ -40617,6 +40707,7 @@ function StatsPanel(_ref2) {let { open, onClose } = _ref2;
 
   filter((_ref3) => {let { key } = _ref3;return key !== 'paths' || window.SHOW_CAMINOS !== false;}).map((_ref4) => {let { key, label } = _ref4;return (
       React.createElement("button", { key: key, style: statsPanelTabStyles.tab(tab === key), "data-pace-stats-tab": key,
+        "aria-pressed": tab === key,
         "data-pace-stats-cerrada": cerrada(key) ? '' : undefined,
         "aria-label": cerrada(key) ? label + ' · ' + t('stats.cerrado') : undefined,
         onClick: () => {if (cerrada(key)) {paceAbrirPremium({ nombre: label });return;}setTab(key);} },
@@ -41094,7 +41185,7 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
       } }
     ),
     msg &&
-    React.createElement("div", { className: "pace-aj-msg", role: "status", style: { color: msg.kind === 'err' ? 'var(--breathe)' : 'var(--focus)' } }, msg.text),
+    React.createElement("div", { className: "pace-aj-msg", role: "status", style: { color: msg.kind === 'err' ? 'var(--breathe-deep)' : 'var(--focus)' } }, msg.text),
 
     rescate &&
     React.createElement(AjustesAccion, { onClick: bajarRescate, title: t('settings.data.rescate.title'), derecha: React.createElement(DownloadIcon, null) },
@@ -41981,6 +42072,39 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
+
+
+
+
+
+
+  useEffectTW(() => {
+    if (!open) return undefined;
+    const p = panelRef.current;
+    const previo = document.activeElement;
+    if (p && !p.contains(previo)) {try {p.focus({ preventScroll: true });} catch (e) {}}
+    const onTab = (e) => {
+      if (e.key !== 'Tab' || e.__paceDialogoAtendido || !p) return;
+      const activo = document.activeElement;
+      if (!p.contains(activo)) return;
+      const lista = paceEnfocables(p);
+      if (lista.length === 0) return;
+      const primero = lista[0],ultimo = lista[lista.length - 1];
+      if (e.shiftKey ? activo === primero || activo === p : activo === ultimo) {
+        e.preventDefault();
+        (e.shiftKey ? ultimo : primero).focus();
+      }
+    };
+    document.addEventListener('keydown', onTab);
+    return () => {
+      document.removeEventListener('keydown', onTab);
+      const ahora = document.activeElement;
+      if ((!ahora || ahora === document.body || p && p.contains(ahora)) && paceFocoDevolvible(previo)) {
+        try {previo.focus({ preventScroll: true });} catch (e) {}
+      }
+    };
+  }, [open]);
+
   if (!open) return null;
 
 
@@ -42009,7 +42133,8 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
 
   return (
     React.createElement("div", { ref: panelRef, "data-pace-tweaks-panel": true, "data-pace-aj-vista": vistaDatos ? 'datos' : undefined,
-      "data-pace-aj-bajo": bajo ? '' : undefined, role: "dialog", "aria-labelledby": "pace-aj-titulo", style: {
+      "data-pace-aj-bajo": bajo ? '' : undefined, role: "dialog", "aria-labelledby": "pace-aj-titulo", tabIndex: -1, style: {
+        outline: 'none',
         position: 'fixed',
         right: 24, bottom: 24,
         width: 320,
@@ -43850,10 +43975,11 @@ function pfBtn(accent, soft) {
     borderRadius: 'var(--r-sm)',
     padding: '10px 22px',
     background: soft,
-    border: '1px solid ' + accent,
-    color: accent,
+
+    border: '1px solid ' + letraDe(accent),
+    color: letraDe(accent),
     transition: 'all 180ms var(--ease)',
-    '--pfbtn': accent
+    '--pfbtn': letraDe(accent)
   };
 }
 
@@ -43915,8 +44041,8 @@ function PathHydrateStep(_ref) {let { step, onExit } = _ref;
     "data-pace-cta": true,
     onClick: handleDrink,
     style: Object.assign({}, btnBase, {
-      background: 'var(--hydrate)',
-      border: '1px solid var(--hydrate)',
+      background: 'var(--hydrate-deep)',
+      border: '1px solid var(--hydrate-deep)',
       color: 'var(--paper)'
     }) },
 
@@ -43933,7 +44059,7 @@ function PathHydrateStep(_ref) {let { step, onExit } = _ref;
         fontFamily: "'EB Garamond', Georgia, serif",
         fontStyle: 'italic',
         fontSize: 'clamp(72px, 12vw, 112px)', fontWeight: 400, lineHeight: 1,
-        color: 'var(--hydrate)'
+        color: 'var(--hydrate-deep)'
       } },
     today, React.createElement("span", { style: { color: 'var(--ink-3)', fontSize: '0.42em' } }, " / ", goal)
     ),
@@ -44113,7 +44239,7 @@ function ExitConfirmModal(_ref2) {let { open, onCancel, onConfirm } = _ref2;
       onClick: onConfirm,
       style: {
         padding: '8px 18px', borderRadius: 'var(--r-sm)',
-        background: 'var(--breathe)', border: 'none',
+        background: 'var(--breathe-deep)', border: 'none',
         color: 'var(--paper)', cursor: 'pointer', fontSize: 13
       } },
 
@@ -44942,7 +45068,7 @@ function OnbChoice(_ref2) {let { label, sub, accent, selected, onSelect } = _ref
         display: 'block',
         fontFamily: 'var(--font-display)', fontStyle: 'italic',
         fontSize: 20, fontWeight: 500, lineHeight: 1.15,
-        color: selected ? accent : 'var(--ink)',
+        color: selected ? letraDe(accent) : 'var(--ink)',
         transition: 'color 180ms'
       } }, label),
     React.createElement("span", { style: {
@@ -45387,6 +45513,7 @@ function Onboarding() {
     React.createElement("button", { "data-pace-toque": true,
       onClick: toggleLang,
       title: t(state.lang === 'es' ? 'welcome.lang.toggle.toEn' : 'welcome.lang.toggle.toEs'),
+      "aria-label": t(state.lang === 'es' ? 'welcome.lang.toggle.toEn' : 'welcome.lang.toggle.toEs'),
       style: onboardingStyles.langToggle },
 
     React.createElement("span", { style: { fontWeight: state.lang === 'es' ? 600 : 400 } }, "ES"),
@@ -46098,7 +46225,8 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
 .pace-rt-nodo.pace-rt-toca { cursor: pointer; }
 .pace-rt-nodo.pace-rt-toca:hover { transform: scale(1.12); background: color-mix(in srgb, var(--c) 12%, var(--paper)); }
 .pace-rt-nodo.pace-rt-ahora { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 14%, var(--paper)); }
-.pace-rt-nodo .pace-rt-ahora-tag { left: 50%; transform: translateX(-50%); bottom: 27px; color: var(--c); }
+/* En claro, el hondo del módulo (Ez, 2B · 7 nov. 2026): en --c, a 9 px no llegaba. */
+.pace-rt-nodo .pace-rt-ahora-tag { left: 50%; transform: translateX(-50%); bottom: 27px; color: var(--cd, var(--c)); }
 /* El de una PAUSA va del color de su módulo, que en oscuro se leía a 3,4 (Estira) y 3,7
    (Mueve): se mezcla con la tinta como el del bloque, solo en oscuro (Ez, 15 oct. 2026). */
 [data-palette="oscuro"] .pace-rt-nodo .pace-rt-ahora-tag { color: color-mix(in srgb, var(--c) 72%, var(--ink)); }
@@ -46981,7 +47109,7 @@ function RitmoLinea(_ref3) {let { plan } = _ref3;
           "aria-expanded": !pasado && !abierta ? !!(fichaVale && ficha.i === i) : undefined,
           "data-pace-ritmo-estado-parada": estado || undefined,
           className: 'pace-rt-nodo' + (it.larga ? ' pace-rt-larga' : '') + (pasado ? ' pace-rt-pasado' : ' pace-rt-toca') + (abierta ? ' pace-rt-ahora' : '') + (estado ? ' pace-rt-' + estado : ''),
-          style: { '--c': RITMO_COLOR[it.platos[0].modulo] },
+          style: { '--c': RITMO_COLOR[it.platos[0].modulo], '--cd': letraDe(RITMO_COLOR[it.platos[0].modulo]) },
           title: pasado ? nombres + (estado ? ' · ' + t('ritmo.' + estado) : '') : nombres + ' · ' + t(abierta ? 'ritmo.empieza' : 'ritmo.toca'),
           "aria-label": ritmoHora(it.desde) + ' · ' + nombres + (abierta ? ' · ' + t('ritmo.ahora') : '') + (estado ? ' · ' + t('ritmo.' + estado) : ''),
           disabled: pasado,
@@ -50226,8 +50354,9 @@ function TopBar(_ref) {let { onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTw
         padding: 3,
         gap: 2
       } },
+
     modes.map((m) =>
-    React.createElement("button", { key: m.v, onClick: () => elegirModo(m.v),
+    React.createElement("button", { key: m.v, onClick: () => elegirModo(m.v), "aria-pressed": state.focusMode === m.v,
       style: {
         padding: '6px 18px',
         fontSize: 11,

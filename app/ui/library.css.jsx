@@ -60,7 +60,7 @@
 .pace-lib-link {
   background: none; border: 0; padding: 0; cursor: pointer;
   font-family: var(--font-display); font-style: italic; font-size: 15px;
-  color: var(--premium); white-space: nowrap;
+  color: var(--premium-deep); white-space: nowrap;
 }
 .pace-lib-link::after { content: ' \\203A'; }
 
@@ -95,9 +95,11 @@
   font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
   color: var(--ink-3); font-weight: 500; margin: 18px 0 8px;
 }
+/* LA LETRA DE COLOR va en el hondo del módulo (--tone-deep, Ez 2B · 7 nov. 2026): en el
+   color de siempre, «Para ahora» daba 2,3 a 1 en Respira. Filos y dibujos siguen en --tone. */
 .pace-lib-now {
   font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
-  color: var(--tone); font-weight: 500; margin: 14px 0 9px;
+  color: var(--tone-deep); font-weight: 500; margin: 14px 0 9px;
 }
 .pace-lib-vacio {
   margin: 0 0 14px; font-family: var(--font-display); font-style: italic;
@@ -109,7 +111,7 @@
 }
 .pace-lib-quitar {
   background: none; border: 0; padding: 0; font: inherit; cursor: pointer;
-  color: var(--tone); border-bottom: 1px solid currentColor;
+  color: var(--tone-deep); border-bottom: 1px solid currentColor;
 }
 .pace-lib-quitar::after { content: ' \\203A'; }
 
@@ -185,8 +187,8 @@
 .pace-lib-ctx em:not(:last-child)::after {
   content: '\\B7'; color: var(--line-2); font-style: normal; margin-left: .34em;
 }
-.pace-lib-ctx .pace-lib-pre { color: var(--premium); }
-.pace-lib-ctx .pace-lib-soon { color: var(--premium); font-weight: 500; }
+.pace-lib-ctx .pace-lib-pre { color: var(--premium-deep); }
+.pace-lib-ctx .pace-lib-soon { color: var(--premium-deep); font-weight: 500; }
 /* La tira: la capitular a 62 px y el resto a 20. El 55 % de opacidad NO valía
    -- el usuario no los registraba y reportó «sólo muestra un glifo». Si no se
    leen, no están. */
@@ -201,7 +203,7 @@
    respiración rápida (medido en s174 -- son SEIS, no cinco). */
 .pace-lib-safety {
   position: absolute; top: 11px; right: 11px; width: 18px; height: 18px;
-  border-radius: 50%; background: var(--breathe-soft); color: var(--breathe);
+  border-radius: 50%; background: var(--breathe-soft); color: var(--breathe-deep);
   display: grid; place-items: center; font-size: 11px; font-weight: 600;
 }
 .pace-lib-card-resp { padding-right: 34px; }
@@ -228,7 +230,7 @@
    s174 y otra aqui.) */
 .pace-lib-viajes {
   font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
-  color: var(--tone); font-weight: 500;
+  color: var(--tone-deep); font-weight: 500;
   margin: 14px 0 9px;
 }
 .pace-lib-card-viaje {
@@ -239,7 +241,7 @@
 }
 .pace-lib-card-viaje h4 { font-size: 24px; }
 .pace-lib-card-viaje .pace-lib-txt { position: relative; z-index: 1; }
-.pace-lib-card-viaje .pace-lib-ctx b { color: var(--breathe-2); }
+.pace-lib-card-viaje .pace-lib-ctx b { color: var(--breathe-deep); }
 .pace-lib-viaje-marca {
   position: absolute; right: -42px; bottom: -27px;
   width: 168px; height: 168px; z-index: 0; pointer-events: none;

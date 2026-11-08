@@ -102,7 +102,7 @@ function RoutineCard({ routine, color, onClick, variant = 'body' }) {
         + (esViaje ? ' pace-lib-card-viaje' : '')}
       data-pace-lib-card={routine.id}
       data-locked={isLocked ? '1' : undefined}
-      style={{ '--tone': color }}
+      style={{ '--tone': color, '--tone-deep': letraDe(color) }}
     >
       {esViaje && typeof window.ABBreathe === 'function' && (
         /* Los pulmones del modulo, GRANDES y al fondo. Es el mismo dibujo que
@@ -111,7 +111,7 @@ function RoutineCard({ routine, color, onClick, variant = 'body' }) {
         <span className="pace-lib-viaje-marca" aria-hidden="true">{React.createElement(window.ABBreathe)}</span>
       )}
       {routine.safety && (
-        <i className="pace-lib-safety" title={t('breathe.safety.required')} aria-label={t('breathe.safety.required')}>&#9888;</i>
+        <i className="pace-lib-safety" role="img" title={t('breathe.safety.required')} aria-label={t('breathe.safety.required')}>&#9888;</i>
       )}
       {glifos.length > 0 && (
         <span className="pace-lib-cap" aria-hidden="true">
