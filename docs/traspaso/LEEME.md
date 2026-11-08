@@ -4,10 +4,10 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de noviembre de 2026, ~11:45, v0.193.0.
 
-## AL RELEVO (8 nov., ~18:45): EcLj6… con las 5 h al 72 % y la semana al 87 %; se sigue en 5iWBf…. Empieza aquí
+## AL RELEVO (8 nov., ~19:20): EcLj6… con las 5 h al 79 % y la semana al 88 %; se sigue en 5iWBf…. Empieza aquí
 
 **Regla de Ez (8 nov.):** se para al 90 % de las 5 h o al 95 % de la semana, lo que llegue antes.
-`main` LOCAL va por delante de origin con la **0.194.0** (contraste, abierta-horas, letras-v1, caza-semana y el arreglo del
+`main` = origin, con la **0.194.0** (contraste, abierta-horas, letras-v1, caza-semana y el arreglo del
 Enter, 9d1d000d) y documentos. La primera suite dio un rojo de verdad (`ver-ejercicio`), ya arreglado; **la segunda, 1390 en verde y 2
 saltadas** (30,8 min, dos workers), y la 0.194.0 **subida a `main`** a las ~18:48. **Su CI, en verde entero** (42506861982: verify, los dos
 trozos de e2e y Safari; y Android e iOS). Lo de ayer en `aro-jornada:71` en el CI de 3e48c7bc no se repitió. Después, decirle a Ez que pegue en ChatGPT `docs/audits/chatgpt-8nov/prompt-jornada.md`.
@@ -15,11 +15,12 @@ trozos de e2e y Safari; y Android e iOS). Lo de ayer en `aro-jornada:71` en el C
 **Ez eligió (8 nov., ~18:45) todas las recomendadas: usabilidad 1A 2A 3A 4A 5A 6A; lo nuevo N2 A y N3 A; la semana S3 A, S7 A, S6 A y S11 A.** Las páginas: la usabilidad, seis mejoras (`claude/usabilidad-8nov-587b48`,
 `docs/audits/usabilidad-8nov/pagina-ez.html`; EcLj6 BMLmjb9FjynGY8zz6FN4av); lo que vio alguien nuevo, N2 y N3
 (`claude/caza-nuevo-8nov-0c7d9b`, `docs/audits/caza-nuevo-8nov/pagina-ez.html`; EcLj6 6qpSUbY5Kfoa1cmsrdyffo); y la semana, S3 S7
-S6 S11 (`docs/audits/caza-semana-7nov/pagina-ez.html`, ya en `main`; EcLj6 C8okoSLuDnN2bBxtSdQSbw). Las páginas de EcLj6 son 404
-en 5iWBf: republicarlas desde esos archivos. **N1** (la copia sin «Cuaderno a salvo», arreglado en caza-nuevo) espera su
+S6 S11 (`docs/audits/caza-semana-7nov/pagina-ez.html`, ya en `main`; EcLj6 C8okoSLuDnN2bBxtSdQSbw). Las letras ya están elegidas: no hace falta
+republicar esas páginas en 5iWBf. La hoja del repo lleva los ids de EcLj6: en 5iWBf, publicarla en 5iWBfHE7kD3dUVocdskmb6 dando la
+vuelta a los que tengan copia allí (1AzBCEn8… → 6stHAifXWoCnzX58mhL8Pz y los del bloque del 7 nov., 16:20); los de hoy, solo de EcLj6. **N1** (la copia sin «Cuaderno a salvo», arreglado en caza-nuevo) espera su
 «júntalo». La pregunta del Foco por libre y la salida es la mejora 3 de usabilidad: A, no cuenta.
 
-**Orden para la otra cuenta:** 1) cerrar la 0.194.0 si falta (arriba); 2) con las letras de Ez, montarlas: usabilidad y
+**Orden para la otra cuenta:** 1) la 0.194.0 ya está en `main` con su CI en verde: nada que cerrar; 2) con las letras de Ez, montarlas: usabilidad y
 semana tocan `state-ritmo*`, `FocusTimer*` y `ritmo.motor.js`, así que en UNA sesión, o dos con archivos repartidos; N2 y N3, en
 otra; N1 se junta con su «júntalo»; 3) Ez pidió seguir buscando fallos: la próxima caza, las pantallas en seis anchos (320, 360,
 390, 768, 1280 y 1536) en es/en, claro/oscuro, buscando textos cortados y solapes, antes de que los testers las vean. **Lunes 9:
@@ -28,7 +29,7 @@ Ez sube la 0.191.1 a Play** y la da en TestFlight, conmigo pantalla a pantalla (
 **Para abrir la otra cuenta, Ez pega esto:**
 
 ```
-Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (8 nov., ~18:45)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Cierra la 0.194.0 si falta, republica mi hoja de pasos en esta cuenta y monta mis letras de las tres páginas (todas las recomendadas), siguiendo el orden del relevo.
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (8 nov., ~19:20)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Republica mi hoja de pasos en esta cuenta y monta mis letras de las tres páginas (todas las recomendadas) como 0.195.0, siguiendo el orden del relevo.
 ```
 
 ## 8 nov., ~11:45: coordina EcLj6… (5 h al 2 %, semana al 65 %); tres sesiones en marcha y la suite de abierta-horas
