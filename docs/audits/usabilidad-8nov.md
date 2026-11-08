@@ -60,7 +60,35 @@ La respuesta recomendada: **1A 2A 3A 4A 5A 6A**.
 
 Nada: todo lo que encontré cambia lo que se ve o lo que la app decide, y espera a las letras de Ez.
 
-## Dónde me quedo
+## Montado (8 nov., tarde)
+
+Ez eligió todas las recomendadas: aquí van 1A 2A 3A 4A 5A y, de la caza de la semana, S3 S6 S7 S11
+(la 6, la voz en Ajustes, la monta `claude/caza-nuevo-8nov-0c7d9b`). Para la 0.195.0; la versión, el
+CHANGELOG y `main` son de la coordinadora. La página con el antes y el ahora de cada cambio que se ve:
+https://claude.ai/artifact/GVFywNBhyR14gkzmdbfwXB (`docs/audits/usabilidad-8nov/montado-ez.html`; se
+rehace con `fotos-montado.js`, una vez contra una copia de la 0.194.0 sacada con `git archive` y otra contra
+la rama, y `pagina-montado.js`).
+
+- **1A** `oculta` de `AroFila` también con `cerrada` (FocusTimer.jsx); la etiqueta lleva `data-pace-ciclo`.
+- **2A** `pacePausaEmpezadaPon`/`pacePausaLleva` (FocusTimer.support.jsx) y `topBarPregunta` (TopBar.jsx);
+  la del día mide desde que acabó el bloque (`ritmoPausaCuenta().dur`).
+- **3A** `motorHoras` deja fuera los Focos con `desde >= salida` de ese día.
+- **4A** estado `cuenta` de la parada (`ritmoPausaPorTuCuenta`, state-ritmo.pausa.jsx): enlace en
+  `BreakMenu.ritmo.jsx`, en el registro (`EVENT_RITMO_ESTADOS`) y en el resumen; la línea, la hoja y
+  Estadísticas dicen «por tu cuenta» sin minutos; el motor la cuenta hecha y nunca saltada.
+- **5A** clave nueva `ritmo.aro.hasta` («Tu jornada, hasta las {h}»); `ritmo.hasta` sigue en las losetas.
+- **S3** `ritmoMinutosDelPlan`/`ritmoMinutosDevolver` (state-ritmo.recolocar.jsx) con `ritmo.focoLibre` y
+  `ritmo.minutosPlan`.
+- **S6** `motorCortas` no propone si todo lo servido duraba 2 min o menos (`e.minutos`, del catálogo).
+- **S7** `ritmoDurSiEmpiezas` acaba antes de la comida (mín. 5); `ritmoBloqueEmpezado` no congela la comida
+  que aún no ha llegado.
+- **S11** `ritmoLeerTrasLaPausa` (state-ritmo.ahora.jsx) y `pausaPasada` en el plan.
+
+Pruebas: `ritmo-por-tu-cuenta`, `foco-libre-minutos`, `ritmo-comida-bloque`, `ritmo-tras-la-pausa` (nuevas)
+y pasos en `aro-jornada`, `aro-modo-identidad`, `ritmo-motor`, `home-hasta-semana`, `ritmo` y `ritmo-reloj`.
+Cada arreglo con su mutante en rojo (`ritmo.spec.js` «mientras esperas…» es el recibo de S11).
+
+## Dónde me quedaba antes de las letras
 
 - Página publicada (BMLmjb9…) y este informe, en la rama. Espera las letras de Ez.
 - Para montar lo elegido: cada mejora dice arriba qué toca; las seis caben en una sesión. Las fotos
