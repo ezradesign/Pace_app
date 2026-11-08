@@ -38,6 +38,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'break.ritmo.sub':               '{h} · Lo que toca ahora.',
     'break.ritmo.hacer':             'Hacer la pausa',
     'break.ritmo.seguir':            'Seguir con el bloque {n}',
+    /* La pausa hecha a tu manera, sin la rutina (Ez, 4A del 8 nov. 2026): junto a «Ahora no». */
+    'break.ritmo.cuenta':            'Ya la hice por mi cuenta',
     'break.ritmo.agua':              'y un vaso de agua',
     'break.ritmo.vaso':              'un vaso ahora',
     'break.ritmo.comida':            'Hora de comer',
@@ -73,6 +75,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'break.ritmo.sub':               '{h} · What comes next.',
     'break.ritmo.hacer':             'Take the break',
     'break.ritmo.seguir':            'Continue to block {n}',
+    'break.ritmo.cuenta':            'I did it my own way',
     'break.ritmo.agua':              'and a glass of water',
     'break.ritmo.vaso':              'a glass now',
     'break.ritmo.comida':            'Lunchtime',

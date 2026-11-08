@@ -163,10 +163,15 @@ function FocusTimer({ onFinish }) {
       fijo: () => (typeof ritmoAvisoFijo === 'function' ? ritmoAvisoFijo(getState(), t, tn, lang, endsAt) : null) });   // N4: se lee al irse al fondo
   }, [running, endsAt, state.focusMode, state.notifyFocusEnd, lang]);
 
-  /* La barra de arriba pregunta antes de cambiar de modo con un Foco empezado. */
+  /* La barra de arriba pregunta antes de cambiar de modo con un Foco empezado, y con una pausa
+     empezada (Ez, 2A del 8 nov. 2026): le dice cuánto lleva, la del día desde que acabó el bloque. */
+  const pausaLlevaRef = useRefFT(0);
+  pausaLlevaRef.current = (enPausaRitmo ? pausaRitmo.dur * 60 : durationSec) - remaining;
   useEffectFT(() => {
-    paceFocoEmpezadoPon(state.focusMode === 'foco' && (status === 'running' || status === 'paused'));
-    return () => paceFocoEmpezadoPon(false);
+    const empezado = status === 'running' || status === 'paused';
+    paceFocoEmpezadoPon(state.focusMode === 'foco' && empezado);
+    pacePausaEmpezadaPon(state.focusMode !== 'foco' && empezado ? () => pausaLlevaRef.current : null);
+    return () => { paceFocoEmpezadoPon(false); pacePausaEmpezadaPon(null); };
   }, [state.focusMode, status]);
 
   // Drone ambiente — efecto paralelo (no toca el ticker ni la lógica de logros)
@@ -359,7 +364,8 @@ function FocusTimer({ onFinish }) {
   const cycleLabel = (isFocoMode && isCompleted)
     ? tn('focus.cycleNext', { n: cycleN })
     : tn('focus.cycleOf', { n: cycleN });
-  const cycleDotsEl = <AroFila cycle={state.cycle} cycleLabel={cycleLabel} oculta={!!aro || enPausaRitmo} fila={jornada.fila} />;
+  /* Con la jornada cerrada la fila tampoco va: «Siguiente · Ciclo 4 / 4» no decía nada (Ez, 1A del 8 nov. 2026). */
+  const cycleDotsEl = <AroFila cycle={state.cycle} cycleLabel={cycleLabel} oculta={!!aro || enPausaRitmo || !!cerrada} fila={jornada.fila} />;
 
   /* Bloque de controles + ciclo inyectado DENTRO del aro (layout ref. usuario).
      Para otros estilos se renderiza debajo en un bloque aparte. */
@@ -475,12 +481,7 @@ function FocusTimer({ onFinish }) {
   );
 }
 
-/* NOTA: el antiguo ModeToggle interno (Foco/Pausa/Larga) se eliminó en v0.11.6.
-   Los tabs viven ahora en TopBar (app/main.jsx), centrados arriba (v0.11.4). */
-
-/* NOTA s124: MinutesPicker y su CSS de input se extrajeron a
-   app/focus/FocusTimer.parts.jsx (split mecánico para bajar del tope de
-   500 ln). Se consume aquí como global (window.MinutesPicker). */
+/* Foco, Pausa y Larga viven en TopBar; MinutesPicker, en FocusTimer.parts.jsx (global). */
 
 /* ============================
    LO QUE SALIO DE AQUI

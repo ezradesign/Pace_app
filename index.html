@@ -1862,6 +1862,14 @@ Object.assign(window.PACE_STRINGS.es, {
   'topbar.cambio.body': 'Llevas un bloque de Foco empezado. Si cambias ahora, se pierde y no cuenta.',
   'topbar.cambio.seguir': 'Seguir con el Foco',
   'topbar.cambio.cambiar': 'Cambiar',
+
+  'topbar.pausa.title': '¿Dejar la pausa?',
+  'topbar.pausa.lleva': 'Llevas {n} minutos de pausa.',
+  'topbar.pausa.lleva.uno': 'Llevas 1 minuto de pausa.',
+  'topbar.pausa.body.foco': 'Si vuelves al Foco ahora, la pausa se acaba aquí.',
+  'topbar.pausa.body.otra': 'Si cambias ahora, la pausa se acaba aquí.',
+  'topbar.pausa.volver': 'Volver al Foco',
+  'topbar.pausa.seguir': 'Seguir con la pausa',
   'topbar.stats.title': 'Ritmo (S)',
   'topbar.stats.aria': 'Ver estadísticas',
   'topbar.achievements.title': 'Logros (L)',
@@ -2030,6 +2038,13 @@ Object.assign(window.PACE_STRINGS.en, {
   'topbar.cambio.body': 'A Focus block is in progress. Switching now ends it without counting it.',
   'topbar.cambio.seguir': 'Keep focusing',
   'topbar.cambio.cambiar': 'Switch',
+  'topbar.pausa.title': 'Leave the break?',
+  'topbar.pausa.lleva': 'You are {n} minutes into your break.',
+  'topbar.pausa.lleva.uno': 'You are 1 minute into your break.',
+  'topbar.pausa.body.foco': 'If you go back to Focus now, the break ends here.',
+  'topbar.pausa.body.otra': 'If you switch now, the break ends here.',
+  'topbar.pausa.volver': 'Back to Focus',
+  'topbar.pausa.seguir': 'Stay on the break',
   'topbar.stats.title': 'Rhythm (S)',
   'topbar.stats.aria': 'View stats',
   'topbar.achievements.title': 'Achievements (L)',
@@ -3340,6 +3355,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'break.ritmo.sub': '{h} · Lo que toca ahora.',
   'break.ritmo.hacer': 'Hacer la pausa',
   'break.ritmo.seguir': 'Seguir con el bloque {n}',
+
+  'break.ritmo.cuenta': 'Ya la hice por mi cuenta',
   'break.ritmo.agua': 'y un vaso de agua',
   'break.ritmo.vaso': 'un vaso ahora',
   'break.ritmo.comida': 'Hora de comer',
@@ -3375,6 +3392,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'break.ritmo.sub': '{h} · What comes next.',
   'break.ritmo.hacer': 'Take the break',
   'break.ritmo.seguir': 'Continue to block {n}',
+  'break.ritmo.cuenta': 'I did it my own way',
   'break.ritmo.agua': 'and a glass of water',
   'break.ritmo.vaso': 'a glass now',
   'break.ritmo.comida': 'Lunchtime',
@@ -3950,6 +3968,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.frase.movil.empieza': 'empieza en el aro, arriba',
   'ritmo.hecha': 'hecha',
   'ritmo.saltada': 'saltada',
+  'ritmo.cuenta': 'por tu cuenta',
   'ritmo.hoy': 'hoy de {desde} a {hasta}',
   'ritmo.opcion.1h': 'Una hora',
   'ritmo.opcion.2h': 'Dos horas',
@@ -4038,6 +4057,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.aro.tuyo': 'Lo que queda del día es tuyo',
   'ritmo.aro.libre': 'Seguir por libre',
   'ritmo.aro.bloque': 'Bloque {n} de {m}',
+
+  'ritmo.aro.hasta': 'Tu jornada, hasta las {h}',
   'ritmo.aro.empezar': 'Empezar jornada',
   'ritmo.aro.siguiente': 'Empezar bloque {n}',
 
@@ -4140,6 +4161,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.frase.movil.empieza': 'start with the timer above',
   'ritmo.hecha': 'done',
   'ritmo.saltada': 'skipped',
+  'ritmo.cuenta': 'your own way',
 
 
   'ritmo.hoy': 'today {desde}–{hasta}',
@@ -4225,6 +4247,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.aro.tuyo': 'The rest of the day is yours',
   'ritmo.aro.libre': 'Keep going freestyle',
   'ritmo.aro.bloque': 'Block {n} of {m}',
+  'ritmo.aro.hasta': 'Your day, until {h}',
   'ritmo.aro.empezar': 'Start the day',
   'ritmo.aro.siguiente': 'Start block {n}',
   'ritmo.aro.hacerPausa': 'Take the break',
@@ -11359,6 +11382,7 @@ function ritmoMotorOlvidar(a, clave, hoy) {
 
 
 
+
 function ritmoMotor(e) {
   e = e || {};
   var hoy = e.hoy;
@@ -11384,7 +11408,7 @@ function ritmoMotor(e) {
     porFecha[f].paradas.forEach(function (p) {
       if (p.tipo === 'cierre') return;
       b.total++;
-      if (p.estado === 'hecha') b.hechas++;
+      if (p.estado === 'hecha' || p.estado === 'cuenta') b.hechas++;
     });
   });
   var fb = (e.feedback || []).filter(function (x) {return x && x.id && typeof x.fecha === 'string';});
@@ -11455,7 +11479,7 @@ function ritmoMotor(e) {
   }
 
 
-  var forma = motorHoras(e, porFecha, s1, a).concat(motorCortas(porFecha, fechas, f1, sem, a));
+  var forma = motorHoras(e, porFecha, s1, a).concat(motorCortas(porFecha, fechas, f1, sem, a, e.minutos || {}));
 
 
   var cambios = [],quedan = MOTOR_TOPE;
@@ -11475,16 +11499,22 @@ function ritmoMotor(e) {
 
 
 
-function motorCortas(porFecha, fechas, f1, sem, a) {
+
+
+function motorCortas(porFecha, fechas, f1, sem, a, minutos) {
   var saltadas = [];
   fechas.forEach(function (f) {
     porFecha[f].paradas.forEach(function (p) {
-      if (p.tipo === 'pausa' && p.estado === 'saltada' && !(p.reunion > 0)) saltadas.push({ f: f, hora: p.hora, k: sem(f), modulo: p.platos[0].modulo });
+      if (p.tipo === 'pausa' && p.estado === 'saltada' && !(p.reunion > 0)) {
+        var min = minutos[p.platos[0].id];
+        saltadas.push({ f: f, hora: p.hora, k: sem(f), modulo: p.platos[0].modulo, corta: typeof min === 'number' && min <= MOTOR_CORTA });
+      }
     });
   });
   var mejor = null;
   saltadas.forEach(function (c) {
     var grupo = saltadas.filter(function (x) {return Math.abs(x.hora - c.hora) <= MOTOR_MISMA_HORA;});
+    if (grupo.every(function (x) {return x.corta;})) return;
     var d1 = {},d2 = {};
     grupo.forEach(function (x) {(x.k === 1 ? d1 : d2)[x.f] = true;});
     var n1 = Object.keys(d1).length,n2 = Object.keys(d2).length;
@@ -11506,11 +11536,15 @@ function motorCortas(porFecha, fechas, f1, sem, a) {
 
 
 
+
+
+
 function motorHoras(e, porFecha, s1, a) {
   var dia = {};
   (e.focos || []).forEach(function (x) {
     var r = x && porFecha[x.fecha];
     if (!r || r.opcion !== 'jornada' || typeof x.desde !== 'number' || typeof x.hasta !== 'number') return;
+    if (typeof r.salida === 'number' && x.desde >= r.salida) return;
     var d = dia[x.fecha] || (dia[x.fecha] = { inicio: x.desde, salida: x.hasta + MOTOR_CIERRE });
     d.inicio = Math.min(d.inicio, x.desde);d.salida = Math.max(d.salida, x.hasta + MOTOR_CIERRE);
   });
@@ -13449,9 +13483,13 @@ function ritmoPlanBase(s, o) {
   var pausa = hechos > 0 && R.dia.pausa === hechos ? ritmoDetras(m, m.focos[hechos - 1]) : null;
   if (pausa && pausa.tipo === 'foco') pausa = null;
 
+  var tras = ahora == null && !(o && o.comoSeEligio) && typeof ritmoLeerTrasLaPausa === 'function' ? ritmoLeerTrasLaPausa(s, R, m, hechos, pausa) : null;
+  if (tras) {m = tras.m;actual = m.focos[hechos];pausa = tras.pausa;}
+
+
 
   return { m: m, hechos: hechos, actual: actual, total: m.focos.length, terminado: !actual, pausa: pausa, estados: R.dia.estados || {}, desdeAhora: ahora,
-    deMas: crudos > m.focos.length };
+    deMas: crudos > m.focos.length, pausaPasada: !!tras, desdeTras: tras ? tras.desde : null };
 }
 
 function ritmoPlan(s, o) {
@@ -13491,7 +13529,7 @@ function ritmoAro(s, t, tn) {
   var k = p.hechos + 1;
   return {
     label: tn('ritmo.aro.bloque', { n: k, m: p.total }),
-    hasta: tn('ritmo.hasta', { h: ritmoHora(p.m.hasta) }),
+    hasta: tn('ritmo.aro.hasta', { h: ritmoHora(p.m.hasta) }),
     empezar: k === 1 ? t('ritmo.aro.empezar') : tn('ritmo.aro.siguiente', { n: k })
   };
 }
@@ -13519,7 +13557,7 @@ function ritmoPropuesta(s) {
 function ritmoSiguiente(s) {
   var p = ritmoPlan(s);
   if (!p || !p.actual) return null;
-  var it = p.pausa && p.pausa.platos && p.pausa.platos[0] ? p.pausa : p.actual;
+  var it = p.pausa && !p.pausaPasada && p.pausa.platos && p.pausa.platos[0] ? p.pausa : p.actual;
   var ahora = it === p.pausa;
   do {
     if (it.platos && it.platos[0]) {
@@ -13527,7 +13565,7 @@ function ritmoSiguiente(s) {
 
 
       var hechas = 0;
-      Object.keys(p.estados || {}).forEach(function (k) {if (p.estados[k] === 'hecha') hechas++;});
+      Object.keys(p.estados || {}).forEach(function (k) {if (p.estados[k] === 'hecha' || p.estados[k] === 'cuenta') hechas++;});
       return { targetId: plato.id, hora: it.desde, min: plato.min, modulo: plato.modulo, larga: !!it.larga, dur: it.dur, ahora: ahora,
         bloques: p.hechos, pausas: hechas };
     }
@@ -13555,7 +13593,7 @@ function ritmoSincronizar() {
   if (s.focusMode !== 'foco' || ritmoFocoCorriendo()) return;
   var p = ritmoPlan(s);
   var dur = p && p.actual ? ritmoDurSiEmpiezas(p, ritmoAhoraExacto()) : null;
-  if (dur && s.focusMinutes !== dur) setState({ focusMinutes: dur });
+  if (dur) ritmoMinutosDelPlan(s, dur);else ritmoMinutosDevolver(s);
 }
 function ritmoSincronizarALaVista() {
   if (document.visibilityState !== 'hidden') {try {ritmoSincronizar();} catch (e) {}}
@@ -13735,9 +13773,10 @@ function ritmoBloqueEmpezado(minutos) {
     cambios.pausa = null;
     cambios.pausaHasta = null;
 
+
     if (p && p.pausa) {
-      var n = ritmoOrdinal(p.m, p.pausa);
-      if (n != null && (R.dia.estados || {})[n] !== 'hecha') {
+      var n = ritmoOrdinal(p.m, p.pausa),ya = (R.dia.estados || {})[n];
+      if (n != null && ya !== 'hecha' && ya !== 'cuenta') {
         cambios.estados = Object.assign({}, R.dia.estados || {});cambios.estados[n] = 'saltada';
       }
     }
@@ -13752,8 +13791,14 @@ function ritmoBloqueEmpezado(minutos) {
 
 
   var otraDuracion = !!(p && p.actual && mins && mins !== ritmoDurSiEmpiezas(p, t));
-  if (p && p.actual && (t !== p.actual.desde || otraDuracion)) {
-    cambios.pasado = ritmoCongelar(p.m.items.slice(0, p.m.items.indexOf(p.actual)));
+
+  if (p && p.actual && (t !== p.actual.desde || otraDuracion || p.pausaPasada)) {
+    var antes = p.m.items.slice(0, p.m.items.indexOf(p.actual));
+
+    if (antes.some(function (x) {return x.tipo === 'comida' && x.desde > t;})) antes = antes.filter(function (x) {return x.desde < t;});
+
+    while (p.pausaPasada && antes.length && antes[antes.length - 1].tipo === 'libre') antes.pop();
+    cambios.pasado = ritmoCongelar(antes);
     cambios.desde = t;
     cambios.primerBloque = mins || p.actual.dur;
     cambios.pausaPendiente = false;
@@ -13824,17 +13869,57 @@ function ritmoFocoEmpezo() {
 }
 
 
+
+
+
+
+
+
+function ritmoMinutosDelPlan(s, dur) {
+  var r = s && s.ritmo || {};
+  if (s.focusMinutes === dur && r.minutosPlan === dur) return;
+  var cambio = { minutosPlan: dur };
+  if (r.minutosPlan == null && ritmoMinutosSonTuyos(s, r)) cambio.focoLibre = s.focusMinutes;
+  setState(function (prev) {return Object.assign({}, prev, { focusMinutes: dur, ritmo: Object.assign({}, prev.ritmo || {}, cambio) });});
+}
+function ritmoMinutosDevolver(s) {
+  var r = s && s.ritmo || {};
+  if (r.minutosPlan == null) return;
+  var tuyos = typeof r.focoLibre === 'number' && r.focoLibre > 0 ? r.focoLibre : 25;
+  setState(function (prev) {
+    var cambio = { ritmo: Object.assign({}, prev.ritmo || {}, { minutosPlan: null }) };
+    if (prev.focusMinutes === r.minutosPlan) cambio.focusMinutes = tuyos;
+    return Object.assign({}, prev, cambio);
+  });
+}
+
+
+function ritmoMinutosSonTuyos(s, r) {
+  return r.minutosPlan === null || [15, 25, 35, 45].indexOf(s.focusMinutes) !== -1;
+}
+
+
 function ritmoFocoHecho(p) {
   return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) {return a + (f.dur || 0);}, 0) : 0;
 }
 
-Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho });
-;Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, _ritmoCierrePintado, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho });
+Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho,
+  ritmoMinutosDelPlan, ritmoMinutosDevolver });
+;Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, _ritmoCierrePintado, ritmoMirarSalida, ritmoFocoEmpezo, ritmoMinutosDelPlan, ritmoMinutosDevolver, ritmoMinutosSonTuyos, ritmoFocoHecho });
 })();
 </script>
   <!-- El día elegido y sin empezar se lee desde ahora (Ez, E1 A del 7 nov. 2026). -->
   <script>
 ;(function () {
+
+
+
+
+
+
+
+
+
 
 
 
@@ -13864,11 +13949,27 @@ function ritmoDesdeSinEmpezar(s, R) {
 
 
 
+
+function ritmoLeerTrasLaPausa(s, R, m, hechos, pausa) {
+  if (!pausa || pausa.tipo !== 'pausa' || hechos < 1 || !R || !R.dia) return null;
+  var fin = pausa.desde + pausa.dur;
+  if (ritmoAhoraExacto() < fin) return null;
+  if (typeof ritmoFocoCorriendo === 'function' && ritmoFocoCorriendo()) return null;
+  var desde = Math.max(ritmoAhora(), fin);
+  var hecho = ritmoCongelar(m.items.slice(0, m.items.indexOf(pausa) + 1));
+  var m2 = ritmoMenu(s, R.dia.opcion, R.dia.cambios, desde, hecho, null, false, R.dia.bloque || null);
+  if (!m2 || m2.focos.length <= hechos) return null;
+  return { m: m2, pausa: ritmoDetras(m2, m2.focos[hechos - 1]), desde: desde };
+}
+
+
+
 var _ritmoSinEmpezarVisto = null;
 function ritmoMirarSinEmpezar() {
   try {
     var s = getState();
     var d = ritmoDesdeSinEmpezar(s, ritmoDe(s));
+    if (d == null) {var pb = ritmoPlanBase(s);if (pb && pb.desdeTras != null) d = 'tras' + pb.desdeTras;}
     if (d === _ritmoSinEmpezarVisto) return;
     _ritmoSinEmpezarVisto = d;
     if (d != null && typeof paceAdoptarEstado === 'function') paceAdoptarEstado(Object.assign({}, s));
@@ -13881,23 +13982,37 @@ if (typeof paceMinutoSuscribir === 'function') paceMinutoSuscribir(ritmoMirarSin
 
 
 
+
+
+
+
+
 function ritmoDurSiEmpiezas(p, t) {
   if (!p || !p.actual) return null;
-  var a = p.actual,i = p.m.items.indexOf(a),pausa = 0,o = null;
-  if (t <= a.desde) return a.dur;
-  while (++i < p.m.items.length && !o) {
+  var a = p.actual,i = p.m.items.indexOf(a),pausa = 0,o = null,dur = a.dur;
+  while (t > a.desde && ++i < p.m.items.length && !o) {
     var x = p.m.items[i];
     if (x.tipo === 'foco') break;
     if (x.tipo === 'pausa') pausa += x.dur;
     if (x.tipo === 'ocupado') o = x;
   }
-  if (!o || t >= o.desde || t + a.dur + pausa <= o.desde) return a.dur;
-  var d = o.desde - t - pausa;
-  return Math.min(a.dur, d >= 15 ? d : o.desde - t);
+  if (o && t < o.desde && t + a.dur + pausa > o.desde) {
+    var d = o.desde - t - pausa;
+    dur = Math.min(a.dur, d >= 15 ? d : o.desde - t);
+  }
+  var c = ritmoComidaSinEmpezar(p.m, t);
+  if (c && t + dur > c.desde) dur = Math.max(5, c.desde - t);
+  return dur;
 }
 
-Object.assign(window, { ritmoDesdeSinEmpezar, ritmoMirarSinEmpezar, ritmoDurSiEmpiezas });
-;Object.assign(window, { ritmoDesdeSinEmpezar, _ritmoSinEmpezarVisto, ritmoMirarSinEmpezar, ritmoDurSiEmpiezas });
+
+function ritmoComidaSinEmpezar(m, t) {
+  for (var i = 0; m && i < m.items.length; i++) if (m.items[i].tipo === 'comida' && m.items[i].desde > t) return m.items[i];
+  return null;
+}
+
+Object.assign(window, { ritmoDesdeSinEmpezar, ritmoMirarSinEmpezar, ritmoDurSiEmpiezas, ritmoLeerTrasLaPausa, ritmoComidaSinEmpezar });
+;Object.assign(window, { ritmoDesdeSinEmpezar, ritmoLeerTrasLaPausa, _ritmoSinEmpezarVisto, ritmoMirarSinEmpezar, ritmoDurSiEmpiezas, ritmoComidaSinEmpezar });
 })();
 </script>
   <script>
@@ -14163,6 +14278,23 @@ function ritmoPausaHecha(routineId) {
 
 
 
+
+
+function ritmoPausaPorTuCuenta() {
+  var a = ritmoPausaAbierta();
+  if (!a || a.it.tipo !== 'pausa') return;
+  ritmoGuardar(function (r) {
+    if (!r.dia || (r.dia.estados || {})[a.n] === 'hecha') return {};
+    var estados = Object.assign({}, r.dia.estados || {});
+    estados[a.n] = 'cuenta';
+    return { dia: Object.assign({}, r.dia, { estados: estados }) };
+  });
+}
+
+
+
+
+
 function ritmoSinPausa(s) {
   var p = typeof ritmoPlan === 'function' ? ritmoPlan(s || getState()) : null;
   if (!p) return typeof bloquesSinDiaJunta === 'function' && bloquesSinDiaJunta(s || getState());
@@ -14216,7 +14348,7 @@ function ritmoPausaCuenta(s) {
   if (!(typeof hasta === 'number' && hasta > 0)) return null;
   var a = ritmoPausaAbierta(s);
   if (!a || a.it.tipo !== 'pausa') return null;
-  return { modo: a.it.larga ? 'larga' : 'pausa', hasta: hasta, n: a.p.hechos + 1, de: a.p.total };
+  return { modo: a.it.larga ? 'larga' : 'pausa', hasta: hasta, n: a.p.hechos + 1, de: a.p.total, dur: a.it.dur };
 }
 
 
@@ -14253,10 +14385,10 @@ function ritmoPausaCerrarConElDia() {
 }
 
 Object.assign(window, {
-  ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha,
+  ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta,
   ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia, ritmoParadaHasta
 });
-;Object.assign(window, { ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, RITMO_METAS_DE_FIN, ritmoSigueCierre, ritmoPausaHecha, ritmoSinPausa, ritmoPausaEmpieza, ritmoParadaHasta, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia });
+;Object.assign(window, { ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, RITMO_METAS_DE_FIN, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta, ritmoSinPausa, ritmoPausaEmpieza, ritmoParadaHasta, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia });
 })();
 </script>
   <!-- Las pausas con bloques cortos (22 oct. 2026): la invitación, «a mi ritmo» o tras cada bloque, y sin día. -->
@@ -14646,7 +14778,7 @@ const EVENT_RITMO_OPCIONES = ['1h', '2h', 'media', 'jornada'];
 const EVENT_RITMO_HABITUAL = ['jornada', 'media', 'libre'];
 const EVENT_RITMO_PARADAS = ['pausa', 'larga', 'cierre'];
 const EVENT_RITMO_MODULOS = ['estira', 'mueve', 'respira', 'cierre'];
-const EVENT_RITMO_ESTADOS = ['hecha', 'saltada'];
+const EVENT_RITMO_ESTADOS = ['hecha', 'saltada', 'cuenta'];
 
 
 function eventMinuto(n) {
@@ -17163,7 +17295,7 @@ function ritmoResumenDe(s, dia) {
     paradas.push({
       hora: it.desde,
       tipo: it.tipo === 'cierre' ? 'cierre' : it.larga ? 'larga' : 'pausa',
-      estado: estados[n] === 'hecha' || estados[n] === 'saltada' ? estados[n] : null,
+      estado: estados[n] === 'hecha' || estados[n] === 'saltada' || estados[n] === 'cuenta' ? estados[n] : null,
       reunion: reunion,
       platos: it.platos.map(function (pl) {
         var veces = Number(cambios[pl.clave]) || 0;
@@ -17337,7 +17469,14 @@ function ritmoMotorEntrada(s, hoy) {
   var cola = typeof ritmoResumenAntesDePisar === 'function' ? ritmoResumenAntesDePisar(s, r).resumenes : r.resumenes;
   (Array.isArray(cola) ? cola : []).forEach(function (x) {if (x) dias.push(x);});
   var horario = Object.assign(ritmoHorarioInicial(), r.horario || {});
-  return { hoy: hoy, dias: dias, feedback: feedback, focos: focos, horario: horario, aprendido: r.aprendido };
+
+
+  var minutos = {};
+  dias.forEach(function (d) {(d.paradas || []).forEach(function (p) {(p.platos || []).forEach(function (pl) {
+        var rt = pl && pl.id && typeof ritmoRutinaPorId === 'function' ? ritmoRutinaPorId(pl.id) : null;
+        if (rt && typeof rt.min === 'number') minutos[pl.id] = rt.min;
+      });});});
+  return { hoy: hoy, dias: dias, feedback: feedback, focos: focos, horario: horario, aprendido: r.aprendido, minutos: minutos };
 }
 
 
@@ -24485,16 +24624,26 @@ function usePaceFocoEmpezado() {
   return v;
 }
 
+
+
+
+var _pacePausaLleva = null;
+function pacePausaEmpezadaPon(lleva) {_pacePausaLleva = typeof lleva === 'function' ? lleva : null;}
+function pacePausaLleva() {
+  if (!_pacePausaLleva) return null;
+  try {return Math.max(0, Number(_pacePausaLleva()) || 0);} catch (e) {return 0;}
+}
+
 Object.assign(window, {
   focoElapsedSec,
-  paceFocoEmpezadoPon, paceFocoEmpezado, usePaceFocoEmpezado,
+  paceFocoEmpezadoPon, paceFocoEmpezado, usePaceFocoEmpezado, pacePausaEmpezadaPon, pacePausaLleva,
 
   curvaSuave, curvaCaida, focusStyles,
 
   getFocusDescriptorKey, maybeNotifyFocusEnd, maybeRequestNotifyPermission,
   loadPersistedFocusTimer, persistFocusTimer, olvidarFocoGuardado
 });
-;Object.assign(window, { getFocusDescriptorKey, maybeRequestNotifyPermission, maybeNotifyFocusEnd, loadPersistedFocusTimer, persistFocusTimer, olvidarFocoGuardado, curvaSuave, curvaCaida, focoElapsedSec, _paceFocoEmpezado, paceFocoEmpezadoPon, paceFocoEmpezado, usePaceFocoEmpezado });
+;Object.assign(window, { getFocusDescriptorKey, maybeRequestNotifyPermission, maybeNotifyFocusEnd, loadPersistedFocusTimer, persistFocusTimer, olvidarFocoGuardado, curvaSuave, curvaCaida, focoElapsedSec, _paceFocoEmpezado, paceFocoEmpezadoPon, paceFocoEmpezado, usePaceFocoEmpezado, _pacePausaLleva, pacePausaEmpezadaPon, pacePausaLleva });
 })();
 </script>
   <!-- Piezas de UI del Pomodoro (s124): MinutesPicker extraído. Declara sus
@@ -30317,7 +30466,7 @@ Object.assign(window, { RitmoHacerla });
 
 function aroPlatoPendiente(s) {
   const a = typeof ritmoPausaAbierta === 'function' ? ritmoPausaAbierta(s) : null;
-  if (!a) return null;
+  if (!a || (a.p.estados || {})[a.n] === 'cuenta') return null;
   return a.platos.find((p) => a.hechos.indexOf(p.id) === -1) || null;
 }
 
@@ -30415,7 +30564,7 @@ function AroFila(_ref2) {let { cycle, cycleLabel, oculta, fila } = _ref2;
         background: cycle % 4 > i ? 'var(--focus)' : 'var(--line-2)'
       } })
     ),
-    React.createElement("span", { style: { ...callado, fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 } }, cycleLabel)
+    React.createElement("span", { "data-pace-ciclo": true, style: { ...callado, fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 } }, cycleLabel)
     ));
 
 }
@@ -30607,9 +30756,14 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   }, [running, endsAt, state.focusMode, state.notifyFocusEnd, lang]);
 
 
+
+  const pausaLlevaRef = useRefFT(0);
+  pausaLlevaRef.current = (enPausaRitmo ? pausaRitmo.dur * 60 : durationSec) - remaining;
   useEffectFT(() => {
-    paceFocoEmpezadoPon(state.focusMode === 'foco' && (status === 'running' || status === 'paused'));
-    return () => paceFocoEmpezadoPon(false);
+    const empezado = status === 'running' || status === 'paused';
+    paceFocoEmpezadoPon(state.focusMode === 'foco' && empezado);
+    pacePausaEmpezadaPon(state.focusMode !== 'foco' && empezado ? () => pausaLlevaRef.current : null);
+    return () => {paceFocoEmpezadoPon(false);pacePausaEmpezadaPon(null);};
   }, [state.focusMode, status]);
 
 
@@ -30802,7 +30956,8 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   const cycleLabel = isFocoMode && isCompleted ?
   tn('focus.cycleNext', { n: cycleN }) :
   tn('focus.cycleOf', { n: cycleN });
-  const cycleDotsEl = React.createElement(AroFila, { cycle: state.cycle, cycleLabel: cycleLabel, oculta: !!aro || enPausaRitmo, fila: jornada.fila });
+
+  const cycleDotsEl = React.createElement(AroFila, { cycle: state.cycle, cycleLabel: cycleLabel, oculta: !!aro || enPausaRitmo || !!cerrada, fila: jornada.fila });
 
 
 
@@ -30917,11 +31072,6 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
     ));
 
 }
-
-
-
-
-
 
 
 
@@ -37933,6 +38083,7 @@ function _extends() {return _extends = Object.assign ? Object.assign.bind() : fu
 
 
 
+
 const BREAK_COLOR = { extra: 'var(--extra)', move: 'var(--move)', breathe: 'var(--breathe)', water: 'var(--hydrate)' };
 
 
@@ -37979,6 +38130,9 @@ function BreakMenuRitmo(_ref2) {let { open, onClose, onChoose, onSeguir, onPropu
 
 
   const dos = !comida && pausa && pausa.platos && pausa.platos.length > 1;
+
+
+  const aTuManera = !comida && !!pausa && pausa.tipo === 'pausa' && typeof ritmoPausaPorTuCuenta === 'function';
   const plato = comida ?
   { color: 'var(--ink-2)', boton: 'var(--focus-cta)', glifo: { nodo: React.createElement(ABMeal, null), modulo: true }, nombre: t('break.ritmo.comida'),
     ctx: React.createElement(React.Fragment, null, React.createElement("b", null, pausa ? pausa.dur : ''), React.createElement("u", null, t('lib.min')), pausa && pausa.agua && React.createElement("em", null, t('break.ritmo.conAgua'))) } :
@@ -38013,7 +38167,10 @@ function BreakMenuRitmo(_ref2) {let { open, onClose, onChoose, onSeguir, onPropu
 
 
 
-    React.createElement("div", { "data-pace-break-shortcut": true, className: "pace-break-pie", style: { marginTop: 6 } },
+    React.createElement("div", { "data-pace-break-shortcut": true, className: "pace-break-pie", style: { marginTop: 6, justifyContent: aTuManera ? 'space-between' : undefined } },
+    aTuManera &&
+    React.createElement("button", { type: "button", className: "pace-break-saltar", "data-pace-break-cuenta": true, onClick: () => {ritmoPausaPorTuCuenta();onClose();} }, t('break.ritmo.cuenta')),
+
     React.createElement("button", { type: "button", className: "pace-break-saltar", onClick: onClose }, t('break.skip'))
     )
     ));
@@ -39375,6 +39532,7 @@ function statsHoyMeta(p, t) {
   if (p.comida) return ritmoDuracion(it.dur);
   if (estado === 'hecha') return t('ritmo.hecha') + ' · ' + it.dur + ' min';
   if (estado === 'saltada') return t('ritmo.saltada');
+  if (estado === 'cuenta') return t('ritmo.cuenta');
   if (estado === 'ahora') return t('ritmo.ahora.min');
   return it.dur + ' min';
 }
@@ -40618,7 +40776,7 @@ Object.assign(window, { PathStats });
       grid-auto-flow: column; background: var(--paper); border: 1px solid color-mix(in srgb, var(--c) 50%, transparent); }
     .pace-sh-aro.pace-sh-larga { width: 36px; border-radius: 11px; gap: 1px; }
     .pace-sh-aro .pace-rt-g { width: 13px; height: 13px; }
-    .pace-sh-hecha .pace-sh-aro { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 22%, var(--paper)); }
+    .pace-sh-hecha .pace-sh-aro, .pace-sh-cuenta .pace-sh-aro { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 22%, var(--paper)); }
     .pace-sh-saltada { opacity: 0.45; }
     .pace-sh-saltada .pace-sh-aro { border-style: dashed; }
     .pace-sh-ahora { box-shadow: inset 0 0 0 1.5px var(--c); background: color-mix(in srgb, var(--c) 12%, var(--paper-2)); }
@@ -46527,9 +46685,9 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
 /* s195: LA LÍNEA TIENE MEMORIA. La parada hecha se rellena con su color (22 %) y su
    borde entero; la saltada queda al 40 % y a trazos, y arrastra su etiqueta (vive
    dentro). Lo pasado sin marca (antes de s195, o sin sesión) sigue como estaba. */
-.pace-rt-nodo.pace-rt-hecha { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 22%, var(--paper)); }
+.pace-rt-nodo.pace-rt-hecha, .pace-rt-nodo.pace-rt-cuenta { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 22%, var(--paper)); }
 .pace-rt-nodo.pace-rt-saltada { opacity: 0.4; border-style: dashed; }
-.pace-rt-mini .pace-rt-punto.pace-rt-hecha { background: var(--c); }
+.pace-rt-mini .pace-rt-punto.pace-rt-hecha, .pace-rt-mini .pace-rt-punto.pace-rt-cuenta { background: var(--c); }
 .pace-rt-mini .pace-rt-punto.pace-rt-saltada { opacity: 0.4; border-style: dashed; }
 .pace-rt-comida-nodo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 24px; height: 24px;
   border-radius: 50%; border: 1px solid color-mix(in srgb, var(--ink-2) 35%, transparent); background: var(--paper);
@@ -46601,7 +46759,7 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
 /* s197 · LA HOJA RECUERDA, con la misma regla que la línea (s195): la parada hecha
    conserva la tinta y su glifo se rellena al 22 % con borde de 1,5; la saltada baja
    al 40 % y puntea. Antes lo pasado se atenuaba entero y no distinguía una de otra. */
-.pace-rt-li.pace-rt-hecha .pace-rt-eje i { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 22%, var(--paper)); }
+.pace-rt-li.pace-rt-hecha .pace-rt-eje i, .pace-rt-li.pace-rt-cuenta .pace-rt-eje i { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 22%, var(--paper)); }
 .pace-rt-li.pace-rt-saltada { opacity: 0.4; }
 .pace-rt-li.pace-rt-saltada .pace-rt-eje i { border-style: dashed; }
 .pace-rt-plato-n { font-family: var(--font-display); font-style: italic; font-size: 17px; line-height: 1.15; color: var(--ink); }
@@ -47188,7 +47346,7 @@ function RitmoEtiqueta(_ref) {let { it, final, t, tn, lang, estado } = _ref;
     nombre = it.larga ? it.platos.map((p, i) =>
     React.createElement(React.Fragment, { key: p.id }, i ? React.createElement("br", null) : null, i ? '+ ' : '', ritmoNombre(p.rutina, t, lang))
     ) : ritmoPlatos(it, t, lang);
-    meta = estado === 'hecha' ? t('ritmo.hecha') + ' · ' + it.dur + ' min' : t('ritmo.saltada');
+    meta = estado === 'hecha' ? t('ritmo.hecha') + ' · ' + it.dur + ' min' : t('ritmo.' + (estado === 'cuenta' ? 'cuenta' : 'saltada'));
   } else if (it.larga) {
     nombre = it.platos.map((p, i) =>
     React.createElement(React.Fragment, { key: p.id }, i ? React.createElement("br", null) : null, i ? '+ ' : '', ritmoNombre(p.rutina, t, lang))
@@ -47251,7 +47409,8 @@ function ritmoColocarEtiquetas(lin, zona) {
 
 function ritmoIndiceAhora(plan) {
   const m = plan.m;
-  if (plan.pausa) return m.items.indexOf(plan.pausa);
+
+  if (plan.pausa && !plan.pausaPasada) return m.items.indexOf(plan.pausa);
   return plan.actual ? m.items.indexOf(plan.actual) : m.items.length;
 }
 
@@ -47754,7 +47913,7 @@ function RitmoMovil(_ref0) {let { state, plan, onVer } = _ref0;
     meta: b.dur + ' min · ' + descriptor });
 
   const luego = ritmoDetras(plan.m, b);
-  const filas = plan.pausa ?
+  const filas = plan.pausa && !plan.pausaPasada ?
   React.createElement(React.Fragment, null, React.createElement(RitmoFilaParada, { it: plan.pausa, rotulo: "ritmo.ahora", corta: true }), filaBloque('ritmo.luego')) :
   React.createElement(React.Fragment, null, filaBloque('ritmo.ahora'), luego ? React.createElement(RitmoFilaParada, { it: luego, rotulo: "ritmo.luego", corta: true }) : null);
   return (
@@ -47854,10 +48013,10 @@ function RitmoLista(_ref) {let { plan } = _ref;
 
       const estado = !comida && pasado ? (plan.estados || {})[ritmoOrdinal(m, it)] || null : null;
       const meta = comida ? tn('ritmo.comida.lista', { d: ritmoDuracion(it.dur) }) :
-      estado ? estado === 'hecha' ? t('ritmo.hecha') + ' · ' + it.dur + ' min' : t('ritmo.saltada') :
+      estado ? estado === 'hecha' ? t('ritmo.hecha') + ' · ' + it.dur + ' min' : t('ritmo.' + (estado === 'cuenta' ? 'cuenta' : 'saltada')) :
       ritmoMetaPlato(it, t, tn);
       return (
-        React.createElement("div", { key: i, className: 'pace-rt-li pace-rt-plato' + (pasado && estado !== 'hecha' ? ' pace-rt-pasado' : '') + (estado ? ' pace-rt-' + estado : ''),
+        React.createElement("div", { key: i, className: 'pace-rt-li pace-rt-plato' + (pasado && estado !== 'hecha' && estado !== 'cuenta' ? ' pace-rt-pasado' : '') + (estado ? ' pace-rt-' + estado : ''),
           "data-pace-ritmo-fila": it.tipo, "data-pace-ritmo-estado-fila": estado || undefined },
         h,
         React.createElement("div", { className: "pace-rt-eje" },
@@ -50600,7 +50759,8 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
      con Sidebar.jsx que dispara el mismo evento. PaceApp lo escucha.
    - Tabs Foco/Pausa/Larga cambian state.focusMode. Cambiar de modo reinicia
      la cuenta, así que con un bloque de Foco empezado (en marcha o en pausa)
-     se pregunta antes: el bloque se perdería sin contar (Ez, 8 oct. 2026).
+     se pregunta antes: el bloque se perdería sin contar (Ez, 8 oct. 2026). Con una pausa
+     empezada, también, con lo que lleva (Ez, 2A del 8 nov. 2026): un clic la cortaba sin vuelta.
    - Tabs ocultos en movil (@media max-width: 768px en _responsive.js).
    - data-pace-* selectors usados por _responsive.js: data-pace-topbar,
      data-pace-tabs, data-pace-topbar-icon.
@@ -50616,14 +50776,18 @@ const { useState: useStateTB } = React;
 
 function TopBar(_ref) {let { onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks } = _ref;
   const [state, set] = usePace();
-  const { t } = useT();
+  const { t, tn } = useT();
+
 
   const [pendiente, setPendiente] = useStateTB(null);
   const elegirModo = (v) => {
     if (v === state.focusMode) return;
-    if (typeof paceFocoEmpezado === 'function' && paceFocoEmpezado()) {setPendiente(v);return;}
+    const foco = typeof paceFocoEmpezado === 'function' && paceFocoEmpezado();
+    const lleva = !foco && typeof pacePausaLleva === 'function' ? pacePausaLleva() : null;
+    if (foco || lleva != null) {setPendiente({ v, lleva });return;}
     set({ focusMode: v });
   };
+  const pregunta = topBarPregunta(pendiente, t, tn);
   const modes = [
   { v: 'foco', label: t('topbar.mode.focus') },
   { v: 'pausa', label: t('topbar.mode.pause') },
@@ -50686,21 +50850,41 @@ function TopBar(_ref) {let { onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTw
     ),
 
     React.createElement(Modal, { open: !!pendiente, onClose: () => setPendiente(null), maxWidth: 440,
-      title: pendiente ? t('topbar.cambio.title.' + pendiente) : undefined },
+      title: pregunta ? pregunta.title : undefined },
     React.createElement("p", { "data-pace-cambio-modo": true, style: { margin: '0 0 22px', color: 'var(--ink-2)', fontSize: 15, lineHeight: 1.55 } },
-    t('topbar.cambio.body')
+    pregunta ? pregunta.body : null
     ),
     React.createElement("div", { style: { display: 'flex', gap: 10, justifyContent: 'flex-end', flexWrap: 'wrap' } },
-    React.createElement(Button, { variant: "secondary", onClick: () => {set({ focusMode: pendiente });setPendiente(null);} },
-    t('topbar.cambio.cambiar')
+    React.createElement(Button, { variant: "secondary", onClick: () => {set({ focusMode: pendiente.v });setPendiente(null);} },
+    pregunta ? pregunta.cambiar : null
     ),
     React.createElement(Button, { variant: "primary", onClick: () => setPendiente(null) },
-    t('topbar.cambio.seguir')
+    pregunta ? pregunta.seguir : null
     )
     )
     )
     ));
 
+}
+
+
+
+
+function topBarPregunta(p, t, tn) {
+  if (!p) return null;
+  if (p.lleva == null) {
+    return { title: t('topbar.cambio.title.' + p.v), body: t('topbar.cambio.body'),
+      cambiar: t('topbar.cambio.cambiar'), seguir: t('topbar.cambio.seguir') };
+  }
+  const min = Math.floor(p.lleva / 60);
+  const lleva = min < 1 ? '' : min === 1 ? t('topbar.pausa.lleva.uno') + ' ' : tn('topbar.pausa.lleva', { n: min }) + ' ';
+  const alFoco = p.v === 'foco';
+  return {
+    title: alFoco ? t('topbar.pausa.title') : t('topbar.cambio.title.' + p.v),
+    body: lleva + t(alFoco ? 'topbar.pausa.body.foco' : 'topbar.pausa.body.otra'),
+    cambiar: alFoco ? t('topbar.pausa.volver') : t('topbar.cambio.cambiar'),
+    seguir: t('topbar.pausa.seguir')
+  };
 }
 
 const topBarStyles = {
@@ -50717,7 +50901,7 @@ const topBarStyles = {
 };
 
 Object.assign(window, { TopBar });
-;Object.assign(window, { TopBar });
+;Object.assign(window, { TopBar, topBarPregunta });
 })();
 </script>
   <script>

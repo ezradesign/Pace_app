@@ -49,7 +49,7 @@ const EVENT_RITMO_OPCIONES = ['1h', '2h', 'media', 'jornada'];
 const EVENT_RITMO_HABITUAL = ['jornada', 'media', 'libre'];
 const EVENT_RITMO_PARADAS = ['pausa', 'larga', 'cierre'];
 const EVENT_RITMO_MODULOS = ['estira', 'mueve', 'respira', 'cierre'];
-const EVENT_RITMO_ESTADOS = ['hecha', 'saltada'];
+const EVENT_RITMO_ESTADOS = ['hecha', 'saltada', 'cuenta'];   /* 'cuenta': hecha a tu manera, sin la rutina (Ez, 4A del 8 nov. 2026) */
 
 /* Minutos desde medianoche, de 0 a 1440; lo demas, null. */
 function eventMinuto(n) {

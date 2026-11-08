@@ -18,6 +18,7 @@
        «quita las cuatro opciones de abajo y deja solo Hidrátate»). Abre el agua.
      · «Saltar esta pausa» → cierra sin más, como siempre (la pausa sigue abierta
        hasta que empiece el bloque).
+     · «Ya la hice por mi cuenta» → la da por hecha a tu manera y cierra (state-ritmo.pausa.jsx).
 
    El vestido es la opción A que eligió Ez («Como su tarjeta», BreakMenu.css.jsx). No
    hay línea de atajos: Intro hace la pausa propuesta y Esc la salta, y no se enseñan.
@@ -75,6 +76,9 @@ function BreakMenuRitmo({ open, onClose, onChoose, onSeguir, onPropuesta, prop, 
      minutos de la parada y sus dos módulos. «Hacer la pausa» entra en el que toca y su
      cierre lleva al otro (state-ritmo.pausa.jsx). */
   const dos = !comida && pausa && pausa.platos && pausa.platos.length > 1;
+  /* «Ya la hice por mi cuenta», a la izquierda de «Ahora no», con su mismo estilo (Ez, 4A del 8 nov.
+     2026): solo en las pausas entre bloques, no en la comida ni en la de cierre. */
+  const aTuManera = !comida && !!pausa && pausa.tipo === 'pausa' && typeof ritmoPausaPorTuCuenta === 'function';
   const plato = comida
     ? { color: 'var(--ink-2)', boton: 'var(--focus-cta)', glifo: { nodo: <ABMeal />, modulo: true }, nombre: t('break.ritmo.comida'),
         ctx: <><b>{pausa ? pausa.dur : ''}</b><u>{t('lib.min')}</u>{pausa && pausa.agua && <em>{t('break.ritmo.conAgua')}</em>}</> }
@@ -109,7 +113,10 @@ function BreakMenuRitmo({ open, onClose, onChoose, onSeguir, onPropuesta, prop, 
       )}
       {/* `data-pace-break-shortcut` ya no lleva atajos: es el pie, y las pruebas lo usan
           para saber que la pausa está abierta. */}
-      <div data-pace-break-shortcut className="pace-break-pie" style={{ marginTop: 6 }}>
+      <div data-pace-break-shortcut className="pace-break-pie" style={{ marginTop: 6, justifyContent: aTuManera ? 'space-between' : undefined }}>
+        {aTuManera && (
+          <button type="button" className="pace-break-saltar" data-pace-break-cuenta onClick={() => { ritmoPausaPorTuCuenta(); onClose(); }}>{t('break.ritmo.cuenta')}</button>
+        )}
         <button type="button" className="pace-break-saltar" onClick={onClose}>{t('break.skip')}</button>
       </div>
     </Modal>

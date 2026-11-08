@@ -287,10 +287,14 @@ function ritmoPlanBase(s, o) {
   var actual = m.focos[hechos] || null;
   var pausa = hechos > 0 && R.dia.pausa === hechos ? ritmoDetras(m, m.focos[hechos - 1]) : null;
   if (pausa && pausa.tipo === 'foco') pausa = null;   /* bloques cortos juntos: no hay parada */
-  /* s195: `estados` = { n: 'hecha' | 'saltada' } por ordinal de parada (pausa o cierre).
-     `deMas`: el último Foco terminado ya no era del plan (uno por libre tras el último bloque). */
+  /* Con la pausa ya acabada, el día también se lee desde ahora (Ez, S11 A; state-ritmo.ahora.jsx). */
+  var tras = ahora == null && !(o && o.comoSeEligio) && typeof ritmoLeerTrasLaPausa === 'function' ? ritmoLeerTrasLaPausa(s, R, m, hechos, pausa) : null;
+  if (tras) { m = tras.m; actual = m.focos[hechos]; pausa = tras.pausa; }
+  /* s195: `estados` = { n: 'hecha' | 'saltada' | 'cuenta' } por ordinal de parada (pausa o cierre).
+     `deMas`: el último Foco terminado ya no era del plan (uno por libre tras el último bloque).
+     `pausaPasada`: la pausa sigue abierta, pero su rato acabó y el día se lee desde `desdeTras`. */
   return { m: m, hechos: hechos, actual: actual, total: m.focos.length, terminado: !actual, pausa: pausa, estados: R.dia.estados || {}, desdeAhora: ahora,
-           deMas: crudos > m.focos.length };
+           deMas: crudos > m.focos.length, pausaPasada: !!tras, desdeTras: tras ? tras.desde : null };
 }
 /* El plan tal como se ve: pasada la salida, el día está cerrado (state-ritmo.recolocar.jsx). */
 function ritmoPlan(s, o) {
@@ -330,7 +334,7 @@ function ritmoAro(s, t, tn) {
   var k = p.hechos + 1;
   return {
     label: tn('ritmo.aro.bloque', { n: k, m: p.total }),
-    hasta: tn('ritmo.hasta', { h: ritmoHora(p.m.hasta) }),   // bajo el rótulo, en cursiva (Ez, 3C del 25 oct.)
+    hasta: tn('ritmo.aro.hasta', { h: ritmoHora(p.m.hasta) }),   // bajo el rótulo, en cursiva (Ez, 3C del 25 oct.): «Tu jornada, hasta las 17:00» (5A del 8 nov.)
     empezar: k === 1 ? t('ritmo.aro.empezar') : tn('ritmo.aro.siguiente', { n: k }),
   };
 }
@@ -358,7 +362,7 @@ function ritmoPropuesta(s) {
 function ritmoSiguiente(s) {
   var p = ritmoPlan(s);
   if (!p || !p.actual) return null;
-  var it = p.pausa && p.pausa.platos && p.pausa.platos[0] ? p.pausa : p.actual;
+  var it = p.pausa && !p.pausaPasada && p.pausa.platos && p.pausa.platos[0] ? p.pausa : p.actual;
   var ahora = it === p.pausa;
   do {
     if (it.platos && it.platos[0]) {
@@ -366,7 +370,7 @@ function ritmoSiguiente(s) {
       /* s197: `bloques` y `pausas` (las HECHAS, no las saltadas) para la frase de la
          tarjeta. Los números van aquí —el estado los sabe— y las palabras en la vista. */
       var hechas = 0;
-      Object.keys(p.estados || {}).forEach(function (k) { if (p.estados[k] === 'hecha') hechas++; });
+      Object.keys(p.estados || {}).forEach(function (k) { if (p.estados[k] === 'hecha' || p.estados[k] === 'cuenta') hechas++; });
       return { targetId: plato.id, hora: it.desde, min: plato.min, modulo: plato.modulo, larga: !!it.larga, dur: it.dur, ahora: ahora,
                bloques: p.hechos, pausas: hechas };
     }
@@ -394,7 +398,7 @@ function ritmoSincronizar() {
   if (s.focusMode !== 'foco' || ritmoFocoCorriendo()) return;
   var p = ritmoPlan(s);
   var dur = p && p.actual ? ritmoDurSiEmpiezas(p, ritmoAhoraExacto()) : null;
-  if (dur && s.focusMinutes !== dur) setState({ focusMinutes: dur });
+  if (dur) ritmoMinutosDelPlan(s, dur); else ritmoMinutosDevolver(s);   /* sin bloque que medir, tus minutos (S3) */
 }
 function ritmoSincronizarALaVista() {
   if (document.visibilityState !== 'hidden') { try { ritmoSincronizar(); } catch (e) {} }

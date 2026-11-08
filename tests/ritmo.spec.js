@@ -133,9 +133,9 @@ test('elegir la jornada entera: el aro, el rótulo, la barra lateral y la persis
   await expect(page.locator('[data-pace-dial-number]').first()).toHaveText('45:00');
   await expect(page.getByRole('button', { name: 'Empezar jornada', exact: true })).toBeVisible();
   const hasta = page.locator('[data-pace-ritmo-hasta]');
-  await expect(hasta).toHaveText('Hasta las 17:00');
+  await expect(hasta).toHaveText('Tu jornada, hasta las 17:00');
   /* «Hasta las» va dentro del aro, bajo «Bloque 1 de 9», en cursiva (Ez, 3C del 25 oct.)… */
-  await expect(page.locator('[data-pace-dial-label] + [data-pace-dial-hasta]')).toHaveText('Hasta las 17:00');
+  await expect(page.locator('[data-pace-dial-label] + [data-pace-dial-hasta]')).toHaveText('Tu jornada, hasta las 17:00');   /* 5A del 8 nov. */
   /* …y el panel no se mueve dentro de su bloque al aparecer (ronda 4). */
   expect(await banda(page), 'el panel se movió al aparecer «Hasta las»').toBe(bandaAntes);
   await expect(page.locator('[data-pace-sidebar-accion]')).toContainText(/Siguiente pausa\s*A las 9:45, /);
@@ -247,8 +247,10 @@ test('empezar el bloque 2 veinte minutos tarde recoloca el resto del día: comid
   await page.keyboard.press('Escape');
   await page.clock.fastForward(25 * 60 * 1000);   /* son las 10:10: veinte minutos tarde para el bloque 2 */
   await page.waitForTimeout(200);
-  /* mientras esperas, nada se mueve: recolocar pasa al EMPEZAR */
-  expect(await page.evaluate(() => ritmoPlan(getState()).actual.desde)).toBe(590);
+  /* Mientras esperas no se escribe nada: recolocar pasa al EMPEZAR. Pero la pausa ya acabó y el día se
+     LEE desde ahora (Ez, S11 A del 8 nov. 2026), lo mismo que sale al pulsar; antes seguía en las 9:50. */
+  const espera = await page.evaluate(() => ({ actual: ritmoPlan(getState()).actual.desde, desde: getState().ritmo.dia.desde, pasado: getState().ritmo.dia.pasado || null }));
+  expect(espera).toEqual({ actual: 610, desde: 540, pasado: null });
   await page.getByRole('button', { name: 'Empezar bloque 2', exact: true }).click();
   await page.waitForTimeout(300);
 
@@ -375,7 +377,7 @@ test('«Hoy voy por libre» devuelve la carta con la tarjeta del ritmo; una lose
 test('la hora de salida y la de comer se cambian dentro de la frase', async ({ page, context }) => {
   await abrir(page, context, { dia: JORNADA });
   await ponerHora(vis(page, '[data-pace-ritmo-horario="salida"]'), 1080);
-  await expect(page.locator('[data-pace-ritmo-hasta]')).toHaveText('Hasta las 18:00');
+  await expect(page.locator('[data-pace-ritmo-hasta]')).toHaveText('Tu jornada, hasta las 18:00');
   await ponerHora(vis(page, '[data-pace-ritmo-horario="comida"]'), 780);
   await expect(vis(page, '[data-pace-ritmo-tramo="comida"] [data-pace-ritmo-etiq]')).toContainText('13:00');
   const horario = await page.evaluate(() => getState().ritmo.horario);
@@ -401,7 +403,7 @@ test('llegando a las 10:30 el día empieza entonces y en ningún sitio pone «ta
   const panel = vis(page, '[data-pace-ritmo-estado="menu"]');
   await expect(panel).toContainText('hoy de 10:30 a 17:00');
   expect((await panel.textContent()).toLowerCase()).not.toContain('tarde');
-  await expect(page.locator('[data-pace-ritmo-hasta]')).toHaveText('Hasta las 17:00');
+  await expect(page.locator('[data-pace-ritmo-hasta]')).toHaveText('Tu jornada, hasta las 17:00');
 });
 
 test('en inglés, la pregunta y la hora de salida', async ({ page, context }) => {
@@ -411,7 +413,7 @@ test('en inglés, la pregunta y la hora de salida', async ({ page, context }) =>
   await expect(vis(page, '[data-pace-ritmo-estado="pregunta"]')).toContainText('How long are you working today?');
   await vis(page, '[data-pace-ritmo-opcion="jornada"]').click();
   await expect(page.getByRole('button', { name: 'Start the day', exact: true })).toBeVisible();
-  await expect(page.locator('[data-pace-ritmo-hasta]')).toHaveText('Until 17:00');
+  await expect(page.locator('[data-pace-ritmo-hasta]')).toHaveText('Your day, until 17:00');
 });
 
 /* ------------------------------------------------------------------ móvil */

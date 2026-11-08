@@ -116,7 +116,7 @@ test('«Dos horas» a las 17:51 con el aro a 5: el plan acaba a las 19:51 bloque
      su minuto exacto (17:51), y desde ahí se cuentan las dos horas */
   await pulsarComienza(page);
   await page.locator('[data-pace-ritmo-opcion="2h"]').filter({ visible: true }).click();
-  await expect(page.locator('[data-pace-ritmo-hasta]')).toHaveText('Hasta las 19:50');
+  await expect(page.locator('[data-pace-ritmo-hasta]')).toHaveText('Tu jornada, hasta las 19:50');
   await page.getByRole('button', { name: 'Otro', exact: true }).click();
   const minutos = page.locator('input[type="number"]');
   await minutos.fill('5');

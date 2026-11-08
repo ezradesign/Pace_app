@@ -367,9 +367,19 @@ function usePaceFocoEmpezado() {
   return v;
 }
 
+/* ¿Hay una pausa empezada, corta o larga, en marcha o parada? (Ez, 2A del 8 nov. 2026) La barra de
+   arriba la cortaba sin preguntar; ahora pregunta como con un Foco. FocusTimer publica una función
+   que dice los segundos que lleva; `pacePausaLleva()` es null sin pausa empezada. */
+var _pacePausaLleva = null;
+function pacePausaEmpezadaPon(lleva) { _pacePausaLleva = typeof lleva === 'function' ? lleva : null; }
+function pacePausaLleva() {
+  if (!_pacePausaLleva) return null;
+  try { return Math.max(0, Number(_pacePausaLleva()) || 0); } catch (e) { return 0; }
+}
+
 Object.assign(window, {
   focoElapsedSec,
-  paceFocoEmpezadoPon, paceFocoEmpezado, usePaceFocoEmpezado,
+  paceFocoEmpezadoPon, paceFocoEmpezado, usePaceFocoEmpezado, pacePausaEmpezadaPon, pacePausaLleva,
   /* s163 · lo que entro con el troceo de FocusTimer.jsx */
   curvaSuave, curvaCaida, focusStyles,
   /* s102 · los helpers con los que nacio este archivo */
