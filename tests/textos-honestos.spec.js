@@ -37,7 +37,7 @@ test('1 · la bienvenida deja probar primero; en Ajustes el botón sigue diciend
   await expect(page.locator(BIENVENIDA + ' [data-pace-semana-saltar]')).toHaveText('Ahora no, quiero probar primero');
   await expect(page.locator(BIENVENIDA + ' [data-pace-semana-nota]')).toHaveText('Puedes prepararla después en Ajustes.');
   expect(await cadenas(page, 'en', ['ritmo.st.ahoraNo', 'ritmo.st.ahoraNo.nota']))
-    .toEqual(['Not now, I want to try it first', 'You can set it up later in Settings.']);
+    .toEqual(['Not now, I’ll try it first', 'You can set it up later in Settings.']);
 
   /* En Ajustes el mismo botón quita la semana guardada: ahí «Ahora no» diría otra cosa. */
   await page.locator('[data-pace-semana-saltar]').click();
@@ -55,7 +55,7 @@ test('2 · bajo «¿Cuánto trabajas hoy?» dice que el tiempo incluye las pausa
   await irAlArtefacto(page);
   await vis(page, '[data-pace-ritmo-ajustar]').click();
   await expect(vis(page, '[data-pace-ritmo-estado="pregunta"] .pace-rt-sub').first()).toHaveText('El tiempo incluye las pausas. Te digo cuándo parar y qué hacer.');
-  expect(await cadenas(page, 'en', ['ritmo.sub'])).toEqual(["Breaks are part of the time. I'll tell you when to pause and what to do."]);
+  expect(await cadenas(page, 'en', ['ritmo.sub'])).toEqual(['Breaks are included. I’ll suggest when to stop and what to do.']);
 });
 
 /* ------------------------------------------------------------------ 3 · el día servido */
@@ -64,7 +64,7 @@ test('3 · la etiqueta del material avisa de que a veces hace falta pared o mesa
   await page.clock.install({ time: NUEVE });
   await irAlArtefacto(page);
   await expect(vis(page, '.pace-rt-ctx span').nth(1)).toHaveText('Sin material, a veces pared o mesa');
-  expect(await cadenas(page, 'en', ['ritmo.ctx.material'])).toEqual(['No equipment, sometimes a wall or desk']);
+  expect(await cadenas(page, 'en', ['ritmo.ctx.material'])).toEqual(['Sometimes a wall or desk; no other equipment']);
 });
 
 /* En la fila del título (panel de 1000 px o más) no caben las dos etiquetas con la larga en una línea:
@@ -117,7 +117,7 @@ test('5 · los motivos de la pausa por libre dicen lo que PACE sabe', async ({ p
     'Hoy aún no hay sesión de Estira', 'Hoy aún no hay sesión de Mueve', 'Hoy aún no hay sesión de Respira',
   ]);
   expect(await cadenas(page, 'en', claves)).toEqual([
-    'You finished a {n}-minute Focus', 'No glasses logged today',
+    'You finished a {n}-minute Focus block', 'No glasses logged today',
     'No Stretch session yet today', 'No Move session yet today', 'No Breathe session yet today',
   ]);
 });
@@ -134,7 +134,7 @@ test('9 · al importar una copia dice que se sustituye sin juntarse', async ({ p
     buffer: Buffer.from(JSON.stringify({ app: 'PACE', version: 'v0.187.0', state: { firstSeen: 1, lang: 'es', totalFocusMin: 340 } })),
   });
   await expect(page.getByText('Lo que hay ahora en PACE se sustituye por la copia, sin juntarse, y no se puede deshacer.')).toBeVisible();
-  expect((await cadenas(page, 'en', ['settings.import.cuerpo']))[0]).toContain('replaced by the copy, not merged');
+  expect((await cadenas(page, 'en', ['settings.import.cuerpo']))[0]).toContain('replace your current PACE data, not merge with it');
 });
 
 /* ------------------------------------------------------------------ 10, 11 y 12 · el calendario */
@@ -294,7 +294,7 @@ test.describe('el calendario, en la web con Google y Microsoft dados de alta', (
       .toHaveText('En pruebas. Mientras PACE está abierto y el permiso dura, si el día cambia, cambia también allí. Cada pausa te avisa.');
     await expect(h.locator('[data-pace-cal-mantener-cerrado]')).toHaveCount(0);
     expect(await cadenas(page, 'en', ['cal.mantener.sub.web']))
-      .toEqual(['In testing. While PACE is open and the permission lasts, if your day changes, it changes there too. Each break reminds you.']);
+      .toEqual(['In testing. While PACE is open and calendar access is active, changes to your plan also update your calendar. You’ll get a reminder for each break.']);
   });
 });
 

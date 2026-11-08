@@ -42,3 +42,10 @@ El script de los mutantes estaba en el scratchpad: cada uno quita un arreglo de 
 `if (true || s === _ritmoCierrePintado`; `if (p.deMas || typeof inicioMs` → `if (false || typeof
 inicioMs`; `if (!diaRef.current || !hoy || diaRef.current === hoy) return;` → `return;`; el
 `"aria-label": tn('hydrate.glass'` → `"data-x": ...`), corre su prueba y vuelve a compilar.
+
+**7 nov., ~18:40: cerrado, espera el «júntalo» de Ez.** La suite entera con un worker, en verde (1323 pasan
+y 2 se saltan, 59,7 min, sobre 42ae69c7). Los cinco mutantes, en rojo: el de `deMas` vivía porque la ventana
+ya la guarda `ritmoPropuesta`, y lo que esa línea evita es otra cosa: que acabar un Foco por libre tras el
+último bloque recoloque el día (congela el bloque en `pasado`, mueve `desde` de 720 a 778 y reabre la pausa).
+La prueba de `ritmo-pausa.spec.js` («tras el último bloque, un Foco por libre…») lo mira ahora: el día,
+igual antes y después de acabar ese Foco. `ritmo-pausa.spec.js` entera, 7 de 7, y `verify` en verde.

@@ -4,10 +4,13 @@
  * 9:37 y el plan pone el bloque 2 de 9:42 a 10:00. Quien vuelve de la pausa a las 9:45:
  *  · ve el aro en 15:00, lo que cabe antes de la reunión, y el bloque acaba a las 10:00; antes, el
  *    aro se quedaba en 18:00, el bloque acababa a las 10:03 dentro de la reunión y la línea corría
- *    la reunión a las 10:03 (`ritmoDurSiEmpiezas`, app/state-ritmo.jsx);
+ *    la reunión a las 10:03 (`ritmoDurSiEmpiezas`, app/state-ritmo.ahora.jsx);
  *  · los bloques que vienen siguen con su duración (no es «otra duración», `dia.bloque`);
  *  · la ventana de después no habla de un «Foco de 45 minutos»: los minutos son los del bloque que
  *    acaba de terminar, no los del aro, que ya mide el siguiente (`breakPropuesta`).
+ * Y antes de todo eso, el primer bloque del día se cuenta: con él acabado y sin contar, el día se
+ * leía «sin empezar» desde ahora (E1), el aro cambiaba de minutos y el bloque se perdía
+ * (`ritmoFocoCorriendo`, app/state-ritmo.jsx). Sin ese arreglo cae en el primer `terminarBloque`.
  */
 'use strict';
 

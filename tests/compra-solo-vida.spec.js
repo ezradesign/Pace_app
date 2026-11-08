@@ -190,8 +190,8 @@ test.describe('la bienvenida con solo el de por vida, en un móvil en inglés', 
     await hastaLaSemana(page);
     await ponerEnlaces(page, SOLO_VIDA);
     await alUltimoPaso(page);
-    await expect(page.locator('[data-pace-onb-precios]')).toHaveText('One payment of €19.99, for good.');
-    await expect(page.locator('[data-pace-onb-vida]')).toHaveText('Buy, €19.99');
+    await expect(page.locator('[data-pace-onb-precios]')).toHaveText('One payment of €19.99 for lifetime access.');
+    await expect(page.locator('[data-pace-onb-vida]')).toHaveText('Buy for €19.99');
     const [a, b] = [await page.locator('[data-pace-onb-vida]').boundingBox(), await page.locator('[data-pace-onb-ahora]').boundingBox()];
     expect(Math.abs(a.width - b.width)).toBeLessThan(1);
     expect(b.y).toBeGreaterThan(a.y + a.height - 1);
@@ -269,9 +269,9 @@ test.describe('la invitación con solo el de por vida, en un móvil en inglés',
     await comoEnV1(page, SOLO_VIDA);
     await invitar(page);
     const hoja = page.locator(HOJA);
-    await expect(hoja.locator('[data-pace-premium-precios]')).toHaveText('One payment of €19.99, for good.');
+    await expect(hoja.locator('[data-pace-premium-precios]')).toHaveText('One payment of €19.99 for lifetime access.');
     await quieta(page);
-    const [a, b] = await hoja.evaluate((h) => ['Buy, €19.99', 'Not now'].map((n) => {
+    const [a, b] = await hoja.evaluate((h) => ['Buy for €19.99', 'Not now'].map((n) => {
       const x = [...h.querySelectorAll('button')].find((e) => e.textContent.replace(/\s/g, ' ').trim() === n);
       return { ancho: x.offsetWidth, alto: x.offsetHeight, arriba: x.offsetTop };
     }));
@@ -398,7 +398,7 @@ test.describe('/premium y la tienda cuentan lo mismo', () => {
 
     await page.goto('/premium/?lang=en');
     await expect(page.locator('.donde .kicker')).toHaveText('Where your purchase works');
-    await expect(mes.locator('.pronto')).toHaveText('Arrives with version 1');
+    await expect(mes.locator('.pronto')).toHaveText('Coming with version 1');
     await expect(page.locator('[data-venta=apagada]')).toHaveText('VAT included. Lifetime opens soon; monthly and the apps arrive with version 1.');
   });
 

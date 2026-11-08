@@ -270,11 +270,17 @@ function ritmoMenu(s, opcion, cambios, desde, pasado, primerBloque, pausaPendien
    `pausa` (s193) es la parada ABIERTA —lo que va detrás del último bloque
    hecho— mientras no empiece el siguiente; null si no hay ninguna. Solo cuenta
    si el número guardado es el de bloques hechos: si `cycle` se movió por otra
-   vía, la pausa guardada ya no es de este momento. */
-function ritmoPlanBase(s) {
+   vía, la pausa guardada ya no es de este momento.
+   SIN EMPEZAR, el día se lee desde ahora (`desdeAhora`, state-ritmo.ahora.jsx); con
+   `o.comoSeEligio`, desde la hora guardada. Si desde ahora ya no cabe un bloque, manda la
+   guardada. */
+function ritmoPlanBase(s, o) {
   var R = ritmoDe(s);
   if (R.libre || !R.dia) return null;
-  var m = ritmoMenu(s, R.dia.opcion, R.dia.cambios, R.dia.desde, R.dia.pasado || null, R.dia.primerBloque || null, !!R.dia.pausaPendiente, R.dia.bloque || null);
+  var ahora = !(o && o.comoSeEligio) && typeof ritmoDesdeSinEmpezar === 'function' ? ritmoDesdeSinEmpezar(s, R) : null;
+  var menu = function (desde) { return ritmoMenu(s, R.dia.opcion, R.dia.cambios, desde, R.dia.pasado || null, R.dia.primerBloque || null, !!R.dia.pausaPendiente, R.dia.bloque || null); };
+  var m = ahora != null ? menu(ahora) : null;
+  if (!m || !m.focos.length) { ahora = null; m = menu(R.dia.desde); }
   if (!m) return null;
   var crudos = (Number((s || {}).cycle) || 0) - (R.dia.cicloBase || 0);
   var hechos = Math.max(0, Math.min(m.focos.length, crudos));
@@ -283,12 +289,12 @@ function ritmoPlanBase(s) {
   if (pausa && pausa.tipo === 'foco') pausa = null;   /* bloques cortos juntos: no hay parada */
   /* s195: `estados` = { n: 'hecha' | 'saltada' } por ordinal de parada (pausa o cierre).
      `deMas`: el último Foco terminado ya no era del plan (uno por libre tras el último bloque). */
-  return { m: m, hechos: hechos, actual: actual, total: m.focos.length, terminado: !actual, pausa: pausa, estados: R.dia.estados || {},
+  return { m: m, hechos: hechos, actual: actual, total: m.focos.length, terminado: !actual, pausa: pausa, estados: R.dia.estados || {}, desdeAhora: ahora,
            deMas: crudos > m.focos.length };
 }
 /* El plan tal como se ve: pasada la salida, el día está cerrado (state-ritmo.recolocar.jsx). */
-function ritmoPlan(s) {
-  var p = ritmoPlanBase(s);
+function ritmoPlan(s, o) {
+  var p = ritmoPlanBase(s, o);
   if (p && typeof ritmoPasadaLaSalida === 'function' && ritmoPasadaLaSalida(p)) {
     p.cerrado = true; p.actual = null; p.terminado = true; p.pausa = null;
   }
@@ -370,32 +376,15 @@ function ritmoSiguiente(s) {
 
 /* ¿Hay un bloque de foco empezado? Lo dice la clave que FocusTimer escribe mientras corre y,
    desde el 12 oct. 2026, también en pausa (hoy). Cambiar `focusMinutes` con un bloque empezado
-   lo reiniciaría, así que con él vivo no se toca nada. */
+   lo reiniciaría, así que con él vivo no se toca nada. También cuenta el que ya acabó hoy y aún
+   no se ha contado (FocusTimer lo cuenta en su vuelta siguiente y entonces borra la clave): en ese
+   rato, el día con el primer bloque aún sin contar se leía «sin empezar» desde ahora, el aro
+   cambiaba de minutos y el bloque se perdía sin contarse. */
 function ritmoFocoCorriendo() {
   try {
-    var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
-    return !!(v && ((v.endsAt && v.endsAt > Date.now()) || (v.pausaMs > 0 && v.dia === new Date().toDateString())));
+    var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null'), hoy = new Date().toDateString();
+    return !!(v && ((v.endsAt && (v.endsAt > Date.now() || new Date(v.endsAt).toDateString() === hoy)) || (v.pausaMs > 0 && v.dia === hoy)));
   } catch (e) { return false; }
-}
-
-/* Lo que dura el bloque que toca si empieza a la hora `t`: lo del plan, salvo que empiece tarde y
-   detrás venga una reunión. Entonces deja sitio a su pausa o, si así no llega a 15 min, acaba al
-   empezar la reunión, como el día que compone la regla. Sin esto, el bloque de 9:42 a 10:00
-   empezado a las 9:45 duraba sus 18 min, acababa a las 10:03 dentro de la reunión, y la línea
-   corría la reunión a las 10:03 (el bloque en marcha manda en `ritmo.regla.js`). */
-function ritmoDurSiEmpiezas(p, t) {
-  if (!p || !p.actual) return null;
-  var a = p.actual, i = p.m.items.indexOf(a), pausa = 0, o = null;
-  if (t <= a.desde) return a.dur;
-  while (++i < p.m.items.length && !o) {
-    var x = p.m.items[i];
-    if (x.tipo === 'foco') break;
-    if (x.tipo === 'pausa') pausa += x.dur;
-    if (x.tipo === 'ocupado') o = x;
-  }
-  if (!o || t >= o.desde || t + a.dur + pausa <= o.desde) return a.dur;
-  var d = o.desde - t - pausa;
-  return Math.min(a.dur, d >= 15 ? d : o.desde - t);
 }
 
 /* El aro tiene que medir lo que mide el bloque que toca, también si empiezas tarde (cada minuto
@@ -493,7 +482,7 @@ function ritmoHorario(campo, valor) {
 Object.assign(window, {
   ritmoHorarioInicial, ritmoMedia, ritmoDe, ritmoPozos, ritmoMenu, ritmoPlanBase, ritmoPlan, ritmoDetras, ritmoAhoraExacto,
   ritmoPrevios, ritmoCongelar, ritmoHidratar, ritmoRutinaPorId,
-  ritmoAro, ritmoPropuesta, ritmoSiguiente, ritmoSincronizar, ritmoDurSiEmpiezas, ritmoFocoCorriendo,
+  ritmoAro, ritmoPropuesta, ritmoSiguiente, ritmoSincronizar, ritmoFocoCorriendo,
   ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario,
   ritmoOrdinal,
 });

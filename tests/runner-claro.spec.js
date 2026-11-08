@@ -145,7 +145,7 @@ test.describe('P5 · lo que dice cada botón del mando', () => {
     const context = await browser.newContext({ baseURL, viewport: { width: 360, height: 740 }, isMobile: true, hasTouch: true, locale: 'es-ES', timezoneId: 'Europe/Madrid', colorScheme: 'light' });
     const page = await context.newPage();
     await empezar(page, context, 'extra.desk.pushups', { cuerpoAuto: true, lang: 'en', langAuto: false });
-    expect(await rotulosLimpios(page, 'placing')).toEqual(['Previous', 'Pause', 'Begin now']);
+    expect(await rotulosLimpios(page, 'placing')).toEqual(['Previous', 'Pause', 'Start now']);
     await flecha(page).click(); await page.clock.runFor(300);
     expect(await bajoLaFlecha(page)).toBe('Finish set');
     await flecha(page).click(); await page.clock.runFor(300);

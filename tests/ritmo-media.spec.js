@@ -65,12 +65,13 @@ test('sus horas son suyas, se recuerdan y se editan en su cabecera', async ({ pa
   await expect(sels, 'dos selectores, los suyos, y ninguno de comida').toHaveCount(2);
   await expect(panel.locator('[data-pace-ritmo-horario="comida"]')).toHaveCount(0);
   const antes = await page.evaluate(() => { const m = ritmoPlan(getState()).m; return [m.desde, m.hasta]; });
-  expect(antes).toEqual([900, 1140]);
+  /* Sin empezar, el día se lee desde ahora, las 15:05 (Ez, E1 A del 7 nov.). */
+  expect(antes).toEqual([905, 1140]);
   /* cambiar su fin recompone el día y se guarda como preferencia */
   await ponerHora(sels.nth(1), 1200);
   await page.waitForTimeout(400);
   const despues = await page.evaluate(() => { const s = getState(); const m = ritmoPlan(s).m; return { tramo: [m.desde, m.hasta], guardado: s.ritmo.horario.media, entera: [s.ritmo.horario.inicio, s.ritmo.horario.salida] }; });
-  expect(despues.tramo, 'el día llega hasta la hora nueva').toEqual([900, 1200]);
+  expect(despues.tramo, 'el día llega hasta la hora nueva').toEqual([905, 1200]);
   expect(despues.guardado, 'y queda guardada como preferencia').toEqual({ inicio: 900, salida: 1200 });
   expect(despues.entera, 'sin tocar las horas de la jornada entera').toEqual([540, 1020]);
 });

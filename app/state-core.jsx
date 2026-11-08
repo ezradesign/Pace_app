@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.192.0';
+const PACE_VERSION = 'v0.193.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -238,9 +238,7 @@ const defaultState = {
    montar, y llama a cuatro de esas cinco funciones. Si el orden se invierte,
    revienta el primer arranque de cada pestaña. */
 
-/* ============================
-   STORE PRIMITIVO
-   ============================ */
+/* ===== STORE PRIMITIVO ===== */
 
 /* `estricto`: quien ya tiene una copia buena en memoria (otra pestaña que guarda, el cambio de
    día) pide que un fallo LANCE en vez de volver al estado de fábrica, para quedarse con la suya. */
@@ -384,11 +382,13 @@ let _state = loadState();
 const _listeners = new Set();
 let _paceSinGuardar = false; // una copia importada ya escrita: nada se guarda hasta recargar (paceAdoptarEstado)
 
-/* Si el navegador no deja guardar (lleno o bloqueado), lo dice ui/UpdatePrompt.jsx (AvisoNoGuarda). */
+/* Si el navegador no deja guardar (lleno o bloqueado), lo dice ui/UpdatePrompt.jsx (AvisoNoGuarda), y
+   `_paceGuardadoAtrasado` dice que lo guardado es más viejo que la memoria (ensureDayFresh). */
+let _paceGuardadoAtrasado = false;
 function persistState() {
   if (_paceSinGuardar) return;
-  try { localStorage.setItem(LS_KEY, JSON.stringify(_state)); } catch (e) {
-    try { window.__paceNoGuarda = true; window.dispatchEvent(new CustomEvent('pace:no-guarda')); } catch (e2) {}
+  try { localStorage.setItem(LS_KEY, JSON.stringify(_state)); _paceGuardadoAtrasado = false; } catch (e) {
+    _paceGuardadoAtrasado = true; try { window.__paceNoGuarda = true; window.dispatchEvent(new CustomEvent('pace:no-guarda')); } catch (e2) {}
   }
 }
 
@@ -466,11 +466,12 @@ function usePace() {
 /* `desdeDisco` lo pide el cambio de día sin gesto (state-core.dia.js). Sin estado compartido
    entre pestañas, la que vuelve al frente puede llevar una copia de hace horas: relevar el día
    sobre ella archivaría un ayer incompleto y pisaría lo que otra pestaña ya hizo hoy. Lo guardado
-   es siempre lo más nuevo, porque cada cambio se guarda al momento, así que el relevo parte de ahí.
-   Si lo guardado no se puede leer, se sigue con la copia propia: nunca con el estado de fábrica. */
+   es lo más nuevo, porque cada cambio se guarda al momento, salvo si la última escritura falló (el
+   navegador lleno): entonces lo de hoy solo está en memoria y se sigue con la copia propia, como si
+   lo guardado no se pudiera leer. Nunca con el estado de fábrica. */
 function ensureDayFresh(desdeDisco) {
   let base = _state;
-  if (desdeDisco && _state.lastActiveDay !== new Date().toDateString()) {
+  if (desdeDisco && !_paceGuardadoAtrasado && _state.lastActiveDay !== new Date().toDateString()) {
     try { if (JSON.parse(localStorage.getItem(LS_KEY))) base = loadState(true); } catch (e) {}
   }
   const next = rolloverIfNeeded(base);
@@ -482,8 +483,7 @@ function ensureDayFresh(desdeDisco) {
   }
 }
 
-/* TOAST (buffer pre-mount) -> state-core.toast.jsx (s198, cortado por un punto al
-   pasar este archivo de 500 lineas con el saneado del estado). */
+/* TOAST (buffer pre-mount) -> state-core.toast.jsx. */
 
 // Aplicar tema e idioma al cargar
 applyTheme(_state);

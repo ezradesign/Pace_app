@@ -3,7 +3,9 @@
    troceó por módulo visual (content/breathe + move + extra) al superar las
    ~470 líneas. Solo EN: en ES los componentes usan los strings del dato.
    Carga después de strings/* — augmenta window.PACE_STRINGS.en. Este archivo
-   preserva el override silencioso de 3 keys breathe.phase.* (D-1).
+   preserva el override silencioso de 2 keys breathe.phase.* (D-1): las dos
+   oceánicas. «inhala.mas» repite aquí el «Inhale more» de sessions.js, y no
+   puede volver a decir otra cosa: el español dice «Inhala más».
 */
 Object.assign(window.PACE_STRINGS.en, {
 
@@ -11,7 +13,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'breathe.phase.inhala':            'Inhale',
   'breathe.phase.exhala':            'Exhale',
   'breathe.phase.sosten':            'Hold',
-  'breathe.phase.inhala.mas':        'Inhale again',
+  'breathe.phase.inhala.mas':        'Inhale more',
   'breathe.phase.inhala.oceanica':   'Oceanic inhale',
   'breathe.phase.exhala.oceanica':   'Oceanic exhale',
   'breathe.phase.inhala.izq':        'Inhale left',
@@ -22,13 +24,13 @@ Object.assign(window.PACE_STRINGS.en, {
 
   // ── Breathe — categorías ─────────────────────────────────────────
   'breathe.cat.energia.label':           'Energy',
-  'breathe.cat.energia.aside':           'Wakes up the system',
-  'breathe.cat.equilibrio.label':        'Equilibrium',
-  'breathe.cat.equilibrio.aside':        'Regulates the nervous system',
+  'breathe.cat.energia.aside':           'Deep breaths, in rounds',
+  'breathe.cat.equilibrio.label':        'Balance',
+  'breathe.cat.equilibrio.aside':        'A slow, counted rhythm',
   'breathe.cat.balance.label':           'Coherence',
   'breathe.cat.balance.aside':           'A soft, steady rhythm',
   'breathe.cat.relajacion.label':        'Relaxation',
-  'breathe.cat.relajacion.aside':        'Quiets the mind',
+  'breathe.cat.relajacion.aside':        'Long exhales',
   'breathe.cat.pranayama.label':         'Pranayama',
   'breathe.cat.pranayama.aside':         'Yogic roots',
 
@@ -43,16 +45,16 @@ Object.assign(window.PACE_STRINGS.en, {
   'breathe.bellows.desc':                'Fast energizing pranayama, in three rounds with a rest.',
   'breathe.bellows.code':                'Pranayama',
   'breathe.box.4.name':                  'Box 4·4·4·4',
-  'breathe.box.4.desc':                  'Perfect square. Mental calm and sustained focus.',
-  'breathe.box.4.code':                  'Equilibrium',
+  'breathe.box.4.desc':                  'A perfect square: four seconds for each phase.',
+  'breathe.box.4.code':                  'Balance',
   'breathe.box.6.name':                  'Box 6·6·6·6',
-  'breathe.box.6.desc':                  'Deeper version',
-  'breathe.box.6.code':                  'Equilibrium',
+  'breathe.box.6.desc':                  'Six seconds for each phase.',
+  'breathe.box.6.code':                  'Balance',
   'breathe.coherent.55.name':            'Coherent 5·5',
-  'breathe.coherent.55.desc':            'A steady five-and-five rhythm. Meant to find an even cadence.',
+  'breathe.coherent.55.desc':            'Breathe in for five seconds and out for five.',
   'breathe.coherent.55.code':            'Coherence',
   'breathe.coherent.66.name':            'Coherent 6·6',
-  'breathe.coherent.66.desc':            'Deeper version. 5 cycles per minute.',
+  'breathe.coherent.66.desc':            'Six seconds in, six seconds out. 5 cycles per minute.',
   'breathe.coherent.66.code':            'Coherence',
   'breathe.478.name':                    '4·7·8',
   'breathe.478.desc':                    'Long exhale, four cycles. Meant to let go of the day and ease into rest.',
@@ -74,12 +76,12 @@ Object.assign(window.PACE_STRINGS.en, {
   'breathe.rounds.long.name':            'Deep Rounds',
   'breathe.rounds.long.desc':            '5 rounds of 35 breaths. The longest, most intense practice.',
   'breathe.rounds.long.code':            'Energy',
-  'breathe.diaphragm.name':              'Diaphragmatic',
-  'breathe.diaphragm.desc':              'Breathe into the belly. The base of everything else.',
-  'breathe.diaphragm.code':              'Equilibrium',
+  'breathe.diaphragm.name':              'Diaphragmatic Breathing',
+  'breathe.diaphragm.desc':              'Breathe slowly into your belly, without straining.',
+  'breathe.diaphragm.code':              'Balance',
   'breathe.co2.name':                    'CO₂ Tolerance',
-  'breathe.co2.desc':                    'Exhale and hold empty. Train calm with less air.',
-  'breathe.co2.code':                    'Equilibrium',
+  'breathe.co2.desc':                    'Exhale and hold with empty lungs. Breathe in whenever you need to.',
+  'breathe.co2.code':                    'Balance',
   'breathe.coherent.432.name':           'Coherent 432',
   'breathe.coherent.432.desc':           'Coherence 6·6 over a background drone. Immersive.',
   'breathe.coherent.432.code':           'Coherence',
@@ -87,10 +89,10 @@ Object.assign(window.PACE_STRINGS.en, {
   'breathe.exhale.46.desc':              'Exhale longer than you inhale. A gentle brake.',
   'breathe.exhale.46.code':              'Relaxation',
   'breathe.yin.name':                    'Yin Rhythmic',
-  'breathe.yin.desc':                    'Soft rhythm with rest after the exhale. Stillness settles in.',
+  'breathe.yin.desc':                    'A gentle rhythm with a rest after each exhale.',
   'breathe.yin.code':                    'Relaxation',
   'breathe.bhramari.name':               'Bhramari · Bee',
-  'breathe.bhramari.desc':               'Exhale with a low hum. The mind grows quiet.',
+  'breathe.bhramari.desc':               'Exhale with a low hum, lips closed.',
   'breathe.bhramari.code':               'Pranayama',
   'breathe.kumbhaka.name':               'Kumbhaka 1:4:2',
   'breathe.kumbhaka.desc':               'Inhale 4, hold 16, exhale 8. Experienced practitioners only.',

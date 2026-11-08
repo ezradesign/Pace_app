@@ -64,7 +64,7 @@ test('en inglés, «Coherence» y «First time? Start here»', async ({ page, co
   await abrirRespira(page, context, { lang: 'en', langAuto: false });
   await expect(page.getByText('First time? Start here').filter({ visible: true })).toHaveCount(1);
   const grupos = await page.evaluate(() => [...document.querySelectorAll('.pace-lib-rejilla .pace-lib-grp')].map((e) => e.textContent));
-  expect(grupos).toEqual(['Relaxation', 'Coherence', 'Equilibrium', 'Pranayama', 'Energy']);
+  expect(grupos).toEqual(['Relaxation', 'Coherence', 'Balance', 'Pranayama', 'Energy']);
   await expect(page.locator('.pace-lib-rejilla [data-pace-lib-card="breathe.coherent.66"] .pace-lib-ctx')).toContainText('no breath holds');
 });
 

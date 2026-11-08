@@ -77,11 +77,11 @@ function FocusTimer({ onFinish }) {
          y `onFinish` (ritmoBloqueTerminado) ha recolocado el día si llegaste
          tarde. El `finally` conserva lo de antes: aunque `onFinish` fallara, avisa. */
       try {
-        onFinish && onFinish(inicio);
+        onFinish && onFinish(inicio, finBloque);
       } finally {
         /* Con bloques cortos, antes de decidir la ventana: la invitación y la cuenta sin día (22 oct.). */
         try { bloques.marcar(typeof bloquesTerminado === 'function' && bloquesTerminado(minutos)); } catch (e) {}
-        try { if (!(typeof ritmoSinPausa === 'function' && ritmoSinPausa(getState()))) paceFocoPausaPendiente(bloque); } catch (e) {}
+        try { if (!(typeof ritmoSinPausa === 'function' && ritmoSinPausa(getState()))) paceFocoPausaPendiente(bloque, typeof ritmoParadaHasta === 'function' ? ritmoParadaHasta(finBloque) : null); } catch (e) {}
         try { if (typeof ritmoPausaEmpieza === 'function') ritmoPausaEmpieza(finBloque); } catch (e) {}
         try {
           const aviso = typeof ritmoAviso === 'function' ? ritmoAviso(getState(), t, tn, lang) : null;
@@ -236,7 +236,7 @@ function FocusTimer({ onFinish }) {
      - pausa/larga: conservan su copy propio (invariante: copys de pausa). */
   const subtitle = bloques.subtitulo ? bloques.subtitulo
     : enPausaRitmo ? tn('ritmo.pausa.luego', { n: pausaRitmo.n, m: pausaRitmo.de })
-    : aro && aroPausaTerminada(state) ? t('ritmo.aro.pausaTerminada')
+    : aro && aroPausaTerminada(state) ? t('ritmo.aro.pausaTerminada') : cerrada && cerrada.sub ? cerrada.sub
     : isFocoMode
     ? (isCompleted ? t('focus.cycleComplete') : t(getFocusDescriptorKey(state.focusMinutes)))
     : state.focusMode === 'pausa' ? t('focus.subtitle.pause')

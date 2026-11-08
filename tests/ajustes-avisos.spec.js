@@ -29,7 +29,7 @@ async function comoNavegadorReal(context) {
 
 const medir = (page) => page.locator(PANEL).evaluate((p) => ({ sobra: p.scrollHeight - p.clientHeight }));
 const ABRIR = { es: 'Abrir ajustes', en: 'Open settings' };
-const DATOS = { es: 'Copias, borrar y PACE completo', en: 'Copies, delete and PACE Complete' };
+const DATOS = { es: 'Copias, borrar y PACE completo', en: 'Copies, data deletion and PACE Complete' };
 const EXPORTAR = { es: 'Exportar una copia', en: 'Export a copy' };
 
 for (const v of [{ width: 1536, height: 710 }, { width: 1366, height: 768 }, { width: 1280, height: 800 }]) {

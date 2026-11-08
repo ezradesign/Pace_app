@@ -1,0 +1,259 @@
+<title>Una semana con PACE</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de lectura, como una hoja de PACE: cada caso es un pliego con la foto de hoy y sus
+   letras; abajo, la respuesta de Ez lista para copiar. Paleta y letras de la app. */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --paper-3: #DFD8C4;
+  --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #77705F;
+  --line: #C9C0A8; --focus: #3E5A3A; --focus-cta: #50624D; --breathe: #A85E43;
+  --on-cta: #F4F0E6;
+  --serif: "Cormorant Garamond", "EB Garamond", Georgia, serif;
+  --sans: "Inter Tight", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #1d1a14; --paper-2: #26211a; --paper-3: #2f2920;
+    --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536; --focus: #9DB596; --focus-cta: #6E8569; --breathe: #E09A7E;
+    --on-cta: #F4F0E6; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --paper-3: #2f2920;
+  --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #9DB596; --focus-cta: #6E8569; --breathe: #E09A7E;
+  --on-cta: #F4F0E6; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 1rem; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.hoja { max-width: 46rem; margin: 0 auto; padding-block: 3rem 5rem; display: grid; gap: 3.5rem; }
+.ceja { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+h1, h2 { font-family: var(--serif); font-style: italic; font-weight: 500; text-wrap: balance; margin: 0; line-height: 1.1; }
+h1 { font-size: clamp(2.4rem, 7vw, 3.4rem); }
+h2 { font-size: clamp(1.7rem, 4.6vw, 2.2rem); }
+p { margin: 0; max-width: 65ch; }
+code { font-size: .86em; }
+.cabecera { display: grid; gap: 1rem; }
+.cabecera .intro { font-size: 1.08rem; color: var(--ink-2); }
+.hecho { border-top: 1px solid var(--line); padding-top: 1rem; display: grid; gap: .5rem; font-size: .94rem; color: var(--ink-2); }
+.hecho ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .3rem; }
+
+.caso { display: grid; gap: 1.25rem; border-top: 1px solid var(--line); padding-top: 2rem; }
+.caso .cab { display: grid; gap: .5rem; }
+.que { display: grid; gap: .75rem; }
+figure { margin: 0; display: grid; gap: .5rem; }
+.par { display: grid; grid-template-columns: minmax(0, 1fr) 150px; gap: 12px; align-items: start; }
+@media (max-width: 640px) { .par { grid-template-columns: minmax(0, 1fr) 110px; gap: 8px; } }
+figure img { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid var(--line); }
+figcaption { font-size: .84rem; color: var(--ink-3); }
+figcaption b { color: var(--ink-2); font-weight: 600; }
+.nota { font-size: .88rem; color: var(--ink-3); }
+
+.opciones { display: grid; gap: .9rem; margin: 0; padding: 0; border: 0; min-width: 0; }
+.opciones legend { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; margin-bottom: .6rem; padding: 0; }
+.op { position: relative; display: grid; grid-template-columns: auto 1fr; gap: .9rem; align-items: start; padding: 1rem 1.1rem; border-radius: 14px;
+  border: 1px solid var(--line); background: transparent; cursor: pointer; transition: border-color .15s, background .15s; }
+.op:hover { border-color: var(--ink-3); }
+.op:has(input:checked) { background: var(--paper-2); border-color: var(--focus); }
+.op input { position: absolute; opacity: 0; pointer-events: none; }
+.op:has(input:focus-visible) { outline: 2px solid var(--focus); outline-offset: 2px; }
+.letra { font-family: var(--serif); font-style: italic; font-size: 1.9rem; line-height: 1; width: 2.2rem; height: 2.2rem; display: grid; place-items: center;
+  border-radius: 50%; border: 1px solid var(--line); color: var(--ink-2); }
+.op:has(input:checked) .letra { background: var(--focus-cta); border-color: var(--focus-cta); color: var(--on-cta); }
+.op-cuerpo { display: grid; gap: .6rem; min-width: 0; }
+.op-titulo { display: flex; flex-wrap: wrap; gap: .5rem; align-items: baseline; }
+.op-titulo strong { font-weight: 600; }
+.reco { font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; color: var(--focus); border: 1px solid currentColor; border-radius: 99px; padding: .1rem .55rem; }
+.op p { color: var(--ink-2); font-size: .95rem; }
+.op figure img { border-radius: 8px; }
+
+.respuesta { position: sticky; bottom: 0; padding-bottom: env(safe-area-inset-bottom, 0px); }
+.respuesta .caja { background: var(--paper-3); border: 1px solid var(--line); border-radius: 16px; padding: 1rem 1.1rem; display: grid; gap: .6rem; }
+.respuesta .linea { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; justify-content: space-between; }
+#texto-respuesta { font-family: var(--serif); font-style: italic; font-size: 1.35rem; font-variant-numeric: tabular-nums; user-select: all; }
+#copiar { font-family: var(--sans); font-size: .9rem; font-weight: 500; background: var(--focus-cta); color: var(--on-cta); border: 0; border-radius: 99px; padding: .5rem 1.1rem; cursor: pointer; }
+#copiar:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+#aviso-copia { font-size: .84rem; color: var(--ink-3); min-height: 1.3em; }
+.pie { font-size: .84rem; color: var(--ink-3); display: grid; gap: .4rem; }
+@media (prefers-reduced-motion: reduce) { .op { transition: none; } }
+</style>
+
+<main class="hoja">
+  <header class="cabecera">
+    <span class="ceja">Una semana con PACE · 9 a 17 nov. 2026</span>
+    <h1>Lo que pasó en una semana de trabajo</h1>
+    <p class="intro">Tres personas usaron PACE una semana entera, con el reloj adelantado: una en la oficina, otra a media jornada y otra que llega tarde y se salta casi todo. La mayoría de lo que encontraron ya está arreglado. Quedan tres cosas que dependen de cómo quieres que se comporte PACE. Elige una letra en cada una; abajo queda tu respuesta para copiarla.</p>
+    <div class="hecho">
+      <span class="ceja">Ya arreglado, sin nada que elegir</span>
+      <ul>
+        <li>Si empiezas tarde el bloque de antes de una reunión, acaba cuando empieza la reunión, y la reunión sigue a su hora.</li>
+        <li>La ventana de después de ese bloque dice los minutos que hiciste, y no los del bloque siguiente.</li>
+        <li>Lo que cambias con «Otra» se apunta: si cambias tres días la misma rutina, la carta del lunes propone que descanse.</li>
+        <li>El sello que sale en el aro ya no se queda encima del número cuando el aro cambia.</li>
+        <li>Al juntar esta caza con lo de «lo que ves al volver», el primer bloque del día podía perderse sin contarse justo al acabar. Ya no.</li>
+      </ul>
+    </div>
+  </header>
+
+  <section class="caso" id="s3" aria-labelledby="s3-t">
+    <div class="cab">
+      <span class="ceja">S3 · después de la jornada</span>
+      <h2 id="s3-t">Acabas el día y el Foco libre se queda con los minutos del último bloque</h2>
+    </div>
+    <div class="que">
+      <p>Un jueves haces una jornada de dos horas y el último bloque dura 33 minutos, lo que cabía hasta tu hora de salir. Al acabar, el aro dice «Jornada cerrada» y «Seguir por libre», como elegiste. Si pulsas «Seguir por libre», el Foco es de 33 minutos.</p>
+      <p>A la mañana siguiente, antes de preparar el día, el Foco libre sigue en 33, y en la fila de minutos hay un «33» que tú no pusiste. Ese número sale de lo que duró el último bloque, así que cambia cada día: 28, 33, 34…</p>
+    </div>
+    <figure>
+      <div class="par"><img src="{{foto:ez-s3-escritorio-hoy-tarde}}" alt="El aro a las 17:30: Jornada cerrada, 1 h 43 min de foco, Seguir por libre, y un 33 marcado en la fila de minutos" width="1280" height="800" loading="lazy"><img src="{{foto:ez-s3-movil-hoy-tarde}}" alt="El móvil a las 17:30: Jornada cerrada" width="360" height="800" loading="lazy"></div>
+      <figcaption><b>Al acabar.</b> Jueves, 17:30. «Seguir por libre» empezaría un Foco de 33 minutos: el 33 marcado arriba.</figcaption>
+    </figure>
+    <figure>
+      <div class="par"><img src="{{foto:ez-s3-escritorio-hoy-manana}}" alt="La home a las 8:55 del viernes: Foco manual, 33:00, y un 33 en la fila de minutos" width="1280" height="800" loading="lazy"><img src="{{foto:ez-s3-movil-hoy-manana}}" alt="El móvil a la mañana siguiente" width="360" height="800" loading="lazy"></div>
+      <figcaption><b>A la mañana siguiente.</b> Viernes, 8:55, antes de preparar el día: «Foco manual · 33:00».</figcaption>
+    </figure>
+    <fieldset class="opciones">
+      <legend>Qué hacemos</legend>
+      <label class="op"><input type="radio" name="s3" value="A" id="s3-a" checked><span class="letra" aria-hidden="true">A</span>
+        <span class="op-cuerpo">
+          <span class="op-titulo"><strong>Vuelve a tus minutos de siempre</strong><span class="reco">La que recomiendo</span></span>
+          <p>Al acabar la jornada, el Foco libre vuelve a los minutos que tenías antes de empezar el día: 25 si nunca los cambiaste. «Seguir por libre» empieza un Foco de 25, y a la mañana siguiente el aro dice 25:00.</p>
+          <figure><img src="{{foto:ez-s3-escritorio-A-manana}}" alt="La misma mañana con la A: Foco manual, 25:00" width="1280" height="800" loading="lazy"><figcaption>La misma mañana con la A: 25:00.</figcaption></figure>
+        </span></label>
+      <label class="op"><input type="radio" name="s3" value="B" id="s3-b"><span class="letra" aria-hidden="true">B</span>
+        <span class="op-cuerpo">
+          <span class="op-titulo"><strong>Los minutos del bloque de tu día</strong></span>
+          <p>Se queda con lo que dura un bloque normal de ese día, aunque el último fuera más corto: 35 en la de dos horas, 45 en la jornada entera.</p>
+        </span></label>
+      <label class="op"><input type="radio" name="s3" value="C" id="s3-c"><span class="letra" aria-hidden="true">C</span>
+        <span class="op-cuerpo">
+          <span class="op-titulo"><strong>Se queda como está</strong></span>
+          <p>Los minutos del último bloque que hiciste, que cambian de un día a otro.</p>
+        </span></label>
+    </fieldset>
+  </section>
+
+  <section class="caso" id="comida" aria-labelledby="comida-t">
+    <div class="cab">
+      <span class="ceja">S7 · la pausa de antes de comer</span>
+      <h2 id="comida-t">Te saltas la pausa de antes de comer, empiezas un bloque y se come la comida</h2>
+    </div>
+    <div class="que">
+      <p>Viernes, jornada entera, comida a las 14:00. A las 13:45 sale la pausa larga de antes de comer. Dices «Ahora no» y, un minuto después, pulsas «Empezar ya el bloque 7».</p>
+      <p>El bloque marca 45 minutos y acaba a las 14:31. La comida desaparece de lo que viene: la línea la deja atrás, como si ya hubiera pasado, y el día pasa de 9 a 10 bloques. Es lo que pediste al pulsar, pero nada te dice que vas a trabajar en tu hora de comer.</p>
+      <p>Antes de una reunión ya no pasa: desde esta caza, el bloque que empiezas tarde acaba cuando empieza la reunión.</p>
+    </div>
+    <figure>
+      <div class="par"><img src="{{foto:ez-comida-escritorio-hoy-antes}}" alt="La pausa larga de las 13:45: Hacer la pausa y, debajo, Empezar ya el bloque 7; en la línea, la comida a las 14:00" width="1280" height="800" loading="lazy"><img src="{{foto:ez-comida-movil-hoy-antes}}" alt="El móvil en la pausa de antes de comer" width="360" height="800" loading="lazy"></div>
+      <figcaption><b>Antes de pulsar.</b> Las 13:46, en la pausa de antes de comer. Debajo de «Hacer la pausa», «Empezar ya el bloque 7». En la línea, la comida a las 14:00.</figcaption>
+    </figure>
+    <figure>
+      <div class="par"><img src="{{foto:ez-comida-escritorio-hoy-empezado}}" alt="El bloque 7 empezado: 45:00, la comida queda atrás en la línea y la siguiente pausa es a las 14:31" width="1280" height="800" loading="lazy"><img src="{{foto:ez-comida-movil-hoy-empezado}}" alt="El móvil con el bloque empezado" width="360" height="800" loading="lazy"></div>
+      <figcaption><b>Así está hoy, con el bloque empezado.</b> El bloque 7 marca 45:00. Lo siguiente es una pausa a las 14:31; la comida ya no está en lo que viene.</figcaption>
+    </figure>
+    <fieldset class="opciones">
+      <legend>Qué hacemos</legend>
+      <label class="op"><input type="radio" name="comida" value="A" id="comida-a" checked><span class="letra" aria-hidden="true">A</span>
+        <span class="op-cuerpo">
+          <span class="op-titulo"><strong>El bloque acaba a la hora de comer</strong><span class="reco">La que recomiendo</span></span>
+          <p>Como ya pasa antes de una reunión: si empiezas un bloque antes de comer y no cabe entero, dura lo que queda hasta la comida. A las 13:46, el aro marca 14 minutos y el bloque acaba a las 14:00. Comes a tu hora.</p>
+          <figure><div class="par"><img src="{{foto:ez-comida-escritorio-A-empezado@aro}}" alt="El aro con la A: Bloque 7 de 10, 14:00" width="960" height="500" loading="lazy"><img src="{{foto:ez-comida-movil-A-empezado@aro}}" alt="El aro del móvil con la A: 14:00" width="360" height="340" loading="lazy"></div><figcaption>El mismo bloque con la A: 14:00 en el aro. Solo el aro: lo de debajo aún no está hecho para la A.</figcaption></figure>
+        </span></label>
+      <label class="op"><input type="radio" name="comida" value="B" id="comida-b"><span class="letra" aria-hidden="true">B</span>
+        <span class="op-cuerpo">
+          <span class="op-titulo"><strong>Se queda como está</strong></span>
+          <p>Pulsaste empezar y el bloque dura lo que dura, aunque pase la hora de comer. La comida se corre detrás y el día gana un bloque.</p>
+        </span></label>
+      <label class="op"><input type="radio" name="comida" value="C" id="comida-c"><span class="letra" aria-hidden="true">C</span>
+        <span class="op-cuerpo">
+          <span class="op-titulo"><strong>Sin «Empezar ya el bloque» antes de comer</strong></span>
+          <p>En la pausa de antes de comer solo salen la pausa y «Ahora no». Si quieres seguir trabajando, lo haces con un Foco libre.</p>
+        </span></label>
+    </fieldset>
+    <p class="nota">Aparte: en plena reunión (a las 10:04, con la reunión hasta las 11:00) el aro también ofrece «Empezar bloque 3 · 45:00». Si lo pulsas, PACE entiende que no estás en la reunión. Eso lo dejo así, salvo que me digas otra cosa.</p>
+  </section>
+
+  <section class="caso" id="s6" aria-labelledby="s6-t">
+    <div class="cab">
+      <span class="ceja">S6 · la carta del lunes</span>
+      <h2 id="s6-t">La carta propone un cambio que no cambia nada</h2>
+    </div>
+    <div class="que">
+      <p>Alguien con media jornada se salta la pausa de las 12:15 el lunes, el miércoles y el jueves. Esos días tocaban «Escritorio express» y «Tronco sentado», que ya duran 2 minutos.</p>
+      <p>El lunes siguiente, la carta de tu semana propone: «La pausa de las 12:15, que saltaste tres días, pasa a ser de 2 minutos». Si dices «Vale», el martes esa pausa es de 2 minutos, igual que antes. No cambia nada.</p>
+    </div>
+    <figure>
+      <div class="par"><img src="{{foto:ez-corta-escritorio-carta}}" alt="La carta del lunes: la pausa de las 12:15, que saltaste tres días, pasa a ser de 2 minutos" width="1280" height="800" loading="lazy"><img src="{{foto:ez-corta-movil-carta}}" alt="La carta en el móvil" width="360" height="800" loading="lazy"></div>
+      <figcaption><b>Así está hoy.</b> La carta del lunes 16, en el ordenador y en el móvil.</figcaption>
+    </figure>
+    <fieldset class="opciones">
+      <legend>Qué hacemos</legend>
+      <label class="op"><input type="radio" name="s6" value="A" id="s6-a" checked><span class="letra" aria-hidden="true">A</span>
+        <span class="op-cuerpo">
+          <span class="op-titulo"><strong>Si ya era de 2 minutos, la carta no lo propone</strong><span class="reco">La que recomiendo</span></span>
+          <p>La carta mira cuánto duraba lo que te saltaste. Si ya era de 2 minutos, no te ofrece hacerlo de 2: deja el sitio a otro cambio que sí se note, si lo hay.</p>
+        </span></label>
+      <label class="op"><input type="radio" name="s6" value="B" id="s6-b"><span class="letra" aria-hidden="true">B</span>
+        <span class="op-cuerpo">
+          <span class="op-titulo"><strong>Se queda como está</strong></span>
+          <p>La carta lo propone igual, aunque no cambie nada.</p>
+        </span></label>
+    </fieldset>
+  </section>
+
+  <aside class="respuesta" aria-label="Tu respuesta">
+    <div class="caja">
+      <span class="ceja">Tu respuesta</span>
+      <div class="linea">
+        <span id="texto-respuesta">S3 A · S7 A · S6 A</span>
+        <button type="button" id="copiar">Copiar</button>
+      </div>
+      <span id="aviso-copia" role="status"></span>
+    </div>
+  </aside>
+  <footer class="pie">
+    <span>Fotos de la versión 0.193.0 con esta caza y «lo que ves al volver» dentro, en un ordenador de 1280 × 800 y un móvil de 360 × 800, con el reloj adelantado. El informe entero está en la rama, en <code>docs/audits/caza-semana-7nov.md</code>.</span>
+  </footer>
+</main>
+<script>
+(function () {
+  var casos = [['s3', 'S3'], ['comida', 'S7'], ['s6', 'S6']];
+  var texto = document.getElementById('texto-respuesta');
+  var aviso = document.getElementById('aviso-copia');
+  var CLAVE = 'caza-semana-respuesta';
+  var antes = {};
+  try { antes = JSON.parse(localStorage.getItem(CLAVE) || '{}'); } catch (e) {}
+  casos.forEach(function (c) {
+    if (antes[c[0]]) { var r = document.getElementById(c[0] + '-' + String(antes[c[0]]).toLowerCase()); if (r) r.checked = true; }
+  });
+  function leer() {
+    var o = {};
+    casos.forEach(function (c) { var r = document.querySelector('input[name="' + c[0] + '"]:checked'); o[c[0]] = r ? r.value : '?'; });
+    return o;
+  }
+  function pintar() {
+    var o = leer();
+    texto.textContent = casos.map(function (c) { return c[1] + ' ' + o[c[0]]; }).join(' · ');
+    aviso.textContent = '';
+    try { localStorage.setItem(CLAVE, JSON.stringify(o)); } catch (e) {}
+  }
+  document.addEventListener('change', function (e) { if (e.target && e.target.type === 'radio') pintar(); });
+  document.getElementById('copiar').addEventListener('click', function () {
+    var t = texto.textContent;
+    function aMano() {
+      var sel = window.getSelection(), rango = document.createRange();
+      rango.selectNodeContents(texto); sel.removeAllRanges(); sel.addRange(rango);
+      aviso.textContent = 'Seleccionada: cópiala con Ctrl+C.';
+    }
+    try { navigator.clipboard.writeText(t).then(function () { aviso.textContent = 'Copiada: pégala en el chat.'; }, aMano); } catch (e) { aMano(); }
+  });
+  pintar();
+})();
+</script>

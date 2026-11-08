@@ -187,7 +187,7 @@ test('en inglés: «See exercise», y la hoja y la pantalla de ejercicio con el 
   const nombre = await page.evaluate(() => window.PACE_STRINGS.en['extra.calves.s0.name']);
   expect(nombre).toBeTruthy();
   await expect(page.locator('[data-pace-hacerla] .pace-break-nombre')).toHaveText(nombre);
-  await expect(page.locator('[data-pace-hacerla-seguir]')).toHaveText('Go on to block 3');
+  await expect(page.locator('[data-pace-hacerla-seguir]')).toHaveText('Continue to block 3');
   await page.locator('[data-pace-hacerla-empezar]').click();
   const sesion = page.locator('[data-pace-session-root]');
   await expect(sesion.locator('[data-pace-session-title]')).toHaveText(nombre);

@@ -48,14 +48,14 @@ test('con la carta y las novedades, un icono abre una hoja con las dos, lo más 
   await expect(filas(page)).toHaveCount(2);
   await expect(filas(page).nth(0)).toHaveAttribute('data-pace-sobre-item', 'novedades');
   await expect(filas(page).nth(0)).toHaveAttribute('data-pace-sobre-item-estado', 'sin-leer');
-  await expect(filas(page).nth(0)).toContainText('Todas las horas de tu jornada se cambian ahora paso a paso');
+  await expect(filas(page).nth(0)).toContainText('Tu jornada se cierra sola al pasar tu hora de salida');
   await expect(filas(page).nth(1)).toHaveAttribute('data-pace-sobre-item', 'carta');
   await expect(filas(page).nth(1)).toContainText('25 de 35 pausas hechas');
   /* Sin contador de ninguna clase: ni número ni rojo. */
   await expect(page.locator('[data-pace-sobre-hoja]')).not.toContainText(/\b[0-9]+ (cosas|sin leer)/);
 
   /* Las novedades quedan leídas; la carta sigue sin leer ni contestar. */
-  expect(await page.evaluate(() => getState().novedadesVistas)).toBe('jornada-y-logros');
+  expect(await page.evaluate(() => getState().novedadesVistas)).toBe('jornada-cerrada');
   expect(await page.evaluate(() => [getState().ritmo.carta.vista, getState().ritmo.carta.respuesta])).toEqual([null, null]);
   await page.keyboard.press('Escape');
   await expect(page.locator('[data-pace-sobre-hoja]')).toHaveCount(0);
@@ -84,12 +84,12 @@ test('con solo las novedades el icono abre la hoja, y leídas queda abierto', as
 
 test('quien empezó con PACE después de la versión no ve novedades de algo que nunca vio; en inglés, las líneas en inglés', async ({ page, context }) => {
   const despues = new Date(2026, 10, 10, 9, 0);
-  await abrir(page, context, { firstSeen: new Date(2026, 10, 6).getTime() }, despues);
+  await abrir(page, context, { firstSeen: new Date(2026, 10, 8).getTime() }, despues);
   await expect(sobreDe(page)).toHaveCount(0);
 
   await page.evaluate(() => setState({ firstSeen: 1, lang: 'en' }));
   await sobreDe(page).click();
-  await expect(filas(page).nth(0)).toContainText('Every hour of your day now changes step by step');
+  await expect(filas(page).nth(0)).toContainText('Your workday now wraps up on its own');
 });
 
 test('abrir la hoja no mueve la home ni pide scroll a 360 px', async ({ page, context }) => {

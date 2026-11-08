@@ -15,14 +15,14 @@ test('A1 · el idioma que se elige en la bienvenida quita «Auto» y sigue al vo
   await expect(page.getByRole('button', { name: 'Comenzar' })).toBeVisible();
 
   await page.getByTitle('Cambiar a English').click();
-  await expect(page.getByRole('button', { name: 'Begin' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Start', exact: true })).toBeVisible();
   const st = await leerEstado(page);
   expect(st.lang).toBe('en');
   expect(st.langAuto, 'la bienvenida dejó el idioma en «Auto»').toBe(false);
 
   /* El navegador va en español (playwright.config.js): con «Auto» volvería a él. */
   await page.reload();
-  await expect(page.getByRole('button', { name: 'Begin' }), 'al volver a abrir, el idioma volvió al del sistema').toBeVisible();
+  await expect(page.getByRole('button', { name: 'Start', exact: true }), 'al volver a abrir, el idioma volvió al del sistema').toBeVisible();
 });
 
 test('A3 · volver atrás desde «¿Cómo es tu semana?» no borra lo que ya se había tocado', async ({ page }) => {

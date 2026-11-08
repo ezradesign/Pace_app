@@ -295,7 +295,7 @@ test('en inglés la barra dice lo suyo y no se queda con claves crudas', async (
   const texto = await sb(page).innerText();
   expect(texto).toContain('TODAY');
   expect(texto).toContain('LIBRARIES');
-  expect(texto).toContain('None of eight glasses');
+  expect(texto).toContain('Zero glasses of eight');
   await expect(sb(page).getByRole('button', { name: /week|Stats/i })).toHaveCount(1);
   await expect(sb(page).getByRole('button', { name: 'Open Stretch' })).toHaveCount(1);
   /* Una clave sin traducir se pinta tal cual («sidebar.week.open»). */
