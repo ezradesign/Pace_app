@@ -4,6 +4,23 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de noviembre de 2026, ~11:45, v0.193.0.
 
+## 8 nov., ~19:55: coordina 5iWBf… (5 h al 2 %, semana al 63 %; las 5 h se reponen a las 00:40); dos sesiones montan las letras
+
+`main` = origin (3cc813c6, 0.194.0), sin nada local. **La hoja**, publicada en 5iWBfHE7kD3dUVocdskmb6 (versión 91) con los ids de
+esta cuenta: los doce de la tabla de 3e48c7bc, al revés. Los de hoy (CdgFC2hX, 26rrub9P, BMLmjb9, 6qpSUbY y C8okoSLu) solo
+existen en EcLj6, y la hoja lo dice. El script, `hoja-5iwbf.js`, está en el scratchpad de la coordinadora: cambia los ids y pliega lo hecho.
+**Las dos sesiones** (`user_asked`, `cwd` en su worktree): WIP con push al 85 % de las 5 h o al 92 % de la semana; paran al 90 % o al 95 %.
+
+| Rama | Sesión | Puerto | Encargo |
+|---|---|---|---|
+| `claude/usabilidad-8nov-587b48` | `letras-jornada`, `local_a3444fc3…` | 8886-8887 | Traer main; usabilidad 1A-5A y la semana S3 S7 S6 S11 A, con prueba y mutante; página «Montado» en 5iWBf |
+| `claude/caza-nuevo-8nov-0c7d9b` | `letras-nuevo`, `local_7f327cf7…` | 8891 | Traer main; N2 A, N3 A y la usabilidad 6A (Escuchar), y si cabe el ruido de `v1Instr`; página «Montado» en 5iWBf |
+
+Las dos se repartieron así porque la 2 (la barra con una pausa) toca `FocusTimer.support.jsx`, y la 4 (Q5) y la 3 tocan el motor:
+todo lo de ritmo y del Foco va en una sola sesión. Al acabar: revisar sus ramas, enseñar a Ez sus páginas y pedir el «júntalo»,
+que también lleva N1. Con el sí: juntar las dos en `main` (los choques serán `i18nClaves`, DECISIONES e `index.html`), `npm run bump --
+0.195.0`, build, la suite entera, CHANGELOG, la novedad del sobre si Ez la quiere, push y CI. **Después**, la caza en seis anchos (abajo, punto 3).
+
 ## AL RELEVO (8 nov., ~19:20): EcLj6… con las 5 h al 79 % y la semana al 88 %; se sigue en 5iWBf…. Empieza aquí
 
 **Regla de Ez (8 nov.):** se para al 90 % de las 5 h o al 95 % de la semana, lo que llegue antes.

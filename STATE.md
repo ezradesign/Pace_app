@@ -56,12 +56,13 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 - **La 0.194.0, juntada con los «Júntalo» de Ez (8 nov.)**: el contraste (1B 2B 3B), volver tras horas fuera (E1 A, V1 A,
   V2 A), el día de v1 (1B 2A 3B 4A, con «Borrar todo» que dice que el código se queda) y siete arreglos de la caza de la semana.
   Si Play se sube el lunes con la 0.191.1, esta llega como actualización. Detalle, en el relevo de `docs/traspaso/LEEME.md`.
-- **Letras de Ez (8 nov.), todas A, sin montar**: usabilidad 1A-6A (`claude/usabilidad-8nov-587b48`), lo nuevo N2 A y N3 A
-  (`claude/caza-nuevo-8nov-0c7d9b`, con N1 arreglado) y la semana S3 S7 S6 S11 A. Van juntas como 0.195.0 (orden, en el relevo).
+- **Letras de Ez (8 nov.), todas A, montándose (desde ~19:50, en 5iWBf)**: usabilidad 1-5 y la semana S3 S7 S6 S11 en
+  `claude/usabilidad-8nov-587b48` (sesión `letras-jornada`, 8886-8887); N2, N3 y la usabilidad 6 en `claude/caza-nuevo-8nov-0c7d9b`
+  (sesión `letras-nuevo`, 8891, con N1 arreglado). Cada una deja una página «Montado»; luego el «júntalo» de Ez y la 0.195.0.
 - **ChatGPT**: Ez le pasa la revisión de la jornada entera (`docs/audits/chatgpt-8nov/prompt-jornada.md`, también en su hoja) y
   la del cobro y lo legal, que sigue en su hoja.
-- **En marcha (8 nov.)**: una caza de bugs de alguien nuevo (`claude/caza-nuevo-8nov…`, puerto 8891) y una revisión de
-  usabilidad con maqueta para Ez (`claude/usabilidad-8nov…`, 8886-8887), las dos sobre la 0.194.0.
+- **Después de la 0.195.0** (lo pidió Ez el 8 nov.): la caza de las pantallas en seis anchos (320, 360, 390, 768, 1280 y
+  1536), es/en, claro y oscuro, buscando textos cortados y solapes antes de que las vean los testers.
 - **Lo legal para vender en la web**, en `main` con la 0.189.0 y las letras de Ez (1A 2A 3A 4A 5A): los borradores, sin
   publicar hasta sus datos (nombre, NIF y un contacto) y la revisión de un profesional (las preguntas para el gestor y el
   jurista, en `docs/launch/legal-web-para-ez.html`); y `/desistir`, cerrada hasta que Ez dé de alta Resend y ponga
