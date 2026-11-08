@@ -58,8 +58,14 @@ terminó» pero sigue con el texto y el botón de antes («Ciclo completado · E
 «Atención sostenida · Empezar foco · 30:00» el viernes), no con «Lo que queda del día es tuyo · Seguir por libre».
 Y S3 en el banco: tras el jueves, el viernes por la mañana el Foco libre está en 24.
 
-**Falta:** `salta es movil` otra vez (la carta con «descansa» en el banco; la prueba ya lo cubre), si el uso lo deja.
-Y las letras de Ez: S3, S7 y S6.
+**salta otra vez** (`semana.js salta es movil`, 8892): sin errores de consola, sin scroll, cortes ni textos sin
+traducir. «Otra» queda apuntado con lo descartado los tres días (`10:25 p hecha extra.legs.standing×1[extra.desk.pushups]`,
+S4). La carta no trae «descansa»: «Empuje sencillo» se descartó el lunes y el martes, pero el jueves la primera pausa
+servía «Piernas sin pasos» y el «Otra» cayó sobre ella (las rutinas cambian de un día a otro); con dos no llega. Es el
+banco: `tests/ritmo-otra-carta.spec.js` lo cubre con tres días sobre la misma rutina. La carta pregunta «¿Pongo tu
+entrada a las 9:40?» (contestada «No», el martes 17 empieza a las 9:00) y S3 sale cada mañana (Foco libre en 34).
+
+**Falta:** las letras de Ez (S3, S7 y S6) y S10 (sin arreglar).
 
 Para correrlo: `PORT=8892 node .claude/static-server.js` en segundo plano (y 8893 para el segundo) y
 `PACE_E2E_PORT=8892 RECORRIDO_FOTOS=<carpeta> node docs/traspaso/archivos/caza-semana-7nov/semana.js oficina es escritorio`.
