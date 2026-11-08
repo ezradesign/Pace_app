@@ -171,7 +171,8 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
       if (e.key === 'Enter' && stage === 'hold') releaseHold();
       // Enter cierra el DONE salvo foco en un control / modificadores / IME —
       // guard P0 s116 (evita una SEGUNDA salida desde el listener global).
-      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit(sinContarRef.current ? 'skip' : 'done');
+      // preventDefault: el foco vuelve a quien abrió la sesión, y este Enter no debe pulsarlo.
+      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) { e.preventDefault(); onExit(sinContarRef.current ? 'skip' : 'done'); }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
