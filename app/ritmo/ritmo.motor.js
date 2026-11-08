@@ -267,13 +267,16 @@ function motorCortas(porFecha, fechas, f1, sem, a, minutos) {
     grupo.forEach(function (x) { (x.k === 1 ? d1 : d2)[x.f] = true; });
     var n1 = Object.keys(d1).length, n2 = Object.keys(d2).length;
     if (!motorPruebas(n1, n2)) return;
+    /* Ya adaptada, o rechazada, a esa hora: fuera del recorrido y no después de elegir (ChatGPT, 8 nov.
+       2026): mirándolo tras elegir la mejor, una pausa de las 10:35 ya acortada tapaba a la de las 15:45. */
+    var hora = motorCinco(motorMediana(grupo.map(function (x) { return x.hora; })));
+    if (a.cortas.some(function (y) { return Math.abs(y.hora - hora) <= MOTOR_MISMA_HORA; })) return;
+    if (Object.keys(a.rechazado).some(function (k) { var q = k.split(':'); return q[0] === 'corta' && Math.abs(Number(q[1]) - hora) <= MOTOR_MISMA_HORA; })) return;
     if (!mejor || n1 + n2 > mejor.n1 + mejor.n2 || (n1 + n2 === mejor.n1 + mejor.n2 && n1 > mejor.n1)) {
-      mejor = { n1: n1, n2: n2, hora: motorCinco(motorMediana(grupo.map(function (x) { return x.hora; }))), modulo: c.modulo };
+      mejor = { n1: n1, n2: n2, hora: hora, modulo: c.modulo };
     }
   });
   if (!mejor) return [];
-  if (a.cortas.some(function (c) { return Math.abs(c.hora - mejor.hora) <= MOTOR_MISMA_HORA; })) return [];
-  if (Object.keys(a.rechazado).some(function (k) { var p = k.split(':'); return p[0] === 'corta' && Math.abs(Number(p[1]) - mejor.hora) <= MOTOR_MISMA_HORA; })) return [];
   /* Toca los días de la semana pasada que tuvieron una pausa corta a esa hora. */
   var paradas = f1.filter(function (f) {
     return porFecha[f].paradas.some(function (p) { return p.tipo === 'pausa' && Math.abs(p.hora - mejor.hora) <= MOTOR_MISMA_HORA; });

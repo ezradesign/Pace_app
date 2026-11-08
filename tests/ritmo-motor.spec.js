@@ -284,3 +284,19 @@ test('4A · la pausa hecha por tu cuenta no cuenta como saltada, y la carta la c
   const guardada = await page.evaluate(() => eventRitmoParada({ tipo: 'pausa', hora: 945, estado: 'cuenta', reunion: 0, platos: [{ modulo: 'estira', id: 'move.wrists', otras: 0, antes: [] }] }).estado);
   expect(guardada).toBe('cuenta');
 });
+
+/* LA CORTA YA ADAPTADA O RECHAZADA NO TAPA A LA SIGUIENTE (revisión de ChatGPT del 8 nov. 2026). Se miraba
+   después de elegir la mejor y, si lo estaba, no se proponía nada: la de las 15:45 se quedaba sin carta. */
+test('una pausa de las 10:35 ya acortada, o rechazada, no tapa a la de las 15:45', async ({ page, context }) => {
+  await abrir(page, context);
+  const dias = semana(S1, (d, i) => { saltar(d, 635); if ([0, 1, 3].includes(i)) saltar(d, 945); });
+  const hasta = '2026-11-01';
+  const adaptada = await motor(page, { dias, aprendido: { cortas: [{ hora: 635, hasta }] } });
+  expect(adaptada.cambios.map((c) => c.tipo + ':' + c.hora), 'con la de las 10:35 ya acortada no proponía nada').toEqual(['corta:945']);
+  const rechazada = await motor(page, { dias, aprendido: { rechazado: { 'corta:635': hasta } } });
+  expect(rechazada.cambios.map((c) => c.tipo + ':' + c.hora), 'con la de las 10:35 rechazada no proponía nada').toEqual(['corta:945']);
+  const libre = await motor(page, { dias });
+  expect(libre.cambios.map((c) => c.tipo + ':' + c.hora), 'CONTROL: sin nada aprendido, la más saltada').toEqual(['corta:635']);
+  const las2 = await motor(page, { dias, aprendido: { cortas: [{ hora: 635, hasta }], rechazado: { 'corta:945': hasta } } });
+  expect(las2.cambios, 'CONTROL: las dos fuera, nada').toEqual([]);
+});
