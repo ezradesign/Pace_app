@@ -21,7 +21,9 @@ Orden al juntar, con el «júntalo» de Ez: abierta-horas, luego caza-semana (en
 **La fecha de Play:** Ez dijo «el domingo 9», pero el 9 es lunes; preguntado, **Ez (8 nov.): «Mañana, lunes 9»**.
 **~12:15, el contraste, cerrado** (545c292b, en origin): main traída (cinco choques; en Hidrátate se queda «Vaso 3 de 8, vacío» de
 la auditoría sobre el «Vaso 3 de 8» del recorrido, sin la clave `hydrate.glass`; censo a 1152), `verify` en verde (también en la
-coordinadora) y su zona 215 de 215. La página nueva en EcLj6: **CdgFC2hXvi6iMGb6P4hBir** (2Fv1m… es de 5iWBf). Espera el «júntalo».
+coordinadora) y su zona 215 de 215. La página nueva en EcLj6: **CdgFC2hXvi6iMGb6P4hBir** (2Fv1m… es de 5iWBf). **Ez, ~12:30: «Júntalo»**: en `main` LOCAL
+(merge 0b5add58, sin choques, build igual, `verify` en verde), **sin subir**: va a origin con las otras tres ramas, el bump y la
+suite entera. Si relevas, `main` local va por delante de origin a propósito.
 
 ## 7 nov., ~21:10: coordina EcLj6…; las 5 h, repuestas a las 21:00; las tres sesiones esperan el «Arráncalas» de Ez
 

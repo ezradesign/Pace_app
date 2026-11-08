@@ -58,8 +58,9 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 - **El día de v1, con sus letras (1B 2A 3B 4A, 7 nov.), sin montar** (`claude/caza-v1-compra-79e3e4`: importar una copia vieja
   ya no reabre otra semana de PACE completo). Qué es cada letra, en el relevo de `docs/traspaso/LEEME.md`.
 - **ChatGPT**: Ez le pasa la revisión del cobro y lo legal (el texto, en su hoja); la de la jornada, cuando entren abierta-horas y la semana.
-- **El contraste (1B 2B 3B), cerrado y a la espera del «júntalo» de Ez** (8 nov.): `claude/accesibilidad-7nov-e36d06` (545c292b), con
-  main dentro, `verify` y su zona en verde; el antes y el ahora, en https://claude.ai/artifact/CdgFC2hXvi6iMGb6P4hBir (EcLj6).
+- **El contraste (1B 2B 3B), juntado en `main` LOCAL y sin subir** (Ez, 8 nov., ~12:30: «Júntalo»): merge 0b5add58 de
+  `claude/accesibilidad-7nov-e36d06` (545c292b), sin choques, `verify` en verde; sale con las otras ramas, la versión nueva y
+  la suite entera. El antes y el ahora, en https://claude.ai/artifact/CdgFC2hXvi6iMGb6P4hBir (EcLj6).
 - **En marcha, con las letras de Ez** (7 nov.): E1 A, y sobre el
   recorrido V1 A y V2 A, en `claude/abierta-horas-7nov-a2419d`; y la caza de la semana (`claude/caza-semana-21914d`, tres fallos
   arreglados). El detalle, en el relevo de `docs/traspaso/LEEME.md`.
