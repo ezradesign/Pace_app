@@ -156,7 +156,7 @@ test.describe('en inglés', () => {
     const m = await medirParada(page);
     expect(m.titulo).toBe('The ring');
     expect(m.meta).toBe('1 of 4');
-    expect(m.texto).toContain('tap “Start focus”');
+    expect(m.texto).toContain('tap “Start Focus”');
     await expect(page.locator('[data-pace-visita-saltar]')).toHaveText('Skip the tour');
   });
 });

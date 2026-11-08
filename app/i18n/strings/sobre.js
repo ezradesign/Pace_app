@@ -16,7 +16,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
 Object.assign(window.PACE_STRINGS.en, {
     'sobre.titulo':             'The envelope',
-    'sobre.nuevas':             'The envelope, with unread things',
+    'sobre.nuevas':             'The envelope, with unread messages',
     'sobre.antes':              'Earlier',
     'sobre.novedades':          'What’s new in PACE',
     'sobre.novedades.nueva':    'What’s new in PACE, unread',

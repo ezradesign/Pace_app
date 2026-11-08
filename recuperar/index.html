@@ -78,7 +78,7 @@
 
   <form data-recuperar-form novalidate>
     <h1 data-en="Get your code back">Recupera tu código</h1>
-    <p class="lede" data-en="With the email you paid with and your receipt number. We find the purchase in Stripe and give you your code again.">Con el correo con el que pagaste y el número de tu recibo. Buscamos la compra en Stripe y te damos tu código otra vez.</p>
+    <p class="lede" data-en="Enter the email used for your purchase and your receipt number. We’ll look up your purchase in Stripe and recover your code.">Con el correo con el que pagaste y el número de tu recibo. Buscamos la compra en Stripe y te damos tu código otra vez.</p>
     <div class="campo">
       <label for="rec-correo" data-en="Your email">Tu correo</label>
       <input id="rec-correo" name="correo" type="email" autocomplete="email" inputmode="email" required data-recuperar-correo>
@@ -95,16 +95,16 @@
 
   <div data-recuperar-listo hidden>
     <h1 data-en="Here is your code.">Aquí tienes tu código.</h1>
-    <p class="lede" data-en="Open it here and PACE Complete stays on in this browser.">Ábrelo aquí y PACE completo queda puesto en este navegador.</p>
+    <p class="lede" data-en="Use your code to activate PACE Complete in this browser.">Ábrelo aquí y PACE completo queda puesto en este navegador.</p>
     <a class="boton lleno" href="/" data-recuperar-abrir data-en="Open PACE with your code">Abrir PACE con tu código</a>
     <div class="cod" data-recuperar-codigo></div>
     <div class="acc">
       <button class="boton hueco" type="button" data-recuperar-copiar data-en="Copy">Copiar</button>
       <button class="boton hueco" type="button" data-recuperar-bajar data-en="Download">Descargar</button>
-      <a class="boton hueco" href="mailto:" data-recuperar-correo-a data-en="Send it to me">Mandármelo</a>
+      <a class="boton hueco" href="mailto:" data-recuperar-correo-a data-en="Email myself">Mandármelo</a>
     </div>
     <p class="nota" role="status" data-recuperar-hecho hidden></p>
-    <p class="nota" data-en="Keep it: it opens PACE Complete in another browser or on another computer. «Send it to me» opens your own email with the code inside; it does not go through us.">Guárdalo: con él se abre en otro navegador o en otro ordenador. «Mandármelo» abre tu correo con el código dentro; no pasa por nosotros.</p>
+    <p class="nota" data-en="Save your code to activate PACE Complete in another browser or on another computer. “Email myself” opens a draft in your email app. You send it yourself; we don’t send the email.">Guárdalo: con él se abre en otro navegador o en otro ordenador. «Mandármelo» abre tu correo con el código dentro; no pasa por nosotros.</p>
   </div>
 
   <div class="caja">

@@ -1,0 +1,202 @@
+<title>El inglés de PACE</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de lectura, como la hoja de pasos: arriba lo que se decide (cinco preguntas, cada
+   una con lo de hoy y sus letras), debajo lo que se pone sin preguntar. Colores y letras, los de
+   la app (DESIGN_SYSTEM.md). */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F695B;
+  --line: #D6CDB6; --focus: #3E5A3A; --breathe: #9E4F33; --mark: rgba(62, 90, 58, 0.10);
+  --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --breathe: #E8A98F; --mark: rgba(152, 181, 139, 0.14); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --breathe: #E8A98F; --mark: rgba(152, 181, 139, 0.14); color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.55; }
+.hoja { max-width: 720px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 36px 64px; display: flex; flex-direction: column; gap: 40px; }
+h1, h2 { font-family: var(--serif); font-style: italic; font-weight: 500; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(38px, 8vw, 54px); line-height: 1.02; }
+h2 { font-size: 29px; line-height: 1.1; }
+p { margin: 0; max-width: 64ch; color: var(--ink-2); }
+b { color: var(--ink); font-weight: 600; }
+.eyebrow { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+header, section { display: flex; flex-direction: column; gap: 14px; }
+.nota { font-size: 14px; color: var(--ink-3); }
+.respuesta { font-family: var(--serif); font-style: italic; font-size: 22px; color: var(--ink); }
+
+/* Cada pregunta: el número de la pregunta (P1…P5 es el orden en que contestar), lo de hoy y las
+   letras. La recomendada lleva el borde de color y lo dice con palabras. */
+.preguntas { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 28px; }
+.pregunta { display: flex; flex-direction: column; gap: 10px; padding-top: 18px; border-top: 1px solid var(--line); }
+.pregunta .num { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--breathe); font-weight: 600; }
+.pregunta .t { font-weight: 600; font-size: 18px; color: var(--ink); }
+.hoy { display: flex; flex-wrap: wrap; gap: 6px; }
+.hoy span { font-size: 14px; padding: 2px 9px; border-radius: 999px; background: var(--paper-2); border: 1px solid var(--line); color: var(--ink-2); }
+.letras { margin: 4px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.letra { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 2px 12px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); }
+.letra .l { grid-row: span 2; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-family: var(--serif); font-style: italic; font-size: 19px; border: 1.5px solid var(--line); color: var(--ink-2); }
+.letra .q { color: var(--ink); font-weight: 500; }
+.letra .d { font-size: 14.5px; color: var(--ink-2); }
+.letra.reco { border-color: var(--focus); background: var(--mark); }
+.letra.reco .l { background: var(--focus); border-color: var(--focus); color: var(--paper); }
+.reco-tag { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; color: var(--focus); margin-left: 6px; }
+.en { font-style: italic; }
+
+/* Lo que se pone sin preguntar: listas y una tabla plegada con los retoques. */
+ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 7px; max-width: 64ch; color: var(--ink-2); }
+details { border-top: 1px solid var(--line); padding-top: 10px; }
+details > summary { cursor: pointer; font-size: 15px; color: var(--ink-2); padding: 6px 2px; }
+details > summary:hover { color: var(--ink); }
+.tabla { overflow-x: auto; margin-top: 10px; }
+table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 14px; }
+th { text-align: left; font-weight: 500; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); padding: 6px 8px; border-bottom: 1px solid var(--line); }
+td { vertical-align: top; padding: 8px; border-bottom: 1px solid var(--line); color: var(--ink-2); }
+td.mio { color: var(--ink); font-weight: 500; }
+code { font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; font-size: 0.86em; background: var(--paper-2); border: 1px solid var(--line); border-radius: 5px; padding: 0 5px; overflow-wrap: anywhere; }
+</style>
+<main class="hoja">
+  <header>
+    <div class="eyebrow">PACE · lo que trajo ChatGPT del inglés · 7 de noviembre</div>
+    <h1>El inglés de PACE</h1>
+    <p>ChatGPT propuso <b>281 cambios</b> en los textos en inglés de la app y de la web. Los he comprobado uno a uno en el
+      código: todos los textos que cita son los que hay hoy, y casi siempre tiene razón. <b>239 los pongo tal cual, 15 con
+      un retoque mío y 4 no.</b> En los otros <b>23 decides tú</b>, con cinco preguntas, porque cambian también el español o
+      son cosa tuya.</p>
+    <p class="respuesta">Contéstame con las cinco letras, por ejemplo «1A 2A 3A 4A 5A».</p>
+  </header>
+
+  <section>
+    <h2>Lo que decides tú</h2>
+    <ol class="preguntas">
+      <li class="pregunta">
+        <span class="num">Pregunta 1</span>
+        <span class="t">¿Inglés de Estados Unidos o de Reino Unido?</span>
+        <p>Hoy está mezclado, aunque casi todo es de Estados Unidos. Hay que elegir uno y usarlo en toda la app y en la web.</p>
+        <div class="hoy"><span class="en">color · colour</span><span class="en">catalog · catalogue</span><span class="en">center · centre</span><span class="en">license · licence</span></div>
+        <ul class="letras">
+          <li class="letra reco"><span class="l">A</span><span class="q">Estados Unidos<span class="reco-tag">Recomendada</span></span>
+            <span class="d">Es lo que ya hay casi en todas partes, y la ficha de Google Play está en inglés de Estados Unidos. Cambian tres palabras.</span></li>
+          <li class="letra"><span class="l">B</span><span class="q">Reino Unido, lo que propone ChatGPT</span>
+            <span class="d">Cambian unas veinticinco palabras en la app. Las fechas se escriben igual con las dos («7 November»).</span></li>
+        </ul>
+      </li>
+      <li class="pregunta">
+        <span class="num">Pregunta 2</span>
+        <span class="t">«Antídoto a la silla», en inglés</span>
+        <p>Sale en seis sitios: el lema de la bienvenida, Estira, la pausa de Mueve, «A tu ritmo» y dos grupos de Estira
+          («antídoto a la mesa» y «al teclado»). Traducido palabra por palabra, <span class="en">«Antidote to the chair»</span>
+          suena raro en inglés. El español no se toca.</p>
+        <ul class="letras">
+          <li class="letra reco"><span class="l">A</span><span class="q en">The antidote to sitting.<span class="reco-tag">Recomendada</span></span>
+            <span class="d">Es una frase normal en inglés y guarda tu idea. Los otros dos: <span class="en">«The antidote to desk work»</span> y <span class="en">«The antidote to typing»</span>.</span></li>
+          <li class="letra"><span class="l">B</span><span class="q en">A break from sitting.</span>
+            <span class="d">La de ChatGPT. Correcta, pero pierde la idea de antídoto, que es tuya.</span></li>
+          <li class="letra"><span class="l">C</span><span class="q">Dejarlo como está</span>
+            <span class="d">Quien hable inglés lo leerá como una traducción.</span></li>
+        </ul>
+      </li>
+      <li class="pregunta">
+        <span class="num">Pregunta 3</span>
+        <span class="t">Las respiraciones que prometen un efecto</span>
+        <p>Ocho descripciones de Respira dicen lo que le pasará a tu cuerpo, en los dos idiomas. ChatGPT propone que digan lo
+          que se hace, por ejemplo «Inhala, sostén, exhala, sostén. Cuatro segundos cada uno.» Las tiendas de Apple y Google
+          miran con lupa las promesas de salud.</p>
+        <div class="hoy"><span>Regula el sistema nervioso</span><span>Despierta el sistema</span><span>Calma mental y foco sostenido</span><span>Entrena la calma con menos aire</span><span>La mente se aquieta</span><span>La base de todo lo demás</span></div>
+        <ul class="letras">
+          <li class="letra reco"><span class="l">A</span><span class="q">Quitar la promesa en los dos idiomas<span class="reco-tag">Recomendada</span></span>
+            <span class="d">Va con tu regla de ningún consejo de salud sin aviso, y los dos idiomas siguen diciendo lo mismo.</span></li>
+          <li class="letra"><span class="l">B</span><span class="q">Solo en inglés</span>
+            <span class="d">El español seguiría prometiendo, y los dos idiomas dirían cosas distintas.</span></li>
+          <li class="letra"><span class="l">C</span><span class="q">Dejarlas como están</span>
+            <span class="d">Solo se arregla el inglés que suena traducido.</span></li>
+        </ul>
+      </li>
+      <li class="pregunta">
+        <span class="num">Pregunta 4</span>
+        <span class="t">Lo que en español tampoco es del todo verdad</span>
+        <p>Mueve dice «sin equipo», pero tiene rutinas con banda y con barra. Y tres textos dicen que nadie lo nota, cuando la
+          regla de PACE es no prometer absolutos.</p>
+        <div class="hoy"><span>Corto, discreto, sin equipo</span><span>Nadie se entera</span><span>Bajo la mesa, nadie se entera</span><span>Glúteos invisibles</span></div>
+        <ul class="letras">
+          <li class="letra reco"><span class="l">A</span><span class="q">Corregirlo en los dos idiomas<span class="reco-tag">Recomendada</span></span>
+            <span class="d">Por ejemplo, «Corto y discreto, casi siempre sin material» y «Movimientos pequeños, en tu mesa». Te enseño los textos antes de juntarlo.</span></li>
+          <li class="letra"><span class="l">B</span><span class="q">Solo en inglés</span>
+            <span class="d">El español se queda como está.</span></li>
+        </ul>
+      </li>
+      <li class="pregunta">
+        <span class="num">Pregunta 5</span>
+        <span class="t">Las promesas de lo gratis</span>
+        <p>ChatGPT quiere suavizarlas porque son absolutas. Son un compromiso tuyo, y v1 lo cumple: lo esencial sigue gratis.</p>
+        <div class="hoy"><span>Gratis · lo esencial, siempre</span><span>El núcleo de PACE es gratis. Y lo seguirá siendo.</span><span>Para siempre · el núcleo, sin condiciones</span></div>
+        <ul class="letras">
+          <li class="letra reco"><span class="l">A</span><span class="q">Dejarlas, y mejorar solo el inglés<span class="reco-tag">Recomendada</span></span>
+            <span class="d">Es tu promesa, y es verdad.</span></li>
+          <li class="letra"><span class="l">B</span><span class="q">Suavizarlas en los dos idiomas</span>
+            <span class="d">«Lo esencial, incluido», «Tu apoyo ayuda a que siga así» y «Núcleo gratis».</span></li>
+        </ul>
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Lo que pongo sin preguntarte</h2>
+    <ul class="lista">
+      <li><b>Cinco sitios donde el inglés decía otra cosa que el español</b>, y ChatGPT acierta en los cinco: «Retén sin aire»
+        salía como «aguanta la respiración», a dos frases de la biblioteca les faltaba el número de rutinas, «Inhala más» salía
+        como «inhala otra vez», el encogimiento de hombros tenía un giro que no existe, y la barra lateral decía «sello» donde el
+        español dice «logro».</li>
+      <li><b>Los nombres, siempre iguales</b>: <span class="en">At your pace</span> para «A tu ritmo», <span class="en">Start</span>
+        para empezar, <span class="en">break</span> para el descanso, <span class="en">backup</span> para las copias y
+        <span class="en">Lifetime</span> para el pago de por vida.</li>
+      <li><b>Más de doscientas frases</b> que sonaban traducidas: avisos, botones, el calendario, la carta del lunes, las
+        estadísticas, los ajustes, los ejercicios y las páginas de la web.</li>
+      <li><b>En la web, también en español</b>: donde dice que el código se recupera con tu correo, ahora dice que con tu
+        correo y el número de recibo, que es lo que pide /recuperar.</li>
+    </ul>
+    <p class="nota">Las claves no cambian, solo el texto: nadie pierde sus rutinas ni sus datos.</p>
+    <details>
+      <summary>Los 15 que retoco y los 4 que no pongo, con el porqué</summary>
+      <div class="tabla">
+        <table>
+          <thead><tr><th>Hoy</th><th>ChatGPT</th><th>Lo que pongo</th><th>Por qué</th></tr></thead>
+          <tbody>
+            <tr><td class="en">What do you want to cultivate today?</td><td class="en">What would you like to focus on today?</td><td class="mio en">Como está</td><td>«cultivate» es el tono de PACE, y «focus on» se confunde con el módulo Foco</td></tr>
+            <tr><td class="en">If it takes care of you, help us keep it going.</td><td class="en">If PACE helps you, help keep it going.</td><td class="mio en">If PACE looks after you, help us look after it.</td><td>guarda el juego de «Si te cuida, ayúdanos a cuidarlo»</td></tr>
+            <tr><td class="en">You left it unfinished</td><td class="en">Ready to pick up where you left off</td><td class="mio en">Pick up where you left off</td><td>más corto: es la línea pequeña de la barra lateral</td></tr>
+            <tr><td class="en">Fits where you are</td><td class="en">Works in your space</td><td class="mio en">Fits your space</td><td>más corto y dice lo mismo</td></tr>
+            <tr><td class="en">What do you want to cultivate?</td><td class="en">What would you like to focus on?</td><td class="mio en">Como está</td><td>igual que la anterior</td></tr>
+            <tr><td class="en">, never standing</td><td class="en">, not standing</td><td class="mio en">, never standing</td><td>en un aviso de seguridad el «never» es lo que toca; el español dice «nunca de pie»</td></tr>
+            <tr><td class="en">Never in water, while driving or at height</td><td class="en">Do not practise in water, while driving or at height</td><td class="mio en">Never practice it in water, while driving or at height</td><td>frase entera, sin perder el «never» del aviso</td></tr>
+            <tr><td class="en">Nothing. Just you and wherever you are.</td><td class="en">No equipment needed.</td><td class="mio en">Nothing. Just you, wherever you are.</td><td>natural y sin perder el tono</td></tr>
+            <tr><td class="en">Get set, no rush · press Begin now</td><td class="en">Take your time getting ready · tap “Start now”</td><td class="mio en">Get ready, no rush · press “Start now”</td><td>«tap» solo vale en el móvil</td></tr>
+            <tr><td class="en">Loosen the tension</td><td class="en">Take a moment to stretch</td><td class="mio en">Ease the tension</td><td>lo natural en inglés, y dice lo mismo que el español</td></tr>
+            <tr><td class="en">{zona}: unmoved today</td><td class="en">{zona}: not yet today</td><td class="mio en">{zona}: not moved yet today</td><td>«not yet today» suelto no se entiende</td></tr>
+            <tr><td class="en">Not now, I want to try it first</td><td class="en">Try PACE first</td><td class="mio en">Not now, I’ll try it first</td><td>no pierde el «Ahora no» del español</td></tr>
+            <tr><td class="en">You have 1 meeting today and the day works around it.</td><td class="en">Your plan works around your 1 meeting today.</td><td class="mio en">Your plan works around today’s meeting.</td><td>«your 1 meeting» suena raro</td></tr>
+            <tr><td class="en">Listen</td><td class="en">Audio</td><td class="mio en">Sound</td><td>la app dice «sound» en el resto</td></tr>
+            <tr><td class="en">PACE Complete is yours, for good.</td><td class="en">Your lifetime access to PACE Complete is ready.</td><td class="mio en">PACE Complete is yours, for life.</td><td>preciso y sin perder el calor; «Lifetime» queda para la etiqueta</td></tr>
+            <tr><td class="en">If not, cancel it now, in two taps. PACE Complete stays open until {dia}.</td><td class="en">To avoid the charge, cancel in Settings before your trial ends. You can keep using PACE Complete until {dia}.</td><td class="mio en">If not, you can cancel now in two taps. You keep PACE Complete until {dia}.</td><td>ChatGPT se inventa «cancel in Settings»: el botón para cancelar está en la misma hoja, debajo</td></tr>
+            <tr><td class="en">I would rather pay once, {vida}</td><td class="en">Pay once · {vida}</td><td class="mio en">I’d rather pay once: {vida}</td><td>las opciones de la app hablan en primera persona</td></tr>
+            <tr><td class="en">Your name, your email and the number go to whoever sells PACE, to refund you and send you the acknowledgement. PACE does not keep them.</td><td class="en">Your name, email and receipt number are sent to the seller of PACE to process your refund and acknowledge your withdrawal. They are not stored in the app.</td><td class="mio en">Your name, email and receipt number go to the seller of PACE, to refund you and send your acknowledgement. PACE does not keep them.</td><td>«not stored in the app» dice menos que el español</td></tr>
+            <tr><td class="en">Inhale again</td><td class="en">Inhale a little more</td><td class="mio en">Inhale more</td><td>basta con quitar el «again» de content/breathe.js, que pisa al «Inhale more» de sessions.js (la deuda D-1)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <section>
+    <h2>Cuando me des las letras</h2>
+    <p>Una sesión lo monta en su rama, mira en el móvil y en el portátil que los textos nuevos caben, pasa todas las pruebas y te
+      lo enseño antes de juntarlo. La revisión entera y lo comprobado, fila a fila, quedan en
+      <code>docs/audits/chatgpt-7nov-ingles/</code>, así que no se pierde al cambiar de cuenta.</p>
+  </section>
+</main>

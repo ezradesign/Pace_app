@@ -137,6 +137,8 @@ Datos en `app/breathe/BreatheLibrary.jsx`. Estado actual: **20 técnicas**
 (F4, s90, v0.35.0). Orden en biblioteca: **free primero** dentro de cada
 grupo. Grupos: energia 4 · equilibrio 4 · balance 3 · relajacion 4 ·
 pranayama 5.
+Las descripciones y los subtítulos de grupo dicen lo que se hace, no lo que le pasa al cuerpo:
+nada de «regula el sistema nervioso» ni «la mente se aquieta», en los dos idiomas (Ez, 7 nov. 2026).
 
 | ID | Nombre | Grupo | min | safety | `access` (real, F4) |
 |---|---|---|---|---|---|
@@ -148,7 +150,7 @@ pranayama 5.
 | `breathe.coherent.66` | Coherente 6·6 | balance | 10 | — | free (variante larga, no avanzada) |
 | `breathe.ujjayi` | Ujjayi | pranayama | 6 | — | free (oceánica accesible) |
 | `breathe.bellows` | Bhastrika · Fuelle | pranayama | 3 | ⚠ | free (B1.2: mudado de Energía — es pranayama, tag PRA; ⚠ como Kapalabhati: 1 s y 1 s, 30 por minuto) |
-| `breathe.diaphragm` | Diafragmática | equilibrio | 5 | — | free (F4 — la base de todo) |
+| `breathe.diaphragm` | Diafragmática | equilibrio | 5 | — | free (F4 — la más sencilla) |
 | `breathe.exhale.46` | Exhalación 4·6 | relajacion | 6 | — | free (F4 — freno simple) |
 | `breathe.yin` | Rítmica yin | relajacion | 8 | — | free (F4 — meditativa accesible) |
 | `breathe.bhramari` | Bhramari · Abeja | pranayama | 5 | — | free (F4 — pranayama accesible) |
@@ -178,14 +180,15 @@ pranayama 5.
 
 ---
 
-## 🦴 Mueve · Fuerza en un cuarto, sin objetos
+## 🦴 Mueve · Fuerza en un cuarto, casi siempre sin objetos
 
 Botón «Mueve». Fuerza contra tu peso, una pared o tu mano: calistenia sin tecnicismos (Ez, 23 oct.
 2026). Datos en `app/move/move.data.js` (`MOVE_ROUTINES`, ids `extra.*`). **14 rutinas** en las
 tres capas que eligió Ez (2A): «Para empezar» arriba (pausas de 2-3 min, gratis enteras, `entrada`),
 «Sigilo», «Con material» (banda o barra; los pasos de banda se pueden saltar, `opcional`) y «Para ir a
 más». Las dos últimas van `aparte`: «A tu ritmo» nunca las propone. Grupos i18n con prefijo
-`mueve.cat.*`.
+`mueve.cat.*`. Sin absolutos: «casi siempre sin material», «en tu mesa», nunca «nadie se entera» ni «invisible»,
+en los dos idiomas (Ez, 7 nov. 2026).
 
 | ID | Nombre | Grupo | min | `access` |
 |---|---|---|---|---|
@@ -194,7 +197,7 @@ más». Las dos últimas van `aparte`: «A tu ritmo» nunca las propone. Grupos 
 | `extra.legs.standing` | Piernas sin pasos | Para empezar | 3 | free |
 | `extra.pausa.suelo` | Fuerza en suelo | Para empezar | 3 | free |
 | `extra.calves` | Gemelos subrepticios | Sigilo | 2 | free |
-| `extra.glutes.stealth` | Glúteos invisibles | Sigilo | 2 | free |
+| `extra.glutes.stealth` | Glúteos en la silla | Sigilo | 2 | free |
 | `extra.core.stealth` | Core silencioso | Sigilo | 2 | **premium** |
 | `extra.banda.espalda` | Espalda con banda | Con material | 4 | **premium** |
 | `extra.hang.bar` | Colgarse | Con material | 2 | **premium** |

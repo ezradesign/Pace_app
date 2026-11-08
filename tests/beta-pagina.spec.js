@@ -96,7 +96,7 @@ test.describe('a 360 px', () => {
 
 test('/beta en inglés cambia los textos y las capturas, y el botón vuelve al castellano y lo recuerda', async ({ page }) => {
   await page.goto(PAGINA + '?lang=en');
-  await expect(page.getByRole('heading', { name: 'Try PACE on Android or iPhone before anyone else.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Try PACE on Android or iPhone before launch.' })).toBeVisible();
   await expect(page).toHaveTitle('Try PACE on Android or iPhone · PACE');
   const capturas = page.locator('.tira img');
   await expect(capturas).toHaveCount(3);

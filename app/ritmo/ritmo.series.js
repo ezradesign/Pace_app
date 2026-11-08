@@ -56,7 +56,7 @@ var RITMO_SERIES_META = {
   'extra.desk.pushups': { z: ['hombros'], pie: true },
   /* Lo que pide una pared, que cuenta como la mesa (ritmoPozos): en una habitación siempre
      hay una (los días diseñados, 20 oct. 2026). */
-  /* La sentadilla alta contra la pared trabaja glúteo y muslo: cadera, como «Glúteos invisibles».
+  /* La sentadilla alta contra la pared trabaja glúteo y muslo: cadera, como «Glúteos en la silla».
      Sin ella, Mueve no tendría nada de pie para la cadera y la primera pausa pasaría a Estira. */
   'extra.legs.standing': { z: ['piernas', 'caderas'], pie: true },
   'move.neck.3': { z: ['cuello'], pie: false },

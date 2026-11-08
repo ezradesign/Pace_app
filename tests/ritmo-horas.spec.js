@@ -330,7 +330,7 @@ test.describe('en el ordenador', () => {
     await expect(dialogo.locator('[data-pace-ritmo-ahora]')).toContainText('Start now');
     await expect(dialogo.locator('[data-pace-ritmo-ahora]')).toContainText('From 15:05 to 19:05');
     await dialogo.locator('[data-pace-ritmo-mas]').click();
-    await expect(dialogo.locator('[data-pace-ritmo-nota]')).toHaveText('You had 9:00');
+    await expect(dialogo.locator('[data-pace-ritmo-nota]')).toHaveText('Previously 9:00');
     await expect(dialogo.locator('[data-pace-ritmo-dejar]')).toHaveText('Keep 9:00');
     await expect(dialogo.locator('[data-pace-ritmo-cambiar]')).toHaveText('Change to 9:30');
   });

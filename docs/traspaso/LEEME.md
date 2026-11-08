@@ -2,7 +2,243 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 6 de noviembre de 2026, v0.191.1.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 7 de noviembre de 2026, ~21:10, v0.193.0.
+
+## 7 nov., ~21:10: coordina EcLj6…; las 5 h, repuestas a las 21:00; las tres sesiones esperan el «Arráncalas» de Ez
+
+A las 20:30 esta cuenta estaba al 94 % (tope 95 %): nada arrancado, y una vuelta programada para las 21:03. **Una vuelta programada
+no puede arrancar sesiones** (la app solo las deja empezar con palabras de Ez): se le pide un clic. **La hoja**, publicada en
+EcLj6io4wM9pGjtQ5wd1CT (versión 114) con los catorce ids de esta cuenta, y así en el repo; para 5iWBf, darles la vuelta otra vez
+(la tabla, en el script del commit). Las cuatro ramas, limpias y en origin, donde dice el bloque de abajo; el encargo de cada
+sesión es el de su «Orden para la otra cuenta».
+
+## AL RELEVO (7 nov., ~19:50): 5iWBf… al 85 %; se sigue en EcLj6…. Empieza aquí; manda sobre todo lo de abajo
+
+`main` = origin, la 0.193.0 con su CI en verde entero. Nada sin subir: las cuatro ramas vivas están en origin y ninguna
+sesión corre. **Ez, 7 nov., ~19:45: las letras del día de v1, 1B · 2A · 3B · 4A** (página 6stHAifXWoCnzX58mhL8Pz en 5iWBf,
+1AzBCEn8XpnhWVKbMJRSdg en EcLj6). Se montan en `claude/caza-v1-compra-79e3e4` (876f2c36), con sesión nueva en su carpeta,
+trayendo antes `origin/main`; cada una con prueba y mutante:
+- **1B**: «Borrar todo» no quita el código de PACE completo (el aviso sigue diciendo «tus días, tus rutinas y tus logros»).
+- **2A**: el aviso del día de v1, a quien tenga rutinas propias, añade una línea: «Tus rutinas propias se quedan guardadas; desde
+  el (fecha) se abren con PACE completo» (y en inglés).
+- **3B**: en una app sin su tienda lista, la hoja de PACE completo dice «Pronto podrás tenerlo aquí» en lugar de «Llega con la
+  versión 1» (Ez eligió B, no la A recomendada: lo de pago se cierra igual).
+- **4A**: una lista para el día de v1 que cambie juntos los textos «hasta v1» (la nota de /premium, el plato del mensual, la hoja
+  de la app y la bienvenida), vigilada por `verify` para que no se quede ninguno.
+
+**ChatGPT (Ez preguntó qué auditar):** ahora, la revisión del cobro y lo legal, que ya está escrita en su hoja (también revisa
+`guardar-atomico`) y es lo que bloquea encender la venta. Cuando entren abierta-horas y la caza de la semana, otra de la jornada
+entera (el cierre a la salida, volver tras horas fuera, la medianoche y lo que aprende la carta): prepararle ese texto entonces.
+
+**Orden para la otra cuenta:** 1) la caza del día de v1 con las cuatro letras; 2) abierta-horas: la suite entera y las fotos
+del después, a Ez para su «júntalo»; 3) contraste: la sección «Montado» de su página y `verify`, a Ez; 4) caza de la semana:
+repetir «oficina» y su página. No más de tres sesiones a la vez, y con tres arrancando la cuenta sube ~2 puntos por minuto.
+**La hoja:** en EcLj6io4wM9pGjtQ5wd1CT, publicar `docs/traspaso/hoja-de-ruta-20oct.html` dando la vuelta a los catorce ids de
+5iWBf (los doce del bloque de las 16:20, más QNng9nK83cABewcErossmJ → RaUErpS4TGbnmUcdgwv9Bp y 6stHAifXWoCnzX58mhL8Pz →
+1AzBCEn8XpnhWVKbMJRSdg).
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (7 nov., ~19:50)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Monta mis letras del día de v1 (1B 2A 3B 4A), retoma las tres sesiones donde pararon y republica mi hoja de pasos en esta cuenta.
+```
+
+## 7 nov., ~19:25: 5iWBf… al 80 % de las 5 h; la 0.193.0, en `main` y con su CI en marcha
+
+**Ez, 7 nov., ~18:50: «Júntalos»** (el recorrido y el inglés). En `main` y subido (c7d23fff): `git merge --no-ff` de las dos
+ramas (sin choques), la novedad `jornada-cerrada` PRIMERA en `app/shell/novedades.data.js` (`desde` 2026-11-07),
+`tests/sobre-hoja.spec.js` al día (quien empieza el 8 nov. no la ve), `npm run bump -- 0.193.0`, build, CHANGELOG y STATE. La
+suite entera con dos workers: 1319 en verde y 4 rojas, todas del inglés: la hoja del día de v1 en inglés (cambio a propósito,
+prueba al día) y `extra.calves.s0` en inglés, que volvía a decir «as high as you can» y «Lower slowly» en un paso de 1 s (ahora
+«only as far as you can control. Lower with control.», como el español). Las cuatro, en verde; `verify` en verde. **El CI de
+c7d23fff, en verde entero** (verify, los dos trozos de e2e, Safari, Android e iOS). La hoja, versión 89 en 5iWBf.
+
+**Las tres sesiones, paradas al 80 %** (todo en origin): `abierta-horas` con E1 A, V1 A y V2 A montados sobre el recorrido
+(97b8db95; `verify` y la zona en verde; falta la suite entera y las fotos del después en su página); `contraste` con 1B 2B 3B
+montados (6c70dde6; 231 pruebas en verde, 10 mutantes en rojo, 28 fotos; falta la sección «Montado» de su página y `verify`);
+`caza-semana` (8e2334da, WIP: cuatro fallos con prueba, S4 de punta a punta, 181 de la zona en verde; falta repetir «oficina»
+y la página de Ez). Se retoman con sesión nueva, `cwd` en su carpeta y `use_worktree: false`, leyendo su informe.
+Antes de juntar abierta-horas y caza-semana: traer `origin/main` (las dos tocan `app/state-ritmo*.jsx`).
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (7 nov., ~19:25)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Mira el CI de la 0.193.0, retoma las tres sesiones donde pararon y republica mi hoja de pasos en esta cuenta.
+```
+
+## 7 nov., ~18:45: coordina 5iWBf…; el recorrido, cerrado; tres sesiones con las letras de Ez y la semana
+
+Coordinadora nueva en 5iWBf… (las 5 h al 2 % al empezar y al 31 % a los 20 minutos con tres sesiones; la semana al 55 %).
+Las seis ramas estaban limpias y en origin. **El recorrido, cerrado** (`claude/recorrido-6nov-645d6b`, **81f9d80d**): la prueba
+«tras el último bloque, un Foco por libre…» de `ritmo-pausa.spec.js` compara ahora `ritmo.dia` (`pasado`, `desde`, `pausa`)
+antes y después de acabar ese Foco; con el mutante de `deMas` cae (`desde` 720 → 778). Los cinco mutantes en rojo, la suite
+entera en verde (1323, 59,7 min) y `verify` en verde. **Espera el «júntalo» de Ez**, a la vez que su sí al español nuevo del
+inglés; con los dos, una versión nueva con la novedad `jornada-cerrada` (textos en el bloque de abajo).
+
+| Rama | Sesión (5iWBf…) | Puerto | Encargo |
+|---|---|---|---|
+| `claude/caza-semana-21914d` | `caza-semana`, `local_254049f7…` | 8892-8893 | Su «Dónde me quedo»: la zona con un worker, oficina limpia, la persona media, Estadísticas y Logros, y la página de Ez en la rama |
+| `claude/accesibilidad-7nov-e36d06` | `contraste`, `local_7eb24f1a…` | 8886-8887 | Montar 1B 2B 3B (un token hondo por módulo en `app/tokens.css`, claro, oscuro y envejecido), medir, prueba con mutante, las 26 `ritmo-*`, fotos y «Montado» en su página |
+| `claude/abierta-horas-7nov-a2419d` | `abierta-horas`, `local_d676a709…` | 8884-8885 | E1 A; luego `merge` del recorrido a su rama y, sobre él, V1 A y V2 A («Jornada cerrada» en el aro); fotos y «Montado» en su página |
+
+Las tres hacen «WIP:» con push al 85 % de las 5 h y paran al 90 %. Choques al juntar: caza-semana y abierta-horas tocan
+`app/state-ritmo.jsx` y `state-ritmo.recolocar.jsx` (S1 de la semana va con E1); el inglés y accesibilidad, solo `index.html`.
+
+**Las páginas, en esta cuenta:** el inglés montado (el español nuevo para Ez) **QNng9nK83cABewcErossmJ** (en EcLj6, RaUErpS4…),
+el día de v1 con sus cuatro letras **6stHAifXWoCnzX58mhL8Pz** (en EcLj6, 1AzBCEn8…), el recorrido 3deGGg5MHvUmihZHqwEj99, volver
+LsDSi3X7Gbd4kBWdpPcpPj y el contraste 2Fv1mCERFo1zLQ8XJyDvoV. **La hoja**, en 5iWBfHE7kD3dUVocdskmb6 (versión 88) y en el repo
+con los ids de 5iWBf: para EcLj6, dar la vuelta a los doce del bloque de las 16:20 y a estos dos.
+
+## AL RELEVO (7 nov., ~16:25): EcLj6… al 58 % y subiendo 3 puntos por minuto; se sigue en 5iWBf… cuando se reponga (hacia las 17:15)
+
+Escrito antes de tiempo, por si la cuenta se queda sin uso: lo que corre está en el bloque de abajo («~16:20»).
+**Ez, 7 nov., ~16:30:** esta cuenta, hasta el 93 % (las sesiones: WIP al 90 %, paran al 93 %); a las 16:30 iba al 82 %. Preguntó por qué no ve el
+sobre en la web: la web sirve la v0.192.0 (comprobado), pero el sobre solo se pinta con algo dentro. Las novedades (`app/shell/novedades.data.js`)
+son las del 5 nov. y solo salen a quien usaba PACE en ese navegador antes del 5 nov. (`Sobre.novedades.js`); la 0.192.0 no escribió
+ninguna. **Ez: «Sí, escríbela».** Una novedad para la versión que lleve el recorrido y el inglés, con el texto para que lo vea.
+Se monta en `app/shell/novedades.data.js` (PRIMERA de la lista, `desde` = el día en que salga, id `jornada-cerrada`) con la
+versión que junte el recorrido; antes, comprobar que cada línea dice lo que hace la app montada:
+- es: «Tu jornada se cierra sola al pasar tu hora de salida, con lo que hiciste; si quieres, sigues por libre.» · «Si dejas
+  abierta la ventana de una pausa, a la mañana siguiente ya no te espera: PACE abre tu día nuevo.»
+- en: “Your workday now wraps up on its own once your finish time has passed, with what you did; you can keep going without
+  a plan.” · “If you leave a break window open, it no longer waits for you the next morning: PACE opens your new day.”
+**Caza del día de v1** (`claude/caza-v1-compra-79e3e4`, 1fbca049, sesión parada): arregló que importar una copia de antes de v1
+reabría otra semana de PACE completo, sin fin (con prueba y mutante). Informe `docs/audits/caza-v1-compra-7nov.md`; página de Ez
+https://claude.ai/artifact/1AzBCEn8XpnhWVKbMJRSdg (EcLj6), en la rama. Sin suite entera: solo sus tres pruebas y `verify`.
+**Ez eligió las recomendadas en las dos páginas (7 nov., ~16:22): E1 A · V1 A · V2 A y 1B · 2B · 3B.** Aún no se ha montado ninguna.
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (7 nov., ~16:25)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Mira cómo dejaron sus ramas las tres sesiones, cierra el recorrido, monta mis letras (E1A V1A V2A y 1B 2B 3B) y republica mi hoja de pasos en esta cuenta.
+```
+
+**Las tres sesiones, paradas (7 nov., ~16:50):**
+- **Inglés** `claude/textos-ingles-7nov-a227ea`, 646e2508: las 281 filas con 1A-5A, `verify` y las pruebas tocadas en verde. Espera que Ez
+  vea el español nuevo de Respira y Mueve en https://claude.ai/artifact/RaUErpS4TGbnmUcdgwv9Bp (EcLj6; el archivo, en la rama). Choca con
+  accesibilidad solo en `index.html` (rehacer con el build): `montado.md`.
+- **Caza del día de v1** `claude/caza-v1-compra-79e3e4`, **876f2c36**: hecha, con su suite entera en verde (1318 pasan y 2 se saltan; la única
+  roja, `aro-jornada`, pasa sola 11 de 11: carga). Esperan a Ez cuatro letras en su página (1AzBCEn8XpnhWVKbMJRSdg).
+- **Caza de la semana** `claude/caza-semana-21914d`, 645eba28 (WIP): tres fallos arreglados con su prueba (un bloque empezado tarde antes
+  de una reunión; la ventana tras ese bloque; lo descartado con «Otra» en el resumen del día). Paró al 88 %: faltan las pruebas vecinas con
+  un worker, la persona «media» y la página de Ez. Su «Dónde me quedo», en `docs/audits/caza-semana-7nov.md`.
+- **Recorrido**: **la suite entera, en verde** (1323 pasan y 2 se saltan, con un worker, 59,7 min, de 16:07 a 17:06, sobre 42ae69c7 y con
+  la caza del día de v1 corriendo la suya a la vez). Solo falta el aserto de `deMas` (abajo) y enseñárselo a Ez para su «júntalo».
+
+1. **Primero, las tres ramas** del bloque de abajo: `git status` y `git log -3` en su worktree (`.claude/worktrees/textos-ingles-7nov-a227ea`,
+   `caza-v1-compra-79e3e4` y `caza-semana-21914d`); lo que no tenga commit, un «WIP:» con push sin `PACE_standalone.html`. Se
+   retoman con sesión nueva, `cwd` en su carpeta y `use_worktree: false`, leyendo su informe. No más de tres a la vez.
+2. **El recorrido** (`.claude/worktrees/recorrido-6nov-645d6b`): la suite entera, en `scratchpad/recorrido-out/suite.log` de la
+   coordinadora de EcLj6 (`C:\Users\ezrav\AppData\Local\Temp\claude\51fb229bb2336eab\a1f656d0-4d3a-45d1-adbe-c0f8a5bed143\`);
+   si no acabó, otra vez con `PACE_E2E_PORT=8882 npx playwright test --workers=1`. Falta el aserto de `deMas` (abajo). Luego, a Ez
+   para su «júntalo», con la página TuaC3kyiChcNgF1H7pRHVX (EcLj6) o 3deGGg5MHvUmihZHqwEj99 (5iWBf).
+3. **Las letras de Ez:** 1B 2B 3B, en `claude/accesibilidad-7nov-e36d06` (el color hondo de cada módulo para la letra y los
+   botones; las cifras, en `docs/audits/accesibilidad-7nov.md`), con fotos a 360 y 1280, en claro y oscuro. E1 A, en
+   `claude/abierta-horas-7nov-a2419d`. V1 A y V2 A tocan la ventana de la pausa y el cierre del día, que cambia el recorrido: se
+   montan en abierta-horas **después** de juntar el recorrido a `main` y traerlo a la rama (V2 A ya está casi entero en el recorrido:
+   sin «Seguir con el bloque N+1» y el día cerrado pasada la salida; falta que el aro diga «Jornada cerrada» tras el último bloque).
+4. La hoja: en 5iWBfHE7kD3dUVocdskmb6, con los doce ids de 5iWBf (ver abajo). Play y TestFlight, el domingo 9.
+
+## 7 nov., ~16:20: coordina EcLj6… (`local_915c0c64…`); el inglés y dos cazas de bugs, en marcha
+
+Con el mensaje de Ez: «Termina lo que falta del recorrido, lanza el inglés con mis letras… + abramos los hilos que sean
+necesarios + caza de bugs + test como si fuéramos un usuario real». Tres sesiones, cada una en su worktree nuevo:
+
+| Rama | Sesión (EcLj6…) | Puerto | Encargo |
+|---|---|---|---|
+| `claude/textos-ingles-7nov-a227ea` (de `main`) | `ingles`, `local_d3ead9c9…` | 8888 | `comprobado.md` con 1A 2A 3A 4A 5A, el español nuevo en una página para Ez, fotos a 360 px. Sin suite entera |
+| `claude/caza-v1-compra-79e3e4` (de `main`) | `caza-v1`, `local_30baba18…` | 8890 | Cinco personas el día de v1 y al comprar; no toca `cobro/` ni `functions/api/` (guardar-atomico) |
+| `claude/caza-semana-21914d` (del recorrido) | `caza-semana`, `local_6b90ac69…` | 8892 | Tres personas de lunes a lunes con `page.clock`: la carta, lo aprendido, el calendario, la medianoche |
+
+**El recorrido** lo cierra la coordinadora en su worktree (8882; script en el scratchpad, el mismo que describe su
+`LEEME.md`): el build no cambia `index.html`, y 4 de los 5 mutantes salen rojos. El de `deMas` (`state-ritmo.recolocar.jsx:39`,
+`if (p.deMas || …` → `if (false || …`) **vive**: la ventana ya la guarda `ritmoPropuesta` (`state-ritmo.jsx:339`), y
+lo que hace esa línea es no recolocar el día, que la prueba de `ritmo-pausa.spec.js:223` no mira; falta un aserto sobre
+`ritmo.dia` (pasado y desde) antes y después del Foco libre. La suite entera con `--workers=1`, en marcha desde las 16:07.
+
+**Las páginas, aquí:** el inglés `5Pbk8cpueqEVwu3Nn6VyJJ`, el recorrido `TuaC3kyiChcNgF1H7pRHVX`, PACE abierto horas
+`Uv6u27mKhGnhZyQUXuk9MV` y el contraste `Mwq1wanupBNsxj1DZzJdjF` (en 5iWBf: EEBgo…, 3deGG…, LsDSi… y 2Fv1m…). Las dos últimas
+solo vivían en el scratchpad de su sesión: ahora están en sus ramas (`docs/audits/abierta-horas-7nov/pagina-ez.html`,
+c4a0dce3; `docs/audits/accesibilidad-7nov/pagina-ez.html` con sus fotos, 02fb6001). **La hoja**, en EcLj6io4wM9pGjtQ5wd1CT
+(versión 112) y en el repo con los ids de EcLj6: para 5iWBf, dar la vuelta a los doce (los ocho del relevo de las 10:45 y
+estos cuatro). La auditoría de ChatGPT que Ez reenvió a las 16:05 es la misma de `revision.md`: nada nuevo.
+
+**Ez, 7 nov.:** subir la 0.191.1 a Play y darla a los testers de TestFlight, **el domingo 9**. Lo suyo ahora: las letras
+de las dos páginas (E1 V1 V2 y 1-3 del contraste). Uso: las 5 h al 38 % a los 15 minutos de arrancar las tres sesiones.
+
+## AL RELEVO (7 nov., ~13:40): 5iWBf… al 91 %; se sigue en EcLj6…. Empieza aquí; manda sobre todo lo de abajo
+
+`main` = origin con este commit (el CI de 034a08a4, en verde entero). Nada sin subir: las ramas están en origin.
+Ninguna se ha juntado. Las tres sesiones de 5iWBf acabaron su turno; la del recorrido aún corría sus mutantes, que
+cambian `index.html` y lo devuelven al acabar: **mira `git status` en su worktree y, si `index.html` sale modificado,
+`git checkout -- index.html`** (es lo compilado).
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (7 nov., ~13:40)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Termina lo que falta del recorrido, lanza el inglés con mis letras (1A 2A 3A 4A 5A) y republica mi hoja de pasos en esta cuenta.
+```
+
+| Rama | Punta | Estado | Lo que falta |
+|---|---|---|---|
+| `claude/recorrido-6nov-645d6b` | 42ae69c7 | Las 12 rojas, resueltas: 8 eran la 1A a propósito (puestas al día), 3 carga y 1 fallo del cambio de hora (arreglado, con mutante). Fotos del después y página (3deGGg5MHvUmihZHqwEj99) | Los cinco mutantes sobre el último build (el script, en su `LEEME.md`) y la suite entera con `--workers=1`; luego, el «júntalo» de Ez |
+| `claude/abierta-horas-7nov-a2419d` | 0057b120 | Lista: tres fallos con prueba; sin red PACE abre entero; las dos dudosas caen igual con `main` (carga) | Ez elige E1, V1 y V2 (página LsDSi3X7Gbd4kBWdpPcpPj) y dice «júntalo» |
+| `claude/accesibilidad-7nov-e36d06` | a6c6ac71 | Lista: 24 pruebas nuevas, 20 mutantes en rojo, informe `docs/audits/accesibilidad-7nov.md` | Correr las 26 `ritmo-*` (solo cambian nombres de botón) o dejarlo al CI al juntar; Ez, tres letras de contraste (página 2Fv1mCERFo1zLQ8XJyDvoV) |
+| `claude/guardar-atomico-166e3f` | 62ad02da | Terminado | La revisión de ChatGPT y el «júntalo» |
+| `claude/landing-web-5ec1e5` | 23c17eca | Propuesta | Las letras de Ez |
+
+**El inglés:** Ez eligió 1A 2A 3A 4A 5A. El encargo, entero, en `docs/audits/chatgpt-7nov-ingles/LEEME.md` («Para
+montarlo»), con `comprobado.md` como lista de lo que queda. Una sesión en una rama nueva sobre `main`; choca con
+accesibilidad en `app/i18n/strings/sessions.js` (dos claves nuevas), así que mejor juntar antes accesibilidad.
+
+**Las páginas de Ez están en 5iWBf** y en EcLj6 dan 404: la hoja (5iWBfHE7kD3dUVocdskmb6, versión 87), el inglés
+(EEBgoRtHUytnXGzeTXXftD, `docs/audits/chatgpt-7nov-ingles/pagina-ez.html`), el recorrido, PACE abierto horas y
+accesibilidad (sus archivos, en sus ramas). Para la hoja de EcLj6 (EcLj6io4wM9pGjtQ5wd1CT): leerla antes, dar la vuelta a
+los ocho ids del relevo de las 10:45 y poner los de las cuatro páginas publicadas de nuevo allí.
+
+## 7 nov., ~12:50: coordina 5iWBf…; las tres ramas a medias, retomadas; el inglés, comprobado
+
+Coordinadora nueva en 5iWBf… (`local_` de esta sesión en la app; las 5 h al 2 %, la semana al 39 %). Las sesiones de EcLj6…
+siguieron escribiendo hasta las 12:00 tras el relevo: accesibilidad dejó cinco cambios sin guardar, que su sesión nueva recoge.
+Retomadas con sesión nueva en su carpeta, sin worktree propio:
+
+| Rama | Sesión (5iWBf…) | Puerto | Encargo |
+|---|---|---|---|
+| `claude/recorrido-6nov-645d6b` | `recorrido`, `local_90c3fc17…` | 8882 | Las 12 pruebas vecinas en rojo, caso a caso (¿la 1A a propósito o un cierre demasiado pronto?), las fotos del después y la página de Ez publicada de nuevo en esta cuenta |
+| `claude/abierta-horas-7nov-a2419d` | `abierta-horas`, `local_6939ec77…` | 8884-8885 | El banco del service worker sin red, las dos pruebas dudosas (`ritmo-aviso:95`, `ritmo-pausa:106`) y una página para Ez con E1, V1 y V2 |
+| `claude/accesibilidad-7nov-e36d06` | `accesibilidad`, `local_8fc623cd…` | 8886 | Reconstruir y terminar, el informe `docs/audits/accesibilidad-7nov.md` y la página con lo visual |
+
+`guardar-atomico` y la landing siguen como dice el relevo de abajo. **El inglés:** Ez trajo la revisión de ChatGPT de los
+textos en inglés; está entera en `docs/audits/chatgpt-7nov-ingles/revision.md`, comprobada (las 257 claves que cita tienen
+hoy ese texto) y clasificada fila a fila en `comprobado.md`; las cinco preguntas, en su `LEEME.md` y en la página
+EEBgoRtHUytnXGzeTXXftD (solo en 5iWBf). **La hoja de 5iWBf, publicada** (versión 85) con los ids de esta cuenta: para
+publicarla en EcLj6 hay que dar la vuelta a los ocho del relevo de abajo y volver a publicar allí la página del inglés.
+
+## AL RELEVO (7 nov., ~10:45): EcLj6… al 92 %; se sigue en 5iWBf…. Empieza aquí; manda sobre todo lo de abajo
+
+Coordinaba `local_bb93541e-f0d1-4080-bec4-823c62e52373` en EcLj6…. `main` = origin en v0.192.0 (CI de 6a75e948 en verde entero) más este commit de documentos. **Nada sin subir:** las cinco ramas vivas están en origin. Ninguna se ha juntado: todas esperan el «júntalo» de Ez.
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (7 nov., ~10:45)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Mira el estado de las cinco ramas, retoma las que quedaron a medias y republica mi hoja de pasos en esta cuenta.
+```
+
+| Rama | Sesión (EcLj6…) | Estado | Lo que falta |
+|---|---|---|---|
+| `claude/recorrido-6nov-645d6b` | `local_09cd451b…` | 3 arreglos del recorrido + lo que eligió Ez (1A 2A 3A 5A; 4C sin tocar), ya con `main` 0.192.0 dentro. WIP d7995d2e: cinco mutantes en rojo y `verify` en verde | Las pruebas vecinas (`aro-jornada`, `ritmo-*`, `hora-y-medianoche`, `bloques-cortos`) y las fotos del después en la página de Ez (Pd8CZq71NjTMimaydP3caM, en EcLj6: en 5iWBf, republicar `docs/traspaso/archivos/recorrido-6nov/pagina-ez.html`). Después, la suite entera y enseñárselo a Ez para su «júntalo» |
+| `claude/abierta-horas-7nov-a2419d` | `local_d3dda760…` | PACE abierto horas: tres fallos arreglados con prueba (e30c0015) y el informe en WIP (3c404579), en `docs/audits/abierta-horas-7nov.md` | `npm run verify`, las pruebas vecinas y el banco del service worker sin red |
+| `claude/accesibilidad-7nov-e36d06` | `local_b7d2e5c1…` | A medias: tres pruebas nuevas (nombres, teclado y movimiento reducido) y cambios en `app/`; WIP guardado por la coordinadora (828d6060 y e1432c8a) | Leer el informe `docs/audits/accesibilidad-7nov.md` (si lo hay) y el diff; terminar, `verify`, sus pruebas y la página para Ez con lo visual (contraste) |
+| `claude/guardar-atomico-166e3f` | `local_84fe474b…` | Terminado: un periodo por llave en `cobro/mensual.js`, 89 del cobro en verde, dos mutantes | Espera la revisión de ChatGPT (Ez tiene el texto, que también pide revisar este arreglo) y su «júntalo» |
+| `claude/landing-web-5ec1e5` | — | Propuesta | Las letras de Ez (en 5iWBf, su página es E3tcsR3FnywQNmnCpymxrp) |
+
+Se retoman con sesión nueva, `cwd` en su carpeta de `.claude/worktrees/` y `use_worktree: false`, leyendo su informe; puertos del 8882 en adelante. No más de tres sesiones a la vez. Al juntar: un `git merge` de cada rama (tiene `main` dentro o casi), `index.html` rehecho con el build, `PACE_standalone.html` como estaba, el censo de `verify.integridad.js` sumado a mano y la suite entera.
+
+**Espera a Ez:** qué versión sube a Play (0.191.1, ya bajada y en TestFlight, que es la recomendada; o 0.192.0, que pide bajar su AAB, otro TestFlight, notas con la jornada y capturas nuevas); pasar a ChatGPT la revisión del cobro y lo legal y la de los textos en inglés (los dos textos, en la hoja); y las letras de lo visual que traigan accesibilidad y el recorrido.
+
+**La hoja de 5iWBf** (5iWBfHE7kD3dUVocdskmb6): publica `docs/traspaso/hoja-de-ruta-20oct.html` allí (léela antes con `action: read`). Lleva ids de EcLj6 que dan 404 en 5iWBf: las fotos de la jornada G4kprWWqpUfjEbGnvhVh1c → 5P7oysx4zRBMe7qvhRjFgZ, la landing JwFknwwkJhmypQwiZ7npnB → E3tcsR3FnywQNmnCpymxrp, los seis del plegado al revés que en 7903bbb8 (VDdAWeb8…→9MnNL8b5…, Mk11GDb9…→56cDi1KJ…, 7Hj5sHmF…→9BKgTENw…, MVctqCpa…→Mtv9tKsU…, U1mVU44s…→LD2aRGw2…, R4hc4PDH…→REAWxKaA…), y la página del recorrido Pd8CZq71NjTMimaydP3caM, que hay que publicar de nuevo allí.
+
+**Trampas de hoy:** en PowerShell, `Remove-Item` está bloqueado; para quitar un worktree con `node_modules` enlazado, primero `cmd /c rmdir <carpeta>\node_modules` (quita solo el enlace) y después `git worktree remove`. Un `cd` en Bash a una carpeta de worktree mueve la sesión: usa `git -C` o `( cd … )`. `logros-sin-pronto-ddf6d6` y `sweet-moser-38e06d` quedan vacías y bloqueadas.
 
 ## 6 nov., ~23:40: v0.192.0 en `main`; guardar() y el recorrido, en sus ramas
 
