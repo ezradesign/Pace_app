@@ -162,9 +162,31 @@ function pacePasoV1Avisado() {
   if (r && !r.avisado) setState({ pasoV1: Object.assign({}, r, { avisado: true }) });
 }
 
+/* AL IMPORTAR UNA COPIA, EL PASO A v1 DE AHORA SE QUEDA. Quien ya usaba PACE tiene su semana y
+   su lista fijadas; la copia que entra lo pisa todo, y una de antes de v1 no trae `pasoV1`: el
+   arranque siguiente lo calculaba otra vez y daba otra semana entera, una por cada vez que se
+   importara (caza del 7 nov.). Con el paso de ahora de quien ya usaba PACE:
+     · se quedan sus fechas y su aviso, traiga lo que traiga la copia;
+     · a su lista se suman las de pago que trae la copia: las de su `pasoV1` si es de quien ya
+       usaba PACE, o, si es de antes de v1, las que hizo según sus contadores (lo de antes de v1
+       es justo lo que se queda).
+   Sin paso de ahora, o con el de quien instaló ya en v1 (también tras «Borrar todo»), entra la
+   copia como venga: así se recupera con ella. Puro: devuelve el estado que debe escribirse. */
+function pacePasoV1Conservar(actual, entrante) {
+  var forma = function (r) { return r && typeof r === 'object' && !Array.isArray(r) && typeof r.at === 'number' ? r : null; };
+  var ahora = forma(actual && actual.pasoV1);
+  if (!ahora || !ahora.previo || !entrante) return entrante;
+  var trae = forma(entrante.pasoV1);
+  var suyas = trae ? (trae.previo && Array.isArray(trae.rutinas) ? trae.rutinas : []) : pacePasoV1Rutinas(entrante, {});
+  var juntas = (Array.isArray(ahora.rutinas) ? ahora.rutinas : [])
+    .concat(suyas.filter(function (id) { return typeof id === 'string' && pacePasoV1EsDePago(id); }));
+  var rutinas = juntas.filter(function (id, i) { return juntas.indexOf(id) === i; }).sort();
+  return Object.assign({}, entrante, { pasoV1: Object.assign({}, ahora, { rutinas: rutinas }) });
+}
+
 try { pacePasoV1(); } catch (e) {}
 
 Object.assign(window, {
   PACE_PASO_V1_DIAS, pacePasoV1, pacePasoV1Leer, pacePasoV1Rutinas, pacePruebaV1Vigente, pacePruebaV1Hasta, pacePasoV1Conserva,
-  pacePasoV1PorAvisar, pacePasoV1Avisado,
+  pacePasoV1PorAvisar, pacePasoV1Avisado, pacePasoV1Conservar,
 });

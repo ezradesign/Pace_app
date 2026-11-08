@@ -311,7 +311,8 @@ for (const plataforma of ['android', 'ios']) {
 
       await invitar(page);
       const hoja = page.locator(HOJA);
-      await expect(hoja).toContainText('Llega con la versión 1.');
+      /* Desde v1 y sin la compra de su tienda (Ez, 3B del 7 nov.). */
+      await expect(hoja).toContainText('Pronto podrás tenerlo aquí.');
       await expect(hoja.locator('[data-pace-premium-precios], [data-pace-premium-vida], [data-pace-premium-tengo], a[href]')).toHaveCount(0);
       await expect(hoja.getByRole('button', { name: /Probar|Comprar|pagarlo/ })).toHaveCount(0);
       await hoja.getByRole('button', { name: 'Ahora no' }).click();

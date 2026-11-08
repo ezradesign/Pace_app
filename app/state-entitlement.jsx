@@ -57,6 +57,25 @@ function tieneLicenciaPremium() {
    (state-paso-v1.js). */
 const PREMIUM_ABIERTO_HASTA_V1 = true;
 
+/* LOS TEXTOS QUE DICEN «HASTA v1» CAMBIAN CON EL INTERRUPTOR, TODOS A LA VEZ (Ez, 4A del 7 nov.
+   2026). Cada texto de la app que habla de v1 como algo que llega va en esta lista con el que lo
+   sustituye desde v1 (null: desde v1 no se dice nada), y se pinta con `paceTextoV1(clave)`, que
+   lee el interruptor al llamarse. /premium y /beta llevan los suyos en `data-v1`, con su propio
+   `DIA_V1`. scripts/verify.dia-v1.js falla si un texto que dice v1 se queda fuera de la lista, si
+   alguien lo pinta sin `paceTextoV1` o si las páginas y el interruptor no van a la par.
+   La hoja de PACE completo sin tienda dice «Pronto podrás tenerlo aquí» (Ez, 3B del 7 nov.). */
+const PACE_TEXTOS_V1 = {
+  'premium.v1': 'premium.v1.despues',
+  'premium.onb.abierto.lede': 'premium.onb.lede',
+  'premium.onb.abierto.precios': 'premium.onb.precios',
+  'premium.onb.abierto.aviso': null,
+};
+
+function paceTextoV1(clave) {
+  if (window.PREMIUM_ABIERTO_HASTA_V1 === true || !Object.prototype.hasOwnProperty.call(PACE_TEXTOS_V1, clave)) return clave;
+  return PACE_TEXTOS_V1[clave];
+}
+
 /* ¿Está PACE completo abierto ahora sin código ni compra? Hasta v1, para todos; desde v1,
    durante la semana de prueba de quien ya usaba PACE. Es lo que abría el interruptor. */
 function paceAbiertoAhora() {
@@ -192,6 +211,18 @@ function paceGestionarCompra() {
   return !!(tienda && tienda.gestionar());
 }
 
+/* AL IMPORTAR UNA COPIA, LO QUE ABRE PACE COMPLETO NO SE CAMBIA A CIEGAS: el código
+   (`paceLicenciaConservar`, state-licencia.js) y la semana del día de v1 con las rutinas que se
+   quedan (`pacePasoV1Conservar`, state-paso-v1.js). Las dos van dentro del estado y la copia lo
+   pisa entero: una copia de antes de v1 no trae `pasoV1`, y el arranque siguiente volvía a dar
+   siete días de todo, tantas veces como se importara. -> Promise<estado que debe escribirse>. */
+function paceConservarAlImportar(actual, entrante) {
+  const licencia = window.paceLicenciaConservar ? window.paceLicenciaConservar(actual, entrante) : Promise.resolve(entrante);
+  return Promise.resolve(licencia).then((e) => {
+    try { return window.pacePasoV1Conservar ? window.pacePasoV1Conservar(actual, e) : e; } catch (x) { return e; }
+  });
+}
+
 /* La tercera fuente de PACE completo: lo que la tienda sabe que ya tienes (Play). */
 function tieneCompraVigente() {
   const tienda = tiendaDelCanal();
@@ -201,4 +232,5 @@ function tieneCompraVigente() {
 Object.assign(window, {
   canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, puedeVariar, puedeCrearRutinas, PREMIUM_ABIERTO_HASTA_V1, paceAbiertoAhora,
   paceTiendaAbierta, paceTiendaPlanes, paceTiendaPrecios, paceBienvenidaCompleto, paceComprar, paceGestionarCompra, paceTiendaPuedeGestionar, tieneCompraVigente,
+  paceConservarAlImportar, PACE_TEXTOS_V1, paceTextoV1,
 });

@@ -3500,8 +3500,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.msg.reset.err': 'No se pudo borrar. Tus datos siguen intactos.',
   'settings.aviso.no': 'Cancelar',
   'settings.reset.titulo': '¿Borrar todos tus datos?',
-  'settings.reset.cuerpo': 'Se borra todo lo que PACE guarda en este navegador: tus días, tus rutinas y tus logros. No se puede deshacer. Si quieres, exporta antes una copia.',
-  'settings.reset.cuerpo.app': 'Se borra todo lo que PACE guarda en este móvil: tus días, tus rutinas y tus logros. No se puede deshacer. Si quieres, exporta antes una copia.',
+  'settings.reset.cuerpo': 'Se borra lo que PACE guarda en este navegador: tus días, tus rutinas y tus logros. Tu código de PACE completo, si lo tienes, se queda. No se puede deshacer. Si quieres, exporta antes una copia.',
+  'settings.reset.cuerpo.app': 'Se borra lo que PACE guarda en este móvil: tus días, tus rutinas y tus logros. No se puede deshacer. Si quieres, exporta antes una copia.',
   'settings.reset.si': 'Borrar todo',
   'settings.import.titulo': '¿Cambiar tus datos por los de la copia?',
   'settings.import.cuerpo': 'La copia trae {logros} logros y {foco} min de foco. Lo que hay ahora en PACE se sustituye por la copia, sin juntarse, y no se puede deshacer.',
@@ -3599,8 +3599,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.msg.reset.err': 'Could not delete. Your data is untouched.',
   'settings.aviso.no': 'Cancel',
   'settings.reset.titulo': 'Delete all your data?',
-  'settings.reset.cuerpo': 'Everything PACE keeps in this browser is deleted: your days, your routines and your achievements. It cannot be undone. If you want, export a copy first.',
-  'settings.reset.cuerpo.app': 'Everything PACE keeps on this phone is deleted: your days, your routines and your achievements. It cannot be undone. If you want, export a copy first.',
+  'settings.reset.cuerpo': 'What PACE keeps in this browser is deleted: your days, your routines and your achievements. Your PACE Complete code, if you have one, stays. It cannot be undone. If you want, export a copy first.',
+  'settings.reset.cuerpo.app': 'What PACE keeps on this phone is deleted: your days, your routines and your achievements. It cannot be undone. If you want, export a copy first.',
   'settings.reset.si': 'Delete everything',
   'settings.import.titulo': 'Replace your data with the copy?',
   'settings.import.cuerpo': 'This copy contains {logros} achievements and {foco} min of Focus. It will replace your current PACE data, not merge with it. This can’t be undone.',
@@ -3611,6 +3611,8 @@ Object.assign(window.PACE_STRINGS.en, {
 </script>
   <script>
 ;(function () {
+
+
 
 
 
@@ -3688,7 +3690,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'premium.pasov1.vale': 'Entendido',
   'premium.pasov1.mod.breathe': 'Respira',
   'premium.pasov1.mod.move': 'Mueve',
-  'premium.pasov1.mod.extra': 'Estira'
+  'premium.pasov1.mod.extra': 'Estira',
+  'premium.pasov1.propias': 'Tus rutinas propias se quedan guardadas; desde el {fecha} se abren con PACE completo.',
+  'premium.v1.despues': 'Pronto podrás tenerlo aquí.'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -3759,7 +3763,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'premium.pasov1.vale': 'Got it',
   'premium.pasov1.mod.breathe': 'Breathe',
   'premium.pasov1.mod.move': 'Move',
-  'premium.pasov1.mod.extra': 'Stretch'
+  'premium.pasov1.mod.extra': 'Stretch',
+  'premium.pasov1.propias': 'Your own routines stay saved; from {fecha}, they open with PACE Complete.',
+  'premium.v1.despues': 'You’ll be able to get it here soon.'
 });
 })();
 </script>
@@ -7359,10 +7365,8 @@ function persistState() {
 
 
 
-
-
-
 function wipeLocalState() {
+  const queda = window.paceLicenciaQuedaAlBorrar ? window.paceLicenciaQuedaAlBorrar(_state) : null;
   try {localStorage.removeItem(LS_KEY);} catch (e) {return false;}
   try {
     const sobrantes = [];
@@ -7372,6 +7376,7 @@ function wipeLocalState() {
     }
     sobrantes.forEach((k) => {try {localStorage.removeItem(k);} catch (e) {}});
   } catch (e) {}
+  if (queda) {try {localStorage.setItem(LS_KEY, JSON.stringify({ ...loadState(), ...queda }));} catch (e) {}}
   return true;
 }
 
@@ -8915,6 +8920,16 @@ function paceLicenciaConservar(actual, entrante) {
 
 
 
+
+
+function paceLicenciaQuedaAlBorrar(s) {
+  if (!s || typeof s.licencia !== 'string' || !s.licencia) return null;
+  return { licencia: s.licencia, premiumAvisoPrueba: s.premiumAvisoPrueba != null ? s.premiumAvisoPrueba : null };
+}
+
+
+
+
 function paceLicenciaComprobarGuardado(c) {
   if (_paceLicenciaFirma.codigo === c) return;
   _paceLicenciaFirma = { codigo: c, estado: 'comprobando' };
@@ -9068,13 +9083,14 @@ Object.assign(window, {
   paceLicenciaComprobar: paceLicenciaComprobar,
   paceLicenciaCanjear: paceLicenciaCanjear,
   paceLicenciaConservar: paceLicenciaConservar,
+  paceLicenciaQuedaAlBorrar: paceLicenciaQuedaAlBorrar,
   paceLicenciaVigente: paceLicenciaVigente,
   paceLicenciaPermitida: paceLicenciaPermitida,
   paceLicenciaRenovar: paceLicenciaRenovar,
   paceLicenciaEstado: paceLicenciaEstado,
   paceLicenciaEsMensual: paceLicenciaEsMensual
 });
-;Object.assign(window, { PACE_LICENCIA_PREFIJO, _paceLicenciaFirma, paceB64urlBytes, paceLicenciaLimpiar, paceLicenciaLeer, paceLicenciaLlave, paceLicenciaAnulada, paceLicenciaFin, paceLicenciaCaducada, paceLicenciaMotivo, paceLicenciaPermitida, paceLicenciaComprobar, paceLicenciaCanjear, paceLicenciaConservar, paceLicenciaComprobarGuardado, paceLicenciaVigente, paceLicenciaDelEnlace, paceLicenciaArranque, _paceLicenciaEsperas, paceLicenciaCuandoSepa, PACE_RENOVAR_ANTES, PACE_RENOVAR_CADA, _paceRenovar, paceLicenciaGuardada, paceLicenciaEsMensual, paceLicenciaRenovar, paceLicenciaEstado });
+;Object.assign(window, { PACE_LICENCIA_PREFIJO, _paceLicenciaFirma, paceB64urlBytes, paceLicenciaLimpiar, paceLicenciaLeer, paceLicenciaLlave, paceLicenciaAnulada, paceLicenciaFin, paceLicenciaCaducada, paceLicenciaMotivo, paceLicenciaPermitida, paceLicenciaComprobar, paceLicenciaCanjear, paceLicenciaConservar, paceLicenciaQuedaAlBorrar, paceLicenciaComprobarGuardado, paceLicenciaVigente, paceLicenciaDelEnlace, paceLicenciaArranque, _paceLicenciaEsperas, paceLicenciaCuandoSepa, PACE_RENOVAR_ANTES, PACE_RENOVAR_CADA, _paceRenovar, paceLicenciaGuardada, paceLicenciaEsMensual, paceLicenciaRenovar, paceLicenciaEstado });
 })();
 </script>
   <!-- Las tiendas de PACE completo (Stripe en la web, Play en Android), vacías hasta
@@ -9305,6 +9321,25 @@ const PREMIUM_ABIERTO_HASTA_V1 = true;
 
 
 
+
+
+
+
+
+const PACE_TEXTOS_V1 = {
+  'premium.v1': 'premium.v1.despues',
+  'premium.onb.abierto.lede': 'premium.onb.lede',
+  'premium.onb.abierto.precios': 'premium.onb.precios',
+  'premium.onb.abierto.aviso': null
+};
+
+function paceTextoV1(clave) {
+  if (window.PREMIUM_ABIERTO_HASTA_V1 === true || !Object.prototype.hasOwnProperty.call(PACE_TEXTOS_V1, clave)) return clave;
+  return PACE_TEXTOS_V1[clave];
+}
+
+
+
 function paceAbiertoAhora() {
   return window.PREMIUM_ABIERTO_HASTA_V1 === true || !!(window.pacePruebaV1Vigente && window.pacePruebaV1Vigente());
 }
@@ -9439,6 +9474,18 @@ function paceGestionarCompra() {
 }
 
 
+
+
+
+
+function paceConservarAlImportar(actual, entrante) {
+  const licencia = window.paceLicenciaConservar ? window.paceLicenciaConservar(actual, entrante) : Promise.resolve(entrante);
+  return Promise.resolve(licencia).then((e) => {
+    try {return window.pacePasoV1Conservar ? window.pacePasoV1Conservar(actual, e) : e;} catch (x) {return e;}
+  });
+}
+
+
 function tieneCompraVigente() {
   const tienda = tiendaDelCanal();
   return !!(tienda && tienda.vigente && tienda.vigente());
@@ -9446,9 +9493,10 @@ function tieneCompraVigente() {
 
 Object.assign(window, {
   canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, puedeVariar, puedeCrearRutinas, PREMIUM_ABIERTO_HASTA_V1, paceAbiertoAhora,
-  paceTiendaAbierta, paceTiendaPlanes, paceTiendaPrecios, paceBienvenidaCompleto, paceComprar, paceGestionarCompra, paceTiendaPuedeGestionar, tieneCompraVigente
+  paceTiendaAbierta, paceTiendaPlanes, paceTiendaPrecios, paceBienvenidaCompleto, paceComprar, paceGestionarCompra, paceTiendaPuedeGestionar, tieneCompraVigente,
+  paceConservarAlImportar, PACE_TEXTOS_V1, paceTextoV1
 });
-;Object.assign(window, { resolveAnyRoutine, tieneLicenciaPremium, paceAbiertoAhora, canAccessRoutine, canAccessPath, hasPremiumEntitlement, puedeMantenerCalendario, puedeCrearRutinas, puedeAprender, puedeVariar, tiendaDelCanal, paceTiendaAbierta, paceTiendaPlanes, paceTiendaPrecios, paceBienvenidaCompleto, paceComprar, paceTiendaPuedeGestionar, paceGestionarCompra, tieneCompraVigente });
+;Object.assign(window, { resolveAnyRoutine, tieneLicenciaPremium, paceTextoV1, paceAbiertoAhora, canAccessRoutine, canAccessPath, hasPremiumEntitlement, puedeMantenerCalendario, puedeCrearRutinas, puedeAprender, puedeVariar, tiendaDelCanal, paceTiendaAbierta, paceTiendaPlanes, paceTiendaPrecios, paceBienvenidaCompleto, paceComprar, paceTiendaPuedeGestionar, paceGestionarCompra, paceConservarAlImportar, tieneCompraVigente });
 })();
 </script>
   <script>
@@ -16930,13 +16978,35 @@ function pacePasoV1Avisado() {
   if (r && !r.avisado) setState({ pasoV1: Object.assign({}, r, { avisado: true }) });
 }
 
+
+
+
+
+
+
+
+
+
+
+function pacePasoV1Conservar(actual, entrante) {
+  var forma = function (r) {return r && typeof r === 'object' && !Array.isArray(r) && typeof r.at === 'number' ? r : null;};
+  var ahora = forma(actual && actual.pasoV1);
+  if (!ahora || !ahora.previo || !entrante) return entrante;
+  var trae = forma(entrante.pasoV1);
+  var suyas = trae ? trae.previo && Array.isArray(trae.rutinas) ? trae.rutinas : [] : pacePasoV1Rutinas(entrante, {});
+  var juntas = (Array.isArray(ahora.rutinas) ? ahora.rutinas : []).
+  concat(suyas.filter(function (id) {return typeof id === 'string' && pacePasoV1EsDePago(id);}));
+  var rutinas = juntas.filter(function (id, i) {return juntas.indexOf(id) === i;}).sort();
+  return Object.assign({}, entrante, { pasoV1: Object.assign({}, ahora, { rutinas: rutinas }) });
+}
+
 try {pacePasoV1();} catch (e) {}
 
 Object.assign(window, {
   PACE_PASO_V1_DIAS, pacePasoV1, pacePasoV1Leer, pacePasoV1Rutinas, pacePruebaV1Vigente, pacePruebaV1Hasta, pacePasoV1Conserva,
-  pacePasoV1PorAvisar, pacePasoV1Avisado
+  pacePasoV1PorAvisar, pacePasoV1Avisado, pacePasoV1Conservar
 });
-;Object.assign(window, { PACE_PASO_V1_DIAS, _pacePasoV1, pacePasoV1Leer, pacePasoV1UsabaPace, pacePasoV1EsDePago, pacePasoV1Rutinas, pacePasoV1Sesiones, pacePasoV1Catalogo, pacePasoV1, pacePruebaV1Vigente, pacePruebaV1Hasta, pacePasoV1Conserva, pacePasoV1PorAvisar, pacePasoV1Avisado });
+;Object.assign(window, { PACE_PASO_V1_DIAS, _pacePasoV1, pacePasoV1Leer, pacePasoV1UsabaPace, pacePasoV1EsDePago, pacePasoV1Rutinas, pacePasoV1Sesiones, pacePasoV1Catalogo, pacePasoV1, pacePruebaV1Vigente, pacePruebaV1Hasta, pacePasoV1Conserva, pacePasoV1PorAvisar, pacePasoV1Avisado, pacePasoV1Conservar });
 })();
 </script>
   <!-- El resumen del día de «A tu ritmo» (ritmo.day.closed): el primer paso del motor de
@@ -22756,6 +22826,9 @@ Object.assign(window, { ToastHost });
 
 
 
+
+
+
 const PREMIUM_AVISO_ANTES = 2 * 24 * 3600 * 1000;
 
 const PREMIUM_PASOV1_LISTA = 6;
@@ -22975,7 +23048,7 @@ function PremiumInvitacion() {
     ) :
 
     React.createElement(React.Fragment, null,
-    React.createElement("p", { style: premiumInvitacionStyles.v1 }, t('premium.v1')),
+    React.createElement("p", { "data-pace-premium-v1": true, style: premiumInvitacionStyles.v1 }, t(paceTextoV1('premium.v1'))),
     React.createElement(Button, { variant: "secondary", onClick: cerrar, style: premiumInvitacionStyles.ancho }, t('premium.later')),
     tengo
     )
@@ -23045,6 +23118,8 @@ function PremiumPasoV1(_ref2) {let { datos, cerrar } = _ref2;
     return v === r.id + '.name' ? r.routine.name : v;
   };
   const titulo = t('premium.pasov1.titulo');
+  const s = typeof getState === 'function' ? getState() : null;
+  const propias = !!(s && Array.isArray(s.customRoutines) && s.customRoutines.length);
   return (
     React.createElement(Modal, { open: true, onClose: cerrar, maxWidth: 440, ariaLabel: titulo },
     React.createElement("div", { "data-pace-premium-hoja": "pasov1" },
@@ -23067,6 +23142,7 @@ function PremiumPasoV1(_ref2) {let { datos, cerrar } = _ref2;
 
     ),
 
+    propias && React.createElement("p", { "data-pace-pasov1-propias": true, style: premiumInvitacionStyles.tuyas }, tn('premium.pasov1.propias', { fecha })),
     React.createElement("p", { style: premiumInvitacionStyles.v1 }, t('premium.pasov1.gratis')),
     React.createElement(Button, { onClick: cerrar, style: premiumInvitacionStyles.ancho }, t('premium.pasov1.vale'))
     )
@@ -41247,7 +41323,9 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
 
 
 
-    paceLicenciaConservar(getState(), pendiente.incoming).then((incoming) => escribirCopia(incoming, pendiente.eventsSection));
+
+
+    paceConservarAlImportar(getState(), pendiente.incoming).then((incoming) => escribirCopia(incoming, pendiente.eventsSection));
   };
 
   const escribirCopia = (incoming, eventsSection) => {
@@ -45344,6 +45422,7 @@ Object.assign(window, {
 
 
 
+
 function OnbCompletoPaso(_ref) {let { modo, onFin } = _ref;
   const { t, tn, lang } = useT();
   const abierto = modo === 'abierto';
@@ -45357,7 +45436,7 @@ function OnbCompletoPaso(_ref) {let { modo, onFin } = _ref;
   return (
     React.createElement(React.Fragment, null,
     React.createElement("h2", { style: onboardingStyles.title }, t('premium.onb.titulo')),
-    React.createElement("p", { style: onboardingStyles.lede }, t(todoAbierto ? 'premium.onb.abierto.lede' : 'premium.onb.lede')),
+    React.createElement("p", { style: onboardingStyles.lede }, t(todoAbierto ? paceTextoV1('premium.onb.abierto.lede') : 'premium.onb.lede')),
     React.createElement("ul", { style: onbCompletoStyles.lista },
     PREMIUM_INCLUYE.map((k, ik) =>
     React.createElement("li", { key: k, style: { ...onbCompletoStyles.item, ...(ik === PREMIUM_INCLUYE.length - 1 ? { borderBottom: 0 } : null) } },
@@ -45368,7 +45447,7 @@ function OnbCompletoPaso(_ref) {let { modo, onFin } = _ref;
     ),
     mes && vida &&
     React.createElement("p", { "data-pace-onb-precios": true, style: onbCompletoStyles.precios },
-    tn(abierto ? 'premium.onb.abierto.precios' : 'premium.onb.precios', { vida: vida.precio, mes: mes.precio, dias })
+    tn(abierto ? paceTextoV1('premium.onb.abierto.precios') : 'premium.onb.precios', { vida: vida.precio, mes: mes.precio, dias })
     ),
 
     soloVida && React.createElement("p", { "data-pace-onb-precios": true, style: onbCompletoStyles.precios }, tn('premium.onb.vida.sola', { vida: vida.precio })),
@@ -45377,7 +45456,9 @@ function OnbCompletoPaso(_ref) {let { modo, onFin } = _ref;
     React.createElement("button", { "data-pace-cta": true, "data-pace-onb-comenzar": true, onClick: () => onFin(null), style: onboardingStyles.cta },
     t('onboarding.welcome.cta')
     ),
-    React.createElement("p", { "data-pace-onb-v1": true, style: { ...onbCompletoStyles.aviso, maxWidth: 340 } }, t('premium.onb.abierto.aviso'))
+    paceTextoV1('premium.onb.abierto.aviso') &&
+    React.createElement("p", { "data-pace-onb-v1": true, style: { ...onbCompletoStyles.aviso, maxWidth: 340 } }, t(paceTextoV1('premium.onb.abierto.aviso')))
+
     ) :
 
     React.createElement(React.Fragment, null,

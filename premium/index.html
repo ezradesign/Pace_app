@@ -38,6 +38,8 @@
      tienda tiene el enlace de ese plan (tests/compra-solo-vida.spec.js), y entonces apunta a él.
      «Premium 1C», Ez, 5 nov. 2026: con solo el de por vida a la venta, los dos platos se quedan, el
      mensual dice «Llega con la versión 1», y «Dónde funciona tu compra» va antes de pagar.
+     EL DÍA DE v1 (Ez, 4A del 7 nov.): lo que dice «con la versión 1» lleva al lado, en `data-v1`, lo
+     que dirá desde v1, y cambia a la vez que la app con `DIA_V1` (lo vigila scripts/verify.dia-v1.js).
      Inglés: cada texto lleva el suyo en `data-en` (o `data-en-html` si lleva enlace). -->
 <style>
   @font-face { font-family: 'Cormorant Garamond'; font-style: italic; font-weight: 400; font-display: swap; src: url('/fonts/cormorantgaramond-400-italic.woff2') format('woff2'); }
@@ -230,15 +232,15 @@
         <p class="kicker" data-en="Monthly">Al mes</p>
         <p class="importe" data-precio="mes" data-en="€2.99">2,99 €</p>
         <p class="sub" data-en="with 7 days free">con 7 días gratis</p>
-        <p class="pronto" data-en="Coming with version 1">Llega con la versión 1</p>
+        <p class="pronto" data-en="Coming with version 1" data-v1="Pronto podrás tenerlo aquí" data-v1-en="You’ll be able to get it here soon">Llega con la versión 1</p>
         <a class="boton hueco" href="#avisame" data-en="Notify me">Avísame</a>
       </div>
     </div>
-    <p class="nota" data-venta="apagada" data-en="VAT included. Lifetime opens soon; monthly and the apps arrive with version 1.">IVA incluido. El de por vida se abre pronto; el mensual y las apps, con la versión 1.</p>
-    <p class="nota" data-venta="encendida" hidden data-en="VAT included. Until version 1, PACE Complete is open to everyone: if you buy it now, it is to have it for good when it stops being open.">IVA incluido. Hasta la versión 1, PACE completo está abierto para todos: si lo compras ahora, es para tenerlo para siempre cuando deje de estarlo.</p>
+    <p class="nota" data-venta="apagada" data-en="VAT included. Lifetime opens soon; monthly and the apps arrive with version 1." data-v1="IVA incluido." data-v1-en="VAT included.">IVA incluido. El de por vida se abre pronto; el mensual y las apps, con la versión 1.</p>
+    <p class="nota" data-venta="encendida" hidden data-en="VAT included. Until version 1, PACE Complete is open to everyone: if you buy it now, it is to have it for good when it stops being open." data-v1="IVA incluido." data-v1-en="VAT included.">IVA incluido. Hasta la versión 1, PACE completo está abierto para todos: si lo compras ahora, es para tenerlo para siempre cuando deje de estarlo.</p>
     <div class="donde">
       <p class="kicker" data-en="Where your purchase works">Dónde funciona tu compra</p>
-      <p data-en="It unlocks PACE Complete on the web, in the browser where you enter your code. It does not work in the Android and iPhone apps: there it is bought on Google Play and the App Store, with version 1.">Abre PACE completo en la web, en el navegador donde pongas tu código. En las apps de Android y de iPhone no vale: allí se compra en Google Play y en la App Store, con la versión 1.</p>
+      <p data-en="It unlocks PACE Complete on the web, in the browser where you enter your code. It does not work in the Android and iPhone apps: there it is bought on Google Play and the App Store, with version 1." data-v1="Abre PACE completo en la web, en el navegador donde pongas tu código. En las apps de Android y de iPhone no vale: allí se compra en Google Play y en la App Store." data-v1-en="It unlocks PACE Complete on the web, in the browser where you enter your code. It does not work in the Android and iPhone apps: there it is bought on Google Play and the App Store.">Abre PACE completo en la web, en el navegador donde pongas tu código. En las apps de Android y de iPhone no vale: allí se compra en Google Play y en la App Store, con la versión 1.</p>
       <p data-en="Your data stays on each device and doesn’t sync. Move it between devices with a copy. If you lose your code, recover it with your email and receipt number. This restores access, not your history.">Tus datos se guardan en cada dispositivo y no se sincronizan; los llevas de uno a otro con una copia. Si pierdes el código, lo recuperas con tu correo y el número del recibo: vuelve el acceso, no el historial.</p>
     </div>
 
@@ -275,7 +277,7 @@
     <h2 data-en="Questions">Preguntas</h2>
     <details><summary data-en="Do I need an account?">¿Necesito una cuenta?</summary><p data-en="No. PACE has no accounts. When you buy, you get a code that unlocks PACE Complete in your browser.">No. PACE no tiene cuentas. Al comprar recibes un código que abre PACE completo en tu navegador.</p></details>
     <details><summary data-en="What if I change computer or browser?">¿Y si cambio de ordenador o de navegador?</summary><p data-premium-recuperar data-en-html="Open your activation link in the new browser, or import a copy from “Your data”. If you lose your code, &lt;a href=&quot;/recuperar/&quot;&gt;recover it&lt;/a&gt; with your email and receipt number.">Abre el enlace de tu código en el nuevo, o llévalo dentro de la copia de «Tus datos». Si lo pierdes, <a href="/recuperar/">lo recuperas</a> con tu correo y el número del recibo.</p></details>
-    <details><summary data-en="Does it work on Android and iPhone?">¿Sirve en Android y en iPhone?</summary><p data-en="What you buy on the web unlocks PACE on the web. It does not work in the Android and iPhone apps: there, PACE Complete is bought on Google Play and the App Store, with version 1.">Lo que compras en la web abre PACE en la web. No vale en las apps de Android y de iPhone: allí, PACE completo se compra en Google Play y en la App Store, con la versión 1.</p></details>
+    <details><summary data-en="Does it work on Android and iPhone?">¿Sirve en Android y en iPhone?</summary><p data-en="What you buy on the web unlocks PACE on the web. It does not work in the Android and iPhone apps: there, PACE Complete is bought on Google Play and the App Store, with version 1." data-v1="Lo que compras en la web abre PACE en la web. No vale en las apps de Android y de iPhone: allí, PACE completo se compra en Google Play y en la App Store." data-v1-en="What you buy on the web unlocks PACE on the web. It does not work in the Android and iPhone apps: there, PACE Complete is bought on Google Play and the App Store.">Lo que compras en la web abre PACE en la web. No vale en las apps de Android y de iPhone: allí, PACE completo se compra en Google Play y en la App Store, con la versión 1.</p></details>
     <!-- El calendario, con lo que decidió Ez el 29 oct.: en Android entra en PACE completo diciendo
          sus límites; en la web va en pruebas y no se vende (13A del 30 oct., «por el momento»). -->
     <details><summary data-en="And the calendar?">¿Y el calendario?</summary><p data-en="On Android, PACE Complete keeps your day up to date in your phone calendar while PACE is open; adding your day and working around your meetings is free. On the web, the calendar is in testing and is not part of what you buy.">En Android, PACE completo mantiene tu día al día en el calendario del móvil mientras PACE está abierto; llevar el día y esquivar tus reuniones es gratis. En la web, el calendario está en pruebas y no entra en lo que compras.</p></details>
@@ -309,6 +311,18 @@
     document.querySelectorAll('[data-venta="apagada"]').forEach(function (el) { el.hidden = true; });
     document.querySelectorAll('[data-venta="encendida"]').forEach(function (el) { el.hidden = false; });
   }
+  /* EL DÍA DE v1 (Ez, 4A del 7 nov. 2026): cada texto que dice «hasta v1» lleva en `data-v1` (y en
+     `data-v1-en`) el que dice desde v1; vacío, se esconde. DIA_V1 va a la par con el interruptor de la
+     app (`PREMIUM_ABIERTO_HASTA_V1`, app/state-entitlement.jsx): scripts/verify.dia-v1.js falla si no,
+     o si un texto que dice v1 se queda sin su `data-v1`. Va antes de `poner`, que guarda el castellano
+     de cada texto la primera vez, y después de la venta, que enseña y esconde las notas. */
+  var DIA_V1 = false;
+  if (DIA_V1) document.querySelectorAll('[data-v1]').forEach(function (el) {
+    var despues = el.getAttribute('data-v1');
+    if (!despues) { el.hidden = true; return; }
+    el.textContent = despues;
+    if (el.hasAttribute('data-v1-en')) el.setAttribute('data-en', el.getAttribute('data-v1-en'));
+  });
   /* EL IDIOMA: ?lang=en, el que se eligió aquí, el de la app en este navegador o el del
      navegador. Sin JavaScript, castellano. */
   function guardado(clave) { try { return localStorage.getItem(clave); } catch (e) { return null; } }

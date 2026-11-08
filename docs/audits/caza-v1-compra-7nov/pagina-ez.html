@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El día de v1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --papel: #f3ecdf; --papel-2: #ebe2d1; --tinta: #2b2a26; --tinta-2: #5b574d; --linea: #d8ccb6;
+  --oliva: #55624a; --terracota: #b0603f; --crema: #fbf7ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --papel: #1f1e1a; --papel-2: #2a2823; --tinta: #eee6d6; --tinta-2: #bdb4a2; --linea: #423d33;
+    --oliva: #9fae8e; --terracota: #d98c6a; --crema: #26241f;
+  }
+}
+:root[data-theme="dark"] {
+  --papel: #1f1e1a; --papel-2: #2a2823; --tinta: #eee6d6; --tinta-2: #bdb4a2; --linea: #423d33;
+  --oliva: #9fae8e; --terracota: #d98c6a; --crema: #26241f;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--papel); color: var(--tinta); font: 16px/1.6 Inter, system-ui, sans-serif; }
+main { max-width: 760px; margin: 0 auto; padding: 32px 16px 64px; }
+h1, h2, h3 { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-weight: 500; line-height: 1.15; }
+h1 { font-size: 40px; margin: 0 0 8px; }
+h2 { font-size: 28px; margin: 40px 0 10px; }
+h3 { font-size: 22px; margin: 0 0 6px; }
+.lede { color: var(--tinta-2); font-size: 17px; }
+.caja { background: var(--crema); border: 1px solid var(--linea); border-radius: 14px; padding: 18px; margin: 14px 0; }
+.ok { border-left: 4px solid var(--oliva); }
+.fallo { border-left: 4px solid var(--terracota); }
+.etiqueta { display: inline-block; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--tinta-2); margin-bottom: 4px; }
+ul { padding-left: 20px; } li { margin: 4px 0; }
+.fotos { display: flex; gap: 12px; flex-wrap: wrap; margin: 10px 0; }
+.fotos figure { margin: 0; flex: 1 1 200px; max-width: 100%; }
+.fotos img { width: 100%; height: auto; border: 1px solid var(--linea); border-radius: 10px; display: block; }
+.fotos.ancha figure { flex-basis: 100%; }
+figcaption { font-size: 13px; color: var(--tinta-2); margin-top: 4px; }
+.letras { list-style: none; padding: 0; }
+.letras li { padding: 8px 10px; border-radius: 8px; margin: 4px 0; background: var(--papel-2); }
+.letras li.rec { outline: 2px solid var(--oliva); }
+.letras b { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 20px; margin-right: 6px; }
+.rec-nota { color: var(--oliva); font-weight: 600; font-size: 13px; }
+.elegida { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: var(--oliva); color: var(--crema); font-size: 12px; font-weight: 600; }
+.fotos.cuatro figure { flex: 1 1 150px; }
+.nuevo { border-left: 4px solid var(--oliva); }
+</style>
+</head>
+<body>
+<main>
+<h1>El día de v1, probado como lo vivirá la gente</h1>
+<p class="lede">He usado PACE como cinco personas distintas el día que salga la versión de pago y al comprar el de por vida, en español y en inglés, en el móvil y en el ordenador. Encontré un fallo serio y lo arreglé. Había cuatro cosas que decidías tú: elegiste 1B, 2A, 3B y 4A, y ya están montadas.</p>
+
+<h2>Montado: lo que elegiste</h2>
+<p>Cada cambio tiene su prueba automática, y he comprobado que esa prueba se pone en rojo si quito el cambio. Las fotos son del móvil (360 px); «antes» es la app de hoy sin el cambio.</p>
+
+<div class="caja nuevo">
+  <span class="etiqueta">1B</span>
+  <h3>«Borrar todo» ya no quita PACE completo</h3>
+  <p>Quien pagó el de por vida y borra sus datos empieza de cero (sus días, sus rutinas y sus logros se van, como dice el aviso), pero sigue teniendo PACE completo. El aviso no cambia. La página de privacidad ya lo cuenta: el código solo se va si se limpian los datos del navegador.</p>
+  <div class="fotos cuatro">
+    <figure><img src="fotos/montado-1b-antes-es.jpg" alt="Ajustes después de «Borrar todo», antes, en español"><figcaption>Antes · español</figcaption></figure>
+    <figure><img src="fotos/montado-1b-despues-es.jpg" alt="Ajustes después de «Borrar todo», después, en español"><figcaption>Ahora · español</figcaption></figure>
+    <figure><img src="fotos/montado-1b-antes-en.jpg" alt="Ajustes después de «Borrar todo», antes, en inglés"><figcaption>Antes · inglés</figcaption></figure>
+    <figure><img src="fotos/montado-1b-despues-en.jpg" alt="Ajustes después de «Borrar todo», después, en inglés"><figcaption>Ahora · inglés</figcaption></figure>
+  </div>
+  <p class="lede" style="font-size:14px">Antes: «Introducir código». Ahora: «Para siempre».</p>
+</div>
+
+<div class="caja nuevo">
+  <span class="etiqueta">2A</span>
+  <h3>El aviso del día de v1 cuenta sus rutinas propias</h3>
+  <p>A quien ha creado rutinas propias, el aviso le dice: «Tus rutinas propias se quedan guardadas; desde el (fecha) se abren con PACE completo». En inglés: «Your own routines stay saved; from (date), they open with PACE Complete». A quien no tiene ninguna, no se lo dice.</p>
+  <div class="fotos cuatro">
+    <figure><img src="fotos/montado-2a-antes-es.jpg" alt="El aviso del día de v1 con rutinas propias, antes, en español"><figcaption>Antes · español</figcaption></figure>
+    <figure><img src="fotos/montado-2a-despues-es.jpg" alt="El aviso del día de v1 con rutinas propias, después, en español"><figcaption>Ahora · español</figcaption></figure>
+    <figure><img src="fotos/montado-2a-antes-en.jpg" alt="El aviso del día de v1 con rutinas propias, antes, en inglés"><figcaption>Antes · inglés</figcaption></figure>
+    <figure><img src="fotos/montado-2a-despues-en.jpg" alt="El aviso del día de v1 con rutinas propias, después, en inglés"><figcaption>Ahora · inglés</figcaption></figure>
+  </div>
+</div>
+
+<div class="caja nuevo">
+  <span class="etiqueta">3B</span>
+  <h3>Sin tienda, «Pronto podrás tenerlo aquí»</h3>
+  <p>Si el día de v1 la app de Android o de iPhone aún no tiene su compra, lo de pago se cierra igual, y la hoja dice «Pronto podrás tenerlo aquí» («You’ll be able to get it here soon») en vez de «Llega con la versión 1». Hasta v1 sigue diciendo «Llega con la versión 1».</p>
+  <div class="fotos cuatro">
+    <figure><img src="fotos/montado-3b-antes-es.jpg" alt="La hoja de PACE completo en Android el día de v1, antes, en español"><figcaption>Antes · español</figcaption></figure>
+    <figure><img src="fotos/montado-3b-despues-es.jpg" alt="La hoja de PACE completo en Android el día de v1, después, en español"><figcaption>Ahora · español</figcaption></figure>
+    <figure><img src="fotos/montado-3b-antes-en.jpg" alt="La hoja de PACE completo en Android el día de v1, antes, en inglés"><figcaption>Antes · inglés</figcaption></figure>
+    <figure><img src="fotos/montado-3b-despues-en.jpg" alt="La hoja de PACE completo en Android el día de v1, después, en inglés"><figcaption>Ahora · inglés</figcaption></figure>
+  </div>
+</div>
+
+<div class="caja nuevo">
+  <span class="etiqueta">4A</span>
+  <h3>Una lista para el día de v1</h3>
+  <p>Todo lo que dice «hasta la versión 1» está apuntado junto a lo que dirá después: en la app, la hoja de PACE completo y la bienvenida; en /premium, el plato del mensual, la nota del precio, «Dónde funciona tu compra» y la pregunta de Android; y en /beta, la nota de los testers y «¿Y mientras dura la prueba?», que desaparece. El día de v1 se cambian a la vez el interruptor de la app y una línea en cada página, y la comprobación automática no deja subir nada si falta uno, o si alguien escribe un texto nuevo que diga «v1» sin decir qué dirá después.</p>
+  <div class="fotos cuatro">
+    <figure><img src="fotos/montado-4a-antes-es.jpg" alt="El precio en /premium el día de v1, antes, en español"><figcaption>Antes · español</figcaption></figure>
+    <figure><img src="fotos/montado-4a-despues-es.jpg" alt="El precio en /premium el día de v1, después, en español"><figcaption>Ahora · español</figcaption></figure>
+    <figure><img src="fotos/montado-4a-antes-en.jpg" alt="El precio en /premium el día de v1, antes, en inglés"><figcaption>Antes · inglés</figcaption></figure>
+    <figure><img src="fotos/montado-4a-despues-en.jpg" alt="El precio en /premium el día de v1, después, en inglés"><figcaption>Ahora · inglés</figcaption></figure>
+  </div>
+  <p class="lede" style="font-size:14px">Una frase que no nombra v1 no la ve: «Cuando llegue el plan al mes» va con el enlace del mensual, no con v1.</p>
+</div>
+
+<h2>Lo que va bien</h2>
+<div class="caja ok">
+  <ul>
+    <li><b>La tester con su código:</b> no ve ningún aviso, lo tiene todo y Ajustes dice «Para siempre».</li>
+    <li><b>Quien compra el de por vida:</b> /premium → pago → la página de gracias le da su código → PACE se abre completo. En otro navegador, con su correo y su recibo, lo recupera y vuelve a abrirse.</li>
+    <li><b>Quien usaba PACE gratis:</b> le sale una vez «Siete días de PACE completo», con la fecha y las rutinas de pago que ya hizo. Pasada la semana conserva sus días, sus logros, sus rutinas y esas de pago.</li>
+    <li><b>Quien vuelve tras meses:</b> su semana empieza el día que vuelve.</li>
+    <li><b>Quien está probando el mensual:</b> dos días antes le avisa, una vez, con el día y el precio.</li>
+    <li>Ningún error en la app, y la hoja de compra cabe en el móvil sin scroll.</li>
+  </ul>
+  <div class="fotos">
+    <figure><img src="fotos/p3-hoja-es-360.png" alt="La hoja del día de v1 en el móvil"><figcaption>El aviso del día de v1, en el móvil.</figcaption></figure>
+    <figure><img src="fotos/p2-invitacion-es-360.png" alt="La hoja de compra con solo el de por vida"><figcaption>Comprar el de por vida desde la app.</figcaption></figure>
+    <figure><img src="fotos/p2-gracias-es-360.png" alt="La página de gracias con el código"><figcaption>La página de gracias, con su código.</figcaption></figure>
+  </div>
+</div>
+
+<h2>El fallo que arreglé</h2>
+<div class="caja fallo">
+  <span class="etiqueta">Arreglado</span>
+  <h3>Una copia vieja regalaba otra semana entera</h3>
+  <p>Si alguien guardaba una copia de sus datos antes del día de v1 y la volvía a cargar después, PACE le daba otra vez siete días de todo gratis, con su aviso. Y podía repetirlo cuantas veces quisiera. Al revés también fallaba: cargar la copia de otro aparato le quitaba las rutinas de pago que se le habían quedado.</p>
+  <p>Ahora la copia trae sus datos, pero la semana y las rutinas que se quedan siguen como estaban, y si la copia tiene alguna de pago que hizo antes, se suma.</p>
+  <div class="fotos ancha">
+    <figure><img src="fotos/p4a-tras-importar-vieja.png" alt="El aviso de los siete días saliendo otra vez tras cargar una copia vieja"><figcaption>Antes del arreglo: cargar la copia de octubre volvía a sacar «Siete días de PACE completo».</figcaption></figure>
+  </div>
+</div>
+
+<h2>Lo que decidiste</h2>
+
+<div class="caja">
+  <h3>1. «Borrar todo» quita también la compra, y no lo dice</h3>
+  <p>El aviso dice que se borran «tus días, tus rutinas y tus logros». Quien pagó el de por vida pierde PACE completo en ese navegador sin enterarse; lo recupera con su código o en /recuperar.</p>
+  <ul class="letras">
+    <li class="rec"><b>A</b> Cuando hay código, el aviso añade una frase: «También se quita PACE completo de este navegador; tu código sigue valiendo». <span class="rec-nota">Recomendada</span></li>
+    <li><b>B</b> Que «Borrar todo» no quite el código. <span class="elegida">Elegida</span></li>
+    <li><b>C</b> Dejarlo como está.</li>
+  </ul>
+</div>
+
+<div class="caja">
+  <h3>2. Sus rutinas propias se cierran y el aviso no lo cuenta</h3>
+  <p>Quien creó rutinas propias antes de v1 las tiene abiertas su semana; luego se quedan guardadas pero cerradas. El aviso del día de v1 no lo menciona.</p>
+  <ul class="letras">
+    <li class="rec"><b>A</b> Una línea en el aviso: «Tus rutinas propias se quedan guardadas; desde el (fecha) se abren con PACE completo». <span class="rec-nota">Recomendada</span> <span class="elegida">Elegida</span></li>
+    <li><b>B</b> Dejarle abiertas para siempre las que creó antes de v1, como las de pago que ya hizo.</li>
+    <li><b>C</b> Dejarlo como está.</li>
+  </ul>
+</div>
+
+<div class="caja">
+  <h3>3. En el móvil, si la tienda aún no está, nadie puede comprarlo</h3>
+  <p>Lo he visto haciendo que el navegador se comporte como la app de Android (no en un móvil de verdad). Si el día de v1 la app de Android o de iPhone todavía no tiene la compra de su tienda, lo de pago se cierra y la hoja dice «Llega con la versión 1»: solo hay «Ahora no», sin botón de compra ni sitio para un código.</p>
+  <div class="fotos"><figure><img src="fotos/p6-android-sin-tienda-es-360.png" alt="La hoja de PACE completo en la app de Android el día de v1, solo con Ahora no"><figcaption>Android el día de v1, sin su tienda: «Llega con la versión 1» y nada más.</figcaption></figure></div>
+  <ul class="letras">
+    <li class="rec"><b>A</b> En una app sin su tienda lista, PACE completo sigue abierto como ahora. <span class="rec-nota">Recomendada</span></li>
+    <li><b>B</b> Cambiar el texto por «Pronto podrás tenerlo aquí». <span class="elegida">Elegida</span></li>
+    <li><b>C</b> No sacar v1 en las apps hasta que tengan su compra.</li>
+  </ul>
+</div>
+
+<div class="caja">
+  <h3>4. Textos que dicen «hasta v1»</h3>
+  <p>Hoy son verdad, pero el día de v1 hay que cambiarlos a la vez: la nota de /premium («Hasta la versión 1, PACE completo está abierto…»), el plato del mensual («Llega con la versión 1»), la hoja de la app y la bienvenida.</p>
+  <ul class="letras">
+    <li class="rec"><b>A</b> Una lista para el día de v1 que los cambie todos juntos. <span class="rec-nota">Recomendada</span> <span class="elegida">Elegida</span></li>
+    <li><b>B</b> Cambiarlos cuando llegue el momento, sin lista.</li>
+  </ul>
+</div>
+
+<h2>Y una cosa que vigilo</h2>
+<div class="caja">
+  <p>El aviso de la prueba del mensual dice «si quieres seguir, no hagas nada», y /premium promete que se cancela desde Ajustes. Eso solo es verdad si ese día está puesto el enlace de Stripe para gestionar la suscripción. Sin él, el aviso no tiene botón para cancelar. He dejado una prueba que se pone en rojo si alguien enciende el mensual sin ese enlace.</p>
+  <div class="fotos">
+    <figure><img src="fotos/p5b-aviso-es-360.png" alt="El aviso de la prueba del mensual sin botón para cancelar"><figcaption>Así sale hoy sin el enlace: solo «Seguir con la prueba».</figcaption></figure>
+  </div>
+</div>
+</main>
+</body>
+</html>

@@ -191,6 +191,16 @@ function paceLicenciaConservar(actual, entrante) {
     .then(null, function () { return conLoDeAhora(); });
 }
 
+/* «BORRAR TODO» NO QUITA EL CÓDIGO (Ez, 1B del 7 nov. 2026, caza del día de v1): quien pagó el de
+   por vida lo perdía en ese navegador sin que el aviso lo dijera. Se queda el código guardado,
+   valga o no (lo que no vale se ignora igual), y con él `premiumAvisoPrueba`, que es suyo.
+   Lo demás se borra: el aviso de «Borrar todo» sigue diciendo la verdad. Lo llama
+   `wipeLocalState` (state-core.jsx) antes de borrar. -> { licencia, premiumAvisoPrueba } o null. */
+function paceLicenciaQuedaAlBorrar(s) {
+  if (!s || typeof s.licencia !== 'string' || !s.licencia) return null;
+  return { licencia: s.licencia, premiumAvisoPrueba: s.premiumAvisoPrueba != null ? s.premiumAvisoPrueba : null };
+}
+
 /* Empieza a comprobar la firma del código guardado, una vez por código. Cuando
    vale, la app se vuelve a pintar con PACE completo; lo demás no cambia nada que
    se vea, porque mientras tanto ya contaba como cerrado. */
@@ -347,6 +357,7 @@ Object.assign(window, {
   paceLicenciaComprobar: paceLicenciaComprobar,
   paceLicenciaCanjear: paceLicenciaCanjear,
   paceLicenciaConservar: paceLicenciaConservar,
+  paceLicenciaQuedaAlBorrar: paceLicenciaQuedaAlBorrar,
   paceLicenciaVigente: paceLicenciaVigente,
   paceLicenciaPermitida: paceLicenciaPermitida,
   paceLicenciaRenovar: paceLicenciaRenovar,

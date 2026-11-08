@@ -20,7 +20,8 @@
    del mismo tamaño, y no sale la prueba ni el aviso de dos días antes ni «Prefiero pagarlo una
    vez», que solo tienen sentido al lado del mensual. Con la tienda abierta antes de v1 (todo sigue
    abierto para todos), el arranque lo dice, como en 'abierto'.
-   Sin escena: como «¿Cómo es tu semana?».
+   Sin escena: como «¿Cómo es tu semana?». Lo que dice «hasta v1» pasa por la lista del día de v1
+   (`paceTextoV1`, state-entitlement.jsx): cambia a la vez que el interruptor.
 
    `onFin(plan)`: null es «Ahora no» o «Comenzar»; 'mes' o 'vida', la compra. La
    bienvenida se cierra antes de comprar, porque la compra de la web sigue en la página
@@ -39,7 +40,7 @@ function OnbCompletoPaso({ modo, onFin }) {
   return (
     <React.Fragment>
       <h2 style={onboardingStyles.title}>{t('premium.onb.titulo')}</h2>
-      <p style={onboardingStyles.lede}>{t(todoAbierto ? 'premium.onb.abierto.lede' : 'premium.onb.lede')}</p>
+      <p style={onboardingStyles.lede}>{t(todoAbierto ? paceTextoV1('premium.onb.abierto.lede') : 'premium.onb.lede')}</p>
       <ul style={onbCompletoStyles.lista}>
         {PREMIUM_INCLUYE.map((k, ik) => (
           <li key={k} style={{ ...onbCompletoStyles.item, ...(ik === PREMIUM_INCLUYE.length - 1 ? { borderBottom: 0 } : null) }}>
@@ -50,7 +51,7 @@ function OnbCompletoPaso({ modo, onFin }) {
       </ul>
       {mes && vida && (
         <p data-pace-onb-precios style={onbCompletoStyles.precios}>
-          {tn(abierto ? 'premium.onb.abierto.precios' : 'premium.onb.precios', { vida: vida.precio, mes: mes.precio, dias })}
+          {tn(abierto ? paceTextoV1('premium.onb.abierto.precios') : 'premium.onb.precios', { vida: vida.precio, mes: mes.precio, dias })}
         </p>
       )}
       {soloVida && <p data-pace-onb-precios style={onbCompletoStyles.precios}>{tn('premium.onb.vida.sola', { vida: vida.precio })}</p>}
@@ -59,7 +60,9 @@ function OnbCompletoPaso({ modo, onFin }) {
           <button data-pace-cta data-pace-onb-comenzar onClick={() => onFin(null)} style={onboardingStyles.cta}>
             {t('onboarding.welcome.cta')}
           </button>
-          <p data-pace-onb-v1 style={{ ...onbCompletoStyles.aviso, maxWidth: 340 }}>{t('premium.onb.abierto.aviso')}</p>
+          {paceTextoV1('premium.onb.abierto.aviso') && (
+            <p data-pace-onb-v1 style={{ ...onbCompletoStyles.aviso, maxWidth: 340 }}>{t(paceTextoV1('premium.onb.abierto.aviso'))}</p>
+          )}
         </React.Fragment>
       ) : (
         <React.Fragment>

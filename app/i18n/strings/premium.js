@@ -3,7 +3,9 @@
    Carga DESPUES de _bootstrap.js y ANTES de useT.jsx.
 
    NINGÚN PRECIO AQUÍ: las tiendas mandan sobre importe y moneda (ROADMAP, Fase 6).
-   Antes de poder comprar, la invitación dice que llega con la versión 1.
+   Antes de poder comprar, la invitación dice que llega con la versión 1; desde v1, sin tienda,
+   que pronto se podrá tener ahí. Las que dicen «hasta v1» van en `PACE_TEXTOS_V1`
+   (state-entitlement.jsx) con la que las sustituye, y `npm run verify` no deja ninguna fuera.
    El sello «Premium» de las tarjetas sigue en `premium.seal` y `lib.premium`.
 */
 
@@ -76,6 +78,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'premium.pasov1.mod.breathe':    'Respira',
     'premium.pasov1.mod.move':       'Mueve',
     'premium.pasov1.mod.extra':      'Estira',
+    'premium.pasov1.propias':        'Tus rutinas propias se quedan guardadas; desde el {fecha} se abren con PACE completo.',
+    'premium.v1.despues':            'Pronto podrás tenerlo aquí.',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -147,4 +151,6 @@ Object.assign(window.PACE_STRINGS.en, {
     'premium.pasov1.mod.breathe':    'Breathe',
     'premium.pasov1.mod.move':       'Move',
     'premium.pasov1.mod.extra':      'Stretch',
+    'premium.pasov1.propias':        'Your own routines stay saved; from {fecha}, they open with PACE Complete.',
+    'premium.v1.despues':            'You’ll be able to get it here soon.',
 });
