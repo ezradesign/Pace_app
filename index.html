@@ -3790,6 +3790,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'onboarding.welcome.cta': 'Comenzar',
   'onboarding.welcome.hint': 'Tres preguntas breves. Medio minuto.',
 
+  'onboarding.copia': '¿Tienes una copia?',
+  'onboarding.copia.traer': 'Tráela',
+
 
   'onboarding.need.kicker': 'Conocerte · 1 de 3',
   'onboarding.need.title': '¿Qué quieres cultivar?',
@@ -3857,6 +3860,8 @@ Object.assign(window.PACE_STRINGS.en, {
 
   'onboarding.welcome.cta': 'Start',
   'onboarding.welcome.hint': 'Three short questions. Half a minute.',
+  'onboarding.copia': 'Have a copy?',
+  'onboarding.copia.traer': 'Bring it in',
 
 
   'onboarding.need.kicker': 'About you · 1 of 3',
@@ -41182,6 +41187,180 @@ Object.assign(window, { TweakSecretsWatcher });
 
 
 
+const { useState: useStateImp, useRef: useRefImp } = React;
+
+
+
+
+
+function paceOlvidarPasajero() {
+  try {if (typeof olvidarFocoGuardado === 'function') olvidarFocoGuardado();} catch (e) {}
+  try {if (typeof olvidarRespiraGuardada === 'function') olvidarRespiraGuardada();} catch (e) {}
+  try {if (typeof olvidarCuerpoGuardada === 'function') olvidarCuerpoGuardada();} catch (e) {}
+}
+
+function usePaceTraerCopia(decir, capa) {
+  const { t, tn } = useT();
+  const fileInputRef = useRefImp(null);
+  const [pidiendoImportar, setPidiendoImportar] = useStateImp(null);
+  const [avisoParcial, setAvisoParcial] = useStateImp(false);
+
+  const importJSON = (file) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const raw = String(ev.target.result || '');
+        let payload = JSON.parse(raw);
+
+
+
+        if (payload && payload.kind === 'rescate' && payload.rescate && typeof payload.rescate.raw === 'string') {
+          payload = { app: 'PACE', state: JSON.parse(payload.rescate.raw) };
+        }
+
+
+        const looksValid = payload && (
+        payload.app === 'PACE' && payload.state && typeof payload.state === 'object' ||
+        payload.achievements !== undefined || payload.weeklyStats !== undefined);
+
+        if (!looksValid) {decir('err', 'settings.msg.import.invalid');return;}
+
+
+        const bruto = payload.state && typeof payload.state === 'object' ? payload.state : payload;
+
+
+
+
+
+        if (!paceEsObjetoPlano(bruto)) {decir('err', 'settings.msg.import.invalid');return;}
+        const incoming = paceSanearEstado(bruto, defaultState).estado;
+
+
+
+        setPidiendoImportar({
+          incoming, eventsSection: payload.events,
+          logros: incoming.achievements ? Object.keys(incoming.achievements).length : 0,
+          foco: incoming.totalFocusMin || 0
+        });
+      } catch (e) {
+        decir('err', 'settings.msg.import.json.err');
+      }
+    };
+    reader.readAsText(file);
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const importarDeVerdad = () => {
+    const pendiente = pidiendoImportar;
+    setPidiendoImportar(null);
+    if (!pendiente) return;
+
+
+
+
+
+    paceConservarAlImportar(getState(), pendiente.incoming).then((incoming) => escribirCopia(incoming, pendiente.eventsSection));
+  };
+
+  const escribirCopia = (incoming, eventsSection) => {
+
+
+
+
+
+
+
+
+    const writeLegacy = () => {
+      localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
+      let copia = getState();
+      try {copia = loadState(true);} catch (e) {}
+      try {paceAdoptarEstado(copia, true);} catch (e) {}
+    };
+
+
+    paceEventsStoreBarrier('import', writeLegacy, incoming, eventsSection).then((r) => {
+      if (!r || !r.legacyWritten) {decir('err', 'settings.msg.import.storage.err');return;}
+
+
+
+
+
+
+      const traiaRegistro = !!(eventsSection && Array.isArray(eventsSection.events) && eventsSection.events.length);
+      if (traiaRegistro && r.result !== 'committed') {setAvisoParcial(true);return;}
+      decir('ok', 'settings.msg.imported');
+      setTimeout(() => {paceOlvidarPasajero();location.reload();}, 900);
+    });
+  };
+
+  const elegir = () => fileInputRef.current && fileInputRef.current.click();
+
+  const piezas =
+  React.createElement(React.Fragment, null,
+  React.createElement("input", {
+    ref: fileInputRef,
+    type: "file",
+    accept: "application/json,.json",
+    "data-pace-traer-copia": true,
+    style: { display: 'none' },
+    onChange: (e) => {
+      const f = e.target.files && e.target.files[0];
+      importJSON(f);
+      e.target.value = '';
+    } }
+  ),
+  React.createElement(AjustesAviso, { abierto: !!pidiendoImportar, capa: capa, titulo: t('settings.import.titulo'), si: t('settings.import.si'),
+    onSi: importarDeVerdad, onNo: () => setPidiendoImportar(null) },
+  pidiendoImportar ? tn('settings.import.cuerpo', { logros: pidiendoImportar.logros, foco: pidiendoImportar.foco }) : null
+  ),
+  React.createElement(AjustesAviso, { abierto: avisoParcial, capa: capa, titulo: t('settings.import.parcial.titulo'), si: t('guardar.entendido'),
+    onNo: () => {paceOlvidarPasajero();location.reload();} },
+  t('settings.msg.import.partial')
+  )
+  );
+
+
+  return { elegir, piezas };
+}
+
+Object.assign(window, { usePaceTraerCopia, paceOlvidarPasajero });
+;Object.assign(window, { paceOlvidarPasajero, usePaceTraerCopia });
+})();
+</script>
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -41282,27 +41461,14 @@ function paceDescargarRescate(alAbrir) {
 
 
 
-
-function paceOlvidarPasajero() {
-  try {if (typeof olvidarFocoGuardado === 'function') olvidarFocoGuardado();} catch (e) {}
-  try {if (typeof olvidarRespiraGuardada === 'function') olvidarRespiraGuardada();} catch (e) {}
-  try {if (typeof olvidarCuerpoGuardada === 'function') olvidarCuerpoGuardada();} catch (e) {}
-}
-
-
-
-
 function paceConLogroDeLaCopia(s) {
   if (!s || !s.achievements || s.achievements['secret.backup']) return s;
   return Object.assign({}, s, { achievements: Object.assign({}, s.achievements, { 'secret.backup': { unlockedAt: Date.now() } }) });
 }
 
 function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
-  const { t, tn, lang } = useT();
-  const fileInputRef = useRefTD(null);
+  const { t, lang } = useT();
   const [msg, setMsg] = useStateTD(null);
-  const [pidiendoImportar, setPidiendoImportar] = useStateTD(null);
-  const [avisoParcial, setAvisoParcial] = useStateTD(false);
 
 
 
@@ -41350,157 +41516,19 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
 
   const noBorro = () => avisar('err', 'settings.msg.reset.err', 3200);
 
-  const importJSON = (file) => {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      try {
-        const raw = String(ev.target.result || '');
-        let payload = JSON.parse(raw);
 
 
-
-        if (payload && payload.kind === 'rescate' && payload.rescate && typeof payload.rescate.raw === 'string') {
-          payload = { app: 'PACE', state: JSON.parse(payload.rescate.raw) };
-        }
-
-
-        const looksValid = payload && (
-        payload.app === 'PACE' && payload.state && typeof payload.state === 'object' ||
-        payload.achievements !== undefined || payload.weeklyStats !== undefined);
-
-        if (!looksValid) {
-          setMsg({ kind: 'err', text: t('settings.msg.import.invalid') });
-          setTimeout(() => setMsg(null), 2600);
-          return;
-        }
-
-
-        const bruto = payload.state && typeof payload.state === 'object' ? payload.state : payload;
-
-
-
-
-
-        if (!paceEsObjetoPlano(bruto)) {
-          setMsg({ kind: 'err', text: t('settings.msg.import.invalid') });
-          setTimeout(() => setMsg(null), 2600);
-          return;
-        }
-        const incoming = paceSanearEstado(bruto, defaultState).estado;
-
-
-
-        setPidiendoImportar({
-          incoming, eventsSection: payload.events,
-          logros: incoming.achievements ? Object.keys(incoming.achievements).length : 0,
-          foco: incoming.totalFocusMin || 0
-        });
-      } catch (e) {
-        setMsg({ kind: 'err', text: t('settings.msg.import.json.err') });
-        setTimeout(() => setMsg(null), 2600);
-      }
-    };
-    reader.readAsText(file);
-  };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  const importarDeVerdad = () => {
-    const pendiente = pidiendoImportar;
-    setPidiendoImportar(null);
-    if (!pendiente) return;
-
-
-
-
-
-    paceConservarAlImportar(getState(), pendiente.incoming).then((incoming) => escribirCopia(incoming, pendiente.eventsSection));
-  };
-
-  const escribirCopia = (incoming, eventsSection) => {
-
-
-
-
-
-
-
-
-    const writeLegacy = () => {
-      localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
-      let copia = getState();
-      try {copia = loadState(true);} catch (e) {}
-      try {paceAdoptarEstado(copia, true);} catch (e) {}
-    };
-
-
-
-
-
-
-    paceEventsStoreBarrier('import', writeLegacy, incoming, eventsSection).then((r) => {
-      if (!r || !r.legacyWritten) {
-        setMsg({ kind: 'err', text: t('settings.msg.import.storage.err') });
-        setTimeout(() => setMsg(null), 2600);
-        return;
-      }
-
-
-
-
-
-
-      const traiaRegistro = !!(eventsSection && Array.isArray(eventsSection.events) && eventsSection.events.length);
-      if (traiaRegistro && r.result !== 'committed') {setAvisoParcial(true);return;}
-      setMsg({ kind: 'ok', text: t('settings.msg.imported') });
-      setTimeout(() => {paceOlvidarPasajero();location.reload();}, 900);
-    });
-  };
+  const traer = usePaceTraerCopia((kind, clave) => avisar(kind, clave, 2600));
 
   return (
     React.createElement(React.Fragment, null,
     React.createElement(AjustesAccion, { onClick: exportJSON, title: t('settings.data.export.title'), derecha: React.createElement(DownloadIcon, null) },
     t('settings.data.export')
     ),
-    React.createElement(AjustesAccion, { onClick: () => fileInputRef.current && fileInputRef.current.click(), title: t('settings.data.import.title'), derecha: React.createElement(UploadIcon, null) },
+    React.createElement(AjustesAccion, { onClick: traer.elegir, title: t('settings.data.import.title'), derecha: React.createElement(UploadIcon, null) },
     t('settings.data.import')
     ),
-    React.createElement("input", {
-      ref: fileInputRef,
-      type: "file",
-      accept: "application/json,.json",
-      style: { display: 'none' },
-      onChange: (e) => {
-        const f = e.target.files && e.target.files[0];
-        importJSON(f);
-        e.target.value = '';
-      } }
-    ),
+    traer.piezas,
     msg &&
     React.createElement("div", { className: "pace-aj-msg", role: "status", style: { color: msg.kind === 'err' ? 'var(--breathe-deep)' : 'var(--focus)' } }, msg.text),
 
@@ -41526,14 +41554,6 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
     React.createElement("a", { href: paceEnlaceLegal('/privacy'), target: "_blank", rel: "noopener" }, t('settings.legal.privacy'))
     )
 
-    ),
-    React.createElement(AjustesAviso, { abierto: !!pidiendoImportar, titulo: t('settings.import.titulo'), si: t('settings.import.si'),
-      onSi: importarDeVerdad, onNo: () => setPidiendoImportar(null) },
-    pidiendoImportar ? tn('settings.import.cuerpo', { logros: pidiendoImportar.logros, foco: pidiendoImportar.foco }) : null
-    ),
-    React.createElement(AjustesAviso, { abierto: avisoParcial, titulo: t('settings.import.parcial.titulo'), si: t('guardar.entendido'),
-      onNo: () => {paceOlvidarPasajero();location.reload();} },
-    t('settings.msg.import.partial')
     )
     ));
 
@@ -41567,7 +41587,7 @@ function UploadIcon() {
 
 
 Object.assign(window, { TweaksDataSection, paceDescargarCopia, paceDescargarRescate });
-;Object.assign(window, { paceBajarJSON, paceEnlaceLegal, paceDiaArchivo, paceDescargarCopia, paceDescargarRescate, paceOlvidarPasajero, paceConLogroDeLaCopia, TweaksDataSection, DownloadIcon, UploadIcon });
+;Object.assign(window, { paceBajarJSON, paceEnlaceLegal, paceDiaArchivo, paceDescargarCopia, paceDescargarRescate, paceConLogroDeLaCopia, TweaksDataSection, DownloadIcon, UploadIcon });
 })();
 </script>
   <script>
@@ -42058,11 +42078,11 @@ function AjustesAccion(_ref6) {let { children, derecha, suave, onClick, title, s
 
 
 
-function AjustesAviso(_ref7) {let { abierto, titulo, children, si, onSi, onNo } = _ref7;
+function AjustesAviso(_ref7) {let { abierto, titulo, children, si, onSi, onNo, capa } = _ref7;
   const { t } = useT();
   if (!abierto) return null;
   return ReactDOM.createPortal(
-    React.createElement(Modal, { open: true, onClose: onNo, maxWidth: 440, title: titulo },
+    React.createElement(Modal, { open: true, onClose: onNo, maxWidth: 440, title: titulo, capa: capa },
     React.createElement("div", { "data-pace-aj-aviso": true },
     React.createElement("p", { style: { margin: '0 0 22px', color: 'var(--ink-2)', fontSize: 15, lineHeight: 1.55 } }, children),
     React.createElement("div", { style: { display: 'flex', gap: 10, justifyContent: 'flex-end', flexWrap: 'wrap' } },
@@ -45500,10 +45520,38 @@ function OnbSemanaPaso(_ref4) {let { state, ultima, onSeguir, borrador, onBorrad
 
 }
 
+
+
+
+
+
+
+function OnbTraerCopia() {
+  const { t } = useT();
+  const [aviso, setAviso] = useStateONBS(null);
+  const traer = usePaceTraerCopia((kind, clave) => setAviso({ kind, clave }), 130);
+  return (
+    React.createElement(React.Fragment, null,
+    React.createElement("button", { type: "button", "data-pace-onb-copia": true, "data-pace-toque": true, onClick: () => {setAviso(null);traer.elegir();},
+      style: { ...onboardingStyles.ghostBtn, color: 'var(--ink-2)', marginTop: -6 } },
+    t('onboarding.copia'), ' ',
+    React.createElement("span", { style: { textDecoration: 'underline', textUnderlineOffset: 3, textDecorationColor: 'var(--line-2)' } }, t('onboarding.copia.traer'))
+    ),
+    aviso &&
+    React.createElement("p", { role: "status", "data-pace-onb-copia-aviso": true,
+      style: { margin: '-8px 0 0', fontSize: 12, color: aviso.kind === 'err' ? 'var(--breathe-deep)' : 'var(--ink-2)' } },
+    t(aviso.clave)
+    ),
+
+    traer.piezas
+    ));
+
+}
+
 Object.assign(window, {
-  ONBOARDING_QUESTIONS, OnbScene, OnbChoice, OnbDots, OnbLogo, OnbSemanaPaso
+  ONBOARDING_QUESTIONS, OnbScene, OnbChoice, OnbDots, OnbLogo, OnbSemanaPaso, OnbTraerCopia
 });
-;Object.assign(window, { OnbScene, OnbChoice, OnbDots, OnbLogo, OnbSemanaPaso });
+;Object.assign(window, { OnbScene, OnbChoice, OnbDots, OnbLogo, OnbSemanaPaso, OnbTraerCopia });
 })();
 </script>
   <script>
@@ -45892,6 +45940,7 @@ function Onboarding() {
     React.createElement("button", { "data-pace-cta": true, onClick: next, style: onboardingStyles.cta },
     t('onboarding.welcome.cta')
     ),
+    React.createElement(OnbTraerCopia, null),
     conCaminos &&
     React.createElement("button", { onClick: () => finish({ pick: false }), style: onboardingStyles.ghostBtn },
     t('onboarding.skip')
