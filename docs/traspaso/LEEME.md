@@ -31,6 +31,12 @@ suite entera. Si relevas, `main` local va por delante de origin a propósito.
 y dice que el código se queda (es y en). **caza-semana** se cortó por la red (ENOTFOUND) con el merge de abierta-horas a medias,
 todo resuelto en el índice; se le mandó seguir. **Ez, ~16:10: «Lleva esta cuenta al 100 %»**: las 5 h se reponen a las 16:30.
 Por mirar aparte: en la foto V1 del después, a las 12:10 con el día empezado, la línea dice «Ahora 8:46» (no lo trae esta rama).
+**~16:20, caza-semana:** abierta-horas juntada en su rama (56efe9c9, solo chocó DECISIONES), **S8** arreglado al juntar (el
+primer bloque se perdía sin contarse con E1 dentro), zona 290 de 290, oficina y salta sin errores (d3094f0d). Página de Ez con
+S3, S7 y S6 (recomienda la A en las tres): **C8okoSLuDnN2bBxtSdQSbw**. Se le mandó seguir con **S10** (el Foco que acaba con el
+portátil cerrado se apunta a la hora de volver y la carta propone mover la salida), **el hueco de V2** (el día cerrado por la
+hora deja el aro en «Ciclo completado»: debe decir «Jornada cerrada») y reproducir el «Ahora 8:46» (S11 si pide letra). S9 (el
+punto tapa «Ciclo 4 / 4»), en su página. **Al juntar: caza-semana lleva abierta-horas dentro; basta juntar caza-semana.**
 
 ## 7 nov., ~21:10: coordina EcLj6…; las 5 h, repuestas a las 21:00; las tres sesiones esperan el «Arráncalas» de Ez
 
