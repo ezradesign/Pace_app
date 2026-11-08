@@ -82,7 +82,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'onboarding.skip.question':        'skip this question',
 
     // Screen 0 — welcome (complements welcome.* in ui.js)
-    'onboarding.welcome.cta':          'Begin',
+    'onboarding.welcome.cta':          'Start',
     'onboarding.welcome.hint':         'Three short questions. Half a minute.',
 
     // Screen 1 — need
@@ -91,9 +91,9 @@ Object.assign(window.PACE_STRINGS.en, {
     'onboarding.need.calm':            'Calm',
     'onboarding.need.calm.sub':        'slow down, release tension',
     'onboarding.need.focus':           'Focus',
-    'onboarding.need.focus.sub':       'truly concentrate',
+    'onboarding.need.focus.sub':       'stay focused',
     'onboarding.need.body':            'Body',
-    'onboarding.need.body.sub':        'move, undo the chair',
+    'onboarding.need.body.sub':        'move more, take a break from sitting',
     'onboarding.need.energy':          'Energy',
     'onboarding.need.energy.sub':      'wake up, clear my head',
     'onboarding.need.free.label':      'Or say it your way',
@@ -105,7 +105,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'onboarding.time.title':           'How much time do you usually have?',
     'onboarding.time.short':           'A breather',
     'onboarding.time.short.sub':       'about 5 minutes',
-    'onboarding.time.pause':           'A pause',
+    'onboarding.time.pause':           'A break',
     'onboarding.time.pause.sub':       'about 15 minutes',
     'onboarding.time.block':           'A block',
     'onboarding.time.block.sub':       '25 minutes or more',
@@ -135,9 +135,9 @@ Object.assign(window.PACE_STRINGS.en, {
     'visita.aro.texto':                'Choose the minutes above and tap “{boton}”: the ring fills as you work.',
     'visita.aro.pausa':                'When it ends, PACE suggests a short break: moving, stretching or breathing.',
     'visita.act.titulo':               'Activities',
-    'visita.act.texto':                'Breathe, Stretch and Move, with short routines, and Hydrate, for your glasses of water. Whenever you like.',
+    'visita.act.texto':                'Try short routines in Breathe, Stretch and Move. Log your water in Hydrate. Whenever you like.',
     'visita.dia.titulo':               'Your day',
-    'visita.dia.texto':                'Each morning, “At your pace” plans your day from your week: when to stop and what to do in each break.',
+    'visita.dia.texto':                'Each morning, “At your pace” uses your weekly schedule to plan when to take a break and what to do.',
     'visita.ajustes.titulo':           'Settings',
-    'visita.ajustes.texto':            'Language, palette, sound and your data. You can replay this tour from here.',
+    'visita.ajustes.texto':            'Language, color theme, sound and your data. You can take this tour again here.',
 });

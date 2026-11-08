@@ -117,6 +117,32 @@ function chequeaMaterial(ctx, sb, STR, listaCorta) {
   else ctx.ok('tus rutinas: lo que pide cada ejercicio casa con su texto y con el del catálogo');
 }
 
+/* El material de cada rutina del catálogo tiene sus dos frases en los dos idiomas: la corta de
+   la tarjeta (`lib.gear.*`, «sentado · con silla») y la de «Qué necesitas» (`preview.eq.*`). La
+   tarjeta pinta la clave en crudo si falta: «Tronco sentado», «Postura reset» y «Hombros» decían
+   «chair» en las dos lenguas (recorrido del 6 nov. 2026). */
+function chequeaMaterialCatalogo(ctx, sb, STR, listaCorta) {
+  var mal = [], vistas = {};
+  [sb.__M, sb.__E].forEach(function (cat) {
+    Object.keys(cat || {}).forEach(function (g) {
+      (cat[g].items || []).forEach(function (r) {
+        (r.equipment || []).forEach(function (k) {
+          if (vistas[k]) return;
+          vistas[k] = r.id;
+          ['lib.gear.', 'preview.eq.'].forEach(function (pre) {
+            ['es', 'en'].forEach(function (l) {
+              if (!STR || !STR[l] || !STR[l][pre + k]) mal.push(pre + k + ' (' + r.id + '): falta en ' + l.toUpperCase());
+            });
+          });
+        });
+      });
+    });
+  });
+  if (!Object.keys(vistas).length) ctx.falla('catálogo: ninguna rutina declara material -- el análisis no ha mirado nada');
+  else if (mal.length) ctx.falla('catálogo: material sin su texto, la tarjeta lo pinta en crudo (' + mal.length + '): ' + listaCorta(mal, 8));
+  else ctx.ok('catálogo: el material de las ' + Object.keys(vistas).length + ' clases tiene su texto en la tarjeta y en «Qué necesitas», en es y en');
+}
+
 /* Nombre y cue en los dos idiomas para cada ejercicio del registro (C5: «Zancada con apertura»
    solo tenía las claves de su nombre de antes y en inglés salía en castellano). El español es
    el propio registro; el inglés, `custom.ex.<nombre>.name|cue` en `content/custom.js`. */
@@ -171,6 +197,7 @@ function chequeaRutinas(ctx, STR, listaCorta) {
     return;
   }
   chequeaMaterial(ctx, d.sb, STR, listaCorta);
+  chequeaMaterialCatalogo(ctx, d.sb, STR, listaCorta);
   chequeaIdiomas(ctx, d.sb, STR, listaCorta);
   chequeaFichas(ctx, d.sb, STR, listaCorta);
 }

@@ -2,7 +2,7 @@
  * ==============================================================================
  * La frase bajo la cuenta atrás decía «De pie. Sin prisa. N pasos.» en las 31
  * rutinas de los dos módulos, y 8 son de silla (su tarjeta dice «sentado»:
- * Tronco sentado, Glúteos invisibles, Cuello suave…) y 2 de suelo. Ahora nombra la
+ * Tronco sentado, Glúteos en la silla, Cuello suave…) y 2 de suelo. Ahora nombra la
  * postura solo cuando la rutina tiene una única; con varias no nombra ninguna,
  * porque `position` lista las que usa y no por cuál empieza.
  *

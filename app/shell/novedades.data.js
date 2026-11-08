@@ -15,6 +15,18 @@
 
 const PACE_NOVEDADES = [
   {
+    id: 'jornada-cerrada',
+    desde: '2026-11-07',
+    es: [
+      'Tu jornada se cierra sola al pasar tu hora de salida, con lo que hiciste; si quieres, sigues por libre.',
+      'Si dejas abierta la ventana de una pausa, a la mañana siguiente ya no te espera: PACE abre tu día nuevo.',
+    ],
+    en: [
+      'Your workday now wraps up on its own once your finish time has passed, with what you did; you can keep going without a plan.',
+      'If you leave a break window open, it no longer waits for you the next morning: PACE opens your new day.',
+    ],
+  },
+  {
     id: 'jornada-y-logros',
     desde: '2026-11-05',
     es: [

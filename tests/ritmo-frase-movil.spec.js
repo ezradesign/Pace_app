@@ -41,7 +41,7 @@ test('en el móvil, antes del primer bloque la fila «Ahora» dice dónde se emp
 
 test('en inglés, lo mismo', async ({ page, context }) => {
   await abrir(page, context, 'en');
-  await expect(filaAhora(page)).toHaveText('45 min · start it on the ring above');
+  await expect(filaAhora(page)).toHaveText('45 min · start with the timer above');
 });
 
 test('al volver a la home con el bloque ya empezado, la fila no lo dice', async ({ page, context }) => {

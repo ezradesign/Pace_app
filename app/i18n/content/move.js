@@ -9,13 +9,13 @@ Object.assign(window.PACE_STRINGS.en, {
 
   // ── Mueve — las tres capas (Ez, 23 oct. 2026: 2A) ─────────────────
   'mueve.cat.empezar.label':             'Start here',
-  'mueve.cat.empezar.aside':             'Two or three minutes, low doses',
-  'mueve.cat.sigilo.label':              'Stealth',
-  'mueve.cat.sigilo.aside':              'No one notices',
+  'mueve.cat.empezar.aside':             'Two or three minutes, a gentle start',
+  'mueve.cat.sigilo.label':              'Discreet',
+  'mueve.cat.sigilo.aside':              'Small movements at your desk',
   'mueve.cat.material.label':            'With equipment',
   'mueve.cat.material.aside':            'A band or a bar; without them, skip it',
   'mueve.cat.mas.label':                 'Go further',
-  'mueve.cat.mas.aside':                 'When the above feels short',
+  'mueve.cat.mas.aside':                 'When you feel ready for more',
 
   // ── Mueve — rutinas (ids extra.*) ────────────────────────────────
   'extra.desk.pushups.name':                 'Simple Push',
@@ -54,7 +54,7 @@ Object.assign(window.PACE_STRINGS.en, {
   // s121 (B2.3 OLA 4): claves EN migradas a `sN.instruction.{setup,action,care}`;
   // `sN.cue` retiradas. `sN.name` intacto (glifos). Dosis legacy conservada.
   'extra.wall.sit.name':                 'Wall Sit',
-  'extra.wall.sit.desc':                 'Quadriceps isometric against a wall.',
+  'extra.wall.sit.desc':                 'Hold a seated position against a wall.',
   'extra.wall.sit.code':                 'Legs',
   'extra.wall.sit.s0.name':              'Wall sit',
   'extra.wall.sit.s0.instruction.setup': 'Back against the wall, feet a step forward. Slide down a little.',
@@ -67,11 +67,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.wall.sit.s2.instruction.care':  'Choose a height that lets you breathe easy.',
 
   'extra.calves.name':                        'Stealth Calf Raises',
-  'extra.calves.desc':                        'Under the desk, no one notices.',
+  'extra.calves.desc':                        'Under your desk, heels up and down.',
   'extra.calves.code':                        'Calves',
   'extra.calves.s0.name':                     'Calf raises',
   'extra.calves.s0.instruction.setup':        'Seated or standing, feet flat on the floor, hip-width apart.',
-  'extra.calves.s0.instruction.action':       'Raise your heels as high as you control. Lower with control.',
+  'extra.calves.s0.instruction.action':       'Raise your heels only as far as you can control. Lower with control.',
   'extra.calves.s0.instruction.care':         'Small, controlled movement. Hold the desk for support if you need to.',
   'extra.calves.s1.name':                     'Calf raises',
   'extra.calves.s1.instruction.action':       'Slower now: lower in 3 s. Feel the calf on each lift.',
@@ -110,7 +110,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.grip.squeeze.s2.name':              'Wrist stretch',
   'extra.grip.squeeze.s2.instruction.setup': 'Arm out in front, elbow soft.',
   'extra.grip.squeeze.s2.instruction.action': 'Ten seconds palm down and ten palm up, easing your fingers toward you with your other hand.',
-  'extra.grip.squeeze.s2.instruction.care':  'Light pressure. Never into pain.',
+  'extra.grip.squeeze.s2.instruction.care':  'Use light pressure. Stop if it hurts.',
   'extra.grip.squeeze.s3.name':              'Palms on the desk',
   'extra.grip.squeeze.s3.instruction.setup': 'Stand facing the desk, palms flat, fingers pointing forward. Elbows straight but not locked.',
   'extra.grip.squeeze.s3.instruction.action': 'Lean your body slightly forward, slowly, until you feel a gentle stretch in your forearm.',
@@ -138,7 +138,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
   // ── Mueve — rutinas F6 (s92) ─────────────────────────────────────
   'extra.push.ladder.name':              'Push · Progression',
-  'extra.push.ladder.desc':              'From the desk to the pike. Complete pushing.',
+  'extra.push.ladder.desc':              'Incline push-ups, desk pikes and slow lowering.',
   'extra.push.ladder.code':              'Push',
   'extra.push.ladder.s0.name':           'Incline push-ups',
   'extra.push.ladder.s0.instruction.setup':  'Hands on the edge of a sturdy desk, body straight on a diagonal.',
@@ -176,8 +176,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.hang.bar.s4.instruction.action':       'Shoulders loose, without letting go of the bar. Let the back open up.',
   'extra.hang.bar.s4.instruction.care':         'Breathe deep and loosen your shoulders.',
 
-  'extra.glutes.stealth.name':                  'Invisible Glutes',
-  'extra.glutes.stealth.desc':                  'Activate them seated. Fully invisible.',
+  'extra.glutes.stealth.name':                  'Seated Glute Squeezes',
+  'extra.glutes.stealth.desc':                  'Work them without leaving your chair.',
   'extra.glutes.stealth.code':                  'Glutes',
   'extra.glutes.stealth.s0.name':               'Glute squeeze',
   'extra.glutes.stealth.s0.instruction.setup':  'Sit up tall, feet flat.',
@@ -191,7 +191,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.glutes.stealth.s3.name':               'Calf raises',
   'extra.glutes.stealth.s3.instruction.action': 'Finish by raising and lowering your heels, gently.',
 
-  'extra.chair.squats.name':                 'Stand and Rise',
+  'extra.chair.squats.name':                 'Sit and Stand',
   'extra.chair.squats.desc':                 'Sit down and stand up, then heel raises. A stable chair, no wheels.',
   'extra.chair.squats.code':                 'Legs',
   'extra.chair.squats.s0.name':              'Chair squat',
@@ -216,7 +216,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.chair.squats.s6.instruction.care':  'No bouncing. Lower until your heel is down.',
 
   'extra.legs.standing.name':                'Legs in Place',
-  'extra.legs.standing.desc':                'Toes up, then sit on air against the wall.',
+  'extra.legs.standing.desc':                'Toe raises followed by a wall sit.',
   'extra.legs.standing.code':                'Legs',
   'extra.legs.standing.s0.name':             'Tibialis raise',
   'extra.legs.standing.s0.instruction.setup': 'Back and glutes against the wall, feet hip-width apart, heels about a hand span from it.',
@@ -239,7 +239,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.legs.standing.s6.instruction.action': 'Once more, at the height you choose.',
   'extra.legs.standing.s6.instruction.care': 'To come out, push through your feet and stand up.',
 
-  'extra.legs.single.name':                  'Legs · Single',
+  'extra.legs.single.name':                  'Legs · Single-leg Strength',
   'extra.legs.single.desc':                  'Single-leg strength. Balance, control, and a stable chair.',
   'extra.legs.single.code':                  'Unilateral',
   'extra.legs.single.s0.name':               'Hip hinge',
@@ -308,7 +308,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.core.plank.s5.instruction.action':  'Lift your hips and keep them up. Raise one knee, then the other. Three each.',
   'extra.core.plank.s5.instruction.care':    'If your pelvis drops or your lower back hurts, put both feet down or stop.',
   'extra.core.plank.s6.name':                'Plank',
-  'extra.core.plank.s6.instruction.action':  'Last one. Back to the plank, body in a line. Breathe inside the tension.',
+  'extra.core.plank.s6.instruction.action':  'Last one. Return to the plank with your body in a straight line. Keep breathing.',
   'extra.core.plank.s6.instruction.care':    'Rest your knees if the line breaks.',
 
   'extra.pausa.suelo.name':                  'Floor Strength',

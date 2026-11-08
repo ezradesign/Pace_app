@@ -281,6 +281,6 @@ test('C6 · en inglés, las dos líneas', async ({ page, context }) => {
   await overlaySuperior(page).getByRole('button', { name: 'Save', exact: true }).click();
   await expect(overlaySuperior(page).locator('[data-pace-custom-aviso="borrada"]')).toContainText('This routine was deleted in another tab.');
   await page.evaluate(() => { for (let i = 0; i < 10; i++) addCustomRoutine({ name: 'R' + i, steps: [{ name: 'Plancha', dur: 30 }] }); });
-  await overlaySuperior(page).getByRole('button', { name: 'Save it as new' }).click();
+  await overlaySuperior(page).getByRole('button', { name: 'Save as new routine' }).click();
   await expect(overlaySuperior(page).locator('[data-pace-custom-aviso="tope"]')).toHaveText('You already have 10 routines, the maximum. Delete one to save this one; your draft stays here.');
 });

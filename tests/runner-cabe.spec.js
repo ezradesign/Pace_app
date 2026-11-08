@@ -1,6 +1,6 @@
 /* PACE · lo que dice un paso cabe en su tiempo (R4 y R6 de ChatGPT, 28 oct. 2026)
  * =================================================================================
- * R4. «Glúteos invisibles», paso 3: «aguanta unos diez segundos y suelta. Tres veces» en 30 s no
+ * R4. «Glúteos en la silla», paso 3: «aguanta unos diez segundos y suelta. Tres veces» en 30 s no
  *     cabe con un respiro entre aguantes. Se lee la frase que SE VE en el runner, en los dos
  *     idiomas, y la cuenta con la que empieza el paso.
  * R6. «4·7·8» dice 1 min y son cuatro ciclos de 19 s: acaba a los 76 s, y la barra estaba llena
@@ -32,7 +32,7 @@ const NUMEROS = { cinco: 5, seis: 6, siete: 7, ocho: 8, nueve: 9, diez: 10, doce
 const VECES = { dos: 2, tres: 3, cuatro: 4, two: 2, three: 3, four: 4 };
 
 for (const [lang, biblio] of [['es', 'Mueve'], ['en', 'Move']]) {
-  test(`cabe-1 · Glúteos invisibles (${lang}): los aguantes y sus respiros caben en la cuenta del paso`, async ({ page, context }) => {
+  test(`cabe-1 · Glúteos en la silla (${lang}): los aguantes y sus respiros caben en la cuenta del paso`, async ({ page, context }) => {
     await sembrar(context, { cuerpoAuto: false, lang });
     await page.clock.install({ time: new Date('2026-10-08T10:00:00+02:00') });
     await irAlArtefacto(page);

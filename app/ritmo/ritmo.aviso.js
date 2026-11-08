@@ -37,7 +37,8 @@
 function ritmoAviso(s, t, tn, lang) {
   if (typeof ritmoPlan !== 'function' || typeof ritmoDetras !== 'function') return null;
   var p = ritmoPlan(s);
-  return p && p.hechos >= 1 ? ritmoAvisoTras(p, p.hechos, t, tn, lang) : null;
+  /* Un Foco por libre (con el día cerrado, o tras el último bloque) avisa como siempre. */
+  return p && p.hechos >= 1 && !p.cerrado && !p.deMas ? ritmoAvisoTras(p, p.hechos, t, tn, lang) : null;
 }
 
 /* El de las apps, con el bloque aún sin cerrar. Sin «A tu ritmo», null: el de siempre. */

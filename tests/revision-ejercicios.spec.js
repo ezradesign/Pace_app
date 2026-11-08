@@ -113,7 +113,7 @@ test('Espalda de oficina entra de pie en «A tu ritmo»; 4·7·8 son cuatro cicl
   /* Weil: cuatro seguidos el primer mes. */
   expect(r.ciclos478).toBe(4);
   for (const b of r.bombeo) {
-    expect(b, b.id).toEqual({ id: b.id, rondas: 3, porRonda: 20, suaves: 1, descanso: 20, ciclo: 2, es: 'Respira suave', en: 'Breathe easy' });
+    expect(b, b.id).toEqual({ id: b.id, rondas: 3, porRonda: 20, suaves: 1, descanso: 20, ciclo: 2, es: 'Respira suave', en: 'Breathe gently' });
   }
   expect(r.hernia[0]).toMatch(/hernia/);
   expect(r.hernia[1]).toMatch(/hernia/);

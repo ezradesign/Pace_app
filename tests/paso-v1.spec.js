@@ -255,7 +255,7 @@ test.describe('la hoja del día de v1 (1A)', () => {
     const hoja = page.locator(HOJA);
     await expect(hoja).toBeVisible({ timeout: 8000 });
     await expect(hoja.getByRole('heading')).toHaveText('Seven days of PACE Complete');
-    await expect(hoja).toContainText('Since you were already using PACE, you have all of it until ');
+    await expect(hoja).toContainText('As an existing PACE user, you can keep using all its features until ');
     await expect(hoja.locator('[data-pace-pasov1-rutina]')).toHaveCount(5);
     await expect(hoja.locator('[data-pace-pasov1-rutina]').first()).toContainText('Move');
     await expect(hoja.locator('[data-pace-pasov1-mas]')).toHaveText('And 2 more, yours too.');
