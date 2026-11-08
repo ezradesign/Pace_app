@@ -56,8 +56,8 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 - **La 0.194.0, juntada con los «Júntalo» de Ez (8 nov.)**: el contraste (1B 2B 3B), volver tras horas fuera (E1 A, V1 A,
   V2 A), el día de v1 (1B 2A 3B 4A, con «Borrar todo» que dice que el código se queda) y siete arreglos de la caza de la semana.
   Si Play se sube el lunes con la 0.191.1, esta llega como actualización. Detalle, en el relevo de `docs/traspaso/LEEME.md`.
-- **Letras de Ez, sin prisa**: la semana, S3 S7 S6 S11 (https://claude.ai/artifact/C8okoSLuDnN2bBxtSdQSbw, la A en las cuatro), y
-  si un Foco por libre tras cerrar la jornada cuenta para la salida que propone la carta (sin página aún).
+- **Letras de Ez (8 nov.), todas A, sin montar**: usabilidad 1A-6A (`claude/usabilidad-8nov-587b48`), lo nuevo N2 A y N3 A
+  (`claude/caza-nuevo-8nov-0c7d9b`, con N1 arreglado) y la semana S3 S7 S6 S11 A. Van juntas como 0.195.0 (orden, en el relevo).
 - **ChatGPT**: Ez le pasa la revisión de la jornada entera (`docs/audits/chatgpt-8nov/prompt-jornada.md`, también en su hoja) y
   la del cobro y lo legal, que sigue en su hoja.
 - **En marcha (8 nov.)**: una caza de bugs de alguien nuevo (`claude/caza-nuevo-8nov…`, puerto 8891) y una revisión de
