@@ -32,6 +32,31 @@ música de fondo, ni las cinco pestañas a 1280 en oscuro una a una (las medidas
 (`copia-con-logro`, `eventos-backup`, `importar-borrar`, `privacidad-datos`, `tus-rutinas`, `logros-sesion-entera`,
 `logros-capas`, `android-nativo`): 43 de 43.
 
+## Montado con las letras de Ez (8 nov., para la 0.195.0)
+
+Ez eligió las recomendadas: N2 A y N3 A, y de la usabilidad del mismo día, 6A. La página con el antes
+y el ahora: `docs/audits/caza-nuevo-8nov/montado-ez.html` (se rehace con `montado-ez.js` y su plantilla,
+en `docs/traspaso/archivos/caza-nuevo-8nov/`).
+
+- **N2 A, montada.** «Tus rutinas» de la barra lateral, con alguna rutina, abre Mueve EN «Tus rutinas»
+  (en el móvil, la vista del segundo toque), y al guardar en el constructor se abre esa lista con la
+  rutina a la vista (`pideTuyas`, main.jsx → `LibraryShell`). Vacía, sigue el constructor.
+  `tests/tus-rutinas-abre.spec.js` (360, 1280 y la décima en inglés): cuatro mutantes en rojo.
+- **N3 A, montada.** «¿Tienes una copia? Tráela» bajo «Comenzar» abre el aviso de importar de Ajustes,
+  que ahora vive en `usePaceTraerCopia` (`app/tweaks/TweaksData.importar.jsx`) y usan las dos puertas.
+  `tests/bienvenida-copia.spec.js`: sin scroll a 360 y 1280 en es y en (cabe también a 360x640,
+  1280x720 y 1536x710; a 320x568 pedía 8 px y ahora 42, la deuda aceptada de ese tamaño), el estado
+  traído igual que desde Ajustes, y el archivo que no es copia. Tres mutantes en rojo.
+- **6A, sin montar: choca con «LOS AJUSTES DEL MÓVIL NO PIDEN SCROLL»** (DECISIONES, 22 oct.). Las dos
+  líneas, tal como se pintaron, suman unos 33 px: a 360x640 los Ajustes piden 2 px de scroll en la web
+  y 23 en Android, y a 360x730 en Android la hoja pasa del 79 % (`tests/ajustes-movil.spec.js`). En el
+  ordenador y a 390x844 caben. El código, en `claude/caza-nuevo-8nov-6a-choca` (133ba624, sin su
+  prueba), a la espera de que Ez diga cómo encajarla en el móvil.
+- **El ruido de consola de `v1Instr`, arreglado** (lo de «Visto y apuntado» de abajo): en una rutina
+  propia devuelve el dato y en un paso sin el campo no pide clave. `tests/runner-claves-ingles.spec.js`
+  cuenta los avisos al abrir el runner (antes salían, por ejemplo, los 5 de colocación de «Levántate
+  y sube») y mira que no se pierda ningún inglés.
+
 ## Arreglado
 
 ### N1 · La copia de tus datos sale sin «Cuaderno a salvo», y al traerla se pierde · molesta (código) · ARREGLADO
