@@ -44,6 +44,11 @@ de PACE completo, si lo tienes, se queda.»; `.app`, solo sin el «todo». `veri
 16 de 16. **S8 está en abierta-horas sola** (E1 + el bloque acabado sin contar = bloque perdido, «bloquea»): `main` no se sube
 hasta juntar caza-semana, que pide el «júntalo» de Ez para sus arreglos (S1, S4, S5, S8, S10, el cierre por la hora); sus letras
 S3 S7 S6, aparte. Luego: bump 0.194.0, build, suite entera, CHANGELOG, novedad si toca, push y CI.
+**~17:10, caza-semana, cerrada (a4089e67, en origin):** S10 (2d890977, `tests/foco-hora-de-acabar.spec.js`), S12 = el cierre por la
+hora con bloques sin hacer dice «Jornada cerrada» (6675ca05, `tests/jornada-cerrada-hora.spec.js`; `aro-jornada` al día) y S11 a la
+página (el «Ahora 8:46» era real: un día empezado no se lee desde ahora; recomienda la A, como E1). Zona con todo junto 249 de
+249. Letras para Ez: S3 S7 S6 S11 (C8okoSLuDnN2bBxtSdQSbw). Pregunta sin página: ¿un Foco por libre tras cerrar la jornada cuenta
+para la salida que propone la carta? Esperando el «júntalos» de Ez para los arreglos.
 
 ## 7 nov., ~21:10: coordina EcLj6…; las 5 h, repuestas a las 21:00; las tres sesiones esperan el «Arráncalas» de Ez
 
