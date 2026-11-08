@@ -30196,14 +30196,17 @@ function aroDespues(s, t, tn) {
 
 
 
+
+
+
+
 function aroCerrado(s, t, tn) {
   const p = typeof ritmoPlan === 'function' ? ritmoPlan(s) : null;
   const todo = !!p && p.total > 0 && p.hechos >= p.total;
   if (!p || !(p.cerrado || todo)) return null;
   const f = ritmoFocoHecho(p);
   const hecho = f > 0 ? tn('ritmo.aro.hecho', { f: ritmoDuracion(f) }) : null;
-  if (todo) return { label: t('ritmo.hecho'), hecho, sub: t('ritmo.aro.tuyo'), cta: t('ritmo.aro.libre') };
-  return { label: t('ritmo.fuera'), hecho };
+  return { label: t('ritmo.hecho'), hecho, sub: t('ritmo.aro.tuyo'), cta: t('ritmo.aro.libre') };
 }
 
 

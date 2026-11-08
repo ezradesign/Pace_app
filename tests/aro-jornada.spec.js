@@ -179,7 +179,8 @@ test('la tarjeta del móvil dice qué hace el botón, en los dos idiomas', async
 /* PASADA LA SALIDA, EL DÍA SE CIERRA (Ez, 1A del 7 nov. 2026, del recorrido del 6 nov.). Quien
    dejaba la jornada en la pausa de las 9:45 y volvía a las 17:40 (salida a las 17:00) leía
    «Bloque 2 de 9 · Hasta las 17:00» y «Tu pausa · Ahora…», y al pulsar empezaba un bloque hasta las
-   18:30. Ahora el aro dice «Tu jornada ya terminó» con lo hecho, la tarjeta «Jornada cerrada», y
+   18:30. Ahora el aro dice «Jornada cerrada» con lo hecho, «Lo que queda del día es tuyo» y «Seguir
+   por libre» (los textos de V2: es el mismo cierre, 8 nov. 2026), la tarjeta «Jornada cerrada», y
    quien quiera sigue por libre: con la página abierta (a pasos de 5 min, sin gesto) y al recargar. */
 const hastaLas = async (page, hhmm) => {
   for (let i = 0; i < 200 && await page.evaluate(() => Date.now()) < a(hhmm).getTime(); i++) {
@@ -189,9 +190,10 @@ const hastaLas = async (page, hhmm) => {
   await page.waitForTimeout(300);
 };
 async function cerrada(page, porque) {
-  await expect(vis(page, '[data-pace-dial-label]'), porque).toHaveText('Tu jornada ya terminó');
+  await expect(vis(page, '[data-pace-dial-label]'), porque).toHaveText('Jornada cerrada');
   await expect(vis(page, '[data-pace-dial-hasta]')).toHaveText('45 min de foco');
-  await expect(cta(page)).toHaveText('Empezar foco');
+  await expect(vis(page, '[data-pace-dial-subtitle]')).toHaveText('Lo que queda del día es tuyo');
+  await expect(cta(page)).toHaveText('Seguir por libre');
   await expect(vis(page, '[data-pace-ritmo-estado="hecho"]')).toContainText('Jornada cerrada');
   await expect(page.locator('[data-pace-sidebar]')).not.toContainText('Tu pausa');
 }
