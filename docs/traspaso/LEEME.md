@@ -24,6 +24,13 @@ la auditoría sobre el «Vaso 3 de 8» del recorrido, sin la clave `hydrate.glas
 coordinadora) y su zona 215 de 215. La página nueva en EcLj6: **CdgFC2hXvi6iMGb6P4hBir** (2Fv1m… es de 5iWBf). **Ez, ~12:30: «Júntalo»**: en `main` LOCAL
 (merge 0b5add58, sin choques, build igual, `verify` en verde), **sin subir**: va a origin con las otras tres ramas, el bump y la
 suite entera. Si relevas, `main` local va por delante de origin a propósito.
+**~16:15:** la **suite entera de abierta-horas** (8fd817b1, con main dentro, un worker): **1334 en verde, 2 saltadas, 0 rojas**
+(53,4 min). Su página con «Montado», publicada en EcLj6: **26rrub9PtzCWwg6LPGzwtv** (la Uv6u27… de esta cuenta es la vieja).
+**letras-v1, montadas** (1dc9e496 en origin, main dentro): 1B 2A 3B 4A con `tests/dia-v1-letras.spec.js` y doce mutantes en rojo,
+`verify` y su zona 268 de 268; «Montado» en 1AzBCEn8…. Al juntar, con el sí de Ez, `settings.reset.cuerpo` pierde el «todo»
+y dice que el código se queda (es y en). **caza-semana** se cortó por la red (ENOTFOUND) con el merge de abierta-horas a medias,
+todo resuelto en el índice; se le mandó seguir. **Ez, ~16:10: «Lleva esta cuenta al 100 %»**: las 5 h se reponen a las 16:30.
+Por mirar aparte: en la foto V1 del después, a las 12:10 con el día empezado, la línea dice «Ahora 8:46» (no lo trae esta rama).
 
 ## 7 nov., ~21:10: coordina EcLj6…; las 5 h, repuestas a las 21:00; las tres sesiones esperan el «Arráncalas» de Ez
 
