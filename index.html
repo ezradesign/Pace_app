@@ -34317,7 +34317,14 @@ function v1Instr(tR, routine, idx, key) {
 
 
   if (!st.instruction && key === 'action' && st.cue) return tR(v1Clave(routine, idx, 'cue'), st.cue);
-  return tR(`${v1Prefijo(routine, idx)}.instruction.${key}`, st.instruction ? st.instruction[key] : undefined);
+
+
+
+
+
+  if (routine.id.indexOf('custom.') === 0) return st.instruction ? st.instruction[key] : undefined;
+  if (!st.instruction || st.instruction[key] == null) return undefined;
+  return tR(`${v1Prefijo(routine, idx)}.instruction.${key}`, st.instruction[key]);
 }
 
 

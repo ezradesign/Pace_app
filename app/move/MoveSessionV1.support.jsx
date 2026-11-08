@@ -361,7 +361,14 @@ function v1Instr(tR, routine, idx, key) {
   /* Los pasos que venían del runner antiguo (y los de las rutinas propias) no traen
      `instruction`: su frase es `cue`, y en inglés se traduce con la clave `.cue` de siempre. */
   if (!st.instruction && key === 'action' && st.cue) return tR(v1Clave(routine, idx, 'cue'), st.cue);
-  return tR(`${v1Prefijo(routine, idx)}.instruction.${key}`, st.instruction ? st.instruction[key] : undefined);
+  /* SOLO SE PIDE LA CLAVE QUE PUEDE EXISTIR (caza de lo nuevo, 8 nov.). Una rutina propia ya trae
+     su texto en el idioma de la app (`_moveFichaPaso`) y no tiene claves por posición; y un paso
+     sin ese campo (un descanso, o la segunda serie, ya colocado) no lo tiene en ningún idioma.
+     Pedirla daba el mismo texto, pero en inglés llenaba la consola de `localhost` de
+     `[i18n] missing key` y tapaba los avisos de verdad (tests/runner-claves-ingles.spec.js). */
+  if (routine.id.indexOf('custom.') === 0) return st.instruction ? st.instruction[key] : undefined;
+  if (!st.instruction || st.instruction[key] == null) return undefined;
+  return tR(`${v1Prefijo(routine, idx)}.instruction.${key}`, st.instruction[key]);
 }
 
 /* s172 · LOS DATOS DE `session.completed` DEL RUNNER V1 (§6.4). Vive aqui y no
