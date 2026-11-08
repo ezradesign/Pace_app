@@ -39,4 +39,24 @@ function ritmoMirarSinEmpezar() {
 }
 if (typeof paceMinutoSuscribir === 'function') paceMinutoSuscribir(ritmoMirarSinEmpezar);
 
-Object.assign(window, { ritmoDesdeSinEmpezar, ritmoMirarSinEmpezar });
+/* EL BLOQUE QUE EMPIEZA AHORA, Y NO A SU HORA. Lo que dura el bloque que toca si empieza a la
+   hora `t`: lo del plan, salvo que empiece tarde y detrás venga una reunión. Entonces deja sitio a su pausa o, si así no llega a 15 min, acaba al
+   empezar la reunión, como el día que compone la regla. Sin esto, el bloque de 9:42 a 10:00
+   empezado a las 9:45 duraba sus 18 min, acababa a las 10:03 dentro de la reunión, y la línea
+   corría la reunión a las 10:03 (el bloque en marcha manda en `ritmo.regla.js`). */
+function ritmoDurSiEmpiezas(p, t) {
+  if (!p || !p.actual) return null;
+  var a = p.actual, i = p.m.items.indexOf(a), pausa = 0, o = null;
+  if (t <= a.desde) return a.dur;
+  while (++i < p.m.items.length && !o) {
+    var x = p.m.items[i];
+    if (x.tipo === 'foco') break;
+    if (x.tipo === 'pausa') pausa += x.dur;
+    if (x.tipo === 'ocupado') o = x;
+  }
+  if (!o || t >= o.desde || t + a.dur + pausa <= o.desde) return a.dur;
+  var d = o.desde - t - pausa;
+  return Math.min(a.dur, d >= 15 ? d : o.desde - t);
+}
+
+Object.assign(window, { ritmoDesdeSinEmpezar, ritmoMirarSinEmpezar, ritmoDurSiEmpiezas });

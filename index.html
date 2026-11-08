@@ -8093,7 +8093,8 @@ function completeFocusSession(context, opts) {
       plannedSeconds: mins * 60,
       plannedSecondsSource: 'preset',
       completionReason: 'natural',
-      creditedMinutes: sumados
+      creditedMinutes: sumados,
+      fin: opts && opts.fin
     });
   }
 }
@@ -13537,20 +13538,30 @@ function ritmoSiguiente(s) {
 
 
 
+
+
+
 function ritmoFocoCorriendo() {
   try {
-    var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
-    return !!(v && (v.endsAt && v.endsAt > Date.now() || v.pausaMs > 0 && v.dia === new Date().toDateString()));
+    var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null'),hoy = new Date().toDateString();
+    return !!(v && (v.endsAt && (v.endsAt > Date.now() || new Date(v.endsAt).toDateString() === hoy) || v.pausaMs > 0 && v.dia === hoy));
   } catch (e) {return false;}
 }
+
 
 
 function ritmoSincronizar() {
   var s = getState();
   if (s.focusMode !== 'foco' || ritmoFocoCorriendo()) return;
   var p = ritmoPlan(s);
-  if (p && p.actual && s.focusMinutes !== p.actual.dur) setState({ focusMinutes: p.actual.dur });
+  var dur = p && p.actual ? ritmoDurSiEmpiezas(p, ritmoAhoraExacto()) : null;
+  if (dur && s.focusMinutes !== dur) setState({ focusMinutes: dur });
 }
+function ritmoSincronizarALaVista() {
+  if (document.visibilityState !== 'hidden') {try {ritmoSincronizar();} catch (e) {}}
+}
+document.addEventListener('visibilitychange', ritmoSincronizarALaVista);
+setInterval(ritmoSincronizarALaVista, 60 * 1000);
 
 
 function ritmoGuardar(cambio) {
@@ -13585,12 +13596,21 @@ function ritmoPreguntar() {ritmoPausaCerrarConElDia();ritmoGuardar(function () {
 function ritmoPorLibre() {ritmoPausaCerrarConElDia();ritmoGuardar(function () {return { libre: ritmoHoy(), dia: null };});}
 function ritmoVolver() {ritmoGuardar(function () {return { libre: null, distinto: ritmoHoy() };});}
 
+
+
 function ritmoOtra(claves) {
+  var p = null;
+  try {p = ritmoPlan(getState());} catch (e) {}
+  var viejos = {};
+  (p ? p.m.items : []).forEach(function (it) {(it.platos || []).forEach(function (pl) {if ((claves || []).indexOf(pl.clave) !== -1) viejos[pl.clave] = pl.id;});});
   ritmoGuardar(function (r) {
     if (!r.dia) return {};
-    var cambios = Object.assign({}, r.dia.cambios || {});
-    (claves || []).forEach(function (k) {cambios[k] = (cambios[k] || 0) + 1;});
-    return { dia: Object.assign({}, r.dia, { cambios: cambios }) };
+    var cambios = Object.assign({}, r.dia.cambios || {}),descartes = Object.assign({}, r.dia.descartes || {});
+    (claves || []).forEach(function (k) {
+      cambios[k] = (cambios[k] || 0) + 1;
+      if (viejos[k]) descartes[k] = (descartes[k] || []).filter(function (id) {return id !== viejos[k];}).concat([viejos[k]]).slice(-5);
+    });
+    return { dia: Object.assign({}, r.dia, { cambios: cambios, descartes: descartes }) };
   });
 }
 
@@ -13627,7 +13647,7 @@ Object.assign(window, {
   ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario,
   ritmoOrdinal
 });
-;Object.assign(window, { RITMO_TIMER_KEY, RITMO_COMIDA_REGION, ritmoHorarioInicial, RITMO_MEDIA_DUR, ritmoMedia, ritmoHoy, ritmoAhora, ritmoAhoraExacto, ritmoDe, ritmoPozos, ritmoPrevios, ritmoCongelar, ritmoRutinaPorId, ritmoHidratar, ritmoMenu, ritmoPlanBase, ritmoPlan, ritmoOrdinal, ritmoDetras, ritmoAro, RITMO_A_MENU, ritmoPropuesta, ritmoSiguiente, ritmoFocoCorriendo, ritmoSincronizar, ritmoGuardar, ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario });
+;Object.assign(window, { RITMO_TIMER_KEY, RITMO_COMIDA_REGION, ritmoHorarioInicial, RITMO_MEDIA_DUR, ritmoMedia, ritmoHoy, ritmoAhora, ritmoAhoraExacto, ritmoDe, ritmoPozos, ritmoPrevios, ritmoCongelar, ritmoRutinaPorId, ritmoHidratar, ritmoMenu, ritmoPlanBase, ritmoPlan, ritmoOrdinal, ritmoDetras, ritmoAro, RITMO_A_MENU, ritmoPropuesta, ritmoSiguiente, ritmoFocoCorriendo, ritmoSincronizar, ritmoSincronizarALaVista, ritmoGuardar, ritmoElegir, ritmoPreguntar, ritmoPorLibre, ritmoVolver, ritmoOtra, ritmoHorario });
 })();
 </script>
   <!-- Terminar y empezar un bloque: la pausa, recolocar el día y el cambio de hora. -->
@@ -13731,7 +13751,7 @@ function ritmoBloqueEmpezado(minutos) {
   var mins = Number(minutos) || 0;
 
 
-  var otraDuracion = !!(p && p.actual && mins && mins !== p.actual.dur);
+  var otraDuracion = !!(p && p.actual && mins && mins !== ritmoDurSiEmpiezas(p, t));
   if (p && p.actual && (t !== p.actual.desde || otraDuracion)) {
     cambios.pasado = ritmoCongelar(p.m.items.slice(0, p.m.items.indexOf(p.actual)));
     cambios.desde = t;
@@ -13856,8 +13876,28 @@ function ritmoMirarSinEmpezar() {
 }
 if (typeof paceMinutoSuscribir === 'function') paceMinutoSuscribir(ritmoMirarSinEmpezar);
 
-Object.assign(window, { ritmoDesdeSinEmpezar, ritmoMirarSinEmpezar });
-;Object.assign(window, { ritmoDesdeSinEmpezar, _ritmoSinEmpezarVisto, ritmoMirarSinEmpezar });
+
+
+
+
+
+function ritmoDurSiEmpiezas(p, t) {
+  if (!p || !p.actual) return null;
+  var a = p.actual,i = p.m.items.indexOf(a),pausa = 0,o = null;
+  if (t <= a.desde) return a.dur;
+  while (++i < p.m.items.length && !o) {
+    var x = p.m.items[i];
+    if (x.tipo === 'foco') break;
+    if (x.tipo === 'pausa') pausa += x.dur;
+    if (x.tipo === 'ocupado') o = x;
+  }
+  if (!o || t >= o.desde || t + a.dur + pausa <= o.desde) return a.dur;
+  var d = o.desde - t - pausa;
+  return Math.min(a.dur, d >= 15 ? d : o.desde - t);
+}
+
+Object.assign(window, { ritmoDesdeSinEmpezar, ritmoMirarSinEmpezar, ritmoDurSiEmpiezas });
+;Object.assign(window, { ritmoDesdeSinEmpezar, _ritmoSinEmpezarVisto, ritmoMirarSinEmpezar, ritmoDurSiEmpiezas });
 })();
 </script>
   <script>
@@ -16680,8 +16720,13 @@ function emitSessionCompleted(module, routineId, datos) {
   const origen = d.inPath ? { origin: 'camino', fromMenu: false } : paceOrigenPendiente;
   paceOrigenPendiente = null;
   paceUltimaPuerta = origen;
+
+
+  const fin = typeof d.fin === 'number' && isFinite(d.fin) && d.fin <= Date.now() &&
+  new Date(d.fin).toDateString() === new Date().toDateString() ? new Date(d.fin).toISOString() : undefined;
   const evento = window.makeEvent && window.makeEvent({
     type: 'session.completed',
+    occurredAt: fin,
     context: d.inPath ? 'path' : 'standalone',
     runId: runId,
     pathRunId: pathRunId,
@@ -17122,8 +17167,10 @@ function ritmoResumenDe(s, dia) {
       reunion: reunion,
       platos: it.platos.map(function (pl) {
         var veces = Number(cambios[pl.clave]) || 0;
+
+        var apuntado = dia.descartes && Array.isArray(dia.descartes[pl.clave]) ? dia.descartes[pl.clave] : null;
         return { modulo: pl.modulo, id: pl.id, otras: veces,
-          antes: veces && !it.congelado ? ritmoDescartados(s, dia, pl.clave, veces) : [] };
+          antes: !veces ? [] : apuntado ? apuntado.slice(0, 5) : !it.congelado ? ritmoDescartados(s, dia, pl.clave, veces) : [] };
       })
     });
   });
@@ -22615,6 +22662,26 @@ const toastSoloLector = { position: 'absolute', width: 1, height: 1, overflow: '
 function SelloEnAro(_ref) {let { toast, t } = _ref;
   const textoRef = useRefTO(null);
   const [ajuste, setAjuste] = useStateTO({ escala: 1, corto: false });
+
+
+
+
+  const [aro, setAro] = useStateTO(toast.aro);
+  useEffectTO(() => {
+    let ultimo = toast.aro;
+    const medir = () => {
+      const h = toastHuecoDelAro();
+      if (!h || ultimo && h.x === ultimo.x && h.y === ultimo.y && h.ancho === ultimo.ancho && h.fs === ultimo.fs) return;
+      ultimo = h;
+      setAro(h);
+    };
+    const obs = new MutationObserver(medir);
+    obs.observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
+    window.addEventListener('resize', medir);
+
+    const cada = setInterval(medir, 250);
+    return () => {obs.disconnect();window.removeEventListener('resize', medir);clearInterval(cada);};
+  }, []);
   useLayoutEffectTO(() => {
     const el = textoRef.current;
     if (!el || el.scrollWidth <= el.clientWidth + 1) return;
@@ -22623,11 +22690,11 @@ function SelloEnAro(_ref) {let { toast, t } = _ref;
     if (!ajuste.corto) setAjuste({ escala: 1, corto: true });else
     if (ajuste.escala === 1) setAjuste({ escala: Math.max(0.6, cabe * 0.98), corto: true });
   }, [ajuste]);
-  const fs = toast.aro.fs;
+  const fs = aro.fs;
   return (
     React.createElement("div", { "data-pace-sello-aro": true, style: {
-        position: 'fixed', left: toast.aro.x, top: toast.aro.y,
-        transform: 'translate(-50%, -50%)', maxWidth: toast.aro.ancho,
+        position: 'fixed', left: aro.x, top: aro.y,
+        transform: 'translate(-50%, -50%)', maxWidth: aro.ancho,
         display: 'flex', alignItems: 'center',
         whiteSpace: 'nowrap', color: 'var(--achievement-deep)',
         fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: fs * ajuste.escala, lineHeight: 1.2,
@@ -24386,9 +24453,11 @@ const focusStyles = {
 
 
 
-function focoElapsedSec(inicioMs, durationSec) {
+function focoElapsedSec(inicioMs, durationSec, finMs) {
   if (!inicioMs) return durationSec;
-  return Math.max(durationSec, Math.round((Date.now() - inicioMs) / 1000));
+
+  var hasta = typeof finMs === 'number' && isFinite(finMs) && finMs <= Date.now() ? finMs : Date.now();
+  return Math.max(durationSec, Math.round((hasta - inicioMs) / 1000));
 }
 
 
@@ -30285,14 +30354,17 @@ function aroDespues(s, t, tn) {
 
 
 
+
+
+
+
 function aroCerrado(s, t, tn) {
   const p = typeof ritmoPlan === 'function' ? ritmoPlan(s) : null;
   const todo = !!p && p.total > 0 && p.hechos >= p.total;
   if (!p || !(p.cerrado || todo)) return null;
   const f = ritmoFocoHecho(p);
   const hecho = f > 0 ? tn('ritmo.aro.hecho', { f: ritmoDuracion(f) }) : null;
-  if (todo) return { label: t('ritmo.hecho'), hecho, sub: t('ritmo.aro.tuyo'), cta: t('ritmo.aro.libre') };
-  return { label: t('ritmo.fuera'), hecho };
+  return { label: t('ritmo.hecho'), hecho, sub: t('ritmo.aro.tuyo'), cta: t('ritmo.aro.libre') };
 }
 
 
@@ -30437,8 +30509,10 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
       if (typeof paceNativoCampana === 'function') paceNativoCampana(finBloque, campana);else campana();
 
 
-      completeFocusSession('home', { minutes: minutos, bloque,
-        elapsedSeconds: focoElapsedSec(inicio, durationSec),
+
+
+      completeFocusSession('home', { minutes: minutos, bloque, fin: finBloque,
+        elapsedSeconds: focoElapsedSec(inicio, durationSec, finBloque),
         activeSeconds: durationSec });
 
 
@@ -37752,7 +37826,16 @@ function breakPropuesta(state, ctx) {
   const hora = typeof c.hora === 'number' ? c.hora : new Date().getHours();
   const agua = s.water || { today: 0, goal: 8 };
   const plan = s.plan || {};
-  const minutos = Number(s.focusMinutes) || 0;
+
+
+
+  const hechoRitmo = (() => {
+    try {
+      const p = typeof ritmoPlanBase === 'function' ? ritmoPlanBase(s) : null;
+      return p && p.hechos > 0 && !p.deMas ? p.m.focos[p.hechos - 1] : null;
+    } catch (e) {return null;}
+  })();
+  const minutos = hechoRitmo ? hechoRitmo.dur : Number(s.focusMinutes) || 0;
 
 
   const bloqueDeHoy = Math.max(1, Number(s.cycle) || 1);

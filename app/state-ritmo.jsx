@@ -376,21 +376,31 @@ function ritmoSiguiente(s) {
 
 /* ¿Hay un bloque de foco empezado? Lo dice la clave que FocusTimer escribe mientras corre y,
    desde el 12 oct. 2026, también en pausa (hoy). Cambiar `focusMinutes` con un bloque empezado
-   lo reiniciaría, así que con él vivo no se toca nada. */
+   lo reiniciaría, así que con él vivo no se toca nada. También cuenta el que ya acabó hoy y aún
+   no se ha contado (FocusTimer lo cuenta en su vuelta siguiente y entonces borra la clave): en ese
+   rato, el día con el primer bloque aún sin contar se leía «sin empezar» desde ahora, el aro
+   cambiaba de minutos y el bloque se perdía sin contarse. */
 function ritmoFocoCorriendo() {
   try {
-    var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
-    return !!(v && ((v.endsAt && v.endsAt > Date.now()) || (v.pausaMs > 0 && v.dia === new Date().toDateString())));
+    var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null'), hoy = new Date().toDateString();
+    return !!(v && ((v.endsAt && (v.endsAt > Date.now() || new Date(v.endsAt).toDateString() === hoy)) || (v.pausaMs > 0 && v.dia === hoy)));
   } catch (e) { return false; }
 }
 
-/* El aro tiene que medir lo que mide el bloque que toca. */
+/* El aro tiene que medir lo que mide el bloque que toca, también si empiezas tarde (cada minuto
+   y al volver a la página, abajo). */
 function ritmoSincronizar() {
   var s = getState();
   if (s.focusMode !== 'foco' || ritmoFocoCorriendo()) return;
   var p = ritmoPlan(s);
-  if (p && p.actual && s.focusMinutes !== p.actual.dur) setState({ focusMinutes: p.actual.dur });
+  var dur = p && p.actual ? ritmoDurSiEmpiezas(p, ritmoAhoraExacto()) : null;
+  if (dur && s.focusMinutes !== dur) setState({ focusMinutes: dur });
 }
+function ritmoSincronizarALaVista() {
+  if (document.visibilityState !== 'hidden') { try { ritmoSincronizar(); } catch (e) {} }
+}
+document.addEventListener('visibilitychange', ritmoSincronizarALaVista);
+setInterval(ritmoSincronizarALaVista, 60 * 1000);
 
 /* --- acciones -------------------------------------------------------------- */
 function ritmoGuardar(cambio) {
@@ -425,12 +435,21 @@ function ritmoPreguntar() { ritmoPausaCerrarConElDia(); ritmoGuardar(function ()
 function ritmoPorLibre() { ritmoPausaCerrarConElDia(); ritmoGuardar(function () { return { libre: ritmoHoy(), dia: null }; }); }
 function ritmoVolver() { ritmoGuardar(function () { return { libre: null, distinto: ritmoHoy() }; }); }
 
+/* Lo que se descarta se apunta al pulsar (`dia.descartes`): el resumen del día no puede sacarlo
+   recomponiendo una parada congelada, y en un día de verdad casi todo lo pasado lo está. */
 function ritmoOtra(claves) {
+  var p = null;
+  try { p = ritmoPlan(getState()); } catch (e) {}
+  var viejos = {};
+  (p ? p.m.items : []).forEach(function (it) { (it.platos || []).forEach(function (pl) { if ((claves || []).indexOf(pl.clave) !== -1) viejos[pl.clave] = pl.id; }); });
   ritmoGuardar(function (r) {
     if (!r.dia) return {};
-    var cambios = Object.assign({}, r.dia.cambios || {});
-    (claves || []).forEach(function (k) { cambios[k] = (cambios[k] || 0) + 1; });
-    return { dia: Object.assign({}, r.dia, { cambios: cambios }) };
+    var cambios = Object.assign({}, r.dia.cambios || {}), descartes = Object.assign({}, r.dia.descartes || {});
+    (claves || []).forEach(function (k) {
+      cambios[k] = (cambios[k] || 0) + 1;
+      if (viejos[k]) descartes[k] = (descartes[k] || []).filter(function (id) { return id !== viejos[k]; }).concat([viejos[k]]).slice(-5);
+    });
+    return { dia: Object.assign({}, r.dia, { cambios: cambios, descartes: descartes }) };
   });
 }
 

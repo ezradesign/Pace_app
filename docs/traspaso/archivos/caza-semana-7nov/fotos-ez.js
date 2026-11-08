@@ -1,0 +1,202 @@
+/* Caza de la semana (7 nov. 2026): las fotos de la página de Ez, con la app de verdad, a 360 y a
+   1280 px y en castellano. Cada caso, como se ve hoy y, si una opción cambia lo que se ve, con esa
+   opción pintada en la misma pantalla (solo el número del aro, que es lo que cambiaría).
+   · S3: la jornada de dos horas, con los bloques empezados tarde; pasada su hora, y a la mañana
+     siguiente, el «Foco manual» con los minutos del último bloque.
+   · La comida: la jornada entera hasta la pausa de antes de comer; «Ahora no» y «Empezar ya el
+     bloque» cuando falta un cuarto de hora para comer.
+   Uso: PACE_E2E_PORT=8893 RECORRIDO_FOTOS=<carpeta> [SOLO=s3,comida,comidaA,corta] node fotos-ez.js */
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const L = require('../recorrido-6nov/lib');
+const PERSONAS = require('./personas');
+
+const D = (d, h, mi) => new Date(2026, 10, d, h, mi || 0).getTime();
+const vis = (p, sel) => p.locator(sel).filter({ visible: true });
+const hm = (ms) => { const x = new Date(ms); return x.getHours() + ':' + String(x.getMinutes()).padStart(2, '0'); };
+const SOLO = process.env.SOLO || '';
+const salida = [];
+const apunta = (k, v) => { salida.push([k, v]); console.log(k.padEnd(30), JSON.stringify(v).slice(0, 260)); };
+const aro = (p) => p.evaluate(() => [...document.querySelectorAll('[data-pace-dial-label], [data-pace-dial-subtitle], [data-pace-dial-number], [data-pace-cta]')]
+  .filter((e) => e.getBoundingClientRect().width).map((e) => e.textContent.trim().replace(/\s+/g, ' ')).join(' | ') + ' @ ' + new Date(Date.now()).toTimeString().slice(0, 5));
+
+async function irA(p, ms) { const a = await p.evaluate(() => Date.now()); if (ms > a) await p.clock.fastForward(ms - a); await p.waitForTimeout(400); }
+async function finDelBloque(p) {
+  const fin = await p.evaluate(() => { try { return JSON.parse(localStorage.getItem('pace.timer.v1')).endsAt || null; } catch (e) { return null; } });
+  if (!fin) return false;
+  await p.clock.fastForward(Math.max(0, fin - await p.evaluate(() => Date.now())) + 1000);
+  await p.locator('[data-pace-break-shortcut]').first().waitFor({ state: 'attached', timeout: 15000 }).catch(() => {});
+  await p.waitForTimeout(500);
+  return true;
+}
+async function preparar(p, op) {
+  const comienza = vis(p, '[data-pace-ritmo-comienza]');
+  if (await comienza.count()) { await comienza.first().click(); await p.waitForTimeout(500); }
+  const habitual = vis(p, '[data-pace-ritmo-distinto]');
+  if (op !== 'jornada' && await habitual.count()) { await habitual.first().click(); await p.waitForTimeout(500); }
+  await vis(p, op === 'jornada' ? '[data-pace-ritmo-habitual-comienza], [data-pace-ritmo-loseta="jornada"]' : 'button[data-pace-ritmo-opcion="' + op + '"], [data-pace-ritmo-loseta="' + op + '"]').first().click();
+  await p.waitForTimeout(600);
+}
+/* «Ahora no» y, pasados unos minutos, el bloque siguiente. */
+async function siguiente(p, tarde) {
+  await vis(p, '[data-pace-break-shortcut] button').first().click();
+  await p.clock.fastForward(tarde * 60000);
+  await p.waitForTimeout(400);
+  const ya = vis(p, 'button').filter({ hasText: /^Empezar ya el bloque/ });
+  if (await ya.count()) { await ya.first().click(); return true; }
+  const cta = vis(p, '[data-pace-cta]');
+  if (await cta.count() && /Empezar|Seguir/.test(await cta.first().textContent())) { await cta.first().click(); return true; }
+  return false;
+}
+const pintaMinutos = (p, n) => p.evaluate((x) => setState({ focusMinutes: x }), n);
+
+async function s3(tam) {
+  const tag = (s) => 'ez-s3-' + tam + '-' + s;
+  const { ctx, page } = await L.abrir({ tam, lang: 'es', estado: PERSONAS.oficina.estado('es'), reloj: new Date(D(12, 15, 0)), espera: 1500 });
+  await page.clock.fastForward(16000);
+  await preparar(page, '2h');
+  apunta(tam + ' s3 preparado', await aro(page));
+  await vis(page, '[data-pace-cta]').first().click();
+  for (let k = 0; k < 6; k++) {
+    if (!(await finDelBloque(page))) break;
+    apunta(tam + ' s3 fin ' + (k + 1), await aro(page));
+    /* El último bloque: la pausa de cierre con «Ahora no», y a casa (sin otro ciclo). */
+    if (!(await page.evaluate(() => { const p = ritmoPlan(getState()); return !!(p && p.actual); }))) { await vis(page, '[data-pace-break-shortcut] button').first().click(); break; }
+    if (!(await siguiente(page, 7))) break;
+  }
+  await irA(page, D(12, 17, 30));
+  apunta(tam + ' s3 pasada la hora', await aro(page));
+  await L.foto(page, tag('hoy-tarde'));
+  await irA(page, D(13, 8, 55));
+  await page.reload(); await page.waitForTimeout(1500);
+  const hoy = await aro(page);
+  apunta(tam + ' s3 a la mañana', hoy);
+  await L.foto(page, tag('hoy-manana'));
+  const antes = await page.evaluate(() => getState().focusMinutes);
+  await pintaMinutos(page, 25); await page.waitForTimeout(300);
+  await L.foto(page, tag('A-manana'));
+  await pintaMinutos(page, antes);
+  await ctx.close();
+}
+
+/* `pintaA`: la opción A pintada con la app de verdad. Poner los minutos del aro a mano no vale (al
+   pulsar, el aro vuelve a lo que mide `ritmoDurSiEmpiezas`), así que en la página se cambia esa
+   función por la de la A: el bloque que empieza antes de su hora y tiene por medio la comida (o una
+   reunión) acaba al empezar esta. */
+async function comida(tam, pintaA) {
+  const tag = (s) => 'ez-comida-' + tam + '-' + (pintaA ? 'A-' : 'hoy-') + s;
+  const { ctx, page } = await L.abrir({ tam, lang: 'es', estado: PERSONAS.oficina.estado('es'), reloj: new Date(D(13, 9, 5)), espera: 1500 });
+  await page.clock.fastForward(16000);
+  await preparar(page, 'jornada');
+  await vis(page, '[data-pace-cta]').first().click();
+  for (let k = 0; k < 10; k++) {
+    if (!(await finDelBloque(page))) break;
+    /* La pausa de antes de comer: lo que va detrás es la comida. */
+    const antesDeComer = await page.evaluate(() => {
+      const p = ritmoPlan(getState()), it = p.m.items, i = it.findIndex((x) => x === p.pausa || (p.pausa && x.desde === p.pausa.desde && x.tipo === p.pausa.tipo));
+      return i >= 0 && it[i + 1] && it[i + 1].tipo === 'comida' ? { pausa: ritmoHora(it[i].desde), comida: ritmoHora(it[i + 1].desde) } : null;
+    });
+    apunta(tam + ' comida fin ' + (k + 1), [await aro(page), antesDeComer]);
+    if (antesDeComer) {
+      await vis(page, '[data-pace-break-shortcut] button').first().click();
+      await page.clock.fastForward(60000); await page.waitForTimeout(500);
+      apunta(tam + ' comida tras «Ahora no»', await aro(page));
+      if (!pintaA) await L.foto(page, tag('antes'));
+      if (pintaA) await page.evaluate(() => {
+        const orig = window.ritmoDurSiEmpiezas;
+        window.ritmoDurSiEmpiezas = function (p, t) {
+          const d = orig(p, t);
+          if (!p || !p.actual || d == null || t >= p.actual.desde) return d;
+          const corta = p.m.items.find((x) => (x.tipo === 'comida' || x.tipo === 'ocupado') && x.desde > t && x.desde < t + d);
+          return corta ? corta.desde - t : d;
+        };
+        ritmoSincronizar();
+      });
+      const ya = vis(page, 'button').filter({ hasText: /^Empezar ya el bloque/ });
+      if (await ya.count()) await ya.first().click(); else await vis(page, '[data-pace-cta]').first().click();
+      await page.waitForTimeout(600);
+      const fin = await page.evaluate(() => JSON.parse(localStorage.getItem('pace.timer.v1')).endsAt);
+      apunta(tam + (pintaA ? ' comida A' : ' comida') + ' empezado', [await aro(page), 'acaba a las ' + hm(fin)]);
+      await L.foto(page, tag('empezado'));
+      break;
+    }
+    if (!(await siguiente(page, 2))) break;
+  }
+  await ctx.close();
+}
+
+/* La carta que propone «pasa a ser de 2 minutos» para una pausa que ya servía rutinas de 2: la de
+   las 12:15 saltada tres días con «Escritorio express» y «Tronco sentado» (lo que vio la persona media). */
+async function cartaCorta(tam) {
+  const tag = (s) => 'ez-corta-' + tam + '-' + s;
+  const { ctx, page } = await L.abrir({ tam, lang: 'es', estado: PERSONAS.media.estado('es'), reloj: new Date(D(16, 8, 50)), espera: 1500 });
+  await page.waitForFunction(() => window.paceEventsCanWrite && window.paceEventsCanWrite());
+  const dias = ['2026-11-09', '2026-11-10', '2026-11-11', '2026-11-12'].map((fecha, i) => {
+    const p = (hora, tipo, modulo, id, estado) => ({ hora, tipo, estado: estado || 'hecha', reunion: 0, platos: [{ modulo, id, otras: 0, antes: [] }] });
+    return { fecha, opcion: 'media', habitual: 'media', inicio: 540, salida: 780, paradas: [
+      p(585, 'pausa', 'mueve', 'extra.legs.standing'), p(635, 'pausa', 'mueve', 'extra.calves'),
+      p(685, 'larga', 'estira', 'move.hips.standing'),
+      p(735, 'pausa', 'estira', i % 2 ? 'move.desk.quick' : 'move.spine.chair', i === 1 ? 'hecha' : 'saltada'),
+      p(775, 'cierre', 'respira', 'breathe.diaphragm')] };
+  });
+  apunta(tam + ' corta rutinas', await page.evaluate(() => ['move.desk.quick', 'move.spine.chair'].map((id) => { const r = ritmoRutinaPorId(id); return id + ' ' + (r && r.min) + ' min'; })));
+  await page.evaluate(async (ds) => {
+    for (const d of ds) await new Promise((ok) => emitRitmoDia(d, ok, ok));
+    setState((prev) => Object.assign({}, prev, { ritmo: Object.assign({}, prev.ritmo, { carta: null }) }));
+    ritmoMotorRevisar();
+  }, dias);
+  await page.clock.fastForward(16000);
+  await page.waitForTimeout(800);
+  const carta = vis(page, '[data-pace-carta]');
+  apunta(tam + ' corta carta', (await carta.count()) ? (await carta.first().textContent()).replace(/\s+/g, ' ') : 'no sale');
+  await L.foto(page, tag('carta'));
+  await ctx.close();
+}
+
+/* S11: la jornada de 8:00 a 18:00 empezada a las 8:00 y PACE de fondo de 8:10 a 12:10 (la foto V1
+   de abierta-horas). Al volver, la línea sigue con la pausa de las 8:46 y el bloque 2 a las 8:51;
+   al pulsar «Empezar bloque 2» se recoloca desde ahora, que es lo que enseñaría la A antes de pulsar. */
+async function s11(tam) {
+  const tag = (s) => 'ez-s11-' + tam + '-' + s;
+  const estado = { ritmo: { horario: { inicio: 480, comida: 840, comidaDur: 60, salida: 1080 },
+    dia: { fecha: '2026-11-10', opcion: 'jornada', desde: 480, cicloBase: 0, cambios: {} } } };
+  const { ctx, page } = await L.abrir({ tam, lang: 'es', estado, reloj: new Date(D(10, 8, 0)), espera: 1500 });
+  const verse = (v) => page.evaluate((valor) => {
+    Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => valor });
+    Object.defineProperty(document, 'hidden', { configurable: true, get: () => valor === 'hidden' });
+    document.dispatchEvent(new Event('visibilitychange'));
+  }, v);
+  await vis(page, '[data-pace-cta]').first().click();
+  await page.clock.fastForward(10 * 60000);
+  await verse('hidden');
+  await page.clock.fastForward(36 * 60000);
+  for (let i = 0; i < 6; i++) await page.clock.fastForward(60000);
+  await page.clock.fastForward(D(10, 12, 10) - await page.evaluate(() => Date.now()));
+  await verse('visible');
+  await page.waitForTimeout(1500);
+  apunta(tam + ' s11 a las 12:10', [await aro(page), await page.evaluate(() => ritmoPlan(getState()).m.items.slice(0, 5).map((it) => it.tipo[0] + ritmoHora(it.desde)).join(' '))]);
+  await L.foto(page, tag('hoy'));
+  await vis(page, '[data-pace-cta]').first().click();
+  await page.waitForTimeout(800);
+  apunta(tam + ' s11 pulsado', [await aro(page), await page.evaluate(() => ritmoPlan(getState()).m.items.slice(0, 6).map((it) => it.tipo[0] + ritmoHora(it.desde)).join(' '))]);
+  await L.foto(page, tag('pulsado'));
+  await ctx.close();
+}
+
+(async () => {
+  await L.lanzar();
+  try {
+    for (const tam of ['movil', 'escritorio']) {
+      const toca = (k) => !SOLO || SOLO.split(',').includes(k);
+      if (toca('s3')) try { await s3(tam); } catch (e) { apunta(tam + ' s3 ERROR', e.message.split('\n')[0]); }
+      if (toca('comida')) try { await comida(tam); } catch (e) { apunta(tam + ' comida ERROR', e.message.split('\n')[0]); }
+      if (toca('comidaA')) try { await comida(tam, true); } catch (e) { apunta(tam + ' comida A ERROR', e.message.split('\n')[0]); }
+      if (toca('corta')) try { await cartaCorta(tam); } catch (e) { apunta(tam + ' corta ERROR', e.message.split('\n')[0]); }
+      if (toca('s11')) try { await s11(tam); } catch (e) { apunta(tam + ' s11 ERROR', e.message.split('\n')[0]); }
+    }
+  } finally {
+    fs.writeFileSync(path.join(L.FOTOS, 'fotos-ez' + (SOLO ? '-' + SOLO.replace(/,/g, '-') : '') + '.json'), JSON.stringify(salida, null, 1));
+    await L.cerrar();
+  }
+})();

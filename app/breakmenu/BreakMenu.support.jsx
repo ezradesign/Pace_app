@@ -162,7 +162,16 @@ function breakPropuesta(state, ctx) {
   const hora = typeof c.hora === 'number' ? c.hora : new Date().getHours();
   const agua = s.water || { today: 0, goal: 8 };
   const plan = s.plan || {};
-  const minutos = Number(s.focusMinutes) || 0;
+  /* Los minutos del bloque que acaba de terminar. Con «A tu ritmo» el aro ya mide el siguiente
+     (`ritmoSincronizar`), así que salen del plan: lo que duró el último bloque hecho. Si no, tras
+     el bloque de 18 min de antes de una reunión decía «Has terminado un Foco de 45 minutos». */
+  const hechoRitmo = (() => {
+    try {
+      const p = typeof ritmoPlanBase === 'function' ? ritmoPlanBase(s) : null;
+      return p && p.hechos > 0 && !p.deMas ? p.m.focos[p.hechos - 1] : null;
+    } catch (e) { return null; }
+  })();
+  const minutos = hechoRitmo ? hechoRitmo.dur : Number(s.focusMinutes) || 0;
   /* El bloque que ACABA de terminar: `completePomodoro` ya subió el contador
      antes de que este menú se abra, así que el que cuenta es el anterior. */
   const bloqueDeHoy = Math.max(1, Number(s.cycle) || 1);

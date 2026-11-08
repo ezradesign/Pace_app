@@ -60,15 +60,18 @@ function aroDespues(s, t, tn) {
    HECHOS TODOS LOS BLOQUES, el último cierra el día también en el aro (Ez, V2 A del 7 nov. 2026),
    antes o después de la salida: «Jornada cerrada», lo hecho, «Lo que queda del día es tuyo» y
    «Seguir por libre» (`sub` y `cta`), donde decía «Foco manual · Ciclo completado» y «Empezar
-   otro ciclo», como si no hubiera jornada. */
+   otro ciclo», como si no hubiera jornada.
+   CERRADO POR LA HORA CON BLOQUES SIN HACER, el mismo cierre y los mismos textos (caza de la
+   semana, 8 nov. 2026): solo cambiaba el rótulo, y debajo quedaba «Ciclo completado · Empezar
+   otro ciclo» (el último bloque acabó con el portátil cerrado) o «Atención sostenida · Empezar
+   foco». La tarjeta ya decía «Jornada cerrada». */
 function aroCerrado(s, t, tn) {
   const p = typeof ritmoPlan === 'function' ? ritmoPlan(s) : null;
   const todo = !!p && p.total > 0 && p.hechos >= p.total;
   if (!p || !(p.cerrado || todo)) return null;
   const f = ritmoFocoHecho(p);
   const hecho = f > 0 ? tn('ritmo.aro.hecho', { f: ritmoDuracion(f) }) : null;
-  if (todo) return { label: t('ritmo.hecho'), hecho, sub: t('ritmo.aro.tuyo'), cta: t('ritmo.aro.libre') };
-  return { label: t('ritmo.fuera'), hecho };
+  return { label: t('ritmo.hecho'), hecho, sub: t('ritmo.aro.tuyo'), cta: t('ritmo.aro.libre') };
 }
 
 /* Lo que la jornada le cambia al aro según el momento. `cta`, si manda en el botón;
