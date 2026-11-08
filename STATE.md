@@ -49,7 +49,7 @@ La lista, por orden y sin jerga, en su hoja de pasos (`docs/traspaso/hoja-de-rut
 https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 y https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT. Ez se pierde
 con mucho abierto: a «¿qué toca?», una sola cosa.
 
-- **La versión de prueba, 0.191.1: subirla el domingo 9 nov.** (Ez, 7 nov.; el sí, del 6). `subidas-play\PACE-0.191.1.aab`, a la prueba interna y
+- **La versión de prueba, 0.191.1: subirla el lunes 9 nov.** (Ez, 8 nov.: «Mañana, lunes 9»; el sí, del 6). `subidas-play\PACE-0.191.1.aab`, a la prueba interna y
   de ahí a la cerrada, con las notas y el párrafo «A tu ritmo» de `ficha.md`, una pantalla por mensaje; en TestFlight, la 191001
   ya subida, al grupo «Testers iPhone» con su «Qué probar». Notas y capturas, en `docs/launch/google-play/SUBIDAS.md`: `6-logros` y `3-respira` están viejas y las seis se rehacen una sola
   vez, con la jornada dentro. El logo se queda como está por ahora (Ez, 4 nov.), aunque «EVEN» se lea «FVFN» (`app/ui/pace-logo.png`).
@@ -58,7 +58,9 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 - **El día de v1, con sus letras (1B 2A 3B 4A, 7 nov.), sin montar** (`claude/caza-v1-compra-79e3e4`: importar una copia vieja
   ya no reabre otra semana de PACE completo). Qué es cada letra, en el relevo de `docs/traspaso/LEEME.md`.
 - **ChatGPT**: Ez le pasa la revisión del cobro y lo legal (el texto, en su hoja); la de la jornada, cuando entren abierta-horas y la semana.
-- **En marcha, con las letras de Ez** (7 nov.): 1B 2B 3B del contraste en `claude/accesibilidad-7nov-e36d06`; E1 A, y sobre el
+- **El contraste (1B 2B 3B), cerrado y a la espera del «júntalo» de Ez** (8 nov.): `claude/accesibilidad-7nov-e36d06` (545c292b), con
+  main dentro, `verify` y su zona en verde; el antes y el ahora, en https://claude.ai/artifact/CdgFC2hXvi6iMGb6P4hBir (EcLj6).
+- **En marcha, con las letras de Ez** (7 nov.): E1 A, y sobre el
   recorrido V1 A y V2 A, en `claude/abierta-horas-7nov-a2419d`; y la caza de la semana (`claude/caza-semana-21914d`, tres fallos
   arreglados). El detalle, en el relevo de `docs/traspaso/LEEME.md`.
 - **Lo legal para vender en la web**, en `main` con la 0.189.0 y las letras de Ez (1A 2A 3A 4A 5A): los borradores, sin

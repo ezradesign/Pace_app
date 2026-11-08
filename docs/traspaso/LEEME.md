@@ -18,7 +18,10 @@ entera con un worker en el 8884 (log en el scratchpad de la coordinadora). Las t
 | `claude/caza-semana-21914d` | `caza-semana`, `local_dbc1b9ca…` | 8892-8893 | Traer abierta-horas (lleva main); repetir oficina; página de Ez con S3, la comida y S6 |
 
 Orden al juntar, con el «júntalo» de Ez: abierta-horas, luego caza-semana (encima), contraste y letras-v1; suite entera al final.
-**Ojo con la fecha de Play:** Ez dijo «el domingo 9», pero el domingo es el 8 (hoy) y el 9 es lunes: se le preguntó.
+**La fecha de Play:** Ez dijo «el domingo 9», pero el 9 es lunes; preguntado, **Ez (8 nov.): «Mañana, lunes 9»**.
+**~12:15, el contraste, cerrado** (545c292b, en origin): main traída (cinco choques; en Hidrátate se queda «Vaso 3 de 8, vacío» de
+la auditoría sobre el «Vaso 3 de 8» del recorrido, sin la clave `hydrate.glass`; censo a 1152), `verify` en verde (también en la
+coordinadora) y su zona 215 de 215. La página nueva en EcLj6: **CdgFC2hXvi6iMGb6P4hBir** (2Fv1m… es de 5iWBf). Espera el «júntalo».
 
 ## 7 nov., ~21:10: coordina EcLj6…; las 5 h, repuestas a las 21:00; las tres sesiones esperan el «Arráncalas» de Ez
 
