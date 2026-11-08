@@ -70,6 +70,10 @@ para Ez en **6qpSUbY5Kfoa1cmsrdyffo**. N1 espera el «júntalo»; las letras de 
 abierta-horas sola: viene de caza-semana, casi seguro S8 (`ritmoFocoCorriendo` cuenta un `endsAt` de hoy ya pasado y la clave
 del bloque se queda). **No se sube**: se le mandó a caza-semana que traiga `main` local a su rama, lo arregle sin perder S8 y lo
 suba; luego se vuelve a juntar su rama, suite entera otra vez y push.
+**~19:00, arreglado (9d1d000d, `main` por fast-forward):** no era S8, era el contraste (0b5add58): el foco vuelve a quien abrió la
+pantalla y el Enter que cerraba la sesión «hecha» pulsaba después «Empezar bloque 3». Los tres atajos de Enter del «hecho»
+(`BreatheSession`, `MoveModule`, `MoveSessionV1.parts`) hacen `preventDefault`; fila en DECISIONES. Build igual, `verify` en
+verde; la suite entera otra vez, con dos workers (nadie más corre).
 
 ## 7 nov., ~21:10: coordina EcLj6…; las 5 h, repuestas a las 21:00; las tres sesiones esperan el «Arráncalas» de Ez
 
