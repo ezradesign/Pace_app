@@ -4,6 +4,34 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de noviembre de 2026, ~11:45, v0.193.0.
 
+## AL RELEVO (8 nov., ~19:20): EcLj6… con las 5 h al 79 % y la semana al 88 %; se sigue en 5iWBf…. Empieza aquí
+
+**Regla de Ez (8 nov.):** se para al 90 % de las 5 h o al 95 % de la semana, lo que llegue antes.
+`main` = origin, con la **0.194.0** (contraste, abierta-horas, letras-v1, caza-semana y el arreglo del
+Enter, 9d1d000d) y documentos. La primera suite dio un rojo de verdad (`ver-ejercicio`), ya arreglado; **la segunda, 1390 en verde y 2
+saltadas** (30,8 min, dos workers), y la 0.194.0 **subida a `main`** a las ~18:48. **Su CI, en verde entero** (42506861982: verify, los dos
+trozos de e2e y Safari; y Android e iOS). Lo de ayer en `aro-jornada:71` en el CI de 3e48c7bc no se repitió. Después, decirle a Ez que pegue en ChatGPT `docs/audits/chatgpt-8nov/prompt-jornada.md`.
+
+**Ez eligió (8 nov., ~18:45) todas las recomendadas: usabilidad 1A 2A 3A 4A 5A 6A; lo nuevo N2 A y N3 A; la semana S3 A, S7 A, S6 A y S11 A.** Las páginas: la usabilidad, seis mejoras (`claude/usabilidad-8nov-587b48`,
+`docs/audits/usabilidad-8nov/pagina-ez.html`; EcLj6 BMLmjb9FjynGY8zz6FN4av); lo que vio alguien nuevo, N2 y N3
+(`claude/caza-nuevo-8nov-0c7d9b`, `docs/audits/caza-nuevo-8nov/pagina-ez.html`; EcLj6 6qpSUbY5Kfoa1cmsrdyffo); y la semana, S3 S7
+S6 S11 (`docs/audits/caza-semana-7nov/pagina-ez.html`, ya en `main`; EcLj6 C8okoSLuDnN2bBxtSdQSbw). Las letras ya están elegidas: no hace falta
+republicar esas páginas en 5iWBf. La hoja del repo lleva los ids de EcLj6: en 5iWBf, publicarla en 5iWBfHE7kD3dUVocdskmb6 dando la
+vuelta a los que tengan copia allí (1AzBCEn8… → 6stHAifXWoCnzX58mhL8Pz y los del bloque del 7 nov., 16:20); los de hoy, solo de EcLj6. **N1** (la copia sin «Cuaderno a salvo», arreglado en caza-nuevo) espera su
+«júntalo». La pregunta del Foco por libre y la salida es la mejora 3 de usabilidad: A, no cuenta.
+
+**Orden para la otra cuenta:** 1) la 0.194.0 ya está en `main` con su CI en verde: nada que cerrar; 2) con las letras de Ez, montarlas: usabilidad y
+semana tocan `state-ritmo*`, `FocusTimer*` y `ritmo.motor.js`, así que en UNA sesión, o dos con archivos repartidos; N2 y N3, en
+otra; N1 se junta con su «júntalo»; 3) Ez pidió seguir buscando fallos: la próxima caza, las pantallas en seis anchos (320, 360,
+390, 768, 1280 y 1536) en es/en, claro/oscuro, buscando textos cortados y solapes, antes de que los testers las vean. **Lunes 9:
+Ez sube la 0.191.1 a Play** y la da en TestFlight, conmigo pantalla a pantalla (`docs/launch/google-play/SUBIDAS.md`).
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (8 nov., ~19:20)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Republica mi hoja de pasos en esta cuenta y monta mis letras de las tres páginas (todas las recomendadas) como 0.195.0, siguiendo el orden del relevo.
+```
+
 ## 8 nov., ~11:45: coordina EcLj6… (5 h al 2 %, semana al 65 %); tres sesiones en marcha y la suite de abierta-horas
 
 Ez: «Retoma la sesión desde exactamente donde la dejamos» = el «Arráncalas». Las cuatro ramas estaban limpias y en origin.
@@ -49,6 +77,31 @@ hora con bloques sin hacer dice «Jornada cerrada» (6675ca05, `tests/jornada-ce
 página (el «Ahora 8:46» era real: un día empezado no se lee desde ahora; recomienda la A, como E1). Zona con todo junto 249 de
 249. Letras para Ez: S3 S7 S6 S11 (C8okoSLuDnN2bBxtSdQSbw). Pregunta sin página: ¿un Foco por libre tras cerrar la jornada cuenta
 para la salida que propone la carta? Esperando el «júntalos» de Ez para los arreglos.
+**~17:20, Ez: «Júntalos»** (la semana) y, a la vez: «Sigue buscando bugs + mejorar la experiencia del usuario + mejorar
+características y usabilidad de la app + dame auditoría para ChatGPT». En `main` LOCAL: merge 56b19829 (solo chocó DECISIONES,
+filas de las dos), `npm run bump -- 0.194.0`, build, CHANGELOG y `verify` en verde (9ed68749). **Suite entera con un worker en el
+8884, en marcha** (log en el scratchpad de la coordinadora): con verde, STATE/LEEME/hoja, push y `gh run watch`. Sin novedad en el
+sobre (lo visible ya se contó en `jornada-cerrada`). **Dos sesiones nuevas** (worktrees desde `main` local 9ed68749):
+`caza-nuevo` (`local_b284bcb8…`, 8891): alguien nuevo, su primera semana, fuera de «A tu ritmo», arregla con prueba y lo de
+producto a su página; `usabilidad` (`local_75a679b1…`, 8886-8887): 6-8 mejoras con maqueta para Ez (S9, la barra con una pausa,
+el Foco por libre y la salida, lo que quede del paquete M), sin montar nada visual. Tope: WIP al 85 % de las 5 h o al 88 % de la
+semana; paran al 90 %. **ChatGPT**: `docs/audits/chatgpt-8nov/prompt-jornada.md` (también en la hoja), para pegar con la 0.194.0
+ya en `main`; la del cobro y lo legal sigue pendiente en la hoja.
+**~18:10, las dos sesiones, paradas con su informe:** `usabilidad` (`claude/usabilidad-8nov-587b48`, 1810a374, solo documentos):
+seis mejoras en **BMLmjb9FjynGY8zz6FN4av** (1 S9 sin la fila de ciclos, 2 la barra pregunta antes de cortar una pausa, 3 el
+Foco por libre tras la salida no cuenta en la carta, 4 Q5 «a mi manera» sin contar como saltada, 5 «Tu jornada, hasta las
+17:00», 6 R5 «Escuchar» la voz; recomienda la A en las seis). `caza-nuevo` (`claude/caza-nuevo-8nov-0c7d9b`, 6428556b): **N1
+arreglado** (la copia no llevaba «Cuaderno a salvo» y al traerla se perdía; prueba roja sin el arreglo; zona 43 de 43) y N2-N3
+para Ez en **6qpSUbY5Kfoa1cmsrdyffo**. N1 espera el «júntalo»; las letras de las tres páginas, también.
+**~18:35, la suite de la 0.194.0 (9ed68749): 1389 en verde, 2 saltadas y 1 roja de verdad** (3 de 3 sola):
+`ver-ejercicio.spec.js:128`: al volver de «Ver ejercicio» el aro dice «Pausar foco» y no «Empezar bloque 3». Pasaba en
+abierta-horas sola: viene de caza-semana, casi seguro S8 (`ritmoFocoCorriendo` cuenta un `endsAt` de hoy ya pasado y la clave
+del bloque se queda). **No se sube**: se le mandó a caza-semana que traiga `main` local a su rama, lo arregle sin perder S8 y lo
+suba; luego se vuelve a juntar su rama, suite entera otra vez y push.
+**~18:20, arreglado (9d1d000d, `main` por fast-forward):** no era S8, era el contraste (0b5add58): el foco vuelve a quien abrió la
+pantalla y el Enter que cerraba la sesión «hecha» pulsaba después «Empezar bloque 3». Los tres atajos de Enter del «hecho»
+(`BreatheSession`, `MoveModule`, `MoveSessionV1.parts`) hacen `preventDefault`; fila en DECISIONES. Build igual, `verify` en
+verde; la suite entera otra vez, con dos workers (nadie más corre).
 
 ## 7 nov., ~21:10: coordina EcLj6…; las 5 h, repuestas a las 21:00; las tres sesiones esperan el «Arráncalas» de Ez
 

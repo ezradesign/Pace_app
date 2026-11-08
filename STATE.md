@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.193.0 · 7 de noviembre de 2026 (la versión de prueba de Play y TestFlight es la 0.191.1). Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.194.0 · 8 de noviembre de 2026 (la versión de prueba de Play y TestFlight es la 0.191.1). Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -53,20 +53,15 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   de ahí a la cerrada, con las notas y el párrafo «A tu ritmo» de `ficha.md`, una pantalla por mensaje; en TestFlight, la 191001
   ya subida, al grupo «Testers iPhone» con su «Qué probar». Notas y capturas, en `docs/launch/google-play/SUBIDAS.md`: `6-logros` y `3-respira` están viejas y las seis se rehacen una sola
   vez, con la jornada dentro. El logo se queda como está por ahora (Ez, 4 nov.), aunque «EVEN» se lea «FVFN» (`app/ui/pace-logo.png`).
-- **El recorrido y el inglés, en `main` con la 0.193.0** (7 nov., con el «Júntalos» de Ez), con la novedad del sobre
-  `jornada-cerrada`. Si Play se sube el domingo con la 0.191.1, esta llega como actualización.
-- **El día de v1, con sus letras (1B 2A 3B 4A, 7 nov.), sin montar** (`claude/caza-v1-compra-79e3e4`: importar una copia vieja
-  ya no reabre otra semana de PACE completo). Qué es cada letra, en el relevo de `docs/traspaso/LEEME.md`.
-- **ChatGPT**: Ez le pasa la revisión del cobro y lo legal (el texto, en su hoja); la de la jornada, cuando entren abierta-horas y la semana.
-- **El contraste (1B 2B 3B), juntado en `main` LOCAL y sin subir** (Ez, 8 nov., ~12:30: «Júntalo»): merge 0b5add58 de
-  `claude/accesibilidad-7nov-e36d06` (545c292b), sin choques, `verify` en verde; sale con las otras ramas, la versión nueva y
-  la suite entera. El antes y el ahora, en https://claude.ai/artifact/CdgFC2hXvi6iMGb6P4hBir (EcLj6).
-- **Juntadas en `main` LOCAL con el «Júntalas» de Ez (8 nov., ~16:40), sin subir:** abierta-horas (ec2e62b1) y las letras del
-  día de v1 (3c7063b4, con el aviso de «Borrar todo» sin el «todo» y el código que se queda). `verify` en verde; censo 1156.
-  **No se suben sin la caza de la semana**: lleva S8, el arreglo del primer bloque que E1 podía perder (bloquea).
-- **En marcha, con las letras de Ez** (7 nov.): E1 A, y sobre el
-  recorrido V1 A y V2 A, en `claude/abierta-horas-7nov-a2419d`; y la caza de la semana (`claude/caza-semana-21914d`, tres fallos
-  arreglados). El detalle, en el relevo de `docs/traspaso/LEEME.md`.
+- **La 0.194.0, juntada con los «Júntalo» de Ez (8 nov.)**: el contraste (1B 2B 3B), volver tras horas fuera (E1 A, V1 A,
+  V2 A), el día de v1 (1B 2A 3B 4A, con «Borrar todo» que dice que el código se queda) y siete arreglos de la caza de la semana.
+  Si Play se sube el lunes con la 0.191.1, esta llega como actualización. Detalle, en el relevo de `docs/traspaso/LEEME.md`.
+- **Letras de Ez (8 nov.), todas A, sin montar**: usabilidad 1A-6A (`claude/usabilidad-8nov-587b48`), lo nuevo N2 A y N3 A
+  (`claude/caza-nuevo-8nov-0c7d9b`, con N1 arreglado) y la semana S3 S7 S6 S11 A. Van juntas como 0.195.0 (orden, en el relevo).
+- **ChatGPT**: Ez le pasa la revisión de la jornada entera (`docs/audits/chatgpt-8nov/prompt-jornada.md`, también en su hoja) y
+  la del cobro y lo legal, que sigue en su hoja.
+- **En marcha (8 nov.)**: una caza de bugs de alguien nuevo (`claude/caza-nuevo-8nov…`, puerto 8891) y una revisión de
+  usabilidad con maqueta para Ez (`claude/usabilidad-8nov…`, 8886-8887), las dos sobre la 0.194.0.
 - **Lo legal para vender en la web**, en `main` con la 0.189.0 y las letras de Ez (1A 2A 3A 4A 5A): los borradores, sin
   publicar hasta sus datos (nombre, NIF y un contacto) y la revisión de un profesional (las preguntas para el gestor y el
   jurista, en `docs/launch/legal-web-para-ez.html`); y `/desistir`, cerrada hasta que Ez dé de alta Resend y ponga
@@ -83,9 +78,8 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   gestor y el alta para cobrar, y los datos del aviso legal.
 - **Espera su «júntalo» y la revisión de ChatGPT:** `guardar()` a prueba de dos renovaciones a la vez
   (`claude/guardar-atomico-166e3f`: un periodo por llave en `cobro/mensual.js`; 89 pruebas del cobro en verde). Ez le pasa a
-  ChatGPT el texto de la hoja, que también pide revisar ese arreglo. La jornada y catálogo, cifras y Auto ya están en `main`
-  (0.192.0, con su «Júntalo»). En marcha, el recorrido entero de la app (`claude/recorrido-6nov-645d6b`): lo visual llega
-  en una página para Ez. La landing (`claude/landing-web-5ec1e5`) espera sus letras; y faltan dos dibujos de logros: Año
+  ChatGPT el texto de la hoja, que también pide revisar ese arreglo. La landing (`claude/landing-web-5ec1e5`) espera sus
+  letras; y faltan dos dibujos de logros: Año
   nuevo, que se repite, y Vaca feliz.
 - **iPhone**: qué estado ve Ez en TestFlight (la prueba beta se envió el 23 oct.) e invitar a sus testers con el
   enlace público del grupo «Testers iPhone», que va también a /beta. Para vender: el acuerdo de apps de pago con banco
