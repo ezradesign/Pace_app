@@ -4,6 +4,35 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de noviembre de 2026, ~11:45, v0.193.0.
 
+## AL RELEVO (8 nov., ~19:35): EcLj6… con las 5 h al 72 % y la semana al 87 %; se sigue en 5iWBf…. Empieza aquí
+
+**Regla de Ez (8 nov.):** se para al 90 % de las 5 h o al 95 % de la semana, lo que llegue antes.
+`main` LOCAL va por delante de origin con la **0.194.0** (contraste, abierta-horas, letras-v1, caza-semana y el arreglo del
+Enter, 9d1d000d) y documentos. La primera suite dio un rojo de verdad (`ver-ejercicio`), ya arreglado; **la segunda corre con dos
+workers** (log: `suite-0194b.log` en el scratchpad de la coordinadora de EcLj6). Si esta cuenta para antes del push: `git log
+origin/main..main` para ver lo que falta, `npm run verify`, build, `npm run test:e2e` entera, push y `gh run watch`. Si ya está
+subida, mirar el CI. Después, decirle a Ez que pegue en ChatGPT `docs/audits/chatgpt-8nov/prompt-jornada.md`.
+
+**Esperan a Ez, en tres páginas (recomienda la A en todas):** la usabilidad, seis mejoras (`claude/usabilidad-8nov-587b48`,
+`docs/audits/usabilidad-8nov/pagina-ez.html`; EcLj6 BMLmjb9FjynGY8zz6FN4av); lo que vio alguien nuevo, N2 y N3
+(`claude/caza-nuevo-8nov-0c7d9b`, `docs/audits/caza-nuevo-8nov/pagina-ez.html`; EcLj6 6qpSUbY5Kfoa1cmsrdyffo); y la semana, S3 S7
+S6 S11 (`docs/audits/caza-semana-7nov/pagina-ez.html`, ya en `main`; EcLj6 C8okoSLuDnN2bBxtSdQSbw). Las páginas de EcLj6 son 404
+en 5iWBf: republicarlas desde esos archivos. **N1** (la copia sin «Cuaderno a salvo», arreglado en caza-nuevo) espera su
+«júntalo». Pregunta sin página: ¿un Foco por libre tras cerrar la jornada cuenta para la salida que propone la carta? (es la
+mejora 3 de usabilidad).
+
+**Orden para la otra cuenta:** 1) cerrar la 0.194.0 si falta (arriba); 2) con las letras de Ez, montarlas: usabilidad y
+semana tocan `state-ritmo*`, `FocusTimer*` y `ritmo.motor.js`, así que en UNA sesión, o dos con archivos repartidos; N2 y N3, en
+otra; N1 se junta con su «júntalo»; 3) Ez pidió seguir buscando fallos: la próxima caza, las pantallas en seis anchos (320, 360,
+390, 768, 1280 y 1536) en es/en, claro/oscuro, buscando textos cortados y solapes, antes de que los testers las vean. **Lunes 9:
+Ez sube la 0.191.1 a Play** y la da en TestFlight, conmigo pantalla a pantalla (`docs/launch/google-play/SUBIDAS.md`).
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (8 nov., ~19:35)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Cierra la 0.194.0 si falta, republica mi hoja de pasos y las tres páginas de letras en esta cuenta, y sigue el orden del relevo.
+```
+
 ## 8 nov., ~11:45: coordina EcLj6… (5 h al 2 %, semana al 65 %); tres sesiones en marcha y la suite de abierta-horas
 
 Ez: «Retoma la sesión desde exactamente donde la dejamos» = el «Arráncalas». Las cuatro ramas estaban limpias y en origin.
