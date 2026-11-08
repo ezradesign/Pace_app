@@ -30,11 +30,11 @@
    MUEVE por `extra.` — el swap de s14, blindado en CONTENT.md. Asumir el
    prefijo es la trampa que s172 prohíbe expresamente y que en s173 dejó un
    bloque VACÍO durante dos versiones de la maqueta. */
-function ExtraLibrary({ open, onClose, onStart, enPausa }) {
+function ExtraLibrary({ open, onClose, onStart, enPausa, pideTuyas }) {
   const { t } = useT();
   return (
     <LibraryShell
-      open={open} enPausa={enPausa} onClose={onClose} onStart={onStart}
+      open={open} enPausa={enPausa} pideTuyas={pideTuyas} onClose={onClose} onStart={onStart}
       groups={window.EXTRA_ROUTINES} tone="var(--extra)" catPrefix="extra"
       title={t('lib.extra.title')} subtitle={t('lib.extra.subtitle')} />
   );

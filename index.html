@@ -29899,11 +29899,11 @@ Object.assign(window, { RoutineCard, routineRhythmText });
 
 
 
-const { useState: useStateLib, useEffect: useEffectLib, useMemo: useMemoLib } = React;
+const { useState: useStateLib, useEffect: useEffectLib, useLayoutEffect: useLayoutEffectLib, useMemo: useMemoLib } = React;
 
 function LibraryShell(_ref)
 
-{let { open, onClose, onStart, groups, tone, title, subtitle, catPrefix, variant = 'body', filtros, conTuyas = true, pozoAhora, ancho = 1240, viajes, enPausa = false, primeraVez = null } = _ref;
+{let { open, onClose, onStart, groups, tone, title, subtitle, catPrefix, variant = 'body', filtros, conTuyas = true, pozoAhora, ancho = 1240, viajes, enPausa = false, primeraVez = null, pideTuyas = null } = _ref;
   const { t, tn, lang } = useT();
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
   const [activos, setActivos] = useStateLib([]);
@@ -29918,6 +29918,23 @@ function LibraryShell(_ref)
   useEffectLib(() => {
     if (!open) {setActivos([]);setVista('catalogo');}
   }, [open]);
+
+
+
+
+
+
+  useLayoutEffectLib(() => {
+    if (!open || !pideTuyas || !conTuyas) return;
+    setVista('tuyas');
+    if (!pideTuyas.id) return;
+    const r = requestAnimationFrame(() => {
+      const el = [...document.querySelectorAll('[data-pace-custom-empezar]')].
+      find((b) => b.getAttribute('data-pace-custom-empezar') === pideTuyas.id && b.getClientRects().length);
+      if (el) el.scrollIntoView({ block: 'nearest' });
+    });
+    return () => cancelAnimationFrame(r);
+  }, [pideTuyas]);
 
   const todas = useMemoLib(() => {
     const out = [];
@@ -33219,11 +33236,11 @@ const { useState: useStateMV, useEffect: useEffectMV, useRef: useRefMV } = React
 
 
 
-function MoveLibrary(_ref) {let { open, onClose, onStart, enPausa } = _ref;
+function MoveLibrary(_ref) {let { open, onClose, onStart, enPausa, pideTuyas } = _ref;
   const { t } = useT();
   return (
     React.createElement(LibraryShell, {
-      open: open, enPausa: enPausa, onClose: onClose, onStart: onStart,
+      open: open, enPausa: enPausa, pideTuyas: pideTuyas, onClose: onClose, onStart: onStart,
       groups: MOVE_ROUTINES, tone: "var(--move)", catPrefix: "mueve",
       title: t('lib.move.title'), subtitle: t('lib.move.subtitle') }));
 
@@ -36327,11 +36344,11 @@ window.EXTRA_ROUTINES_FUERA = [
 
 
 
-function ExtraLibrary(_ref) {let { open, onClose, onStart, enPausa } = _ref;
+function ExtraLibrary(_ref) {let { open, onClose, onStart, enPausa, pideTuyas } = _ref;
   const { t } = useT();
   return (
     React.createElement(LibraryShell, {
-      open: open, enPausa: enPausa, onClose: onClose, onStart: onStart,
+      open: open, enPausa: enPausa, pideTuyas: pideTuyas, onClose: onClose, onStart: onStart,
       groups: window.EXTRA_ROUTINES, tone: "var(--extra)", catPrefix: "extra",
       title: t('lib.extra.title'), subtitle: t('lib.extra.subtitle') }));
 
@@ -36879,7 +36896,7 @@ function CustomRoutineCard(_ref2) {let { routine, locked, onClick, onEdit, accen
     React.createElement(Tag, { color: accent }, t('custom.tag'))
     ),
     React.createElement("h4", { style: { ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 } },
-    React.createElement("button", { type: "button", className: "pace-lib-hit", "data-pace-custom-empezar": true, onClick: onClick,
+    React.createElement("button", { type: "button", className: "pace-lib-hit", "data-pace-custom-empezar": routine.id, onClick: onClick,
       title: locked ? t('premium.locked.aria') : undefined }, routine.name)
     ),
     React.createElement("p", { style: { fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 } }, stepsLabel),
@@ -36966,7 +36983,7 @@ function customPasosDeHoy(lista) {
   return lista.map((p) => ({ ...p, name: typeof ejercicioNombreDeHoy === 'function' ? ejercicioNombreDeHoy(p.name) : p.name }));
 }
 
-function CustomBuilder(_ref) {let { editId, onClose } = _ref;
+function CustomBuilder(_ref) {let { editId, onClose, onGuardada } = _ref;
   const { t, tn, lang } = useT();
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
   const tEx = (name) => tR(`custom.ex.${name}.name`, name);
@@ -37074,7 +37091,9 @@ function CustomBuilder(_ref) {let { editId, onClose } = _ref;
     }
     const draft = { name, steps };
     const ok = id ? updateCustomRoutine(id, draft) : addCustomRoutine(draft);
-    if (ok) {soltarBorrador([id, target]);onClose();}
+
+
+    if (ok) {soltarBorrador([id, target]);if (onGuardada) onGuardada(id || ok.id);onClose();}
   };
   const save = () => guardarComo(target);
   const comoNueva = () => {setTarget(null);guardarComo(null);};
@@ -51064,8 +51083,10 @@ function usePaceEventos(acciones) {
 
 
 
+
+
         const propias = (getState().customRoutines || []).length;
-        if (propias) a.abrirBiblioteca('move');else
+        if (propias) a.abrirBiblioteca('move', true);else
         constructor(null);
         return;
       }
@@ -51153,7 +51174,9 @@ function PaceApp() {
 
 
   const anotarPuerta = (puerta, desdeMenu) => {if (typeof paceOrigenSesion === 'function') paceOrigenSesion(puerta, desdeMenu);};
-  const abrirBiblioteca = (kind) => {anotarPuerta('biblioteca', false);setOpenLibrary(kind);};
+
+  const [pideTuyas, setPideTuyas] = useStateMain(null);
+  const abrirBiblioteca = (kind, tuyas) => {anotarPuerta('biblioteca', false);setOpenLibrary(kind);if (tuyas) setPideTuyas({ id: tuyas === true ? null : tuyas });};
   const [openHydrate, setOpenHydrate] = useStateMain(false);
   const [openAchievements, setOpenAchievements] = useStateMain(false);
   const [openStats, setOpenStats] = useStateMain(false);
@@ -51512,13 +51535,13 @@ function PaceApp() {
     red(t('lib.breathe.title'), openLibrary === 'breathe', () => setOpenLibrary(null),
     React.createElement(BreatheLibrary, { open: openLibrary === 'breathe', onClose: () => setOpenLibrary(null), onStart: handleStartBreathe })),
     red(t('lib.move.title'), openLibrary === 'move', () => setOpenLibrary(null),
-    React.createElement(MoveLibrary, { open: openLibrary === 'move', enPausa: !!customBuilder, onClose: () => setOpenLibrary(null), onStart: handleStartMove })),
+    React.createElement(MoveLibrary, { open: openLibrary === 'move', enPausa: !!customBuilder, pideTuyas: pideTuyas, onClose: () => setOpenLibrary(null), onStart: handleStartMove })),
     red(t('lib.extra.title'), openLibrary === 'extra', () => setOpenLibrary(null),
-    React.createElement(ExtraLibrary, { open: openLibrary === 'extra', enPausa: !!customBuilder, onClose: () => setOpenLibrary(null), onStart: handleStartExtra })),
+    React.createElement(ExtraLibrary, { open: openLibrary === 'extra', enPausa: !!customBuilder, pideTuyas: pideTuyas, onClose: () => setOpenLibrary(null), onStart: handleStartExtra })),
 
 
     customBuilder && red(t('custom.builder.tag'), true, () => setCustomBuilder(null),
-    React.createElement(CustomBuilder, { editId: customBuilder.id, onClose: () => setCustomBuilder(null) })),
+    React.createElement(CustomBuilder, { editId: customBuilder.id, onClose: () => setCustomBuilder(null), onGuardada: (id) => abrirBiblioteca(openLibrary === 'extra' ? 'extra' : 'move', id || true) })),
     red(t('hydrate.title'), openHydrate, () => setOpenHydrate(false),
     React.createElement(HydrateTracker, { open: openHydrate, onClose: () => setOpenHydrate(false) })),
     red(t('ach.title'), openAchievements, () => setOpenAchievements(false),

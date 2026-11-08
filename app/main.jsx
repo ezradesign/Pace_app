@@ -33,7 +33,9 @@ function PaceApp() {
      demás puertas anotan la suya en su gesto (la pausa, la barra lateral, la parada,
      el aro); dentro de un Camino manda 'camino' sin preguntar. */
   const anotarPuerta = (puerta, desdeMenu) => { if (typeof paceOrigenSesion === 'function') paceOrigenSesion(puerta, desdeMenu); };
-  const abrirBiblioteca = (kind) => { anotarPuerta('biblioteca', false); setOpenLibrary(kind); };
+  /* `tuyas` la abre EN «Tus rutinas» (Ez, N2 A): true, o el id de la rutina que se ha de ver. */
+  const [pideTuyas, setPideTuyas] = useStateMain(null);
+  const abrirBiblioteca = (kind, tuyas) => { anotarPuerta('biblioteca', false); setOpenLibrary(kind); if (tuyas) setPideTuyas({ id: tuyas === true ? null : tuyas }); };
   const [openHydrate, setOpenHydrate] = useStateMain(false);
   const [openAchievements, setOpenAchievements] = useStateMain(false);
   const [openStats, setOpenStats] = useStateMain(false);
@@ -392,13 +394,13 @@ function PaceApp() {
       {red(t('lib.breathe.title'), openLibrary === 'breathe', () => setOpenLibrary(null),
         <BreatheLibrary open={openLibrary === 'breathe'} onClose={() => setOpenLibrary(null)} onStart={handleStartBreathe} />)}
       {red(t('lib.move.title'), openLibrary === 'move', () => setOpenLibrary(null),
-        <MoveLibrary open={openLibrary === 'move'} enPausa={!!customBuilder} onClose={() => setOpenLibrary(null)} onStart={handleStartMove} />)}
+        <MoveLibrary open={openLibrary === 'move'} enPausa={!!customBuilder} pideTuyas={pideTuyas} onClose={() => setOpenLibrary(null)} onStart={handleStartMove} />)}
       {red(t('lib.extra.title'), openLibrary === 'extra', () => setOpenLibrary(null),
-        <ExtraLibrary open={openLibrary === 'extra'} enPausa={!!customBuilder} onClose={() => setOpenLibrary(null)} onStart={handleStartExtra} />)}
+        <ExtraLibrary open={openLibrary === 'extra'} enPausa={!!customBuilder} pideTuyas={pideTuyas} onClose={() => setOpenLibrary(null)} onStart={handleStartExtra} />)}
       {/* El constructor va después de las dos bibliotecas que lo abren: con el mismo z, manda el
           orden del árbol, y así queda delante aunque una de ellas no se esconda. */}
       {customBuilder && red(t('custom.builder.tag'), true, () => setCustomBuilder(null),
-        <CustomBuilder editId={customBuilder.id} onClose={() => setCustomBuilder(null)} />)}
+        <CustomBuilder editId={customBuilder.id} onClose={() => setCustomBuilder(null)} onGuardada={(id) => abrirBiblioteca(openLibrary === 'extra' ? 'extra' : 'move', id || true)} />)}
       {red(t('hydrate.title'), openHydrate, () => setOpenHydrate(false),
         <HydrateTracker open={openHydrate} onClose={() => setOpenHydrate(false)} />)}
       {red(t('ach.title'), openAchievements, () => setOpenAchievements(false),

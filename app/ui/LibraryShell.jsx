@@ -37,11 +37,11 @@
    Las reglas puras (umbral, orden, «Para ahora», motivo del grupo vacío) viven
    en `library-rules.js` para poder asertarse sin navegador. */
 
-const { useState: useStateLib, useEffect: useEffectLib, useMemo: useMemoLib } = React;
+const { useState: useStateLib, useEffect: useEffectLib, useLayoutEffect: useLayoutEffectLib, useMemo: useMemoLib } = React;
 
 function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, catPrefix,
                        variant = 'body', filtros, conTuyas = true, pozoAhora, ancho = 1240,
-                       viajes, enPausa = false, primeraVez = null }) {
+                       viajes, enPausa = false, primeraVez = null, pideTuyas = null }) {
   const { t, tn, lang } = useT();
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   const [activos, setActivos] = useStateLib([]);
@@ -56,6 +56,23 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
   useEffectLib(() => {
     if (!open) { setActivos([]); setVista('catalogo'); }
   }, [open]);
+
+  /* «TUS RUTINAS» ABRE TUS RUTINAS (Ez, N2 A, 8 nov.): la barra lateral y el constructor al
+     guardar piden esta vista (`pideTuyas`, un objeto nuevo en cada petición). Solo la oye la
+     biblioteca abierta: la otra, montada y cerrada, se quedaría en «tuyas» para la próxima vez.
+     Antes de pintar (layout), para no enseñar el catálogo un fotograma; y la rutina guardada
+     se trae a la vista en la copia que se ve (lateral o móvil), aunque haya diez encima. */
+  useLayoutEffectLib(() => {
+    if (!open || !pideTuyas || !conTuyas) return;
+    setVista('tuyas');
+    if (!pideTuyas.id) return;
+    const r = requestAnimationFrame(() => {
+      const el = [...document.querySelectorAll('[data-pace-custom-empezar]')]
+        .find(b => b.getAttribute('data-pace-custom-empezar') === pideTuyas.id && b.getClientRects().length);
+      if (el) el.scrollIntoView({ block: 'nearest' });
+    });
+    return () => cancelAnimationFrame(r);
+  }, [pideTuyas]);
 
   const todas = useMemoLib(() => {
     const out = [];
