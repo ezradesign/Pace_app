@@ -65,6 +65,11 @@ Foco por libre tras la salida no cuenta en la carta, 4 Q5 «a mi manera» sin co
 17:00», 6 R5 «Escuchar» la voz; recomienda la A en las seis). `caza-nuevo` (`claude/caza-nuevo-8nov-0c7d9b`, 6428556b): **N1
 arreglado** (la copia no llevaba «Cuaderno a salvo» y al traerla se perdía; prueba roja sin el arreglo; zona 43 de 43) y N2-N3
 para Ez en **6qpSUbY5Kfoa1cmsrdyffo**. N1 espera el «júntalo»; las letras de las tres páginas, también.
+**~18:35, la suite de la 0.194.0 (9ed68749): 1389 en verde, 2 saltadas y 1 roja de verdad** (3 de 3 sola):
+`ver-ejercicio.spec.js:128`: al volver de «Ver ejercicio» el aro dice «Pausar foco» y no «Empezar bloque 3». Pasaba en
+abierta-horas sola: viene de caza-semana, casi seguro S8 (`ritmoFocoCorriendo` cuenta un `endsAt` de hoy ya pasado y la clave
+del bloque se queda). **No se sube**: se le mandó a caza-semana que traiga `main` local a su rama, lo arregle sin perder S8 y lo
+suba; luego se vuelve a juntar su rama, suite entera otra vez y push.
 
 ## 7 nov., ~21:10: coordina EcLj6…; las 5 h, repuestas a las 21:00; las tres sesiones esperan el «Arráncalas» de Ez
 
