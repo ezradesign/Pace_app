@@ -97,6 +97,10 @@ if (!_paceAjustesCss) {
     .pace-aj-nombre { font-family: var(--font-display); font-style: italic; font-size: 16px; font-weight: 500; color: var(--ink); flex: 1 1 auto; line-height: 1.1; }
     .pace-aj-sub { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 400; color: var(--ink-3); margin-top: 3px; letter-spacing: .1px; }
     .pace-aj-punto { width: 6px; height: 6px; border-radius: 50%; background: var(--pace-aj-m, var(--ink-3)); display: inline-block; flex: 0 0 auto; }
+    /* La línea de debajo de una fila, a la derecha bajo su control: «Escuchar ›» y dónde suena la
+       música (Ez, 6A del 8 nov.). Con el sonido apagado se atenúa como su fila. */
+    .pace-aj-bajo-fila { display: flex; justify-content: flex-end; margin: -2px 0 4px; font-size: 12px; color: var(--ink-3); letter-spacing: .1px; transition: opacity 180ms; }
+    .pace-aj-bajo-fila[data-atenuada] { opacity: .38; pointer-events: none; }
     .pace-aj-nota { font-size: 10.5px; color: var(--ink-3); letter-spacing: .1px; line-height: 1.45; margin: -2px 0 6px; }
 
     /* pildoras: pista de papel-2 sin borde, la elegida en tinta */

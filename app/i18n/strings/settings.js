@@ -60,6 +60,9 @@ Object.assign(window.PACE_STRINGS.es, {
     'settings.bg.none':              'Nada',
     'settings.bg.ambient':           'Ambiente',
     'settings.bg.music':             'Música',
+    /* Oír la señal elegida sin empezar una Respira, y dónde suena la música (Ez, 6A del 8 nov.). */
+    'settings.signal.escuchar':      'Escuchar',
+    'settings.bg.music.nota':        'La música suena solo en Respira',
 
     // Sesiones: cada fila dice de que modulo es
     'settings.notify':               'Aviso al terminar',
@@ -159,6 +162,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'settings.bg.none':              'Nothing',
     'settings.bg.ambient':           'Ambient',
     'settings.bg.music':             'Music',
+    'settings.signal.escuchar':      'Listen',
+    'settings.bg.music.nota':        'Music only plays in Breathe',
 
     // Sessions
     'settings.notify':               'Alert at the end',

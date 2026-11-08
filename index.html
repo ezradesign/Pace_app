@@ -3448,6 +3448,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.bg.ambient': 'Ambiente',
   'settings.bg.music': 'Música',
 
+  'settings.signal.escuchar': 'Escuchar',
+  'settings.bg.music.nota': 'La música suena solo en Respira',
+
 
   'settings.notify': 'Aviso al terminar',
   'settings.notify.sub': 'Foco · si la pestaña está detrás',
@@ -3546,6 +3549,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.bg.none': 'Nothing',
   'settings.bg.ambient': 'Ambient',
   'settings.bg.music': 'Music',
+  'settings.signal.escuchar': 'Listen',
+  'settings.bg.music.nota': 'Music only plays in Breathe',
 
 
   'settings.notify': 'Alert at the end',
@@ -41811,6 +41816,10 @@ if (!_paceAjustesCss) {
     .pace-aj-nombre { font-family: var(--font-display); font-style: italic; font-size: 16px; font-weight: 500; color: var(--ink); flex: 1 1 auto; line-height: 1.1; }
     .pace-aj-sub { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 400; color: var(--ink-3); margin-top: 3px; letter-spacing: .1px; }
     .pace-aj-punto { width: 6px; height: 6px; border-radius: 50%; background: var(--pace-aj-m, var(--ink-3)); display: inline-block; flex: 0 0 auto; }
+    /* La línea de debajo de una fila, a la derecha bajo su control: «Escuchar ›» y dónde suena la
+       música (Ez, 6A del 8 nov.). Con el sonido apagado se atenúa como su fila. */
+    .pace-aj-bajo-fila { display: flex; justify-content: flex-end; margin: -2px 0 4px; font-size: 12px; color: var(--ink-3); letter-spacing: .1px; transition: opacity 180ms; }
+    .pace-aj-bajo-fila[data-atenuada] { opacity: .38; pointer-events: none; }
     .pace-aj-nota { font-size: 10.5px; color: var(--ink-3); letter-spacing: .1px; line-height: 1.45; margin: -2px 0 6px; }
 
     /* pildoras: pista de papel-2 sin borde, la elegida en tinta */
@@ -42197,6 +42206,27 @@ function TweaksAudioBlock(_ref) {let { state, set } = _ref;
   const fondo = state.musicOn ? 'mus' : state.ambientOn ? 'amb' : 'nada';
   const apagado = !state.soundOn;
 
+
+
+
+
+
+  React.useEffect(() => {
+    if (!apagado && senal !== 'tono') {
+      try {if (typeof window.paceVozInit === 'function') window.paceVozInit(senal);} catch (e) {}
+    }
+  }, [senal, apagado]);
+  const escuchar = () => {
+    let quedan = 20;
+    const suena = () => {
+      let lista = senal === 'tono';
+      try {lista = lista || window.paceVozCabe('breathe.inhale', 4);} catch (e) {lista = true;}
+      if (!lista && quedan-- > 0) {setTimeout(suena, 100);return;}
+      try {playSound('breathe.inhale', 4);} catch (e) {}
+    };
+    suena();
+  };
+
   return (
     React.createElement(React.Fragment, null,
     React.createElement(AjustesFila, { id: "sound", nombre: t('settings.sound'), alTocar: () => set({ soundOn: !state.soundOn }) },
@@ -42211,6 +42241,11 @@ function TweaksAudioBlock(_ref) {let { state, set } = _ref;
       { v: 'bradford', name: t('settings.signal.deep') }] }
     )
     ),
+    React.createElement("div", { className: "pace-aj-bajo-fila", "data-atenuada": apagado ? '' : undefined },
+    React.createElement("button", { type: "button", className: "pace-aj-sec-accion", "data-pace-aj-escuchar": true, onClick: escuchar, disabled: apagado },
+    t('settings.signal.escuchar'), React.createElement("span", { "aria-hidden": "true" }, " \u203A")
+    )
+    ),
     React.createElement(AjustesFila, { id: "bg", nombre: t('settings.bg'), atenuada: apagado },
     React.createElement(AjustesPildoras, { aria: t('settings.bg'), valor: fondo, onChange: ponerFondo, apagado: apagado, opciones: [
       { v: 'nada', name: t('settings.bg.none') },
@@ -42220,7 +42255,8 @@ function TweaksAudioBlock(_ref) {let { state, set } = _ref;
 
       { v: 'mus', name: t('settings.bg.music') }] }
     )
-    )
+    ),
+    React.createElement("p", { className: "pace-aj-bajo-fila", "data-pace-aj-musica-nota": true, "data-atenuada": apagado ? '' : undefined }, t('settings.bg.music.nota'))
     ));
 
 }
