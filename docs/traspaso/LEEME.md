@@ -4,6 +4,22 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de noviembre de 2026, ~11:45, v0.193.0.
 
+## 8 nov., ~20:55: 5iWBf con las 5 h al 82 % (se reponen a las 00:40; un CronCreate de una vez a las 00:47 despierta a la coordinadora)
+
+- **letras-jornada**: las nueve letras en 37f4603d (en su rama). **Ez (~20:45): «Sí, los dos»** a los dos arreglos de ChatGPT
+  (`docs/audits/chatgpt-8nov/respuesta-1-motor-resumen.md`): `motorCortas` excluye lo adaptado o rechazado ANTES de elegir, y
+  `ritmoResumenAntesDePisar` no marca `resumido` si `ritmoResumenDe` lanza y guarda una copia del día para reintentarlo (el
+  `null` sin error sigue marcándose). Se los mandé por SendMessage con el detalle; luego, su página «Montado».
+- **letras-nuevo**: N2 A, N3 A y el ruido de `v1Instr`, en fb57e2b7 (en origin). Su página: **6ZzJK5741WjiEzG33yu8qg** (5iWBf).
+  **6A no entra**: choca con «los Ajustes del móvil no piden scroll» (a 360×640 pide 2 px en la web y 23 en Android). El código,
+  aparte, en `claude/caza-nuevo-8nov-6a-choca` (133ba624). Falta pintar a Ez dos o tres formas de encajarla (p. ej. «Escuchar» en la
+  misma fila de la voz y la línea de la música dentro de la línea pequeña que ya existe); no frena la 0.195.0.
+- **ChatGPT, segunda parte**: `docs/audits/chatgpt-8nov/prompt-jornada-2.md`, en la hoja como «Ahora».
+- **Audios de Respira que faltan** (Ez preguntó): solo los del segundo tramo del suspiro, «Inhala más»: `sulafat-mas`,
+  `bradford-mas`, `sulafat-more` y `bradford-more` (y, opcional, un `sulafat-inhale` de 1,85 s como mucho). Al llegar, una
+  entrada `'breathe.phase.inhala.mas'` por voz en `app/ui/Sound.voz.jsx`, con `ini`/`fin` medidos. En la hoja, como paso de Ez.
+- `main` local va un commit por delante de origin (docs), a propósito: sube con la 0.195.0.
+
 ## 8 nov., ~19:55: coordina 5iWBf… (5 h al 2 %, semana al 63 %; las 5 h se reponen a las 00:40); dos sesiones montan las letras
 
 `main` = origin (3cc813c6, 0.194.0), sin nada local. **La hoja**, publicada en 5iWBfHE7kD3dUVocdskmb6 (versión 91) con los ids de

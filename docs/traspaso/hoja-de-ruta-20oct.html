@@ -95,7 +95,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.194.0 · actualizada el 8 de noviembre a las 19:55 · en esta cuenta, con dos sesiones montando tus letras</div>
+    <div class="eyebrow">PACE · versión 0.194.0 · actualizada el 8 de noviembre a las 20:55 · en esta cuenta, con dos sesiones montando tus letras</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -131,36 +131,29 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <h2>Paso a paso</h2>
     <p class="nota">La pongo al día en cada paso. Si tienes la página abierta, se actualiza sola. Si un enlace no abre, es que está en tu otra cuenta.</p>
     <ol class="pasos">
-      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, 2 minutos · la 0.194.0 ya está subida</span>
-        <span class="t">Pasar a ChatGPT la revisión de la jornada entera</span>
-        <span class="c"><span class="quien">Tú.</span> Copia esto en ChatGPT y tráeme su respuesta entera: compruebo cada cosa en el código
-          antes de montar nada. Mira lo que más se usa cada día y pregunta también qué mejoras darían más valor antes de v1.
-          <pre class="prompt">Revisa en el repositorio público ezradesign/Pace_app, rama main (versión 0.194.0), «A tu ritmo»: la jornada entera de PACE y lo que aprende de una semana a otra. Solo lectura. No repitas lo que ya está bien: quiero lo que puede salir mal y lo que mejoraría la experiencia de quien lo usa cada día.
+      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, 2 minutos · en la misma conversación de ChatGPT</span>
+        <span class="t">Pasar a ChatGPT la segunda parte de la revisión</span>
+        <span class="c"><span class="quien">Tú.</span> Su primera respuesta solo miró lo que aprende PACE. Pega esto en la misma
+          conversación y tráeme su respuesta entera; compruebo cada cosa antes de montar nada.
+          <pre class="prompt">Gracias. Lo he comprobado en el código y aciertas en las dos. En la segunda, el null sin error es a propósito: es un día sin forma elegida y no hay nada que resumir. Lo que se arregla es el caso del error, guardando una copia del día pendiente para reintentarlo. Las dos se están montando.
 
-Contexto:
-- PACE es una app de pausas activas para quien trabaja sentado (web/PWA, Android e iPhone). «A tu ritmo» compone el día en bloques de Foco y pausas según tu horario, la comida y tus reuniones; lo pinta en la línea del día y en el aro; se recoloca cuando haces algo; pasada tu hora de salida se cierra; y cada lunes una carta te propone cambios con lo que hiciste.
-- Acabo de juntar (8 nov.): volver tras horas fuera (el día elegido y sin empezar se lee desde ahora; la ventana de una pausa que ya pasó entera no sale; el día cerrado dice «Jornada cerrada») y siete arreglos de una semana simulada (el bloque antes de una reunión, «Otra» en lo que se aprende, el primer bloque que se perdía sin contarse, el Foco que acaba con el portátil cerrado).
-- Ya lo sé y está en mi lista: con el día ya empezado, al volver tras horas fuera la línea sigue en las horas de la mañana; y falta decidir si un Foco por libre después de cerrar la jornada cuenta para la hora de salida que propone la carta.
-- Las reglas que ya rigen están en docs/product/DECISIONES_TECNICAS_VIGENTES.md y docs/product/DECISIONES_PRODUCTO.md. Si el código las contradice, dímelo; si una regla te parece mala, dilo aparte.
+Sigue con la misma revisión, sobre main, con lo que falta de mi primer mensaje: 1) el día (empezar tarde, saltarse la comida o una pausa, «Otra» y «Ahora no», reuniones que se mueven o se solapan, salir antes o después de tu hora, «Hoy es distinto», la media jornada, y un bloque o una pausa que se quedan a medias); 2) el tiempo (la pestaña de fondo, el portátil cerrado, PACE cerrado y vuelto a abrir, dos pestañas, la medianoche, el cambio de hora y el móvil bloqueado); 3) lo que se cuenta, más allá del resumen (que cada bloque y cada pausa cuenten una sola vez, con lo que duraron y en su día, y lo que lee Estadísticas); y 5) la experiencia, con qué mejoras darían más valor antes de v1 y cuáles pueden esperar.
 
-Lee: app/state-ritmo*.jsx, app/ritmo/ (sobre todo ritmo.motor.js, ritmo.regla.js, ritmo.semana.js, RitmoHome.jsx, RitmoLinea.jsx y RitmoCarta.jsx), app/focus/FocusTimer*.jsx, app/state-timer.jsx, app/state-core.dia.js, app/state-events.jsx, y las pruebas tests/ritmo-*.spec.js, aro-jornada, cambio-de-dia, abierta-horas, jornada-cerrada-hora y foco-hora-de-acabar.
+No repitas las dos de antes. Tampoco esto, que ya está montado en una rama y entra en la próxima versión: con el día empezado, al volver tras horas fuera con la pausa ya acabada, la línea se lee desde ahora; un Foco por libre que empieza pasada la salida no cuenta para la hora de salida de la carta; el bloque empezado antes de comer acaba a la hora de comer; la carta no propone dejar en 2 minutos una pausa que ya es de 2; tras la jornada, el Foco por libre vuelve a tus minutos de siempre; y en la ventana de la pausa se puede decir «Ya la hice por mi cuenta» sin que cuente como saltada.
 
-Busca casos concretos, paso a paso, en:
-1. El día: empezar tarde, saltarse la comida o una pausa, «Otra» y «Ahora no», reuniones que se mueven o se solapan, salir antes o después de tu hora, «Hoy es distinto», la media jornada, y un bloque o una pausa que se quedan a medias.
-2. El tiempo: la pestaña de fondo, el portátil cerrado, PACE cerrado y vuelto a abrir, dos pestañas, la medianoche, el cambio de hora y el móvil bloqueado.
-3. Lo que se cuenta: que cada bloque y cada pausa cuenten una sola vez, con lo que duraron y en su día; lo que lee Estadísticas y lo que aprende la carta.
-4. La carta del lunes: que lo que propone salga de lo que de verdad hiciste y que no proponga algo que ya es así.
-5. La experiencia: lo que una persona no entendería, lo que le cuesta un paso de más y lo que le dice algo que no es verdad (una hora que ya pasó, un bloque que no existe). Y qué mejoras o funciones nuevas darían más valor antes de v1 y cuáles pueden esperar, con lo que costarían.
-
-Para cada hallazgo: archivo y línea, el caso paso a paso, qué ve y qué pierde quien lo usa, y si es grave, molesta o es una mejora. Separa lo que has comprobado en el código de lo que deduces. No propongas nada que suba la exigencia física ni consejos de salud.</pre></span></li>
-      <li class="paso marcha"><span class="estado">En marcha · yo · desde las 19:50 · dos sesiones a la vez</span>
+Mismo formato: la función como localizador, el caso paso a paso, qué ve y qué pierde quien lo usa, si es grave, molesta o es una mejora, y lo comprobado en el código aparte de lo que deduces. No propongas nada que suba la exigencia física ni consejos de salud.</pre></span></li>
+      <li class="paso marcha"><span class="estado">En marcha · yo · dos sesiones · siguen a las 00:40 si se acaba el uso</span>
         <span class="t">Montar tus letras de las tres páginas como 0.195.0</span>
-        <span class="c"><span class="quien">Yo.</span> Una sesión monta lo de la jornada: el aro de cierre sin la fila de ciclos; que la
-          barra de arriba pregunte antes de cortar una pausa; que un Foco por libre después de tu salida no mueva tu hora en la
-          carta; «la hice a mi manera» en la pausa, sin que cuente como saltada; «Tu jornada, hasta las 17:00»; y de la semana,
-          el Foco por libre con tus minutos, la comida, la carta que no cambia nada y el día que se lee desde ahora al volver.
-          La otra monta lo nuevo: «Tus rutinas» abre tus rutinas también en el móvil, traer una copia desde la bienvenida y
-          «Escuchar» la voz en Ajustes. Cada cambio, con su prueba. Al acabar te enseño cómo queda cada uno, antes y después.</span></li>
+        <span class="c"><span class="quien">Yo.</span>
+          <ol>
+            <li><b>La jornada, hecha:</b> las nueve letras con sus pruebas: el aro de cierre sin la fila de ciclos, la barra que pregunta
+              antes de cortar una pausa, el Foco por libre que no mueve tu salida, «Ya la hice por mi cuenta», «Tu jornada, hasta las
+              17:00» y S3, S6, S7 y S11. Ahora monta los dos arreglos de ChatGPT, y luego te enseña cómo queda.</li>
+            <li><b>Lo nuevo, hecho</b> (<a href="https://claude.ai/artifact/6ZzJK5741WjiEzG33yu8qg">la página</a>): «Tus rutinas» abre tus
+              rutinas también en el móvil, y «¿Tienes una copia? Tráela» en la bienvenida. «Escuchar» la voz no cabe tal como se
+              pintó: en un móvil de 640 px de alto los Ajustes vuelven a pedir scroll. Te pinto dos o tres formas de encajarla para
+              que elijas; no frena la 0.195.0.</li>
+          </ol></span></li>
       <li class="paso luego"><span class="estado">Lo siguiente tuyo · cuando acaben las dos sesiones</span>
         <span class="t">Decir «júntalo» a la 0.195.0</span>
         <span class="c"><span class="quien">Tú lo miras; yo lo junto.</span> Con tu «júntalo» entra también el arreglo de la copia de tus
@@ -188,6 +181,14 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué ve y qué pierde
         <span class="c"><span class="quien">Yo.</span> Lo que pediste: seguir buscando fallos. Todas las pantallas a 320, 360, 390, 768,
           1280 y 1536 de ancho, en español y en inglés, en claro y en oscuro, buscando textos cortados o que se pisan, antes
           de que las vean tus testers.</span></li>
+      <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo, unos 15 minutos</span>
+        <span class="t">Grabar las cuatro voces que faltan en Respira</span>
+        <span class="c"><span class="quien">Tú; yo las mido y las pongo.</span> Lo recordabas bien: en el Suspiro fisiológico, el segundo
+          tramo, «Inhala más», dura un segundo y suena un tono porque no tiene voz. Faltan cuatro archivos, una sola palabra cada
+          uno: <code>sulafat-mas.mp3</code> y <code>bradford-mas.mp3</code> («Más») y <code>sulafat-more.mp3</code> y
+          <code>bradford-more.mp3</code> («More»), de 0,85 s como mucho. Opcional, un «Inhale» de sulafat más corto, de 1,85 s
+          como mucho, porque el de ahora no cabe en la primera inhalación. Los prompts, en
+          <code>docs/traspaso/archivos/encargos-16oct/PROMPTS_AUDIO_SUSPIRO.md</code>. Las demás voces y la música ya están.</span></li>
       <li class="paso luego"><span class="estado">Hecho en su rama · espera tu «júntalo»</span>
         <span class="t">Que dos cobros de la mensual a la vez no acorten el código</span>
         <span class="c"><span class="quien">Tú dices «júntalo»; yo lo subo.</span> Lo que encontró ChatGPT: si dos renovaciones de la
@@ -252,8 +253,14 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
 
     </ol>
     <details class="plegado">
-      <summary>Lo hecho hasta hoy · 102 pasos</summary>
+      <summary>Lo hecho hasta hoy · 103 pasos</summary>
       <ol class="pasos">
+      <li class="paso hecho"><span class="estado">Hecho · me la trajiste · 8 de noviembre, 20:30 · tú dijiste «Sí, los dos»</span>
+        <span class="t">La revisión de ChatGPT de la jornada, primera parte</span>
+        <span class="c"><span class="quien">Yo.</span> Acierta en las dos, comprobadas en el código. Una pausa que ya acortó PACE, o que le
+          dijiste que no acortara, le impedía proponerte acortar otra durante un mes. Y si al resumir un día saltaba un error, ese
+          día se perdía para la carta del lunes; no se ha visto pasar, es una red de seguridad. Las dos se montan para la 0.195.0.
+          Todo, en <code>docs/audits/chatgpt-8nov/</code>.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · elegiste todas las A · 8 de noviembre, 18:45 · se montan como 0.195.0</span>
         <span class="t">Las letras de tres páginas</span>
         <span class="c"><span class="quien">Tú.</span> Usabilidad 1A a 6A, lo nuevo N2 y N3, y la semana S3, S7, S6 y S11, todas A. Se montan juntas, con sus pruebas, para la versión siguiente de tus testers. Las tres páginas están en tu otra cuenta.
