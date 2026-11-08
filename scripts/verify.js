@@ -58,6 +58,8 @@ var pruebas = require('./verify.pruebas.js');
 var web = require('./verify.web.js');
 /* Que lo que privacy.html dice de /premium y de «Avísame» sea lo que pasa. */
 var privacidad = require('./verify.privacidad.js');
+/* Que lo que dice «hasta v1» esté en la lista del día de v1 y cambie con el interruptor (Ez, 4A). */
+var diaV1 = require('./verify.dia-v1.js');
 
 /* --------------------------------------------------------------------------
    Identificadores de PLATAFORMA. Un nombre sin ligar que este aqui es del
@@ -423,7 +425,7 @@ var NO_CUBRE = [
   'orden de carga: un modulo que use algo publicado DESPUES sigue pasando',
   'CSS, tokens y layout: no se mira una sola regla',
   'el standalone: se restaura, no se analiza (index.html es el canonico, s134)',
-].concat(tamano.NO_CUBRE).concat(integridad.NO_CUBRE).concat(lienzo.NO_CUBRE).concat(web.NO_CUBRE).concat(privacidad.NO_CUBRE);
+].concat(tamano.NO_CUBRE).concat(integridad.NO_CUBRE).concat(lienzo.NO_CUBRE).concat(web.NO_CUBRE).concat(privacidad.NO_CUBRE).concat(diaV1.NO_CUBRE);
 
 function main() {
   console.log('=== PACE verify v2 (s150 + s152) — build + artefacto + node --check + integridad ===');
@@ -444,6 +446,7 @@ function main() {
   autoria.tandaAutoria({ ROOT: ROOT, falla: falla, ok: ok, info: info });
   web.tandaWeb({ ROOT: ROOT, falla: falla, ok: ok, info: info });
   privacidad.tandaPrivacidad({ ROOT: ROOT, falla: falla, ok: ok, info: info });
+  diaV1.tandaDiaV1({ ROOT: ROOT, babel: babel, falla: falla, ok: ok, info: info }, declarados);
   tandaVersion();
 
   console.log('\n--- lo que este verify NO cubre ---');

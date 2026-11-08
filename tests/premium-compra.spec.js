@@ -54,13 +54,13 @@ async function dosBotones(page, primero, segundo) {
 }
 
 test.describe('3A · la invitación con la tienda abierta', () => {
-  test('sin tienda, como hoy: «Llega con la versión 1» y ningún precio', async ({ page, context }) => {
+  test('sin tienda, desde v1: «Pronto podrás tenerlo aquí» (Ez, 3B del 7 nov.) y ningún precio', async ({ page, context }) => {
     await sembrar(context);
     await irAlArtefacto(page);
     await comoEnV1(page, false);
     await invitar(page);
     const hoja = page.locator(HOJA);
-    await expect(hoja).toContainText('Llega con la versión 1.');
+    await expect(hoja.locator('[data-pace-premium-v1]')).toHaveText('Pronto podrás tenerlo aquí.');
     await expect(hoja.locator('[data-pace-premium-precios], [data-pace-premium-vida]')).toHaveCount(0);
     await expect(hoja.getByRole('button', { name: /Probar/ })).toHaveCount(0);
   });
@@ -76,7 +76,7 @@ test.describe('3A · la invitación con la tienda abierta', () => {
     await expect(hoja).toHaveAttribute('data-pace-premium-hoja', 'invita');
     await expect(hoja).toContainText('Colgarse');
     await expect(hoja).toContainText('Es parte de PACE completo.');
-    await expect(hoja).not.toContainText('Llega con la versión 1.');
+    await expect(hoja.locator('[data-pace-premium-v1]')).toHaveCount(0);
     /* Los precios, los de la tienda y escritos en el idioma de la app. */
     await expect(hoja.locator('[data-pace-premium-precios]')).toHaveText('19,99 € una vez, o 2,99 € al mes con 7 días gratis.');
     const ahora = hoja.getByRole('button', { name: 'Ahora no' });

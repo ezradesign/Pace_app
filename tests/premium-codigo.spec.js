@@ -51,7 +51,8 @@ test('la tarjeta cerrada lleva candado, no dice «Pronto» y al tocarla abre la 
   await expect(hoja).toHaveAttribute('data-pace-premium-hoja', 'invita');
   await expect(hoja).toContainText('Colgarse');
   await expect(hoja).toContainText('Es parte de PACE completo.');
-  await expect(hoja).toContainText('Llega con la versión 1.');
+  /* Cerrado a mano, como el día de v1 sin tienda en este canal (Ez, 3B del 7 nov.). */
+  await expect(hoja).toContainText('Pronto podrás tenerlo aquí.');
   /* Lo cerrado no se empieza: ni sesión ni preview detrás de la hoja. */
   await expect(page.locator('[data-pace-session-root]')).toHaveCount(0);
 
@@ -182,6 +183,6 @@ test('en Android no hay «Tengo un código» y no vale ni el enlace ni un códig
 
   await abrirMueve(page);
   await page.locator('[data-pace-lib-card="extra.hang.bar"]').first().getByRole('button', { name: 'Colgarse' }).click();
-  await expect(page.locator(HOJA)).toContainText('Llega con la versión 1.');
+  await expect(page.locator(HOJA)).toContainText('Pronto podrás tenerlo aquí.');
   await expect(page.locator('[data-pace-premium-tengo]')).toHaveCount(0);
 });

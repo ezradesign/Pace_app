@@ -14,7 +14,8 @@
    Play Billing), la hoja acaba como la última pantalla de la bienvenida: los dos
    precios de la tienda en una frase (nunca escritos en las traducciones),
    «Probar 7 días gratis» y «Ahora no» del mismo tamaño, el aviso de antes de
-   cobrar y «Prefiero pagarlo una vez». Hasta entonces dice «Llega con la versión 1».
+   cobrar y «Prefiero pagarlo una vez». Hasta entonces dice «Llega con la versión 1», y desde
+   v1, en una app sin su tienda lista, «Pronto podrás tenerlo aquí» (Ez, 3B del 7 nov.).
    La hoja ofrece solo lo que tiene enlace (Ez, 5 nov. 2026: hasta v1, solo el de por
    vida): con ese plan solo, dice un solo pago y su botón principal compra ese plan,
    con «Ahora no» del mismo tamaño; sin prueba, sin aviso de los dos días y sin la
@@ -39,7 +40,9 @@
    quien ya usaba PACE, una vez, al abrir PACE ese día y sin nada delante
    (`pacePasoV1PorAvisar`, state-paso-v1.js). Cuenta sus siete días con la fecha,
    las rutinas de pago que se le quedan con su módulo y que lo gratis sigue
-   gratis, con un solo «Entendido»: no vende nada. */
+   gratis, con un solo «Entendido»: no vende nada. A quien tiene rutinas propias le
+   dice además que se quedan guardadas y que desde ese día se abren con PACE
+   completo (Ez, 2A del 7 nov.): sin esa línea las encontraba cerradas sin aviso. */
 const PREMIUM_AVISO_ANTES = 2 * 24 * 3600 * 1000;
 /* Las que se le quedan, en la hoja: hasta seis; con más, cinco y «Y n más». */
 const PREMIUM_PASOV1_LISTA = 6;
@@ -259,7 +262,7 @@ function PremiumInvitacion() {
               </React.Fragment>
             ) : (
               <React.Fragment>
-                <p style={premiumInvitacionStyles.v1}>{t('premium.v1')}</p>
+                <p data-pace-premium-v1 style={premiumInvitacionStyles.v1}>{t(paceTextoV1('premium.v1'))}</p>
                 <Button variant="secondary" onClick={cerrar} style={premiumInvitacionStyles.ancho}>{t('premium.later')}</Button>
                 {tengo}
               </React.Fragment>
@@ -329,6 +332,8 @@ function PremiumPasoV1({ datos, cerrar }) {
     return v === r.id + '.name' ? r.routine.name : v;
   };
   const titulo = t('premium.pasov1.titulo');
+  const s = typeof getState === 'function' ? getState() : null;
+  const propias = !!(s && Array.isArray(s.customRoutines) && s.customRoutines.length);
   return (
     <Modal open onClose={cerrar} maxWidth={440} ariaLabel={titulo}>
       <div data-pace-premium-hoja="pasov1">
@@ -351,6 +356,7 @@ function PremiumPasoV1({ datos, cerrar }) {
             )}
           </React.Fragment>
         )}
+        {propias && <p data-pace-pasov1-propias style={premiumInvitacionStyles.tuyas}>{tn('premium.pasov1.propias', { fecha })}</p>}
         <p style={premiumInvitacionStyles.v1}>{t('premium.pasov1.gratis')}</p>
         <Button onClick={cerrar} style={premiumInvitacionStyles.ancho}>{t('premium.pasov1.vale')}</Button>
       </div>

@@ -392,18 +392,16 @@ function persistState() {
   }
 }
 
-/* Borra el almacen legacy. Vive AQUI porque `pace.state.v2` es de este modulo:
-   desde s155 hay un segundo almacen (`pace.events.v1`) y el «borrar todo» de
-   Ajustes lo orquesta `paceEventsWipeAll`, pero cada modulo borra LO SUYO —
-   una unica fuente de verdad por dominio. No recarga ni avisa a nadie: de eso
-   se encarga quien orquesta.
-   s198: EL ALMACEN LEGACY SON TODAS LAS CLAVES `pace.*` QUE NO SON DE EVENTOS.
-   Borrar solo `pace.state.v2` dejaba vivas `pace.timer.v1` (el bloque en marcha
-   volvia tras el reset), `pace.breathe.v1` (la barra lateral seguia ofreciendo
-   «Continua») y `pace.darkDays.v1`, y `privacy.html` promete que lo borrado
-   «desaparece de tu dispositivo». Se barre por PREFIJO para que una clave nueva
-   no vuelva a quedarse fuera; el exito lo decide la principal. */
+/* Borra el almacen legacy. Vive AQUI porque `pace.state.v2` es de este modulo; el «borrar todo»
+   de Ajustes lo orquesta `paceEventsWipeAll` (los dos almacenes), pero cada modulo borra LO SUYO.
+   No recarga ni avisa a nadie. EL ALMACEN LEGACY SON TODAS LAS CLAVES `pace.*` QUE NO SON DE
+   EVENTOS (s198): borrar solo `pace.state.v2` dejaba vivo el bloque en marcha, «Continua» de
+   Respira y los dias oscuros. Se barre por PREFIJO para que una clave nueva no se quede fuera; el
+   exito lo decide la principal. EL CODIGO DE PACE COMPLETO SE QUEDA (Ez, 1B del 7 nov. 2026): lo
+   pagado no se pierde con «Borrar todo». Vuelve en un estado de instalacion nueva, el mismo que
+   da `loadState` sin nada guardado (`paceLicenciaQuedaAlBorrar`, state-licencia.js). */
 function wipeLocalState() {
+  const queda = window.paceLicenciaQuedaAlBorrar ? window.paceLicenciaQuedaAlBorrar(_state) : null;
   try { localStorage.removeItem(LS_KEY); } catch (e) { return false; }
   try {
     const sobrantes = [];
@@ -413,6 +411,7 @@ function wipeLocalState() {
     }
     sobrantes.forEach((k) => { try { localStorage.removeItem(k); } catch (e) {} });
   } catch (e) {}
+  if (queda) { try { localStorage.setItem(LS_KEY, JSON.stringify({ ...loadState(), ...queda })); } catch (e) {} }
   return true;
 }
 

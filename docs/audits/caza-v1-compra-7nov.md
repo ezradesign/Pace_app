@@ -50,7 +50,7 @@ de después de esa copia, así que es caro). Es del riesgo ya aceptado («lo gua
   prometen cancelarlo desde Ajustes. Hoy el mensual no tiene enlace. La prueba «el mensual no se vende sin dónde
   cancelarlo» cae el día que alguien encienda el mensual sin el portal.
 
-## Espera a Ez (en la página, con su letra recomendada)
+## Lo que eligió Ez (7 nov.: 1B 2A 3B 4A), montado el 8 nov. (abajo, «Montado»)
 
 1. **«Borrar todo» quita PACE completo comprado sin decirlo.** El aviso dice «tus días, tus rutinas y tus
    logros». Recomendada A: una frase más cuando hay código. Pide una clave nueva de i18n.
@@ -62,6 +62,43 @@ de después de esa copia, así que es caro). Es del riesgo ya aceptado («lo gua
 4. **Textos que dirán «hasta v1» el día de v1**: la nota de /premium («Hasta la versión 1, PACE completo está
    abierto…»), el plato mensual («Llega con la versión 1»), `premium.v1` en la app y la bienvenida
    (`premium.onb.abierto.*`). No mienten hoy; el día de v1 hay que cambiarlos a la vez que el interruptor.
+
+## Montado (8 nov.)
+
+Sobre `main` en la 0.193.0 (juntada en la rama sin choques). Sin subir versión. Prueba: `tests/dia-v1-letras.spec.js`.
+
+- **1B · «Borrar todo» no quita el código.** `wipeLocalState` (state-core.jsx) borra como siempre y, si había código,
+  deja una instalación nueva (la de `loadState` sin nada guardado) con el código y `premiumAvisoPrueba`
+  (`paceLicenciaQuedaAlBorrar`, state-licencia.js). El aviso no cambia («tus días, tus rutinas y tus logros»).
+  privacy.html lo dice en los dos idiomas (y su fecha pasa al 8 nov.).
+- **2A · La hoja del día de v1 cuenta las rutinas propias.** Con alguna en `customRoutines`, una línea antes de
+  «Lo gratis sigue gratis»: «Tus rutinas propias se quedan guardadas; desde el (fecha) se abren con PACE completo.»
+  / «Your own routines stay saved; from (date), they open with PACE Complete.» (`premium.pasov1.propias`).
+- **3B · Sin tienda, desde v1: «Pronto podrás tenerlo aquí.»** / «You’ll be able to get it here soon.»
+  (`premium.v1.despues`). Hasta v1 sigue «Llega con la versión 1.». Lo de pago se cierra igual.
+- **4A · Una lista para el día de v1.** En la app, `PACE_TEXTOS_V1` (state-entitlement.jsx, junto al interruptor)
+  con `paceTextoV1(clave)`: la hoja de PACE completo y los tres textos de la bienvenida. En /premium (el plato del
+  mensual, las dos notas del IVA, «Dónde funciona tu compra» y la pregunta de Android) y en /beta (la nota de los
+  testers y «¿Y mientras dura la prueba?», que se esconde) cada texto lleva en `data-v1` lo que dirá, con
+  `var DIA_V1 = false;` en cada página. `scripts/verify.dia-v1.js` falla si un texto que nombra v1 queda fuera, si
+  se pinta sin `paceTextoV1` o si las páginas y el interruptor no van a la par: el día de v1 se cambian a la vez
+  `PREMIUM_ABIERTO_HASTA_V1` y los dos `DIA_V1`, o `verify` no deja subir.
+
+Pruebas viejas que esperaban «Llega con la versión 1» con el interruptor apagado (premium-codigo, premium-compra y
+la de Android y el iPhone de compra-solo-vida) dicen ahora «Pronto podrás tenerlo aquí»: es la letra 3B.
+
+Mutantes (cada uno cae y, restaurado, vuelve a verde):
+
+| Letra | Lo que se quita | Cae |
+|---|---|---|
+| 1B | `if (queda)` en el index.html compilado | «el código se quedó» (el control pasa igual) |
+| 2A | la línea de las propias en el index.html | las dos de 2A, es y en (el control pasa) |
+| 3B y 4A app | `paceTextoV1` devolviendo la clave en el index.html | 3B y «en la app» de 4A |
+| 4A web | el bloque de `DIA_V1` en premium/index.html y en beta/index.html | la de cada página |
+| 4A verify | siete: sin `data-v1` en /premium y /beta, un `DIA_V1` cambiado solo, el interruptor cambiado solo, un texto nuevo con «hasta v1», la hoja sin `paceTextoV1`, una entrada que apunta a una clave que no existe | `verify.dia-v1` en los siete |
+
+Lo que no cubre: las fichas de las tiendas y los correos que nombren v1 (a mano), y frases que dependen de v1 sin
+nombrarlo: «Cuando llegue el plan al mes» de /premium va con el enlace del mensual, no con el interruptor.
 
 ## Otras cosas vistas, sin fallo
 
