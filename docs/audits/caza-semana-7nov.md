@@ -33,9 +33,9 @@ cayó `ritmo-reunion-tarde`, y no por lo que mide: era un fallo nuevo de la uni�
 `android-calendario`, `android-nativo`, `caza-foco`, `checklist-foco`, `estado-saneado`, `importar-borrar`,
 `textos-honestos`): **290 de 290** (11,3 min). Ninguna prueba hubo que ponerla al día por E1 o V2.
 
-**La página de Ez:** `docs/audits/caza-semana-7nov/pagina-ez.html` (264 KB, un solo archivo con las fotos en webp
+**La página de Ez:** `docs/audits/caza-semana-7nov/pagina-ez.html` (342 KB, un solo archivo con las fotos en webp
 dentro), publicada en https://claude.ai/artifact/C8okoSLuDnN2bBxtSdQSbw. Se rehace con `fotos-ez.js` (8893) y
-`pagina-ez.js` (la plantilla al lado). Tres casos, con la recomendada primero:
+`pagina-ez.js` (la plantilla al lado). Cuatro casos, con la recomendada primero:
 - **S3 · el Foco libre tras la jornada**: A vuelve a tus minutos de antes del día (25 si nunca los cambiaste);
   B el bloque normal de ese día (35 o 45); C como ahora (33, los del último bloque).
 - **S7 · la comida saltada con un bloque**: A el bloque empezado antes de comer acaba a la hora de comer (14 min a
@@ -43,6 +43,8 @@ dentro), publicada en https://claude.ai/artifact/C8okoSLuDnN2bBxtSdQSbw. Se reha
   la pausa de antes de comer. Nota en la página: en plena reunión el aro ofrece «Empezar bloque 3 · 45:00» y se
   queda así salvo que Ez diga otra cosa (quien lo pulsa no está en la reunión).
 - **S6 · la carta que no cambia nada**: A si ya era de 2 minutos no lo propone; B como ahora.
+- **S11 · al volver después de la pausa** (8 nov.): A el día se lee desde ahora en cuanto la pausa acabó, como E1
+  (lo que hoy sale al pulsar «Empezar bloque 2»); B no se mueve nada pero se quitan las horas pasadas; C como ahora.
 
 La foto de la A de S7 cambia `ritmoDurSiEmpiezas` en la página (la regla de la A); de ella solo se enseña el aro,
 porque la línea de abajo no está hecha para la A y pondría una pausa a las 14:00 en vez de la comida.
@@ -53,9 +55,9 @@ jueves; ocho el martes con las dos reuniones, y el bloque 2 acaba a las 10:00 en
 portátil cerrado de 12:19 a 13:09, el bloque 5 cuenta y el aro dice «Pausa terminada» (A1 y V1 de abierta-horas).
 El viernes se va a las 15:56. El lunes 16 rechaza la carta («No, déjala») y el martes 17 el día es el de siempre.
 La carta («Terminas a las 19:05. ¿Pongo tu salida a las 19:05?») no es del banco, como creí el 7 nov.: es S10.
-Visto también, para quien lleve V2: con el día cerrado por la hora y bloques sin hacer, el aro dice «Tu jornada ya
-terminó» pero sigue con el texto y el botón de antes («Ciclo completado · Empezar otro ciclo» el miércoles,
-«Atención sostenida · Empezar foco · 30:00» el viernes), no con «Lo que queda del día es tuyo · Seguir por libre».
+Con el día cerrado por la hora y bloques sin hacer, el aro decía «Tu jornada ya terminó» con el texto y el botón de
+antes («Ciclo completado · Empezar otro ciclo» el miércoles, «Atención sostenida · Empezar foco · 30:00» el viernes):
+es S12, arreglado.
 Y S3 en el banco: tras el jueves, el viernes por la mañana el Foco libre está en 24.
 
 **salta otra vez** (`semana.js salta es movil`, 8892): sin errores de consola, sin scroll, cortes ni textos sin
@@ -65,7 +67,13 @@ servía «Piernas sin pasos» y el «Otra» cayó sobre ella (las rutinas cambia
 banco: `tests/ritmo-otra-carta.spec.js` lo cubre con tres días sobre la misma rutina. La carta pregunta «¿Pongo tu
 entrada a las 9:40?» (contestada «No», el martes 17 empieza a las 9:00) y S3 sale cada mañana (Foco libre en 34).
 
-**Falta:** las letras de Ez (S3, S7 y S6) y S10 (sin arreglar).
+**8 nov., segunda tanda (encargo de la coordinadora):** S10 arreglado (`2d890977`), S12 arreglado (`6675ca05`) y la
+foto V1 de abierta-horas reproducida: es de verdad y pide elegir, así que es S11 en la página.
+oficina con S10: la carta ya no dice 19:05. Pregunta «Terminas a las 17:35. ¿Pongo tu salida a las 17:35?», porque el
+banco hace de verdad un Foco por libre hasta las 17:30 lunes, martes y jueves. Eso son datos ciertos: si un Foco por
+libre después de cerrar la jornada debe contar para tu hora de salida es una pregunta de producto, sin página aún.
+
+**Falta:** las letras de Ez (S3, S7, S6 y S11).
 
 Para correrlo: `PORT=8892 node .claude/static-server.js` en segundo plano (y 8893 para el segundo) y
 `PACE_E2E_PORT=8892 RECORRIDO_FOTOS=<carpeta> node docs/traspaso/archivos/caza-semana-7nov/semana.js oficina es escritorio`.
@@ -87,7 +95,7 @@ No compiles (`build-standalone.js`) mientras corre una suite en la misma carpeta
   contarlo o al quedarse parado). Fila arriba del todo en `DECISIONES_TECNICAS_VIGENTES.md`. Lo vigila
   `tests/ritmo-reunion-tarde.spec.js`, que sin el arreglo cae en su primer `terminarBloque`.
 
-### S10 · Un Foco que acaba con el portátil cerrado se apunta a la hora de volver, y la carta propone mover tu salida · molesta (código) · por arreglar
+### S10 · Un Foco que acaba con el portátil cerrado se apunta a la hora de volver, y la carta propone mover tu salida · molesta (código) · ARREGLADO
 
 - **Pasos** (`semana.js oficina`): lunes, martes y jueves, al acabar la jornada, «Seguir por libre» a las 17:04 (25
   min, acaba a las 17:29); PACE abierto y el reloj salta a las 19:00, como con el portátil cerrado.
@@ -96,7 +104,34 @@ No compiles (`build-standalone.js`) mientras corre una suite en la misma carpeta
   Foco, no a la hora en que acabó; con el portátil cerrado (o PACE cerrado y abierto el mismo día) es la hora de
   volver. `motorHoras` (`ritmo.motor.js`) saca tu salida del último Foco del día (`hasta` + el cierre): tres días a las
   19:00 y propone las 19:05. A1 de abierta-horas ya arregló lo mismo en el plan del día (`finBloque`), no en el
-  evento. Arreglo probable: que el Foco vencido se apunte con su `endsAt`. No se tocó (tope de uso).
+  evento.
+- **Arreglo:** FocusTimer pasa `fin: finBloque` a `completeFocusSession` y este a `emitSessionCompleted`, que lo usa
+  como `occurredAt` (solo uno de hoy y ya pasado); `focoElapsedSec` mide hasta `finBloque`. Los Caminos siguen con la
+  hora de ahora. `tests/foco-hora-de-acabar.spec.js` (portátil cerrado, PACE cerrado y el control despierto); el
+  mutante da 19:00 y 115 min. Vecinas que leen el evento o el motor: 225 de 225.
+
+### S12 · Con el día cerrado por la hora y bloques sin hacer, el aro no decía lo mismo que V2 · molesta (código) · ARREGLADO
+
+- **Pasos** (`semana.js oficina`): el miércoles, el bloque 5 acaba con el portátil cerrado y PACE sigue abierto hasta
+  las 19:00 con bloques sin hacer; el viernes se va a las 15:56.
+- **Qué pasaba:** a las 19:00 el aro decía «Tu jornada ya terminó» y, debajo, «Ciclo completado · Empezar otro ciclo»
+  (miércoles) o «Atención sostenida · Empezar foco» (viernes). Con todos los bloques hechos (V2 A de Ez) dice «Jornada
+  cerrada», «Lo que queda del día es tuyo» y «Seguir por libre».
+- **Arreglo:** `aroCerrado` (`FocusTimer.jornada.jsx`) da los textos de V2 también al cerrarse por la hora; es el
+  mismo cierre, sin letra nueva. `tests/jornada-cerrada-hora.spec.js` (es y en), rojo con el rótulo viejo;
+  `cerrada()` de `tests/aro-jornada.spec.js` se pone al día. Vecinas del cierre: 64 de 64.
+
+### S11 · Al volver después de la pausa, la línea sigue en la pausa de hace horas · molesta (producto) · espera a Ez (página)
+
+- **Pasos** (la foto V1 de abierta-horas, con `page.clock`; `fotos-ez.js`, `s11`): jornada de 8:00 a 18:00 empezada a las
+  8:00, PACE de fondo de 8:10 a 12:10.
+- **Qué pasa:** a las 12:10 el aro dice bien «Pausa terminada · Empezar bloque 2», pero la tarjeta del móvil dice
+  «Ahora · 8:46 Empuje sencillo» y «Luego · 8:51 Foco · bloque 2 de 11», y la línea del escritorio marca «Ahora» en
+  las 8:46 con todo el día en horas pasadas (`p8:46+5 f8:51+45`). Pasa igual con PACE delante sin pulsar nada. Al
+  pulsar «Empezar bloque 2» se recoloca desde ahora («bloque 2 de 7», luego a las 12:55).
+- **Por qué es de Ez:** «recolocar desde ahora con lo hecho congelado» es la regla al pulsar, y E1 la llevó solo al día
+  sin empezar. Con el día empezado, leerlo desde ahora decide qué pasa con la pausa que quedó atrás y cambia el número
+  de bloques sin que se pulse nada.
 
 ### S9 · Con la jornada cerrada, el punto del aro tapa «Ciclo 4 / 4» · pulido (visual) · para mirar
 

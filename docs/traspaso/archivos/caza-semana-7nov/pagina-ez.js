@@ -13,9 +13,12 @@ const FOTOS = process.env.RECORRIDO_FOTOS;
 if (!FOTOS) throw new Error('Falta RECORRIDO_FOTOS');
 const SALE = path.join(RAIZ, 'docs/audits/caza-semana-7nov/pagina-ez.html');
 
-/* `nombre@aro`: solo el aro. La A de la comida se pinta cambiando en la página lo que dura el bloque
+/* `nombre@aro`: solo el aro; `nombre@linea`, solo la tarjeta del día. La A de la comida se pinta cambiando en la página lo que dura el bloque
    (fotos-ez.js), pero la línea de abajo no está hecha para la A y diría otra cosa. */
-const RECORTES = { aro: { escritorio: { left: 300, top: 60, width: 960, height: 500 }, movil: { left: 0, top: 150, width: 360, height: 340 } } };
+const RECORTES = {
+  aro: { escritorio: { left: 300, top: 60, width: 960, height: 500 }, movil: { left: 0, top: 150, width: 360, height: 340 } },
+  linea: { escritorio: { left: 320, top: 538, width: 920, height: 242 }, movil: { left: 0, top: 495, width: 360, height: 228 } },
+};
 
 (async () => {
   let html = fs.readFileSync(path.join(__dirname, 'pagina-ez.plantilla.html'), 'utf8');
@@ -25,7 +28,7 @@ const RECORTES = { aro: { escritorio: { left: 300, top: 60, width: 960, height: 
     const movil = /-movil-/.test(base);
     let img = sharp(path.join(FOTOS, base + '.png'));
     if (recorte) img = img.extract(RECORTES[recorte][movil ? 'movil' : 'escritorio']);
-    const buf = await img.resize({ width: movil ? 360 : recorte ? 960 : 1280 }).webp({ quality: movil ? 72 : 62 }).toBuffer();
+    const buf = await img.resize({ width: movil ? 360 : recorte ? RECORTES[recorte].escritorio.width : 1280 }).webp({ quality: movil ? 72 : 62 }).toBuffer();
     html = html.split('{{foto:' + n + '}}').join('data:image/webp;base64,' + buf.toString('base64'));
     console.log(n.padEnd(34), Math.round(buf.length / 1024) + ' KB');
   }

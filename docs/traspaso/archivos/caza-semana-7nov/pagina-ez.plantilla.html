@@ -89,7 +89,7 @@ figcaption b { color: var(--ink-2); font-weight: 600; }
   <header class="cabecera">
     <span class="ceja">Una semana con PACE · 9 a 17 nov. 2026</span>
     <h1>Lo que pasó en una semana de trabajo</h1>
-    <p class="intro">Tres personas usaron PACE una semana entera, con el reloj adelantado: una en la oficina, otra a media jornada y otra que llega tarde y se salta casi todo. La mayoría de lo que encontraron ya está arreglado. Quedan tres cosas que dependen de cómo quieres que se comporte PACE. Elige una letra en cada una; abajo queda tu respuesta para copiarla.</p>
+    <p class="intro">Tres personas usaron PACE una semana entera, con el reloj adelantado: una en la oficina, otra a media jornada y otra que llega tarde y se salta casi todo. La mayoría de lo que encontraron ya está arreglado. Quedan cuatro cosas que dependen de cómo quieres que se comporte PACE. Elige una letra en cada una; abajo queda tu respuesta para copiarla.</p>
     <div class="hecho">
       <span class="ceja">Ya arreglado, sin nada que elegir</span>
       <ul>
@@ -98,6 +98,8 @@ figcaption b { color: var(--ink-2); font-weight: 600; }
         <li>Lo que cambias con «Otra» se apunta: si cambias tres días la misma rutina, la carta del lunes propone que descanse.</li>
         <li>El sello que sale en el aro ya no se queda encima del número cuando el aro cambia.</li>
         <li>Al juntar esta caza con lo de «lo que ves al volver», el primer bloque del día podía perderse sin contarse justo al acabar. Ya no.</li>
+        <li>Un Foco que acaba con el portátil cerrado se apunta a la hora en que acabó, no a la de volver. Por eso la carta proponía «¿Pongo tu salida a las 19:05?».</li>
+        <li>Si el día se cierra por la hora con bloques sin hacer, el aro dice «Jornada cerrada», «Lo que queda del día es tuyo» y «Seguir por libre», igual que cuando acabas el último bloque (tu V2 A).</li>
       </ul>
     </div>
   </header>
@@ -208,11 +210,45 @@ figcaption b { color: var(--ink-2); font-weight: 600; }
     </fieldset>
   </section>
 
+  <section class="caso" id="s11" aria-labelledby="s11-t">
+    <div class="cab">
+      <span class="ceja">S11 · al volver después de la pausa</span>
+      <h2 id="s11-t">Vuelves a las 12:10 y la línea sigue en la pausa de las 8:46</h2>
+    </div>
+    <div class="que">
+      <p>Empiezas la jornada a las 8:00 y dejas PACE de fondo a las 8:10. El bloque acaba a las 8:45 y su pausa pasa sin que la veas. Vuelves a las 12:10: el aro dice bien «Pausa terminada · Empezar bloque 2», pero la tarjeta sigue en «Ahora · 8:46 Empuje sencillo» y «Luego · 8:51 Foco · bloque 2 de 11», y la línea del día, con todas sus horas ya pasadas.</p>
+      <p>Pasa igual con PACE delante: si no pulsas nada desde la pausa de las 8:45, a mediodía la línea sigue a las 8:46. Las horas solo se ponen bien al pulsar «Empezar bloque 2».</p>
+    </div>
+    <figure>
+      <div class="par"><img src="{{foto:ez-s11-escritorio-hoy}}" alt="La home a las 12:10: el aro dice Pausa terminada y la línea del día marca Ahora a las 8:46" width="1280" height="800" loading="lazy"><img src="{{foto:ez-s11-movil-hoy}}" alt="El móvil a las 12:10: Ahora 8:46 Empuje sencillo, Luego 8:51 Foco bloque 2 de 11" width="360" height="800" loading="lazy"></div>
+      <figcaption><b>Así está hoy.</b> Las 12:10. En el móvil, «Ahora · 8:46» y «Luego · 8:51».</figcaption>
+    </figure>
+    <fieldset class="opciones">
+      <legend>Qué hacemos</legend>
+      <label class="op"><input type="radio" name="s11" value="A" id="s11-a" checked><span class="letra" aria-hidden="true">A</span>
+        <span class="op-cuerpo">
+          <span class="op-titulo"><strong>El día se lee desde ahora en cuanto acaba la pausa</strong><span class="reco">La que recomiendo</span></span>
+          <p>Como el día que eliges y no empiezas (E1): a las 12:10 ves el día como quedará al pulsar, «Ahora · 12:10 Foco · bloque 2 de 7» y «Luego · 12:55». La pausa de las 8:46 queda atrás en la línea. Nada se apunta hasta que pulsas.</p>
+          <figure><div class="par"><img src="{{foto:ez-s11-escritorio-pulsado@linea}}" alt="La línea del día leída desde las 12:10" width="920" height="240" loading="lazy"><img src="{{foto:ez-s11-movil-pulsado@linea}}" alt="El móvil: Ahora 12:10 Foco bloque 2 de 7, Luego 12:55" width="360" height="225" loading="lazy"></div><figcaption>Lo que verías con la A antes de pulsar. Es lo que sale hoy justo después de pulsar «Empezar bloque 2».</figcaption></figure>
+        </span></label>
+      <label class="op"><input type="radio" name="s11" value="B" id="s11-b"><span class="letra" aria-hidden="true">B</span>
+        <span class="op-cuerpo">
+          <span class="op-titulo"><strong>No se mueve nada, pero se quitan las horas pasadas</strong></span>
+          <p>La tarjeta dice «Ahora · el bloque 2, cuando quieras», sin hora, y la línea no marca «Ahora» en las 8:46. Las horas se ponen al pulsar, como hoy.</p>
+        </span></label>
+      <label class="op"><input type="radio" name="s11" value="C" id="s11-c"><span class="letra" aria-hidden="true">C</span>
+        <span class="op-cuerpo">
+          <span class="op-titulo"><strong>Se queda como está</strong></span>
+          <p>Al pulsar «Empezar bloque 2» todo se pone en su sitio.</p>
+        </span></label>
+    </fieldset>
+  </section>
+
   <aside class="respuesta" aria-label="Tu respuesta">
     <div class="caja">
       <span class="ceja">Tu respuesta</span>
       <div class="linea">
-        <span id="texto-respuesta">S3 A · S7 A · S6 A</span>
+        <span id="texto-respuesta">S3 A · S7 A · S6 A · S11 A</span>
         <button type="button" id="copiar">Copiar</button>
       </div>
       <span id="aviso-copia" role="status"></span>
@@ -224,7 +260,7 @@ figcaption b { color: var(--ink-2); font-weight: 600; }
 </main>
 <script>
 (function () {
-  var casos = [['s3', 'S3'], ['comida', 'S7'], ['s6', 'S6']];
+  var casos = [['s3', 'S3'], ['comida', 'S7'], ['s6', 'S6'], ['s11', 'S11']];
   var texto = document.getElementById('texto-respuesta');
   var aviso = document.getElementById('aviso-copia');
   var CLAVE = 'caza-semana-respuesta';

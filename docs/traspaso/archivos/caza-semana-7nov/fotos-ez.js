@@ -154,6 +154,36 @@ async function cartaCorta(tam) {
   await ctx.close();
 }
 
+/* S11: la jornada de 8:00 a 18:00 empezada a las 8:00 y PACE de fondo de 8:10 a 12:10 (la foto V1
+   de abierta-horas). Al volver, la línea sigue con la pausa de las 8:46 y el bloque 2 a las 8:51;
+   al pulsar «Empezar bloque 2» se recoloca desde ahora, que es lo que enseñaría la A antes de pulsar. */
+async function s11(tam) {
+  const tag = (s) => 'ez-s11-' + tam + '-' + s;
+  const estado = { ritmo: { horario: { inicio: 480, comida: 840, comidaDur: 60, salida: 1080 },
+    dia: { fecha: '2026-11-10', opcion: 'jornada', desde: 480, cicloBase: 0, cambios: {} } } };
+  const { ctx, page } = await L.abrir({ tam, lang: 'es', estado, reloj: new Date(D(10, 8, 0)), espera: 1500 });
+  const verse = (v) => page.evaluate((valor) => {
+    Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => valor });
+    Object.defineProperty(document, 'hidden', { configurable: true, get: () => valor === 'hidden' });
+    document.dispatchEvent(new Event('visibilitychange'));
+  }, v);
+  await vis(page, '[data-pace-cta]').first().click();
+  await page.clock.fastForward(10 * 60000);
+  await verse('hidden');
+  await page.clock.fastForward(36 * 60000);
+  for (let i = 0; i < 6; i++) await page.clock.fastForward(60000);
+  await page.clock.fastForward(D(10, 12, 10) - await page.evaluate(() => Date.now()));
+  await verse('visible');
+  await page.waitForTimeout(1500);
+  apunta(tam + ' s11 a las 12:10', [await aro(page), await page.evaluate(() => ritmoPlan(getState()).m.items.slice(0, 5).map((it) => it.tipo[0] + ritmoHora(it.desde)).join(' '))]);
+  await L.foto(page, tag('hoy'));
+  await vis(page, '[data-pace-cta]').first().click();
+  await page.waitForTimeout(800);
+  apunta(tam + ' s11 pulsado', [await aro(page), await page.evaluate(() => ritmoPlan(getState()).m.items.slice(0, 6).map((it) => it.tipo[0] + ritmoHora(it.desde)).join(' '))]);
+  await L.foto(page, tag('pulsado'));
+  await ctx.close();
+}
+
 (async () => {
   await L.lanzar();
   try {
@@ -163,6 +193,7 @@ async function cartaCorta(tam) {
       if (toca('comida')) try { await comida(tam); } catch (e) { apunta(tam + ' comida ERROR', e.message.split('\n')[0]); }
       if (toca('comidaA')) try { await comida(tam, true); } catch (e) { apunta(tam + ' comida A ERROR', e.message.split('\n')[0]); }
       if (toca('corta')) try { await cartaCorta(tam); } catch (e) { apunta(tam + ' corta ERROR', e.message.split('\n')[0]); }
+      if (toca('s11')) try { await s11(tam); } catch (e) { apunta(tam + ' s11 ERROR', e.message.split('\n')[0]); }
     }
   } finally {
     fs.writeFileSync(path.join(L.FOTOS, 'fotos-ez' + (SOLO ? '-' + SOLO.replace(/,/g, '-') : '') + '.json'), JSON.stringify(salida, null, 1));
