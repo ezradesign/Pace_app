@@ -29,12 +29,35 @@
 
 var PACE_DIA_CADA_MS = 60 * 1000;
 
+/* LA HORA TAMBIÉN PASA SIN GESTO. Lo que se pinta con la hora de ahora y no con el estado
+   (las losetas de «A tu ritmo»: «Una hora · Hasta las 9:00», «Media jornada · De 8:00 a
+   12:00») no se repintaba: con PACE abierto desde las 8:00 y sin tocar, a las 12:00 seguía
+   ofreciendo «Hasta las 9:00». Quien lo pinta se suscribe con `usePaceMinuto()`, y el mismo
+   vigilante del día avisa cuando cambia el minuto. Oculta no avisa: al volver al frente, sí. */
+var paceMinutoVisto = Math.floor(Date.now() / 60000);
+var paceMinutoOyentes = new Set();
+
 function paceDiaMirar() {
   if (document.visibilityState === 'hidden') return;
   ensureDayFresh(true);
+  var minuto = Math.floor(Date.now() / 60000);
+  if (minuto !== paceMinutoVisto) {
+    paceMinutoVisto = minuto;
+    paceMinutoOyentes.forEach(function (f) { f(); });
+  }
+}
+
+function paceMinutoSuscribir(f) {
+  paceMinutoOyentes.add(f);
+  return function () { paceMinutoOyentes.delete(f); };
+}
+
+/* El minuto que ya se ha avisado: repinta al componente cuando cambia. */
+function usePaceMinuto() {
+  return React.useSyncExternalStore(paceMinutoSuscribir, function () { return paceMinutoVisto; });
 }
 
 document.addEventListener('visibilitychange', paceDiaMirar);
 setInterval(paceDiaMirar, PACE_DIA_CADA_MS);
 
-Object.assign(window, { PACE_DIA_CADA_MS, paceDiaMirar });
+Object.assign(window, { PACE_DIA_CADA_MS, paceDiaMirar, usePaceMinuto, paceMinutoSuscribir });

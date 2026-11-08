@@ -53,8 +53,9 @@ function paceFocoContar(id, contar) {
   }).catch(function () {});
 }
 
-function paceFocoPausaPendiente(id) {
-  setState(prev => ({ ...prev, focoPausa: { id: id, dia: new Date().toDateString() } }));
+/* `hasta` (ms) es cuándo acaba la parada con «A tu ritmo» (ritmoParadaHasta): pasada, ya no sale. */
+function paceFocoPausaPendiente(id, hasta) {
+  setState(prev => ({ ...prev, focoPausa: { id: id, dia: new Date().toDateString(), hasta: typeof hasta === 'number' ? hasta : null } }));
 }
 
 /* `pendiente` es el id de `state.focoPausa`: el efecto se rehace cuando otra pestaña la deja o la quita.
@@ -76,6 +77,12 @@ function usePausaALaVista(pendiente, abrir, cerrar, hoy) {
       if (reintento) { clearTimeout(reintento); reintento = null; }
       const p = getState().focoPausa;
       if (!p || !p.id || p.dia !== new Date().toDateString() || document.visibilityState !== 'visible') return;
+      /* SI AL VOLVER LA PAUSA ENTERA YA PASÓ, LA VENTANA NO SALE (Ez, V1 A del 7 nov. 2026): el aro ya
+         dice «Pausa terminada» y ofrece el bloque siguiente. Se quita, para que no salga después. */
+      if (typeof p.hasta === 'number' && Date.now() >= p.hasta) {
+        setState(prev => (prev.focoPausa && prev.focoPausa.id === p.id ? { ...prev, focoPausa: null } : prev));
+        return;
+      }
       if (document.querySelector('[data-pace-session-root]')) { reintento = setTimeout(intentar, PAUSA_REINTENTO_MS); return; }
       const coger = () => {
         const s = getState();

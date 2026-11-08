@@ -56,12 +56,19 @@ function aroDespues(s, t, tn) {
 
 /* PASADA LA SALIDA (Ez, 1A del 7 nov. 2026; state-ritmo.recolocar.jsx): el rótulo dice «Tu jornada
    ya terminó» y la línea de la hora, lo hecho («45 min de foco»). El reloj y el botón son los de por
-   libre, así que quien quiera sigue; con un Foco libre en marcha, el aro es el de siempre. */
+   libre, así que quien quiera sigue; con un Foco libre en marcha, el aro es el de siempre.
+   HECHOS TODOS LOS BLOQUES, el último cierra el día también en el aro (Ez, V2 A del 7 nov. 2026),
+   antes o después de la salida: «Jornada cerrada», lo hecho, «Lo que queda del día es tuyo» y
+   «Seguir por libre» (`sub` y `cta`), donde decía «Foco manual · Ciclo completado» y «Empezar
+   otro ciclo», como si no hubiera jornada. */
 function aroCerrado(s, t, tn) {
   const p = typeof ritmoPlan === 'function' ? ritmoPlan(s) : null;
-  if (!p || !p.cerrado) return null;
+  const todo = !!p && p.total > 0 && p.hechos >= p.total;
+  if (!p || !(p.cerrado || todo)) return null;
   const f = ritmoFocoHecho(p);
-  return { label: t('ritmo.fuera'), hecho: f > 0 ? tn('ritmo.aro.hecho', { f: ritmoDuracion(f) }) : null };
+  const hecho = f > 0 ? tn('ritmo.aro.hecho', { f: ritmoDuracion(f) }) : null;
+  if (todo) return { label: t('ritmo.hecho'), hecho, sub: t('ritmo.aro.tuyo'), cta: t('ritmo.aro.libre') };
+  return { label: t('ritmo.fuera'), hecho };
 }
 
 /* Lo que la jornada le cambia al aro según el momento. `cta`, si manda en el botón;
@@ -83,7 +90,11 @@ function aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empez
       ),
     };
   }
-  if (!aro) return {};
+  if (!aro) {
+    /* La jornada cerrada con todos sus bloques: el botón sigue por libre (aroCerrado). */
+    const c = state.focusMode === 'foco' && status !== 'running' && status !== 'paused' ? aroCerrado(state, t, tn) : null;
+    return c && c.cta ? { cta: { label: c.cta } } : {};
+  }
   const despues = aroDespues(state, t, tn);
   return {
     cta: status === 'running' ? { label: t('ritmo.aro.pausar') }

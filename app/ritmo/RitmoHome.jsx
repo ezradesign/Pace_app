@@ -43,6 +43,7 @@ function RitmoVuelta() {
 
 function RitmoHome({ onOpenLibrary, onOpenHydrate }) {
   const [state] = usePace();
+  usePaceMinuto();   /* sin día elegido, lo que ofrece sale de la hora de ahora (state-core.dia.js) */
   const { tn } = useT();
   const [hoja, setHoja] = useStateRH(false);
   const R = ritmoDe(state);

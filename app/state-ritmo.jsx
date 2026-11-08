@@ -270,11 +270,17 @@ function ritmoMenu(s, opcion, cambios, desde, pasado, primerBloque, pausaPendien
    `pausa` (s193) es la parada ABIERTA —lo que va detrás del último bloque
    hecho— mientras no empiece el siguiente; null si no hay ninguna. Solo cuenta
    si el número guardado es el de bloques hechos: si `cycle` se movió por otra
-   vía, la pausa guardada ya no es de este momento. */
-function ritmoPlanBase(s) {
+   vía, la pausa guardada ya no es de este momento.
+   SIN EMPEZAR, el día se lee desde ahora (`desdeAhora`, state-ritmo.ahora.jsx); con
+   `o.comoSeEligio`, desde la hora guardada. Si desde ahora ya no cabe un bloque, manda la
+   guardada. */
+function ritmoPlanBase(s, o) {
   var R = ritmoDe(s);
   if (R.libre || !R.dia) return null;
-  var m = ritmoMenu(s, R.dia.opcion, R.dia.cambios, R.dia.desde, R.dia.pasado || null, R.dia.primerBloque || null, !!R.dia.pausaPendiente, R.dia.bloque || null);
+  var ahora = !(o && o.comoSeEligio) && typeof ritmoDesdeSinEmpezar === 'function' ? ritmoDesdeSinEmpezar(s, R) : null;
+  var menu = function (desde) { return ritmoMenu(s, R.dia.opcion, R.dia.cambios, desde, R.dia.pasado || null, R.dia.primerBloque || null, !!R.dia.pausaPendiente, R.dia.bloque || null); };
+  var m = ahora != null ? menu(ahora) : null;
+  if (!m || !m.focos.length) { ahora = null; m = menu(R.dia.desde); }
   if (!m) return null;
   var crudos = (Number((s || {}).cycle) || 0) - (R.dia.cicloBase || 0);
   var hechos = Math.max(0, Math.min(m.focos.length, crudos));
@@ -283,12 +289,12 @@ function ritmoPlanBase(s) {
   if (pausa && pausa.tipo === 'foco') pausa = null;   /* bloques cortos juntos: no hay parada */
   /* s195: `estados` = { n: 'hecha' | 'saltada' } por ordinal de parada (pausa o cierre).
      `deMas`: el último Foco terminado ya no era del plan (uno por libre tras el último bloque). */
-  return { m: m, hechos: hechos, actual: actual, total: m.focos.length, terminado: !actual, pausa: pausa, estados: R.dia.estados || {},
+  return { m: m, hechos: hechos, actual: actual, total: m.focos.length, terminado: !actual, pausa: pausa, estados: R.dia.estados || {}, desdeAhora: ahora,
            deMas: crudos > m.focos.length };
 }
 /* El plan tal como se ve: pasada la salida, el día está cerrado (state-ritmo.recolocar.jsx). */
-function ritmoPlan(s) {
-  var p = ritmoPlanBase(s);
+function ritmoPlan(s, o) {
+  var p = ritmoPlanBase(s, o);
   if (p && typeof ritmoPasadaLaSalida === 'function' && ritmoPasadaLaSalida(p)) {
     p.cerrado = true; p.actual = null; p.terminado = true; p.pausa = null;
   }

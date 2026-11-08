@@ -97,7 +97,7 @@ function calendarioDeseados(s, textos) {
   if (!hoy) return null;
   if (R.libre) return { fecha: hoy, eventos: [] };
   if (!R.dia) return null;
-  var plan = ritmoPlan(s);
+  var plan = ritmoPlan(s, { comoSeEligio: true });   /* sin empezar, el día como se eligió (state-ritmo.ahora.jsx) */
   if (!plan) return null;
   var corre = plan.actual && typeof ritmoFocoCorriendo === 'function' && ritmoFocoCorriendo();
   var callar = corre ? plan.actual.desde + plan.actual.dur : null;

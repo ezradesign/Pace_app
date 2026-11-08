@@ -17,19 +17,23 @@
    alcanza; la hora que no existió queda como margen libre. Lo vigila
    tests/hora-y-medianoche.spec.js (H1 y H2). */
 
-/* Los minutos que se ha movido el reloj por un cambio de hora desde `ms`: 60 si se
-   atrasó, −60 si se adelantó y 0 si no hubo cambio o no se sabe cuándo empezó. Sumados
-   a la hora de ahora, dan la hora en el reloj de entonces. */
-function ritmoDesfase(ms) {
+/* Los minutos que se ha movido el reloj por un cambio de hora desde `ms` hasta `hasta`
+   (ahora, si no se dice): 60 si se atrasó, −60 si se adelantó y 0 si no hubo cambio o no
+   se sabe cuándo empezó. Sumados a la hora de `hasta`, dan la hora en el reloj de entonces. */
+function ritmoDesfase(ms, hasta) {
   if (typeof ms !== 'number' || !isFinite(ms)) return 0;
-  return new Date().getTimezoneOffset() - new Date(ms).getTimezoneOffset();
+  var ref = typeof hasta === 'number' && isFinite(hasta) ? new Date(hasta) : new Date();
+  return ref.getTimezoneOffset() - new Date(ms).getTimezoneOffset();
 }
 
 /* LA PAUSA (s193). Terminar un bloque la abre con el número de bloques hechos
    —`completePomodoro` ya subió `cycle` cuando main.jsx llama a esto—; empezar
    el siguiente la cierra. Sin menú no hay nada que abrir. `inicioMs` es cuándo
-   empezó el bloque (FocusTimer), para contarlo bien si cambió la hora mientras. */
-function ritmoBloqueTerminado(inicioMs) {
+   empezó el bloque (FocusTimer), para contarlo bien si cambió la hora mientras, y
+   `finMs` cuándo acabó: con el portátil cerrado o PACE cerrado, PACE se entera al
+   volver, y el bloque dura lo que duró y no hasta la hora de volver (el rato de en
+   medio queda como margen libre). Sin él, ahora. */
+function ritmoBloqueTerminado(inicioMs, finMs) {
   /* El plan base: el bloque que cruzó la salida aún abre su pausa de cierre aunque ya sea la hora. */
   var p = ritmoPlanBase(getState());
   if (!p || p.hechos < 1) return;
@@ -45,9 +49,13 @@ function ritmoBloqueTerminado(inicioMs) {
      duró, y el resto se recompone desde ahora con la pausa la primera. */
   var ultimo = p.m.focos[p.hechos - 1];
   var t = ritmoAhoraExacto();
+  var finReal = typeof finMs === 'number' && isFinite(finMs) && finMs <= Date.now() &&
+    new Date(finMs).toDateString() === new Date().toDateString() ? new Date(finMs) : null;
   /* La hora de acabar en el reloj con que empezó; si aun así queda antes de empezar
      (empezó en la hora repetida, con el plan por delante del reloj), la del plan. */
-  var fin = t + ritmoDesfase(inicioMs);
+  var fin = finReal
+    ? finReal.getHours() * 60 + finReal.getMinutes() + ritmoDesfase(inicioMs, finReal.getTime())
+    : t + ritmoDesfase(inicioMs);
   if (ultimo && fin <= ultimo.desde) fin = ultimo.desde + ultimo.dur;
   var desde = Math.max(t, fin);
   if (ultimo && desde !== ultimo.desde + ultimo.dur) {
@@ -96,6 +104,8 @@ function ritmoBloqueEmpezado(minutos) {
     cambios.pausaPendiente = false;
     if (otraDuracion) cambios.bloque = mins;
   }
+  /* Sin empezar, el día se leía desde ahora (state-ritmo.ahora.jsx): empezar a esa misma hora lo fija. */
+  if (p && p.desdeAhora != null && cambios.desde == null) cambios.desde = t;
   if (!Object.keys(cambios).length) return;
   ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {}; });
 }
