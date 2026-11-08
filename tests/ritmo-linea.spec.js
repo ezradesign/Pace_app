@@ -34,22 +34,28 @@
  *    primera colocación sea con la de reserva de verdad, y comparando la
  *    colocación del DOM con una fresca (`ritmoColocarEtiquetas` está en window).
  *
- * EL GUION es el del usuario: «Una hora» empezada a las 17:20, bloque 1 y su
+ * EL GUION nació del usuario: «Una hora» empezada a las 17:20, bloque 1 y su
  * pausa hechos, y «Empezar bloque 2» a las 19:30, o sea recolocar con un hueco
- * de 17:48 a 19:30 y el bloque de ahora pegado al final. La hora va CON OFFSET
- * (trampa de ritmo.spec.js: el runner del CI está en UTC).
+ * largo y el bloque de ahora pegado al final. Desde el 7 nov. 2026 (Ez, 1A del
+ * recorrido del 6 nov.), pasada la hora de acabar el día se cierra, y a las 19:30
+ * esa hora (18:20) y la salida (19:00) ya habían pasado: no hay bloque 2 que
+ * empezar. El mismo dibujo con un día que sigue abierto: «Dos horas» desde las
+ * 17:20 con la salida a las 21:00, y «Empezar bloque 2» a las 19:15, antes de las
+ * 19:20 en que acaban (hueco de 18:00 a 19:15, el tramo más largo, y el bloque de
+ * ahora pasado el 70 % de la línea). La hora va CON OFFSET (trampa de
+ * ritmo.spec.js: el runner del CI está en UTC).
  */
 'use strict';
 
 const { test, expect } = require('@playwright/test');
 const { sembrar, irAlArtefacto } = require('./helpers');
 
-const TARDE = new Date('2026-09-18T19:30:00+02:00');   /* viernes, 19:30 en Madrid */
+const TARDE = new Date('2026-09-18T19:15:00+02:00');   /* viernes, 19:15 en Madrid */
 const TARDE_RITMO = {
   cycle: 1, lastActiveDay: 'Fri Sep 18 2026', _historyMigrated: true,
   ritmo: {
-    horario: { inicio: 780, comida: 960, comidaDur: 30, salida: 1140 },
-    dia: { fecha: '2026-09-18', opcion: '1h', desde: 1040, cicloBase: 0, cambios: {}, pausa: 1 },
+    horario: { inicio: 780, comida: 960, comidaDur: 30, salida: 1260 },
+    dia: { fecha: '2026-09-18', opcion: '2h', desde: 1040, cicloBase: 0, cambios: {}, pausa: 1 },
   },
 };
 
@@ -116,7 +122,7 @@ test('el hueco del retraso es un punteado de 2 px sin borde ni relleno: la píld
              pildoraBorde: p.borderTopWidth, pildoraRelleno: p.paddingLeft };
   });
   expect(m, 'GUARD: falta el hueco del retraso o la píldora').not.toBeNull();
-  expect(m.ancho, 'GUARD: el hueco de 17:48 a 19:30 tiene que ser el tramo más largo').toBeGreaterThan(300);
+  expect(m.ancho, 'GUARD: el hueco de 18:00 a 19:15 tiene que ser el tramo más largo').toBeGreaterThan(300);
   expect(m.pildoraBorde, 'GUARD: la píldora ha perdido su borde; el aserto de abajo sería vacío').toBe('1px');
   expect(m.pildoraRelleno, 'GUARD: la píldora ha perdido su padding').toBe('10px');
   expect(m.punteado, 'el hueco no es el punteado del margen libre').toBe(true);

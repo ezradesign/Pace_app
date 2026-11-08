@@ -144,6 +144,10 @@ function FocusTimer({ onFinish }) {
     avisarCorreRef.current = false;
     if (state.focusMode === 'foco') avisarPestanas({ tipo: 'corre', id: bloqueRef.current, endsAt });
   }, [running, endsAt]);
+  /* La home del día nuevo (Ez, 3A del 7 nov. 2026): el «Ciclo completado» de un Foco de ayer se recoge al cambiar de día. */
+  const completadoRef = useRefFT(null);
+  useEffectFT(() => { completadoRef.current = status === 'completed' ? state.lastActiveDay : null; }, [status]);
+  useEffectFT(() => { if (status === 'completed' && completadoRef.current && completadoRef.current !== state.lastActiveDay) reset(); }, [state.lastActiveDay]);
 
   /* En las apps (Android y iPhone) el aviso de fin de Foco lo programa el sistema
      (ui/nativo.js), porque con la app en el fondo esta cuenta no corre. Aqui solo
@@ -196,6 +200,7 @@ function FocusTimer({ onFinish }) {
      del que acabó, que se leía como un bloque de cero minutos (Ez, 13 oct. 2026). Sin plan, el
      00:00 se queda: allí la etiqueta sigue siendo la del bloque terminado. */
   const aro = state.focusMode === 'foco' && typeof ritmoAro === 'function' ? ritmoAro(state, t, tn) : null;   // s192 «A tu ritmo»: «Bloque 2 de 8» (state-ritmo.jsx)
+  const cerrada = !aro && state.focusMode === 'foco' && status !== 'running' && status !== 'paused' && typeof aroCerrado === 'function' ? aroCerrado(state, t, tn) : null;   // pasada la salida (FocusTimer.jornada.jsx)
   const siguienteDelPlan = status === 'completed' && !!aro;
   const mostrado = siguienteDelPlan ? durationSec : remaining;
   const mins = Math.floor(mostrado / 60);
@@ -207,7 +212,7 @@ function FocusTimer({ onFinish }) {
      el temporizador como el flujo MANUAL, distinto del Camino guiado, sin
      ocupar una línea extra fuera del aro (decisión del usuario: la etiqueta
      vive dentro del círculo, no como kicker suelto). Pausa/Larga sin cambio. */
-  const modeLabel = aro ? aro.label : state.focusMode === 'foco' ? t('focus.manual.label')
+  const modeLabel = aro ? aro.label : cerrada ? cerrada.label : state.focusMode === 'foco' ? t('focus.manual.label')
                   : state.focusMode === 'pausa' ? t('focus.mode.pause')
                   : t('focus.mode.long');
 
@@ -437,7 +442,7 @@ function FocusTimer({ onFinish }) {
           progress={progress}
           mode={state.focusMode}
           modeLabel={modeLabel}
-          hasta={aro ? aro.hasta : null}
+          hasta={aro ? aro.hasta : cerrada ? cerrada.hecho : null}
           subtitle={subtitle}
           inner={isAro ? innerForAro : null}
           running={running}

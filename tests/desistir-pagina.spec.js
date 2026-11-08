@@ -133,7 +133,7 @@ test('/premium: «Desistir del contrato aquí» sale en el pie solo cuando la fu
   await expect(enlace).toBeVisible();
   await expect(enlace).toHaveText('Desistir del contrato aquí');
   await page.click('[data-idioma]');
-  await expect(enlace).toHaveText('Withdraw from contract here');
+  await expect(enlace).toHaveText('Withdraw from the contract here');
 });
 
 test('gracias, adonde solo llega quien ha pagado, lleva a desistir junto al código', async () => {
@@ -141,7 +141,7 @@ test('gracias, adonde solo llega quien ha pagado, lleva a desistir junto al cód
   const listo = gracias.slice(gracias.indexOf('<div data-gracias-listo'), gracias.indexOf('<div class="caja" data-gracias-prueba'));
   expect(listo).toContain('<div class="caja" data-gracias-desistir>');
   expect(listo).toContain('<a href="/desistir/">Desistir del contrato aquí</a>');
-  expect(listo).toContain('Withdraw from contract here');
+  expect(listo).toContain('Withdraw from the contract here');
 });
 
 test('el borrador del desistimiento lleva a esta página, en los dos idiomas', async () => {

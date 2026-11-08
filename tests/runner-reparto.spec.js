@@ -217,7 +217,7 @@ test.describe('El reparto del runner (Ez, 29 oct.)', () => {
   });
 
   test('r-5 · sin Auto, colocarse nombra el botón por su palabra, en castellano y en inglés', async ({ browser, baseURL }) => {
-    for (const [lang, frase] of [['es', 'Colócate sin prisa · pulsa «Empezar ya»'], ['en', 'Get set, no rush · press Begin now']]) {
+    for (const [lang, frase] of [['es', 'Colócate sin prisa · pulsa «Empezar ya»'], ['en', 'Get ready, no rush · press “Start now”']]) {
       const { context, page } = await abrir(browser, baseURL, 360, 740, 'extra.banda.espalda', { lang, langAuto: false });
       expect(await fase(page)).toBe('place');
       await expect(page.locator('[data-pace-v1-support]')).toHaveText(frase);

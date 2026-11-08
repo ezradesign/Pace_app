@@ -111,7 +111,7 @@ test('con la lista encendida, el correo se apunta con el idioma de la página', 
     return route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' });
   });
   await page.goto(PAGINA + '?lang=en');
-  await expect(page.getByRole('heading', { name: 'Active breaks for people who work sitting down.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Active breaks for people who work at a desk.' })).toBeVisible();
   await expect(page.locator('[data-avisame-pronto]')).toBeHidden();
 
   await page.locator('#avisame-correo').fill('Alguien@Ejemplo.com');

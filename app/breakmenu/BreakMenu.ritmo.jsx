@@ -93,7 +93,10 @@ function BreakMenuRitmo({ open, onClose, onChoose, onSeguir, onPropuesta, prop, 
         <button type="button" className="pace-break-pildora pace-break-llena" style={{ '--cd': letraDe(plato.boton) }} onClick={onPropuesta}>
           {t(comida ? 'break.ritmo.comer' : 'break.ritmo.hacer')}
         </button>
-        <button type="button" className="pace-break-pildora pace-break-tonal" onClick={onSeguir}>{tn('break.ritmo.seguir', { n: plan.hechos + 1 })}</button>
+        {/* Tras el último bloque no hay otro con el que seguir: solo queda la pausa de cierre. */}
+        {plan.hechos < plan.total && (
+          <button type="button" className="pace-break-pildora pace-break-tonal" onClick={onSeguir}>{tn('break.ritmo.seguir', { n: plan.hechos + 1 })}</button>
+        )}
       </div>
       {/* A la hora de comer no: la comida ya lleva su vaso. */}
       {agua && !comida && (

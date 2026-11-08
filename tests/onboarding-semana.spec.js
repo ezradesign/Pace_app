@@ -100,7 +100,7 @@ test('en inglés la pregunta habla inglés', async ({ page }) => {
   await page.locator(BIENVENIDA + ' [data-pace-cta]').click();
   await page.locator(EDITOR).waitFor({ state: 'visible' });
   await expect(page.locator(BIENVENIDA)).toContainText("What's your week like?");
-  await expect(page.locator(BIENVENIDA)).toContainText('Not now, I want to try it first');
+  await expect(page.locator(BIENVENIDA)).toContainText('Not now, I’ll try it first');
   await expect(page.locator(EDITOR + ' [data-pace-semana-dia="1"]')).toHaveAttribute('aria-label', 'Monday, Full day');
 });
 

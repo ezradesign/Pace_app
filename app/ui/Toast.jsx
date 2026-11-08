@@ -38,11 +38,26 @@ function toastHuecoDelAro() {
     return { x: x, y: y, ancho: Math.round(ancho), fs: fs };
   } catch (e) { return null; }
 }
+/* UN SELLO YA A LA VISTA TAMPOCO PISA LO QUE SE ABRE DESPUÉS (recorrido del 6 nov. 2026). El
+   aviso espera a que no haya nada abierto para salir (state-core.toast.jsx), pero vive en z 200:
+   si mientras dura se abría una biblioteca, «Antes de empezar» o una sesión, se pintaba encima
+   de su título. Mientras haya una ventana, una sesión o un diálogo (Ajustes incluido), no se ve. */
+const TOAST_TAPADO = 'html:has([data-pace-modal-backdrop], [data-pace-session-root], [role="dialog"])';
 if (!document.getElementById('pace-toast-css')) {
   const st = document.createElement('style');
   st.id = 'pace-toast-css';
-  st.textContent = '[data-pace-sello-en-aro] [data-pace-dial-subtitle] { visibility: hidden; }';
+  st.textContent = '[data-pace-sello-en-aro] [data-pace-dial-subtitle] { visibility: hidden; }'
+    + TOAST_TAPADO + ' [data-pace-sello-aro], ' + TOAST_TAPADO + ' [data-pace-toast] { visibility: hidden; }';
   document.head.appendChild(st);
+}
+
+/* ¿Hay algo abierto encima de la home? Lo de state-core.toast.jsx y, además, un diálogo propio
+   que se vea (Ajustes no entra en la pila). */
+function toastTapado() {
+  try {
+    if (typeof paceAvisoTaparia === 'function' && paceAvisoTaparia()) return true;
+    return [...document.querySelectorAll('[role="dialog"]')].some((d) => d.getClientRects().length > 0);
+  } catch (e) { return false; }
 }
 
 /* Lo que solo oye el lector de pantalla. */
@@ -98,8 +113,14 @@ function ToastHost() {
   const colaRef = useRefTO([]);
   const activoRef = useRefTO(false);
   const siguienteRef = useRefTO(null);
+  const esperaRef = useRefTO(null);
   siguienteRef.current = () => {
     if (activoRef.current || !colaRef.current.length) return;
+    /* El siguiente de la fila espera, como el primero, a que se cierre lo que se abrió. */
+    if (toastTapado()) {
+      if (!esperaRef.current) esperaRef.current = setTimeout(() => { esperaRef.current = null; siguienteRef.current(); }, 500);
+      return;
+    }
     const sig = colaRef.current.shift();
     const full = Object.assign({}, sig, { aro: sig.licencia ? null : toastHuecoDelAro() });
     activoRef.current = true;

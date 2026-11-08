@@ -9,7 +9,7 @@ const { useState } = React;
 const BREATHE_ROUTINES = {
   energia: {
     label: 'Energía',
-    aside: 'Despierta el sistema',
+    aside: 'Respiraciones profundas, en rondas',
     items: [
       /* B1.2 (s108): Bhastrika (PRA) se mudó al grupo Pranayama — era el único
          pranayama colado en Energía. rounds.express pasó a FREE para que el
@@ -25,12 +25,12 @@ const BREATHE_ROUTINES = {
   },
   equilibrio: {
     label: 'Equilibrio',
-    aside: 'Regula el sistema nervioso',
+    aside: 'Ritmo pausado y contado',
     items: [
-      { id: 'breathe.box.4', tag: 'EQU', code: 'Equilibrio', name: 'Box 4·4·4·4', desc: 'Cuadrado perfecto. Calma mental y foco sostenido.', min: 5, pattern: 'box', cycle: [4,4,4,4] },
+      { id: 'breathe.box.4', tag: 'EQU', code: 'Equilibrio', name: 'Box 4·4·4·4', desc: 'Cuadrado perfecto: cuatro segundos en cada fase.', min: 5, pattern: 'box', cycle: [4,4,4,4] },
       { id: 'breathe.box.6', tag: 'EQU', code: 'Equilibrio', name: 'Box 6·6·6·6', desc: 'Versión profunda', min: 7, pattern: 'box', cycle: [6,6,6,6] },
-      { id: 'breathe.diaphragm', tag: 'EQU', code: 'Equilibrio', name: 'Diafragmática', desc: 'Respira hacia el vientre. La base de todo lo demás.', min: 5, pattern: 'diaphragm' },
-      { id: 'breathe.co2', tag: 'EQU', code: 'Equilibrio', name: 'Tolerancia CO₂', desc: 'Exhala y sostén en vacío. Entrena la calma con menos aire.', min: 6, pattern: 'co2', safety: true, access: 'premium' },
+      { id: 'breathe.diaphragm', tag: 'EQU', code: 'Equilibrio', name: 'Diafragmática', desc: 'Respira despacio hacia el vientre, sin forzar.', min: 5, pattern: 'diaphragm' },
+      { id: 'breathe.co2', tag: 'EQU', code: 'Equilibrio', name: 'Tolerancia CO₂', desc: 'Exhala y sostén en vacío. Vuelve a respirar cuando lo necesites.', min: 6, pattern: 'co2', safety: true, access: 'premium' },
     ]
   },
   /* «Balance» SE LEE «COHERENCIA» (Ez, 5 nov. 2026: 3A): junto a «Equilibrio» los dos nombres
@@ -47,14 +47,14 @@ const BREATHE_ROUTINES = {
   },
   relajacion: {
     label: 'Relajación',
-    aside: 'Baja el ruido mental',
+    aside: 'Exhalaciones largas',
     items: [
       /* Cuatro ciclos (1:16): su autor pide 4 seguidos el primer mes, y en 3 min eran 9.
          Con `min: 1` la sesión acaba al cerrar el cuarto, el primero que pasa del minuto. */
       { id: 'breathe.478', tag: 'REL', code: 'Relajación', name: '4·7·8', desc: 'Exhalación larga, cuatro ciclos. Pensada para soltar el día y preparar el descanso.', min: 1, pattern: 'pattern', cycle: [4,7,8,0] },
       { id: 'breathe.physiological', tag: 'REL', code: 'Relajación', name: 'Suspiro fisiológico', desc: 'Doble inhalación + exhalación larga. Reset rápido.', min: 2, pattern: 'physiological' },
       { id: 'breathe.exhale.46', tag: 'REL', code: 'Relajación', name: 'Exhalación 4·6', desc: 'Exhala más largo de lo que inhalas. Freno suave.', min: 6, pattern: 'coherent', cycle: [4,0,6,0] },
-      { id: 'breathe.yin', tag: 'REL', code: 'Relajación', name: 'Rítmica yin', desc: 'Ritmo suave con reposo tras exhalar. Quietud que se asienta.', min: 8, pattern: 'yin' },
+      { id: 'breathe.yin', tag: 'REL', code: 'Relajación', name: 'Rítmica yin', desc: 'Ritmo suave con reposo tras exhalar.', min: 8, pattern: 'yin' },
     ]
   },
   pranayama: {
@@ -62,7 +62,7 @@ const BREATHE_ROUTINES = {
     aside: 'Raíces yóguicas',
     items: [
       { id: 'breathe.ujjayi', tag: 'PRA', code: 'Pranayama', name: 'Ujjayi', desc: 'Respiración oceánica. Meditativa.', min: 6, pattern: 'ujjayi', cycle: [5,0,5,0] },
-      { id: 'breathe.bhramari', tag: 'PRA', code: 'Pranayama', name: 'Bhramari · Abeja', desc: 'Exhala con un zumbido grave. La mente se aquieta.', min: 5, pattern: 'bhramari' },
+      { id: 'breathe.bhramari', tag: 'PRA', code: 'Pranayama', name: 'Bhramari · Abeja', desc: 'Exhala con un zumbido grave, con los labios cerrados.', min: 5, pattern: 'bhramari' },
       /* `safety` como Kapalabhati: misma secuencia de 1 s y 1 s, 30 respiraciones
          por minuto, o sea hiperventilación. Lo vigila tests/respira-biblioteca. */
       { id: 'breathe.bellows', tag: 'PRA', code: 'Pranayama', name: 'Bhastrika · Fuelle', desc: 'Pranayama energizante rápido, en tres rondas con descanso.', min: 3, pattern: 'bhastrika', safety: true },

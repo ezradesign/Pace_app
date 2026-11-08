@@ -26,7 +26,7 @@ Object.assign(window.PACE_STRINGS.en, {
     // Achievements
     'ach.tag':                         'Collection',
     'ach.title':                       'Achievements',
-    'ach.subtitle':                    "Field notebook stamps. Growing collection. Explore, don't compete.",
+    'ach.subtitle':                    'A growing collection of field-notebook stamps. Explore, don’t compete.',
     'ach.collected':                   'Stamps collected',
     'ach.cat.primeros':                'First steps',
     'ach.cat.constancia':              'Consistency',
