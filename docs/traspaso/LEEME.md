@@ -49,6 +49,16 @@ hora con bloques sin hacer dice «Jornada cerrada» (6675ca05, `tests/jornada-ce
 página (el «Ahora 8:46» era real: un día empezado no se lee desde ahora; recomienda la A, como E1). Zona con todo junto 249 de
 249. Letras para Ez: S3 S7 S6 S11 (C8okoSLuDnN2bBxtSdQSbw). Pregunta sin página: ¿un Foco por libre tras cerrar la jornada cuenta
 para la salida que propone la carta? Esperando el «júntalos» de Ez para los arreglos.
+**~17:20, Ez: «Júntalos»** (la semana) y, a la vez: «Sigue buscando bugs + mejorar la experiencia del usuario + mejorar
+características y usabilidad de la app + dame auditoría para ChatGPT». En `main` LOCAL: merge 56b19829 (solo chocó DECISIONES,
+filas de las dos), `npm run bump -- 0.194.0`, build, CHANGELOG y `verify` en verde (9ed68749). **Suite entera con un worker en el
+8884, en marcha** (log en el scratchpad de la coordinadora): con verde, STATE/LEEME/hoja, push y `gh run watch`. Sin novedad en el
+sobre (lo visible ya se contó en `jornada-cerrada`). **Dos sesiones nuevas** (worktrees desde `main` local 9ed68749):
+`caza-nuevo` (`local_b284bcb8…`, 8891): alguien nuevo, su primera semana, fuera de «A tu ritmo», arregla con prueba y lo de
+producto a su página; `usabilidad` (`local_75a679b1…`, 8886-8887): 6-8 mejoras con maqueta para Ez (S9, la barra con una pausa,
+el Foco por libre y la salida, lo que quede del paquete M), sin montar nada visual. Tope: WIP al 85 % de las 5 h o al 88 % de la
+semana; paran al 90 %. **ChatGPT**: `docs/audits/chatgpt-8nov/prompt-jornada.md` (también en la hoja), para pegar con la 0.194.0
+ya en `main`; la del cobro y lo legal sigue pendiente en la hoja.
 
 ## 7 nov., ~21:10: coordina EcLj6…; las 5 h, repuestas a las 21:00; las tres sesiones esperan el «Arráncalas» de Ez
 

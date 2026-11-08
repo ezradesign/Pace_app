@@ -95,7 +95,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.193.0 · actualizada el 8 de noviembre a las 17:10 · seguimos en esta cuenta</div>
+    <div class="eyebrow">PACE · versión 0.193.0 · actualizada el 8 de noviembre a las 17:30 · seguimos en esta cuenta</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -179,15 +179,49 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           y la subió a las 21:43, y Apple la está procesando. Cuando salga en App Store Connect › TestFlight, se añade al grupo
           «Testers iPhone» con el «Qué probar» que te paso, y Apple la revisa antes de que les llegue. Dime qué estado ves: si
           está lista, el enlace público del grupo va también a /beta.</span></li>
-      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, una palabra · hecho en su rama</span>
-        <span class="t">Decir «júntalos» a los siete arreglos de la semana</span>
-        <span class="c"><span class="quien">Tú dices «júntalos»; yo lo subo todo.</span> La sesión vivió con PACE una semana como tres
+      <li class="paso hecho"><span class="estado">Hecho · dijiste «Júntalos» · 8 de noviembre, 17:20 · en la 0.194.0</span>
+        <span class="t">Los siete arreglos de la semana, juntados</span>
+        <span class="c"><span class="quien">Tú dijiste «júntalos»; yo los junté.</span> La sesión vivió con PACE una semana como tres
           personas y arregló siete fallos, cada uno con su prueba: un bloque empezado tarde antes de una reunión se metía en la
           reunión; la ventana de después decía «Foco de 45 minutos» de un bloque de 18; lo que cambias con «Otra» no llegaba a lo
           que PACE aprende; el sello del aro se quedaba encima del número; el primer bloque del día se podía perder sin contarse
           (venía de lo de volver tras horas fuera); un Foco que acaba con el portátil cerrado se apuntaba a la hora de volver, y
           la carta te proponía mover tu salida; y si el día se cierra por la hora, el aro ya dice «Jornada cerrada», como
-          elegiste. Sus 249 pruebas, en verde. Con tu palabra, todo sale a la web y a tus testers en una versión.</span></li>
+          elegiste. Sus 249 pruebas, en verde. Van en la 0.194.0 con todo lo de hoy.</span></li>
+      <li class="paso ahora"><span class="estado">Ahora · lo mío, una hora · tú no tienes que mirar nada</span>
+        <span class="t">Subir la 0.194.0 a la web y a tus testers</span>
+        <span class="c"><span class="quien">Yo.</span> El contraste, volver tras horas fuera, el día de v1 y la semana ya están juntos en la
+          0.194.0. Ahora pasan todas las pruebas de la app, una detrás de otra; si salen en verde, la subo a la web, y GitHub
+          compila la de Android y la del iPhone. Te aviso cuando esté.</span></li>
+      <li class="paso luego"><span class="estado">En cuanto te diga que la 0.194.0 está subida · lo tuyo, 2 minutos</span>
+        <span class="t">Pasar a ChatGPT la revisión de la jornada entera</span>
+        <span class="c"><span class="quien">Tú.</span> Copia esto en ChatGPT y tráeme su respuesta entera: compruebo cada cosa en el código
+          antes de montar nada. Mira lo que más se usa cada día y pregunta también qué mejoras darían más valor antes de v1.
+          <pre class="prompt">Revisa en el repositorio público ezradesign/Pace_app, rama main (versión 0.194.0), «A tu ritmo»: la jornada entera de PACE y lo que aprende de una semana a otra. Solo lectura. No repitas lo que ya está bien: quiero lo que puede salir mal y lo que mejoraría la experiencia de quien lo usa cada día.
+
+Contexto:
+- PACE es una app de pausas activas para quien trabaja sentado (web/PWA, Android e iPhone). «A tu ritmo» compone el día en bloques de Foco y pausas según tu horario, la comida y tus reuniones; lo pinta en la línea del día y en el aro; se recoloca cuando haces algo; pasada tu hora de salida se cierra; y cada lunes una carta te propone cambios con lo que hiciste.
+- Acabo de juntar (8 nov.): volver tras horas fuera (el día elegido y sin empezar se lee desde ahora; la ventana de una pausa que ya pasó entera no sale; el día cerrado dice «Jornada cerrada») y siete arreglos de una semana simulada (el bloque antes de una reunión, «Otra» en lo que se aprende, el primer bloque que se perdía sin contarse, el Foco que acaba con el portátil cerrado).
+- Ya lo sé y está en mi lista: con el día ya empezado, al volver tras horas fuera la línea sigue en las horas de la mañana; y falta decidir si un Foco por libre después de cerrar la jornada cuenta para la hora de salida que propone la carta.
+- Las reglas que ya rigen están en docs/product/DECISIONES_TECNICAS_VIGENTES.md y docs/product/DECISIONES_PRODUCTO.md. Si el código las contradice, dímelo; si una regla te parece mala, dilo aparte.
+
+Lee: app/state-ritmo*.jsx, app/ritmo/ (sobre todo ritmo.motor.js, ritmo.regla.js, ritmo.semana.js, RitmoHome.jsx, RitmoLinea.jsx y RitmoCarta.jsx), app/focus/FocusTimer*.jsx, app/state-timer.jsx, app/state-core.dia.js, app/state-events.jsx, y las pruebas tests/ritmo-*.spec.js, aro-jornada, cambio-de-dia, abierta-horas, jornada-cerrada-hora y foco-hora-de-acabar.
+
+Busca casos concretos, paso a paso, en:
+1. El día: empezar tarde, saltarse la comida o una pausa, «Otra» y «Ahora no», reuniones que se mueven o se solapan, salir antes o después de tu hora, «Hoy es distinto», la media jornada, y un bloque o una pausa que se quedan a medias.
+2. El tiempo: la pestaña de fondo, el portátil cerrado, PACE cerrado y vuelto a abrir, dos pestañas, la medianoche, el cambio de hora y el móvil bloqueado.
+3. Lo que se cuenta: que cada bloque y cada pausa cuenten una sola vez, con lo que duraron y en su día; lo que lee Estadísticas y lo que aprende la carta.
+4. La carta del lunes: que lo que propone salga de lo que de verdad hiciste y que no proponga algo que ya es así.
+5. La experiencia: lo que una persona no entendería, lo que le cuesta un paso de más y lo que le dice algo que no es verdad (una hora que ya pasó, un bloque que no existe). Y qué mejoras o funciones nuevas darían más valor antes de v1 y cuáles pueden esperar, con lo que costarían.
+
+Para cada hallazgo: archivo y línea, el caso paso a paso, qué ve y qué pierde quien lo usa, y si es grave, molesta o es una mejora. Separa lo que has comprobado en el código de lo que deduces. No propongas nada que suba la exigencia física ni consejos de salud.</pre></span></li>
+      <li class="paso luego"><span class="estado">En marcha desde las 17:25 · dos sesiones · te traen páginas para elegir</span>
+        <span class="t">Seguir buscando fallos y mejorar la app</span>
+        <span class="c"><span class="quien">Dos sesiones aparte.</span> Una vive PACE como alguien que llega de cero, su primera semana, en el
+          móvil en español y en el ordenador en inglés: la bienvenida, Respira, Mueve, Estira, Hidrátate, tus rutinas, logros y
+          Estadísticas. Arregla los fallos, cada uno con su prueba. La otra mira la app entera como una diseñadora y elige las
+          6 a 8 mejoras que más ayudan cada día. Te las pinta con opciones y la que recomienda, y no monta nada que se vea distinto
+          hasta que elijas.</span></li>
       <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo, unos 5 minutos · recomiendo la A en las cuatro</span>
         <span class="t">Elegir cuatro letras de la semana entera</span>
         <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/C8okoSLuDnN2bBxtSdQSbw">la página</a>). Qué duración tiene
