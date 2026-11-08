@@ -61,8 +61,9 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 - **El contraste (1B 2B 3B), juntado en `main` LOCAL y sin subir** (Ez, 8 nov., ~12:30: «Júntalo»): merge 0b5add58 de
   `claude/accesibilidad-7nov-e36d06` (545c292b), sin choques, `verify` en verde; sale con las otras ramas, la versión nueva y
   la suite entera. El antes y el ahora, en https://claude.ai/artifact/CdgFC2hXvi6iMGb6P4hBir (EcLj6).
-- **Esperan el «júntalo» de Ez** (8 nov.): abierta-horas (suite entera, 1334 en verde; página 26rrub9PtzCWwg6LPGzwtv) y las
-  letras del día de v1 (`claude/caza-v1-compra-79e3e4`, 1dc9e496; página 1AzBCEn8XpnhWVKbMJRSdg).
+- **Juntadas en `main` LOCAL con el «Júntalas» de Ez (8 nov., ~16:40), sin subir:** abierta-horas (ec2e62b1) y las letras del
+  día de v1 (3c7063b4, con el aviso de «Borrar todo» sin el «todo» y el código que se queda). `verify` en verde; censo 1156.
+  **No se suben sin la caza de la semana**: lleva S8, el arreglo del primer bloque que E1 podía perder (bloquea).
 - **En marcha, con las letras de Ez** (7 nov.): E1 A, y sobre el
   recorrido V1 A y V2 A, en `claude/abierta-horas-7nov-a2419d`; y la caza de la semana (`claude/caza-semana-21914d`, tres fallos
   arreglados). El detalle, en el relevo de `docs/traspaso/LEEME.md`.

@@ -37,6 +37,13 @@ S3, S7 y S6 (recomienda la A en las tres): **C8okoSLuDnN2bBxtSdQSbw**. Se le man
 portátil cerrado se apunta a la hora de volver y la carta propone mover la salida), **el hueco de V2** (el día cerrado por la
 hora deja el aro en «Ciclo completado»: debe decir «Jornada cerrada») y reproducir el «Ahora 8:46» (S11 si pide letra). S9 (el
 punto tapa «Ciclo 4 / 4»), en su página. **Al juntar: caza-semana lleva abierta-horas dentro; basta juntar caza-semana.**
+**~16:40, Ez: «Júntalas»** (abierta-horas y el día de v1). En `main` LOCAL, sin subir: ec2e62b1 (abierta-horas; choques en el censo
+y DECISIONES, las dos filas guardadas) y 3c7063b4 (letras-v1; mismo choque). Censo de claves: 1149 de la 0.193.0 + 3 contraste +
+2 abierta-horas + 2 letras = **1156**. `settings.reset.cuerpo` (es/en): «Se borra lo que PACE guarda en este navegador: … Tu código
+de PACE completo, si lo tienes, se queda.»; `.app`, solo sin el «todo». `verify` en verde; `dia-v1-letras` e `importar-borrar`,
+16 de 16. **S8 está en abierta-horas sola** (E1 + el bloque acabado sin contar = bloque perdido, «bloquea»): `main` no se sube
+hasta juntar caza-semana, que pide el «júntalo» de Ez para sus arreglos (S1, S4, S5, S8, S10, el cierre por la hora); sus letras
+S3 S7 S6, aparte. Luego: bump 0.194.0, build, suite entera, CHANGELOG, novedad si toca, push y CI.
 
 ## 7 nov., ~21:10: coordina EcLj6…; las 5 h, repuestas a las 21:00; las tres sesiones esperan el «Arráncalas» de Ez
 
