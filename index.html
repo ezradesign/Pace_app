@@ -41266,6 +41266,14 @@ function paceOlvidarPasajero() {
   try {if (typeof olvidarCuerpoGuardada === 'function') olvidarCuerpoGuardada();} catch (e) {}
 }
 
+
+
+
+function paceConLogroDeLaCopia(s) {
+  if (!s || !s.achievements || s.achievements['secret.backup']) return s;
+  return Object.assign({}, s, { achievements: Object.assign({}, s.achievements, { 'secret.backup': { unlockedAt: Date.now() } }) });
+}
+
 function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
   const { t, tn, lang } = useT();
   const fileInputRef = useRefTD(null);
@@ -41297,7 +41305,7 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
 
 
 
-    Promise.resolve(paceDescargarCopia(getState(), alAbrir)).then((como) => {
+    Promise.resolve(paceDescargarCopia(paceConLogroDeLaCopia(getState()), alAbrir)).then((como) => {
       avisarSalida(como);
 
       if (como === 'descargada' || como === 'compartida') unlockAchievement('secret.backup');
@@ -41536,7 +41544,7 @@ function UploadIcon() {
 
 
 Object.assign(window, { TweaksDataSection, paceDescargarCopia, paceDescargarRescate });
-;Object.assign(window, { paceBajarJSON, paceEnlaceLegal, paceDiaArchivo, paceDescargarCopia, paceDescargarRescate, paceOlvidarPasajero, TweaksDataSection, DownloadIcon, UploadIcon });
+;Object.assign(window, { paceBajarJSON, paceEnlaceLegal, paceDiaArchivo, paceDescargarCopia, paceDescargarRescate, paceOlvidarPasajero, paceConLogroDeLaCopia, TweaksDataSection, DownloadIcon, UploadIcon });
 })();
 </script>
   <script>

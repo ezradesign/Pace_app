@@ -1,0 +1,77 @@
+<title>Primera semana con PACE</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Una columna de lectura; cada caso, su pregunta, sus fotos en tira y sus letras con la recomendada primero. */
+:root {
+  --papel: #f3eee3; --hoja: #fbf8f1; --tinta: #2c2a24; --tinta-2: #6a6457; --linea: #d9d1bf;
+  --oliva: #4f5d45; --terracota: #a45a3c; --oliva-suave: #e3e6d6;
+  --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --papel: #1d1a14; --hoja: #26221b; --tinta: #ece5d6; --tinta-2: #b3aa98; --linea: #423b2f;
+  --oliva: #a9b796; --terracota: #e0a080; --oliva-suave: #2f3528; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --papel: #1d1a14; --hoja: #26221b; --tinta: #ece5d6; --tinta-2: #b3aa98; --linea: #423b2f;
+  --oliva: #a9b796; --terracota: #e0a080; --oliva-suave: #2f3528; color-scheme: dark }
+body { background: var(--papel); color: var(--tinta); font: 17px/1.55 var(--sans);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 56px; }
+main { max-width: 760px; margin: 0 auto; display: grid; gap: 40px; }
+h1, h2 { font-family: var(--serif); font-style: italic; font-weight: 600; text-wrap: balance; margin: 0; }
+h1 { font-size: 2.3rem; line-height: 1.1; }
+h2 { font-size: 1.7rem; line-height: 1.15; }
+p { margin: 0; max-width: 62ch; }
+.etiqueta { font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--tinta-2); }
+header { display: grid; gap: 10px; }
+section { display: grid; gap: 14px; }
+.tira { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 6px; }
+figure { margin: 0; flex: 0 0 200px; display: grid; gap: 6px; }
+figure img { width: 200px; height: auto; border: 1px solid var(--linea); border-radius: 10px; display: block; }
+figcaption { font-size: .85rem; color: var(--tinta-2); line-height: 1.35; }
+.letras { display: grid; gap: 10px; }
+.letra { background: var(--hoja); border: 1px solid var(--linea); border-radius: 10px; padding: 12px 14px; display: grid; grid-template-columns: 2.2rem 1fr; gap: 4px 10px; }
+.letra b { font-family: var(--serif); font-style: italic; font-size: 1.6rem; line-height: 1; color: var(--oliva); grid-row: span 2; }
+.letra.rec { border-color: var(--oliva); background: var(--oliva-suave); }
+.letra .rec-marca { font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: var(--oliva); }
+.hecho { border-left: 3px solid var(--oliva); padding: 4px 0 4px 14px; display: grid; gap: 6px; }
+.pie { font-size: .9rem; color: var(--tinta-2); }
+</style>
+
+<main>
+  <header>
+    <span class="etiqueta">Caza de lo nuevo · 8 nov.</span>
+    <h1>Primera semana con PACE</h1>
+    <p>Dos personas nuevas usaron PACE una semana entera, del lunes 9 al domingo 15: una en el móvil en castellano y otra en el ordenador en inglés. Bienvenida, Ajustes, Respira con la apnea, Mueve, Estira, Hidrátate, «Tus rutinas», logros, Estadísticas, copiar y traer los datos, el modo oscuro y el cambio de idioma. Casi todo salió bien. Hay dos cosas para que elijas.</p>
+  </header>
+
+  <section class="hecho">
+    <span class="etiqueta">Arreglado, no hace falta elegir</span>
+    <p><strong>La copia de tus datos perdía un logro.</strong> Al exportar una copia ganas «Cuaderno a salvo», pero el logro llegaba después de hacer la copia, así que la copia salía sin él. Quien la traía a otro móvil, o después de borrar sus datos, lo perdía. Ahora la copia lo lleva dentro.</p>
+  </section>
+
+  <section>
+    <span class="etiqueta">1 · En el móvil</span>
+    <h2>¿Dónde está la rutina que acabo de crear?</h2>
+    <p>Con PACE vacío, «Tus rutinas» del panel abre el constructor. Al guardar, vuelves al inicio sin ver dónde quedó. Si vuelves a «Tus rutinas», se abre la biblioteca de Mueve, y en el móvil tus rutinas no se ven: hay que tocar otra vez «Tus rutinas ›» arriba a la derecha. En el ordenador sí se ven, en la columna de la izquierda.</p>
+    <div class="tira">{{R1}}</div>
+    <div class="letras">
+      <div class="letra rec"><b>A</b><span class="rec-marca">Recomendada</span><span>«Tus rutinas» abre directamente tus rutinas (en el móvil, lo que ahora sale con el segundo toque). Y al guardar una rutina nueva, se abre esa lista con ella dentro.</span></div>
+      <div class="letra"><b>B</b><span></span><span>Solo un aviso corto al guardar: «Guardada en Mueve · Tus rutinas». Lo demás, como ahora.</span></div>
+      <div class="letra"><b>C</b><span></span><span>Como ahora.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <span class="etiqueta">2 · Al cambiar de móvil</span>
+    <h2>Traer una copia sin pasar la bienvenida</h2>
+    <p>Quien estrena móvil, o borró sus datos, y tiene una copia, ahora pasa cuatro pantallas (la bienvenida, «¿Cómo es tu semana?», PACE completo y la visita) y luego va a Ajustes, Tus datos, Importar. Lo traído sustituye lo que contestó. No es urgente: los testers empiezan de cero.</p>
+    <div class="tira">{{R2}}</div>
+    <div class="letras">
+      <div class="letra rec"><b>A</b><span class="rec-marca">Recomendada</span><span>Debajo de «Comenzar», un enlace pequeño: «¿Tienes una copia? Tráela». Abre el mismo aviso de siempre antes de cambiar nada.</span></div>
+      <div class="letra"><b>B</b><span></span><span>Como ahora.</span></div>
+    </div>
+  </section>
+
+  <p class="pie">Lo que salió bien: el aviso de la apnea no deja empezar sin marcar «Lo he leído»; las sesiones de Respira, Mueve, Estira y una rutina propia llegan a su final y cuentan; el oscuro y el idioma se cambian y vuelven sin dejar nada en el otro; copiar, borrar todo y traer la copia deja PACE igual que estaba; y «Qué te ayuda» dice «Todavía es pronto» la primera semana. Ningún error de la app en la consola.</p>
+</main>

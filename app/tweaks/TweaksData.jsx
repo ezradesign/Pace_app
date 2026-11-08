@@ -118,6 +118,14 @@ function paceOlvidarPasajero() {
   try { if (typeof olvidarCuerpoGuardada === 'function') olvidarCuerpoGuardada(); } catch (e) {}
 }
 
+/* La copia lleva dentro el logro que gana («Cuaderno a salvo»): se da al salir la copia, después
+   de armarla, y sin esto quien la trae a otro móvil (o tras «Borrar todos mis datos») perdía justo
+   ese logro. Si la copia no sale, el archivo no existe y el logro no se da: no hay nada que corregir. */
+function paceConLogroDeLaCopia(s) {
+  if (!s || !s.achievements || s.achievements['secret.backup']) return s;
+  return Object.assign({}, s, { achievements: Object.assign({}, s.achievements, { 'secret.backup': { unlockedAt: Date.now() } }) });
+}
+
 function TweaksDataSection({ onReset, isWeb }) {
   const { t, tn, lang } = useT();
   const fileInputRef = useRefTD(null);
@@ -149,7 +157,7 @@ function TweaksDataSection({ onReset, isWeb }) {
     /* Desde la app funcionando, lo que se ve: el estado en memoria, que es lo único al día si el
        navegador no deja guardar (revisión de ChatGPT del 5 nov., punto 1). Leer del disco es solo
        para la pantalla de error, que existe cuando el árbol se ha caído. */
-    Promise.resolve(paceDescargarCopia(getState(), alAbrir)).then((como) => {
+    Promise.resolve(paceDescargarCopia(paceConLogroDeLaCopia(getState()), alAbrir)).then((como) => {
       avisarSalida(como);
       /* secret.backup (B1, sustituto de apnea): exportar tus datos. */
       if (como === 'descargada' || como === 'compartida') unlockAchievement('secret.backup');
