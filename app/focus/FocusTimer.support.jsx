@@ -335,9 +335,11 @@ const focusStyles = {
 /* s172 · el tiempo de PARED de un bloque de foco (§6.4): con las pausas
    dentro, y nunca menor que la propia cuenta atras — si el inicio se perdio en
    una recarga, el suelo es la duracion del preset, que es lo unico seguro. */
-function focoElapsedSec(inicioMs, durationSec) {
+function focoElapsedSec(inicioMs, durationSec, finMs) {
   if (!inicioMs) return durationSec;
-  return Math.max(durationSec, Math.round((Date.now() - inicioMs) / 1000));
+  /* Hasta que acabó, no hasta que PACE se enteró: el rato con el portátil cerrado no es del bloque. */
+  var hasta = typeof finMs === 'number' && isFinite(finMs) && finMs <= Date.now() ? finMs : Date.now();
+  return Math.max(durationSec, Math.round((hasta - inicioMs) / 1000));
 }
 
 /* ¿Hay un bloque de Foco empezado (en marcha o en pausa)? Lo publica FocusTimer

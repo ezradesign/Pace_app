@@ -91,6 +91,7 @@ function completeFocusSession(context, opts) {
       plannedSecondsSource: 'preset',
       completionReason: 'natural',
       creditedMinutes: sumados,
+      fin: opts && opts.fin,
     });
   }
 }

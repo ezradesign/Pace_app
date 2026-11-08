@@ -175,8 +175,13 @@ function emitSessionCompleted(module, routineId, datos) {
   const origen = d.inPath ? { origin: 'camino', fromMenu: false } : paceOrigenPendiente;
   paceOrigenPendiente = null;
   paceUltimaPuerta = origen;
+  /* `d.fin`: cuándo acabó, si PACE se enteró después (el Foco con el portátil cerrado). Solo
+     uno de hoy y ya pasado; si no, ahora. */
+  const fin = typeof d.fin === 'number' && isFinite(d.fin) && d.fin <= Date.now() &&
+    new Date(d.fin).toDateString() === new Date().toDateString() ? new Date(d.fin).toISOString() : undefined;
   const evento = window.makeEvent && window.makeEvent({
     type: 'session.completed',
+    occurredAt: fin,
     context: d.inPath ? 'path' : 'standalone',
     runId: runId,
     pathRunId: pathRunId,

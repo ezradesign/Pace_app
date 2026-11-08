@@ -8054,7 +8054,8 @@ function completeFocusSession(context, opts) {
       plannedSeconds: mins * 60,
       plannedSecondsSource: 'preset',
       completionReason: 'natural',
-      creditedMinutes: sumados
+      creditedMinutes: sumados,
+      fin: opts && opts.fin
     });
   }
 }
@@ -16637,8 +16638,13 @@ function emitSessionCompleted(module, routineId, datos) {
   const origen = d.inPath ? { origin: 'camino', fromMenu: false } : paceOrigenPendiente;
   paceOrigenPendiente = null;
   paceUltimaPuerta = origen;
+
+
+  const fin = typeof d.fin === 'number' && isFinite(d.fin) && d.fin <= Date.now() &&
+  new Date(d.fin).toDateString() === new Date().toDateString() ? new Date(d.fin).toISOString() : undefined;
   const evento = window.makeEvent && window.makeEvent({
     type: 'session.completed',
+    occurredAt: fin,
     context: d.inPath ? 'path' : 'standalone',
     runId: runId,
     pathRunId: pathRunId,
@@ -24305,9 +24311,11 @@ const focusStyles = {
 
 
 
-function focoElapsedSec(inicioMs, durationSec) {
+function focoElapsedSec(inicioMs, durationSec, finMs) {
   if (!inicioMs) return durationSec;
-  return Math.max(durationSec, Math.round((Date.now() - inicioMs) / 1000));
+
+  var hasta = typeof finMs === 'number' && isFinite(finMs) && finMs <= Date.now() ? finMs : Date.now();
+  return Math.max(durationSec, Math.round((hasta - inicioMs) / 1000));
 }
 
 
@@ -30340,8 +30348,10 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
       if (typeof paceNativoCampana === 'function') paceNativoCampana(finBloque, campana);else campana();
 
 
-      completeFocusSession('home', { minutes: minutos, bloque,
-        elapsedSeconds: focoElapsedSec(inicio, durationSec),
+
+
+      completeFocusSession('home', { minutes: minutos, bloque, fin: finBloque,
+        elapsedSeconds: focoElapsedSec(inicio, durationSec, finBloque),
         activeSeconds: durationSec });
 
 

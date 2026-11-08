@@ -66,8 +66,10 @@ function FocusTimer({ onFinish }) {
       if (typeof paceNativoCampana === 'function') paceNativoCampana(finBloque, campana); else campana();
       /* s172 · `activeSeconds` ES el preset: la cuenta solo corre en 'running',
          asi que llegar a 0 es haber contado eso; lo pausado va en elapsed. */
-      completeFocusSession('home', { minutes: minutos, bloque,
-        elapsedSeconds: focoElapsedSec(inicio, durationSec),
+      /* `fin`: el evento va a la hora a la que acabó, no a la de enterarse (el portátil cerrado,
+         PACE cerrado): el motor saca de ahí tu hora de salida. */
+      completeFocusSession('home', { minutes: minutos, bloque, fin: finBloque,
+        elapsedSeconds: focoElapsedSec(inicio, durationSec, finBloque),
         activeSeconds: durationSec });
       /* Aviso PWA (s102): solo si el usuario lo activó en Ajustes Y la
          pestaña está en segundo plano. Nunca rompe (patrón playSound).
