@@ -9,8 +9,8 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de n
 **Regla de Ez (8 nov.):** se para al 90 % de las 5 h o al 95 % de la semana, lo que llegue antes.
 `main` LOCAL va por delante de origin con la **0.194.0** (contraste, abierta-horas, letras-v1, caza-semana y el arreglo del
 Enter, 9d1d000d) y documentos. La primera suite dio un rojo de verdad (`ver-ejercicio`), ya arreglado; **la segunda, 1390 en verde y 2
-saltadas** (30,8 min, dos workers), y la 0.194.0 **subida a `main`** a las ~18:48. Mirar su CI (`gh run list --branch main`): verify,
-los dos trozos de e2e, Safari, Android e iOS. Después, decirle a Ez que pegue en ChatGPT `docs/audits/chatgpt-8nov/prompt-jornada.md`.
+saltadas** (30,8 min, dos workers), y la 0.194.0 **subida a `main`** a las ~18:48. **Su CI, en verde entero** (42506861982: verify, los dos
+trozos de e2e y Safari; y Android e iOS). Lo de ayer en `aro-jornada:71` en el CI de 3e48c7bc no se repitió. Después, decirle a Ez que pegue en ChatGPT `docs/audits/chatgpt-8nov/prompt-jornada.md`.
 
 **Ez eligió (8 nov., ~18:45) todas las recomendadas: usabilidad 1A 2A 3A 4A 5A 6A; lo nuevo N2 A y N3 A; la semana S3 A, S7 A, S6 A y S11 A.** Las páginas: la usabilidad, seis mejoras (`claude/usabilidad-8nov-587b48`,
 `docs/audits/usabilidad-8nov/pagina-ez.html`; EcLj6 BMLmjb9FjynGY8zz6FN4av); lo que vio alguien nuevo, N2 y N3
