@@ -32402,7 +32402,8 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
       if (e.key === 'Enter' && stage === 'hold') releaseHold();
 
 
-      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit(sinContarRef.current ? 'skip' : 'done');
+
+      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) {e.preventDefault();onExit(sinContarRef.current ? 'skip' : 'done');}
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -33407,7 +33408,8 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
       if (e.key === 'ArrowLeft') goPrev();
 
 
-      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit(sinContarRef.current ? 'skip' : 'done');
+
+      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) {e.preventDefault();onExit(sinContarRef.current ? 'skip' : 'done');}
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -35093,7 +35095,9 @@ function useV1Teclas(stage, alternar, onExit, cerrar) {
       if (e.key === 'Escape' && paceEscapeDeSesion(e)) c.onExit('exit');
 
 
-      if (e.key === 'Enter' && c.stage === 'done' && !sessionDoneKeyBlocked(e)) c.cerrar();
+
+
+      if (e.key === 'Enter' && c.stage === 'done' && !sessionDoneKeyBlocked(e)) {e.preventDefault();c.cerrar();}
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);

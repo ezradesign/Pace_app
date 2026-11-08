@@ -139,7 +139,9 @@ function useV1Teclas(stage, alternar, onExit, cerrar) {
       if (e.key === 'Escape' && paceEscapeDeSesion(e)) c.onExit('exit');
       // Enter cierra el DONE, salvo que el foco esté en un control (feedback o el propio CTA se
       // activan por su onClick) o haya modificadores/IME: guard P0 s116 (evita una SEGUNDA salida).
-      if (e.key === 'Enter' && c.stage === 'done' && !sessionDoneKeyBlocked(e)) c.cerrar();
+      // El Enter es de la sesión: al cerrarla, el foco vuelve a quien la abrió (Dialogo.jsx), y sin
+      // preventDefault ese mismo Enter lo pulsaba («Ver ejercicio» → «Empezar bloque 3» arrancaba).
+      if (e.key === 'Enter' && c.stage === 'done' && !sessionDoneKeyBlocked(e)) { e.preventDefault(); c.cerrar(); }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
