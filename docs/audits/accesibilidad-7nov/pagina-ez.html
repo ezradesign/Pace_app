@@ -51,7 +51,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .pild { font: 500 0.85rem/1 var(--sans); padding: 8px 14px; min-height: 36px; border-radius: 999px; border: 1px solid var(--line);
   background: transparent; color: var(--ink); cursor: pointer; }
 .pild[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-.pild:focus-visible, .elegir:focus-visible, .copiar:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.pild:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .pregunta { display: grid; gap: 18px; padding-top: 8px; border-top: 1px solid var(--line); }
 .pregunta .cab { padding-top: 22px; }
@@ -69,15 +69,24 @@ body[data-ancho="1280"] .opciones { grid-template-columns: 1fr; }
 .reco { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; color: var(--accent);
   border: 1px solid var(--accent); border-radius: 999px; padding: 3px 8px; }
 .ficha p { font-size: 0.92rem; color: var(--ink-2); }
-.elegir { justify-self: start; font: 500 0.88rem/1 var(--sans); padding: 9px 16px; min-height: 38px; border-radius: 999px;
-  border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; }
-.elegir[aria-pressed="true"] { background: var(--accent); color: var(--paper); }
 .fotos { display: grid; gap: 10px; }
 body[data-ancho="1280"] .fotos { grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
 figure { margin: 0; display: grid; gap: 6px; min-width: 0; }
 figure img { width: 100%; max-width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 8px; background: var(--paper-2); }
 body[data-ancho="1280"] figure img { max-width: 760px; }
 figcaption { font-size: 0.82rem; color: var(--muted); }
+/* Montado: cada caso con la foto de antes y la de ahora, una al lado de la otra. */
+.montado { display: grid; gap: 26px; }
+.caso { display: grid; gap: 10px; padding-top: 20px; border-top: 1px solid var(--line); min-width: 0; }
+.caso p { font-size: 0.95rem; color: var(--ink-2); }
+.cifras { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 0.9rem; color: var(--ink-2); padding: 0; margin: 0; }
+.cifras li { list-style: none; }
+.igual { color: var(--ink); font-weight: 600; }
+.par { display: grid; gap: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+body[data-ancho="1280"] .par { grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
+.par figcaption b { color: var(--ink); font-weight: 600; }
+.nocambia { border-left: 2px solid var(--accent); padding-left: 14px; display: grid; gap: 6px; }
+.nocambia p { color: var(--ink-2); font-size: 0.95rem; }
 .solo-escritorio { display: none; }
 body[data-ancho="1280"] .solo-escritorio { display: grid; }
 body[data-ancho="1280"] .solo-movil { display: none; }
@@ -94,8 +103,6 @@ th { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; colo
 
 .respuesta { border: 1px solid var(--accent); border-radius: var(--r); padding: 18px; display: grid; gap: 12px; }
 .respuesta .linea { font-family: var(--serif); font-style: italic; font-size: 2rem; line-height: 1.1; }
-.copiar { justify-self: start; font: 500 0.9rem/1 var(--sans); padding: 10px 16px; min-height: 40px; border-radius: 999px;
-  border: 1px solid var(--ink); background: var(--ink); color: var(--paper); cursor: pointer; }
 .quieto { border-left: 2px solid var(--line); padding-left: 14px; display: grid; gap: 8px; }
 .quieto p { color: var(--ink-2); font-size: 0.95rem; }
 code { font-size: 0.85em; background: var(--paper-2); border-radius: 4px; padding: 1px 5px; }
@@ -104,11 +111,11 @@ code { font-size: 0.85em; background: var(--paper-2); border-radius: 4px; paddin
 
 <main class="hoja" id="hoja">
   <header class="cab">
-    <div class="rotulo">PACE 0.192.0 · auditoría de accesibilidad · 7 nov. 2026</div>
+    <div class="rotulo">PACE · auditoría de accesibilidad · 7 y 8 nov. 2026</div>
     <h1>Lo que cuesta leer</h1>
-    <p class="lede">La auditoría ya arregló por dentro lo que oye quien no ve la pantalla y lo que hace quien va con
-      teclado. Nada de eso cambia lo que se ve, y está en la rama con sus pruebas. Aquí queda lo que sí se vería:
-      textos con poco contraste. Son tres preguntas, con fotos de la app de hoy y de cada opción pintada encima.</p>
+    <p class="lede">Elegiste 1B · 2B · 3B y ya está montado, con sus pruebas, en una rama aparte: todavía no está en
+      la app. Primero tienes cada caso con la foto de antes y la de ahora. Debajo siguen las tres preguntas como te
+      las hice.</p>
   </header>
 
   <div class="regla">
@@ -130,6 +137,144 @@ code { font-size: 0.85em; background: var(--paper-2); border-radius: 4px; paddin
       <button class="pild" type="button" id="ver-crema" data-tema="crema" aria-pressed="true">Claro</button>
       <button class="pild" type="button" id="ver-oscuro" data-tema="oscuro" aria-pressed="false">Oscuro</button>
     </div>
+  </div>
+
+  <section class="montado" id="montado" aria-labelledby="montado-t">
+    <div class="cab">
+      <div class="rotulo">Montado · 1B · 2B · 3B</div>
+      <h2 id="montado-t">Antes y ahora, caso por caso</h2>
+      <p>Cada módulo tiene ahora una versión más honda de su color, solo para la letra y para el relleno de sus
+        botones. Con los botones de arriba cambias todas las fotos a móvil o escritorio y a claro u oscuro. Las cifras
+        son el contraste del peor fondo de cada caso: el mínimo es <b>4,5 a 1</b>.</p>
+    </div>
+
+    <article class="caso" id="m-apagado-logros">
+      <h3>Logros que aún no tienes</h3>
+      <p>El dibujo y el borde de puntos siguen apagados, y así se ve de un vistazo qué te falta. El nombre y la frase
+        ya no van apagados: van en el gris de los rótulos y se leen.</p>
+      <ul class="cifras num">
+        <li>Claro: <span class="mal">2,0</span> → <span class="igual">3,9</span></li>
+        <li>Oscuro: <span class="mal">3,2</span> → <span class="bien">5,5</span></li>
+      </ul>
+      <div class="par">
+        <figure><img alt="Logros sin ganar, antes: todo apagado" data-foto="apagado-logros-A"><figcaption><b>Antes</b></figcaption></figure>
+        <figure><img alt="Logros sin ganar, ahora: el nombre y la frase en gris" data-foto="apagado-logros-D"><figcaption><b>Ahora</b></figcaption></figure>
+      </div>
+      <p class="nota-movil">El 3,9 es el gris que elegiste el 16 de octubre para los rótulos, sobre el fondo del panel
+        de Logros. Se queda como lo elegiste.</p>
+    </article>
+
+    <article class="caso" id="m-apagado-fecha">
+      <h3>La fecha de la barra lateral</h3>
+      <p>«sáb 7 nov» ya no es transparente: va en el mismo gris. La foto de ahora dice otro día porque se sacó con
+        el reloj puesto en septiembre; lo que cuenta es el gris.</p>
+      <ul class="cifras num">
+        <li>Claro: <span class="mal">2,6</span> → <span class="igual">3,9</span></li>
+        <li>Oscuro: <span class="mal">4,48</span> → <span class="bien">6,9</span></li>
+      </ul>
+      <div class="solo-escritorio">
+        <div class="par">
+          <figure><img alt="La barra lateral antes, con la fecha transparente" data-foto="apagado-fecha-A"><figcaption><b>Antes</b></figcaption></figure>
+          <figure><img alt="La barra lateral ahora, con la fecha entera" data-foto="apagado-fecha-D"><figcaption><b>Ahora</b></figcaption></figure>
+        </div>
+      </div>
+      <p class="nota-movil solo-movil">En el móvil la fecha va dentro del panel lateral: se ve en Escritorio.</p>
+    </article>
+
+    <article class="caso" id="m-letra-respira">
+      <h3>Respira · «¿Es tu primera vez? Empieza aquí»</h3>
+      <p>El terracota de la letra es más hondo. El punto de color y los dibujos siguen en el de siempre.</p>
+      <ul class="cifras num">
+        <li>Claro: <span class="mal">2,8</span> → <span class="bien">5,6</span></li>
+        <li>Oscuro: ya se leía (<span class="bien">7,0</span>) y no cambia</li>
+      </ul>
+      <div class="par">
+        <figure><img alt="La biblioteca de Respira antes" data-foto="letra-respira-A"><figcaption><b>Antes</b></figcaption></figure>
+        <figure><img alt="La biblioteca de Respira ahora, con la letra más honda" data-foto="letra-respira-D"><figcaption><b>Ahora</b></figcaption></figure>
+      </div>
+    </article>
+
+    <article class="caso" id="m-letra-logros">
+      <h3>Logros · el título de cada familia</h3>
+      <p>«Maestría», «Exploración», «La jornada» y los demás: el oro de la letra tira hacia el bronce. Los sellos
+        siguen en oro.</p>
+      <ul class="cifras num">
+        <li>Claro: <span class="mal">2,5–3,4</span> → <span class="bien">5,5–5,6</span></li>
+        <li>Oscuro: <span class="mal">4,4</span>–7,0 → <span class="bien">5,8–7,0</span></li>
+      </ul>
+      <div class="par">
+        <figure><img alt="El título «Maestría» en Logros, antes" data-foto="letra-logros-A"><figcaption><b>Antes</b></figcaption></figure>
+        <figure><img alt="El título «Maestría» en Logros, ahora" data-foto="letra-logros-D"><figcaption><b>Ahora</b></figcaption></figure>
+      </div>
+    </article>
+
+    <article class="caso" id="m-letra-barra">
+      <h3>La barra lateral · «+ vaso»</h3>
+      <p>El azul del agua, más hondo en claro y un poco más claro en oscuro.</p>
+      <ul class="cifras num">
+        <li>Claro: <span class="mal">2,6</span> → <span class="bien">4,6</span></li>
+        <li>Oscuro: <span class="mal">3,7</span> → <span class="bien">4,6</span></li>
+      </ul>
+      <div class="solo-escritorio">
+        <div class="par">
+          <figure><img alt="«+ vaso» en la barra lateral, antes" data-foto="letra-barra-A"><figcaption><b>Antes</b></figcaption></figure>
+          <figure><img alt="«+ vaso» en la barra lateral, ahora" data-foto="letra-barra-D"><figcaption><b>Ahora</b></figcaption></figure>
+        </div>
+      </div>
+      <p class="nota-movil solo-movil">En el móvil la barra va dentro del panel lateral: se ve en Escritorio.</p>
+    </article>
+
+    <article class="caso" id="m-boton-pausa">
+      <h3>La ventana de la pausa · «Empezar»</h3>
+      <p>El botón va relleno del color hondo del módulo que te propone (aquí Estira), y la letra clara se lee. Con
+        Mueve, Respira o Hidrátate pasa lo mismo, cada uno con su color.</p>
+      <ul class="cifras num">
+        <li>Claro: <span class="mal">3,7</span> → <span class="bien">5,7</span></li>
+        <li>Oscuro: <span class="mal">4,0</span> → <span class="bien">5,8</span></li>
+      </ul>
+      <div class="par">
+        <figure><img alt="La ventana de la pausa antes" data-foto="boton-pausa-A"><figcaption><b>Antes</b></figcaption></figure>
+        <figure><img alt="La ventana de la pausa ahora, con el botón más hondo" data-foto="boton-pausa-D"><figcaption><b>Ahora</b></figcaption></figure>
+      </div>
+    </article>
+
+    <article class="caso" id="m-boton-mueve">
+      <h3>«Antes de empezar» de Mueve · «Empezar»</h3>
+      <p>El mismo cambio en el botón que arranca la rutina. En Estira, igual con su azul.</p>
+      <ul class="cifras num">
+        <li>Claro: <span class="mal">3,4</span> → <span class="bien">5,6</span></li>
+        <li>Oscuro: <span class="mal">4,4</span> → <span class="bien">5,8</span></li>
+      </ul>
+      <div class="par">
+        <figure><img alt="«Antes de empezar» de Mueve, antes" data-foto="boton-mueve-A"><figcaption><b>Antes</b></figcaption></figure>
+        <figure><img alt="«Antes de empezar» de Mueve, ahora" data-foto="boton-mueve-D"><figcaption><b>Ahora</b></figcaption></figure>
+      </div>
+    </article>
+
+    <article class="caso" id="m-boton-agua">
+      <h3>Hidrátate · «Un vaso más»</h3>
+      <p>El botón, en el azul hondo del agua. Los vasos llenos siguen en el azul de siempre.</p>
+      <ul class="cifras num">
+        <li>Claro: <span class="mal">3,2</span> → <span class="bien">5,6</span></li>
+        <li>Oscuro: <span class="bien">4,6</span> → <span class="bien">5,8</span></li>
+      </ul>
+      <div class="par">
+        <figure><img alt="Hidrátate antes" data-foto="boton-agua-A"><figcaption><b>Antes</b></figcaption></figure>
+        <figure><img alt="Hidrátate ahora, con el botón más hondo" data-foto="boton-agua-D"><figcaption><b>Ahora</b></figcaption></figure>
+      </div>
+    </article>
+
+    <div class="nocambia">
+      <div class="rotulo">Lo que no cambia</div>
+      <p>Los dibujos, los puntos de color, los filos, las barras y los fondos suaves de cada módulo siguen en su
+        color de siempre. «Empezar foco» tampoco cambia: su oliva ya se leía. Si en un par de fotos cambia también algún
+        texto, es de lo que se juntó después (los textos nuevos de Respira y el inglés), que no toca ningún color.</p>
+    </div>
+  </section>
+
+  <div class="cab">
+    <div class="rotulo">Lo que te pregunté el 7 nov.</div>
+    <h2>Las tres preguntas</h2>
   </div>
 
   <!-- 1 -->
@@ -154,21 +299,19 @@ code { font-size: 0.85em; background: var(--paper-2); border-radius: 4px; paddin
           <figure><img alt="Logros de hoy" data-foto="apagado-logros-A"><figcaption>Logros</figcaption></figure>
           <figure class="solo-escritorio"><img alt="La barra lateral de hoy, con la fecha" data-foto="apagado-fecha-A"><figcaption>La fecha de la barra</figcaption></figure>
         </div>
-        <button class="elegir" type="button" data-op="1A" aria-pressed="false">Elegir 1A</button>
       </article>
-      <article class="ficha" id="op-1B" data-op="1B">
-        <div class="tit"><span class="letra">B</span><span class="que">Se apaga el dibujo, no las palabras</span><span class="reco">Recomendada</span></div>
+      <article class="ficha" id="op-1B" data-op="1B" data-elegida>
+        <div class="tit"><span class="letra">B</span><span class="que">Se apaga el dibujo, no las palabras</span><span class="reco">Elegida</span></div>
         <p>El sello y el borde de puntos siguen apagados; el nombre y la frase van en el gris de siempre
           (<span class="num">4,2 a 1</span>). La fecha, sin transparencia (<span class="num">3,9</span>).</p>
         <div class="fotos">
           <figure><img alt="Logros con las palabras en gris" data-foto="apagado-logros-B"><figcaption>Logros</figcaption></figure>
           <figure class="solo-escritorio"><img alt="La barra lateral con la fecha sin transparencia" data-foto="apagado-fecha-B"><figcaption>La fecha de la barra</figcaption></figure>
         </div>
-        <button class="elegir" type="button" data-op="1B" aria-pressed="false">Elegir 1B</button>
       </article>
     </div>
     <p class="nota-movil solo-movil">En el móvil la fecha va dentro del panel lateral: se ve en Escritorio.</p>
-    <p><b>Por qué la B:</b> se sigue viendo de un vistazo qué te falta, por el dibujo apagado y el borde de puntos,
+    <p><b>Por qué te recomendé la B:</b> se sigue viendo de un vistazo qué te falta, por el dibujo apagado y el borde de puntos,
       y se puede leer qué es y cómo se gana, que es lo que invita a cazarlo.</p>
   </section>
 
@@ -200,10 +343,9 @@ code { font-size: 0.85em; background: var(--paper-2); border-radius: 4px; paddin
           <figure><img alt="Un título de familia en Logros hoy" data-foto="letra-logros-A"><figcaption>Logros · «Maestría»</figcaption></figure>
           <figure class="solo-escritorio"><img alt="La barra lateral hoy" data-foto="letra-barra-A"><figcaption>La barra · «+ vaso»</figcaption></figure>
         </div>
-        <button class="elegir" type="button" data-op="2A" aria-pressed="false">Elegir 2A</button>
       </article>
-      <article class="ficha" id="op-2B" data-op="2B">
-        <div class="tit"><span class="letra">B</span><span class="que">El mismo color, más hondo, solo en la letra</span><span class="reco">Recomendada</span></div>
+      <article class="ficha" id="op-2B" data-op="2B" data-elegida>
+        <div class="tit"><span class="letra">B</span><span class="que">El mismo color, más hondo, solo en la letra</span><span class="reco">Elegida</span></div>
         <p>Cada módulo tiene una versión de su color para la letra: más oscura en claro y más clara en oscuro, con el
           mismo tono. Los puntos, los dibujos y los fondos suaves no cambian. Llega al menos a 4,6 a 1 en cualquier fondo.</p>
         <div class="fotos">
@@ -211,7 +353,6 @@ code { font-size: 0.85em; background: var(--paper-2); border-radius: 4px; paddin
           <figure><img alt="Un título de familia en Logros más hondo" data-foto="letra-logros-B"><figcaption>Logros · «Maestría»</figcaption></figure>
           <figure class="solo-escritorio"><img alt="La barra lateral con la letra más honda" data-foto="letra-barra-B"><figcaption>La barra · «+ vaso»</figcaption></figure>
         </div>
-        <button class="elegir" type="button" data-op="2B" aria-pressed="false">Elegir 2B</button>
       </article>
       <article class="ficha" id="op-2C" data-op="2C">
         <div class="tit"><span class="letra">C</span><span class="que">La letra en tinta, el color en el dibujo</span></div>
@@ -222,7 +363,6 @@ code { font-size: 0.85em; background: var(--paper-2); border-radius: 4px; paddin
           <figure><img alt="Un título de familia en Logros en tinta" data-foto="letra-logros-C"><figcaption>Logros · «Maestría»</figcaption></figure>
           <figure class="solo-escritorio"><img alt="La barra lateral con la letra en tinta" data-foto="letra-barra-C"><figcaption>La barra · «+ vaso»</figcaption></figure>
         </div>
-        <button class="elegir" type="button" data-op="2C" aria-pressed="false">Elegir 2C</button>
       </article>
     </div>
     <p class="nota-movil solo-movil">En el móvil la barra con «+ vaso» va dentro del panel lateral: se ve en Escritorio.</p>
@@ -240,7 +380,7 @@ code { font-size: 0.85em; background: var(--paper-2); border-radius: 4px; paddin
       </table>
     </div>
     <p class="nota-movil">Las cifras de la tabla son el peor fondo de cada color: el papel, las tarjetas o su fondo suave.</p>
-    <p><b>Por qué la B:</b> cada módulo sigue teniendo su color y se lee. La C se lee igual de bien, pero las
+    <p><b>Por qué te recomendé la B:</b> cada módulo sigue teniendo su color y se lee. La C se lee igual de bien, pero las
       bibliotecas y Logros pierden el tono que las distingue; y el oro de Logros, que en la B se va hacia el bronce,
       es el que más cambia: si no te gusta ahí, se puede dejar la B en todo menos en los títulos de Logros.</p>
   </section>
@@ -268,10 +408,9 @@ code { font-size: 0.85em; background: var(--paper-2); border-radius: 4px; paddin
           <figure><img alt="Antes de empezar de Mueve hoy" data-foto="boton-mueve-A"><figcaption>Mueve · «Empezar»</figcaption></figure>
           <figure><img alt="Hidrátate hoy" data-foto="boton-agua-A"><figcaption>Hidrátate · «Un vaso más»</figcaption></figure>
         </div>
-        <button class="elegir" type="button" data-op="3A" aria-pressed="false">Elegir 3A</button>
       </article>
-      <article class="ficha" id="op-3B" data-op="3B">
-        <div class="tit"><span class="letra">B</span><span class="que">El relleno en el color hondo</span><span class="reco">Recomendada</span></div>
+      <article class="ficha" id="op-3B" data-op="3B" data-elegida>
+        <div class="tit"><span class="letra">B</span><span class="que">El relleno en el color hondo</span><span class="reco">Elegida</span></div>
         <p>El mismo color hondo de la 2B, ahora de fondo: la letra clara se lee (5,5 a 1 o más; en oscuro, 5,8). Vale aunque elijas la
           2A o la 2C.</p>
         <div class="fotos">
@@ -279,10 +418,9 @@ code { font-size: 0.85em; background: var(--paper-2); border-radius: 4px; paddin
           <figure><img alt="Antes de empezar de Mueve con el botón más hondo" data-foto="boton-mueve-B"><figcaption>Mueve · «Empezar»</figcaption></figure>
           <figure><img alt="Hidrátate con el botón más hondo" data-foto="boton-agua-B"><figcaption>Hidrátate · «Un vaso más»</figcaption></figure>
         </div>
-        <button class="elegir" type="button" data-op="3B" aria-pressed="false">Elegir 3B</button>
       </article>
     </div>
-    <p><b>Por qué la B:</b> son los botones que más se pulsan después de «Empezar foco», y hoy son los que peor se leen.
+    <p><b>Por qué te recomendé la B:</b> son los botones que más se pulsan después de «Empezar foco», y hoy son los que peor se leen.
       El color hondo los deja con el peso de «Empezar foco», que ya es oliva oscuro.</p>
   </section>
 
@@ -295,12 +433,12 @@ code { font-size: 0.85em; background: var(--paper-2); border-radius: 4px; paddin
       preguntar: queda apuntado en el informe. En /premium y /beta pasa lo mismo (<span class="num">4,4</span>).</p>
   </section>
 
-  <section class="respuesta" aria-live="polite">
-    <div class="rotulo">Tu respuesta</div>
-    <div class="linea" id="linea">1B · 2B · 3B</div>
-    <p id="pista">Esta es mi recomendación. Pulsa «Elegir» en cada pregunta para cambiarla, y copia la línea o
-      escríbemela con tus letras.</p>
-    <button class="copiar" type="button" id="copiar">Copiar la respuesta</button>
+  <section class="respuesta">
+    <div class="rotulo">Lo que falta</div>
+    <div class="linea">Que lo veas</div>
+    <p>Si te parece bien, dile «júntalo» a la coordinadora: entra en la app junto con lo demás de la auditoría, que
+      es lo que oye quien usa un lector de pantalla y lo que hace quien va con teclado. Si un caso no te convence,
+      dime cuál y lo cambio antes de juntarlo.</p>
   </section>
 </main>
 
@@ -308,8 +446,6 @@ code { font-size: 0.85em; background: var(--paper-2); border-radius: 4px; paddin
 (function () {
   var cuerpo = document.body;
   var ver = { ancho: '360', tema: 'crema' };
-  var elegidas = { 1: null, 2: null, 3: null };
-  var RECO = { 1: 'B', 2: 'B', 3: 'B' };
   function fotos() {
     cuerpo.setAttribute('data-ancho', ver.ancho);
     document.querySelectorAll('img[data-foto]').forEach(function (im) {
@@ -323,34 +459,6 @@ code { font-size: 0.85em; background: var(--paper-2); border-radius: 4px; paddin
       document.querySelectorAll('.pild[data-' + k + ']').forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); });
       fotos();
     });
-  });
-  function linea() {
-    var partes = [1, 2, 3].map(function (n) { return n + (elegidas[n] || RECO[n]); });
-    document.getElementById('linea').textContent = partes.join(' · ');
-    var propias = [1, 2, 3].filter(function (n) { return elegidas[n]; }).length;
-    document.getElementById('pista').textContent = propias === 0
-      ? 'Esta es mi recomendación. Pulsa «Elegir» en cada pregunta para cambiarla, y copia la línea o escríbemela con tus letras.'
-      : propias === 3 ? 'Las tres son tuyas. Cópiala y pégamela.' : 'Donde no has tocado nada va mi recomendación.';
-  }
-  document.querySelectorAll('.elegir').forEach(function (f) {
-    f.addEventListener('click', function () {
-      var op = f.getAttribute('data-op'), n = op.charAt(0);
-      elegidas[n] = op.charAt(1);
-      document.querySelectorAll('.elegir[data-op^="' + n + '"]').forEach(function (o) { o.setAttribute('aria-pressed', String(o === f)); o.closest('.ficha').toggleAttribute('data-elegida', o === f); });
-      linea();
-    });
-  });
-  document.getElementById('copiar').addEventListener('click', function () {
-    var t = document.getElementById('linea').textContent.replace(/ · /g, ' ');
-    var b = this;
-    function hecho() { b.textContent = 'Copiada: ' + t; }
-    try {
-      navigator.clipboard.writeText(t).then(hecho, function () { seleccionar(); });
-    } catch (e) { seleccionar(); }
-    function seleccionar() {
-      var r = document.createRange(); r.selectNodeContents(document.getElementById('linea'));
-      var s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Seleccionada: cópiala con Ctrl+C';
-    }
   });
   fotos();
 })();

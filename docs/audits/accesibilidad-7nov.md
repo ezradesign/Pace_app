@@ -4,6 +4,7 @@
 > cuenta EcLj6 por la mañana; al llegar esa cuenta al 92 %, la coordinadora guardó lo hecho sin pasar `verify`
 > ni pruebas (828d6060 y e1432c8a) y añadió cinco cambios más sin guardar. La terminó por la tarde una sesión de
 > la otra cuenta. No sube versión ni toca `STATE.md` ni `CHANGELOG.md`: eso lo hace la coordinadora al juntarla.
+> El 8 nov. se le juntó `main` en la 0.193.0 (el recorrido y el inglés) y se cerró el contraste de Ez (1B · 2B · 3B).
 
 ## En una frase
 
@@ -49,6 +50,11 @@ buscarlo por el nuevo: `caza-foco`, `estado-saneado`, `onboarding-semana`, `rete
 `ritmo-pausa-entera` y `ritmo-pausa`. La regla nueva está arriba del todo en `DECISIONES_TECNICAS_VIGENTES.md`;
 el panel de Ajustes, en `DESIGN_SYSTEM.md` («Focus visible»), y el censo de claves sube a 1150 (+4: dos del Foco y dos de los vasos).
 
+**Al juntar `main` (8 nov.):** el recorrido del 6 nov. (5A de Ez) también les había puesto nombre a los vasos,
+«Vaso 3 de 8» (`hydrate.glass`). Se queda el de esta auditoría, «Vaso 3 de 8, vacío», que dice lo mismo y además
+si está lleno: sale `hydrate.glass`, `hidratate-botones` busca el nombre entero y el censo queda en 1152 (+4 de
+aquí, +3 de `main`, −1). La fila del recorrido en `DECISIONES_TECNICAS_VIGENTES.md` lo dice.
+
 ### Las pruebas vecinas
 
 Corridas sobre el `index.html` de esta rama en el puerto 8886: `caza-foco`, `estado-saneado`, `onboarding-semana`,
@@ -58,8 +64,8 @@ Corridas sobre el `index.html` de esta rama en el puerto 8886: `caza-foco`, `est
 líneas. La suite entera se paró en la prueba 294 de 1341, sin ningún rojo hasta ahí (entran las cuatro de Ajustes,
 `bienvenida-ajustes` y las del aro), porque a ese ritmo eran dos horas.
 
-**Dónde me quedo (89 % de las 5 h):** falta correr en local las 26 `ritmo-*`, que cambian solo de nombre de botón
-(«15 minutos», «Salir»). La coordinadora puede correrlas al juntar o esperar al CI, que corre la suite entera.
+Las 26 `ritmo-*`, que cambian solo de nombre de botón («15 minutos», «Salir»), se corrieron después, con el
+contraste: ver «Cerrado (8 nov.)» en la sección «Montado».
 
 ### Los mutantes
 
@@ -98,9 +104,9 @@ de 3 px del color del papel a 2 px de oliva; «Preparar jornada» pinta el aro e
 ## Lo que se vería distinto: espera a Ez
 
 Medido con el medidor de la tarde (peor fondo de cada caso). La página «Contraste de PACE» las enseña con fotos
-de la app real a 360 y 1280 px, en claro y oscuro, con cada opción pintada encima solo en la foto. **No se ha
-montado ninguna.** Página: https://claude.ai/artifact/2Fv1mCERFo1zLQ8XJyDvoV (privada: se abre con la cuenta de Claude que la publicó, la de la tarde; desde la otra hay que compartirla en
-su menú «Compartir»).
+de la app real a 360 y 1280 px, en claro y oscuro, con cada opción pintada encima solo en la foto. Ez eligió
+1B · 2B · 3B y está montado (abajo). La página con las preguntas era https://claude.ai/artifact/2Fv1mCERFo1zLQ8XJyDvoV
+(de la cuenta de la tarde); la de ahora, con el antes y el después, está en la sección «Montado».
 
 | | Qué pasa | Opciones | Recomendación |
 |---|---|---|---|
@@ -166,14 +172,23 @@ siete miran la app pintada y hacen un censo: ninguna letra ni botón en el color
 botón de la pausa (1), «Un vaso más» (1), «+ vaso» (1), la fecha al 75 % (1), la tarjeta del logro apagada entera
 (1), `letraDe` devolviendo el color de módulo (4) y el «Empezar» de «Antes de empezar» (1).
 
-**Dónde me quedo (WIP, 76 % de las 5 h):** el código, los tokens, el medidor, la prueba y sus mutantes están
-hechos, y las 28 fotos del después están en `docs/audits/accesibilidad-7nov/fotos/` con la letra D
-(`<caso>-D-<tema>-<ancho>.webp`, sacadas con `node scripts/audit/contraste-7nov.fotos.js 8887`). Falta: (1) la sección
-«Montado» de `pagina-ez.html` con la A y la D lado a lado, y publicarla; (2) hecho: las 26 `ritmo-*`, las de accesibilidad (`accesibilidad-nombres`, `accesibilidad-teclado`,
-`movimiento-reducido`, `contraste-rotulos`, `contraste-modulos`) y las vecinas de los botones cambiados
-(`hidratate-botones`, `logros-capas`, `pausa-sin-repetir`, `aviso-antes-de-empezar`), 231 de 231 en el 8886 sobre el
-`index.html` compilado; (3) `npm run verify`,
-que aún no ha corrido sobre esto. La paleta ya está en `DESIGN_SYSTEM.md` y la regla, arriba en
+**Cerrado (8 nov.), sobre `main` 0.193.0 juntada:** `npm run verify` pasa (0 problemas). En el 8886, con
+`--workers=1` y sobre el `index.html` recompilado tras juntar: las 26 `ritmo-*`, las de accesibilidad
+(`accesibilidad-nombres`, `accesibilidad-teclado`, `movimiento-reducido`, `contraste-rotulos`, `contraste-modulos`) y
+las vecinas de los botones cambiados (`hidratate-botones`, `logros-capas`, `pausa-sin-repetir`,
+`aviso-antes-de-empezar`): **215 de 215, a la primera** (8,5 min, con otras dos sesiones en el PC). El 7 nov., antes de juntar, la misma zona había dado 231 de 231 (no quedó
+apuntado qué más entró en aquella cuenta). La suite entera la corre la coordinadora al juntar.
+
+Las fotos del después están en `docs/audits/accesibilidad-7nov/fotos/` con la letra D
+(`<caso>-D-<tema>-<ancho>.webp`, `node scripts/audit/contraste-7nov.fotos.js 8887`). Las de Logros y la de la fecha
+se rehicieron el 8 nov.: centradas en el panel cortaban «Maestría», y la de la fecha recortaba por debajo de la
+fecha. Ahora Logros se encuadra desde su título, como las de antes. La fecha de la D es la del reloj del script
+(17 sep.), no la de la A (7 nov.); el gris es el que importa.
+
+**La página para Ez:** https://claude.ai/artifact/CdgFC2hXvi6iMGb6P4hBir (`pagina-ez.html`, privada, de la cuenta
+de la sesión del 8 nov.). Arriba, «Montado»: cada caso con la foto de antes y la de ahora, lado a lado, en claro u
+oscuro y a 360 o 1280; debajo, las tres preguntas con la B marcada como elegida. **Espera a Ez:** mirarla y decir
+«júntalo» (o qué caso no le convence). La paleta ya está en `DESIGN_SYSTEM.md` y la regla, arriba en
 `DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Lo que esta auditoría no cubre

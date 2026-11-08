@@ -33,10 +33,10 @@ async function quieto(page) {
 /* Cada caso: cómo se llega, el ancla y el recorte (alto; arriba = cuánto por encima del ancla). */
 const CASOS = [
   { id: 'letra-respira', alto: 460, arriba: 40, ir: (p) => boton(p, /^Respira/), ancla: '.pace-lib [data-pace-lib-now]' },
-  { id: 'letra-logros', alto: 300, arriba: 24, ir: (p) => boton(p, /^Ver logros/), ancla: 'h3:text-is("Maestría")' },
-  { id: 'apagado-logros', alto: 400, arriba: 24, ir: (p) => boton(p, /^Ver logros/), ancla: 'h3:text-is("Primeros pasos")' },
+  { id: 'letra-logros', alto: 300, arriba: 24, izquierda: 40, ir: (p) => boton(p, /^Ver logros/), ancla: 'h3:text-is("Maestría")' },
+  { id: 'apagado-logros', alto: 400, arriba: 24, izquierda: 40, ir: (p) => boton(p, /^Ver logros/), ancla: 'h3:text-is("Primeros pasos")' },
   { id: 'letra-barra', solo: 1280, ancho: 320, alto: 300, arriba: 60, ancla: '[data-pace-sidebar] [data-pace-hoy-vaso]', barra: true },
-  { id: 'apagado-fecha', solo: 1280, ancho: 320, alto: 300, arriba: 60, ancla: '[data-pace-sidebar] [data-pace-hoy-vaso]', barra: true },
+  { id: 'apagado-fecha', solo: 1280, ancho: 320, alto: 300, arriba: 115, ancla: '[data-pace-sidebar] [data-pace-hoy-vaso]', barra: true },
   { id: 'boton-pausa', alto: 380, arriba: 120, ir: async (p) => {
     await boton(p, 'Empezar foco');
     const fin = await p.evaluate(() => JSON.parse(localStorage.getItem('pace.timer.v1')).endsAt);
@@ -82,11 +82,12 @@ async function foto(navegador, caso, ancho, tema) {
       const r = e.getBoundingClientRect();
       const marco = (barra ? e.closest('[data-pace-sidebar]') : e.closest('[data-pace-modal-card], [data-pace-modal-backdrop] > div')) || e;
       const m = marco.getBoundingClientRect();
-      return { top: r.top, bottom: r.bottom, cx: (m.left + m.right) / 2, left: m.left };
+      return { top: r.top, bottom: r.bottom, cx: (m.left + m.right) / 2, left: m.left, aleft: r.left };
     }, !!caso.barra);
     const w = Math.min(caso.ancho || 760, ancho);
     const h = Math.min(caso.alto, alto);
-    let x = caso.barra ? caja.left : Math.round(caja.cx - w / 2);
+    /* Logros se encuadra desde el título, como las fotos de antes: centrado en el panel cortaba «Maestría». */
+    let x = caso.barra ? caja.left : caso.izquierda != null ? caja.aleft - caso.izquierda : Math.round(caja.cx - w / 2);
     x = Math.max(0, Math.min(ancho - w, Math.round(x)));
     let y = caso.abajo != null ? caja.bottom + caso.abajo - h : caja.top - caso.arriba;
     y = Math.max(0, Math.min(alto - h, Math.round(y)));
