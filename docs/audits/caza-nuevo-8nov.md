@@ -28,9 +28,9 @@ Las dos personas, enteras; un fallo de código arreglado con su prueba; dos caso
 https://claude.ai/artifact/6qpSUbY5Kfoa1cmsrdyffo (`docs/audits/caza-nuevo-8nov/pagina-ez.html`, 89 KB, con las
 fotos dentro). Paré aquí por el uso de la semana (83 %, con el corte en el 88 %). **No llegué a mirar:** el sonido y
 la voz oyéndolos (en el banco solo se ve que no hay errores con el sonido encendido, que es lo de fábrica), la
-música de fondo, ni las cinco pestañas a 1280 en oscuro una a una (las medidas no dieron nada). `verify` y la zona
-(`copia-con-logro`, `eventos-backup`, `importar-borrar`, `privacidad-datos`, `tus-rutinas*`, `logros-*`) con un
-worker en el 8891: ver el commit.
+música de fondo, ni las cinco pestañas a 1280 en oscuro una a una (las medidas no dieron nada). `verify` pasa, y la zona con un worker en el 8891
+(`copia-con-logro`, `eventos-backup`, `importar-borrar`, `privacidad-datos`, `tus-rutinas`, `logros-sesion-entera`,
+`logros-capas`, `android-nativo`): 43 de 43.
 
 ## Arreglado
 
