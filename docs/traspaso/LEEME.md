@@ -59,6 +59,12 @@ producto a su página; `usabilidad` (`local_75a679b1…`, 8886-8887): 6-8 mejora
 el Foco por libre y la salida, lo que quede del paquete M), sin montar nada visual. Tope: WIP al 85 % de las 5 h o al 88 % de la
 semana; paran al 90 %. **ChatGPT**: `docs/audits/chatgpt-8nov/prompt-jornada.md` (también en la hoja), para pegar con la 0.194.0
 ya en `main`; la del cobro y lo legal sigue pendiente en la hoja.
+**~18:10, las dos sesiones, paradas con su informe:** `usabilidad` (`claude/usabilidad-8nov-587b48`, 1810a374, solo documentos):
+seis mejoras en **BMLmjb9FjynGY8zz6FN4av** (1 S9 sin la fila de ciclos, 2 la barra pregunta antes de cortar una pausa, 3 el
+Foco por libre tras la salida no cuenta en la carta, 4 Q5 «a mi manera» sin contar como saltada, 5 «Tu jornada, hasta las
+17:00», 6 R5 «Escuchar» la voz; recomienda la A en las seis). `caza-nuevo` (`claude/caza-nuevo-8nov-0c7d9b`, 6428556b): **N1
+arreglado** (la copia no llevaba «Cuaderno a salvo» y al traerla se perdía; prueba roja sin el arreglo; zona 43 de 43) y N2-N3
+para Ez en **6qpSUbY5Kfoa1cmsrdyffo**. N1 espera el «júntalo»; las letras de las tres páginas, también.
 
 ## 7 nov., ~21:10: coordina EcLj6…; las 5 h, repuestas a las 21:00; las tres sesiones esperan el «Arráncalas» de Ez
 
