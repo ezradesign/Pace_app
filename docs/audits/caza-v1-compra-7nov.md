@@ -110,9 +110,16 @@ nombrarlo: «Cuando llegue el plan al mes» de /premium va con el enlace del men
 
 ## Dónde me quedo
 
-Hecho y subido el arreglo 1 con su prueba (commit WIP 0b657fcb y lo que sigue). El punto 3, comprobado simulando
-la app de Android en el navegador; falta verlo en un móvil de verdad.
+Montadas las cuatro letras de Ez (1B 2A 3B 4A), con `tests/dia-v1-letras.spec.js` (9 de 9) y sus mutantes, que caen
+todos (cinco de Playwright y siete de `verify`). `npm run verify` pasa. Mi zona con un worker en el puerto 8891, tras el
+build: 268 de 268 en verde (caza, compra, cobro, hoja y código de PACE completo, borrar e importar, bienvenida, el sobre,
+/premium, /beta, /recuperar, /desistir, privacidad, cabeceras, la barrera de eventos y las pestañas). La suite entera la
+corre la coordinadora al juntar. La página de Ez lleva la sección «Montado» con fotos de antes y después a 360 px en es y
+en (`docs/audits/caza-v1-compra-7nov/fotos/montado-*.jpg`), republicada en el mismo enlace.
 
-La suite e2e entera, tras el build y con un worker (puerto 8891): 1318 en verde, 2 saltadas y 1 en rojo,
-`aro-jornada` («con el plato hecho no propone repetirlo»: el botón aún con relleno con el reloj en marcha). Repetida
-sola, 11 de 11 en verde: falso rojo por la carga del PC, nada que ver con lo tocado.
+Para el día de v1 (a juntar con el punto 17 del ROADMAP): apagar `PREMIUM_ABIERTO_HASTA_V1` y poner `var DIA_V1 = true;`
+en premium/index.html y beta/index.html en el mismo commit; `verify` falla si falta uno.
+
+Espera a Ez: nada nuevo. Dos cosas para que las sepa: privacy.html cambia (dice que «Borrar todo» no quita el código,
+con fecha del 8 nov.), y el aviso de «Borrar todo» dice «Se borra todo lo que PACE guarda en este navegador», que con la
+1B deja fuera el código; como pidió la coordinadora, el aviso no se ha tocado.
