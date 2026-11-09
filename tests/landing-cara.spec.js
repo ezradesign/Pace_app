@@ -87,6 +87,17 @@ test('sin JavaScript (un buscador que no lo ejecuta), el texto de la landing est
 
 /* La app evalúa sus módulos detrás de la landing, pero no monta ni abre su base de eventos: el
    MUTANTE abre la base al cargar, como antes de la landing (app/events/events-store.js). */
+/* `.pl-foto img { display: block }` ganaba a la regla que esconde el otro idioma y salían las dos. */
+test('se ve una sola captura de la jornada, la del idioma de la landing', async ({ page }) => {
+  await page.goto(RUTA_ARTEFACTO);
+  await expect(page.locator('#pace-landing .pl-foto img:visible')).toHaveCount(1);
+  await expect(page.locator('#pace-landing .pl-foto img:visible')).toHaveAttribute('lang', 'es');
+  await page.locator('[data-pace-landing-idioma-boton]').click();
+  await expect(page.locator('#pace-landing .pl-foto img:visible')).toHaveCount(1);
+  await expect(page.locator('#pace-landing .pl-foto img:visible')).toHaveAttribute('lang', 'en');
+  expect(await page.title()).toBe('PACE · Active breaks for people who work at a desk');
+});
+
 test('con la landing delante no se guarda nada, ni pasadas dos horas ni al irse', async ({ browser }) => {
   const app = ['window.paceCuandoAbra(paceEventsBoot);', 'paceEventsBoot();'];
   if (INDEX.indexOf(app[0]) < 0) throw new Error('GUARD: el arranque de los eventos ya no pasa por paceCuandoAbra');

@@ -169,11 +169,10 @@ html[data-pace-cara="landing"] body { background: #F2EDE0; }
   /* El logo en oscuro es el mismo PNG invertido, como en la app. */
   #pace-landing .pl-vaca img { filter: invert(1); }
 }
-/* Los dos idiomas están en el HTML; se ve el que pone landing/cara.js (sin JS, castellano). */
-#pace-landing [lang="en"] { display: none; }
-html[data-pace-landing-idioma="en"] #pace-landing [lang="es"] { display: none; }
-html[data-pace-landing-idioma="en"] #pace-landing span[lang="en"] { display: inline; }
-html[data-pace-landing-idioma="en"] #pace-landing img[lang="en"] { display: block; }
+/* Los dos idiomas están en el HTML; se ve el que pone landing/cara.js (sin JS, castellano). Solo
+   se esconde el otro, con !important: un `display` de clase (.pl-foto img) no puede sacarlo. */
+html:not([data-pace-landing-idioma="en"]) #pace-landing [lang="en"],
+html[data-pace-landing-idioma="en"] #pace-landing [lang="es"] { display: none !important; }
 #pace-landing a { color: var(--l-focus); }
 #pace-landing .pl-marco { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
 #pace-landing .pl-cab { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; }
