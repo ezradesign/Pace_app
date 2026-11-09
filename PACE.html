@@ -671,11 +671,17 @@
         console.error('PACE - Componentes no cargaron en 5 s. Comprueba la red.');
       }
     }
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function() { mount(); });
-    } else {
-      mount();
+    function arrancar() {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() { mount(); });
+      } else {
+        mount();
+      }
     }
+    /* LA RAÍZ CON DOS CARAS (landing/cara.js, solo en el index.html de la web): con la
+       landing delante, la app monta al pulsar «Abrir PACE». Sin ella, como siempre. */
+    if (typeof window.paceCuandoAbra === 'function') window.paceCuandoAbra(arrancar);
+    else arrancar();
   </script>
 
   <!-- PWA · Service Worker (sesión 37 · v0.19.0 · registro; s102 · v0.47.0 ·

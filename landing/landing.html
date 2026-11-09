@@ -1,0 +1,75 @@
+  <!-- LA LANDING DE LA RAÍZ (opción C, Ez, 9 nov. 2026). La ve quien llega por primera vez sin
+       nada guardado (landing/cara.js decide). Los textos son los de /premium, /beta y privacy.html:
+       sin cifras inventadas. Cada texto va en los dos idiomas; el CSS enseña uno. «Abrir PACE»
+       lleva `data-pace-abrir`: abre la app en el sitio, y si el JS fallara, `/?go=inicio` cae en
+       la regla de `?go=` y también abre la app. -->
+  <!--email_off-->
+  <div id="pace-landing">
+  <div class="pl-marco">
+    <header class="pl-cab">
+      <a class="pl-vaca" href="/?go=inicio" data-pace-abrir><img src="/premium/vaca.webp" alt="PACE" width="91" height="60"></a>
+      <div class="pl-cab-der">
+        <a class="pl-ya" href="/?go=inicio" data-pace-abrir><span lang="es">¿Ya usas PACE? <b>Ábrelo</b></span><span lang="en">Already use PACE? <b>Open it</b></span></a>
+        <button class="pl-idioma" type="button" data-pace-landing-idioma-boton><span lang="es"><b>ES</b> · EN</span><span lang="en">ES · <b>EN</b></span></button>
+      </div>
+    </header>
+    <main>
+      <div class="pl-portada">
+        <div>
+          <h1><span lang="es">Pausas activas para quien trabaja sentado.</span><span lang="en">Active breaks for people who work at a desk.</span></h1>
+          <p class="pl-lede"><span lang="es">Foco, respiración, movilidad y agua, a tu ritmo. Sin cuenta, sin anuncios, sin rastreo: lo tuyo se queda en tu equipo.</span><span lang="en">Focus, breathing, mobility and water. At your pace. No account, ads or tracking. Your data stays on your device.</span></p>
+          <a class="pl-boton" href="/?go=inicio" data-pace-abrir><span lang="es">Abrir PACE, es gratis</span><span lang="en">Open PACE, it is free</span></a>
+        </div>
+        <div class="pl-foto">
+          <img lang="es" src="/beta/jornada-es.webp" alt="Tu jornada en PACE: el aro del Foco y las pausas del día" width="540" height="960" loading="lazy">
+          <img lang="en" src="/beta/jornada-en.webp" alt="Your workday in PACE: the Focus ring and the breaks of the day" width="540" height="960" loading="lazy">
+        </div>
+      </div>
+      <section>
+        <h2><span lang="es">Cinco maneras de parar</span><span lang="en">Five ways to take a break</span></h2>
+        <ul class="pl-mods">
+          <li><b><i style="background:var(--l-focus)"></i><span lang="es">Foco</span><span lang="en">Focus</span></b><span><span lang="es">Pomodoro, pausas y aviso</span><span lang="en">Pomodoro, breaks and reminders</span></span></li>
+          <li><b><i style="background:var(--l-breathe)"></i><span lang="es">Respira</span><span lang="en">Breathe</span></b><span><span lang="es">técnicas guiadas, con voz</span><span lang="en">guided techniques, with voice</span></span></li>
+          <li><b><i style="background:var(--l-move)"></i><span lang="es">Mueve</span><span lang="en">Move</span></b><span><span lang="es">rutinas de pie</span><span lang="en">standing routines</span></span></li>
+          <li><b><i style="background:var(--l-extra)"></i><span lang="es">Estira</span><span lang="en">Stretch</span></b><span><span lang="es">movilidad</span><span lang="en">mobility</span></span></li>
+          <li><b><i style="background:var(--l-water)"></i><span lang="es">Hidrátate</span><span lang="en">Hydrate</span></b><span><span lang="es">tus vasos del día</span><span lang="en">your daily water log</span></span></li>
+        </ul>
+        <div class="pl-par">
+          <figure><img lang="es" src="/beta/respira-es.webp" alt="Respira: una técnica guiada, con voz" width="540" height="960" loading="lazy"><img lang="en" src="/beta/respira-en.webp" alt="Breathe: a guided technique with voice cues" width="540" height="960" loading="lazy"></figure>
+          <figure><img lang="es" src="/beta/logros-es.webp" alt="Los logros: sellos de cuaderno de campo, sin rachas" width="540" height="960" loading="lazy"><img lang="en" src="/beta/logros-en.webp" alt="Achievements: field-notebook stamps, no streaks" width="540" height="960" loading="lazy"></figure>
+        </div>
+      </section>
+      <section class="pl-dos">
+        <div>
+          <h2><span lang="es">Gratis, y lo seguirá siendo</span><span lang="en">Free, and it will stay free</span></h2>
+          <p><span lang="es">El Foco entero, «A tu ritmo» cada día, las rutinas de siempre, Hidrátate y los logros.</span><span lang="en">All of Focus, «At your pace» every day, the everyday routines, Hydrate and the achievements.</span></p>
+        </div>
+        <div>
+          <h2><span lang="es">PACE completo</span><span lang="en">PACE Complete</span></h2>
+          <p><span lang="es">Para cuando quieras más: las rutinas más profundas, pausas que cambian de un día a otro, tus propias rutinas y una semana a tu medida.</span><span lang="en">For when you want more: the deeper routines, breaks that change from day to day, your own routines and a week tailored to you.</span></p>
+          <a class="pl-boton hueco" href="/premium/"><span lang="es">Ver PACE completo</span><span lang="en">See PACE Complete</span></a>
+        </div>
+      </section>
+      <section class="pl-dos">
+        <div>
+          <h2><span lang="es">Tu calendario, si tú lo pides</span><span lang="en">Your calendar, if you ask</span></h2>
+          <p><span lang="es">Con «Al calendario», PACE añade tu día de «A tu ritmo» a tu calendario, como libre y privado. Si se lo pides, mira a qué horas estás ocupado hoy y coloca tus pausas alrededor; solo guarda esas horas, en tu dispositivo. Nada de tu calendario pasa por un servidor de PACE.</span><span lang="en">With «To calendar», PACE adds your «At your pace» day to your calendar, as free and private. If you ask, it checks when you are busy today and places your breaks around it; it only keeps those times, on your device. Nothing from your calendar goes through a PACE server.</span> <a href="/privacy"><span lang="es">Privacidad</span><span lang="en">Privacy</span></a>.</p>
+        </div>
+        <div>
+          <h2><span lang="es">Android e iPhone</span><span lang="en">Android and iPhone</span></h2>
+          <p><span lang="es">PACE está en prueba cerrada en Google Play y en TestFlight.</span><span lang="en">PACE is in closed testing on Google Play and TestFlight.</span> <a href="/beta/"><span lang="es">Cómo unirte</span><span lang="en">How to join</span></a>.</p>
+        </div>
+      </section>
+    </main>
+    <footer class="pl-pie">
+      <a class="pl-boton" href="/?go=inicio" data-pace-abrir><span lang="es">Abrir PACE</span><span lang="en">Open PACE</span></a>
+      <nav aria-label="PACE">
+        <a href="/privacy"><span lang="es">Privacidad</span><span lang="en">Privacy</span></a>
+        <a href="/safety"><span lang="es">Seguridad</span><span lang="en">Safety</span></a>
+        <a href="/premium/"><span lang="es">PACE completo</span><span lang="en">PACE Complete</span></a>
+        <a href="mailto:hola.ezradesign@gmail.com"><span lang="es">Contacto</span><span lang="en">Contact</span></a>
+      </nav>
+    </footer>
+  </div>
+  </div>
+  <!--/email_off-->

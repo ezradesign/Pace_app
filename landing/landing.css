@@ -1,0 +1,73 @@
+/* PACE · la landing de la raíz (opción C de la estructura, Ez, 9 nov. 2026). La letra y los
+   botones son los de /premium y /beta, que son los de la app. Todo va bajo #pace-landing: la hoja
+   de la app está en la misma página. Las fuentes ya las declara app/tokens.css. */
+html[data-pace-cara="app"] #pace-landing { display: none !important; }
+html[data-pace-cara="landing"] #root { display: none !important; }
+/* El lienzo de la app (_lienzo.js) pone `zoom` en la raíz en ventanas grandes: no a la landing. */
+html[data-pace-cara="landing"] { zoom: 1 !important; background: #F2EDE0; }
+html[data-pace-cara="landing"] body { background: #F2EDE0; }
+#pace-landing {
+  --l-paper: #F2EDE0; --l-paper-2: #EAE4D4; --l-ink: #1F1C17; --l-ink-2: #4A453C; --l-ink-3: #6F6858;
+  --l-line: #C9C0A8; --l-line-2: #B8AD8E; --l-focus: #3E5A3A; --l-cta: #50624D;
+  --l-breathe: #C97A5D; --l-move: #9A7B4F; --l-extra: #6B7A8F; --l-water: #5D8AA8;
+  --l-display: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  --l-ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  background: var(--l-paper); color: var(--l-ink); font: 16px/1.6 var(--l-ui); min-height: 100vh;
+  -webkit-text-size-adjust: 100%;
+}
+@media (prefers-color-scheme: dark) {
+  html[data-pace-cara="landing"], html[data-pace-cara="landing"] body { background: #1d1a14; }
+  #pace-landing { --l-paper: #1d1a14; --l-paper-2: #26211a; --l-ink: #EDE5D3; --l-ink-2: #c0b49e; --l-ink-3: #B2A995;
+    --l-line: #4d4536; --l-line-2: #5f5544; --l-focus: #7A9A6D; --l-cta: #8E9D88; --l-breathe: #D99477; }
+  /* El logo en oscuro es el mismo PNG invertido, como en la app. */
+  #pace-landing .pl-vaca img { filter: invert(1); }
+}
+/* Los dos idiomas están en el HTML; se ve el que pone landing/cara.js (sin JS, castellano). */
+#pace-landing [lang="en"] { display: none; }
+html[data-pace-landing-idioma="en"] #pace-landing [lang="es"] { display: none; }
+html[data-pace-landing-idioma="en"] #pace-landing span[lang="en"] { display: inline; }
+html[data-pace-landing-idioma="en"] #pace-landing img[lang="en"] { display: block; }
+#pace-landing a { color: var(--l-focus); }
+#pace-landing .pl-marco { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+#pace-landing .pl-cab { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; }
+#pace-landing .pl-vaca img { height: 52px; width: auto; display: block; }
+#pace-landing .pl-cab-der { display: flex; align-items: center; gap: 12px; }
+#pace-landing .pl-ya { font-size: 14px; color: var(--l-ink-2); text-decoration: none; text-align: right; line-height: 1.3; }
+#pace-landing .pl-ya b { color: var(--l-focus); font-weight: 500; border-bottom: 1px solid var(--l-line-2); }
+#pace-landing .pl-idioma { font: 500 11px/1 var(--l-ui); letter-spacing: .1em; color: var(--l-ink-3); background: none; border: 1px solid var(--l-line-2); border-radius: 999px; padding: 7px 11px; cursor: pointer; white-space: nowrap; }
+#pace-landing .pl-idioma b { color: var(--l-ink); font-weight: 500; }
+#pace-landing h1, #pace-landing h2 { font-family: var(--l-display); font-style: italic; font-weight: 500; color: var(--l-ink); text-wrap: balance; }
+#pace-landing h1 { font-size: clamp(40px, 8.8vw, 58px); line-height: 1.04; margin: 8px 0 16px; }
+#pace-landing h2 { font-size: clamp(30px, 6.4vw, 38px); line-height: 1.1; margin: 0 0 12px; }
+#pace-landing p { color: var(--l-ink-2); margin: 0 0 14px; }
+#pace-landing .pl-lede { font-size: 17px; max-width: 34em; }
+#pace-landing .pl-boton { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 8px 24px; border-radius: 999px; font: italic 500 17px/1.2 var(--l-display); text-decoration: none; background: var(--l-cta); color: var(--l-paper); border: 1px solid var(--l-cta); }
+#pace-landing .pl-boton.hueco { background: transparent; color: var(--l-cta); }
+#pace-landing a:focus-visible, #pace-landing button:focus-visible { outline: 2px solid var(--l-focus); outline-offset: 2px; }
+#pace-landing .pl-foto img, #pace-landing .pl-par img { width: 100%; height: auto; display: block; border: 1px solid var(--l-line); border-radius: 14px; background: var(--l-paper-2); }
+#pace-landing .pl-foto { margin: 26px auto 6px; max-width: 320px; }
+#pace-landing section { padding: 40px 16px 32px; margin: 0 -16px; }
+#pace-landing section:nth-of-type(odd) { background: var(--l-paper-2); }
+#pace-landing .pl-mods { list-style: none; padding: 0; margin: 0; display: grid; gap: 2px; }
+#pace-landing .pl-mods li { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 10px 0; border-bottom: 1px dashed var(--l-line); }
+#pace-landing .pl-mods li:last-child { border-bottom: 0; }
+#pace-landing .pl-mods b { font: italic 500 21px/1.2 var(--l-display); color: var(--l-ink); white-space: nowrap; }
+#pace-landing .pl-mods i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 10px; vertical-align: .12em; }
+#pace-landing .pl-mods span { font-size: 14px; color: var(--l-ink-3); text-align: right; }
+#pace-landing .pl-par { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+#pace-landing .pl-par figure { margin: 0; }
+#pace-landing .pl-par figcaption { font: italic 400 17px/1.3 var(--l-display); color: var(--l-ink-2); margin-top: 8px; }
+#pace-landing .pl-dos > div + div { margin-top: 32px; }
+#pace-landing .pl-pie { margin: 32px 0 0; padding: 22px 0 44px; border-top: 1px solid var(--l-line); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 28px; }
+#pace-landing .pl-pie nav { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+#pace-landing .pl-pie nav a { font: italic 400 18px/1.3 var(--l-display); color: var(--l-ink-2); text-decoration: none; border-bottom: 1px solid var(--l-line-2); }
+@media (max-width: 400px) { #pace-landing .pl-vaca img { height: 42px; } #pace-landing .pl-ya { font-size: 13px; } }
+@media (min-width: 900px) {
+  #pace-landing .pl-vaca img { height: 72px; }
+  #pace-landing .pl-portada { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; padding: 16px 0 40px; }
+  #pace-landing .pl-foto { margin: 0 auto; max-width: 340px; }
+  #pace-landing .pl-dos { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  #pace-landing .pl-dos > div + div { margin-top: 0; }
+  #pace-landing section { padding: 52px 40px 44px; margin: 0 0 22px; border-radius: 18px; }
+  #pace-landing .pl-par { max-width: 520px; gap: 20px; }
+}
