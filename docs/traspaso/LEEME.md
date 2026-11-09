@@ -4,6 +4,18 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de noviembre de 2026, ~11:45, v0.193.0.
 
+## 9 nov., ~00:50: 5iWBf con las 5 h repuestas (2 %, semana al 75 %); las dos sesiones, despiertas
+
+- **letras-jornada** paró al 88 % en 4df29445 (en origin) con el **arreglo 1 de ChatGPT hecho** (`motorCortas` descarta lo
+  adaptado o rechazado dentro del recorrido, con su prueba). Su suite de zona dio 481 en verde y 4 en rojo: dos en `ritmo-carta`
+  (la carta ya no propone acortar la pausa de las 15:45: ¿S6, el arreglo 1 o una regresión?), una en `ritmo-otra-carta` y la C2 del
+  calendario (¿carga?). A las 00:45 le mandé seguir con el arreglo 2, las cuatro rojas, DECISIONES, su suite y su página «Montado».
+  **No se pide el «júntalo» hasta que esas cuatro estén explicadas.**
+- **letras-nuevo**: le pedí pintar dos o tres formas de encajar la 6A a 360×640 y 360×800 (es/en), desde
+  `claude/caza-nuevo-8nov-6a-choca`, con recomendación, en una página nueva de 5iWBf.
+- Hoja de Ez: versión 93.
+- `main` local va dos commits por delante de origin (docs), a propósito: suben con la 0.195.0.
+
 ## 8 nov., ~20:55: 5iWBf con las 5 h al 82 % (se reponen a las 00:40; un CronCreate de una vez a las 00:47 despierta a la coordinadora)
 
 - **letras-jornada**: las nueve letras en 37f4603d (en su rama). **Ez (~20:45): «Sí, los dos»** a los dos arreglos de ChatGPT
