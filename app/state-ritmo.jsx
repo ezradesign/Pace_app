@@ -192,7 +192,8 @@ function ritmoPrevios(pasado, primerBloque, pausaPendiente, bloque) {
   /* la cuenta de la larga (ritmo.regla.js, `pausaDe`): pausas y foco desde la última */
   p.pausasLarga = 0; p.focoLarga = 0; p.largaEn = 3; p.largasManana = 0; p.seguidos = 0;
   (pasado || []).forEach(function (it) {
-    if (it.tipo === 'foco') { p.bloques++; p.foco += it.dur; p.focoLarga += it.dur; p.seguidos += it.dur; }
+    /* de foco, lo que contó el aro: un bloque pausado ocupa más en la línea (ritmoFocoMin) */
+    if (it.tipo === 'foco') { var cuenta = ritmoFocoMin(it); p.bloques++; p.foco += cuenta; p.focoLarga += cuenta; p.seguidos += cuenta; }
     if (it.tipo === 'pausa') { p.pausas++; p.claves++; p.pausasLarga++; p.seguidos = 0; }
     if (it.tipo === 'pausa' && it.larga) {
       p.largaEn = p.pausasLarga; p.pausasLarga = 0; p.focoLarga = 0;

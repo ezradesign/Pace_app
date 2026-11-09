@@ -13411,7 +13411,8 @@ function ritmoPrevios(pasado, primerBloque, pausaPendiente, bloque) {
 
   p.pausasLarga = 0;p.focoLarga = 0;p.largaEn = 3;p.largasManana = 0;p.seguidos = 0;
   (pasado || []).forEach(function (it) {
-    if (it.tipo === 'foco') {p.bloques++;p.foco += it.dur;p.focoLarga += it.dur;p.seguidos += it.dur;}
+
+    if (it.tipo === 'foco') {var cuenta = ritmoFocoMin(it);p.bloques++;p.foco += cuenta;p.focoLarga += cuenta;p.seguidos += cuenta;}
     if (it.tipo === 'pausa') {p.pausas++;p.claves++;p.pausasLarga++;p.seguidos = 0;}
     if (it.tipo === 'pausa' && it.larga) {
       p.largaEn = p.pausasLarga;p.pausasLarga = 0;p.focoLarga = 0;
@@ -13750,7 +13751,8 @@ function ritmoDesfase(ms, hasta) {
 
 
 
-function ritmoBloqueTerminado(inicioMs, finMs) {
+
+function ritmoBloqueTerminado(inicioMs, finMs, minutos) {
 
   var p = ritmoPlanBase(getState());
   if (!p || p.hechos < 1) return;
@@ -13777,7 +13779,9 @@ function ritmoBloqueTerminado(inicioMs, finMs) {
   var desde = Math.max(t, fin);
   if (ultimo && desde !== ultimo.desde + ultimo.dur) {
     var pasado = ritmoCongelar(p.m.items.slice(0, p.m.items.indexOf(ultimo) + 1));
-    pasado[pasado.length - 1].dur = fin - ultimo.desde;
+    var hecho = pasado[pasado.length - 1];
+    hecho.dur = fin - ultimo.desde;
+    hecho.foco = Number(minutos) > 0 ? Number(minutos) : ultimo.dur;
     cambios.pasado = pasado;cambios.desde = desde;cambios.primerBloque = null;cambios.pausaPendiente = true;
   }
   ritmoGuardar(function (r) {return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {};});
@@ -13923,13 +13927,21 @@ function ritmoMinutosSonTuyos(s, r) {
 }
 
 
-function ritmoFocoHecho(p) {
-  return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) {return a + (f.dur || 0);}, 0) : 0;
+
+
+
+
+function ritmoFocoMin(f) {
+  return f ? typeof f.foco === 'number' && f.foco >= 0 ? f.foco : f.dur || 0 : 0;
 }
 
-Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho,
+function ritmoFocoHecho(p) {
+  return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) {return a + ritmoFocoMin(f);}, 0) : 0;
+}
+
+Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho, ritmoFocoMin,
   ritmoMinutosDelPlan, ritmoMinutosDevolver });
-;Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, _ritmoCierrePintado, ritmoMirarSalida, ritmoFocoEmpezo, ritmoMinutosDelPlan, ritmoMinutosDevolver, ritmoMinutosSonTuyos, ritmoFocoHecho });
+;Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, _ritmoCierrePintado, ritmoMirarSalida, ritmoFocoEmpezo, ritmoMinutosDelPlan, ritmoMinutosDevolver, ritmoMinutosSonTuyos, ritmoFocoMin, ritmoFocoHecho });
 })();
 </script>
   <!-- El día elegido y sin empezar se lee desde ahora (Ez, E1 A del 7 nov. 2026). -->
@@ -14460,12 +14472,13 @@ function bloquesInvita(antes, bloque, pausa) {
 
 
 
+
 function bloquesSeguidoAntes(m, tramo) {
   var i = m.items.indexOf(tramo),suma = 0;
   while (--i >= 0) {
     var it = m.items[i];
     if (it.tipo === 'pausa' || it.tipo === 'comida') break;
-    if (it.tipo === 'foco') suma += it.dur;
+    if (it.tipo === 'foco') suma += ritmoFocoMin(it);
   }
   return suma;
 }
@@ -14480,7 +14493,7 @@ function bloquesTerminado(minutos) {
     if (p.hechos < 1 || cada) return false;
     var ultimo = p.m.focos[p.hechos - 1];
     var detras = ritmoDetras(p.m, ultimo);
-    return bloquesInvita(bloquesSeguidoAntes(p.m, ultimo), ultimo.dur, !(detras && detras.tipo === 'foco'));
+    return bloquesInvita(bloquesSeguidoAntes(p.m, ultimo), ritmoFocoMin(ultimo), !(detras && detras.tipo === 'foco'));
   }
   var m = Number(minutos) || 0;
   var hoy = ritmoHoy();
@@ -14499,7 +14512,7 @@ function bloquesSeguidos() {
   if (p) {
     if (p.hechos < 1) return 0;
     var ultimo = p.m.focos[p.hechos - 1];
-    return bloquesSeguidoAntes(p.m, ultimo) + ultimo.dur;
+    return bloquesSeguidoAntes(p.m, ultimo) + ritmoFocoMin(ultimo);
   }
   var c = s.bloquesSinDia;
   return c && c.fecha === ritmoHoy() && !c.pausa && typeof c.seguidos === 'number' ? c.seguidos : 0;
@@ -30807,7 +30820,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
       try {
-        onFinish && onFinish(inicio, finBloque);
+        onFinish && onFinish(inicio, finBloque, minutos);
       } finally {
 
         try {bloques.marcar(typeof bloquesTerminado === 'function' && bloquesTerminado(minutos));} catch (e) {}
@@ -51738,14 +51751,15 @@ function PaceApp() {
     setPreviewRoutine({ routine, kind: esPropia ? 'move' : 'extra' });
   };
 
-  const handleFocusFinish = (inicio, fin) => {
+  const handleFocusFinish = (inicio, fin, minutos) => {
 
 
 
 
 
 
-    if (typeof ritmoBloqueTerminado === 'function') ritmoBloqueTerminado(inicio, fin);
+
+    if (typeof ritmoBloqueTerminado === 'function') ritmoBloqueTerminado(inicio, fin, minutos);
   };
 
 

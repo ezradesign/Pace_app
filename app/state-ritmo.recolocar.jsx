@@ -32,8 +32,9 @@ function ritmoDesfase(ms, hasta) {
    empezó el bloque (FocusTimer), para contarlo bien si cambió la hora mientras, y
    `finMs` cuándo acabó: con el portátil cerrado o PACE cerrado, PACE se entera al
    volver, y el bloque dura lo que duró y no hasta la hora de volver (el rato de en
-   medio queda como margen libre). Sin él, ahora. */
-function ritmoBloqueTerminado(inicioMs, finMs) {
+   medio queda como margen libre). Sin él, ahora. `minutos`, los que contó el aro: lo
+   que el bloque suma de foco, sin las veces que se pausó (ver `ritmoFocoMin`). */
+function ritmoBloqueTerminado(inicioMs, finMs, minutos) {
   /* El plan base: el bloque que cruzó la salida aún abre su pausa de cierre aunque ya sea la hora. */
   var p = ritmoPlanBase(getState());
   if (!p || p.hechos < 1) return;
@@ -60,7 +61,9 @@ function ritmoBloqueTerminado(inicioMs, finMs) {
   var desde = Math.max(t, fin);
   if (ultimo && desde !== ultimo.desde + ultimo.dur) {
     var pasado = ritmoCongelar(p.m.items.slice(0, p.m.items.indexOf(ultimo) + 1));
-    pasado[pasado.length - 1].dur = fin - ultimo.desde;
+    var hecho = pasado[pasado.length - 1];
+    hecho.dur = fin - ultimo.desde;
+    hecho.foco = Number(minutos) > 0 ? Number(minutos) : ultimo.dur;
     cambios.pasado = pasado; cambios.desde = desde; cambios.primerBloque = null; cambios.pausaPendiente = true;
   }
   ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {}; });
@@ -205,10 +208,18 @@ function ritmoMinutosSonTuyos(s, r) {
   return r.minutosPlan === null || [15, 25, 35, 45].indexOf(s.focusMinutes) !== -1;
 }
 
+/* LO QUE UN BLOQUE SUMA DE FOCO (revisión de ChatGPT, 9 nov. 2026). Un bloque de 45 pausado 20
+   minutos ocupa en la línea de 9:00 a 10:05 (`dur`, 65: la línea dice la verdad), pero de foco son
+   los 45 que contó el aro (`foco`, que pone `ritmoBloqueTerminado` al congelarlo), los mismos que
+   Estadísticas. Las cuentas del día leen esto: lo hecho al cerrar, la pausa larga (75 min de foco)
+   y el foco seguido de los bloques cortos. Un bloque sin `foco` (del plan, o de antes) es su `dur`. */
+function ritmoFocoMin(f) {
+  return f ? (typeof f.foco === 'number' && f.foco >= 0 ? f.foco : f.dur || 0) : 0;
+}
 /* Los minutos de foco hechos hoy en el plan: los de sus bloques terminados. */
 function ritmoFocoHecho(p) {
-  return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) { return a + (f.dur || 0); }, 0) : 0;
+  return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) { return a + ritmoFocoMin(f); }, 0) : 0;
 }
 
-Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho,
+Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho, ritmoFocoMin,
   ritmoMinutosDelPlan, ritmoMinutosDevolver });

@@ -39,13 +39,14 @@ function bloquesInvita(antes, bloque, pausa) {
 }
 
 /* El foco seguido antes de un bloque del plan: los bloques pegados de delante, hasta la
-   pausa o la comida anterior (lo mismo que cuenta `ritmoPrevios` como `seguidos`). */
+   pausa o la comida anterior (lo mismo que cuenta `ritmoPrevios` como `seguidos`). De cada uno,
+   lo que contó el aro (`ritmoFocoMin`): las pausas del Foco no son foco seguido. */
 function bloquesSeguidoAntes(m, tramo) {
   var i = m.items.indexOf(tramo), suma = 0;
   while (--i >= 0) {
     var it = m.items[i];
     if (it.tipo === 'pausa' || it.tipo === 'comida') break;
-    if (it.tipo === 'foco') suma += it.dur;
+    if (it.tipo === 'foco') suma += ritmoFocoMin(it);
   }
   return suma;
 }
@@ -60,7 +61,7 @@ function bloquesTerminado(minutos) {
     if (p.hechos < 1 || cada) return false;
     var ultimo = p.m.focos[p.hechos - 1];
     var detras = ritmoDetras(p.m, ultimo);
-    return bloquesInvita(bloquesSeguidoAntes(p.m, ultimo), ultimo.dur, !(detras && detras.tipo === 'foco'));
+    return bloquesInvita(bloquesSeguidoAntes(p.m, ultimo), ritmoFocoMin(ultimo), !(detras && detras.tipo === 'foco'));
   }
   var m = Number(minutos) || 0;
   var hoy = ritmoHoy();
@@ -79,7 +80,7 @@ function bloquesSeguidos() {
   if (p) {
     if (p.hechos < 1) return 0;
     var ultimo = p.m.focos[p.hechos - 1];
-    return bloquesSeguidoAntes(p.m, ultimo) + ultimo.dur;
+    return bloquesSeguidoAntes(p.m, ultimo) + ritmoFocoMin(ultimo);
   }
   var c = s.bloquesSinDia;
   return c && c.fecha === ritmoHoy() && !c.pausa && typeof c.seguidos === 'number' ? c.seguidos : 0;
