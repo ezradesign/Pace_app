@@ -2,7 +2,35 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de noviembre de 2026, ~20:00, v0.195.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de noviembre de 2026, ~20:40, v0.196.0.
+
+## AL RELEVO (9 nov., ~21:00): EcLj6… con la semana al 94-98 % (Ez la dejó usar hasta el final); se sigue en 5iWBf…. Empieza aquí; manda sobre todo lo de abajo
+
+**Regla de Ez:** se para al 90 % de las 5 h o al 95 % de la semana. 5iWBf repone las 5 h hacia las 21:00 y tiene la semana al
+~7 %. `main` = **0.196.0** (las voces de Ez en el Suspiro, con el «More» de sulafat cortado en 1,08 s, y la 1A de la caza):
+mira su CI con `gh run list --branch main -L 3`; si no está en verde entero, eso es lo primero. Las sesiones de EcLj6 **no se
+ven desde 5iWBf**: lo que esté a medias se retoma con una sesión nueva con `cwd` en su worktree, que empiece por su `git log`
+y su nota de dónde se quedó (abajo, en cada fila). Las páginas de EcLj6 dan 404 en 5iWBf: se republican desde su generador.
+
+| Rama | Qué lleva | Estado | Falta |
+|---|---|---|---|
+| `claude/landing-c-9nov` | la raíz con dos caras (C) y la landing B larga como /premium | 5f9629ea (el CSS de los nombres de los cinco módulos) y 39e7476e (dos pruebas que leían el documento entero y no sabían de la landing: ahora miran la app); verify y landing-cara 17/17; suite entera (1,1 h con la máquina cargada): los otros cuatro rojos, runner-cabe y runner-espera, pasan solos | republicar su página en 5iWBf (la de EcLj6 es TUES7Hw31NwYXYBypdmHwK; el generador, `pagina-ez.js`, en el scratchpad de la sesión `local_ac11222c…` de EcLj6, bajo `AppData/Local/Temp/claude/`); el «júntalo» de Ez |
+| `claude/chatgpt-jornada-9nov` | ChatGPT 2, sin cambiar nada a la vista: el 5 (d6683620), el 1 (9a398542, el Foco pausado suma lo del aro), el 3 (1c7e6fbd, cambiar cadencia, horario, semana o reuniones congela antes lo hecho) y el 2 (dfc6ee9b, el inicio se guarda también en marcha); cada uno con prueba, mutantes y fila en DECISIONES | hecho y parado al 95 % (LEEME aeecfc84). Suites de zona 50/50, 93/94 y 157/158: las dos rojas pasaron de 60 s con la máquina cargada y solas pasan | **la página de 4, 6 y 7**, sin hacer: qué pintar y la recomendación (4B, 6A, 7A), en `docs/audits/chatgpt-8nov/LEEME.md`, con el guion de fotos sin correr (`pintar-4-6-7.spec.js.txt`); el «júntalo» de Ez para 5, 1, 3 y 2 |
+| `claude/caza-rendimiento-9nov` | dos arreglos invisibles con prueba: las barras con `transform` (7cc6b238, `tests/barras-transform.spec.js`) y una `@font-face` por familia, 12 → 5 descargas (301c2b4b, `tests/fuentes-unicas.spec.js`); verify y la suite de lo tocado en verde | parada al 95 % (WIP b403a1c0). Banco de versión: la pestaña abierta no se entera de la nueva, un aviso de más al recargar, dibujos viejos mientras espera y «Actualizar» recarga la otra pestaña a mitad de Respira. La caída de las 15:00 era del instrumento | página para Ez en EcLj6 **4Fohyqi7Cth9iKGxE2FSSD** (el aro A/B/C, V1 y V2; recomienda B en las tres): republicarla en 5iWBf desde su generador; el «júntalo» de las dos invisibles; montar lo que elija; las propuestas de build (punto 5 de su LEEME) |
+
+Ya juntadas en la 0.196.0 y sin nada más: `claude/voces-suspiro-9nov` y `claude/caza-anchos-9nov-6a280f`. En el worktree de las
+voces queda `oir-suspiro.html` sin commit (la página de escucha; ya no hace falta) y en `.claude/launch.json` de la copia
+principal, la entrada `voces-suspiro` sin commit: se quitan las dos.
+
+**Esperan a Ez:** mirar la landing B y decir «júntalo»; subir la 0.191.1 a Play y darla en TestFlight; pegar en ChatGPT la
+revisión del cobro y lo legal (en su hoja). **La hoja:** la del repo lleva ids de 5iWBf: se publica tal cual en
+**5iWBfHE7kD3dUVocdskmb6**, con la landing apuntando a la página que se republique allí.
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (9 nov., ~21:00)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Mira el CI de la 0.196.0, republica mi hoja de pasos y la página de la landing en esta cuenta, y retoma las sesiones a medias desde sus ramas.
+```
 
 ## 9 nov., ~20:00: relevo tomado en EcLj6 (5 h al 22 %, semana al 91 %; tope de Ez, 98 %)
 
