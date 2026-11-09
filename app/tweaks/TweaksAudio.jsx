@@ -53,14 +53,6 @@ function paceEscucharSenal(state) {
 
 function TweaksAudioBlock({ state, set }) {
   const { t } = useT();
-  /* «La música suena solo en Respira», como aviso de 4 s al elegir «Música» (como «Auto» en el
-     runner): una línea fija hacía scroll en el móvil de 640 px. Flota bajo la fila sin sumar alto. */
-  const [notaMusica, setNotaMusica] = React.useState(0);
-  React.useEffect(() => {
-    if (!notaMusica) return undefined;
-    const r = setTimeout(() => setNotaMusica(0), 4000);
-    return () => clearTimeout(r);
-  }, [notaMusica]);
 
   /* El fondo son dos booleanos en el estado (`ambientOn`, `musicOn`) y tres
      pildoras aqui. s177: TRES OPCIONES Y NO DOS, pero sigue siendo UNA decision:
@@ -73,7 +65,6 @@ function TweaksAudioBlock({ state, set }) {
     set({ ambientOn: cual === 'amb', musicOn: cual === 'mus' });
     if (cual !== 'amb' && window.ambientDrone) window.ambientDrone.stop(400);
     if (cual !== 'mus' && window.paceMusica) window.paceMusica.stop(400);
-    setNotaMusica(cual === 'mus' ? Date.now() : 0);
   };
 
   /* Que marca la fase: 'tono' apaga la voz; 'sulafat' / 'bradford' la encienden
@@ -123,9 +114,6 @@ function TweaksAudioBlock({ state, set }) {
           { v: 'mus', name: t('settings.bg.music') },
         ]} />
       </AjustesFila>
-      <div className="pace-aj-globo-ancla" role="status">
-        {notaMusica && !apagado ? <p key={notaMusica} className="pace-aj-globo" data-pace-aj-musica-nota>{t('settings.bg.music.nota')}</p> : null}
-      </div>
     </React.Fragment>
   );
 }
