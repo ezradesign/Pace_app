@@ -2,7 +2,34 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de noviembre de 2026, ~20:40, v0.196.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de noviembre de 2026, ~23:35, v0.196.0.
+
+## 9 nov., ~23:35: relevo tomado en 5iWBf (5 h al 3 %, semana al 8 %). Empieza aquí; el bloque de las 21:00, debajo, ya está hecho
+
+- **CI de la 0.196.0, en verde entero** (42696654845, el del último commit de documentos: verify, los dos trozos de e2e, Safari,
+  Android e iOS). Las tres ramas a medias, limpias y subidas.
+- **Páginas republicadas en 5iWBf:** la landing B, **3juJNAvBAFo8NKKKWLEc6J** (el HTML de EcLj6 con las imágenes sacadas a
+  archivos, para poder leerlo entero antes de publicar); la caza de rendimiento, **R3vZVCMdEvKxWhyLHRmwvE**; y la hoja,
+  versión 100 en 5iWBfHE7kD3dUVocdskmb6, con los dos enlaces apuntando aquí.
+- **Ez pidió además (23:20):** «ya que estoy con el modelo de Fable nuevo revisa y audita la app y aporta nuevas ideas, flujos de
+  ejercicios, mejora de la interfaz, etc. con vistas a que la monetización sea un éxito tanto en web como en móvil, revisa cómo se
+  integra el pomodoro a los ejercicios y localiza también dudas o mejoras de toda la app». Y a las 23:25: «También puedes mejorar
+  la estética de la landing + beta + premium para que quede una web bien bonita y atractiva».
+- **Sesiones arrancadas en 5iWBf** (los encargos llevan los topes de uso):
+
+| Sesión | Rama y carpeta | Modelo | Qué hace | Hecho es |
+|---|---|---|---|---|
+| `chatgpt-pagina` (`local_a381fb3d…`) | `claude/chatgpt-jornada-9nov`, su worktree; 8886-8887 | Opus 5.5 | la página de 4, 6 y 7 con el guion `pintar-4-6-7.spec.js.txt` | página publicada aquí, copia en `docs/audits/chatgpt-8nov/`, LEEME al día |
+| `web-bonita` (`local_8a20426c…`) | `claude/landing-c-9nov`, su worktree; 8901-8902 | Fable 5.2 | defectos de hoy con foto y dos o tres direcciones estéticas para landing, /beta y /premium; sin cambiar textos ni tocar lo publicado; commits posteriores a 39e7476e | página publicada aquí, generador y copia en `docs/proposals/` |
+| `auditoria-fable` | rama nueva `claude/auditoria-fable-9nov…`, worktree propio; 8920-8921 | Fable 5.2 | auditoría de producto: monetización web y móvil, el Foco con los ejercicios, flujos, interfaz y dudas; no monta nada | `docs/audits/fable-9nov/auditoria.md` y una página con una sola cola ordenada |
+
+- **La landing B se puede juntar sin esperar a la estética**: la maqueta va encima y aparte. Sigue esperando el «júntalo» de Ez.
+- **Sin sesión, en cola:** las propuestas de build de la caza de rendimiento (punto 5 de `scripts/audit/rendimiento-9nov/LEEME.md`);
+  sus dos arreglos invisibles esperan el «júntalo» y el aro, V1 y V2, las letras de Ez.
+- **Fable gasta mucho.** En los primeros 8 minutos (la coordinadora leyendo la hoja viva entera, con el contexto en 300k, y dos
+  sesiones recién arrancadas) las 5 h pasaron del 3 al 43 %, la semana del 8 al 13 % y «Weekly · Fable», que es un medidor aparte,
+  del 1 al 11 %. Desde ahí la coordinadora hace pocas vueltas y lo pesado va a sesiones nuevas. Topes de las sesiones en Fable:
+  WIP con push al 85 % de las 5 h o al 55 % de «Weekly · Fable»; paran al 90 % o al 60 %. Las 5 h se reponen a las 04:20.
 
 ## AL RELEVO (9 nov., ~21:00): EcLj6… con la semana al 94-98 % (Ez la dejó usar hasta el final); se sigue en 5iWBf…. Empieza aquí; manda sobre todo lo de abajo
 
