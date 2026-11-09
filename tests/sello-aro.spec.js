@@ -117,7 +117,7 @@ for (const [ancho, alto] of [[1280, 720], [360, 718]]) {
     await vis('[data-pace-cta]').first().click();
     await page.waitForTimeout(250);
     await terminarBloque(page);
-    await vis('[data-pace-break-shortcut] button').first().click();
+    await vis('[data-pace-break-shortcut] button:not([data-pace-break-cuenta])').first().click();   /* «Ahora no» */
     await page.waitForTimeout(300);
 
     /* El sello sale con la pausa en el aro (el reloj quieto: no se va a los 3 s). */
