@@ -69,6 +69,36 @@ function ritmoBloqueTerminado(inicioMs, finMs, minutos) {
   ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {}; });
 }
 /* La pausa hecha, lo hecho de cada plato y la cuenta del aro: state-ritmo.pausa.jsx. */
+
+/* LO HECHO NO SE RECOMPONE (revisión de ChatGPT, 9 nov. 2026, punto 3). El día se compone en vivo
+   con la cadencia, el horario y las reuniones de ahora, y solo `dia.pasado` queda fuera. Si nada se
+   había recolocado (bloques a su hora), cambiar a «después de cada bloque» con seis bloques de 5
+   hechos de 9:00 a 9:30 los recomponía con pausas en medio, y la pausa «hecha» (va por ordinal)
+   pasaba a ser la de las 9:05. Antes de aplicar uno de esos cambios se congela lo hecho: hasta la
+   pausa abierta si la hay (sigue abierta y con lo hecho de ella) o hasta el último bloque; el resto
+   se compone desde que acaba eso, o desde ahora. Con un Foco en marcha, todo lo de antes de él, y él
+   sigue a su hora y con su duración (como al empezarlo, `ritmoBloqueEmpezado`). Si ya estaba en la
+   historia no se toca: congelar dos veces no mueve nada. Sin nada hecho, o con el día cerrado o
+   terminado, no hay nada que proteger. Lo llaman bloquesElegir, ritmoHorario, ritmoGuardarSemana y
+   calendarioGuardarOcupado ANTES de guardar su cambio. */
+function ritmoFijarLoHecho() {
+  var s = getState(), R = ritmoDe(s);
+  if (!R.dia || R.libre) return;
+  var p = ritmoPlanBase(s);
+  if (!p || p.hechos < 1 || !p.actual || ritmoPasadaLaSalida(p)) return;
+  var corre = typeof ritmoFocoCorriendo === 'function' && ritmoFocoCorriendo();
+  var hasta = corre ? p.actual : (p.pausa || p.m.focos[p.hechos - 1]);
+  var corte = p.m.items.indexOf(hasta) + (corre ? 0 : 1);
+  var ya = (R.dia.pasado || []).length;
+  if (!p.m.items.slice(ya, corte).some(function (it) { return it.tipo !== 'libre'; })) return;
+  var antes = p.m.items.slice(0, corte);
+  while (antes.length && antes[antes.length - 1].tipo === 'libre') antes.pop();
+  var fin = antes[antes.length - 1];
+  var cambios = { pasado: ritmoCongelar(antes), pausaPendiente: false,
+    desde: corre ? p.actual.desde : Math.max(ritmoAhoraExacto(), fin.desde + fin.dur),
+    primerBloque: corre ? p.actual.dur : null };
+  ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {}; });
+}
 /* Empezar un bloque cierra la pausa y, si la hora no es la del plan, RECOLOCA:
    lo anterior al bloque se congela como historia y el resto se recompone desde
    ahora, con la duración con la que el aro arranca (`minutos`). Llegar antes es
@@ -221,5 +251,5 @@ function ritmoFocoHecho(p) {
   return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) { return a + ritmoFocoMin(f); }, 0) : 0;
 }
 
-Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho, ritmoFocoMin,
+Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho, ritmoFocoMin, ritmoFijarLoHecho,
   ritmoMinutosDelPlan, ritmoMinutosDevolver });

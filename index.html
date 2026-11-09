@@ -12474,6 +12474,8 @@ function calendarioGuardarOcupado(tramos, fuente, iso) {
   if (!iso || iso !== ritmoHoy()) return false;
   var antes = (getState().ritmo || {}).ocupado;
   if (antes && antes.fecha === iso && JSON.stringify(antes.tramos) === JSON.stringify(tramos)) return false;
+
+  if (typeof ritmoFijarLoHecho === 'function') ritmoFijarLoHecho();
   ritmoGuardar(function () {return { ocupado: { fecha: iso, tramos: tramos, fuente: fuente } };});
   return true;
 }
@@ -13697,6 +13699,7 @@ function ritmoHorario(campo, valor) {
       Object.keys(cambios).forEach(function (c) {horario.media[c.slice(6)] = cambios[c];});
     } else Object.assign(horario, cambios);
   }
+  if (typeof ritmoFijarLoHecho === 'function') ritmoFijarLoHecho();
   ritmoGuardar(function (r) {
     return { horario: horario, dia: r.dia ? Object.assign({}, r.dia, { cambios: {} }) : r.dia };
   });
@@ -13787,6 +13790,36 @@ function ritmoBloqueTerminado(inicioMs, finMs, minutos) {
   ritmoGuardar(function (r) {return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {};});
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+function ritmoFijarLoHecho() {
+  var s = getState(),R = ritmoDe(s);
+  if (!R.dia || R.libre) return;
+  var p = ritmoPlanBase(s);
+  if (!p || p.hechos < 1 || !p.actual || ritmoPasadaLaSalida(p)) return;
+  var corre = typeof ritmoFocoCorriendo === 'function' && ritmoFocoCorriendo();
+  var hasta = corre ? p.actual : p.pausa || p.m.focos[p.hechos - 1];
+  var corte = p.m.items.indexOf(hasta) + (corre ? 0 : 1);
+  var ya = (R.dia.pasado || []).length;
+  if (!p.m.items.slice(ya, corte).some(function (it) {return it.tipo !== 'libre';})) return;
+  var antes = p.m.items.slice(0, corte);
+  while (antes.length && antes[antes.length - 1].tipo === 'libre') antes.pop();
+  var fin = antes[antes.length - 1];
+  var cambios = { pasado: ritmoCongelar(antes), pausaPendiente: false,
+    desde: corre ? p.actual.desde : Math.max(ritmoAhoraExacto(), fin.desde + fin.dur),
+    primerBloque: corre ? p.actual.dur : null };
+  ritmoGuardar(function (r) {return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {};});
+}
 
 
 
@@ -13939,9 +13972,9 @@ function ritmoFocoHecho(p) {
   return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) {return a + ritmoFocoMin(f);}, 0) : 0;
 }
 
-Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho, ritmoFocoMin,
+Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho, ritmoFocoMin, ritmoFijarLoHecho,
   ritmoMinutosDelPlan, ritmoMinutosDevolver });
-;Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, _ritmoCierrePintado, ritmoMirarSalida, ritmoFocoEmpezo, ritmoMinutosDelPlan, ritmoMinutosDevolver, ritmoMinutosSonTuyos, ritmoFocoMin, ritmoFocoHecho });
+;Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoFijarLoHecho, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, _ritmoCierrePintado, ritmoMirarSalida, ritmoFocoEmpezo, ritmoMinutosDelPlan, ritmoMinutosDevolver, ritmoMinutosSonTuyos, ritmoFocoMin, ritmoFocoHecho });
 })();
 </script>
   <!-- El día elegido y sin empezar se lee desde ahora (Ez, E1 A del 7 nov. 2026). -->
@@ -14148,6 +14181,7 @@ function ritmoOcupadoDe(r, fecha) {
 
 function ritmoGuardarSemana(tipo, cambios) {
   var tocadas = Object.keys(cambios || {});
+  if (typeof ritmoFijarLoHecho === 'function') ritmoFijarLoHecho();
   ritmoGuardar(function (r) {
     var c = { semanaTipo: Array.isArray(tipo) ? tipo.slice(0, 7) : null };
     if (tocadas.length) {
@@ -14525,8 +14559,11 @@ function bloquesSinDiaJunta(s) {
 }
 
 
+
 function bloquesElegir(valor) {
-  setState({ ejercicioBloques: valor === 'cada' ? 'cada' : 'ritmo' });
+  var nuevo = valor === 'cada' ? 'cada' : 'ritmo';
+  if (nuevo !== (bloquesCadaUno(getState()) ? 'cada' : 'ritmo') && typeof ritmoFijarLoHecho === 'function') ritmoFijarLoHecho();
+  setState({ ejercicioBloques: nuevo });
   if (typeof ritmoSincronizar === 'function') ritmoSincronizar();
 }
 

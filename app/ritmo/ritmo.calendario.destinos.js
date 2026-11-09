@@ -156,6 +156,8 @@ function calendarioGuardarOcupado(tramos, fuente, iso) {
   if (!iso || iso !== ritmoHoy()) return false;
   var antes = (getState().ritmo || {}).ocupado;
   if (antes && antes.fecha === iso && JSON.stringify(antes.tramos) === JSON.stringify(tramos)) return false;
+  /* Una reunión nueva recompone lo que queda, no lo hecho (state-ritmo.recolocar.jsx). */
+  if (typeof ritmoFijarLoHecho === 'function') ritmoFijarLoHecho();
   ritmoGuardar(function () { return { ocupado: { fecha: iso, tramos: tramos, fuente: fuente } }; });
   return true;
 }

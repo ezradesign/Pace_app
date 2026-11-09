@@ -92,9 +92,12 @@ function bloquesSinDiaJunta(s) {
   return !!c && c.fecha === ritmoHoy() && c.pausa === false;
 }
 
-/* 4b · la elección del aro. Cambiarla recompone el día desde la regla (`cadaBloque`). */
+/* 4b · la elección del aro. Cambiarla recompone el día desde la regla (`cadaBloque`), pero solo
+   lo que queda: lo hecho se congela antes (ritmoFijarLoHecho, state-ritmo.recolocar.jsx). */
 function bloquesElegir(valor) {
-  setState({ ejercicioBloques: valor === 'cada' ? 'cada' : 'ritmo' });
+  var nuevo = valor === 'cada' ? 'cada' : 'ritmo';
+  if (nuevo !== (bloquesCadaUno(getState()) ? 'cada' : 'ritmo') && typeof ritmoFijarLoHecho === 'function') ritmoFijarLoHecho();
+  setState({ ejercicioBloques: nuevo });
   if (typeof ritmoSincronizar === 'function') ritmoSincronizar();
 }
 

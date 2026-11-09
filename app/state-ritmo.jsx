@@ -478,6 +478,7 @@ function ritmoHorario(campo, valor) {
       Object.keys(cambios).forEach(function (c) { horario.media[c.slice(6)] = cambios[c]; });
     } else Object.assign(horario, cambios);
   }
+  if (typeof ritmoFijarLoHecho === 'function') ritmoFijarLoHecho();   /* lo hecho no se recompone */
   ritmoGuardar(function (r) {
     return { horario: horario, dia: r.dia ? Object.assign({}, r.dia, { cambios: {} }) : r.dia };
   });
