@@ -46844,7 +46844,10 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
   .pace-rt-sel option:hover, .pace-rt-sel option:focus-visible { background: var(--paper-3); outline: none; }
   .pace-rt-sel option:checked { background: var(--focus-soft); color: var(--ink); }
 }
-.pace-rt-frase { margin-top: 3px; }
+/* La frase se reparte en líneas parecidas (Ez, 1A de la caza de los seis anchos, 9 nov. 2026): a 360 px
+   en castellano partía antes de la comida y dejaba «1 h» sola debajo. «balance» no añade líneas, así que
+   la tarjeta no crece. */
+.pace-rt-frase { margin-top: 3px; text-wrap: balance; }
 
 /* GLIFOS: los de Actividades, en el color de su módulo. SUSTITUYEN al punto. */
 .pace-rt-g { display: inline-grid; place-items: center; color: var(--c); line-height: 0; flex-shrink: 0; }
