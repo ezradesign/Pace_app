@@ -15,6 +15,16 @@
 
 const PACE_NOVEDADES = [
   {
+    id: 'pausa-a-tu-manera',
+    desde: '2026-11-09',
+    es: [
+      'Si haces la pausa a tu manera, dilo: «Ya la hice por mi cuenta», junto a «Ahora no».',
+    ],
+    en: [
+      'Took your break your own way? Say so: “I did it my own way”, next to “Not now”.',
+    ],
+  },
+  {
     id: 'jornada-cerrada',
     desde: '2026-11-07',
     es: [
