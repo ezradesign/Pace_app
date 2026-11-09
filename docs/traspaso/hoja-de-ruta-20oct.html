@@ -95,7 +95,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.194.0 · actualizada el 9 de noviembre a las 10:02 · en esta cuenta, con dos sesiones montando tus letras</div>
+    <div class="eyebrow">PACE · versión 0.194.0 · actualizada el 9 de noviembre a las 10:12 · en esta cuenta, con tres sesiones: tus letras y la caza de fallos</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -131,20 +131,20 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <h2>Paso a paso</h2>
     <p class="nota">La pongo al día en cada paso. Si tienes la página abierta, se actualiza sola. Si un enlace no abre, es que está en tu otra cuenta.</p>
     <ol class="pasos">
-      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, 1 minuto</span>
-        <span class="t">Elegir cómo encaja «Escuchar» la voz en los Ajustes del móvil</span>
-        <span class="c"><span class="quien">Tú eliges; yo lo monto.</span> Tal como se pintó, en un móvil de 640 px de alto los Ajustes
-          volvían a pedir scroll. <a href="https://claude.ai/artifact/NZV35JmmQbhSStP4wnUffk">Aquí tienes tres formas</a>, pintadas
-          sobre la app de verdad, en español y en inglés:
-          <ol>
-            <li><b>A, la recomendada:</b> «Escuchar ›» a la derecha del título «Oír», como «Visita guiada ›», y «La música suena solo
-              en Respira» sale 4 segundos al elegir «Música», como el aviso de «Auto». No añade nada de alto.</li>
-            <li><b>B:</b> las dos líneas tal como se pintaron, pero solo en móviles altos (780 px o más); en el tuyo no se verían.</li>
-            <li><b>C:</b> dejarlo para después de la 0.195.0.</li>
-          </ol>
-          Dime la letra. Si es la A o la B, entra en la 0.195.0.</span></li>
-      <li class="paso marcha"><span class="estado">En marcha · yo · dos sesiones · retomadas a las 09:45</span>
-        <span class="t">Montar tus letras de las tres páginas como 0.195.0</span>
+      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, 2 minutos · en la misma conversación de ChatGPT</span>
+        <span class="t">Pasar a ChatGPT la segunda parte de la revisión de la jornada</span>
+        <span class="c"><span class="quien">Tú.</span> Busca fallos en tu día con PACE: empezar tarde, saltarse la comida, reuniones que se
+          mueven, el portátil cerrado, la medianoche, lo que cuenta Estadísticas. Pega esto en la misma conversación de la primera
+          parte y tráeme su respuesta entera; compruebo cada cosa en el código antes de montar nada.
+          <pre class="prompt">Gracias. Lo he comprobado en el código y aciertas en las dos. En la segunda, el null sin error es a propósito: es un día sin forma elegida y no hay nada que resumir. Lo que se arregla es el caso del error, guardando una copia del día pendiente para reintentarlo. Las dos ya están montadas en una rama, con sus pruebas, y entran en la próxima versión.
+
+Sigue con la misma revisión, sobre main, con lo que falta de mi primer mensaje: 1) el día (empezar tarde, saltarse la comida o una pausa, «Otra» y «Ahora no», reuniones que se mueven o se solapan, salir antes o después de tu hora, «Hoy es distinto», la media jornada, y un bloque o una pausa que se quedan a medias); 2) el tiempo (la pestaña de fondo, el portátil cerrado, PACE cerrado y vuelto a abrir, dos pestañas, la medianoche, el cambio de hora y el móvil bloqueado); 3) lo que se cuenta, más allá del resumen (que cada bloque y cada pausa cuenten una sola vez, con lo que duraron y en su día, y lo que lee Estadísticas); y 5) la experiencia, con qué mejoras darían más valor antes de v1 y cuáles pueden esperar.
+
+No repitas las dos de antes. Tampoco esto, que ya está montado en una rama y entra en la próxima versión: con el día empezado, al volver tras horas fuera con la pausa ya acabada, la línea se lee desde ahora; un Foco por libre que empieza pasada la salida no cuenta para la hora de salida de la carta; el bloque empezado antes de comer acaba a la hora de comer; la carta no propone dejar en 2 minutos una pausa que ya es de 2; tras la jornada, el Foco por libre vuelve a tus minutos de siempre; y en la ventana de la pausa se puede decir «Ya la hice por mi cuenta» sin que cuente como saltada.
+
+Mismo formato: la función como localizador, el caso paso a paso, qué ve y qué pierde quien lo usa, si es grave, molesta o es una mejora, y lo comprobado en el código aparte de lo que deduces. No propongas nada que suba la exigencia física ni consejos de salud.</pre></span></li>
+      <li class="paso marcha"><span class="estado">En marcha · yo · tres sesiones</span>
+        <span class="t">Montar tus letras como 0.195.0, y la caza de fallos</span>
         <span class="c"><span class="quien">Yo.</span>
           <ol>
             <li><b>La jornada, hecha:</b> las nueve letras con sus pruebas: el aro de cierre sin la fila de ciclos, la barra que pregunta
@@ -154,7 +154,11 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
               que era «Ahora no», y la del calendario era el ordenador cargado. Ahora pasa sus pruebas otra vez y lo sube.</li>
             <li><b>Lo nuevo, hecho</b> (<a href="https://claude.ai/artifact/6ZzJK5741WjiEzG33yu8qg">la página</a>): «Tus rutinas» abre tus
               rutinas también en el móvil, y «¿Tienes una copia? Tráela» en la bienvenida. «Escuchar» la voz no cabe tal como se
-              pintó; las formas de encajarla, en el paso de arriba.</li>
+              pintó. No te gustó el aviso de la A porque tapa otras opciones, así que te está pintando otras formas en las que nada
+              tape nada; te las paso para que elijas.</li>
+            <li><b>La caza de fallos, empezada:</b> todas las pantallas a 320, 360, 390, 768, 1280 y 1536 de ancho, en español y en
+              inglés, en claro y en oscuro, con tus letras ya dentro. Lo que esté roto sin cambiar cómo se ve, lo arregla con su prueba;
+              lo que cambie cómo se ve, y hasta seis mejoras de la interfaz, te lo pinta con opciones para que elijas.</li>
           </ol></span></li>
       <li class="paso luego"><span class="estado">Lo siguiente tuyo · cuando acaben las dos sesiones</span>
         <span class="t">Decir «júntalo» a la 0.195.0</span>
@@ -178,22 +182,6 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           y la subió a las 21:43, y Apple la está procesando. Cuando salga en App Store Connect › TestFlight, se añade al grupo
           «Testers iPhone» con el «Qué probar» que te paso, y Apple la revisa antes de que les llegue. Dime qué estado ves: si
           está lista, el enlace público del grupo va también a /beta.</span></li>
-      <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo, 2 minutos · en la misma conversación de ChatGPT</span>
-        <span class="t">Pasar a ChatGPT la segunda parte de la revisión</span>
-        <span class="c"><span class="quien">Tú.</span> Su primera respuesta solo miró lo que aprende PACE. Pega esto en la misma
-          conversación y tráeme su respuesta entera; compruebo cada cosa antes de montar nada.
-          <pre class="prompt">Gracias. Lo he comprobado en el código y aciertas en las dos. En la segunda, el null sin error es a propósito: es un día sin forma elegida y no hay nada que resumir. Lo que se arregla es el caso del error, guardando una copia del día pendiente para reintentarlo. Las dos se están montando.
-
-Sigue con la misma revisión, sobre main, con lo que falta de mi primer mensaje: 1) el día (empezar tarde, saltarse la comida o una pausa, «Otra» y «Ahora no», reuniones que se mueven o se solapan, salir antes o después de tu hora, «Hoy es distinto», la media jornada, y un bloque o una pausa que se quedan a medias); 2) el tiempo (la pestaña de fondo, el portátil cerrado, PACE cerrado y vuelto a abrir, dos pestañas, la medianoche, el cambio de hora y el móvil bloqueado); 3) lo que se cuenta, más allá del resumen (que cada bloque y cada pausa cuenten una sola vez, con lo que duraron y en su día, y lo que lee Estadísticas); y 5) la experiencia, con qué mejoras darían más valor antes de v1 y cuáles pueden esperar.
-
-No repitas las dos de antes. Tampoco esto, que ya está montado en una rama y entra en la próxima versión: con el día empezado, al volver tras horas fuera con la pausa ya acabada, la línea se lee desde ahora; un Foco por libre que empieza pasada la salida no cuenta para la hora de salida de la carta; el bloque empezado antes de comer acaba a la hora de comer; la carta no propone dejar en 2 minutos una pausa que ya es de 2; tras la jornada, el Foco por libre vuelve a tus minutos de siempre; y en la ventana de la pausa se puede decir «Ya la hice por mi cuenta» sin que cuente como saltada.
-
-Mismo formato: la función como localizador, el caso paso a paso, qué ve y qué pierde quien lo usa, si es grave, molesta o es una mejora, y lo comprobado en el código aparte de lo que deduces. No propongas nada que suba la exigencia física ni consejos de salud.</pre></span></li>
-      <li class="paso luego"><span class="estado">Después · yo · con la 0.195.0 dentro</span>
-        <span class="t">Buscar textos cortados en seis anchos</span>
-        <span class="c"><span class="quien">Yo.</span> Lo que pediste: seguir buscando fallos. Todas las pantallas a 320, 360, 390, 768,
-          1280 y 1536 de ancho, en español y en inglés, en claro y en oscuro, buscando textos cortados o que se pisan, antes
-          de que las vean tus testers.</span></li>
       <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo, unos 15 minutos</span>
         <span class="t">Grabar las cuatro voces que faltan en Respira</span>
         <span class="c"><span class="quien">Tú; yo las mido y las pongo.</span> Lo recordabas bien: en el Suspiro fisiológico, el segundo

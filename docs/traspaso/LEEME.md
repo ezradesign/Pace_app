@@ -4,6 +4,20 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de noviembre de 2026, ~11:45, v0.193.0.
 
+## 9 nov., ~10:15: tres sesiones; Ez rechaza el aviso de la 6A y pide seguir cazando fallos
+
+- **letras-jornada**: los dos arreglos de ChatGPT hechos y las cuatro rojas explicadas (dos, S6 haciendo lo suyo; una, «Ya la
+  hice por mi cuenta» es ahora el primer botón del pie; la C2, carga). Su suite de zona corre y luego hace commit y push.
+- **letras-nuevo** pintó la 6A (NZV35JmmQbhSStP4wnUffk; A en `claude/caza-nuevo-8nov-6a-a`, B en `…-6a-b`). **Ez: «No me gusta el
+  aviso de la A porque se superpone con otras opciones».** «Escuchar ›» junto a «Oír» no lo rechazó. Le pedí otras formas sin
+  nada que tape (A1 sin línea de la música, A2 en una línea que ya exista, A3 la línea solo en móviles altos).
+- **caza-anchos** (`local_f42c90e5…`, `claude/caza-anchos-9nov-6a280f`, 8895-8896), nueva: le junta a `origin/main` las dos ramas
+  de letras (ensayo de la unión de la 0.195.0, con los choques apuntados en el commit) y recorre todas las pantallas en seis
+  anchos, es/en, claro/oscuro. Arregla con prueba lo que no cambia el aspecto; lo demás y hasta seis mejoras, pintadas para Ez.
+- **ChatGPT**: Ez pidió una auditoría; se le pasa la segunda parte de la jornada (`prompt-jornada-2.md`, ahora «Ahora» en la
+  hoja). La del cobro y lo legal sigue en la hoja (`guardar-atomico` sigue sin juntar, así que su texto vale).
+- Hoja: versión 95.
+
 ## 9 nov., ~09:50: 5iWBf con las 5 h repuestas (2 %, semana al 75 %); las dos sesiones, despiertas
 
 - **letras-jornada** paró al 88 % en 4df29445 (en origin) con el **arreglo 1 de ChatGPT hecho** (`motorCortas` descarta lo

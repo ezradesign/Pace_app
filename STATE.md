@@ -59,8 +59,10 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 - **Letras de Ez (8 nov.), todas A, montándose (desde ~19:50, en 5iWBf)**: usabilidad 1-5 y la semana S3 S7 S6 S11 en
   `claude/usabilidad-8nov-587b48` (sesión `letras-jornada`, 8886-8887); N2, N3 y la usabilidad 6 en `claude/caza-nuevo-8nov-0c7d9b`
   (sesión `letras-nuevo`, 8891, con N1 arreglado). Cada una deja una página «Montado»; luego el «júntalo» de Ez y la 0.195.0.
-  La jornada lleva además los dos arreglos de ChatGPT (el 1, hecho; el 2 y cuatro pruebas en rojo, en marcha el 9 nov.). La 6A
-  no entra: pide scroll a 360×640, y Ez elegirá entre formas pintadas de encajarla.
+  La jornada lleva además los dos arreglos de ChatGPT, hechos. La 6A no entra tal cual: pedía scroll a 360×640, y Ez rechazó el
+  aviso que tapaba (9 nov.); se le pintan otras formas.
+- **Caza en seis anchos** (9 nov., `claude/caza-anchos-9nov-6a280f`): todas las pantallas con las letras dentro; arregla con
+  prueba lo que no cambia el aspecto y pinta para Ez lo demás.
 - **ChatGPT**: la primera parte de la revisión de la jornada, comprobada (`docs/audits/chatgpt-8nov/`); la segunda
   (`prompt-jornada-2.md`) y la del cobro y lo legal siguen en la hoja de Ez.
 - **Después de la 0.195.0** (lo pidió Ez el 8 nov.): la caza de las pantallas en seis anchos (320, 360, 390, 768, 1280 y
