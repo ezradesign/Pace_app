@@ -318,10 +318,16 @@ for (const plataforma of ['android', 'ios']) {
       await hoja.getByRole('button', { name: 'Ahora no' }).click();
       await expect(page.locator(HOJA)).toHaveCount(0);
 
-      /* En toda la app, ningún enlace lleva a pagar ni a /premium. */
-      const enlaces = await page.evaluate(() => [...document.querySelectorAll('a[href]')].map((a) => a.getAttribute('href'))
-        .filter((h) => /premium|stripe|buy\./i.test(h)));
+      /* En toda la app, ningún enlace lleva a pagar ni a /premium. La landing de la raíz (solo web) sí
+         enlaza a /premium: aquí, con la cara «app», está escondida y no se ve ninguno de sus enlaces; en
+         las apps de verdad ni existe, porque a su index.html le llega sin ella (landing-cara.spec.js). */
+      const { enlaces, landingVisible } = await page.evaluate(() => ({
+        enlaces: [...document.querySelectorAll('a[href]')].filter((a) => !a.closest('#pace-landing')).map((a) => a.getAttribute('href'))
+          .filter((h) => /premium|stripe|buy\./i.test(h)),
+        landingVisible: [...document.querySelectorAll('#pace-landing a[href]')].some((a) => a.checkVisibility()),
+      }));
       expect(enlaces).toEqual([]);
+      expect(landingVisible).toBe(false);
     });
 
     test('la bienvenida acaba en «Comenzar», sin ningún botón de compra', async ({ page, context }) => {
