@@ -18,7 +18,13 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de n
   con el tono donde no cabe, y botones que dejan la app de la rama con cada voz e idioma. El service worker viejo del 8915
   se purgó (servía la caché `pace-v0.195.0`, el mismo nombre que la rama, que no sube versión). Comprobado en la app de la
   rama: con sulafat en español, `paceVozCabe('breathe.inhale.more', 1)` da `true`.
-- **Hoja, versión 128 en EcLj6io4wM9pGjtQ5wd1CT**: el «Ahora» es oír las voces; ChatGPT del cobro y lo legal, lo siguiente.
+- **Ez oyó las voces (~20:15): «Me valen todos los audios»**, y del «More» de sulafat: «¿no podemos ajustarlo un poco?». Cortado
+  en 1,08 s (e18676db en `claude/voces-suspiro-9nov`): de 1,05 s en adelante es la cola de la «r», a −40 dB o menos, y sigue
+  sonando `PACE_VOZ_COLA` detrás con su fundido; mide 0,82 y cabe. Las 33 pruebas de voz en verde; con 1,15 cae el caso de
+  sulafat en inglés. **Las voces quedan aprobadas para la próxima versión** (con la 1A de `caza-anchos`). verify en la rama
+  solo marca `oir-suspiro.html`, que está sin commit en su raíz: al juntar no existe.
+- **Landing B**: 5f9629ea (el CSS) subido y la página para Ez en **TUES7Hw31NwYXYBypdmHwK** (EcLj6); su suite entera, corriendo.
+- **Hoja, versión 130 en EcLj6io4wM9pGjtQ5wd1CT**: el «Ahora» es mirar la landing B; ChatGPT del cobro y lo legal, lo siguiente.
 
 ## AL RELEVO (9 nov., ~19:45): 5iWBf… al 87-93 % de las 5 h (semana 7 %); se sigue en EcLj6…. Empieza aquí; manda sobre todo lo de abajo
 
