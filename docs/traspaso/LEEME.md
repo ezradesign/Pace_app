@@ -15,6 +15,7 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de n
   para Ez: **WXqNcQ9XeojuhvSBgWoR76** (A corta, B larga, C corta con capturas, recomendada, con «¿Ya usas PACE?» en la cabecera).
   Antes de juntar: la suite entera, WebKit, su fila en DECISIONES y mirarla a mano a 360 y 1280.
 - Play 0.191.1: Ez, «luego».
+- **CI de la 0.195.0 (42648271866), en verde entero**: verify, los dos trozos de e2e, Safari, Android e iOS.
 
 ## AL RELEVO (9 nov., ~11:10): 5iWBf… al 90 % de las 5 h y al 86 % de la semana; se sigue en EcLj6…. Empieza aquí
 
