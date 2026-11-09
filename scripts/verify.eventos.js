@@ -116,10 +116,11 @@ function chequeaEventos(ctx, declarados, listaCorta) {
   }
 
   /* 4. Importar un backup no puede dejar mezcla: el estado entra por la misma
-        barrera, que reinicia el contenedor con activatedAt nuevo. */
-  var datos = codigosSinComentariosCache(ctx, codigos, 'app/tweaks/TweaksData.jsx');
+        barrera, que reinicia el contenedor con activatedAt nuevo. Importar vive en
+        TweaksData.importar.jsx: lo comparten Ajustes y la bienvenida. */
+  var datos = codigosSinComentariosCache(ctx, codigos, 'app/tweaks/TweaksData.importar.jsx');
   if (datos === null) {
-    ctx.falla('eventos: no se pudo leer TweaksData.jsx para comprobar el import');
+    ctx.falla('eventos: no se pudo leer TweaksData.importar.jsx para comprobar el import');
   } else if (!/paceEventsStoreBarrier/.test(datos)) {
     ctx.falla('eventos: el import ya no pasa por paceEventsStoreBarrier -- un backup importado ' +
               'convivira con el baseline capturado del estado ANTERIOR (mezcla parcial, §17)');
@@ -142,7 +143,10 @@ function chequeaEventos(ctx, declarados, listaCorta) {
     var c = codigosSinComentariosCache(ctx, codigos, f);
     if (c && /\bpaceEventsAppend\s*\(/.test(c)) emisores.push(f);
   });
-  var exporta = !!(datos && /paceEventsExport/.test(datos));
+  /* El export sigue en TweaksData.jsx; importar vive en TweaksData.importar.jsx desde que también
+     se llega desde la bienvenida (Ez, N3 A, 8 nov. 2026), y lo mira la comprobación 4. */
+  var datosExport = codigosSinComentariosCache(ctx, codigos, 'app/tweaks/TweaksData.jsx');
+  var exporta = !!(datosExport && /paceEventsExport/.test(datosExport));
   if (!emisores.length && exporta) {
     /* s169 puso la condicion de entrada ANTES que el primer emisor, a
        proposito: asi el gate no puede pillar a nadie a mitad de camino. */

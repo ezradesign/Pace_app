@@ -17,11 +17,9 @@
      - exportedAt: timestamp legible.
      - state: copia literal de localStorage['pace.state.v2'].
 
-   IMPORT — lee un JSON y lo mergea/reemplaza en localStorage.
-   Valida estructura mínima (app === 'PACE' + state como objeto)
-   y pregunta confirmación explícita antes de sobrescribir.
-   Tras confirmar, recarga la página para que useSyncExternalStore
-   re-lea el nuevo estado desde cero (evita estados inconsistentes).
+   IMPORT — vive en TweaksData.importar.jsx (`usePaceTraerCopia`), porque se
+   llega también desde la bienvenida (Ez, N3 A, 8 nov. 2026). Valida, pregunta
+   con el aviso de PACE y, al decir que sí, escribe por la barrera y recarga.
 */
 
 const { useState: useStateTD, useRef: useRefTD } = React;
@@ -108,22 +106,17 @@ function paceDescargarRescate(alAbrir) {
   } catch (e) { return false; }
 }
 
-/* Lo pasajero que vuelve al recargar: el Foco en marcha o en pausa, y la Respira, el Mueve o el
-   Estira a medias. Al importar es de ANTES de la copia, así que no se reanuda con ella: un bloque
-   ya vencido se contaría en la historia que acaba de entrar (auditoría del 21 oct.). Cada clave
-   la borra su dueño. */
-function paceOlvidarPasajero() {
-  try { if (typeof olvidarFocoGuardado === 'function') olvidarFocoGuardado(); } catch (e) {}
-  try { if (typeof olvidarRespiraGuardada === 'function') olvidarRespiraGuardada(); } catch (e) {}
-  try { if (typeof olvidarCuerpoGuardada === 'function') olvidarCuerpoGuardada(); } catch (e) {}
+/* La copia lleva dentro el logro que gana («Cuaderno a salvo»): se da al salir la copia, después
+   de armarla, y sin esto quien la trae a otro móvil (o tras «Borrar todos mis datos») perdía justo
+   ese logro. Si la copia no sale, el archivo no existe y el logro no se da: no hay nada que corregir. */
+function paceConLogroDeLaCopia(s) {
+  if (!s || !s.achievements || s.achievements['secret.backup']) return s;
+  return Object.assign({}, s, { achievements: Object.assign({}, s.achievements, { 'secret.backup': { unlockedAt: Date.now() } }) });
 }
 
 function TweaksDataSection({ onReset, isWeb }) {
-  const { t, tn, lang } = useT();
-  const fileInputRef = useRefTD(null);
+  const { t, lang } = useT();
   const [msg, setMsg] = useStateTD(null); // {kind, text} para feedback Export/Import
-  const [pidiendoImportar, setPidiendoImportar] = useStateTD(null); // lo que trae la copia, mientras se pregunta
-  const [avisoParcial, setAvisoParcial] = useStateTD(false);       // la copia entró sin su registro
 
   /* Un aviso no lo borra el temporizador de otro anterior: en las apps, el de la hoja abierta
      y el de cómo acabó van seguidos. */
@@ -149,7 +142,7 @@ function TweaksDataSection({ onReset, isWeb }) {
     /* Desde la app funcionando, lo que se ve: el estado en memoria, que es lo único al día si el
        navegador no deja guardar (revisión de ChatGPT del 5 nov., punto 1). Leer del disco es solo
        para la pantalla de error, que existe cuando el árbol se ha caído. */
-    Promise.resolve(paceDescargarCopia(getState(), alAbrir)).then((como) => {
+    Promise.resolve(paceDescargarCopia(paceConLogroDeLaCopia(getState()), alAbrir)).then((como) => {
       avisarSalida(como);
       /* secret.backup (B1, sustituto de apnea): exportar tus datos. */
       if (como === 'descargada' || como === 'compartida') unlockAchievement('secret.backup');
@@ -171,157 +164,19 @@ function TweaksDataSection({ onReset, isWeb }) {
      dice aquí, donde salen los demás avisos de «Tus datos». */
   const noBorro = () => avisar('err', 'settings.msg.reset.err', 3200);
 
-  const importJSON = (file) => {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      try {
-        const raw = String(ev.target.result || '');
-        let payload = JSON.parse(raw);
-        /* La copia de rescate (la fila de arriba) lleva el estado como la cadena CRUDA que un
-           arranque no pudo leer. Si ahora se lee, entra como una copia normal, por el mismo
-           saneado; si no, es un JSON roto y lo dice el catch (caza del 10 oct., estado-4). */
-        if (payload && payload.kind === 'rescate' && payload.rescate && typeof payload.rescate.raw === 'string') {
-          payload = { app: 'PACE', state: JSON.parse(payload.rescate.raw) };
-        }
-
-        // Validación mínima: tiene que parecerse a un backup de PACE.
-        const looksValid = payload && (
-          (payload.app === 'PACE' && payload.state && typeof payload.state === 'object')
-          || (payload.achievements !== undefined || payload.weeklyStats !== undefined)
-        );
-        if (!looksValid) {
-          setMsg({ kind: 'err', text: t('settings.msg.import.invalid') });
-          setTimeout(() => setMsg(null), 2600);
-          return;
-        }
-
-        // Soporta dos formatos: {app, state:{...}} o state plano (fallback).
-        const bruto = (payload.state && typeof payload.state === 'object') ? payload.state : payload;
-        /* s198 · A-7, EL IMPORT SANEADO. Lo que entra pasa por el MISMO saneador que
-           el arranque (state-core.sanea.js): antes se escribia tal cual, y un
-           `weeklyStats: null` dentro de un backup bastaba para que el siguiente
-           arranque cayera al estado de fabrica y borrara la historia. Un backup
-           que no es un objeto se rechaza aqui, no al recargar. */
-        if (!paceEsObjetoPlano(bruto)) {
-          setMsg({ kind: 'err', text: t('settings.msg.import.invalid') });
-          setTimeout(() => setMsg(null), 2600);
-          return;
-        }
-        const incoming = paceSanearEstado(bruto, defaultState).estado;
-
-        /* Lo que trae, para el aviso que pregunta antes de escribir (un aviso de PACE, no la
-           ventanita del navegador: Ez, 3A del 27 oct.). Se escribe al decir que sí. */
-        setPidiendoImportar({
-          incoming, eventsSection: payload.events,
-          logros: incoming.achievements ? Object.keys(incoming.achievements).length : 0,
-          foco: incoming.totalFocusMin || 0,
-        });
-      } catch (e) {
-        setMsg({ kind: 'err', text: t('settings.msg.import.json.err') });
-        setTimeout(() => setMsg(null), 2600);
-      }
-    };
-    reader.readAsText(file);
-  };
-
-  /* Al decir que sí: se escribe y se recarga para empezar de un estado limpio.
-     s155 — el estado legacy y `pace.events.v1` son DOS almacenes y entre
-     ellos NO hay atomicidad, asi que la escritura pasa por la barrera:
-     marcador -> estado legacy (la verdad canonica va primero) ->
-     contenedor de eventos REINICIADO con `activatedAt` nuevo y el
-     baseline recapturado del estado que acaba de entrar.
-     Que pasa con el contenedor depende de SI EL BACKUP TRAE EVENTOS, y
-     s169 cambio esto: antes ningun backup los traia y el contenedor se
-     reiniciaba siempre.
-       · CON seccion  -> se REEMPLAZA por completo con la del backup
-         (§17: sin merge, sin deduplicar, idempotente).
-       · SIN seccion  -> se REINICIA con `activatedAt` nuevo y el
-         baseline recapturado del estado que entra. Dejar el contenedor
-         de antes junto a un estado importado seria exactamente la MEZCLA
-         de historial anterior con estado nuevo que hay que evitar — el
-         baseline se habria capturado de unos contadores que ya no son
-         los de este estado.
-     Y si la seccion viene CORRUPTA, la barrera aborta el import ENTERO
-     sin escribir el estado legacy: un backup a medias no es un backup.
-     La recarga de 900 ms no es la garantia: si el proceso muriera antes
-     de que la barrera termine, el MARCADOR sobrevive y la siguiente
-     inicializacion completa el reinicio (§22), que es idempotente.
-     La seccion de eventos, si el backup la trae: los backups anteriores
-     a s169 no la llevan y `undefined` mantiene el camino de siempre,
-     reiniciar el contenedor. NO se valida aqui -- lo hace la barrera,
-     que es quien puede garantizar el «antes de tocar nada» de §17. */
-  const importarDeVerdad = () => {
-    const pendiente = pidiendoImportar;
-    setPidiendoImportar(null);
-    if (!pendiente) return;
-    /* EL CÓDIGO DE PACE COMPLETO NO SE VA CON LA COPIA: viaja dentro del estado y una hecha antes
-       de comprar lo pisaba (revisión de ChatGPT del 5 nov., punto 2). `paceLicenciaConservar`
-       (state-licencia.js) dice cuál se queda; comprobar dos códigos es asíncrono, y lo demás espera.
-       Lo mismo con la semana del día de v1 y las rutinas que se quedan (`paceConservarAlImportar`,
-       state-entitlement.jsx): una copia de antes de v1 no la trae y volvía a empezar. */
-    paceConservarAlImportar(getState(), pendiente.incoming).then((incoming) => escribirCopia(incoming, pendiente.eventsSection));
-  };
-
-  const escribirCopia = (incoming, eventsSection) => {
-    /* EN CUANTO LA COPIA ESTÁ ESCRITA, LO QUE HAY EN MEMORIA ES LA COPIA, y nada guarda hasta
-       recargar (revisión de ChatGPT del 28 oct., A5). Lo de antes seguía en memoria los 900 ms
-       de la recarga, o lo que tardara en cerrarse el aviso de la copia a medias, y cualquier
-       cambio de ese rato (un Foco que acaba, el cambio de día, el resumen de «A tu ritmo») lo
-       guardaba encima de la copia. Desde que se escribe, siempre se recarga.
-       La copia se lee como al arrancar, igual que la de otra pestaña (state-core.pestanas.js):
-       el objeto que entra no lleva lo que añaden las migraciones, y dibujarlo tumba la app. Si
-       no se pudiera leer, lo de memoria se queda, pero tampoco se guarda. */
-    const writeLegacy = () => {
-      localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
-      let copia = getState();
-      try { copia = loadState(true); } catch (e) {}
-      try { paceAdoptarEstado(copia, true); } catch (e) {}
-    };
-    /* SE ESPERA A LA BARRERA, y el exito se anuncia solo si de verdad lo
-       hubo. Antes se lanzaba sin esperar: si `setItem` fallaba por cuota o
-       por almacenamiento bloqueado, el estado nuevo no se guardaba, el
-       contenedor de eventos se reiniciaba igual, la UI decia «importado» y
-       la pagina recargaba. Cuatro mentiras seguidas sobre una promesa de
-       integridad. */
-    paceEventsStoreBarrier('import', writeLegacy, incoming, eventsSection).then((r) => {
-      if (!r || !r.legacyWritten) {
-        setMsg({ kind: 'err', text: t('settings.msg.import.storage.err') });
-        setTimeout(() => setMsg(null), 2600);
-        return;
-      }
-      /* El estado entró, pero `legacyWritten` no dice si entró el registro de sesiones: la
-         barrera lo da también cuando el almacén falló al reemplazarlo (`interrupted`; al
-         arrancar, el marcador lo deja vacío) o cuando este navegador no tiene dónde
-         guardarlo (`unavailable`). Si la copia traía registro y no entró, se dice con un
-         aviso que hay que cerrar, y al cerrarlo se recarga (auditoría del 21 oct.): hasta
-         entonces la app sigue con la copia en memoria y sin guardar nada. */
-      const traiaRegistro = !!(eventsSection && Array.isArray(eventsSection.events) && eventsSection.events.length);
-      if (traiaRegistro && r.result !== 'committed') { setAvisoParcial(true); return; }
-      setMsg({ kind: 'ok', text: t('settings.msg.imported') });
-      setTimeout(() => { paceOlvidarPasajero(); location.reload(); }, 900);
-    });
-  };
+  /* Importar vive en TweaksData.importar.jsx, porque también se llega desde la bienvenida
+     (Ez, N3 A). Sus avisos cortos salen aquí, con los de exportar. */
+  const traer = usePaceTraerCopia((kind, clave) => avisar(kind, clave, 2600));
 
   return (
     <React.Fragment>
       <AjustesAccion onClick={exportJSON} title={t('settings.data.export.title')} derecha={<DownloadIcon />}>
         {t('settings.data.export')}
       </AjustesAccion>
-      <AjustesAccion onClick={() => fileInputRef.current && fileInputRef.current.click()} title={t('settings.data.import.title')} derecha={<UploadIcon />}>
+      <AjustesAccion onClick={traer.elegir} title={t('settings.data.import.title')} derecha={<UploadIcon />}>
         {t('settings.data.import')}
       </AjustesAccion>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="application/json,.json"
-        style={{ display: 'none' }}
-        onChange={(e) => {
-          const f = e.target.files && e.target.files[0];
-          importJSON(f);
-          e.target.value = ''; // permitir re-importar el mismo archivo
-        }}
-      />
+      {traer.piezas}
       {msg && (
         <div className="pace-aj-msg" role="status" style={{ color: msg.kind === 'err' ? 'var(--breathe-deep)' : 'var(--focus)' }}>{msg.text}</div>
       )}
@@ -348,14 +203,6 @@ function TweaksDataSection({ onReset, isWeb }) {
           </span>
         )}
       </div>
-      <AjustesAviso abierto={!!pidiendoImportar} titulo={t('settings.import.titulo')} si={t('settings.import.si')}
-        onSi={importarDeVerdad} onNo={() => setPidiendoImportar(null)}>
-        {pidiendoImportar ? tn('settings.import.cuerpo', { logros: pidiendoImportar.logros, foco: pidiendoImportar.foco }) : null}
-      </AjustesAviso>
-      <AjustesAviso abierto={avisoParcial} titulo={t('settings.import.parcial.titulo')} si={t('guardar.entendido')}
-        onNo={() => { paceOlvidarPasajero(); location.reload(); }}>
-        {t('settings.msg.import.partial')}
-      </AjustesAviso>
     </React.Fragment>
   );
 }

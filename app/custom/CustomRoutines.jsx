@@ -199,7 +199,7 @@ function CustomRoutineCard({ routine, locked, onClick, onEdit, accent = 'var(--m
         <Tag color={accent}>{t('custom.tag')}</Tag>
       </div>
       <h4 style={{ ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 }}>
-        <button type="button" className="pace-lib-hit" data-pace-custom-empezar onClick={onClick}
+        <button type="button" className="pace-lib-hit" data-pace-custom-empezar={routine.id} onClick={onClick}
           title={locked ? t('premium.locked.aria') : undefined}>{routine.name}</button>
       </h4>
       <p style={{ fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 }}>{stepsLabel}</p>

@@ -235,6 +235,34 @@ function OnbSemanaPaso({ state, ultima, onSeguir, borrador, onBorrador }) {
   );
 }
 
+/* «¿Tienes una copia? Tráela», bajo «Comenzar» (Ez, N3 A, 8 nov. 2026): quien estrena móvil o
+   borró sus datos traía su copia DESPUÉS de pasar la bienvenida entera, y la copia sustituía lo
+   contestado. Es la misma puerta que Ajustes › Tus datos › «Importar una copia»
+   (`usePaceTraerCopia`): el mismo aviso, por encima de la bienvenida (capa 130, como la hora de
+   «A tu ritmo»), y al decir que sí la app recarga con la copia, que trae su `firstSeen`. Lo que
+   no se puede traer (un archivo que no es una copia) se dice aquí debajo. */
+function OnbTraerCopia() {
+  const { t } = useT();
+  const [aviso, setAviso] = useStateONBS(null);
+  const traer = usePaceTraerCopia((kind, clave) => setAviso({ kind, clave }), 130);
+  return (
+    <React.Fragment>
+      <button type="button" data-pace-onb-copia data-pace-toque onClick={() => { setAviso(null); traer.elegir(); }}
+        style={{ ...onboardingStyles.ghostBtn, color: 'var(--ink-2)', marginTop: -6 }}>
+        {t('onboarding.copia')}{' '}
+        <span style={{ textDecoration: 'underline', textUnderlineOffset: 3, textDecorationColor: 'var(--line-2)' }}>{t('onboarding.copia.traer')}</span>
+      </button>
+      {aviso && (
+        <p role="status" data-pace-onb-copia-aviso
+          style={{ margin: '-8px 0 0', fontSize: 12, color: aviso.kind === 'err' ? 'var(--breathe-deep)' : 'var(--ink-2)' }}>
+          {t(aviso.clave)}
+        </p>
+      )}
+      {traer.piezas}
+    </React.Fragment>
+  );
+}
+
 Object.assign(window, {
-  ONBOARDING_QUESTIONS, OnbScene, OnbChoice, OnbDots, OnbLogo, OnbSemanaPaso,
+  ONBOARDING_QUESTIONS, OnbScene, OnbChoice, OnbDots, OnbLogo, OnbSemanaPaso, OnbTraerCopia,
 });

@@ -3808,6 +3808,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'onboarding.welcome.cta': 'Comenzar',
   'onboarding.welcome.hint': 'Tres preguntas breves. Medio minuto.',
 
+  'onboarding.copia': '¿Tienes una copia?',
+  'onboarding.copia.traer': 'Tráela',
+
 
   'onboarding.need.kicker': 'Conocerte · 1 de 3',
   'onboarding.need.title': '¿Qué quieres cultivar?',
@@ -3875,6 +3878,8 @@ Object.assign(window.PACE_STRINGS.en, {
 
   'onboarding.welcome.cta': 'Start',
   'onboarding.welcome.hint': 'Three short questions. Half a minute.',
+  'onboarding.copia': 'Have a copy?',
+  'onboarding.copia.traer': 'Bring it in',
 
 
   'onboarding.need.kicker': 'About you · 1 of 3',
@@ -30051,11 +30056,11 @@ Object.assign(window, { RoutineCard, routineRhythmText });
 
 
 
-const { useState: useStateLib, useEffect: useEffectLib, useMemo: useMemoLib } = React;
+const { useState: useStateLib, useEffect: useEffectLib, useLayoutEffect: useLayoutEffectLib, useMemo: useMemoLib } = React;
 
 function LibraryShell(_ref)
 
-{let { open, onClose, onStart, groups, tone, title, subtitle, catPrefix, variant = 'body', filtros, conTuyas = true, pozoAhora, ancho = 1240, viajes, enPausa = false, primeraVez = null } = _ref;
+{let { open, onClose, onStart, groups, tone, title, subtitle, catPrefix, variant = 'body', filtros, conTuyas = true, pozoAhora, ancho = 1240, viajes, enPausa = false, primeraVez = null, pideTuyas = null } = _ref;
   const { t, tn, lang } = useT();
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
   const [activos, setActivos] = useStateLib([]);
@@ -30070,6 +30075,23 @@ function LibraryShell(_ref)
   useEffectLib(() => {
     if (!open) {setActivos([]);setVista('catalogo');}
   }, [open]);
+
+
+
+
+
+
+  useLayoutEffectLib(() => {
+    if (!open || !pideTuyas || !conTuyas) return;
+    setVista('tuyas');
+    if (!pideTuyas.id) return;
+    const r = requestAnimationFrame(() => {
+      const el = [...document.querySelectorAll('[data-pace-custom-empezar]')].
+      find((b) => b.getAttribute('data-pace-custom-empezar') === pideTuyas.id && b.getClientRects().length);
+      if (el) el.scrollIntoView({ block: 'nearest' });
+    });
+    return () => cancelAnimationFrame(r);
+  }, [pideTuyas]);
 
   const todas = useMemoLib(() => {
     const out = [];
@@ -33372,11 +33394,11 @@ const { useState: useStateMV, useEffect: useEffectMV, useRef: useRefMV } = React
 
 
 
-function MoveLibrary(_ref) {let { open, onClose, onStart, enPausa } = _ref;
+function MoveLibrary(_ref) {let { open, onClose, onStart, enPausa, pideTuyas } = _ref;
   const { t } = useT();
   return (
     React.createElement(LibraryShell, {
-      open: open, enPausa: enPausa, onClose: onClose, onStart: onStart,
+      open: open, enPausa: enPausa, pideTuyas: pideTuyas, onClose: onClose, onStart: onStart,
       groups: MOVE_ROUTINES, tone: "var(--move)", catPrefix: "mueve",
       title: t('lib.move.title'), subtitle: t('lib.move.subtitle') }));
 
@@ -34448,7 +34470,14 @@ function v1Instr(tR, routine, idx, key) {
 
 
   if (!st.instruction && key === 'action' && st.cue) return tR(v1Clave(routine, idx, 'cue'), st.cue);
-  return tR(`${v1Prefijo(routine, idx)}.instruction.${key}`, st.instruction ? st.instruction[key] : undefined);
+
+
+
+
+
+  if (routine.id.indexOf('custom.') === 0) return st.instruction ? st.instruction[key] : undefined;
+  if (!st.instruction || st.instruction[key] == null) return undefined;
+  return tR(`${v1Prefijo(routine, idx)}.instruction.${key}`, st.instruction[key]);
 }
 
 
@@ -36480,11 +36509,11 @@ window.EXTRA_ROUTINES_FUERA = [
 
 
 
-function ExtraLibrary(_ref) {let { open, onClose, onStart, enPausa } = _ref;
+function ExtraLibrary(_ref) {let { open, onClose, onStart, enPausa, pideTuyas } = _ref;
   const { t } = useT();
   return (
     React.createElement(LibraryShell, {
-      open: open, enPausa: enPausa, onClose: onClose, onStart: onStart,
+      open: open, enPausa: enPausa, pideTuyas: pideTuyas, onClose: onClose, onStart: onStart,
       groups: window.EXTRA_ROUTINES, tone: "var(--extra)", catPrefix: "extra",
       title: t('lib.extra.title'), subtitle: t('lib.extra.subtitle') }));
 
@@ -37032,7 +37061,7 @@ function CustomRoutineCard(_ref2) {let { routine, locked, onClick, onEdit, accen
     React.createElement(Tag, { color: accent }, t('custom.tag'))
     ),
     React.createElement("h4", { style: { ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 } },
-    React.createElement("button", { type: "button", className: "pace-lib-hit", "data-pace-custom-empezar": true, onClick: onClick,
+    React.createElement("button", { type: "button", className: "pace-lib-hit", "data-pace-custom-empezar": routine.id, onClick: onClick,
       title: locked ? t('premium.locked.aria') : undefined }, routine.name)
     ),
     React.createElement("p", { style: { fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 } }, stepsLabel),
@@ -37119,7 +37148,7 @@ function customPasosDeHoy(lista) {
   return lista.map((p) => ({ ...p, name: typeof ejercicioNombreDeHoy === 'function' ? ejercicioNombreDeHoy(p.name) : p.name }));
 }
 
-function CustomBuilder(_ref) {let { editId, onClose } = _ref;
+function CustomBuilder(_ref) {let { editId, onClose, onGuardada } = _ref;
   const { t, tn, lang } = useT();
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
   const tEx = (name) => tR(`custom.ex.${name}.name`, name);
@@ -37227,7 +37256,9 @@ function CustomBuilder(_ref) {let { editId, onClose } = _ref;
     }
     const draft = { name, steps };
     const ok = id ? updateCustomRoutine(id, draft) : addCustomRoutine(draft);
-    if (ok) {soltarBorrador([id, target]);onClose();}
+
+
+    if (ok) {soltarBorrador([id, target]);if (onGuardada) onGuardada(id || ok.id);onClose();}
   };
   const save = () => guardarComo(target);
   const comoNueva = () => {setTarget(null);guardarComo(null);};
@@ -41324,6 +41355,180 @@ Object.assign(window, { TweakSecretsWatcher });
 
 
 
+const { useState: useStateImp, useRef: useRefImp } = React;
+
+
+
+
+
+function paceOlvidarPasajero() {
+  try {if (typeof olvidarFocoGuardado === 'function') olvidarFocoGuardado();} catch (e) {}
+  try {if (typeof olvidarRespiraGuardada === 'function') olvidarRespiraGuardada();} catch (e) {}
+  try {if (typeof olvidarCuerpoGuardada === 'function') olvidarCuerpoGuardada();} catch (e) {}
+}
+
+function usePaceTraerCopia(decir, capa) {
+  const { t, tn } = useT();
+  const fileInputRef = useRefImp(null);
+  const [pidiendoImportar, setPidiendoImportar] = useStateImp(null);
+  const [avisoParcial, setAvisoParcial] = useStateImp(false);
+
+  const importJSON = (file) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const raw = String(ev.target.result || '');
+        let payload = JSON.parse(raw);
+
+
+
+        if (payload && payload.kind === 'rescate' && payload.rescate && typeof payload.rescate.raw === 'string') {
+          payload = { app: 'PACE', state: JSON.parse(payload.rescate.raw) };
+        }
+
+
+        const looksValid = payload && (
+        payload.app === 'PACE' && payload.state && typeof payload.state === 'object' ||
+        payload.achievements !== undefined || payload.weeklyStats !== undefined);
+
+        if (!looksValid) {decir('err', 'settings.msg.import.invalid');return;}
+
+
+        const bruto = payload.state && typeof payload.state === 'object' ? payload.state : payload;
+
+
+
+
+
+        if (!paceEsObjetoPlano(bruto)) {decir('err', 'settings.msg.import.invalid');return;}
+        const incoming = paceSanearEstado(bruto, defaultState).estado;
+
+
+
+        setPidiendoImportar({
+          incoming, eventsSection: payload.events,
+          logros: incoming.achievements ? Object.keys(incoming.achievements).length : 0,
+          foco: incoming.totalFocusMin || 0
+        });
+      } catch (e) {
+        decir('err', 'settings.msg.import.json.err');
+      }
+    };
+    reader.readAsText(file);
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const importarDeVerdad = () => {
+    const pendiente = pidiendoImportar;
+    setPidiendoImportar(null);
+    if (!pendiente) return;
+
+
+
+
+
+    paceConservarAlImportar(getState(), pendiente.incoming).then((incoming) => escribirCopia(incoming, pendiente.eventsSection));
+  };
+
+  const escribirCopia = (incoming, eventsSection) => {
+
+
+
+
+
+
+
+
+    const writeLegacy = () => {
+      localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
+      let copia = getState();
+      try {copia = loadState(true);} catch (e) {}
+      try {paceAdoptarEstado(copia, true);} catch (e) {}
+    };
+
+
+    paceEventsStoreBarrier('import', writeLegacy, incoming, eventsSection).then((r) => {
+      if (!r || !r.legacyWritten) {decir('err', 'settings.msg.import.storage.err');return;}
+
+
+
+
+
+
+      const traiaRegistro = !!(eventsSection && Array.isArray(eventsSection.events) && eventsSection.events.length);
+      if (traiaRegistro && r.result !== 'committed') {setAvisoParcial(true);return;}
+      decir('ok', 'settings.msg.imported');
+      setTimeout(() => {paceOlvidarPasajero();location.reload();}, 900);
+    });
+  };
+
+  const elegir = () => fileInputRef.current && fileInputRef.current.click();
+
+  const piezas =
+  React.createElement(React.Fragment, null,
+  React.createElement("input", {
+    ref: fileInputRef,
+    type: "file",
+    accept: "application/json,.json",
+    "data-pace-traer-copia": true,
+    style: { display: 'none' },
+    onChange: (e) => {
+      const f = e.target.files && e.target.files[0];
+      importJSON(f);
+      e.target.value = '';
+    } }
+  ),
+  React.createElement(AjustesAviso, { abierto: !!pidiendoImportar, capa: capa, titulo: t('settings.import.titulo'), si: t('settings.import.si'),
+    onSi: importarDeVerdad, onNo: () => setPidiendoImportar(null) },
+  pidiendoImportar ? tn('settings.import.cuerpo', { logros: pidiendoImportar.logros, foco: pidiendoImportar.foco }) : null
+  ),
+  React.createElement(AjustesAviso, { abierto: avisoParcial, capa: capa, titulo: t('settings.import.parcial.titulo'), si: t('guardar.entendido'),
+    onNo: () => {paceOlvidarPasajero();location.reload();} },
+  t('settings.msg.import.partial')
+  )
+  );
+
+
+  return { elegir, piezas };
+}
+
+Object.assign(window, { usePaceTraerCopia, paceOlvidarPasajero });
+;Object.assign(window, { paceOlvidarPasajero, usePaceTraerCopia });
+})();
+</script>
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -41424,19 +41629,14 @@ function paceDescargarRescate(alAbrir) {
 
 
 
-
-function paceOlvidarPasajero() {
-  try {if (typeof olvidarFocoGuardado === 'function') olvidarFocoGuardado();} catch (e) {}
-  try {if (typeof olvidarRespiraGuardada === 'function') olvidarRespiraGuardada();} catch (e) {}
-  try {if (typeof olvidarCuerpoGuardada === 'function') olvidarCuerpoGuardada();} catch (e) {}
+function paceConLogroDeLaCopia(s) {
+  if (!s || !s.achievements || s.achievements['secret.backup']) return s;
+  return Object.assign({}, s, { achievements: Object.assign({}, s.achievements, { 'secret.backup': { unlockedAt: Date.now() } }) });
 }
 
 function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
-  const { t, tn, lang } = useT();
-  const fileInputRef = useRefTD(null);
+  const { t, lang } = useT();
   const [msg, setMsg] = useStateTD(null);
-  const [pidiendoImportar, setPidiendoImportar] = useStateTD(null);
-  const [avisoParcial, setAvisoParcial] = useStateTD(false);
 
 
 
@@ -41462,7 +41662,7 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
 
 
 
-    Promise.resolve(paceDescargarCopia(getState(), alAbrir)).then((como) => {
+    Promise.resolve(paceDescargarCopia(paceConLogroDeLaCopia(getState()), alAbrir)).then((como) => {
       avisarSalida(como);
 
       if (como === 'descargada' || como === 'compartida') unlockAchievement('secret.backup');
@@ -41484,157 +41684,19 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
 
   const noBorro = () => avisar('err', 'settings.msg.reset.err', 3200);
 
-  const importJSON = (file) => {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      try {
-        const raw = String(ev.target.result || '');
-        let payload = JSON.parse(raw);
 
 
-
-        if (payload && payload.kind === 'rescate' && payload.rescate && typeof payload.rescate.raw === 'string') {
-          payload = { app: 'PACE', state: JSON.parse(payload.rescate.raw) };
-        }
-
-
-        const looksValid = payload && (
-        payload.app === 'PACE' && payload.state && typeof payload.state === 'object' ||
-        payload.achievements !== undefined || payload.weeklyStats !== undefined);
-
-        if (!looksValid) {
-          setMsg({ kind: 'err', text: t('settings.msg.import.invalid') });
-          setTimeout(() => setMsg(null), 2600);
-          return;
-        }
-
-
-        const bruto = payload.state && typeof payload.state === 'object' ? payload.state : payload;
-
-
-
-
-
-        if (!paceEsObjetoPlano(bruto)) {
-          setMsg({ kind: 'err', text: t('settings.msg.import.invalid') });
-          setTimeout(() => setMsg(null), 2600);
-          return;
-        }
-        const incoming = paceSanearEstado(bruto, defaultState).estado;
-
-
-
-        setPidiendoImportar({
-          incoming, eventsSection: payload.events,
-          logros: incoming.achievements ? Object.keys(incoming.achievements).length : 0,
-          foco: incoming.totalFocusMin || 0
-        });
-      } catch (e) {
-        setMsg({ kind: 'err', text: t('settings.msg.import.json.err') });
-        setTimeout(() => setMsg(null), 2600);
-      }
-    };
-    reader.readAsText(file);
-  };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  const importarDeVerdad = () => {
-    const pendiente = pidiendoImportar;
-    setPidiendoImportar(null);
-    if (!pendiente) return;
-
-
-
-
-
-    paceConservarAlImportar(getState(), pendiente.incoming).then((incoming) => escribirCopia(incoming, pendiente.eventsSection));
-  };
-
-  const escribirCopia = (incoming, eventsSection) => {
-
-
-
-
-
-
-
-
-    const writeLegacy = () => {
-      localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
-      let copia = getState();
-      try {copia = loadState(true);} catch (e) {}
-      try {paceAdoptarEstado(copia, true);} catch (e) {}
-    };
-
-
-
-
-
-
-    paceEventsStoreBarrier('import', writeLegacy, incoming, eventsSection).then((r) => {
-      if (!r || !r.legacyWritten) {
-        setMsg({ kind: 'err', text: t('settings.msg.import.storage.err') });
-        setTimeout(() => setMsg(null), 2600);
-        return;
-      }
-
-
-
-
-
-
-      const traiaRegistro = !!(eventsSection && Array.isArray(eventsSection.events) && eventsSection.events.length);
-      if (traiaRegistro && r.result !== 'committed') {setAvisoParcial(true);return;}
-      setMsg({ kind: 'ok', text: t('settings.msg.imported') });
-      setTimeout(() => {paceOlvidarPasajero();location.reload();}, 900);
-    });
-  };
+  const traer = usePaceTraerCopia((kind, clave) => avisar(kind, clave, 2600));
 
   return (
     React.createElement(React.Fragment, null,
     React.createElement(AjustesAccion, { onClick: exportJSON, title: t('settings.data.export.title'), derecha: React.createElement(DownloadIcon, null) },
     t('settings.data.export')
     ),
-    React.createElement(AjustesAccion, { onClick: () => fileInputRef.current && fileInputRef.current.click(), title: t('settings.data.import.title'), derecha: React.createElement(UploadIcon, null) },
+    React.createElement(AjustesAccion, { onClick: traer.elegir, title: t('settings.data.import.title'), derecha: React.createElement(UploadIcon, null) },
     t('settings.data.import')
     ),
-    React.createElement("input", {
-      ref: fileInputRef,
-      type: "file",
-      accept: "application/json,.json",
-      style: { display: 'none' },
-      onChange: (e) => {
-        const f = e.target.files && e.target.files[0];
-        importJSON(f);
-        e.target.value = '';
-      } }
-    ),
+    traer.piezas,
     msg &&
     React.createElement("div", { className: "pace-aj-msg", role: "status", style: { color: msg.kind === 'err' ? 'var(--breathe-deep)' : 'var(--focus)' } }, msg.text),
 
@@ -41660,14 +41722,6 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
     React.createElement("a", { href: paceEnlaceLegal('/privacy'), target: "_blank", rel: "noopener" }, t('settings.legal.privacy'))
     )
 
-    ),
-    React.createElement(AjustesAviso, { abierto: !!pidiendoImportar, titulo: t('settings.import.titulo'), si: t('settings.import.si'),
-      onSi: importarDeVerdad, onNo: () => setPidiendoImportar(null) },
-    pidiendoImportar ? tn('settings.import.cuerpo', { logros: pidiendoImportar.logros, foco: pidiendoImportar.foco }) : null
-    ),
-    React.createElement(AjustesAviso, { abierto: avisoParcial, titulo: t('settings.import.parcial.titulo'), si: t('guardar.entendido'),
-      onNo: () => {paceOlvidarPasajero();location.reload();} },
-    t('settings.msg.import.partial')
     )
     ));
 
@@ -41701,7 +41755,7 @@ function UploadIcon() {
 
 
 Object.assign(window, { TweaksDataSection, paceDescargarCopia, paceDescargarRescate });
-;Object.assign(window, { paceBajarJSON, paceEnlaceLegal, paceDiaArchivo, paceDescargarCopia, paceDescargarRescate, paceOlvidarPasajero, TweaksDataSection, DownloadIcon, UploadIcon });
+;Object.assign(window, { paceBajarJSON, paceEnlaceLegal, paceDiaArchivo, paceDescargarCopia, paceDescargarRescate, paceConLogroDeLaCopia, TweaksDataSection, DownloadIcon, UploadIcon });
 })();
 </script>
   <script>
@@ -42192,11 +42246,11 @@ function AjustesAccion(_ref6) {let { children, derecha, suave, onClick, title, s
 
 
 
-function AjustesAviso(_ref7) {let { abierto, titulo, children, si, onSi, onNo } = _ref7;
+function AjustesAviso(_ref7) {let { abierto, titulo, children, si, onSi, onNo, capa } = _ref7;
   const { t } = useT();
   if (!abierto) return null;
   return ReactDOM.createPortal(
-    React.createElement(Modal, { open: true, onClose: onNo, maxWidth: 440, title: titulo },
+    React.createElement(Modal, { open: true, onClose: onNo, maxWidth: 440, title: titulo, capa: capa },
     React.createElement("div", { "data-pace-aj-aviso": true },
     React.createElement("p", { style: { margin: '0 0 22px', color: 'var(--ink-2)', fontSize: 15, lineHeight: 1.55 } }, children),
     React.createElement("div", { style: { display: 'flex', gap: 10, justifyContent: 'flex-end', flexWrap: 'wrap' } },
@@ -45634,10 +45688,38 @@ function OnbSemanaPaso(_ref4) {let { state, ultima, onSeguir, borrador, onBorrad
 
 }
 
+
+
+
+
+
+
+function OnbTraerCopia() {
+  const { t } = useT();
+  const [aviso, setAviso] = useStateONBS(null);
+  const traer = usePaceTraerCopia((kind, clave) => setAviso({ kind, clave }), 130);
+  return (
+    React.createElement(React.Fragment, null,
+    React.createElement("button", { type: "button", "data-pace-onb-copia": true, "data-pace-toque": true, onClick: () => {setAviso(null);traer.elegir();},
+      style: { ...onboardingStyles.ghostBtn, color: 'var(--ink-2)', marginTop: -6 } },
+    t('onboarding.copia'), ' ',
+    React.createElement("span", { style: { textDecoration: 'underline', textUnderlineOffset: 3, textDecorationColor: 'var(--line-2)' } }, t('onboarding.copia.traer'))
+    ),
+    aviso &&
+    React.createElement("p", { role: "status", "data-pace-onb-copia-aviso": true,
+      style: { margin: '-8px 0 0', fontSize: 12, color: aviso.kind === 'err' ? 'var(--breathe-deep)' : 'var(--ink-2)' } },
+    t(aviso.clave)
+    ),
+
+    traer.piezas
+    ));
+
+}
+
 Object.assign(window, {
-  ONBOARDING_QUESTIONS, OnbScene, OnbChoice, OnbDots, OnbLogo, OnbSemanaPaso
+  ONBOARDING_QUESTIONS, OnbScene, OnbChoice, OnbDots, OnbLogo, OnbSemanaPaso, OnbTraerCopia
 });
-;Object.assign(window, { OnbScene, OnbChoice, OnbDots, OnbLogo, OnbSemanaPaso });
+;Object.assign(window, { OnbScene, OnbChoice, OnbDots, OnbLogo, OnbSemanaPaso, OnbTraerCopia });
 })();
 </script>
   <script>
@@ -46026,6 +46108,7 @@ function Onboarding() {
     React.createElement("button", { "data-pace-cta": true, onClick: next, style: onboardingStyles.cta },
     t('onboarding.welcome.cta')
     ),
+    React.createElement(OnbTraerCopia, null),
     conCaminos &&
     React.createElement("button", { onClick: () => finish({ pick: false }), style: onboardingStyles.ghostBtn },
     t('onboarding.skip')
@@ -51243,8 +51326,10 @@ function usePaceEventos(acciones) {
 
 
 
+
+
         const propias = (getState().customRoutines || []).length;
-        if (propias) a.abrirBiblioteca('move');else
+        if (propias) a.abrirBiblioteca('move', true);else
         constructor(null);
         return;
       }
@@ -51332,7 +51417,9 @@ function PaceApp() {
 
 
   const anotarPuerta = (puerta, desdeMenu) => {if (typeof paceOrigenSesion === 'function') paceOrigenSesion(puerta, desdeMenu);};
-  const abrirBiblioteca = (kind) => {anotarPuerta('biblioteca', false);setOpenLibrary(kind);};
+
+  const [pideTuyas, setPideTuyas] = useStateMain(null);
+  const abrirBiblioteca = (kind, tuyas) => {anotarPuerta('biblioteca', false);setOpenLibrary(kind);if (tuyas) setPideTuyas({ id: tuyas === true ? null : tuyas });};
   const [openHydrate, setOpenHydrate] = useStateMain(false);
   const [openAchievements, setOpenAchievements] = useStateMain(false);
   const [openStats, setOpenStats] = useStateMain(false);
@@ -51691,13 +51778,13 @@ function PaceApp() {
     red(t('lib.breathe.title'), openLibrary === 'breathe', () => setOpenLibrary(null),
     React.createElement(BreatheLibrary, { open: openLibrary === 'breathe', onClose: () => setOpenLibrary(null), onStart: handleStartBreathe })),
     red(t('lib.move.title'), openLibrary === 'move', () => setOpenLibrary(null),
-    React.createElement(MoveLibrary, { open: openLibrary === 'move', enPausa: !!customBuilder, onClose: () => setOpenLibrary(null), onStart: handleStartMove })),
+    React.createElement(MoveLibrary, { open: openLibrary === 'move', enPausa: !!customBuilder, pideTuyas: pideTuyas, onClose: () => setOpenLibrary(null), onStart: handleStartMove })),
     red(t('lib.extra.title'), openLibrary === 'extra', () => setOpenLibrary(null),
-    React.createElement(ExtraLibrary, { open: openLibrary === 'extra', enPausa: !!customBuilder, onClose: () => setOpenLibrary(null), onStart: handleStartExtra })),
+    React.createElement(ExtraLibrary, { open: openLibrary === 'extra', enPausa: !!customBuilder, pideTuyas: pideTuyas, onClose: () => setOpenLibrary(null), onStart: handleStartExtra })),
 
 
     customBuilder && red(t('custom.builder.tag'), true, () => setCustomBuilder(null),
-    React.createElement(CustomBuilder, { editId: customBuilder.id, onClose: () => setCustomBuilder(null) })),
+    React.createElement(CustomBuilder, { editId: customBuilder.id, onClose: () => setCustomBuilder(null), onGuardada: (id) => abrirBiblioteca(openLibrary === 'extra' ? 'extra' : 'move', id || true) })),
     red(t('hydrate.title'), openHydrate, () => setOpenHydrate(false),
     React.createElement(HydrateTracker, { open: openHydrate, onClose: () => setOpenHydrate(false) })),
     red(t('ach.title'), openAchievements, () => setOpenAchievements(false),

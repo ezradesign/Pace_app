@@ -28,7 +28,7 @@ function customPasosDeHoy(lista) {
   return lista.map(p => ({ ...p, name: typeof ejercicioNombreDeHoy === 'function' ? ejercicioNombreDeHoy(p.name) : p.name }));
 }
 
-function CustomBuilder({ editId, onClose }) {
+function CustomBuilder({ editId, onClose, onGuardada }) {
   const { t, tn, lang } = useT();
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   const tEx = (name) => tR(`custom.ex.${name}.name`, name);
@@ -136,7 +136,9 @@ function CustomBuilder({ editId, onClose }) {
     }
     const draft = { name, steps };
     const ok = id ? updateCustomRoutine(id, draft) : addCustomRoutine(draft);
-    if (ok) { soltarBorrador([id, target]); onClose(); }
+    /* Guardada, se abre «Tus rutinas» con ella a la vista (Ez, N2 A): desde la barra lateral
+       no había biblioteca debajo y se volvía al inicio sin ver dónde quedó. */
+    if (ok) { soltarBorrador([id, target]); if (onGuardada) onGuardada(id || ok.id); onClose(); }
   };
   const save = () => guardarComo(target);
   const comoNueva = () => { setTarget(null); guardarComo(null); };
