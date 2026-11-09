@@ -63,7 +63,9 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 - **ChatGPT, segunda parte** (`docs/audits/chatgpt-8nov/respuesta-2-dia-tiempo-cuenta.md`): siete puntos ciertos; Ez dijo
   «Sí, así»: después de la 0.195.0, probar el doble cómputo, arreglar la cuenta (1, 3, 2) y pintar 4, 6 y 7. La del cobro y lo
   legal sigue en su hoja.
-- **Landing C** (9 nov., `claude/landing-c-9nov`, a medias): la raíz con dos caras; ante la duda, la app. Se pinta para Ez.
+- **Landing C con la B de Ez** (9 nov., `claude/landing-c-9nov`): la raíz con dos caras y la landing larga como /premium; montándose.
+- **Las voces del Suspiro** («Más» / «More», grabadas por Ez), puestas en `claude/voces-suspiro-9nov`: Ez tiene que oírlas antes de publicarlas; el «More» de sulafat no cabe (0,89 s).
+- **En marcha** (9 nov.): lo de ChatGPT 2 (`claude/chatgpt-jornada-9nov`) y la caza de rendimiento (`claude/caza-rendimiento-9nov`). Relevo a EcLj6 en `docs/traspaso/LEEME.md`.
 - **La 1A de la caza** («1 h» no se queda sola en la frase del día), montada en `claude/caza-anchos-9nov-6a280f` (43655d1b): entra en la siguiente. La 2A deja 320 px como está.
 - **Esperan a Ez**: las letras de la landing (WXqNcQ9X…, 5iWBf), Play y TestFlight con la 0.191.1 (lunes 9) y los audios del suspiro.
 - **Lo legal para vender en la web**, en `main` con la 0.189.0 y las letras de Ez (1A 2A 3A 4A 5A): los borradores, sin

@@ -2,7 +2,42 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de noviembre de 2026, ~11:10, v0.194.0 (la 0.195.0, juntándose).
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de noviembre de 2026, ~19:45, v0.195.0.
+
+## AL RELEVO (9 nov., ~19:45): 5iWBf… al 87-93 % de las 5 h (semana 7 %); se sigue en EcLj6…. Empieza aquí; manda sobre todo lo de abajo
+
+**Regla de Ez:** se para al 90 % de las 5 h o al 95 % de la semana (esta noche, excepción hasta el 93 % para dejar el relevo).
+`main` = **0.195.0**, con su CI en verde entero (42648271866). Las sesiones de 5iWBf **no se ven desde EcLj6**: lo que esté a
+medias se retoma con una sesión nueva en EcLj6, con `cwd` en su worktree, que empiece leyendo su `git log` y su nota «dónde me
+quedo» (en la carpeta de memoria del proyecto, que comparten las dos cuentas). Sus páginas dan 404 en EcLj6: se republican desde
+la copia de su rama. No hay ningún CronCreate vivo en 5iWBf.
+
+**Ramas por juntar, con lo que decidió Ez:**
+
+| Rama | Qué lleva | Estado | Falta |
+|---|---|---|---|
+| `claude/caza-anchos-9nov-6a280f` | **1A** de Ez: «1 h» no se queda sola en la frase del día (43655d1b); lo demás ya está en `main` | prueba con mutante, verify y zona en verde | juntarla en la próxima versión |
+| `claude/voces-suspiro-9nov` | **«Más» y «More»** del Suspiro, las voces que grabó Ez (4d80f867): señal `breathe.inhale.more`, la única voz en una fase de 1 s, con `vol` | verify; las 8 pruebas de voz en verde; prueba nueva con 3 mutantes en rojo | **que Ez las oiga antes de publicar** (en la app de la rama: Respira › Suspiro fisiológico, con cada voz y en los dos idiomas); el «More» de sulafat dura 0,89 s y no cabe en 0,85: suena el tono hasta que Ez grabe una toma más corta (los prompts, en `docs/traspaso/archivos/encargos-16oct/PROMPTS_AUDIO_SUSPIRO.md`, pidiendo menos de 0,7 s) |
+| `claude/landing-c-9nov` | la raíz con dos caras (C) y **la landing B de Ez** («B larga como premium»), con las recomendadas en sus otras preguntas | 17 pruebas con mutantes; montando la B; suite entera y WebKit en marcha al relevar | ver su nota; enseñar a Ez lo montado y qué recomendadas se pusieron; su «júntalo» |
+| `claude/chatgpt-jornada-9nov` | lo de ChatGPT 2 (Ez: «Sí, así»): el 5 primero, luego 1, 3 y 2 con prueba y mutante, y una página con 4, 6 y 7 | a medias | retomarla; su página, a Ez |
+| `claude/caza-rendimiento-9nov` | caza nueva: móvil lento, un día entero con la pestaña abierta y el paso de versión con el service worker | a medias | retomarla; su página, a Ez |
+
+Puertos: landing 8901-8902, chatgpt 8886-8887, rendimiento 8910-8911, voces 8915; el 8896 lo tiene un servidor viejo.
+La próxima versión junta 1A + voces (cuando Ez las oiga) + lo que esté listo; bump, suite entera, CHANGELOG, push y CI.
+
+**Esperan a Ez:** subir la 0.191.1 a Play y darla en TestFlight, guiándole pantalla a pantalla (`docs/launch/google-play/SUBIDAS.md`;
+el archivo, `subidas-play\PACE-0.191.1.aab`); pegar en ChatGPT la revisión del cobro y lo legal (el «Ahora» de su hoja; comprobar
+cada punto en el código antes de montar nada y esperar su sí); oír las voces; mirar la landing B y las páginas de chatgpt y rendimiento.
+
+**La hoja:** la del repo lleva ids de 5iWBf. En EcLj6 se publica en **EcLj6io4wM9pGjtQ5wd1CT** dando la vuelta a los ids con
+`docs/traspaso/archivos/hoja-ids-cuentas.js`. Ponerla al día con este bloque: las voces, puestas y por oír; la landing B montándose;
+el «Ahora», el cobro y lo legal para ChatGPT.
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (9 nov., ~19:45)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Republica mi hoja de pasos en esta cuenta, retoma las sesiones a medias desde sus ramas y prepárame las voces del suspiro para oírlas.
+```
 
 ## 9 nov., ~19:15: la semana, repuesta (1 %); Ez elige la landing B y pide seguir cazando y auditando
 
