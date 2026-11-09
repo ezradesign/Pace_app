@@ -98,6 +98,9 @@ if (!_paceAjustesCss) {
     .pace-aj-sub { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 400; color: var(--ink-3); margin-top: 3px; letter-spacing: .1px; }
     .pace-aj-punto { width: 6px; height: 6px; border-radius: 50%; background: var(--pace-aj-m, var(--ink-3)); display: inline-block; flex: 0 0 auto; }
     .pace-aj-sec-accion:disabled { opacity: .38; cursor: default; }
+    /* La línea pequeña de «Suena detrás» cabe en el alto de la fila (34 px en el móvil): con la de
+       las demás filas la hoja crecía 4 px, y en Android a 360×730 ya está en el 79 %. */
+    [data-pace-aj-fila="bg"] .pace-aj-sub { font-size: 11px; line-height: 1; margin-top: 1px; }
     .pace-aj-nota { font-size: 10.5px; color: var(--ink-3); letter-spacing: .1px; line-height: 1.45; margin: -2px 0 6px; }
 
     /* pildoras: pista de papel-2 sin borde, la elegida en tinta */

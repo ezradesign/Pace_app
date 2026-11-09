@@ -104,7 +104,9 @@ function TweaksAudioBlock({ state, set }) {
           { v: 'bradford', name: t('settings.signal.deep') },
         ]} />
       </AjustesFila>
-      <AjustesFila id="bg" nombre={t('settings.bg')} atenuada={apagado}>
+      {/* «La música, solo en Respira» en la línea pequeña de la fila (Ez, 6A del 8 nov.): debajo
+          de la fila pedía scroll en el móvil de 640 px, y como aviso tapaba otras opciones. */}
+      <AjustesFila id="bg" nombre={t('settings.bg')} sub={t('settings.bg.music.nota')} atenuada={apagado}>
         <AjustesPildoras aria={t('settings.bg')} valor={fondo} onChange={ponerFondo} apagado={apagado} opciones={[
           { v: 'nada', name: t('settings.bg.none') },
           { v: 'amb', name: t('settings.bg.ambient') },
