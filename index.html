@@ -19243,6 +19243,20 @@ function letraDe(color) {
   return m ? 'var(--' + m[1] + '-deep)' : color;
 }
 
+
+
+
+
+
+function rellenoDeBarra(p) {
+  const v = Number.isFinite(p) ? Math.min(1, Math.max(0, p)) : 0;
+  return {
+    position: 'absolute', inset: 0,
+    transform: `translateX(${(v - 1) * 100}%)`,
+    transition: 'transform 1s linear'
+  };
+}
+
 function Modal(_ref) {let { open, onClose, children, maxWidth = 680, tagLabel, title, subtitle, ariaLabel, cabecera, relleno, capa = 100 } = _ref;
   const { t } = useT();
 
@@ -19605,8 +19619,8 @@ function PaceConIcono(_ref8) {let { texto } = _ref8;
   return React.createElement(React.Fragment, null, m[3], " ", React.createElement("span", { "aria-hidden": "true" }, m[4]));
 }
 
-Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic, letraDe, paceSinIcono, PaceConIcono });
-;Object.assign(window, { _extends, letraDe, Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, paceSinIcono, PaceConIcono });
+Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic, letraDe, rellenoDeBarra, paceSinIcono, PaceConIcono });
+;Object.assign(window, { _extends, letraDe, rellenoDeBarra, Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, paceSinIcono, PaceConIcono });
 })();
 </script>
   <script>
@@ -24913,12 +24927,7 @@ function TimerBar(_ref3) {let { mins, secs, progress, modeLabel, subtitle } = _r
         marginBottom: 30
       } }, String(mins).padStart(2, '0'), ":", String(secs).padStart(2, '0')),
     React.createElement("div", { style: { height: 2, background: 'var(--line)', borderRadius: 2, position: 'relative', overflow: 'hidden' } },
-    React.createElement("div", { style: {
-        position: 'absolute', inset: 0,
-        width: `${progress * 100}%`,
-        background: 'var(--focus)',
-        transition: 'width 1s linear'
-      } })
+    React.createElement("div", { "data-pace-relleno": true, style: { ...rellenoDeBarra(progress), background: 'var(--focus)' } })
     ),
     React.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', marginTop: 8, fontSize: 10, color: 'var(--ink-3)', letterSpacing: '0.1em', textTransform: 'uppercase' } },
     React.createElement("span", null, "0:00"),
@@ -32971,12 +32980,10 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
         flex: 1, height: '100%', position: 'relative', overflow: 'hidden',
         borderRadius: 'var(--r-pill)', background: 'var(--line)'
       } },
-    React.createElement("div", { style: {
-        position: 'absolute', inset: 0,
-        width: `${sessionProgress * 100}%`,
+    React.createElement("div", { "data-pace-relleno": true, style: {
+        ...rellenoDeBarra(sessionProgress),
         background: 'var(--breathe)',
-        borderRadius: 'var(--r-pill)',
-        transition: 'width 1s linear'
+        borderRadius: 'var(--r-pill)'
       } })
     )
 
@@ -33820,12 +33827,7 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
         transition: 'height 220ms'
       } },
     i === stepIdx &&
-    React.createElement("div", { style: {
-        position: 'absolute', inset: 0,
-        width: `${progress * 100}%`,
-        background: accent,
-        transition: 'width 1s linear'
-      } })
+    React.createElement("div", { "data-pace-relleno": true, style: { ...rellenoDeBarra(progress), background: accent } })
 
     )
     )
@@ -35028,7 +35030,7 @@ function CuerpoV1(p) {
         borderRadius: 2, position: 'relative', overflow: 'hidden', transition: 'height 220ms'
       } },
     i === stepIdx &&
-    React.createElement("div", { style: { position: 'absolute', inset: 0, width: `${v1StepProgress(step, side, elapsed) * 100}%`, background: accent, transition: 'width 1s linear' } })
+    React.createElement("div", { "data-pace-relleno": true, style: { ...rellenoDeBarra(v1StepProgress(step, side, elapsed)), background: accent } })
 
     )
     )

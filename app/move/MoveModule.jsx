@@ -364,12 +364,7 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
               transition: 'height 220ms',
             }}>
               {i === stepIdx && (
-                <div style={{
-                  position: 'absolute', inset: 0,
-                  width: `${progress * 100}%`,
-                  background: accent,
-                  transition: 'width 1s linear',
-                }} />
+                <div data-pace-relleno style={{ ...rellenoDeBarra(progress), background: accent }} />
               )}
             </div>
           ))}

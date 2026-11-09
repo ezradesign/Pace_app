@@ -476,12 +476,10 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
             flex: 1, height: '100%', position: 'relative', overflow: 'hidden',
             borderRadius: 'var(--r-pill)', background: 'var(--line)',
           }}>
-            <div style={{
-              position: 'absolute', inset: 0,
-              width: `${sessionProgress * 100}%`,
+            <div data-pace-relleno style={{
+              ...rellenoDeBarra(sessionProgress),
               background: 'var(--breathe)',
               borderRadius: 'var(--r-pill)',
-              transition: 'width 1s linear',
             }} />
           </div>
         )}

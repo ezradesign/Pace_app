@@ -203,12 +203,7 @@ function TimerBar({ mins, secs, progress, modeLabel, subtitle }) {
         marginBottom: 30,
       }}>{String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}</div>
       <div style={{ height: 2, background: 'var(--line)', borderRadius: 2, position: 'relative', overflow: 'hidden' }}>
-        <div style={{
-          position: 'absolute', inset: 0,
-          width: `${progress * 100}%`,
-          background: 'var(--focus)',
-          transition: 'width 1s linear',
-        }} />
+        <div data-pace-relleno style={{ ...rellenoDeBarra(progress), background: 'var(--focus)' }} />
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8, fontSize: 10, color: 'var(--ink-3)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
         <span>0:00</span>
