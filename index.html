@@ -21706,6 +21706,12 @@ var SOUND_RECIPES = {
     if (dur === undefined) dur = 4.0;
     breathNoise(ctx, ctx.destination, 'in', t0, dur, 0.06);
   },
+
+
+  'breathe.inhale.more': function (ctx, t0, dur) {
+    if (dur === undefined) dur = 1.0;
+    breathNoise(ctx, ctx.destination, 'in', t0, dur, 0.06);
+  },
   'breathe.exhale': function (ctx, t0, dur) {
     if (dur === undefined) dur = 6.0;
     breathNoise(ctx, ctx.destination, 'out', t0, dur, 0.07);
@@ -22042,29 +22048,43 @@ var PACE_VOZ_MARGEN = 0.15;
 
 
 
+
+
+
+
+
+
+
+
+
+
 var PACE_VOZ_CLIPS = {
   es: {
     sulafat: {
       'breathe.inhale': { archivo: 'inhala', dur: 2.44, ini: 0.386, fin: 1.79 },
       'breathe.hold': { archivo: 'manten', dur: 2.56, ini: 0.021, fin: 1.341 },
-      'breathe.exhale': { archivo: 'exhala', dur: 4.96, ini: 0.644, fin: 2.122 }
+      'breathe.exhale': { archivo: 'exhala', dur: 4.96, ini: 0.644, fin: 2.122 },
+      'breathe.inhale.more': { archivo: 'mas', dur: 2.12, ini: 0.75, fin: 1.59, vol: 0.56, corta: true }
     },
     bradford: {
       'breathe.inhale': { archivo: 'inhala', dur: 2.64, ini: 0.001, fin: 0.912 },
       'breathe.hold': { archivo: 'manten', dur: 2.4, ini: 0.001, fin: 1.219 },
-      'breathe.exhale': { archivo: 'exhala', dur: 3.68, ini: 0.108, fin: 1.309 }
+      'breathe.exhale': { archivo: 'exhala', dur: 3.68, ini: 0.108, fin: 1.309 },
+      'breathe.inhale.more': { archivo: 'mas', dur: 0.8, ini: 0.05, fin: 0.63, vol: 0.47, corta: true }
     }
   },
   en: {
     sulafat: {
       'breathe.inhale': { archivo: 'inhale', dur: 6.88, ini: 0.29, fin: 2.26 },
       'breathe.hold': { archivo: 'hold', dur: 1.52, ini: 0.149, fin: 1.134 },
-      'breathe.exhale': { archivo: 'exhale', dur: 2.68, ini: 0.831, fin: 2.65 }
+      'breathe.exhale': { archivo: 'exhale', dur: 2.68, ini: 0.831, fin: 2.65 },
+      'breathe.inhale.more': { archivo: 'more', dur: 1.6, ini: 0.26, fin: 1.15, vol: 0.75, corta: true }
     },
     bradford: {
       'breathe.inhale': { archivo: 'inhale', dur: 0.96, ini: 0.056, fin: 0.799 },
       'breathe.hold': { archivo: 'hold', dur: 0.72, ini: 0.031, fin: 0.612 },
-      'breathe.exhale': { archivo: 'exhale', dur: 1.2, ini: 0.057, fin: 0.987 }
+      'breathe.exhale': { archivo: 'exhale', dur: 1.2, ini: 0.057, fin: 0.987 },
+      'breathe.inhale.more': { archivo: 'more', dur: 0.64, ini: 0.05, fin: 0.5, corta: true }
     }
   }
 };
@@ -22144,8 +22164,8 @@ function paceVozWebAudio(slot, desde) {
   var g = ctx.createGain();
   s.buffer = slot.buffer;
   g.gain.setValueAtTime(0, t0);
-  g.gain.linearRampToValueAtTime(1, t0 + f);
-  g.gain.setValueAtTime(1, t0 + resto - f);
+  g.gain.linearRampToValueAtTime(slot.vol, t0 + f);
+  g.gain.setValueAtTime(slot.vol, t0 + resto - f);
   g.gain.linearRampToValueAtTime(0, t0 + resto);
   s.connect(g);
   g.connect(ctx.destination);
@@ -22202,7 +22222,8 @@ function paceVozInit(voz) {
   var fichas = (PACE_VOZ_CLIPS[idioma] || {})[cual] || {};
   Object.keys(fichas).forEach(function (nombre) {
     var ficha = fichas[nombre];
-    var slot = { listo: false, ini: ficha.ini, fin: ficha.fin, palabra: ficha.fin - ficha.ini, audio: null, buffer: null, fuente: null, corte: null };
+    var slot = { listo: false, ini: ficha.ini, fin: ficha.fin, palabra: ficha.fin - ficha.ini, audio: null, buffer: null, fuente: null, corte: null,
+      vol: typeof ficha.vol === 'number' ? ficha.vol : 1, corta: !!ficha.corta };
     juego[nombre] = slot;
     var url = 'app/breathe/voz/' + cual + '-' + ficha.archivo + '.mp3';
     paceVozDescodifica(slot, url);
@@ -22242,7 +22263,8 @@ function paceVozCabe(nombre, faseSeg) {
   if (!paceVozEncendida()) return false;
   var slot = paceVozInit(paceVozActiva())[nombre];
   if (!slot || !slot.listo) return false;
-  if (typeof faseSeg !== 'number' || !isFinite(faseSeg) || faseSeg < PACE_VOZ_FASE_MIN) return false;
+
+  if (typeof faseSeg !== 'number' || !isFinite(faseSeg) || !slot.corta && faseSeg < PACE_VOZ_FASE_MIN) return false;
 
 
   return slot.palabra + PACE_VOZ_MARGEN <= faseSeg;
@@ -22269,6 +22291,7 @@ function paceVozIntenta(nombre, faseSeg, alFallar) {
     var desde = Math.max(0, slot.ini - PACE_VOZ_PREV);
     if (paceVozWebAudio(slot, desde)) return true;
     slot.audio.currentTime = desde;
+    slot.audio.volume = slot.vol;
     var pedida = Date.now();
     var p = slot.audio.play();
 
@@ -32401,7 +32424,11 @@ function playPhaseSound(phaseLabel, phaseDur) {
 
 
   const musica = (tipo) => {try {if (window.paceMusica) window.paceMusica.fase(tipo, phaseDur, phaseLabel);} catch (e) {}};
-  if (phaseLabel === 'Inhala' || phaseLabel === 'Inhala más' ||
+
+  if (phaseLabel === 'Inhala más') {
+    try {playSound('breathe.inhale.more', phaseDur);} catch (e) {}
+    musica('in');
+  } else if (phaseLabel === 'Inhala' ||
   phaseLabel === 'Inhala oceánica' || phaseLabel === 'Inhala izq.' ||
   phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira' ||
   phaseLabel === 'Inhala al vientre') {
