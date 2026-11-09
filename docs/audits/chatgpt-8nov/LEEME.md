@@ -12,7 +12,9 @@ para elegir. La revisión y lo comprobado: `respuesta-2-dia-tiempo-cuenta.md`.
 | 3 · cambiar cadencia, horario, semana o reuniones congela antes lo hecho (`ritmoFijarLoHecho`) | 1c7e6fbd | `tests/ritmo-fijar-lo-hecho.spec.js` | sin congelar, caen las dos |
 | 2 · la hora de empezar se guarda también en marcha y viaja con `corre` | el commit que lleva este LEEME | `tests/foco-inicio-recarga.spec.js` | caen los dos |
 
-Sin versión, sin STATE ni CHANGELOG: eso lo pone la coordinadora al juntar.
+El 2 subió como «WIP:» por el uso, pero está terminado: verify en verde y la suite de las zonas del Foco
+(158 pruebas) en verde salvo una que se pasó de tiempo al cerrar (`eventos-origen`, «el aro con plan»), que
+sola pasa. Sin versión, sin STATE ni CHANGELOG: eso lo pone la coordinadora al juntar.
 
 ## Lo que falta: la página de 4, 6 y 7 para Ez
 
