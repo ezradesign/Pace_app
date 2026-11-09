@@ -4,6 +4,18 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de noviembre de 2026, ~11:45, v0.193.0.
 
+## 9 nov., ~11:40: 5iWBf al 89 % de las 5 h (semana 86 %): todo parado hasta las 14:40
+
+- **caza-anchos**, hecha: `claude/caza-anchos-9nov-6a280f` d553a8e2 = la unión de las dos ramas de letras (e4185529: `i18nClaves`
+  1168, DECISIONES 7 de usabilidad y luego 4 de caza-nuevo, `index.html` regenerado) + los dos commits finales de la jornada
+  (fbe85104) + dos arreglos con prueba («+ Crear rutina» cortado en Mueve/Estira a 1280×720 y 1536×710, `LibraryShell.jsx`; «No
+  plan, no plan» en la bienvenida inglesa). 140 recorridos: desde 360 px nada roto. Página: **6qpGWXaVkm5TM6QCD6iddk**. Esperan a Ez
+  1A/1B («1 h» sola en la frase del día a 360) y 2A/2B (320 px; 2A deja como la home ya aceptada). **Para la 0.195.0 basta juntar
+  esta rama + la 6A elegida.** El 8896 lo ocupa un servidor de `caza-6a-opciones`.
+- **landing-c** paró al 82 %: WIP 37266f5a (la raíz decide antes de pintar; «Abrir PACE» monta la app en el sitio). Faltan
+  pruebas, la marca de la suite, verify/e2e y la página. Despertarla a las 14:40.
+- **Pendiente de Ez:** el «júntalo» (con A2 o sin 6A) y las letras de la caza.
+
 ## 9 nov., ~11:10: las letras, listas para el «júntalo»; Ez dice «Sí, así» a lo de ChatGPT
 
 - **Ez (~11:05): «Sí, así»** al plan de ChatGPT 2: después de la 0.195.0, UNA sesión que primero pruebe el 5 (contar dos veces
