@@ -21,6 +21,8 @@ const rotuloArriba = (page) => page.evaluate(() => {
   return v('[data-pace-dial-label]').getBoundingClientRect().top - v('[data-pace-dial-ring]').getBoundingClientRect().top;
 });
 
+/* 5A del 8 nov. 2026: la línea dice de qué es la hora, «Tu jornada, hasta las 17:00»: «Hasta las 17:00»
+   sobre la cuenta del bloque se leía como el final del bloque. Mismo sitio y misma letra. */
 test.describe('3C · «Hasta las» en el aro', () => {
   test.use({ viewport: { width: 360, height: 730 }, isMobile: true, hasTouch: true });
 
@@ -31,7 +33,7 @@ test.describe('3C · «Hasta las» en el aro', () => {
     await irAlArtefacto(page);
     const hasta = page.locator('[data-pace-dial-label] + [data-pace-dial-hasta]');
     await expect(page.locator('[data-pace-dial-label]')).toHaveText('Bloque 1 de 9');
-    await expect(hasta).toHaveText('Hasta las 17:00');
+    await expect(hasta).toHaveText('Tu jornada, hasta las 17:00');
     expect(await hasta.evaluate((e) => getComputedStyle(e).fontStyle)).toBe('italic');
     await expect(page.locator('.pace-rt-rotulo'), 'el hueco vacío bajo el aro sigue ahí').toHaveCount(0);
     await page.waitForTimeout(600);
@@ -44,11 +46,11 @@ test.describe('3C · «Hasta las» en el aro', () => {
     expect(errores).toEqual([]);
   });
 
-  test('en inglés dice «Until 17:00»', async ({ page, context }) => {
+  test('en inglés dice «Your day, until 17:00»', async ({ page, context }) => {
     await sembrar(context, { lang: 'en', sidebarCollapsed: true, ritmo: { dia: JORNADA } });
     await page.clock.install({ time: hora('09:00') });
     await irAlArtefacto(page);
-    await expect(page.locator('[data-pace-dial-label] + [data-pace-dial-hasta]')).toHaveText('Until 17:00');
+    await expect(page.locator('[data-pace-dial-label] + [data-pace-dial-hasta]')).toHaveText('Your day, until 17:00');
   });
 });
 

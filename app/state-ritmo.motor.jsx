@@ -76,7 +76,14 @@ function ritmoMotorEntrada(s, hoy) {
   var cola = typeof ritmoResumenAntesDePisar === 'function' ? ritmoResumenAntesDePisar(s, r).resumenes : r.resumenes;
   (Array.isArray(cola) ? cola : []).forEach(function (x) { if (x) dias.push(x); });
   var horario = Object.assign(ritmoHorarioInicial(), r.horario || {});
-  return { hoy: hoy, dias: dias, feedback: feedback, focos: focos, horario: horario, aprendido: r.aprendido };
+  /* Lo que dura cada rutina servida: el resumen guarda ids, y la carta no propone 2 minutos a una
+     pausa que ya era de 2 (S6 A del 8 nov. 2026). */
+  var minutos = {};
+  dias.forEach(function (d) { (d.paradas || []).forEach(function (p) { (p.platos || []).forEach(function (pl) {
+    var rt = pl && pl.id && typeof ritmoRutinaPorId === 'function' ? ritmoRutinaPorId(pl.id) : null;
+    if (rt && typeof rt.min === 'number') minutos[pl.id] = rt.min;
+  }); }); });
+  return { hoy: hoy, dias: dias, feedback: feedback, focos: focos, horario: horario, aprendido: r.aprendido, minutos: minutos };
 }
 
 /* Una vez por semana: lo que dice el motor, a `ritmo.carta`. Con la página oculta, sin

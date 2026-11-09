@@ -103,7 +103,7 @@ function ritmoResumenDe(s, dia) {
     paradas.push({
       hora: it.desde,
       tipo: it.tipo === 'cierre' ? 'cierre' : (it.larga ? 'larga' : 'pausa'),
-      estado: estados[n] === 'hecha' || estados[n] === 'saltada' ? estados[n] : null,
+      estado: estados[n] === 'hecha' || estados[n] === 'saltada' || estados[n] === 'cuenta' ? estados[n] : null,
       reunion: reunion,
       platos: it.platos.map(function (pl) {
         var veces = Number(cambios[pl.clave]) || 0;

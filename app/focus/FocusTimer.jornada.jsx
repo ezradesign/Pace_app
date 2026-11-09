@@ -24,7 +24,7 @@
    lo que ya se hizo. */
 function aroPlatoPendiente(s) {
   const a = typeof ritmoPausaAbierta === 'function' ? ritmoPausaAbierta(s) : null;
-  if (!a) return null;
+  if (!a || (a.p.estados || {})[a.n] === 'cuenta') return null;   /* hecha a tu manera (4A del 8 nov.) */
   return a.platos.find((p) => a.hechos.indexOf(p.id) === -1) || null;
 }
 
@@ -122,7 +122,7 @@ function AroFila({ cycle, cycleLabel, oculta, fila }) {
           background: (cycle % 4) > i ? 'var(--focus)' : 'var(--line-2)',
         }} />
       ))}
-      <span style={{ ...callado, fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 }}>{cycleLabel}</span>
+      <span data-pace-ciclo style={{ ...callado, fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 }}>{cycleLabel}</span>
     </div>
   );
 }

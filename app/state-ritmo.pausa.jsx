@@ -94,6 +94,23 @@ function ritmoPausaHecha(routineId) {
   });
 }
 
+/* «YA LA HICE POR MI CUENTA» (Ez, 4A del 8 nov. 2026; Q5 de las revisiones de ChatGPT). Quien hacía
+   la pausa a su manera (agua, una vuelta) sin abrir la rutina solo podía pulsar «Seguir» o «Ahora no»,
+   y la pausa quedaba saltada: tres días a la misma hora y la carta proponía acortarla. Ahora la parada
+   queda `cuenta`: hecha según tú, sin minutos ni ejercicios inventados. Estadísticas no le suma
+   tiempo (no hay sesión), el motor no la cuenta como saltada, y la línea dice «por tu cuenta». Si ya
+   se hizo un plato, se queda «hecha». */
+function ritmoPausaPorTuCuenta() {
+  var a = ritmoPausaAbierta();
+  if (!a || a.it.tipo !== 'pausa') return;
+  ritmoGuardar(function (r) {
+    if (!r.dia || (r.dia.estados || {})[a.n] === 'hecha') return {};
+    var estados = Object.assign({}, r.dia.estados || {});
+    estados[a.n] = 'cuenta';
+    return { dia: Object.assign({}, r.dia, { estados: estados }) };
+  });
+}
+
 /* ¿El bloque que acaba de terminar va pegado al siguiente? Con el aro corto los bloques
    se juntan hasta 30 min (ritmo.regla.js) y entonces no hay pausa que abrir: suena el
    final, la ventana no sale y el aro deja listo el bloque siguiente (Ez, 15 oct.). Sin
@@ -142,16 +159,16 @@ function ritmoParadaHasta(fin) {
   return (typeof fin === 'number' && fin > 0 && fin <= ahora ? fin : ahora) + it.dur * 60000;
 }
 
-/* La pausa que el aro está contando: { modo, hasta, n, de }, o null. `n de` es el bloque
-   que viene («Luego, el bloque 3 de 9»). Mira primero la hora guardada, que es barato:
-   el aro lo pregunta en cada segundo. */
+/* La pausa que el aro está contando: { modo, hasta, n, de, dur }, o null. `n de` es el bloque
+   que viene («Luego, el bloque 3 de 9»); `dur`, sus minutos. Mira primero la hora guardada, que
+   es barato: el aro lo pregunta en cada segundo. */
 function ritmoPausaCuenta(s) {
   var r = (s && s.ritmo) || {};
   var hasta = r.dia && r.dia.pausaHasta;
   if (!(typeof hasta === 'number' && hasta > 0)) return null;
   var a = ritmoPausaAbierta(s);
   if (!a || a.it.tipo !== 'pausa') return null;
-  return { modo: a.it.larga ? 'larga' : 'pausa', hasta: hasta, n: a.p.hechos + 1, de: a.p.total };
+  return { modo: a.it.larga ? 'larga' : 'pausa', hasta: hasta, n: a.p.hechos + 1, de: a.p.total, dur: a.it.dur };
 }
 
 /* Una pausa guardada que ya no está abierta (el día se recompuso, cambió de fecha, te
@@ -188,6 +205,6 @@ function ritmoPausaCerrarConElDia() {
 }
 
 Object.assign(window, {
-  ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha,
+  ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta,
   ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia, ritmoParadaHasta,
 });

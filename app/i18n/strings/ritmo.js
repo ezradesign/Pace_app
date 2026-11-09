@@ -30,6 +30,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'ritmo.frase.movil.empieza':     'empieza en el aro, arriba',
     'ritmo.hecha':                   'hecha',
     'ritmo.saltada':                 'saltada',
+    'ritmo.cuenta':                  'por tu cuenta',   /* hecha sin la rutina: sin minutos (4A del 8 nov.) */
     'ritmo.hoy':                     'hoy de {desde} a {hasta}',
     'ritmo.opcion.1h':               'Una hora',
     'ritmo.opcion.2h':               'Dos horas',
@@ -118,6 +119,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'ritmo.aro.tuyo':                'Lo que queda del día es tuyo',
     'ritmo.aro.libre':               'Seguir por libre',
     'ritmo.aro.bloque':              'Bloque {n} de {m}',
+    /* Bajo el rótulo del aro: de qué es la hora, que se leía como el final del bloque (Ez, 5A del 8 nov. 2026). */
+    'ritmo.aro.hasta':               'Tu jornada, hasta las {h}',
     'ritmo.aro.empezar':             'Empezar jornada',
     'ritmo.aro.siguiente':           'Empezar bloque {n}',
     /* El aro como paso actual (Ez, 5 nov. 2026: 1A; focus/FocusTimer.jornada.jsx) */
@@ -220,6 +223,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.frase.movil.empieza':     'start with the timer above',
     'ritmo.hecha':                   'done',
     'ritmo.saltada':                 'skipped',
+    'ritmo.cuenta':                  'your own way',
     /* Corta a propósito (elegido por Ez): con «today from … to …» la frase del móvil cabía con
        0,3 px en dos líneas y un Chromium que ensancha la letra la partía en tres (scroll a 360×640). */
     'ritmo.hoy':                     'today {desde}–{hasta}',
@@ -305,6 +309,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.aro.tuyo':                'The rest of the day is yours',
     'ritmo.aro.libre':               'Keep going freestyle',
     'ritmo.aro.bloque':              'Block {n} of {m}',
+    'ritmo.aro.hasta':               'Your day, until {h}',
     'ritmo.aro.empezar':             'Start the day',
     'ritmo.aro.siguiente':           'Start block {n}',
     'ritmo.aro.hacerPausa':          'Take the break',

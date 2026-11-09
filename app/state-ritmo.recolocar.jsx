@@ -79,10 +79,11 @@ function ritmoBloqueEmpezado(minutos) {
   if (R.dia.pausa != null) {
     cambios.pausa = null;
     cambios.pausaHasta = null;   /* el aro deja de contar la pausa (state-ritmo.pausa.jsx) */
-    /* s195: empezar el bloque sin haber hecho la pausa abierta la deja SALTADA */
+    /* s195: empezar el bloque sin haber hecho la pausa abierta la deja SALTADA; la hecha a tu
+       manera se queda así (Ez, 4A del 8 nov. 2026) */
     if (p && p.pausa) {
-      var n = ritmoOrdinal(p.m, p.pausa);
-      if (n != null && (R.dia.estados || {})[n] !== 'hecha') {
+      var n = ritmoOrdinal(p.m, p.pausa), ya = (R.dia.estados || {})[n];
+      if (n != null && ya !== 'hecha' && ya !== 'cuenta') {
         cambios.estados = Object.assign({}, R.dia.estados || {}); cambios.estados[n] = 'saltada';
       }
     }
@@ -97,8 +98,14 @@ function ritmoBloqueEmpezado(minutos) {
   /* s195: si el aro no marca lo que el plan (pusiste 25 con un plan de 45), también
      se recoloca, y esa duración manda en los bloques que vienen (`dia.bloque`). */
   var otraDuracion = !!(p && p.actual && mins && mins !== ritmoDurSiEmpiezas(p, t));
-  if (p && p.actual && (t !== p.actual.desde || otraDuracion)) {
-    cambios.pasado = ritmoCongelar(p.m.items.slice(0, p.m.items.indexOf(p.actual)));
+  /* Con el día leído desde ahora tras la pausa (S11), empezar a esa misma hora también lo fija. */
+  if (p && p.actual && (t !== p.actual.desde || otraDuracion || p.pausaPasada)) {
+    var antes = p.m.items.slice(0, p.m.items.indexOf(p.actual));
+    /* Empezado antes de comer (S7), la comida aún no ha pasado: no va a la historia, y se sirve detrás. */
+    if (antes.some(function (x) { return x.tipo === 'comida' && x.desde > t; })) antes = antes.filter(function (x) { return x.desde < t; });
+    /* Leído tras la pausa (S11), el hueco hasta ahora no es historia: lo vuelve a pintar ritmoMenu. */
+    while (p.pausaPasada && antes.length && antes[antes.length - 1].tipo === 'libre') antes.pop();
+    cambios.pasado = ritmoCongelar(antes);
     cambios.desde = t;
     cambios.primerBloque = mins || p.actual.dur;
     cambios.pausaPendiente = false;
@@ -168,9 +175,40 @@ function ritmoFocoEmpezo() {
   } catch (e) { return null; }
 }
 
+/* TUS MINUTOS, ANTES Y DESPUÉS DE LA JORNADA (Ez, S3 A del 8 nov. 2026). El aro mide lo que mide el
+   bloque que toca (ritmoSincronizar), y al acabar el día se quedaba con los del último bloque:
+   «Seguir por libre» y el Foco de la mañana siguiente empezaban de 33. La primera vez que el plan pone
+   sus minutos se guardan los tuyos (`ritmo.focoLibre`) y, sin bloque del plan que medir ni Foco
+   empezado, vuelven; sin nada guardado, 25. `ritmo.minutosPlan` son los que puso el plan: si después
+   elegiste otros, se quedan los tuyos. Vuelven en el acto al acabar el último bloque porque RitmoHome
+   sincroniza cada vez que cambia el bloque que toca, y si no, al minuto. */
+function ritmoMinutosDelPlan(s, dur) {
+  var r = (s && s.ritmo) || {};
+  if (s.focusMinutes === dur && r.minutosPlan === dur) return;
+  var cambio = { minutosPlan: dur };
+  if (r.minutosPlan == null && ritmoMinutosSonTuyos(s, r)) cambio.focoLibre = s.focusMinutes;
+  setState(function (prev) { return Object.assign({}, prev, { focusMinutes: dur, ritmo: Object.assign({}, prev.ritmo || {}, cambio) }); });
+}
+function ritmoMinutosDevolver(s) {
+  var r = (s && s.ritmo) || {};
+  if (r.minutosPlan == null) return;
+  var tuyos = typeof r.focoLibre === 'number' && r.focoLibre > 0 ? r.focoLibre : 25;
+  setState(function (prev) {
+    var cambio = { ritmo: Object.assign({}, prev.ritmo || {}, { minutosPlan: null }) };
+    if (prev.focusMinutes === r.minutosPlan) cambio.focusMinutes = tuyos;
+    return Object.assign({}, prev, cambio);
+  });
+}
+/* Antes de esta versión el plan no apuntaba lo que ponía (`minutosPlan` sin nada): unos minutos que
+   no son de la fila (15, 25, 35 o 45) solo pueden venir de un bloque recolocado, y no son tuyos. */
+function ritmoMinutosSonTuyos(s, r) {
+  return r.minutosPlan === null || [15, 25, 35, 45].indexOf(s.focusMinutes) !== -1;
+}
+
 /* Los minutos de foco hechos hoy en el plan: los de sus bloques terminados. */
 function ritmoFocoHecho(p) {
   return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) { return a + (f.dur || 0); }, 0) : 0;
 }
 
-Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho });
+Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho,
+  ritmoMinutosDelPlan, ritmoMinutosDevolver });
