@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.194.0 · 8 de noviembre de 2026 (la versión de prueba de Play y TestFlight es la 0.191.1). Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.195.0 · 9 de noviembre de 2026 (la versión de prueba de Play y TestFlight es la 0.191.1). Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -56,13 +56,16 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 - **La 0.194.0, juntada con los «Júntalo» de Ez (8 nov.)**: el contraste (1B 2B 3B), volver tras horas fuera (E1 A, V1 A,
   V2 A), el día de v1 (1B 2A 3B 4A, con «Borrar todo» que dice que el código se queda) y siete arreglos de la caza de la semana.
   Si Play se sube el lunes con la 0.191.1, esta llega como actualización. Detalle, en el relevo de `docs/traspaso/LEEME.md`.
-- **Letras de Ez (8 nov.), todas A, montándose (desde ~19:50, en 5iWBf)**: usabilidad 1-5 y la semana S3 S7 S6 S11 en
-  `claude/usabilidad-8nov-587b48` (sesión `letras-jornada`, 8886-8887); N2, N3 y la usabilidad 6 en `claude/caza-nuevo-8nov-0c7d9b`
-  (sesión `letras-nuevo`, 8891, con N1 arreglado). Cada una deja una página «Montado»; luego el «júntalo» de Ez y la 0.195.0.
-- **ChatGPT**: Ez le pasa la revisión de la jornada entera (`docs/audits/chatgpt-8nov/prompt-jornada.md`, también en su hoja) y
-  la del cobro y lo legal, que sigue en su hoja.
-- **Después de la 0.195.0** (lo pidió Ez el 8 nov.): la caza de las pantallas en seis anchos (320, 360, 390, 768, 1280 y
-  1536), es/en, claro y oscuro, buscando textos cortados y solapes antes de que las vean los testers.
+- **La 0.195.0, en `main` con el «Júntalo con la A2» de Ez (9 nov.)**: 1432 pruebas en verde y tres puestas al día (las novedades del sobre y «Escuchar ›» en los toques).
+  `claude/caza-anchos-9nov-6a280f` ya lleva juntas las letras de la jornada (usabilidad 1A-5A, S3 S6 S7 S11 y los dos arreglos
+  de la primera parte de ChatGPT) y de lo nuevo (N1, N2, N3), más dos arreglos de la caza en seis anchos; se le suma
+  `claude/caza-nuevo-8nov-6a-a2` («Escuchar ›» junto a «Oír» y «La música, solo en Respira»), que pide su prueba al juntar.
+- **ChatGPT, segunda parte** (`docs/audits/chatgpt-8nov/respuesta-2-dia-tiempo-cuenta.md`): siete puntos ciertos; Ez dijo
+  «Sí, así»: después de la 0.195.0, probar el doble cómputo, arreglar la cuenta (1, 3, 2) y pintar 4, 6 y 7. La del cobro y lo
+  legal sigue en su hoja.
+- **Landing C** (9 nov., `claude/landing-c-9nov`, a medias): la raíz con dos caras; ante la duda, la app. Se pinta para Ez.
+- **La 1A de la caza** («1 h» no se queda sola en la frase del día), montada en `claude/caza-anchos-9nov-6a280f` (43655d1b): entra en la siguiente. La 2A deja 320 px como está.
+- **Esperan a Ez**: las letras de la landing (WXqNcQ9X…, 5iWBf), Play y TestFlight con la 0.191.1 (lunes 9) y los audios del suspiro.
 - **Lo legal para vender en la web**, en `main` con la 0.189.0 y las letras de Ez (1A 2A 3A 4A 5A): los borradores, sin
   publicar hasta sus datos (nombre, NIF y un contacto) y la revisión de un profesional (las preguntas para el gestor y el
   jurista, en `docs/launch/legal-web-para-ez.html`); y `/desistir`, cerrada hasta que Ez dé de alta Resend y ponga

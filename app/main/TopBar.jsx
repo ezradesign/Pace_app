@@ -15,7 +15,8 @@
      con Sidebar.jsx que dispara el mismo evento. PaceApp lo escucha.
    - Tabs Foco/Pausa/Larga cambian state.focusMode. Cambiar de modo reinicia
      la cuenta, así que con un bloque de Foco empezado (en marcha o en pausa)
-     se pregunta antes: el bloque se perdería sin contar (Ez, 8 oct. 2026).
+     se pregunta antes: el bloque se perdería sin contar (Ez, 8 oct. 2026). Con una pausa
+     empezada, también, con lo que lleva (Ez, 2A del 8 nov. 2026): un clic la cortaba sin vuelta.
    - Tabs ocultos en movil (@media max-width: 768px en _responsive.js).
    - data-pace-* selectors usados por _responsive.js: data-pace-topbar,
      data-pace-tabs, data-pace-topbar-icon.
@@ -31,14 +32,18 @@ const { useState: useStateTB } = React;
 
 function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
   const [state, set] = usePace();
-  const { t } = useT();
-  /* El modo al que se quiere pasar mientras se pregunta; null sin pregunta. */
+  const { t, tn } = useT();
+  /* Mientras se pregunta: el modo al que se quiere pasar y, si lo empezado es una pausa, los
+     segundos que lleva (`lleva`, null con un Foco). null sin pregunta. */
   const [pendiente, setPendiente] = useStateTB(null);
   const elegirModo = (v) => {
     if (v === state.focusMode) return;
-    if (typeof paceFocoEmpezado === 'function' && paceFocoEmpezado()) { setPendiente(v); return; }
+    const foco = typeof paceFocoEmpezado === 'function' && paceFocoEmpezado();
+    const lleva = !foco && typeof pacePausaLleva === 'function' ? pacePausaLleva() : null;
+    if (foco || lleva != null) { setPendiente({ v, lleva }); return; }
     set({ focusMode: v });
   };
+  const pregunta = topBarPregunta(pendiente, t, tn);
   const modes = [
     { v: 'foco', label: t('topbar.mode.focus') },
     { v: 'pausa', label: t('topbar.mode.pause') },
@@ -101,21 +106,41 @@ function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
       </button>
 
       <Modal open={!!pendiente} onClose={() => setPendiente(null)} maxWidth={440}
-             title={pendiente ? t('topbar.cambio.title.' + pendiente) : undefined}>
+             title={pregunta ? pregunta.title : undefined}>
         <p data-pace-cambio-modo style={{ margin: '0 0 22px', color: 'var(--ink-2)', fontSize: 15, lineHeight: 1.55 }}>
-          {t('topbar.cambio.body')}
+          {pregunta ? pregunta.body : null}
         </p>
         <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
-          <Button variant="secondary" onClick={() => { set({ focusMode: pendiente }); setPendiente(null); }}>
-            {t('topbar.cambio.cambiar')}
+          <Button variant="secondary" onClick={() => { set({ focusMode: pendiente.v }); setPendiente(null); }}>
+            {pregunta ? pregunta.cambiar : null}
           </Button>
           <Button variant="primary" onClick={() => setPendiente(null)}>
-            {t('topbar.cambio.seguir')}
+            {pregunta ? pregunta.seguir : null}
           </Button>
         </div>
       </Modal>
     </div>
   );
+}
+
+/* Los textos de la pregunta. Con un Foco, los de siempre. Con una pausa, «¿Dejar la pausa?» si se
+   vuelve al Foco y, entre la corta y la larga, el título de siempre; los minutos que lleva solo
+   desde el primero entero, para no decir «0 minutos». */
+function topBarPregunta(p, t, tn) {
+  if (!p) return null;
+  if (p.lleva == null) {
+    return { title: t('topbar.cambio.title.' + p.v), body: t('topbar.cambio.body'),
+      cambiar: t('topbar.cambio.cambiar'), seguir: t('topbar.cambio.seguir') };
+  }
+  const min = Math.floor(p.lleva / 60);
+  const lleva = min < 1 ? '' : min === 1 ? t('topbar.pausa.lleva.uno') + ' ' : tn('topbar.pausa.lleva', { n: min }) + ' ';
+  const alFoco = p.v === 'foco';
+  return {
+    title: alFoco ? t('topbar.pausa.title') : t('topbar.cambio.title.' + p.v),
+    body: lleva + t(alFoco ? 'topbar.pausa.body.foco' : 'topbar.pausa.body.otra'),
+    cambiar: alFoco ? t('topbar.pausa.volver') : t('topbar.cambio.cambiar'),
+    seguir: t('topbar.pausa.seguir'),
+  };
 }
 
 const topBarStyles = {

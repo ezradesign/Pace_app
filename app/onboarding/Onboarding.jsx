@@ -240,6 +240,7 @@ function Onboarding() {
               <button data-pace-cta onClick={next} style={onboardingStyles.cta}>
                 {t('onboarding.welcome.cta')}
               </button>
+              <OnbTraerCopia />
               {conCaminos && (
                 <button onClick={() => finish({ pick: false })} style={onboardingStyles.ghostBtn}>
                   {t('onboarding.skip')}

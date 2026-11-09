@@ -300,14 +300,14 @@ function RitmoMovil({ state, plan, onVer }) {
   const empezado = typeof usePaceFocoEmpezado === 'function' ? usePaceFocoEmpezado() : true;
   const descriptor = plan.hechos === 0 && !empezado ? t('ritmo.frase.movil.empieza')
     : typeof getFocusDescriptorKey === 'function' ? t(getFocusDescriptorKey(b.dur)) : '';
-  /* Con la pausa abierta (s193), «Ahora» es la parada y «Luego» el bloque. */
+  /* Con la pausa abierta (s193), «Ahora» es la parada y «Luego» el bloque; acabado su rato, ya no (S11 A). */
   const filaBloque = (rotulo) => (
     <RitmoFila rotulo={<React.Fragment>{t(rotulo)}<br />{ritmoHora(b.desde)}</React.Fragment>}
       modulo="foco" nombre={tn('ritmo.fila.bloque', { n: plan.hechos + 1, m: plan.total })}
       meta={b.dur + ' min · ' + descriptor} />
   );
   const luego = ritmoDetras(plan.m, b);
-  const filas = plan.pausa
+  const filas = plan.pausa && !plan.pausaPasada
     ? <React.Fragment><RitmoFilaParada it={plan.pausa} rotulo="ritmo.ahora" corta />{filaBloque('ritmo.luego')}</React.Fragment>
     : <React.Fragment>{filaBloque('ritmo.ahora')}{luego ? <RitmoFilaParada it={luego} rotulo="ritmo.luego" corta /> : null}</React.Fragment>;
   return (

@@ -196,6 +196,9 @@ async function cerrada(page, porque) {
   await expect(cta(page)).toHaveText('Seguir por libre');
   await expect(vis(page, '[data-pace-ritmo-estado="hecho"]')).toContainText('Jornada cerrada');
   await expect(page.locator('[data-pace-sidebar]')).not.toContainText('Tu pausa');
+  /* Sin la fila del ciclo debajo del botón (Ez, 1A del 8 nov. 2026): «Siguiente · Ciclo 4 / 4» no
+     decía nada con el día cerrado, y el punto del final del aro caía encima. */
+  await expect(vis(page, '[data-pace-ciclo]'), 'con la jornada cerrada sigue la fila del ciclo').toHaveCount(0);
 }
 
 test('pasada la salida el día se cierra, con la página abierta y al recargar, y se sigue por libre', async ({ page, context }) => {
@@ -211,6 +214,7 @@ test('pasada la salida el día se cierra, con la página abierta y al recargar, 
   /* Por libre: el Foco es el de siempre y su ventana también, sin la pausa de cierre. */
   await cta(page).click();
   await expect(vis(page, '[data-pace-dial-label]')).toHaveText('Foco manual');
+  await expect(vis(page, '[data-pace-ciclo]'), 'CONTROL: por libre la fila del ciclo vuelve').toHaveCount(1);
   await terminarBloque(page);
   const ventana = overlaySuperior(page);
   await expect(ventana).toContainText('Ciclo completado');
@@ -231,4 +235,6 @@ test('el bloque que empezó antes de la salida acaba con su pausa de cierre, y l
   /* Hechos los dos bloques, el aro dice «Jornada cerrada» también pasada la salida (Ez, V2 A del 7 nov.). */
   await expect(vis(page, '[data-pace-dial-label]')).toHaveText('Jornada cerrada');
   await expect(vis(page, '[data-pace-dial-hasta]')).toHaveText('1 h 30 min de foco');
+  /* El bloque acabó con su ventana: el aro queda en «Siguiente · Ciclo…», que es el caso de la foto (1A). */
+  await expect(vis(page, '[data-pace-ciclo]'), 'con la jornada cerrada sigue «Siguiente · Ciclo…»').toHaveCount(0);
 });

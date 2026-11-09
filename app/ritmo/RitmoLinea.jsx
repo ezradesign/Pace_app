@@ -44,7 +44,7 @@ function RitmoEtiqueta({ it, final, t, tn, lang, estado }) {
     nombre = it.larga ? it.platos.map((p, i) => (
       <React.Fragment key={p.id}>{i ? <br /> : null}{i ? '+ ' : ''}{ritmoNombre(p.rutina, t, lang)}</React.Fragment>
     )) : ritmoPlatos(it, t, lang);
-    meta = estado === 'hecha' ? t('ritmo.hecha') + ' · ' + it.dur + ' min' : t('ritmo.saltada');
+    meta = estado === 'hecha' ? t('ritmo.hecha') + ' · ' + it.dur + ' min' : t('ritmo.' + (estado === 'cuenta' ? 'cuenta' : 'saltada'));
   } else if (it.larga) {
     nombre = it.platos.map((p, i) => (
       <React.Fragment key={p.id}>{i ? <br /> : null}{i ? '+ ' : ''}{ritmoNombre(p.rutina, t, lang)}</React.Fragment>
@@ -107,7 +107,8 @@ function ritmoColocarEtiquetas(lin, zona) {
 /* El índice de AHORA: la pausa abierta si la hay, si no el bloque que toca. */
 function ritmoIndiceAhora(plan) {
   const m = plan.m;
-  if (plan.pausa) return m.items.indexOf(plan.pausa);
+  /* Con su rato ya acabado, la pausa abierta queda atrás y «Ahora» es el bloque (Ez, S11 A del 8 nov.). */
+  if (plan.pausa && !plan.pausaPasada) return m.items.indexOf(plan.pausa);
   return plan.actual ? m.items.indexOf(plan.actual) : m.items.length;
 }
 

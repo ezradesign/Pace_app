@@ -193,9 +193,9 @@
 /* s195: LA LÍNEA TIENE MEMORIA. La parada hecha se rellena con su color (22 %) y su
    borde entero; la saltada queda al 40 % y a trazos, y arrastra su etiqueta (vive
    dentro). Lo pasado sin marca (antes de s195, o sin sesión) sigue como estaba. */
-.pace-rt-nodo.pace-rt-hecha { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 22%, var(--paper)); }
+.pace-rt-nodo.pace-rt-hecha, .pace-rt-nodo.pace-rt-cuenta { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 22%, var(--paper)); }
 .pace-rt-nodo.pace-rt-saltada { opacity: 0.4; border-style: dashed; }
-.pace-rt-mini .pace-rt-punto.pace-rt-hecha { background: var(--c); }
+.pace-rt-mini .pace-rt-punto.pace-rt-hecha, .pace-rt-mini .pace-rt-punto.pace-rt-cuenta { background: var(--c); }
 .pace-rt-mini .pace-rt-punto.pace-rt-saltada { opacity: 0.4; border-style: dashed; }
 .pace-rt-comida-nodo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 24px; height: 24px;
   border-radius: 50%; border: 1px solid color-mix(in srgb, var(--ink-2) 35%, transparent); background: var(--paper);
@@ -267,7 +267,7 @@
 /* s197 · LA HOJA RECUERDA, con la misma regla que la línea (s195): la parada hecha
    conserva la tinta y su glifo se rellena al 22 % con borde de 1,5; la saltada baja
    al 40 % y puntea. Antes lo pasado se atenuaba entero y no distinguía una de otra. */
-.pace-rt-li.pace-rt-hecha .pace-rt-eje i { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 22%, var(--paper)); }
+.pace-rt-li.pace-rt-hecha .pace-rt-eje i, .pace-rt-li.pace-rt-cuenta .pace-rt-eje i { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 22%, var(--paper)); }
 .pace-rt-li.pace-rt-saltada { opacity: 0.4; }
 .pace-rt-li.pace-rt-saltada .pace-rt-eje i { border-style: dashed; }
 .pace-rt-plato-n { font-family: var(--font-display); font-style: italic; font-size: 17px; line-height: 1.15; color: var(--ink); }

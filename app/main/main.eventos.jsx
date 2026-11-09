@@ -70,11 +70,13 @@ function usePaceEventos(acciones) {
         return;
       }
       if (d.kind === 'custom') {
-        /* MIS RUTINAS. Con rutinas propias abre la biblioteca de Mueve, que es
-           donde vive su seccion (s93); sin ninguna, abre el CONSTRUCTOR, porque
-           llevar a una lista vacia seria peor que no llevar. */
+        /* MIS RUTINAS. Con rutinas propias abre la biblioteca de Mueve EN «Tus
+           rutinas» (Ez, N2 A, 8 nov.): en el móvil, la vista del enlace de la
+           cabecera, que antes pedía un segundo toque; en el escritorio ya están
+           en el lateral. Sin ninguna, abre el CONSTRUCTOR, porque llevar a una
+           lista vacia seria peor que no llevar. */
         const propias = (getState().customRoutines || []).length;
-        if (propias) a.abrirBiblioteca('move');
+        if (propias) a.abrirBiblioteca('move', true);
         else constructor(null);
         return;
       }

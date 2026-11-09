@@ -16,6 +16,9 @@ Object.assign(window.PACE_STRINGS.es, {
     // Pantalla 0 — bienvenida (complementa welcome.* de ui.js)
     'onboarding.welcome.cta':          'Comenzar',
     'onboarding.welcome.hint':         'Tres preguntas breves. Medio minuto.',
+    /* Traer una copia sin pasar la bienvenida (Ez, N3 A, 8 nov.): abre el aviso de importar de Ajustes. */
+    'onboarding.copia':                '¿Tienes una copia?',
+    'onboarding.copia.traer':          'Tráela',
 
     // Pantalla 1 — necesidad
     'onboarding.need.kicker':          'Conocerte · 1 de 3',
@@ -84,6 +87,8 @@ Object.assign(window.PACE_STRINGS.en, {
     // Screen 0 — welcome (complements welcome.* in ui.js)
     'onboarding.welcome.cta':          'Start',
     'onboarding.welcome.hint':         'Three short questions. Half a minute.',
+    'onboarding.copia':                'Have a copy?',
+    'onboarding.copia.traer':          'Bring it in',
 
     // Screen 1 — need
     'onboarding.need.kicker':          'About you · 1 of 3',

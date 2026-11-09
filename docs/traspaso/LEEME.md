@@ -2,7 +2,153 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de noviembre de 2026, ~11:45, v0.193.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de noviembre de 2026, ~11:10, v0.194.0 (la 0.195.0, juntándose).
+
+## 9 nov., ~16:45: Ez sigue en 5iWBf hasta el 95 % de la semana; la 0.195.0, en main
+
+- **Ez: «Seguimos aquí hasta que el uso semanal quede en un 95 %».** El relevo de abajo queda como reserva: lo que dice de la
+  0.195.0 ya está hecho. Juntada en `claude/union-0195` (caza-anchos + la A2 con `tests/ajustes-escuchar.spec.js`, dos mutantes en
+  rojo; `i18nClaves` 1170; novedad `pausa-a-tu-manera`); 1432 en verde y 3 puestas al día (`sobre-hoja` x2 por la novedad nueva,
+  `toques-movil` porque «Escuchar ›» suma una `.pace-aj-sec-accion` delante de «Copias…»).
+- **Letras de la caza: 1A y 2A.** La 1A, en `claude/caza-anchos-9nov-6a280f` (43655d1b), para la siguiente versión.
+- **landing-c**: hecha en `claude/landing-c-9nov` (b3d95a6f): 17 pruebas con mutantes, verify, 150 de 150 en sus zonas. Página
+  para Ez: **WXqNcQ9XeojuhvSBgWoR76** (A corta, B larga, C corta con capturas, recomendada, con «¿Ya usas PACE?» en la cabecera).
+  Antes de juntar: la suite entera, WebKit, su fila en DECISIONES y mirarla a mano a 360 y 1280.
+- Play 0.191.1: Ez, «luego».
+- **CI de la 0.195.0 (42648271866), en verde entero**: verify, los dos trozos de e2e, Safari, Android e iOS.
+
+## AL RELEVO (9 nov., ~11:10): 5iWBf… al 90 % de las 5 h y al 86 % de la semana; se sigue en EcLj6…. Empieza aquí
+
+**Regla de Ez (8 nov.):** se para al 90 % de las 5 h o al 95 % de la semana. Las sesiones de 5iWBf (letras-jornada,
+letras-nuevo, caza-anchos, landing-c) **no se ven desde EcLj6**: lo que quede se retoma con una sesión nueva en EcLj6 con `cwd`
+en su worktree. Sus páginas dan 404 en EcLj6; las copias están en las ramas (abajo). En 5iWBf no queda ningún aviso programado
+(el CronCreate de las 14:47 se quitó para que no junte dos veces).
+
+`main` local va **10 commits de docs** por delante de origin, a propósito (suben con la 0.195.0); `main` = 0.194.0 en código.
+
+**Orden para EcLj6:**
+1. **La 0.195.0, con el «júntalo con la A2» de Ez (~11:05).** Juntar en `main`:
+   - `claude/caza-anchos-9nov-6a280f` (d553a8e2). Ya lleva la unión de `claude/usabilidad-8nov-587b48` (19a7eb6b) y
+     `claude/caza-nuevo-8nov-0c7d9b` (fb57e2b7), ensayada en e4185529 y fbe85104 (`i18nClaves` 1168; DECISIONES, 7 filas de
+     usabilidad y luego 4 de caza-nuevo; `index.html` regenerado), más dos arreglos con prueba.
+   - `claude/caza-nuevo-8nov-6a-a2` (aa1df7f3). Sale de 133ba624, así que el choque esperable es `index.html` (se regenera) y
+     quizá `i18nClaves` (+2 claves de la A2: comprobar el número con verify). **La A2 no lleva prueba propia**: escribirla al
+     juntar. Debe comprobar que «La música, solo en Respira» va bajo «Suena detrás» en una línea a 360 en es y en, que «Escuchar ›»
+     va a la derecha de «Oír» y no pisa nada, y que no hay scroll a 360×640. Más un mutante que la tire.
+   - Luego `npm run bump -- 0.195.0`, `node build-standalone.js`, `git checkout -- PACE_standalone.html`, verify y la suite
+     entera (`--workers=2`; el 8896 lo ocupa un servidor de `caza-6a-opciones`: usar otro puerto).
+   - CHANGELOG. La novedad del sobre: «Si haces la pausa a tu manera, dilo: "Ya la hice por mi cuenta", junto a "Ahora no".» /
+     «Took your break your own way? Say so: "I did it my own way", next to "Not now".»
+   - STATE, este LEEME y la hoja; commit sin Co-Authored-By; push; `gh run watch` hasta ver verde.
+2. **landing-c**: sesión nueva en EcLj6 con `cwd` = `.claude/worktrees/landing-c-9nov` (rama `claude/landing-c-9nov`, WIP
+   37266f5a; puertos 8901-8902). Su encargo está en el bloque «~10:50» de abajo. Le falta: pruebas de cada caso con mutante, la
+   marca de los helpers para que las e2e vean la app, verify, las zonas que toque y la página para Ez con dos o tres landings.
+3. **Después de la 0.195.0, lo de ChatGPT 2** (Ez: «Sí, así»): una sesión que primero intente provocar el 5 (contar dos veces
+   con una pestaña congelada por CDP), luego arregle 1, 3 y 2 con prueba y mutante, y pinte 4, 6 y 7. Todo está en
+   `docs/audits/chatgpt-8nov/respuesta-2-dia-tiempo-cuenta.md`.
+4. **Esperan a Ez:**
+   - las letras de la caza: 1A/1B («1 h» sola a 360) y 2A/2B (320 px), con la A recomendada en las dos. La página está en
+     `docs/audits/caza-anchos-9nov/pagina-ez.html` de esa rama: hay que publicarla en EcLj6;
+   - **hoy, lunes 9**: subir la 0.191.1 a Play y darla en TestFlight, guiándole pantalla a pantalla (`docs/launch/google-play/SUBIDAS.md`);
+   - grabar los cuatro audios del suspiro (ya tiene los prompts);
+   - pasar a ChatGPT la revisión del cobro y lo legal (está en su hoja).
+
+**La hoja:** la copia del repo lleva los ids de 5iWBf. En EcLj6 se publica en **EcLj6io4wM9pGjtQ5wd1CT**, dando la vuelta a los
+ids con las parejas enteras de `docs/traspaso/archivos/hoja-ids-cuentas.js` (el script que las cambió de EcLj6 a 5iWBf; para volver, al revés): (5P7oysx4→G4kprWWq, E3tcsR3F→JwFknwwk, 9MnNL8b5→VDdAWeb8, 56cDi1KJ→Mk11GDb9, 9BKgTENw→7Hj5sHmF,
+Mtv9tKsU→MVctqCpa, LD2aRGw2→U1mVU44s, REAWxKaA→R4hc4PDH, EEBgoRtH→5Pbk8cpu, LsDSi3X7→Uv6u27mK, 2Fv1mCER→Mwq1wanu,
+6stHAifX→1AzBCEn8, QNng9nK8→RaUErpS4). Las páginas de hoy solo existen en 5iWBf: 6A segunda vuelta CSaEpNjy…, jornada
+GVFywNBh…, lo nuevo 6ZzJK574…, caza 6qpGWXaV… y la 6A primera NZV35Jmm…. Ya no hacen falta, salvo la de la caza, que hay que
+republicar desde su rama.
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (9 nov., ~11:10)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Republica mi hoja de pasos en esta cuenta y junta la 0.195.0 con la A2, como dice el relevo; luego retoma la landing.
+```
+
+## 9 nov., ~11:00: 5iWBf al 89 % de las 5 h (semana 86 %): todo parado hasta las 14:40
+
+- **caza-anchos**, hecha: `claude/caza-anchos-9nov-6a280f` d553a8e2 = la unión de las dos ramas de letras (e4185529: `i18nClaves`
+  1168, DECISIONES 7 de usabilidad y luego 4 de caza-nuevo, `index.html` regenerado) + los dos commits finales de la jornada
+  (fbe85104) + dos arreglos con prueba («+ Crear rutina» cortado en Mueve/Estira a 1280×720 y 1536×710, `LibraryShell.jsx`; «No
+  plan, no plan» en la bienvenida inglesa). 140 recorridos: desde 360 px nada roto. Página: **6qpGWXaVkm5TM6QCD6iddk**. Esperan a Ez
+  1A/1B («1 h» sola en la frase del día a 360) y 2A/2B (320 px; 2A deja como la home ya aceptada). **Para la 0.195.0 basta juntar
+  esta rama + la 6A elegida.** El 8896 lo ocupa un servidor de `caza-6a-opciones`.
+- **landing-c** paró al 82 %: WIP 37266f5a (la raíz decide antes de pintar; «Abrir PACE» monta la app en el sitio). Faltan
+  pruebas, la marca de la suite, verify/e2e y la página. Despertarla a las 14:40.
+- **Ez (~11:05): «Júntalo con la A2».** A las 14:40: juntar en main `claude/caza-anchos-9nov-6a280f` y
+  `claude/caza-nuevo-8nov-6a-a2` (aa1df7f3; su prueba propia, al montarla), bump 0.195.0, build, suite entera, CHANGELOG, la
+  novedad de «Ya la hice por mi cuenta», push y CI. Siguen pendientes de Ez las letras de la caza (1A/1B, 2A/2B).
+
+## 9 nov., ~10:55: las letras, listas para el «júntalo»; Ez dice «Sí, así» a lo de ChatGPT
+
+- **Ez (~11:05): «Sí, así»** al plan de ChatGPT 2: después de la 0.195.0, UNA sesión que primero pruebe el 5 (contar dos veces
+  con una pestaña dormida, CDP `Page.setWebLifecycleState`), luego arregle 1, 3 y 2 con prueba y mutante, y pinte 4, 6 y 7.
+- **letras-jornada**, terminada: 19a7eb6b en origin (arreglo 2 con `ritmo.sinResumir` y `ritmo-resumen-fallo`; las cuatro rojas
+  eran S6 y 4A; 487 de 488 y la roja arreglada). `i18nClaves` = 1166 en su rama; nueve filas arriba en DECISIONES. Página
+  «Montado» v2: GVFywNBhyR14gkzmdbfwXB. Novedad propuesta: «Si haces la pausa a tu manera, dilo: "Ya la hice por mi cuenta",
+  junto a "Ahora no".» / «Took your break your own way? Say so: "I did it my own way", next to "Not now".» Abierta: un bloque
+  que acaba en una reunión puede durar menos de 5 min y perderse al recargar.
+- **letras-nuevo**: la 6A, segunda vuelta (CSaEpNjyYihJUaY5BoaxQP): A1 `claude/caza-nuevo-8nov-6a-a1` (b7d263b6), **A2
+  recomendada** `…-6a-a2` (aa1df7f3: «La música, solo en Respira» bajo «Suena detrás», a 11 px = `--size-meta`), A3 `…-6a-a3`
+  (4abd7e53). Ninguna añade altura; las tres pasan las 40 de Ajustes; la prueba propia se escribe con la elegida. Las ramas 6A
+  salen de 133ba624: no llevan 0de87f86 ni fb57e2b7, que entran con `caza-nuevo-8nov-0c7d9b`.
+- **Ahora en la hoja (v97):** elegir la 6A y decir «júntalo». Con él: juntar jornada, nuevo y la 6A elegida; bump 0.195.0; la
+  suite entera; CHANGELOG; la novedad; push; CI. caza-anchos tendrá que traer los commits nuevos de la jornada.
+
+## 9 nov., ~10:50: cuatro sesiones; la landing C y la segunda parte de ChatGPT, comprobada
+
+- **landing-c** (`local_51b13b7a…`, `claude/landing-c-9nov`, 8901-8902), nueva. **Ez eligió la C** de la página de la landing
+  (E3tcsR3F…, 5iWBf; 5 nov.) «implementándola de manera elegante», y no la B (mueve la app: rompe la PWA instalada, `#codigo=`
+  y los «Abrir PACE»). Reglas que aceptó: la raíz decide antes de pintar; app con datos, instalada, `#codigo=`, `?go=`, ya abrió
+  o en Android/iPhone (la landing fuera de `www/`); landing para quien llega nuevo y para buscadores (texto en el HTML); ante la
+  duda, app; «Abrir PACE» sin recargar; «¿Ya usas PACE?» arriba. Pinta dos o tres landings y un prototipo con pruebas.
+- **ChatGPT, segunda parte**, comprobada en `docs/audits/chatgpt-8nov/respuesta-2-dia-tiempo-cuenta.md`: los siete puntos están
+  en el código (el 5, contar dos veces entre pestañas, sin reproducir). Ninguno lo tocan las letras. **Espera el sí de Ez**;
+  propuesta: después de la 0.195.0, una sesión que pruebe el 5, arregle 1, 3 y 2 y pinte 4, 6 y 7.
+- `main` local, 6 commits de docs por delante de origin: suben con la 0.195.0.
+
+## 9 nov., ~10:15: tres sesiones; Ez rechaza el aviso de la 6A y pide seguir cazando fallos
+
+- **letras-jornada**: los dos arreglos de ChatGPT hechos y las cuatro rojas explicadas (dos, S6 haciendo lo suyo; una, «Ya la
+  hice por mi cuenta» es ahora el primer botón del pie; la C2, carga). Su suite de zona corre y luego hace commit y push.
+- **letras-nuevo** pintó la 6A (NZV35JmmQbhSStP4wnUffk; A en `claude/caza-nuevo-8nov-6a-a`, B en `…-6a-b`). **Ez: «No me gusta el
+  aviso de la A porque se superpone con otras opciones».** «Escuchar ›» junto a «Oír» no lo rechazó. Le pedí otras formas sin
+  nada que tape (A1 sin línea de la música, A2 en una línea que ya exista, A3 la línea solo en móviles altos).
+- **caza-anchos** (`local_f42c90e5…`, `claude/caza-anchos-9nov-6a280f`, 8895-8896), nueva: le junta a `origin/main` las dos ramas
+  de letras (ensayo de la unión de la 0.195.0, con los choques apuntados en el commit) y recorre todas las pantallas en seis
+  anchos, es/en, claro/oscuro. Arregla con prueba lo que no cambia el aspecto; lo demás y hasta seis mejoras, pintadas para Ez.
+- **ChatGPT**: Ez pidió una auditoría; se le pasa la segunda parte de la jornada (`prompt-jornada-2.md`, ahora «Ahora» en la
+  hoja). La del cobro y lo legal sigue en la hoja (`guardar-atomico` sigue sin juntar, así que su texto vale).
+- Hoja: versión 95.
+
+## 9 nov., ~09:50: 5iWBf con las 5 h repuestas (2 %, semana al 75 %); las dos sesiones, despiertas
+
+- **letras-jornada** paró al 88 % en 4df29445 (en origin) con el **arreglo 1 de ChatGPT hecho** (`motorCortas` descarta lo
+  adaptado o rechazado dentro del recorrido, con su prueba). Su suite de zona dio 481 en verde y 4 en rojo: dos en `ritmo-carta`
+  (la carta ya no propone acortar la pausa de las 15:45: ¿S6, el arreglo 1 o una regresión?), una en `ritmo-otra-carta` y la C2 del
+  calendario (¿carga?). A las 09:45 le mandé seguir con el arreglo 2, las cuatro rojas, DECISIONES, su suite y su página «Montado».
+  **No se pide el «júntalo» hasta que esas cuatro estén explicadas.**
+- **letras-nuevo**: le pedí pintar dos o tres formas de encajar la 6A a 360×640 y 360×800 (es/en), desde
+  `claude/caza-nuevo-8nov-6a-choca`, con recomendación, en una página nueva de 5iWBf.
+- Hoja de Ez: versión 93.
+- `main` local va dos commits por delante de origin (docs), a propósito: suben con la 0.195.0.
+
+## 8 nov., ~20:55: 5iWBf con las 5 h al 82 % (se reponen a las 00:40; un CronCreate de una vez a las 00:47 despierta a la coordinadora)
+
+- **letras-jornada**: las nueve letras en 37f4603d (en su rama). **Ez (~20:45): «Sí, los dos»** a los dos arreglos de ChatGPT
+  (`docs/audits/chatgpt-8nov/respuesta-1-motor-resumen.md`): `motorCortas` excluye lo adaptado o rechazado ANTES de elegir, y
+  `ritmoResumenAntesDePisar` no marca `resumido` si `ritmoResumenDe` lanza y guarda una copia del día para reintentarlo (el
+  `null` sin error sigue marcándose). Se los mandé por SendMessage con el detalle; luego, su página «Montado».
+- **letras-nuevo**: N2 A, N3 A y el ruido de `v1Instr`, en fb57e2b7 (en origin). Su página: **6ZzJK5741WjiEzG33yu8qg** (5iWBf).
+  **6A no entra**: choca con «los Ajustes del móvil no piden scroll» (a 360×640 pide 2 px en la web y 23 en Android). El código,
+  aparte, en `claude/caza-nuevo-8nov-6a-choca` (133ba624). Falta pintar a Ez dos o tres formas de encajarla (p. ej. «Escuchar» en la
+  misma fila de la voz y la línea de la música dentro de la línea pequeña que ya existe); no frena la 0.195.0.
+- **ChatGPT, segunda parte**: `docs/audits/chatgpt-8nov/prompt-jornada-2.md`, en la hoja como «Ahora».
+- **Audios de Respira que faltan** (Ez preguntó): solo los del segundo tramo del suspiro, «Inhala más»: `sulafat-mas`,
+  `bradford-mas`, `sulafat-more` y `bradford-more` (y, opcional, un `sulafat-inhale` de 1,85 s como mucho). Al llegar, una
+  entrada `'breathe.phase.inhala.mas'` por voz en `app/ui/Sound.voz.jsx`, con `ini`/`fin` medidos. En la hoja, como paso de Ez.
+- `main` local va un commit por delante de origin (docs), a propósito: sube con la 0.195.0.
 
 ## 8 nov., ~19:55: coordina 5iWBf… (5 h al 2 %, semana al 63 %; las 5 h se reponen a las 00:40); dos sesiones montan las letras
 

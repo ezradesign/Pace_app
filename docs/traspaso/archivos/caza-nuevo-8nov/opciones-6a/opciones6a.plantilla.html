@@ -1,0 +1,106 @@
+<title>Escuchar sin scroll</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Una columna de lectura: el problema, la recomendación, y cada opción con sus cuatro fotos en tira y sus cifras. */
+:root {
+  --papel: #f3eee3; --hoja: #fbf8f1; --tinta: #2c2a24; --tinta-2: #6a6457; --linea: #d9d1bf;
+  --oliva: #4f5d45; --terracota: #a45a3c; --oliva-suave: #e3e6d6; --terracota-suave: #f3e1d7;
+  --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --papel: #1d1a14; --hoja: #26221b; --tinta: #ece5d6; --tinta-2: #b3aa98; --linea: #423b2f;
+  --oliva: #a9b796; --terracota: #e0a080; --oliva-suave: #2f3528; --terracota-suave: #3a2a22; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --papel: #1d1a14; --hoja: #26221b; --tinta: #ece5d6; --tinta-2: #b3aa98; --linea: #423b2f;
+  --oliva: #a9b796; --terracota: #e0a080; --oliva-suave: #2f3528; --terracota-suave: #3a2a22; color-scheme: dark }
+body { background: var(--papel); color: var(--tinta); font: 17px/1.55 var(--sans);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 56px; }
+main { max-width: 760px; margin: 0 auto; display: grid; gap: 40px; }
+h1, h2 { font-family: var(--serif); font-style: italic; font-weight: 600; text-wrap: balance; margin: 0; }
+h1 { font-size: 2.3rem; line-height: 1.1; }
+h2 { font-size: 1.7rem; line-height: 1.15; }
+p { margin: 0; max-width: 62ch; }
+ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; max-width: 62ch; }
+.etiqueta { font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--tinta-2); }
+.estado { justify-self: start; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; padding: 3px 10px; border-radius: 99px; background: var(--oliva-suave); color: var(--oliva); }
+.estado.no { background: var(--terracota-suave); color: var(--terracota); }
+.estado.neutro { background: var(--hoja); color: var(--tinta-2); border: 1px solid var(--linea); }
+header, section { display: grid; gap: 14px; }
+.reco { background: var(--hoja); border: 1px solid var(--linea); border-radius: 12px; padding: 18px 20px; display: grid; gap: 10px; }
+.reco h2 { font-size: 1.45rem; }
+.tira { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 6px; align-items: flex-start; }
+figure { margin: 0; flex: 0 0 170px; display: grid; gap: 6px; }
+figure img { width: 100%; height: auto; border: 1px solid var(--linea); border-radius: 10px; display: block; }
+figcaption { font-size: .85rem; color: var(--tinta-2); line-height: 1.35; }
+figcaption b { color: var(--tinta); font-weight: 600; }
+.cifras { font-size: .92rem; color: var(--tinta-2); }
+.cifras b { color: var(--tinta); font-weight: 600; }
+.tabla { overflow-x: auto; }
+table { border-collapse: collapse; font-size: .92rem; font-variant-numeric: tabular-nums; min-width: 520px; }
+th, td { text-align: left; padding: 7px 12px 7px 0; border-bottom: 1px solid var(--linea); vertical-align: top; }
+th { font-weight: 600; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--tinta-2); }
+td.mal { color: var(--terracota); font-weight: 600; }
+td.bien { color: var(--oliva); }
+.pie { font-size: .9rem; color: var(--tinta-2); display: grid; gap: 8px; }
+code { font-size: .88em; }
+</style>
+
+<main>
+  <header>
+    <span class="etiqueta">Caza de lo nuevo · 6A · para la 0.195.0 o después</span>
+    <h1>«Escuchar», sin que los Ajustes pidan scroll</h1>
+    <p>Elegiste la 6A: poder oír la voz desde Ajustes y una línea que diga que la música solo suena en Respira. Tal como se pintó, eran dos líneas más (unos 33 px), y en un móvil de 640 px de alto los Ajustes ya van justos: en Android sobran {{SOBRA_C_640}} px, y en tu móvil (730 px) la hoja ocupa ya el {{PCT_C_730}} % de la pantalla, que es el tope que pusimos el 22 oct. Con esas dos líneas, a 640 faltaban {{FALTA_P_640}} px y a 730 pasaba al {{PCT_P_730}} %.</p>
+    <p>Aquí van tres formas de hacerlo, pintadas sobre la app de verdad, con las fotos a 360 × 640 y a 360 × 800, en castellano y en inglés.</p>
+  </header>
+
+  <div class="reco">
+    <span class="etiqueta">Lo que recomiendo</span>
+    <h2>La A: las dos cosas, sin una línea más</h2>
+    <p>Es la única que da las dos cosas en todos los móviles, el tuyo incluido, y no sube nada de alto. «Escuchar ›» va en la línea de «Oír», en el mismo sitio donde ya están «Visita guiada ›» y «Tu semana ›», así que no es un sitio nuevo que haya que aprender. Lo de la música sale justo cuando eliges «Música», que es cuando importa, y se va solo a los 4 segundos. Es lo mismo que elegiste para «Auto» el 6 nov.</p>
+    <p>La B deja sin «Escuchar» los móviles bajos, y también el tuyo. La C no gana nada esperando: la A ya está hecha.</p>
+  </div>
+
+  <section>
+    <span class="estado">Opción A · recomendada</span>
+    <h2>«Escuchar ›» en la línea de «Oír», y la música como aviso al elegirla</h2>
+    <p>«Escuchar ›» sale arriba a la derecha de la sección «Oír». Al tocarlo suena lo que tengas en «Marca la fase»: «Inhala» con la voz clara o la grave, o el soplo con el Tono. Con el sonido apagado se ve tenue y no se puede tocar, como las filas de debajo. Al elegir «Música» aparece debajo de «Suena detrás», durante 4 segundos, «La música suena solo en Respira». Tapa un momento el título «Sesiones», que no se toca, y si tocas justo ahí, el toque llega a lo de debajo. En el ordenador cabe igual (a 1280 × 800, 1280 × 720 y 1536 × 710), y las 40 pruebas de Ajustes pasan.</p>
+    <div class="tira">{{FOTOS_A}}</div>
+    <p class="cifras">{{CIFRAS_A}}</p>
+  </section>
+
+  <section>
+    <span class="estado neutro">Opción B</span>
+    <h2>Las dos líneas, solo cuando hay altura</h2>
+    <p>Las dos líneas tal como se pintaron, pero solo en un móvil de 780 px de alto o más. A 360 × 800 se ven; a 640 y a 730 no salen, y esos Ajustes quedan como hoy. En el ordenador salen siempre, porque allí caben.</p>
+    <div class="tira">{{FOTOS_B}}</div>
+    <p class="cifras">{{CIFRAS_B}}</p>
+  </section>
+
+  <section>
+    <span class="estado neutro">Opción C</span>
+    <h2>Dejarla para después de la 0.195.0</h2>
+    <p>La 0.195.0 sale con N2 y N3, y los Ajustes se quedan como hoy. La 6A espera guardada en su rama y se decide con calma.</p>
+    <div class="tira">{{FOTOS_C}}</div>
+    <p class="cifras">{{CIFRAS_C}}</p>
+  </section>
+
+  <section>
+    <span class="estado no">Para comparar · la 6A tal como se pintó</span>
+    <h2>Por qué no entró</h2>
+    <p>Las dos líneas debajo de sus filas. A 640 px de alto la hoja llega arriba del todo y aun así hay que deslizar para ver lo último.</p>
+    <div class="tira">{{FOTOS_P}}</div>
+  </section>
+
+  <section>
+    <span class="etiqueta">Lo que sobra o falta, medido</span>
+    <div class="tabla">{{TABLA}}</div>
+    <p class="cifras">«Sobra» es lo que la hoja aún podría crecer sin pedir scroll; «falta» es lo que hay que deslizar. El tope del 79 % se mide en tu móvil, a 360 × 730 en Android. Castellano e inglés dan lo mismo en todas las medidas.</p>
+  </section>
+
+  <div class="pie">
+    <p>Fotos y medidas de la app compilada, a 360 px de ancho, como en Android (con la fila de «Alarmas y recordatorios», que es la más alta), con «Música» recién elegida. En la web normal sobran {{WEB_EXTRA}} px más.</p>
+    <p>Ramas: la A en <code>claude/caza-nuevo-8nov-6a-a</code>, la B en <code>claude/caza-nuevo-8nov-6a-b</code>, la 6A como se pintó en <code>claude/caza-nuevo-8nov-6a-choca</code>. Ninguna lleva prueba todavía: la que elijas se monta con la suya.</p>
+  </div>
+</main>

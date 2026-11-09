@@ -25,11 +25,12 @@ const LUNES = new Date(2026, 9, 19, 8, 30);   /* repasa del 12 al 18 de octubre 
 const SEMANA = ['2026-10-12', '2026-10-13', '2026-10-14', '2026-10-15', '2026-10-16'];
 const HORARIO = { inicio: 540, comida: 840, comidaDur: 60, salida: 1020 };
 
+/* La pausa de las 15:45 sirve una rutina de 3 min: a una de 2 la carta no le propone «2 minutos» (S6). */
 function dia(fecha, i) {
   const p = (hora, tipo, modulo, id) => ({ hora, tipo, estado: 'hecha', reunion: 0, platos: [{ modulo, id, otras: 0, antes: [] }] });
   const d = { fecha, opcion: 'jornada', habitual: 'jornada', inicio: 540, salida: 1020, paradas: [
     p(585, 'pausa', 'mueve', 'extra.legs.standing'), p(745, 'pausa', 'estira', 'move.neck.3'),
-    p(795, 'pausa', 'mueve', 'extra.glutes.stealth'), p(945, 'pausa', 'estira', 'move.shoulder.circles'),
+    p(795, 'pausa', 'mueve', 'extra.glutes.stealth'), p(945, 'pausa', 'estira', 'move.hamstrings.standing'),
     p(1015, 'cierre', 'respira', 'breathe.physiological') ] };
   if (i < 4) { d.paradas[2].platos[0].otras = 1; d.paradas[2].platos[0].antes = ['extra.calves']; }
   if (i < 3) d.paradas[3].estado = 'saltada';

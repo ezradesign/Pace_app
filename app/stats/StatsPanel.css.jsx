@@ -158,7 +158,7 @@
       grid-auto-flow: column; background: var(--paper); border: 1px solid color-mix(in srgb, var(--c) 50%, transparent); }
     .pace-sh-aro.pace-sh-larga { width: 36px; border-radius: 11px; gap: 1px; }
     .pace-sh-aro .pace-rt-g { width: 13px; height: 13px; }
-    .pace-sh-hecha .pace-sh-aro { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 22%, var(--paper)); }
+    .pace-sh-hecha .pace-sh-aro, .pace-sh-cuenta .pace-sh-aro { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 22%, var(--paper)); }
     .pace-sh-saltada { opacity: 0.45; }
     .pace-sh-saltada .pace-sh-aro { border-style: dashed; }
     .pace-sh-ahora { box-shadow: inset 0 0 0 1.5px var(--c); background: color-mix(in srgb, var(--c) 12%, var(--paper-2)); }
