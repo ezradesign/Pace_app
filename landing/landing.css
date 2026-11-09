@@ -57,6 +57,17 @@ html[data-pace-landing-idioma="en"] #pace-landing [lang="es"] { display: none !i
 #pace-landing .pl-par figure { margin: 0; }
 #pace-landing .pl-par figcaption { font: italic 400 17px/1.3 var(--l-display); color: var(--l-ink-2); margin-top: 8px; }
 #pace-landing .pl-dos > div + div { margin-top: 32px; }
+/* Las tres promesas y las preguntas, como en /premium. */
+#pace-landing .pl-promesas { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+#pace-landing .pl-promesas li { font: italic 500 23px/1.3 var(--l-display); color: var(--l-ink); padding-left: 22px; position: relative; }
+#pace-landing .pl-promesas li::before { content: ''; position: absolute; left: 2px; top: .62em; width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--l-cta); }
+#pace-landing .pl-preg details { border-bottom: 1px dashed var(--l-line); padding: 12px 0; }
+#pace-landing .pl-preg details:last-of-type { border-bottom: 0; }
+#pace-landing .pl-preg summary { cursor: pointer; font: italic 500 21px/1.3 var(--l-display); color: var(--l-ink); list-style: none; display: flex; align-items: baseline; gap: 12px; }
+#pace-landing .pl-preg summary::-webkit-details-marker { display: none; }
+#pace-landing .pl-preg summary::before { content: '+'; flex: 0 0 14px; font: 400 21px/1 var(--l-ui); color: var(--l-cta); }
+#pace-landing .pl-preg details[open] > summary::before { content: '–'; }
+#pace-landing .pl-preg details p { margin: 8px 0 4px; }
 #pace-landing .pl-pie { margin: 32px 0 0; padding: 22px 0 44px; border-top: 1px solid var(--l-line); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 28px; }
 #pace-landing .pl-pie nav { display: flex; flex-wrap: wrap; gap: 8px 22px; }
 #pace-landing .pl-pie nav a { font: italic 400 18px/1.3 var(--l-display); color: var(--l-ink-2); text-decoration: none; border-bottom: 1px solid var(--l-line-2); }

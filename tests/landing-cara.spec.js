@@ -82,6 +82,11 @@ test('sin JavaScript (un buscador que no lo ejecuta), el texto de la landing est
   await expect(page.locator('#pace-landing h1 span[lang="es"]')).toHaveText('Pausas activas para quien trabaja sentado.');
   await expect(page.locator('#pace-landing h1 span[lang="en"]')).toBeHidden();
   await expect(page.locator('#pace-landing a[data-pace-abrir]').first()).toHaveAttribute('href', '/?go=inicio');
+  /* La landing larga (B, Ez, 9 nov. 2026): lo de /premium también está en el HTML. */
+  for (const h2 of ['Así se ve PACE completo', 'Tres cosas que no van a cambiar', 'Preguntas']) {
+    await expect(page.locator('#pace-landing h2 span[lang="es"]', { hasText: h2 })).toHaveCount(1);
+  }
+  await expect(page.locator('#pace-landing .pl-preg details')).toHaveCount(4);
   await ctx.close();
 });
 
