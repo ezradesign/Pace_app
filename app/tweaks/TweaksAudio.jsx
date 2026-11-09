@@ -33,6 +33,24 @@
    Las piezas (`AjustesFila`, `AjustesPildoras`, `AjustesInterruptor`) vienen de
    `TweaksPanel.parts.jsx` por `window`: un `const` no cruza la IIFE (s148). */
 
+/* «ESCUCHAR» (Ez, 6A del 8 nov., R5 de ChatGPT): la voz se elegía sin poder oírla; para oír
+   cada una había que empezar una Respira. Suena la señal elegida como en una inhalación de 4 s,
+   por `playSound`, que es lo que suena en la sesión: «Inhala» con la voz, el soplo con el Tono.
+   La voz necesita su clip cargado y, si aún no lo está, sonaría el tono: se espera hasta 2 s a
+   que esté. Va en la línea del título «Oír» (TweaksPanel.jsx), como «Visita guiada ›»: una
+   línea más bajo la fila hacía scroll en el móvil de 640 px. */
+function paceEscucharSenal(state) {
+  const senal = state.voiceOn === false ? 'tono' : (state.voice === 'bradford' ? 'bradford' : 'sulafat');
+  let quedan = 20;
+  const suena = () => {
+    let lista = senal === 'tono';
+    try { lista = lista || window.paceVozCabe('breathe.inhale', 4); } catch (e) { lista = true; }
+    if (!lista && quedan-- > 0) { setTimeout(suena, 100); return; }
+    try { playSound('breathe.inhale', 4); } catch (e) { /* el sonido nunca rompe la app */ }
+  };
+  suena();
+}
+
 function TweaksAudioBlock({ state, set }) {
   const { t } = useT();
 
@@ -65,6 +83,13 @@ function TweaksAudioBlock({ state, set }) {
   const fondo = state.musicOn ? 'mus' : (state.ambientOn ? 'amb' : 'nada');
   const apagado = !state.soundOn;
 
+  /* Abrir Ajustes con una voz puesta ya la va cargando, para que «Escuchar» la diga a la primera. */
+  React.useEffect(() => {
+    if (!apagado && senal !== 'tono') {
+      try { if (typeof window.paceVozInit === 'function') window.paceVozInit(senal); } catch (e) { /* sin Audio no hay precarga */ }
+    }
+  }, [senal, apagado]);
+
   return (
     <React.Fragment>
       <AjustesFila id="sound" nombre={t('settings.sound')} alTocar={() => set({ soundOn: !state.soundOn })}>
@@ -79,7 +104,9 @@ function TweaksAudioBlock({ state, set }) {
           { v: 'bradford', name: t('settings.signal.deep') },
         ]} />
       </AjustesFila>
-      <AjustesFila id="bg" nombre={t('settings.bg')} atenuada={apagado}>
+      {/* «La música, solo en Respira» en la línea pequeña de la fila (Ez, 6A del 8 nov.): debajo
+          de la fila pedía scroll en el móvil de 640 px, y como aviso tapaba otras opciones. */}
+      <AjustesFila id="bg" nombre={t('settings.bg')} sub={t('settings.bg.music.nota')} atenuada={apagado}>
         <AjustesPildoras aria={t('settings.bg')} valor={fondo} onChange={ponerFondo} apagado={apagado} opciones={[
           { v: 'nada', name: t('settings.bg.none') },
           { v: 'amb', name: t('settings.bg.ambient') },
@@ -93,4 +120,4 @@ function TweaksAudioBlock({ state, set }) {
   );
 }
 
-Object.assign(window, { TweaksAudioBlock });
+Object.assign(window, { TweaksAudioBlock, paceEscucharSenal });

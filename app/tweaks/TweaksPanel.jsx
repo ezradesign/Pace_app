@@ -308,7 +308,10 @@ function TweaksPanel({ open, onClose }) {
         )}
       </AjustesSeccion>
 
-      <AjustesSeccion titulo={t('settings.sec.oir')}>
+      {/* «Escuchar ›» la señal elegida (TweaksAudio.jsx), en la línea del título: debajo de su
+          fila pedía scroll en el móvil de 640 px (Ez, 6A del 8 nov.). */}
+      <AjustesSeccion titulo={t('settings.sec.oir')} accion={{ texto: t('settings.signal.escuchar'),
+        onClick: () => paceEscucharSenal(state), apagado: !state.soundOn, marca: 'data-pace-aj-escuchar' }}>
         <TweaksAudioBlock state={state} set={set} />
       </AjustesSeccion>
 
