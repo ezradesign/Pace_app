@@ -95,7 +95,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.194.0 · actualizada el 9 de noviembre a las 10:22 · en esta cuenta, con cuatro sesiones: tus letras, la caza de fallos y la landing</div>
+    <div class="eyebrow">PACE · versión 0.194.0 · actualizada el 9 de noviembre a las 10:32 · en esta cuenta, con tus letras listas para juntar, la caza de fallos y la landing</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -131,28 +131,25 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <h2>Paso a paso</h2>
     <p class="nota">La pongo al día en cada paso. Si tienes la página abierta, se actualiza sola. Si un enlace no abre, es que está en tu otra cuenta.</p>
     <ol class="pasos">
-      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, 1 minuto</span>
-        <span class="t">Decirme si monto lo que encontró ChatGPT en tu día</span>
-        <span class="c"><span class="quien">Tú dices sí; yo lo monto después de la 0.195.0.</span> Los siete puntos están en el código tal como
-          los cuenta. Los que más importan: un Foco que pausas 20 minutos cuenta esos 20 como foco al cerrar el día (y la pausa
-          larga puede llegar antes); cambiar en mitad del día cómo van las pausas rehace lo que ya hiciste; y una pestaña dormida
-          podría contar un bloque dos veces, que hay que probar. Propongo arreglar sin tocar cómo se ve los de la cuenta (1, 2, 3 y,
-          si se reproduce, 5), y pintarte los que se ven: qué hace «Cambiar» con un Foco en marcha, lo que haces por tu cuenta en
-          Estadísticas › Hoy y el «Hecha · 5 min» de una rutina de 2. Todo, en
-          <code>docs/audits/chatgpt-8nov/respuesta-2-dia-tiempo-cuenta.md</code>.</span></li>
-      <li class="paso marcha"><span class="estado">En marcha · yo · cuatro sesiones</span>
-        <span class="t">Montar tus letras como 0.195.0, la caza de fallos y la landing</span>
+      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, 5 minutos</span>
+        <span class="t">Elegir cómo encaja «Escuchar» y decir «júntalo» a la 0.195.0</span>
+        <span class="c"><span class="quien">Tú lo miras; yo lo junto.</span>
+          <ol>
+            <li><b>«Escuchar», segunda vuelta</b> (<a href="https://claude.ai/artifact/CSaEpNjyYihJUaY5BoaxQP">la página</a>): en las
+              tres, «Escuchar ›» a la derecha de «Oír», y nada tapa nada ni pide scroll. <b>A2, la recomendada:</b> bajo «Suena
+              detrás», en pequeño, «La música, solo en Respira», como «Mueve» va bajo «Descanso entre series». A1: solo «Escuchar».
+              A3: la frase solo en móviles altos; en el tuyo no saldría.</li>
+            <li><b>La jornada</b> (<a href="https://claude.ai/artifact/GVFywNBhyR14gkzmdbfwXB">la página</a>): tus nueve letras y los
+              dos arreglos de ChatGPT, con sus pruebas en verde.</li>
+            <li><b>Lo nuevo</b> (<a href="https://claude.ai/artifact/6ZzJK5741WjiEzG33yu8qg">la página</a>): «Tus rutinas» en el móvil,
+              «¿Tienes una copia? Tráela» y la copia de tus datos con «Cuaderno a salvo».</li>
+          </ol>
+          Con tu «júntalo» lo junto todo, paso todas las pruebas de la app, la subo a la web y es una actualización más para tus
+          testers.</span></li>
+      <li class="paso marcha"><span class="estado">En marcha · yo · dos sesiones</span>
+        <span class="t">La caza de fallos y la landing</span>
         <span class="c"><span class="quien">Yo.</span>
           <ol>
-            <li><b>La jornada, hecha:</b> las nueve letras con sus pruebas: el aro de cierre sin la fila de ciclos, la barra que pregunta
-              antes de cortar una pausa, el Foco por libre que no mueve tu salida, «Ya la hice por mi cuenta», «Tu jornada, hasta las
-              17:00» y S3, S6, S7 y S11. Los dos arreglos de ChatGPT, hechos. Las cuatro pruebas en rojo no eran fallos de la app: dos
-              eran S6 haciendo lo suyo (la pausa de las 15:45 ya duraba 2 minutos), una pulsaba «Ya la hice por mi cuenta» creyendo
-              que era «Ahora no», y la del calendario era el ordenador cargado. Ahora pasa sus pruebas otra vez y lo sube.</li>
-            <li><b>Lo nuevo, hecho</b> (<a href="https://claude.ai/artifact/6ZzJK5741WjiEzG33yu8qg">la página</a>): «Tus rutinas» abre tus
-              rutinas también en el móvil, y «¿Tienes una copia? Tráela» en la bienvenida. «Escuchar» la voz no cabe tal como se
-              pintó. No te gustó el aviso de la A porque tapa otras opciones, así que te está pintando otras formas en las que nada
-              tape nada; te las paso para que elijas.</li>
             <li><b>La caza de fallos, empezada:</b> todas las pantallas a 320, 360, 390, 768, 1280 y 1536 de ancho, en español y en
               inglés, en claro y en oscuro, con tus letras ya dentro. Lo que esté roto sin cambiar cómo se ve, lo arregla con su prueba;
               lo que cambie cómo se ve, y hasta seis mejoras de la interfaz, te lo pinta con opciones para que elijas.</li>
@@ -160,11 +157,6 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
               el icono, llega con un enlace de tester o usa el móvil ve la app; quien llega por primera vez, la landing. Ante la duda,
               la app. Te pinta dos o tres landings y el «¿Ya usas PACE?», con un prototipo que funciona en su rama.</li>
           </ol></span></li>
-      <li class="paso luego"><span class="estado">Lo siguiente tuyo · cuando acaben las dos sesiones</span>
-        <span class="t">Decir «júntalo» a la 0.195.0</span>
-        <span class="c"><span class="quien">Tú lo miras; yo lo junto.</span> Con tu «júntalo» entra también el arreglo de la copia de tus
-          datos, que ahora lleva «Cuaderno a salvo». Después, todas las pruebas de la app de una vez, la subo a la web y es
-          una actualización más para tus testers.</span></li>
       <li class="paso luego"><span class="estado">Lo siguiente tuyo · hoy, lunes 9 de noviembre · conmigo pantalla a pantalla</span>
         <span class="t">Subir la 0.191.1 a Google Play</span>
         <span class="c"><span class="quien">Tú la subes; yo te guío.</span> El archivo ya está bajado y firmado:
@@ -182,6 +174,12 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           y la subió a las 21:43, y Apple la está procesando. Cuando salga en App Store Connect › TestFlight, se añade al grupo
           «Testers iPhone» con el «Qué probar» que te paso, y Apple la revisa antes de que les llegue. Dime qué estado ves: si
           está lista, el enlace público del grupo va también a /beta.</span></li>
+      <li class="paso luego"><span class="estado">Después de la 0.195.0 · yo · dijiste «Sí, así» el 9 de noviembre</span>
+        <span class="t">Montar lo que encontró ChatGPT en tu día</span>
+        <span class="c"><span class="quien">Yo, en una sesión.</span> Primero, probar si una pestaña dormida puede contar un bloque dos
+          veces. Después, sin cambiar cómo se ve nada: que la pausa de un Foco no cuente como foco, que la hora de empezar no cambie
+          al recargar, y que cambiar cómo van las pausas en mitad del día no rehaga lo que ya hiciste. Y te pinto, para que elijas,
+          qué hace «Cambiar» con un Foco en marcha, lo que haces por tu cuenta en Estadísticas › Hoy y el «Hecha · 5 min».</span></li>
       <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo, unos 15 minutos</span>
         <span class="t">Grabar las cuatro voces que faltan en Respira</span>
         <span class="c"><span class="quien">Tú; yo las mido y las pongo.</span> Lo recordabas bien: en el Suspiro fisiológico, el segundo

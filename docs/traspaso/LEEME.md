@@ -4,6 +4,22 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de noviembre de 2026, ~11:45, v0.193.0.
 
+## 9 nov., ~11:10: las letras, listas para el «júntalo»; Ez dice «Sí, así» a lo de ChatGPT
+
+- **Ez (~11:05): «Sí, así»** al plan de ChatGPT 2: después de la 0.195.0, UNA sesión que primero pruebe el 5 (contar dos veces
+  con una pestaña dormida, CDP `Page.setWebLifecycleState`), luego arregle 1, 3 y 2 con prueba y mutante, y pinte 4, 6 y 7.
+- **letras-jornada**, terminada: 19a7eb6b en origin (arreglo 2 con `ritmo.sinResumir` y `ritmo-resumen-fallo`; las cuatro rojas
+  eran S6 y 4A; 487 de 488 y la roja arreglada). `i18nClaves` = 1166 en su rama; nueve filas arriba en DECISIONES. Página
+  «Montado» v2: GVFywNBhyR14gkzmdbfwXB. Novedad propuesta: «Si haces la pausa a tu manera, dilo: "Ya la hice por mi cuenta",
+  junto a "Ahora no".» / «Took your break your own way? Say so: "I did it my own way", next to "Not now".» Abierta: un bloque
+  que acaba en una reunión puede durar menos de 5 min y perderse al recargar.
+- **letras-nuevo**: la 6A, segunda vuelta (CSaEpNjyYihJUaY5BoaxQP): A1 `claude/caza-nuevo-8nov-6a-a1` (b7d263b6), **A2
+  recomendada** `…-6a-a2` (aa1df7f3: «La música, solo en Respira» bajo «Suena detrás», a 11 px = `--size-meta`), A3 `…-6a-a3`
+  (4abd7e53). Ninguna añade altura; las tres pasan las 40 de Ajustes; la prueba propia se escribe con la elegida. Las ramas 6A
+  salen de 133ba624: no llevan 0de87f86 ni fb57e2b7, que entran con `caza-nuevo-8nov-0c7d9b`.
+- **Ahora en la hoja (v97):** elegir la 6A y decir «júntalo». Con él: juntar jornada, nuevo y la 6A elegida; bump 0.195.0; la
+  suite entera; CHANGELOG; la novedad; push; CI. caza-anchos tendrá que traer los commits nuevos de la jornada.
+
 ## 9 nov., ~10:50: cuatro sesiones; la landing C y la segunda parte de ChatGPT, comprobada
 
 - **landing-c** (`local_51b13b7a…`, `claude/landing-c-9nov`, 8901-8902), nueva. **Ez eligió la C** de la página de la landing
