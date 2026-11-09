@@ -65,7 +65,7 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   legal sigue en su hoja.
 - **Landing C con la B de Ez** (9 nov., `claude/landing-c-9nov`): la raíz con dos caras y la landing larga como /premium, montada
   (5f9629ea); su página para Ez, TUES7Hw31NwYXYBypdmHwK (EcLj6). Espera su suite entera y el «júntalo» de Ez.
-- **La 0.196.0, en `main` con el «Me valen todos los audios» de Ez (9 nov.)**: «Más» y «More» en el segundo tramo del Suspiro con
+- **La 0.196.0, en `main` con el «Me valen todos los audios» de Ez (9 nov.), CI en verde entero (42693245511)**: «Más» y «More» en el segundo tramo del Suspiro con
   las cuatro tomas de Ez (el «More» de sulafat, cortado en 1,08 s, ya cabe) y la 1A de la caza en seis anchos. 1449 pruebas en verde; la única roja (eventos-origen, «el navegador se cerró» con la máquina cargada) pasa sola, 4 de 4.
 - **En marcha** (9 nov., retomadas en EcLj6 a las 19:50): la landing B (`claude/landing-c-9nov`), lo de ChatGPT 2 (`claude/chatgpt-jornada-9nov`) y la caza de rendimiento (`claude/caza-rendimiento-9nov`). Dónde va cada una, en el relevo de `docs/traspaso/LEEME.md`.
 - **Esperan a Ez**: mirar la landing B (TUES7Hw…, EcLj6) y su «júntalo», Play y TestFlight con la 0.191.1 (lunes 9), y la revisión de ChatGPT del cobro y lo legal.
