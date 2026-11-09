@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.194.0 · 8 de noviembre de 2026 (la versión de prueba de Play y TestFlight es la 0.191.1). Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.195.0 · 9 de noviembre de 2026 (la versión de prueba de Play y TestFlight es la 0.191.1). Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
