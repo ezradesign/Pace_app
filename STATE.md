@@ -56,7 +56,7 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 - **La 0.194.0, juntada con los «Júntalo» de Ez (8 nov.)**: el contraste (1B 2B 3B), volver tras horas fuera (E1 A, V1 A,
   V2 A), el día de v1 (1B 2A 3B 4A, con «Borrar todo» que dice que el código se queda) y siete arreglos de la caza de la semana.
   Si Play se sube el lunes con la 0.191.1, esta llega como actualización. Detalle, en el relevo de `docs/traspaso/LEEME.md`.
-- **La 0.195.0, con el «Júntalo con la A2» de Ez (9 nov.), por juntar en EcLj6** (relevo en `docs/traspaso/LEEME.md`):
+- **La 0.195.0, en `main` con el «Júntalo con la A2» de Ez (9 nov.)**: 1432 pruebas en verde y tres puestas al día (las novedades del sobre y «Escuchar ›» en los toques).
   `claude/caza-anchos-9nov-6a280f` ya lleva juntas las letras de la jornada (usabilidad 1A-5A, S3 S6 S7 S11 y los dos arreglos
   de la primera parte de ChatGPT) y de lo nuevo (N1, N2, N3), más dos arreglos de la caza en seis anchos; se le suma
   `claude/caza-nuevo-8nov-6a-a2` («Escuchar ›» junto a «Oír» y «La música, solo en Respira»), que pide su prueba al juntar.
@@ -64,7 +64,8 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   «Sí, así»: después de la 0.195.0, probar el doble cómputo, arreglar la cuenta (1, 3, 2) y pintar 4, 6 y 7. La del cobro y lo
   legal sigue en su hoja.
 - **Landing C** (9 nov., `claude/landing-c-9nov`, a medias): la raíz con dos caras; ante la duda, la app. Se pinta para Ez.
-- **Esperan a Ez**: las letras de la caza (1A/1B, 2A/2B), Play y TestFlight con la 0.191.1 (lunes 9) y los audios del suspiro.
+- **La 1A de la caza** («1 h» no se queda sola en la frase del día), montada en `claude/caza-anchos-9nov-6a280f` (43655d1b): entra en la siguiente. La 2A deja 320 px como está.
+- **Esperan a Ez**: las letras de la landing (WXqNcQ9X…, 5iWBf), Play y TestFlight con la 0.191.1 (lunes 9) y los audios del suspiro.
 - **Lo legal para vender en la web**, en `main` con la 0.189.0 y las letras de Ez (1A 2A 3A 4A 5A): los borradores, sin
   publicar hasta sus datos (nombre, NIF y un contacto) y la revisión de un profesional (las preguntas para el gestor y el
   jurista, en `docs/launch/legal-web-para-ez.html`); y `/desistir`, cerrada hasta que Ez dé de alta Resend y ponga

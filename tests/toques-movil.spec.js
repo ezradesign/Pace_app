@@ -88,8 +88,11 @@ test('ajustes, estadísticas y apoyo', async ({ page, context }) => {
      a las píldoras. */
   await exigir(page, '.pace-aj-sec-accion', 32, '«Visita guiada ›»', 0);
   await exigir(page, '.pace-aj-pild', 32, 'las píldoras del idioma, bajo «Visita guiada ›»', 0);
-  await exigir(page, '.pace-aj-sec-accion', 36, '«Copias, borrar y PACE completo ›»', 2);
-  await page.locator('.pace-aj-sec-accion').filter({ visible: true }).nth(2).click();
+  /* «Escuchar ›» (Ez, A2 de la 6A, 9 nov. 2026) va en la línea del título «Oír», como «Visita guiada ›». */
+  await exigir(page, '[data-pace-aj-escuchar]', 32, '«Escuchar ›»', 0);
+  /* «Copias…» por su sección plegada y no por su orden: «Escuchar ›» suma una entrada delante. */
+  await exigir(page, '[data-pace-aj-plegada] .pace-aj-sec-accion', 36, '«Copias, borrar y PACE completo ›»', 0);
+  await page.locator('[data-pace-aj-plegada] .pace-aj-sec-accion').filter({ visible: true }).first().click();
   await exigir(page, '.pace-aj-volver', 36, 'la «‹» que vuelve de Tus datos');
   /* 16 oct. 2026 (auditoría): «Seguridad» y «Privacidad» medían 15 px de alto. */
   await exigir(page, '.pace-aj-pie a', 24, 'los enlaces del pie de Ajustes');

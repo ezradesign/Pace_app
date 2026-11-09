@@ -4,6 +4,18 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de noviembre de 2026, ~11:10, v0.194.0 (la 0.195.0, juntándose).
 
+## 9 nov., ~17:15: Ez sigue en 5iWBf hasta el 95 % de la semana; la 0.195.0, en main
+
+- **Ez: «Seguimos aquí hasta que el uso semanal quede en un 95 %».** El relevo de abajo queda como reserva: lo que dice de la
+  0.195.0 ya está hecho. Juntada en `claude/union-0195` (caza-anchos + la A2 con `tests/ajustes-escuchar.spec.js`, dos mutantes en
+  rojo; `i18nClaves` 1170; novedad `pausa-a-tu-manera`); 1432 en verde y 3 puestas al día (`sobre-hoja` x2 por la novedad nueva,
+  `toques-movil` porque «Escuchar ›» suma una `.pace-aj-sec-accion` delante de «Copias…»).
+- **Letras de la caza: 1A y 2A.** La 1A, en `claude/caza-anchos-9nov-6a280f` (43655d1b), para la siguiente versión.
+- **landing-c**: hecha en `claude/landing-c-9nov` (b3d95a6f): 17 pruebas con mutantes, verify, 150 de 150 en sus zonas. Página
+  para Ez: **WXqNcQ9XeojuhvSBgWoR76** (A corta, B larga, C corta con capturas, recomendada, con «¿Ya usas PACE?» en la cabecera).
+  Antes de juntar: la suite entera, WebKit, su fila en DECISIONES y mirarla a mano a 360 y 1280.
+- Play 0.191.1: Ez, «luego».
+
 ## AL RELEVO (9 nov., ~11:10): 5iWBf… al 90 % de las 5 h y al 86 % de la semana; se sigue en EcLj6…. Empieza aquí
 
 **Regla de Ez (8 nov.):** se para al 90 % de las 5 h o al 95 % de la semana. Las sesiones de 5iWBf (letras-jornada,
