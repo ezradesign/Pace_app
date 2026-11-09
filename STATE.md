@@ -65,7 +65,8 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   legal sigue en su hoja.
 - **Landing C con la B de Ez** (9 nov., `claude/landing-c-9nov`): la raíz con dos caras y la landing larga como /premium; montándose.
 - **Las voces del Suspiro** («Más» / «More», grabadas por Ez), puestas en `claude/voces-suspiro-9nov`: Ez tiene que oírlas antes de publicarlas; el «More» de sulafat no cabe (0,89 s).
-- **En marcha** (9 nov.): lo de ChatGPT 2 (`claude/chatgpt-jornada-9nov`) y la caza de rendimiento (`claude/caza-rendimiento-9nov`). Relevo a EcLj6 en `docs/traspaso/LEEME.md`.
+  Para oírlas: `oir-suspiro.html`, sin commit en su worktree, servida en el 8915 (`voces-suspiro` en `.claude/launch.json`, sin commit; desde el móvil, `192.168.1.129:8915`).
+- **En marcha** (9 nov., retomadas en EcLj6 a las 19:50): la landing B (`claude/landing-c-9nov`), lo de ChatGPT 2 (`claude/chatgpt-jornada-9nov`) y la caza de rendimiento (`claude/caza-rendimiento-9nov`). Dónde va cada una, en el relevo de `docs/traspaso/LEEME.md`.
 - **La 1A de la caza** («1 h» no se queda sola en la frase del día), montada en `claude/caza-anchos-9nov-6a280f` (43655d1b): entra en la siguiente. La 2A deja 320 px como está.
 - **Esperan a Ez**: las letras de la landing (WXqNcQ9X…, 5iWBf), Play y TestFlight con la 0.191.1 (lunes 9) y los audios del suspiro.
 - **Lo legal para vender en la web**, en `main` con la 0.189.0 y las letras de Ez (1A 2A 3A 4A 5A): los borradores, sin

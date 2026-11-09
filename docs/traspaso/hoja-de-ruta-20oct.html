@@ -95,7 +95,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.195.0 · actualizada el 9 de noviembre a las 19:08 · en esta cuenta, con la 0.195.0 en la web y tres sesiones cazando y montando</div>
+    <div class="eyebrow">PACE · versión 0.195.0 · actualizada el 9 de noviembre a las 19:55 · en esta cuenta, con tus voces listas para oír y tres sesiones retomadas</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -107,8 +107,8 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <p class="nota">Lo que salió de mirarlo todo a fondo el 28 de octubre. El detalle, en
       <code>docs/audits/auditoria-v0.181.1.md</code>.</p>
     <ul class="lista">
-      <li><b>La app está casi entera y sana.</b> La web va por la 0.194.0, con todo lo del 5 al 8 de noviembre
-        dentro. Las últimas pruebas enteras, las de la 0.194.0 el 8 de noviembre: 1390 en verde, y GitHub en verde entero, también Safari, Android y el iPhone. Lo que ChatGPT marcó para antes de lanzar ya está, salvo cobrar y
+      <li><b>La app está casi entera y sana.</b> La web va por la 0.195.0, con todo lo del 5 al 9 de noviembre
+        dentro. Las últimas pruebas enteras, las de la 0.195.0 el 9 de noviembre: 1432 en verde, y GitHub en verde entero, también Safari, Android y el iPhone. Lo que ChatGPT marcó para antes de lanzar ya está, salvo cobrar y
         lo legal, que esperan tus altas y tus datos.</li>
       <li><b>Ocho revisiones de ChatGPT, comprobadas y guardadas enteras.</b> Acierta en todo lo que se puede mirar en el
         código. Los arreglos del cobro, de las rutinas sin «Auto» y de «Tus rutinas» ya están dentro de la app. Y
@@ -131,7 +131,21 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <h2>Paso a paso</h2>
     <p class="nota">La pongo al día en cada paso. Si tienes la página abierta, se actualiza sola. Si un enlace no abre, es que está en tu otra cuenta.</p>
     <ol class="pasos">
-      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, 2 minutos · es lo que más ayuda de ChatGPT ahora</span>
+      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, unos 5 minutos · me lo pediste</span>
+        <span class="t">Oír «Más» y «More» en el Suspiro</span>
+        <span class="c"><span class="quien">Tú las oyes; yo las publico.</span> Tus cuatro tomas ya están dentro de la app, en su rama,
+          con el volumen igualado al de las otras palabras de cada voz. Ábrelas en el ordenador en
+          <code>localhost:8915/oir-suspiro.html</code> (ya está abierta en mi panel) o en el móvil, con la misma wifi, en
+          <code>192.168.1.129:8915/oir-suspiro.html</code>:
+          <ol>
+            <li><b>La palabra sola</b>, las cuatro.</li>
+            <li><b>En su sitio</b>: una respiración entera, «Inhala», «Más» y «Exhala», con cada voz y en los dos idiomas.</li>
+            <li><b>En la app de verdad</b>: cada botón la deja con esa voz y ese idioma; luego, Respira › Suspiro fisiológico. La
+              primera vez sale la bienvenida.</li>
+          </ol>
+          El «More» de sulafat dura 0,89 s y no cabe en su segundo: ahí sigue el tono hasta que grabes una toma de menos de
+          0,7 s. Dime «publícalas» o qué toma no te convence.</span></li>
+      <li class="paso luego"><span class="estado">Lo siguiente tuyo · 2 minutos · es lo que más ayuda de ChatGPT ahora</span>
         <span class="t">Pasar a ChatGPT la revisión del cobro y de lo legal</span>
         <span class="c"><span class="quien">Tú.</span> Lo que me trajiste el 5 de noviembre cubre datos y compra, pero no lo legal. Copia esto en
           ChatGPT y tráeme su respuesta: compruebo cada cosa en el código antes de montar nada.
@@ -149,19 +163,22 @@ Cobro: busca casos concretos en los que alguien pague y no reciba su código, lo
 Legal: dime qué es obligatorio tener publicado ANTES de la primera venta y qué puede esperar un mes; en concreto, si mis datos del aviso legal pueden esperar. Revisa también si están bien resueltos el desistimiento, su pérdida en contenido digital y el botón para desistir; si «de por vida» está bien definido; si /premium promete algo que el código o las condiciones no cumplen; y cualquier contradicción entre condiciones, privacidad y /premium.
 
 Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien compra, y si bloquea la primera venta, va antes del mensual o puede esperar. Separa lo que has comprobado en el código de lo que deduces. En lo legal cita la norma y di con qué seguridad lo afirmas: no es asesoría y lo revisará un profesional.</pre></span></li>
-      <li class="paso marcha"><span class="estado">En marcha · yo · tres sesiones</span>
-        <span class="t">La landing, lo de ChatGPT y una caza nueva</span>
+      <li class="paso marcha"><span class="estado">En marcha · yo · tres sesiones, retomadas en esta cuenta a las 19:50</span>
+        <span class="t">La landing, lo de ChatGPT y la caza de rendimiento</span>
         <span class="c"><span class="quien">Yo.</span>
           <ol>
-            <li><b>La landing B</b>, la larga como /premium: se monta en su rama, con todas las pruebas de la app, y te la enseño antes
-              de juntarla.</li>
-            <li><b>Lo que encontró ChatGPT en tu día</b> (dijiste «Sí, así»): primero, probar si un bloque puede contar dos veces; luego,
-              arreglar la cuenta sin cambiar cómo se ve; y te pinta lo que se ve: «Cambiar» con un Foco en marcha, lo que haces por tu
-              cuenta en Estadísticas › Hoy y el «Hecha · 5 min».</li>
-            <li><b>Caza nueva:</b> cuánto tarda PACE en un móvil normal, si algo se acumula con la pestaña abierta todo el día, y qué
-              pasa cuando sale una versión nueva y la tienes abierta.</li>
+            <li><b>La landing B</b>, la larga como /premium: montada en su rama. Falta un arreglo pequeño en los nombres de los cinco
+              módulos, todas las pruebas de la app y la página para que la mires antes de juntarla.</li>
+            <li><b>Lo que encontró ChatGPT en tu día</b>: lo de contar un bloque dos veces era cierto y ya está arreglado. Ahora, sin
+              cambiar cómo se ve nada: que la pausa de un Foco no cuente como foco, que cambiar cómo van las pausas a mitad del día
+              no rehaga lo que ya hiciste y que la hora de empezar no cambie al recargar. Y te pinta, para que elijas, «Cambiar» con
+              un Foco en marcha, lo que haces por tu cuenta en Estadísticas › Hoy y el «Hecha · 5 min».</li>
+            <li><b>Caza de rendimiento</b>, medida en un móvil lento: lo que más pesa son las barras de progreso y el aro del Foco, que
+              se redibujan sesenta veces por segundo para moverse medio píxel. Las barras se arreglan sin que cambie nada a la
+              vista; el aro cambiaría cómo se mueve, así que te lo pinto para que elijas. Y qué pasa cuando sale una versión nueva
+              con PACE abierto.</li>
           </ol>
-          Tu 1A de la caza en seis anchos entra en la siguiente versión.</span></li>
+          Tu 1A de la caza en seis anchos, y las voces cuando digas, entran en la siguiente versión.</span></li>
       <li class="paso luego"><span class="estado">Lo siguiente tuyo · hoy, lunes 9 de noviembre · conmigo pantalla a pantalla</span>
         <span class="t">Subir la 0.191.1 a Google Play</span>
         <span class="c"><span class="quien">Tú la subes; yo te guío.</span> El archivo ya está bajado y firmado:
@@ -179,20 +196,6 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
           y la subió a las 21:43, y Apple la está procesando. Cuando salga en App Store Connect › TestFlight, se añade al grupo
           «Testers iPhone» con el «Qué probar» que te paso, y Apple la revisa antes de que les llegue. Dime qué estado ves: si
           está lista, el enlace público del grupo va también a /beta.</span></li>
-      <li class="paso luego"><span class="estado">Después de la 0.195.0 · yo · dijiste «Sí, así» el 9 de noviembre</span>
-        <span class="t">Montar lo que encontró ChatGPT en tu día</span>
-        <span class="c"><span class="quien">Yo, en una sesión.</span> Primero, probar si una pestaña dormida puede contar un bloque dos
-          veces. Después, sin cambiar cómo se ve nada: que la pausa de un Foco no cuente como foco, que la hora de empezar no cambie
-          al recargar, y que cambiar cómo van las pausas en mitad del día no rehaga lo que ya hiciste. Y te pinto, para que elijas,
-          qué hace «Cambiar» con un Foco en marcha, lo que haces por tu cuenta en Estadísticas › Hoy y el «Hecha · 5 min».</span></li>
-      <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo, unos 15 minutos</span>
-        <span class="t">Grabar las cuatro voces que faltan en Respira</span>
-        <span class="c"><span class="quien">Tú; yo las mido y las pongo.</span> Lo recordabas bien: en el Suspiro fisiológico, el segundo
-          tramo, «Inhala más», dura un segundo y suena un tono porque no tiene voz. Faltan cuatro archivos, una sola palabra cada
-          uno: <code>sulafat-mas.mp3</code> y <code>bradford-mas.mp3</code> («Más») y <code>sulafat-more.mp3</code> y
-          <code>bradford-more.mp3</code> («More»), de 0,85 s como mucho. Opcional, un «Inhale» de sulafat más corto, de 1,85 s
-          como mucho, porque el de ahora no cabe en la primera inhalación. Los prompts, en
-          <code>docs/traspaso/archivos/encargos-16oct/PROMPTS_AUDIO_SUSPIRO.md</code>. Las demás voces y la música ya están.</span></li>
       <li class="paso luego"><span class="estado">Hecho en su rama · espera tu «júntalo»</span>
         <span class="t">Que dos cobros de la mensual a la vez no acorten el código</span>
         <span class="c"><span class="quien">Tú dices «júntalo»; yo lo subo.</span> Lo que encontró ChatGPT: si dos renovaciones de la
@@ -236,8 +239,16 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
 
     </ol>
     <details class="plegado">
-      <summary>Lo hecho hasta hoy · 106 pasos</summary>
+      <summary>Lo hecho hasta hoy · 108 pasos</summary>
       <ol class="pasos">
+      <li class="paso hecho"><span class="estado">Hecho · 9 de noviembre, 19:50</span>
+        <span class="t">Volver a esta cuenta y retomar las sesiones</span>
+        <span class="c"><span class="quien">Yo.</span> Las cinco ramas, en orden y sin nada perdido. Las tres sesiones a medias, otra vez
+          en marcha desde donde pararon.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · 9 de noviembre, 19:30 · en su rama</span>
+        <span class="t">Grabaste «Más» y «More», y están puestas</span>
+        <span class="c"><span class="quien">Tú las grabaste; yo las medí y las puse.</span> Con las dos voces y en los dos idiomas, con el
+          volumen igualado al de sus otras palabras. Esperan a que las oigas (arriba).</span></li>
       <li class="paso hecho"><span class="estado">Hecho · 9 de noviembre, 19:00</span>
         <span class="t">Elegiste la landing: la B, larga como /premium</span>
         <span class="c"><span class="quien">Tú.</span> Y la C de la estructura: quien ya usa PACE ve la app, y quien llega nuevo, la landing.</span></li>
@@ -1195,7 +1206,7 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
     <div class="grupo"><h3>4 · Cuando puedas, no frenan v1</h3>
       <ul class="lista">
         <li>Probar en tu Android el calendario que se mantiene solo, y leer <code>privacy.html</code>, que es pública.</li>
-        <li>Oír la voz de Respira y los cuencos en pacegrass.app, y grabar «Más» y «More» para el suspiro.</li>
+        <li>Oír la voz de Respira y los cuencos en pacegrass.app.</li>
         <li>Los 22 dibujos de los logros, cuando acabes los de ejercicios (<code>docs/product/GLIFOS_A_DIBUJAR.md</code>).</li>
         <li>Apagar en GitHub las propuestas automáticas de Dependabot, dejando las alertas.</li>
         <li>Decirme si ChatGPT contestó a dos consultas: «qué pasa cuando sale una versión nueva» y «volver a la app».

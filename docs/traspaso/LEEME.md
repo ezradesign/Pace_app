@@ -2,7 +2,23 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de noviembre de 2026, ~19:45, v0.195.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de noviembre de 2026, ~20:00, v0.195.0.
+
+## 9 nov., ~20:00: relevo tomado en EcLj6 (5 h al 22 %, semana al 91 %; tope de Ez, 98 %)
+
+- **Ez: «puedes llevar la sesión semanal hasta el 98 %»**. Con tres sesiones y la coordinadora, la semana subió del 88 al 91 %
+  en 12 minutos (las 5 h, del 2 al 22 %): aquí queda poco. Las sesiones, WIP con push al 95 % y paran al 97 %. **5iWBf repone
+  las 5 h hacia las 21:00 y tiene la semana al ~7 %**: lo que quede se sigue allí, con el relevo de abajo puesto al día.
+- **Sesiones retomadas en EcLj6** (con `cwd` en su worktree): landing B, `local_ac11222c…` (Sonnet; el CSS sin commit de
+  `.pl-mods li > span`, la suite, push y la página para Ez desde el generador de la otra cuenta); chatgpt-jornada,
+  `local_92cdd7f1…` (1, 3 y 2 con el diseño de su nota, que estaba en `side-session-notes` de la otra cuenta y se copió al
+  encargo; luego la página de 4, 6 y 7); caza-rendimiento, `local_fd57880b…` (primero el arreglo invisible de las barras).
+- **Las voces, listas para oír**: `oir-suspiro.html` en el worktree de `voces-suspiro-9nov` (sin commit; no se sube), servida
+  en el 8915 con `voces-suspiro` de `.claude/launch.json` (sin commit). Tres partes: la palabra sola, una respiración entera
+  con el tono donde no cabe, y botones que dejan la app de la rama con cada voz e idioma. El service worker viejo del 8915
+  se purgó (servía la caché `pace-v0.195.0`, el mismo nombre que la rama, que no sube versión). Comprobado en la app de la
+  rama: con sulafat en español, `paceVozCabe('breathe.inhale.more', 1)` da `true`.
+- **Hoja, versión 128 en EcLj6io4wM9pGjtQ5wd1CT**: el «Ahora» es oír las voces; ChatGPT del cobro y lo legal, lo siguiente.
 
 ## AL RELEVO (9 nov., ~19:45): 5iWBf… al 87-93 % de las 5 h (semana 7 %); se sigue en EcLj6…. Empieza aquí; manda sobre todo lo de abajo
 
