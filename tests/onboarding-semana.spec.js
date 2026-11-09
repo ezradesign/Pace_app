@@ -102,6 +102,10 @@ test('en inglés la pregunta habla inglés', async ({ page }) => {
   await expect(page.locator(BIENVENIDA)).toContainText("What's your week like?");
   await expect(page.locator(BIENVENIDA)).toContainText('Not now, I’ll try it first');
   await expect(page.locator(EDITOR + ' [data-pace-semana-dia="1"]')).toHaveAttribute('aria-label', 'Monday, Full day');
+  /* La fila del día libre no repite su nombre: decía «No plan, no plan: PACE leaves you be» (caza de los
+     seis anchos, 9 nov. 2026), porque el castellano lleva «Libre, sin plan» y el inglés traducía las dos. */
+  await expect(page.locator(EDITOR)).toContainText('No plan: PACE leaves you be');
+  await expect(page.locator(EDITOR)).not.toContainText('no plan:');
 });
 
 test('a 360 px los siete días caben en una fila y la página no se va de lado', async ({ page }) => {

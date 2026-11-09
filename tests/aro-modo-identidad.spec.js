@@ -6,8 +6,10 @@
  * bloque de trabajo. Ahora el reloj es el de un modo y una duración: cambiar cualquiera
  * de los dos lo deja a cero, en marcha o en pausa. Contra v0.174.0 falla.
  *
- * NO CUBRE: la confirmación al salir de una pausa empezada (la barra solo pregunta con
- * un Foco empezado), que no existe.
+ * Y LA PREGUNTA AL DEJAR UNA PAUSA EMPEZADA (Ez, 2A del 8 nov. 2026): la barra de arriba solo
+ * preguntaba con un Foco empezado; con una pausa, «Foco» la cortaba sin más. Ahora sale la misma
+ * ventana con sus palabras: «¿Dejar la pausa?», lo que lleva, «Seguir con la pausa» o «Volver al
+ * Foco». Solo en el ordenador: en el móvil la barra no está.
  */
 'use strict';
 
@@ -18,6 +20,7 @@ const ARRANQUE = new Date('2026-10-07T10:00:00+02:00');
 const numero = (p) => p.locator('[data-pace-dial-number]');
 const cta = (p) => p.locator('[data-pace-cta]');
 const modo = (p, nombre) => p.locator('[data-pace-tabs] button').filter({ hasText: nombre });
+const dejar = (p) => p.getByRole('dialog', { name: '¿Dejar la pausa?' });
 
 async function abrir(page, context, minutos) {
   await sembrar(context, { soundOn: false, focusMinutes: minutos });
@@ -43,6 +46,8 @@ for (const [pausa, minutos, texto] of [['Pausa', 5, '05:00'], ['Larga', 15, '15:
       expect(await numero(page).textContent(), 'la pausa ha corrido').not.toBe(texto);
 
       await modo(page, 'Foco').click();
+      /* con la pausa empezada, la barra pregunta antes (2A); se vuelve al Foco */
+      await dejar(page).getByRole('button', { name: 'Volver al Foco', exact: true }).click();
       /* el Foco empieza entero y parado: no hereda el tiempo de la pausa */
       await expect(numero(page)).toHaveText(texto);
       await expect(cta(page)).toHaveText('Empezar foco');
@@ -55,6 +60,74 @@ for (const [pausa, minutos, texto] of [['Pausa', 5, '05:00'], ['Larga', 15, '15:
     });
   }
 }
+
+test('2A · con una pausa empezada, «Foco» pregunta antes, y «Seguir con la pausa» no toca nada', async ({ page, context }) => {
+  await abrir(page, context, 25);
+  await modo(page, 'Pausa').click();
+  await cta(page).click();
+  await context.clock.fastForward(2 * 60 * 1000 + 10 * 1000);
+  await context.clock.runFor(1000);
+  const antes = await numero(page).textContent();
+  await modo(page, 'Foco').click();
+  await expect(dejar(page), 'la pausa se cortaba sin preguntar').toBeVisible();
+  await expect(dejar(page)).toContainText('Llevas 2 minutos de pausa. Si vuelves al Foco ahora, la pausa se acaba aquí.');
+  await dejar(page).getByRole('button', { name: 'Seguir con la pausa', exact: true }).click();
+  await expect(dejar(page)).toHaveCount(0);
+  expect(await page.evaluate(() => getState().focusMode)).toBe('pausa');
+  await expect(cta(page), 'la pausa sigue en marcha').toHaveText('Pausar');
+  await context.clock.runFor(2000);
+  expect(await numero(page).textContent(), 'la pausa no sigue contando').not.toBe(antes);
+  /* Entre la corta y la larga, el título de siempre; el minuto, en singular al principio. */
+  await modo(page, 'Larga').click();
+  const larga = page.getByRole('dialog', { name: '¿Pasar a la pausa larga?' });
+  await expect(larga).toContainText('Si cambias ahora, la pausa se acaba aquí.');
+  await larga.getByRole('button', { name: 'Cambiar', exact: true }).click();
+  expect(await page.evaluate(() => getState().focusMode)).toBe('larga');
+  await cta(page).click();
+  await context.clock.fastForward(70 * 1000);
+  await context.clock.runFor(1000);
+  await modo(page, 'Foco').click();
+  await expect(dejar(page)).toContainText('Llevas 1 minuto de pausa.');
+});
+
+test('2A · en inglés, la misma pregunta', async ({ page, context }) => {
+  await sembrar(context, { soundOn: false, lang: 'en' });
+  await context.clock.install({ time: ARRANQUE });
+  await irAlArtefacto(page);
+  await page.locator('[data-pace-tabs]').getByRole('button', { name: 'Break', exact: true }).click();
+  await cta(page).click();
+  await context.clock.fastForward(3 * 60 * 1000 + 5000);
+  await context.clock.runFor(1000);
+  await modo(page, 'Focus').click();
+  const d = page.getByRole('dialog', { name: 'Leave the break?' });
+  await expect(d).toContainText('You are 3 minutes into your break. If you go back to Focus now, the break ends here.');
+  await d.getByRole('button', { name: 'Back to Focus', exact: true }).click();
+  expect(await page.evaluate(() => getState().focusMode)).toBe('foco');
+});
+
+test('2A · CONTROL · sin empezarla, o en pausa sin un segundo hecho, la pausa cambia sin preguntar', async ({ page, context }) => {
+  await abrir(page, context, 25);
+  await modo(page, 'Pausa').click();
+  await modo(page, 'Foco').click();
+  await expect(dejar(page)).toHaveCount(0);
+  expect(await page.evaluate(() => getState().focusMode)).toBe('foco');
+});
+
+test('2A · la pausa del día en el aro también pregunta, desde que acabó el bloque', async ({ page, context }) => {
+  await sembrar(context, { soundOn: false, ritmo: { dia: { fecha: '2026-10-07', opcion: 'jornada', desde: 600, cicloBase: 0, cambios: {} } } });
+  await context.clock.install({ time: ARRANQUE });
+  await irAlArtefacto(page);
+  await page.getByRole('button', { name: 'Empezar jornada', exact: true }).filter({ visible: true }).first().click();
+  const fin = await page.evaluate(() => JSON.parse(localStorage.getItem('pace.timer.v1')).endsAt);
+  await context.clock.fastForward(fin - await page.evaluate(() => Date.now()) + 1000);
+  await page.locator('[data-pace-break-shortcut]').first().waitFor({ state: 'attached' });
+  await page.getByRole('button', { name: 'Ahora no', exact: true }).click();
+  await context.clock.fastForward(2 * 60 * 1000);
+  await context.clock.runFor(1000);
+  expect(await page.evaluate(() => getState().focusMode), 'GUARD: el aro cuenta la pausa del día').toBe('pausa');
+  await modo(page, 'Foco').click();
+  await expect(dejar(page)).toContainText('Llevas 2 minutos de pausa.');
+});
 
 test('CONTROL · el Foco de 5 empezado desde cero acaba a los 5 minutos y cuenta', async ({ page, context }) => {
   await abrir(page, context, 5);

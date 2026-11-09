@@ -87,6 +87,7 @@ function statsHoyMeta(p, t) {
   if (p.comida) return ritmoDuracion(it.dur);
   if (estado === 'hecha') return t('ritmo.hecha') + ' · ' + it.dur + ' min';
   if (estado === 'saltada') return t('ritmo.saltada');
+  if (estado === 'cuenta') return t('ritmo.cuenta');   /* sin minutos: no hubo sesión (4A del 8 nov.) */
   if (estado === 'ahora') return t('ritmo.ahora.min');
   return it.dur + ' min';
 }

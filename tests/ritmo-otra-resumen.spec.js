@@ -35,7 +35,7 @@ test('«Otra» en una pausa que luego se congela: el resumen dice qué rutina se
   await vis(page, '[data-pace-cta]').first().click();
   await page.waitForTimeout(250);
   await terminarBloque(page);
-  await vis(page, '[data-pace-break-shortcut] button').first().click();
+  await vis(page, '[data-pace-break-shortcut] button:not([data-pace-break-cuenta])').first().click();   /* «Ahora no» */
 
   /* «Otra» en la pausa abierta (en el escritorio vive en la ficha de la parada; aquí, su acción). */
   const antes = await platoDe(page, 1);

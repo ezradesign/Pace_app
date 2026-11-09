@@ -37,15 +37,17 @@
    Las reglas puras (umbral, orden, «Para ahora», motivo del grupo vacío) viven
    en `library-rules.js` para poder asertarse sin navegador. */
 
-const { useState: useStateLib, useEffect: useEffectLib, useMemo: useMemoLib } = React;
+const { useState: useStateLib, useEffect: useEffectLib, useLayoutEffect: useLayoutEffectLib, useMemo: useMemoLib } = React;
 
 function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, catPrefix,
                        variant = 'body', filtros, conTuyas = true, pozoAhora, ancho = 1240,
-                       viajes, enPausa = false, primeraVez = null }) {
+                       viajes, enPausa = false, primeraVez = null, pideTuyas = null }) {
   const { t, tn, lang } = useT();
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   const [activos, setActivos] = useStateLib([]);
   const [vista, setVista] = useStateLib('catalogo');
+  const [lateral, setLateral] = useStateLib(null);
+  usePaceLateralPegado(lateral);
   usePace(); // al canjear un código, «Para ahora» vuelve a contar con lo que se abrió
 
   /* El modal se OCULTA, no se desmonta: sin esto el filtro y la vista
@@ -56,6 +58,23 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
   useEffectLib(() => {
     if (!open) { setActivos([]); setVista('catalogo'); }
   }, [open]);
+
+  /* «TUS RUTINAS» ABRE TUS RUTINAS (Ez, N2 A, 8 nov.): la barra lateral y el constructor al
+     guardar piden esta vista (`pideTuyas`, un objeto nuevo en cada petición). Solo la oye la
+     biblioteca abierta: la otra, montada y cerrada, se quedaría en «tuyas» para la próxima vez.
+     Antes de pintar (layout), para no enseñar el catálogo un fotograma; y la rutina guardada
+     se trae a la vista en la copia que se ve (lateral o móvil), aunque haya diez encima. */
+  useLayoutEffectLib(() => {
+    if (!open || !pideTuyas || !conTuyas) return;
+    setVista('tuyas');
+    if (!pideTuyas.id) return;
+    const r = requestAnimationFrame(() => {
+      const el = [...document.querySelectorAll('[data-pace-custom-empezar]')]
+        .find(b => b.getAttribute('data-pace-custom-empezar') === pideTuyas.id && b.getClientRects().length);
+      if (el) el.scrollIntoView({ block: 'nearest' });
+    });
+    return () => cancelAnimationFrame(r);
+  }, [pideTuyas]);
 
   const todas = useMemoLib(() => {
     const out = [];
@@ -225,7 +244,7 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
           {/* LATERAL: sólo escritorio (la hoja lo oculta por debajo de 769 px).
               Lleva los filtros en vertical, «Tus rutinas» y «Para ahora», y así
               la rejilla queda de catálogo puro. */}
-          <aside className="pace-lib-lateral">
+          <aside className="pace-lib-lateral" ref={setLateral}>
             <p className="pace-lib-lateral-tit">{t('lib.filter.title')}</p>
             {chips}
             {/* «Tus rutinas» NO lleva versalita encima: `CustomRoutinesSection`
@@ -280,6 +299,33 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
       </div>
     </Modal>
   );
+}
+
+/* EL LATERAL MÁS ALTO QUE LA VENTANA SE PEGA POR ABAJO. Va pegado arriba (`top: 0`) para que no se
+   vaya al bajar por el catálogo; pero con «Tus rutinas» y «Para ahora» puede medir más que la
+   ventana (865 px de lateral en 612 de hueco a 1280×720 con dos rutinas), y entonces lo de abajo
+   —«+ Crear rutina», las últimas rutinas— no se veía hasta el final del catálogo, ni con el
+   teclado. Con `top` negativo, lo que sobra se recorre al bajar y luego se queda pegado con su
+   final a la vista. Si cabe, `top` vuelve a 0 y nada cambia; en el móvil el lateral no se pinta
+   (alto 0). Caza de los seis anchos, 9 nov. 2026. */
+function usePaceLateralPegado(lat) {
+  useLayoutEffectLib(() => {
+    if (!lat || typeof ResizeObserver === 'undefined') return undefined;
+    let sc = lat.parentElement;
+    while (sc && !/(auto|scroll)/.test(getComputedStyle(sc).overflowY)) sc = sc.parentElement;
+    if (!sc) return undefined;
+    const poner = () => {
+      const cs = getComputedStyle(sc);
+      const hueco = sc.clientHeight - (parseFloat(cs.paddingTop) || 0) - (parseFloat(cs.paddingBottom) || 0);
+      const sobra = lat.offsetHeight - hueco;
+      lat.style.top = sobra > 0 ? (-sobra) + 'px' : '';
+    };
+    poner();
+    const ro = new ResizeObserver(poner);
+    ro.observe(lat);
+    ro.observe(sc);
+    return () => { ro.disconnect(); lat.style.top = ''; };
+  }, [lat]);
 }
 
 Object.assign(window, { LibraryShell });

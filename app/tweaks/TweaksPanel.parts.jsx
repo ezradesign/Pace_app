@@ -147,11 +147,11 @@ function AjustesAccion({ children, derecha, suave, onClick, title, sub }) {
    dice…»; Ez, 3A del 27 oct.). El de la pregunta de cambiar de modo (TopBar.jsx), con el botón
    que hace en terracota. Sin `onSi` es un aviso de un solo botón. Va por portal al <body>: el
    panel anima con transform y un `fixed` de dentro quedaría atrapado en él. */
-function AjustesAviso({ abierto, titulo, children, si, onSi, onNo }) {
+function AjustesAviso({ abierto, titulo, children, si, onSi, onNo, capa }) {
   const { t } = useT();
   if (!abierto) return null;
   return ReactDOM.createPortal(
-    <Modal open onClose={onNo} maxWidth={440} title={titulo}>
+    <Modal open onClose={onNo} maxWidth={440} title={titulo} capa={capa}>
       <div data-pace-aj-aviso>
         <p style={{ margin: '0 0 22px', color: 'var(--ink-2)', fontSize: 15, lineHeight: 1.55 }}>{children}</p>
         <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', flexWrap: 'wrap' }}>

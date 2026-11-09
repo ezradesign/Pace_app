@@ -55,7 +55,7 @@ test('«Otra» tres días sobre la misma rutina: el lunes siguiente la carta pro
     await vis(page, '[data-pace-cta]').first().click();
     await page.waitForTimeout(250);
     await terminarBloque(page);
-    await vis(page, '[data-pace-break-shortcut] button').first().click();
+    await vis(page, '[data-pace-break-shortcut] button:not([data-pace-break-cuenta])').first().click();   /* «Ahora no» */
 
     const antes = await pausaCon(page, rutina);
     if (antes) {

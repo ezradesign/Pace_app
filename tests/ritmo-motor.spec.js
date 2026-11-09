@@ -248,3 +248,55 @@ test('sin PACE completo no aprende: el día es el de la capa 1 y no hay carta', 
   expect(r.abierto, 'hasta v1, abierto: Cuello descansa y la carta espera').toEqual({ neck: false, carta: true });
   expect(r.cerrado, 'sin PACE completo').toEqual({ neck: true, carta: false, mem: null });
 });
+
+/* LAS LETRAS DEL 8 NOV. 2026 EN EL MOTOR (usabilidad 3A y 4A, caza de la semana S6). */
+test('3A · un Foco por libre que empieza pasada la salida no cuenta para tu hora de salida', async ({ page, context }) => {
+  await abrir(page, context);
+  const dias = semana(S1);
+  /* Tres días con la jornada hasta las 16:50 y un Foco por libre de 17:05 a 17:30. */
+  const libre = await motor(page, { dias, focos: focos(S1, 540, 1010).concat(focos(S1.slice(0, 3), 1025, 1050)) });
+  expect(libre.cambios, '«Terminas a las 17:35. ¿Pongo tu salida a las 17:35?»').toEqual([]);
+  /* CONTROL: un bloque de la jornada que empieza antes de la salida y acaba tarde sí cuenta. */
+  const tarde = await motor(page, { dias, focos: focos(S1, 540, 950).concat(focos(S1.slice(0, 3), 990, 1050)) });
+  expect(tarde.cambios).toEqual([expect.objectContaining({ tipo: 'hora', campo: 'salida', dia: null, hora: 1055 })]);
+});
+
+test('S6 · la pausa que ya era de 2 minutos no «pasa a ser de 2 minutos»', async ({ page, context }) => {
+  await abrir(page, context);
+  const dias = semana(S1, (d, i) => { if ([0, 1, 3].includes(i)) saltar(d, 945); });
+  const dosMin = await motor(page, { dias, minutos: { 'move.shoulder.circles': 2 } });
+  expect(dosMin.cambios, 'proponía una pausa de 2 minutos para una que ya era de 2').toEqual([]);
+  const cuatro = await motor(page, { dias, minutos: { 'move.shoulder.circles': 4 } });
+  expect(cuatro.cambios.map((c) => c.tipo), 'CONTROL: de 4 minutos, sí').toEqual(['corta']);
+  /* Si una de las tres era más larga, la pausa no siempre era de 2: se propone. */
+  const mezcla = semana(S1, (d, i) => { if ([0, 1, 3].includes(i)) saltar(d, 945); if (i === 3) d.paradas[5].platos[0].id = 'move.neck.3'; });
+  const r = await motor(page, { dias: mezcla, minutos: { 'move.shoulder.circles': 2, 'move.neck.3': 4 } });
+  expect(r.cambios.map((c) => c.tipo)).toEqual(['corta']);
+});
+
+test('4A · la pausa hecha por tu cuenta no cuenta como saltada, y la carta la cuenta como hecha', async ({ page, context }) => {
+  await abrir(page, context);
+  const cuenta = (d, hora) => { d.paradas.find((y) => y.hora === hora).estado = 'cuenta'; };
+  const r = await motor(page, { dias: semana(S1, (d, i) => { if ([0, 1, 3].includes(i)) cuenta(d, 945); }) });
+  expect(r.cambios, 'tres días por tu cuenta a la misma hora no la acortan').toEqual([]);
+  expect([r.hechas, r.total]).toEqual([35, 35]);
+  /* El registro la guarda tal cual: el día cerrado lleva `cuenta`. */
+  const guardada = await page.evaluate(() => eventRitmoParada({ tipo: 'pausa', hora: 945, estado: 'cuenta', reunion: 0, platos: [{ modulo: 'estira', id: 'move.wrists', otras: 0, antes: [] }] }).estado);
+  expect(guardada).toBe('cuenta');
+});
+
+/* LA CORTA YA ADAPTADA O RECHAZADA NO TAPA A LA SIGUIENTE (revisión de ChatGPT del 8 nov. 2026). Se miraba
+   después de elegir la mejor y, si lo estaba, no se proponía nada: la de las 15:45 se quedaba sin carta. */
+test('una pausa de las 10:35 ya acortada, o rechazada, no tapa a la de las 15:45', async ({ page, context }) => {
+  await abrir(page, context);
+  const dias = semana(S1, (d, i) => { saltar(d, 635); if ([0, 1, 3].includes(i)) saltar(d, 945); });
+  const hasta = '2026-11-01';
+  const adaptada = await motor(page, { dias, aprendido: { cortas: [{ hora: 635, hasta }] } });
+  expect(adaptada.cambios.map((c) => c.tipo + ':' + c.hora), 'con la de las 10:35 ya acortada no proponía nada').toEqual(['corta:945']);
+  const rechazada = await motor(page, { dias, aprendido: { rechazado: { 'corta:635': hasta } } });
+  expect(rechazada.cambios.map((c) => c.tipo + ':' + c.hora), 'con la de las 10:35 rechazada no proponía nada').toEqual(['corta:945']);
+  const libre = await motor(page, { dias });
+  expect(libre.cambios.map((c) => c.tipo + ':' + c.hora), 'CONTROL: sin nada aprendido, la más saltada').toEqual(['corta:635']);
+  const las2 = await motor(page, { dias, aprendido: { cortas: [{ hora: 635, hasta }], rechazado: { 'corta:945': hasta } } });
+  expect(las2.cambios, 'CONTROL: las dos fuera, nada').toEqual([]);
+});

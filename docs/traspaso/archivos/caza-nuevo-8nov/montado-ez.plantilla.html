@@ -1,0 +1,78 @@
+<title>Lo nuevo, montado</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Una columna de lectura: cada letra, lo que cambia, y su antes y ahora en tira (móvil y ordenador). */
+:root {
+  --papel: #f3eee3; --hoja: #fbf8f1; --tinta: #2c2a24; --tinta-2: #6a6457; --linea: #d9d1bf;
+  --oliva: #4f5d45; --terracota: #a45a3c; --oliva-suave: #e3e6d6; --terracota-suave: #f3e1d7;
+  --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --papel: #1d1a14; --hoja: #26221b; --tinta: #ece5d6; --tinta-2: #b3aa98; --linea: #423b2f;
+  --oliva: #a9b796; --terracota: #e0a080; --oliva-suave: #2f3528; --terracota-suave: #3a2a22; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --papel: #1d1a14; --hoja: #26221b; --tinta: #ece5d6; --tinta-2: #b3aa98; --linea: #423b2f;
+  --oliva: #a9b796; --terracota: #e0a080; --oliva-suave: #2f3528; --terracota-suave: #3a2a22; color-scheme: dark }
+body { background: var(--papel); color: var(--tinta); font: 17px/1.55 var(--sans);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 56px; }
+main { max-width: 760px; margin: 0 auto; display: grid; gap: 40px; }
+h1, h2 { font-family: var(--serif); font-style: italic; font-weight: 600; text-wrap: balance; margin: 0; }
+h1 { font-size: 2.3rem; line-height: 1.1; }
+h2 { font-size: 1.7rem; line-height: 1.15; }
+p { margin: 0; max-width: 62ch; }
+.etiqueta { font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--tinta-2); }
+.estado { justify-self: start; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; padding: 3px 10px; border-radius: 99px; background: var(--oliva-suave); color: var(--oliva); }
+.estado.no { background: var(--terracota-suave); color: var(--terracota); }
+header, section { display: grid; gap: 14px; }
+.tira { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 6px; align-items: flex-start; }
+figure { margin: 0; flex: 0 0 200px; display: grid; gap: 6px; }
+figure img { width: 100%; height: auto; border: 1px solid var(--linea); border-radius: 10px; display: block; }
+figcaption { font-size: .85rem; color: var(--tinta-2); line-height: 1.35; }
+figcaption b { color: var(--tinta); font-weight: 600; }
+.pie { font-size: .9rem; color: var(--tinta-2); display: grid; gap: 8px; }
+code { font-size: .88em; }
+</style>
+
+<main>
+  <header>
+    <span class="etiqueta">Caza de lo nuevo · lo que elegiste el 8 nov.</span>
+    <h1>Lo nuevo, montado</h1>
+    <p>De lo que elegiste, van montadas «Tus rutinas» (N2 A) y traer una copia desde la bienvenida (N3 A). «Escuchar» en Ajustes (6A) no entra: tal como se pintó, los Ajustes del móvil vuelven a pedir scroll. Abajo está por qué, para que digas cómo la quieres.</p>
+  </header>
+
+  <section>
+    <span class="estado">Montado · N2 A</span>
+    <h2>«Tus rutinas» abre tus rutinas</h2>
+    <p>En el móvil, «Tus rutinas» del panel abre ya la lista que antes salía con un segundo toque. Al guardar una rutina se abre esa lista con la nueva dentro, a la vista aunque tengas nueve encima. Si no tienes ninguna, sigue abriendo el constructor.</p>
+    <div class="tira">{{N2_MOVIL}}</div>
+    <div class="tira">{{N2_ORDENADOR}}</div>
+  </section>
+
+  <section>
+    <span class="estado">Montado · N3 A</span>
+    <h2>«¿Tienes una copia? Tráela»</h2>
+    <p>Debajo de «Comenzar», un enlace que abre el mismo aviso de Ajustes › Tus datos. Al decir «Importar», PACE se abre con tu copia, sin pasar la bienvenida ni la visita, igual que si la hubieras traído desde Ajustes. En inglés dice «Have a copy? Bring it in».</p>
+    <div class="tira">{{N3_MOVIL}}</div>
+    <div class="tira">{{N3_ORDENADOR}}</div>
+  </section>
+
+  <section>
+    <span class="estado no">Sin montar · 6A</span>
+    <h2>«Escuchar» no cabe en el móvil tal como se pintó</h2>
+    <p>«Escuchar ›» bajo «Marca la fase» y «La música suena solo en Respira» bajo «Suena detrás» son dos líneas más, unos 33 px. En el ordenador y en un móvil de 800 px de alto caben. En uno de 640 px los Ajustes vuelven a pedir scroll, y en tu Android de 730 la hoja pasa del 79 % de la pantalla. Eso rompe la regla del 22 oct.: los Ajustes del móvil sin scroll. Está hecha y guardada aparte, lista para entrar cuando digas cómo.</p>
+    <div class="tira">{{6A}}</div>
+  </section>
+
+  <section>
+    <span class="estado">Arreglado · no se ve</span>
+    <h2>El runner ya no llena la consola en inglés</h2>
+    <p>Al hacer una rutina en inglés, la consola de pruebas se llenaba de avisos de textos que no existen (153 con «Levántate y sube», cientos con una rutina propia). En la app no se veía nada, pero tapaban los errores de verdad en cada prueba en inglés. Ahora no sale ninguno, y todo lo que tiene su inglés sigue saliendo en inglés.</p>
+  </section>
+
+  <div class="pie">
+    <p>Sigue en la app: la copia con «Cuaderno a salvo» (N1), ya arreglada antes. Todo va en la rama <code>claude/caza-nuevo-8nov-0c7d9b</code>, para la 0.195.0; «Escuchar», en <code>claude/caza-nuevo-8nov-6a-choca</code>.</p>
+    <p>Fotos de la app de antes (0.194.0) y de la rama, a 360 × 800 y 1280 × 800, en castellano.</p>
+  </div>
+</main>

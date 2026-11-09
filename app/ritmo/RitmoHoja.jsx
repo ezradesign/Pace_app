@@ -40,10 +40,10 @@ function RitmoLista({ plan }) {
            recupera la tinta y su glifo se rellena; la saltada baja al 40 % y puntea. */
         const estado = !comida && pasado ? (plan.estados || {})[ritmoOrdinal(m, it)] || null : null;
         const meta = comida ? tn('ritmo.comida.lista', { d: ritmoDuracion(it.dur) })
-          : estado ? (estado === 'hecha' ? t('ritmo.hecha') + ' · ' + it.dur + ' min' : t('ritmo.saltada'))
+          : estado ? (estado === 'hecha' ? t('ritmo.hecha') + ' · ' + it.dur + ' min' : t('ritmo.' + (estado === 'cuenta' ? 'cuenta' : 'saltada')))
           : ritmoMetaPlato(it, t, tn);
         return (
-          <div key={i} className={'pace-rt-li pace-rt-plato' + (pasado && estado !== 'hecha' ? ' pace-rt-pasado' : '') + (estado ? ' pace-rt-' + estado : '')}
+          <div key={i} className={'pace-rt-li pace-rt-plato' + (pasado && estado !== 'hecha' && estado !== 'cuenta' ? ' pace-rt-pasado' : '') + (estado ? ' pace-rt-' + estado : '')}
             data-pace-ritmo-fila={it.tipo} data-pace-ritmo-estado-fila={estado || undefined}>
             {h}
             <div className="pace-rt-eje">

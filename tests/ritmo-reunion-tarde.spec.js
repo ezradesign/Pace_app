@@ -38,7 +38,7 @@ test('empezado tarde, el bloque de antes de la reunión acaba al empezarla y la 
   await page.waitForTimeout(250);
   await terminarBloque(page);
   expect(await plan(page), 'GUARD: el bloque 2 va de 9:42 a 10:00, pegado a la reunión').toContain('f9:42+18 o10:00+60');
-  await vis(page, '[data-pace-break-shortcut] button').first().click();
+  await vis(page, '[data-pace-break-shortcut] button:not([data-pace-break-cuenta])').first().click();   /* «Ahora no» */
 
   /* 9:45: tres minutos tarde. */
   await page.clock.fastForward(new Date(2026, 10, 10, 9, 45).getTime() - await page.evaluate(() => Date.now()));

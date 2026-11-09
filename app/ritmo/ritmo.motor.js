@@ -127,7 +127,8 @@ function ritmoMotorOlvidar(a, clave, hoy) {
 /* ritmoMotor(e) -> lo que cambia la semana que empieza y por qué.
    `e` = { hoy, dias: [resúmenes de ritmo.day.closed], feedback: [{ fecha, id, r }],
    focos: [{ fecha, desde, hasta }] (bloques de foco, en minutos), horario: { inicio,
-   salida, comida, comidaDur, dias: { 1…7: { inicio, salida } } }, aprendido }.
+   salida, comida, comidaDur, dias: { 1…7: { inicio, salida } } }, aprendido,
+   minutos: { id: min } (lo que dura cada rutina servida, del catálogo; opcional) }.
    Devuelve { semana: { lunes, desde, hasta }, dias, carta, ayudo: [ids], hechas, total,
    barras: [{ d, hechas, total }] (lunes a domingo), cambios: [como mucho dos] }. */
 function ritmoMotor(e) {
@@ -155,7 +156,7 @@ function ritmoMotor(e) {
     porFecha[f].paradas.forEach(function (p) {
       if (p.tipo === 'cierre') return;
       b.total++;
-      if (p.estado === 'hecha') b.hechas++;
+      if (p.estado === 'hecha' || p.estado === 'cuenta') b.hechas++;   /* la hecha a tu manera, también (4A) */
     });
   });
   var fb = (e.feedback || []).filter(function (x) { return x && x.id && typeof x.fecha === 'string'; });
@@ -226,7 +227,7 @@ function ritmoMotor(e) {
   }
 
   /* LA FORMA DEL DÍA. Primero tus horas: con ellas mal, se saltan pausas que no tocaban. */
-  var forma = motorHoras(e, porFecha, s1, a).concat(motorCortas(porFecha, fechas, f1, sem, a));
+  var forma = motorHoras(e, porFecha, s1, a).concat(motorCortas(porFecha, fechas, f1, sem, a, e.minutos || {}));
 
   /* Como mucho dos: uno de rutinas y uno de la forma, y entre los dos no más de 10 paradas. */
   var cambios = [], quedan = MOTOR_TOPE;
@@ -244,29 +245,38 @@ function ritmoMotor(e) {
   };
 }
 
-/* La pausa corta que saltas: saltada (no «sin tocar», que también es la que no llegó),
-   sin reunión alrededor, a la misma hora en días distintos. */
-function motorCortas(porFecha, fechas, f1, sem, a) {
+/* La pausa corta que saltas: saltada (no «sin tocar», que también es la que no llegó; ni la hecha
+   a tu manera, 4A), sin reunión alrededor, a la misma hora en días distintos. SI YA ERA DE 2 MINUTOS
+   (Ez, S6 A del 8 nov. 2026), no se propone: «pasa a ser de 2 minutos» no cambiaba nada. Ya era de
+   2 si todo lo servido allí duraba 2 o menos; lo que no se sabe cuánto dura cuenta como más largo. */
+function motorCortas(porFecha, fechas, f1, sem, a, minutos) {
   var saltadas = [];
   fechas.forEach(function (f) {
     porFecha[f].paradas.forEach(function (p) {
-      if (p.tipo === 'pausa' && p.estado === 'saltada' && !(p.reunion > 0)) saltadas.push({ f: f, hora: p.hora, k: sem(f), modulo: p.platos[0].modulo });
+      if (p.tipo === 'pausa' && p.estado === 'saltada' && !(p.reunion > 0)) {
+        var min = minutos[p.platos[0].id];
+        saltadas.push({ f: f, hora: p.hora, k: sem(f), modulo: p.platos[0].modulo, corta: typeof min === 'number' && min <= MOTOR_CORTA });
+      }
     });
   });
   var mejor = null;
   saltadas.forEach(function (c) {
     var grupo = saltadas.filter(function (x) { return Math.abs(x.hora - c.hora) <= MOTOR_MISMA_HORA; });
+    if (grupo.every(function (x) { return x.corta; })) return;
     var d1 = {}, d2 = {};
     grupo.forEach(function (x) { (x.k === 1 ? d1 : d2)[x.f] = true; });
     var n1 = Object.keys(d1).length, n2 = Object.keys(d2).length;
     if (!motorPruebas(n1, n2)) return;
+    /* Ya adaptada, o rechazada, a esa hora: fuera del recorrido y no después de elegir (ChatGPT, 8 nov.
+       2026): mirándolo tras elegir la mejor, una pausa de las 10:35 ya acortada tapaba a la de las 15:45. */
+    var hora = motorCinco(motorMediana(grupo.map(function (x) { return x.hora; })));
+    if (a.cortas.some(function (y) { return Math.abs(y.hora - hora) <= MOTOR_MISMA_HORA; })) return;
+    if (Object.keys(a.rechazado).some(function (k) { var q = k.split(':'); return q[0] === 'corta' && Math.abs(Number(q[1]) - hora) <= MOTOR_MISMA_HORA; })) return;
     if (!mejor || n1 + n2 > mejor.n1 + mejor.n2 || (n1 + n2 === mejor.n1 + mejor.n2 && n1 > mejor.n1)) {
-      mejor = { n1: n1, n2: n2, hora: motorCinco(motorMediana(grupo.map(function (x) { return x.hora; }))), modulo: c.modulo };
+      mejor = { n1: n1, n2: n2, hora: hora, modulo: c.modulo };
     }
   });
   if (!mejor) return [];
-  if (a.cortas.some(function (c) { return Math.abs(c.hora - mejor.hora) <= MOTOR_MISMA_HORA; })) return [];
-  if (Object.keys(a.rechazado).some(function (k) { var p = k.split(':'); return p[0] === 'corta' && Math.abs(Number(p[1]) - mejor.hora) <= MOTOR_MISMA_HORA; })) return [];
   /* Toca los días de la semana pasada que tuvieron una pausa corta a esa hora. */
   var paradas = f1.filter(function (f) {
     return porFecha[f].paradas.some(function (p) { return p.tipo === 'pausa' && Math.abs(p.hora - mejor.hora) <= MOTOR_MISMA_HORA; });
@@ -276,12 +286,16 @@ function motorCortas(porFecha, fechas, f1, sem, a) {
 
 /* Tus horas de verdad: el primer bloque de foco y el último (más el cierre) de los días de
    jornada, contra las horas que tenía ese día. Tres días de la semana hacia el mismo lado,
-   o el mismo día de la semana dos semanas seguidas (a media hora o menos entre las dos). */
+   o el mismo día de la semana dos semanas seguidas (a media hora o menos entre las dos).
+   UN FOCO QUE EMPIEZA PASADA LA SALIDA DE ESE DÍA NO CUENTA (Ez, 3A del 8 nov. 2026): lo que haces
+   por libre después de cerrar la jornada es tuyo, y tres días así la carta preguntaba «Terminas a
+   las 17:35. ¿Pongo tu salida a las 17:35?». Un bloque de la jornada que acaba tarde sí cuenta. */
 function motorHoras(e, porFecha, s1, a) {
   var dia = {};
   (e.focos || []).forEach(function (x) {
     var r = x && porFecha[x.fecha];
     if (!r || r.opcion !== 'jornada' || typeof x.desde !== 'number' || typeof x.hasta !== 'number') return;
+    if (typeof r.salida === 'number' && x.desde >= r.salida) return;
     var d = dia[x.fecha] || (dia[x.fecha] = { inicio: x.desde, salida: x.hasta + MOTOR_CIERRE });
     d.inicio = Math.min(d.inicio, x.desde); d.salida = Math.max(d.salida, x.hasta + MOTOR_CIERRE);
   });

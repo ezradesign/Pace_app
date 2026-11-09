@@ -27,11 +27,11 @@ const { useState: useStateMV, useEffect: useEffectMV, useRef: useRefMV } = React
    Se cae el `aside` de grupo («Pecho, brazos, espalda alta»): la tarjeta nueva
    ya dice de qué va cada rutina con su descripción, su contexto y sus dibujos,
    y el aside repetía a nivel de grupo lo que ahora se lee en cada fila. */
-function MoveLibrary({ open, onClose, onStart, enPausa }) {
+function MoveLibrary({ open, onClose, onStart, enPausa, pideTuyas }) {
   const { t } = useT();
   return (
     <LibraryShell
-      open={open} enPausa={enPausa} onClose={onClose} onStart={onStart}
+      open={open} enPausa={enPausa} pideTuyas={pideTuyas} onClose={onClose} onStart={onStart}
       groups={MOVE_ROUTINES} tone="var(--move)" catPrefix="mueve"
       title={t('lib.move.title')} subtitle={t('lib.move.subtitle')} />
   );
