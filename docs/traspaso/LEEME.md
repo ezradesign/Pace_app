@@ -4,7 +4,7 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de noviembre de 2026, ~11:10, v0.194.0 (la 0.195.0, juntándose).
 
-## 9 nov., ~17:15: Ez sigue en 5iWBf hasta el 95 % de la semana; la 0.195.0, en main
+## 9 nov., ~16:45: Ez sigue en 5iWBf hasta el 95 % de la semana; la 0.195.0, en main
 
 - **Ez: «Seguimos aquí hasta que el uso semanal quede en un 95 %».** El relevo de abajo queda como reserva: lo que dice de la
   0.195.0 ya está hecho. Juntada en `claude/union-0195` (caza-anchos + la A2 con `tests/ajustes-escuchar.spec.js`, dos mutantes en
