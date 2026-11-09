@@ -14,7 +14,9 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de n
   esta rama + la 6A elegida.** El 8896 lo ocupa un servidor de `caza-6a-opciones`.
 - **landing-c** paró al 82 %: WIP 37266f5a (la raíz decide antes de pintar; «Abrir PACE» monta la app en el sitio). Faltan
   pruebas, la marca de la suite, verify/e2e y la página. Despertarla a las 14:40.
-- **Pendiente de Ez:** el «júntalo» (con A2 o sin 6A) y las letras de la caza.
+- **Ez (~11:45): «Júntalo con la A2».** A las 14:40: juntar en main `claude/caza-anchos-9nov-6a280f` y
+  `claude/caza-nuevo-8nov-6a-a2` (aa1df7f3; su prueba propia, al montarla), bump 0.195.0, build, suite entera, CHANGELOG, la
+  novedad de «Ya la hice por mi cuenta», push y CI. Siguen pendientes de Ez las letras de la caza (1A/1B, 2A/2B).
 
 ## 9 nov., ~11:10: las letras, listas para el «júntalo»; Ez dice «Sí, así» a lo de ChatGPT
 
