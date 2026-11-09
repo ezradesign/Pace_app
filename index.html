@@ -8070,10 +8070,19 @@ function addFocusMinutes(mins) {
 
 
 
+
+
+
+var FOCO_CONTADOS_MAX = 20;
+function focoContadosCon(lista, id) {
+  var antes = Array.isArray(lista) ? lista.filter(function (x) {return x !== id;}) : [];
+  return antes.concat([id]).slice(-FOCO_CONTADOS_MAX);
+}
 function completePomodoro(bloque) {
   ensureDayFresh();
   const focusMinsAtCompletion = getState().focusMinutes;
-  setState((prev) => ({ ...prev, cycle: prev.cycle + 1, ...(bloque ? { focoContado: bloque } : {}) }));
+  setState((prev) => ({ ...prev, cycle: prev.cycle + 1,
+    ...(bloque ? { focoContado: bloque, focoContados: focoContadosCon(prev.focoContados, bloque) } : {}) }));
   addFocusMinutes(focusMinsAtCompletion);
   unlockAchievement('first.step');
   if (getState().cycle >= 8) unlockAchievement('master.pomodoro.8');
@@ -8134,10 +8143,12 @@ function completeFocusSession(context, opts) {
 
 Object.assign(window, {
   addFocusMinutes,
+  FOCO_CONTADOS_MAX,
+  focoContadosCon,
   completePomodoro,
   completeFocusSession
 });
-;Object.assign(window, { checkFocusDayAchievement, addFocusMinutes, completePomodoro, completeFocusSession });
+;Object.assign(window, { checkFocusDayAchievement, addFocusMinutes, FOCO_CONTADOS_MAX, focoContadosCon, completePomodoro, completeFocusSession });
 })();
 </script>
   <script>
@@ -25243,8 +25254,19 @@ function paceFocoNuevoId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 }
 
+
+
+
+function paceFocoYaContado(id) {
+  var en = function (s) {
+    return !!s && (s.focoContado === id || Array.isArray(s.focoContados) && s.focoContados.indexOf(id) !== -1);
+  };
+  if (en(getState())) return true;
+  try {return en(JSON.parse(localStorage.getItem('pace.state.v2') || 'null'));} catch (e) {return false;}
+}
+
 function paceFocoContar(id, contar) {
-  var ya = function () {var s = getState();return !!(s && s.focoContado === id);};
+  var ya = function () {return paceFocoYaContado(id);};
   if (ya()) return;
   var locks = typeof navigator !== 'undefined' ? navigator.locks : null;
   if (!locks || typeof locks.request !== 'function') {contar();return;}
@@ -25359,9 +25381,9 @@ function useFocoPestanas(o) {
   };
 }
 
-Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoContar, useFocoPestanas,
+Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoYaContado, paceFocoContar, useFocoPestanas,
   paceFocoPausaPendiente, usePausaALaVista });
-;Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoContar, paceFocoPausaPendiente, usePausaALaVista, useFocoPestanas });
+;Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoYaContado, paceFocoContar, paceFocoPausaPendiente, usePausaALaVista, useFocoPestanas });
 })();
 </script>
 

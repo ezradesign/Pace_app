@@ -32,12 +32,21 @@ function addFocusMinutes(mins) {
   checkFocusDayAchievement();
 }
 
-/* `bloque`: el id del bloque que se cuenta. Viaja en el estado (`focoContado`) para que otra
-   pestaña con el mismo bloque sepa que ya está contado (focus/FocusTimer.pestanas.jsx). */
+/* `bloque`: el id del bloque que se cuenta. Viaja en el estado para que otra pestaña con el mismo
+   bloque sepa que ya está contado (focus/FocusTimer.pestanas.jsx): `focoContado` es el último y
+   `focoContados`, los últimos veinte. Con solo el último, una pestaña que despertaba después de que
+   otra contara X y luego Y no sabía que X estaba contado, y lo contaba otra vez
+   (tests/pestanas-dormida.spec.js). Veinte es más de los bloques que caben en un día. */
+var FOCO_CONTADOS_MAX = 20;
+function focoContadosCon(lista, id) {
+  var antes = Array.isArray(lista) ? lista.filter(function (x) { return x !== id; }) : [];
+  return antes.concat([id]).slice(-FOCO_CONTADOS_MAX);
+}
 function completePomodoro(bloque) {
   ensureDayFresh();
   const focusMinsAtCompletion = getState().focusMinutes;
-  setState(prev => ({ ...prev, cycle: prev.cycle + 1, ...(bloque ? { focoContado: bloque } : {}) }));
+  setState(prev => ({ ...prev, cycle: prev.cycle + 1,
+    ...(bloque ? { focoContado: bloque, focoContados: focoContadosCon(prev.focoContados, bloque) } : {}) }));
   addFocusMinutes(focusMinsAtCompletion);
   unlockAchievement('first.step');
   if (getState().cycle >= 8) unlockAchievement('master.pomodoro.8');
@@ -98,6 +107,8 @@ function completeFocusSession(context, opts) {
 
 Object.assign(window, {
   addFocusMinutes,
+  FOCO_CONTADOS_MAX,
+  focoContadosCon,
   completePomodoro,
   completeFocusSession,
 });
