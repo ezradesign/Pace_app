@@ -292,18 +292,12 @@ const PRECACHE = [
   '/app/glyphs/assets/logros/streak.7.webp',
   /* s105: fuentes self-hosted (subset latin). En la web viajan como archivo
      (el standalone las inlinea como data URI); precache = offline fiel. */
+  /* Una por familia y estilo (tokens.css): las de 300, 500 y 600 eran copias de estas. */
   '/fonts/ebgaramond-400-italic.woff2',
-  '/fonts/ebgaramond-500-italic.woff2',
   '/fonts/ebgaramond-400-normal.woff2',
-  '/fonts/ebgaramond-500-normal.woff2',
-  '/fonts/intertight-300-normal.woff2',
   '/fonts/intertight-400-normal.woff2',
-  '/fonts/intertight-500-normal.woff2',
-  '/fonts/intertight-600-normal.woff2',
   '/fonts/cormorantgaramond-400-italic.woff2',
-  '/fonts/cormorantgaramond-500-italic.woff2',
-  '/fonts/cormorantgaramond-400-normal.woff2',
-  '/fonts/cormorantgaramond-500-normal.woff2'
+  '/fonts/cormorantgaramond-400-normal.woff2'
 ];
 
 /* s102 (PWA completa): el skipWaiting() incondicional del install se retiró.
