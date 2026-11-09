@@ -27,8 +27,10 @@
      · `ritmoResumirAhora`, al arrancar, al volver al frente y cada minuto con la
        página a la vista, como el cambio de día (state-core.dia.js).
    `ritmo.resumido` es la fecha del último día resumido: lo que impide resumir dos
-   veces el mismo. La cola sale de uno en uno y cada resumen se quita solo cuando el
-   almacén confirma que lo guardó. Cada resumen lleva en la cola el id de su evento
+   veces el mismo. Si resumirlo REVIENTA, no se marca: el día va entero a
+   `ritmo.sinResumir` y se reintenta (ChatGPT, 8 nov. 2026, con el sí de Ez); antes se
+   marcaba igual y el día se perdía sin rastro. La cola sale de uno en uno y cada
+   resumen se quita solo cuando el almacén confirma que lo guardó. Cada resumen lleva en la cola el id de su evento
    (`eventoId`): si PACE se cierra entre guardarlo y quitarlo, el reintento es el mismo
    evento y el almacén no lo repite (auditoría del 21 oct.). Con la página oculta no se hace nada, para no
    escribir encima de lo que hace otra pestaña (la misma regla del cambio de día). */
@@ -122,16 +124,53 @@ function ritmoResumenDe(s, dia) {
 }
 
 /* Desde `ritmoGuardar`, antes de aplicar el cambio: si el día guardado ya pasó y no
-   se ha resumido, su resumen entra en la cola. Recibe y devuelve el `ritmo`. */
+   se ha resumido, su resumen entra en la cola. Recibe y devuelve el `ritmo`.
+   Un null SIN error (un día sin opción o sin forma) se marca y no se reintenta; un error deja
+   el día sin marcar y su copia en `sinResumir`. */
 function ritmoResumenAntesDePisar(s, r) {
   var dia = r && r.dia;
   var hoy = typeof todayISO === 'function' ? todayISO() : '';
   if (!dia || typeof dia.fecha !== 'string' || !hoy || dia.fecha >= hoy || r.resumido === dia.fecha) return r;
   var resumen = null;
-  try { resumen = ritmoResumenDe(s, dia); } catch (e) { resumen = null; }
+  try { resumen = ritmoResumenDe(s, dia); } catch (e) { return ritmoGuardarSinResumir(r, dia); }
   var cola = (Array.isArray(r.resumenes) ? r.resumenes : []).filter(function (x) { return x && x.fecha !== dia.fecha; });
   if (resumen) cola = cola.concat([Object.assign({ eventoId: ritmoResumenId() }, resumen)]).slice(-RITMO_RESUMEN_COLA_MAX);
-  return Object.assign({}, r, { resumido: dia.fecha, resumenes: cola });
+  var out = Object.assign({}, r, { resumido: dia.fecha, resumenes: cola });
+  /* Resumido aquí, su copia sobra: el reintento lo mandaría otra vez con otro id. */
+  if (Array.isArray(r.sinResumir)) out.sinResumir = r.sinResumir.filter(function (x) { return x && x.fecha !== dia.fecha; });
+  return out;
+}
+
+/* La copia del día que no se pudo resumir: una por fecha, las RITMO_RESUMEN_COLA_MAX últimas. Si
+   ya está igual, `r` sale tal cual: mientras el fallo siga, no hay una escritura por minuto. */
+function ritmoGuardarSinResumir(r, dia) {
+  var copias = Array.isArray(r.sinResumir) ? r.sinResumir.filter(function (x) { return x && typeof x.fecha === 'string'; }) : [];
+  var ya = copias.filter(function (x) { return x.fecha === dia.fecha; })[0];
+  if (ya && JSON.stringify(ya) === JSON.stringify(dia)) return r;
+  copias = copias.filter(function (x) { return x.fecha !== dia.fecha; }).concat([dia]);
+  copias.sort(function (a, b) { return a.fecha < b.fecha ? -1 : 1; });
+  return Object.assign({}, r, { sinResumir: copias.slice(-RITMO_RESUMEN_COLA_MAX) });
+}
+
+/* Los días que no se pudieron resumir, otra vez, cada uno en su `try`: el que sale entra en la cola
+   con su `eventoId` y su copia se quita (también si sale null: no tiene forma); el que vuelve a
+   fallar se queda. Si el día sigue en `ritmo.dia`, se marca, para no resumirlo dos veces. */
+function ritmoReintentarSinResumir(s, r) {
+  var copias = Array.isArray(r.sinResumir) ? r.sinResumir : [];
+  if (!copias.length) return r;
+  var quedan = [], cola = Array.isArray(r.resumenes) ? r.resumenes : [], resumido = r.resumido, cambia = false;
+  copias.forEach(function (dia) {
+    if (!dia || typeof dia.fecha !== 'string') { cambia = true; return; }
+    var resumen = null;
+    try { resumen = ritmoResumenDe(s, dia); } catch (e) { quedan.push(dia); return; }
+    cambia = true;
+    if (r.dia && r.dia.fecha === dia.fecha) resumido = dia.fecha;
+    if (!resumen) return;
+    cola = cola.filter(function (x) { return x && x.fecha !== dia.fecha; }).concat([Object.assign({ eventoId: ritmoResumenId() }, resumen)]);
+  });
+  if (!cambia) return r;
+  cola = cola.slice().sort(function (a, b) { return a.fecha < b.fecha ? -1 : 1; }).slice(-RITMO_RESUMEN_COLA_MAX);
+  return Object.assign({}, r, { sinResumir: quedan, resumenes: cola, resumido: resumido });
 }
 
 function ritmoResumenId() {
@@ -149,6 +188,12 @@ function ritmoResumirAhora() {
     if (ritmoResumenAntesDePisar(s, r) !== r) {
       setState(function (prev) {
         return Object.assign({}, prev, { ritmo: ritmoResumenAntesDePisar(prev, prev.ritmo || {}) });
+      });
+      r = getState().ritmo || {};
+    }
+    if (ritmoReintentarSinResumir(getState(), r) !== r) {
+      setState(function (prev) {
+        return Object.assign({}, prev, { ritmo: ritmoReintentarSinResumir(prev, prev.ritmo || {}) });
       });
       r = getState().ritmo || {};
     }
@@ -191,5 +236,5 @@ setInterval(ritmoResumirAhora, typeof PACE_DIA_CADA_MS === 'number' ? PACE_DIA_C
 
 Object.assign(window, {
   RITMO_RESUMEN_COLA_MAX, RITMO_RESUMEN_ALREDEDOR, ritmoMenuDe, ritmoDescartados, ritmoResumenDe,
-  ritmoResumenAntesDePisar, ritmoResumirAhora,
+  ritmoResumenAntesDePisar, ritmoResumirAhora, ritmoGuardarSinResumir, ritmoReintentarSinResumir,
 });

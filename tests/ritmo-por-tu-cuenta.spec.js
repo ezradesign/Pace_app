@@ -13,7 +13,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior, terminarBloque } = require('./helpers');
+const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior, terminarBloque, esperarModalAsentado } = require('./helpers');
 
 const HOY = '2026-10-14';
 const JORNADA = { fecha: HOY, opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} };
@@ -39,8 +39,10 @@ test('el enlace va a la izquierda de «Ahora no», con su estilo, y deja la paus
   const enlace = ventana.locator('[data-pace-break-cuenta]');
   const ahoraNo = ventana.getByRole('button', { name: 'Ahora no', exact: true });
   await expect(enlace).toHaveText('Ya la hice por mi cuenta');
+  /* Con la ventana ya quieta, y por el centro: entrando, la escala movía los bordes (2,4 px). */
+  await esperarModalAsentado(page);
   const [e, n] = [await enlace.boundingBox(), await ahoraNo.boundingBox()];
-  expect(Math.abs(e.y - n.y), 'en la misma fila').toBeLessThanOrEqual(2);
+  expect(Math.abs((e.y + e.height / 2) - (n.y + n.height / 2)), 'en la misma fila').toBeLessThanOrEqual(2);
   expect(e.x + e.width, 'a la izquierda de «Ahora no»').toBeLessThan(n.x);
   expect(await enlace.getAttribute('class')).toBe(await ahoraNo.getAttribute('class'));
 
