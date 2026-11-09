@@ -95,7 +95,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.194.0 · actualizada el 9 de noviembre a las 10:12 · en esta cuenta, con tres sesiones: tus letras y la caza de fallos</div>
+    <div class="eyebrow">PACE · versión 0.194.0 · actualizada el 9 de noviembre a las 10:22 · en esta cuenta, con cuatro sesiones: tus letras, la caza de fallos y la landing</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -131,20 +131,17 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <h2>Paso a paso</h2>
     <p class="nota">La pongo al día en cada paso. Si tienes la página abierta, se actualiza sola. Si un enlace no abre, es que está en tu otra cuenta.</p>
     <ol class="pasos">
-      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, 2 minutos · en la misma conversación de ChatGPT</span>
-        <span class="t">Pasar a ChatGPT la segunda parte de la revisión de la jornada</span>
-        <span class="c"><span class="quien">Tú.</span> Busca fallos en tu día con PACE: empezar tarde, saltarse la comida, reuniones que se
-          mueven, el portátil cerrado, la medianoche, lo que cuenta Estadísticas. Pega esto en la misma conversación de la primera
-          parte y tráeme su respuesta entera; compruebo cada cosa en el código antes de montar nada.
-          <pre class="prompt">Gracias. Lo he comprobado en el código y aciertas en las dos. En la segunda, el null sin error es a propósito: es un día sin forma elegida y no hay nada que resumir. Lo que se arregla es el caso del error, guardando una copia del día pendiente para reintentarlo. Las dos ya están montadas en una rama, con sus pruebas, y entran en la próxima versión.
-
-Sigue con la misma revisión, sobre main, con lo que falta de mi primer mensaje: 1) el día (empezar tarde, saltarse la comida o una pausa, «Otra» y «Ahora no», reuniones que se mueven o se solapan, salir antes o después de tu hora, «Hoy es distinto», la media jornada, y un bloque o una pausa que se quedan a medias); 2) el tiempo (la pestaña de fondo, el portátil cerrado, PACE cerrado y vuelto a abrir, dos pestañas, la medianoche, el cambio de hora y el móvil bloqueado); 3) lo que se cuenta, más allá del resumen (que cada bloque y cada pausa cuenten una sola vez, con lo que duraron y en su día, y lo que lee Estadísticas); y 5) la experiencia, con qué mejoras darían más valor antes de v1 y cuáles pueden esperar.
-
-No repitas las dos de antes. Tampoco esto, que ya está montado en una rama y entra en la próxima versión: con el día empezado, al volver tras horas fuera con la pausa ya acabada, la línea se lee desde ahora; un Foco por libre que empieza pasada la salida no cuenta para la hora de salida de la carta; el bloque empezado antes de comer acaba a la hora de comer; la carta no propone dejar en 2 minutos una pausa que ya es de 2; tras la jornada, el Foco por libre vuelve a tus minutos de siempre; y en la ventana de la pausa se puede decir «Ya la hice por mi cuenta» sin que cuente como saltada.
-
-Mismo formato: la función como localizador, el caso paso a paso, qué ve y qué pierde quien lo usa, si es grave, molesta o es una mejora, y lo comprobado en el código aparte de lo que deduces. No propongas nada que suba la exigencia física ni consejos de salud.</pre></span></li>
-      <li class="paso marcha"><span class="estado">En marcha · yo · tres sesiones</span>
-        <span class="t">Montar tus letras como 0.195.0, y la caza de fallos</span>
+      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, 1 minuto</span>
+        <span class="t">Decirme si monto lo que encontró ChatGPT en tu día</span>
+        <span class="c"><span class="quien">Tú dices sí; yo lo monto después de la 0.195.0.</span> Los siete puntos están en el código tal como
+          los cuenta. Los que más importan: un Foco que pausas 20 minutos cuenta esos 20 como foco al cerrar el día (y la pausa
+          larga puede llegar antes); cambiar en mitad del día cómo van las pausas rehace lo que ya hiciste; y una pestaña dormida
+          podría contar un bloque dos veces, que hay que probar. Propongo arreglar sin tocar cómo se ve los de la cuenta (1, 2, 3 y,
+          si se reproduce, 5), y pintarte los que se ven: qué hace «Cambiar» con un Foco en marcha, lo que haces por tu cuenta en
+          Estadísticas › Hoy y el «Hecha · 5 min» de una rutina de 2. Todo, en
+          <code>docs/audits/chatgpt-8nov/respuesta-2-dia-tiempo-cuenta.md</code>.</span></li>
+      <li class="paso marcha"><span class="estado">En marcha · yo · cuatro sesiones</span>
+        <span class="t">Montar tus letras como 0.195.0, la caza de fallos y la landing</span>
         <span class="c"><span class="quien">Yo.</span>
           <ol>
             <li><b>La jornada, hecha:</b> las nueve letras con sus pruebas: el aro de cierre sin la fila de ciclos, la barra que pregunta
@@ -159,6 +156,9 @@ Mismo formato: la función como localizador, el caso paso a paso, qué ve y qué
             <li><b>La caza de fallos, empezada:</b> todas las pantallas a 320, 360, 390, 768, 1280 y 1536 de ancho, en español y en
               inglés, en claro y en oscuro, con tus letras ya dentro. Lo que esté roto sin cambiar cómo se ve, lo arregla con su prueba;
               lo que cambie cómo se ve, y hasta seis mejoras de la interfaz, te lo pinta con opciones para que elijas.</li>
+            <li><b>La landing, pintándose:</b> elegiste la C, la raíz con dos caras, hecha con cuidado. Quien ya usa PACE, abre desde
+              el icono, llega con un enlace de tester o usa el móvil ve la app; quien llega por primera vez, la landing. Ante la duda,
+              la app. Te pinta dos o tres landings y el «¿Ya usas PACE?», con un prototipo que funciona en su rama.</li>
           </ol></span></li>
       <li class="paso luego"><span class="estado">Lo siguiente tuyo · cuando acaben las dos sesiones</span>
         <span class="t">Decir «júntalo» a la 0.195.0</span>
@@ -197,9 +197,6 @@ Mismo formato: la función como localizador, el caso paso a paso, qué ve y qué
           pagado se guarda aparte y la web da siempre el que llega más lejos, llegue en el orden que llegue. Las 89 pruebas del
           cobro, en verde. No afecta al pago de por vida, que es lo único que se vende antes de v1. ChatGPT lo revisa en el
           paso de abajo.</span></li>
-      <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo</span>
-        <span class="t">Elegir las letras de la landing</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/E3tcsR3FnywQNmnCpymxrp">la página</a>). Hasta entonces, la web sigue como está.</span></li>
       <li class="paso luego"><span class="estado">Después · lo tuyo · la venta sigue apagada</span>
         <span class="t">Encender la venta en la web</span>
         <span class="c"><span class="quien">Tú; yo lo pongo en la app.</span> Decidiste el 5 de noviembre: solo el de por vida, solo en la web,
@@ -254,8 +251,13 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
 
     </ol>
     <details class="plegado">
-      <summary>Lo hecho hasta hoy · 103 pasos</summary>
+      <summary>Lo hecho hasta hoy · 104 pasos</summary>
       <ol class="pasos">
+      <li class="paso hecho"><span class="estado">Hecho · me la trajiste · 9 de noviembre, 10:40</span>
+        <span class="t">La revisión de ChatGPT de la jornada, segunda parte</span>
+        <span class="c"><span class="quien">Yo.</span> Siete puntos, los siete en el código tal como los cuenta; uno, el de contar dos
+          veces, hay que probarlo. Ninguno lo arreglan ya tus letras. Todo, en
+          <code>docs/audits/chatgpt-8nov/respuesta-2-dia-tiempo-cuenta.md</code>.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · me la trajiste · 8 de noviembre, 20:30 · tú dijiste «Sí, los dos»</span>
         <span class="t">La revisión de ChatGPT de la jornada, primera parte</span>
         <span class="c"><span class="quien">Yo.</span> Acierta en las dos, comprobadas en el código. Una pausa que ya acortó PACE, o que le

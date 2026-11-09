@@ -4,6 +4,18 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 8 de noviembre de 2026, ~11:45, v0.193.0.
 
+## 9 nov., ~10:50: cuatro sesiones; la landing C y la segunda parte de ChatGPT, comprobada
+
+- **landing-c** (`local_51b13b7a…`, `claude/landing-c-9nov`, 8901-8902), nueva. **Ez eligió la C** de la página de la landing
+  (E3tcsR3F…, 5iWBf; 5 nov.) «implementándola de manera elegante», y no la B (mueve la app: rompe la PWA instalada, `#codigo=`
+  y los «Abrir PACE»). Reglas que aceptó: la raíz decide antes de pintar; app con datos, instalada, `#codigo=`, `?go=`, ya abrió
+  o en Android/iPhone (la landing fuera de `www/`); landing para quien llega nuevo y para buscadores (texto en el HTML); ante la
+  duda, app; «Abrir PACE» sin recargar; «¿Ya usas PACE?» arriba. Pinta dos o tres landings y un prototipo con pruebas.
+- **ChatGPT, segunda parte**, comprobada en `docs/audits/chatgpt-8nov/respuesta-2-dia-tiempo-cuenta.md`: los siete puntos están
+  en el código (el 5, contar dos veces entre pestañas, sin reproducir). Ninguno lo tocan las letras. **Espera el sí de Ez**;
+  propuesta: después de la 0.195.0, una sesión que pruebe el 5, arregle 1, 3 y 2 y pinte 4, 6 y 7.
+- `main` local, 6 commits de docs por delante de origin: suben con la 0.195.0.
+
 ## 9 nov., ~10:15: tres sesiones; Ez rechaza el aviso de la 6A y pide seguir cazando fallos
 
 - **letras-jornada**: los dos arreglos de ChatGPT hechos y las cuatro rojas explicadas (dos, S6 haciendo lo suyo; una, «Ya la

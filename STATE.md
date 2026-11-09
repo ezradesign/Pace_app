@@ -63,8 +63,10 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   aviso que tapaba (9 nov.); se le pintan otras formas.
 - **Caza en seis anchos** (9 nov., `claude/caza-anchos-9nov-6a280f`): todas las pantallas con las letras dentro; arregla con
   prueba lo que no cambia el aspecto y pinta para Ez lo demás.
-- **ChatGPT**: la primera parte de la revisión de la jornada, comprobada (`docs/audits/chatgpt-8nov/`); la segunda
-  (`prompt-jornada-2.md`) y la del cobro y lo legal siguen en la hoja de Ez.
+- **ChatGPT**: las dos partes de la revisión de la jornada, comprobadas (`docs/audits/chatgpt-8nov/`). La segunda trae siete
+  puntos ciertos (Foco pausado que cuenta su pausa, cadencia que rehace lo hecho, «Cambiar» con Foco en marcha, Estadísticas›Hoy
+  sin lo hecho por libre…) que esperan el sí de Ez, para después de la 0.195.0. La del cobro y lo legal sigue en su hoja.
+- **Landing C** (9 nov., `claude/landing-c-9nov`): la raíz con dos caras; se pinta para que Ez elija.
 - **Después de la 0.195.0** (lo pidió Ez el 8 nov.): la caza de las pantallas en seis anchos (320, 360, 390, 768, 1280 y
   1536), es/en, claro y oscuro, buscando textos cortados y solapes antes de que las vean los testers.
 - **Lo legal para vender en la web**, en `main` con la 0.189.0 y las letras de Ez (1A 2A 3A 4A 5A): los borradores, sin
