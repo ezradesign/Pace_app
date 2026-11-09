@@ -114,6 +114,9 @@ function TweaksAudioBlock({ state, set }) {
           { v: 'mus', name: t('settings.bg.music') },
         ]} />
       </AjustesFila>
+      {/* Dónde suena la música (Ez, 6A del 8 nov.), solo donde cabe: en el móvil, de 780 px de alto
+          para arriba (TweaksPanel.support.jsx). */}
+      <p className="pace-aj-bajo-fila" data-pace-aj-musica-nota data-atenuada={apagado ? '' : undefined}>{t('settings.bg.music.nota')}</p>
     </React.Fragment>
   );
 }

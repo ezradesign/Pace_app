@@ -98,6 +98,10 @@ if (!_paceAjustesCss) {
     .pace-aj-sub { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 400; color: var(--ink-3); margin-top: 3px; letter-spacing: .1px; }
     .pace-aj-punto { width: 6px; height: 6px; border-radius: 50%; background: var(--pace-aj-m, var(--ink-3)); display: inline-block; flex: 0 0 auto; }
     .pace-aj-sec-accion:disabled { opacity: .38; cursor: default; }
+    /* La línea de debajo de «Suena detrás»: dónde suena la música (Ez, 6A del 8 nov.). Con el
+       sonido apagado se atenúa como su fila. */
+    .pace-aj-bajo-fila { display: flex; justify-content: flex-end; margin: -2px 0 4px; font-size: 12px; color: var(--ink-3); letter-spacing: .1px; transition: opacity 180ms; }
+    .pace-aj-bajo-fila[data-atenuada] { opacity: .38; }
     .pace-aj-nota { font-size: 10.5px; color: var(--ink-3); letter-spacing: .1px; line-height: 1.45; margin: -2px 0 6px; }
 
     /* pildoras: pista de papel-2 sin borde, la elegida en tinta */
@@ -203,6 +207,11 @@ if (!_paceTweaksResponsive) {
       [data-pace-tweaks-panel] [data-pace-aj-plegada] .pace-aj-sec-titulo { margin-bottom: 0; }
       [data-pace-tweaks-panel] .pace-aj-fila { min-height: 34px; padding: 2px 0; }
       [data-pace-tweaks-panel] .pace-aj-div { margin: 8px 0; }
+    }
+    /* Por debajo de 780 px de alto, la línea de la música pedía scroll a 640 y pasaba del 79 % a 730
+       en Android: en esos móviles no sale. */
+    @media (max-width: 640px) and (max-height: 779px) {
+      [data-pace-tweaks-panel] .pace-aj-bajo-fila { display: none; }
     }
     [data-pace-tweaks-panel][data-pace-aj-bajo] .pace-aj-solo-movil { display: inline-block; }
     [data-pace-tweaks-panel][data-pace-aj-bajo] [data-pace-aj-plegada] > :not(.pace-aj-sec-titulo) { display: none; }
