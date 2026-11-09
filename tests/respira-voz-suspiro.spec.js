@@ -6,8 +6,8 @@
 
    QUÉ DEFIENDE:
    - «Inhala más» pide su propia señal (`breathe.inhale.more`), y «Inhala» sigue pidiendo la suya;
-   - la palabra cabe en su fase de 1 s con bradford en los dos idiomas y con sulafat en castellano; el
-     «More» de sulafat dura 0,89 s y NO cabe, así que ahí sigue el tono;
+   - la palabra cabe en su fase de 1 s con las dos voces en los dos idiomas; el «More» de sulafat, cortado
+     en 1,08 s (la cola de la «r», a −40 dB o menos, sigue sonando detrás con `PACE_VOZ_COLA`);
    - «Inhala» en una fase de 1 s (Bhastrika, Kapalabhati) sigue sin voz, con cualquier voz e idioma;
    - estas tomas vienen más fuertes que las demás y suenan con su volumen bajado (`vol`).
    Quitar la excepción de la fase corta, devolver «Inhala más» a `breathe.inhale` o subir el volumen a 1
@@ -23,7 +23,7 @@ const { sembrar, irAlArtefacto } = require('./helpers');
 const CASOS = [
   { lang: 'es', voice: 'sulafat', cabe: true, vol: 0.56 },
   { lang: 'es', voice: 'bradford', cabe: true, vol: 0.47 },
-  { lang: 'en', voice: 'sulafat', cabe: false, vol: 0.75 },
+  { lang: 'en', voice: 'sulafat', cabe: true, vol: 0.75 },
   { lang: 'en', voice: 'bradford', cabe: true, vol: 1 },
 ];
 

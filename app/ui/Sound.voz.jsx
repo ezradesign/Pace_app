@@ -118,7 +118,9 @@ var PACE_VOZ_MARGEN = 0.15;
    a muestra: el «Más» de sulafat trae 0,75 s de ruido suave a −54 dB antes de la palabra, con picos sobre
    −50, y el criterio de muestra lo tomaba por voz. La palabra va desde la ventana más fuerte hasta tres
    seguidas bajo −50 dB a cada lado. Quedan: bradford «Más» 0,58 s y «More» 0,45; sulafat «Más» 0,84 y
-   «More» 0,89, que NO cabe y deja el tono hasta que haya una toma más corta.
+   «More» 0,89. Ese «More» se corta en 1,08 s y queda en 0,82, que cabe (Ez, 9 nov.: «¿no podemos ajustarlo
+   un poco?»): de 1,05 s en adelante es la cola de la «r», a −40 dB o menos, 28 por debajo de su pico, y la
+   voz sigue sonando `PACE_VOZ_COLA` detrás de `fin` con su fundido, así que se oye igual y no pisa «Exhale».
    `vol`: estas tomas vienen más fuertes que las de su voz (el nivel de la palabra: bradford «Más» −19,5 dB
    contra −26 de su «inhala» y «exhala»; sulafat «Más» −16,2 contra −23,3 y −19,2; sulafat «More» −15,8
    contra −18,7 y −17,8). Se bajan para quedar entre sus vecinas; bradford «More» ya está entre ellas. */
@@ -142,7 +144,7 @@ var PACE_VOZ_CLIPS = {
       'breathe.inhale': { archivo: 'inhale', dur: 6.88, ini: 0.29, fin: 2.26 },
       'breathe.hold': { archivo: 'hold', dur: 1.52, ini: 0.149, fin: 1.134 },
       'breathe.exhale': { archivo: 'exhale', dur: 2.68, ini: 0.831, fin: 2.65 },
-      'breathe.inhale.more': { archivo: 'more', dur: 1.6, ini: 0.26, fin: 1.15, vol: 0.75, corta: true },
+      'breathe.inhale.more': { archivo: 'more', dur: 1.6, ini: 0.26, fin: 1.08, vol: 0.75, corta: true },
     },
     bradford: {
       'breathe.inhale': { archivo: 'inhale', dur: 0.96, ini: 0.056, fin: 0.799 },
