@@ -4,6 +4,7 @@ const { test } = require('@playwright/test');
 const { sembrar, irAlArtefacto, esperarModalAsentado } = require('./helpers');
 const fs = require('fs'), path = require('path');
 const OUT = process.env.PINTAR_OUT;
+const CALIDAD = Number(process.env.PINTAR_Q || 50);
 
 const JUEVES = new Date('2026-10-15T13:16:00+02:00');
 const BASE = {
@@ -20,13 +21,22 @@ const DIA = { fecha: '2026-10-15', opcion: 'jornada', desde: 540, cicloBase: 0, 
   estados: { 1: 'hecha', 2: 'hecha', 3: 'hecha', 4: 'saltada' } };
 const ANCHOS = { m: { width: 360, height: 740 }, d: { width: 1280, height: 720 } };
 
-async function foto(page, nombre) {
-  fs.writeFileSync(path.join(OUT, nombre + '.jpg'), await page.screenshot({ type: 'jpeg', quality: 55 }));
+async function foto(page, nombre, clip) {
+  const o = { type: 'jpeg', quality: CALIDAD };
+  if (clip) o.clip = clip;
+  fs.writeFileSync(path.join(OUT, nombre + '.jpg'), await page.screenshot(o));
+}
+/* A 1280 la ventana de Estadísticas ocupa el centro: se recorta a ella (el ancho sigue siendo 1280). */
+async function recorteStats(page) {
+  const b = await page.locator('[data-pace-modal-card]').last().boundingBox();
+  const fin = await page.evaluate(() => Math.max(...[...document.querySelectorAll('[data-pace-hoy-rejilla]')].map((r) => r.getBoundingClientRect().bottom)));
+  const y = Math.max(0, Math.floor(b.y) - 12);
+  return { x: 0, y, width: 1280, height: Math.min(720 - y, Math.ceil(fin - y) + 28) };
 }
 
-async function hoy(page, context, ancho) {
+async function hoy(page, context, ancho, dia) {
   await page.setViewportSize(ANCHOS[ancho]);
-  await sembrar(context, Object.assign({}, BASE, { ritmo: { dia: DIA } }));
+  await sembrar(context, Object.assign({}, BASE, { ritmo: { dia: dia || DIA } }));
   await page.clock.install({ time: JUEVES });
   await irAlArtefacto(page);
   await page.evaluate(() => document.fonts && document.fonts.ready);
@@ -36,29 +46,38 @@ async function hoy(page, context, ancho) {
   await page.waitForTimeout(300);
 }
 
-/* 7 · lo que dice una pausa hecha. */
+/* 7 · lo que dice una pausa hecha. La de las 13:15 (la abierta) también está hecha: la app hoy dice «ahora». */
+const DIA7 = Object.assign({}, DIA, { estados: Object.assign({}, DIA.estados, { 5: 'hecha' }) });
 const SIETE = {
-  A: ['Hecha · 2 min', 'Hecha · 4 min', 'Hecha · 3 min'],
-  B: ['Hecha', 'Hecha', 'Hecha'],
-  C: ['Hecha · 2 de 5 min', 'Hecha · 4 de 5 min', 'Hecha · 3 de 15 min'],
+  hoy: null,
+  A: ['hecha · 2 min', 'hecha · 4 min', 'hecha · 3 min', 'hecha · 2 min'],
+  B: ['hecha', 'hecha', 'hecha', 'hecha'],
+  C: ['hecha · 2 de 5 min', 'hecha · 4 de 5 min', 'hecha · 3 de 15 min', 'hecha · 2 de 5 min'],
 };
 for (const [op, textos] of Object.entries(SIETE)) {
   for (const ancho of (op === 'A' ? ['m', 'd'] : ['m'])) {
     test('7' + op + ancho, async ({ page, context }) => {
-      await hoy(page, context, ancho);
+      await hoy(page, context, ancho, DIA7);
+      fs.writeFileSync(path.join(OUT, '7' + op + '-' + ancho + '.txt'), await page.evaluate(() =>
+        [...document.querySelectorAll('[data-pace-hoy-parada]')].map((c) => c.dataset.paceHoyParada + ' | ' + c.textContent).join('\n')));
       await page.evaluate((tx) => {
-        const hechas = [...document.querySelectorAll('[data-pace-hoy-parada="hecha"] .pace-sh-m')];
-        hechas.forEach((m, i) => { const h = m.querySelector('.pace-sh-h'); m.textContent = ''; m.appendChild(h); m.append(' · ' + tx[i % tx.length]); });
-        const r = document.querySelector('[data-pace-hoy-rejilla]');
-        r.scrollIntoView({ block: 'start' });
+        if (tx) {
+          const cards = [...document.querySelectorAll('[data-pace-hoy-parada="hecha"], [data-pace-hoy-parada="ahora"]')];
+          cards.forEach((c, i) => {
+            const m = c.querySelector('.pace-sh-m'); const h = m.querySelector('.pace-sh-h');
+            m.textContent = ''; m.appendChild(h); m.append(' · ' + tx[Math.min(i, tx.length - 1)]);
+          });
+        }
+        document.querySelector('[data-pace-hoy-rejilla]').scrollIntoView({ block: 'end' });
       }, textos);
       await page.waitForTimeout(150);
-      await foto(page, '7' + op + '-' + ancho);
+      await foto(page, '7' + op + '-' + ancho, ancho === 'd' ? await recorteStats(page) : null);
     });
   }
 }
 
-/* 6 · lo hecho por tu cuenta con el día elegido. */
+/* 6 · lo hecho por tu cuenta con el día elegido: Box 4·4·4·4 a las 8:50 (2 min, antes de elegir el día) y
+   Cuello suave a las 11:20 (4 min, fuera de una pausa). Ninguna de las dos está en el plan de hoy. */
 for (const op of ['A', 'B', 'C']) {
   for (const ancho of (op === 'A' ? ['m', 'd'] : ['m'])) {
     test('6' + op + ancho, async ({ page, context }) => {
@@ -66,16 +85,19 @@ for (const op of ['A', 'B', 'C']) {
       await page.evaluate((op) => {
         const rej = document.querySelector('[data-pace-hoy-rejilla]');
         const cards = [...rej.querySelectorAll('[data-pace-hoy-parada]')];
-        const molde = cards.find((c) => c.dataset.paceHoyParada === 'hecha') || cards[0];
-        const suelta = (hora, meta, fuente) => {
-          const c = (fuente || molde).cloneNode(true);
+        const porNombre = (n) => cards.find((c) => c.querySelector('.pace-sh-n').textContent.trim() === n);
+        const respira = porNombre('Suspiro fisiológico') || porNombre('Coherente 5·5') || cards[0];
+        const estira = porNombre('Hombros') || porNombre('Escritorio express') || cards[1];
+        const suelta = (fuente, nombre, hora, meta) => {
+          const c = fuente.cloneNode(true);
           c.className = 'pace-sh-t pace-sh-hecha';
           c.dataset.paceHoyParada = 'hecha';
+          c.querySelector('.pace-sh-n').textContent = nombre;
           const m = c.querySelector('.pace-sh-m'); const h = m.querySelector('.pace-sh-h');
           h.textContent = hora; m.textContent = ''; m.appendChild(h); m.append(' · ' + meta);
           return c;
         };
-        const otra = cards.find((c) => c !== molde && c.dataset.paceHoyParada === 'hecha' && c.querySelector('.pace-sh-n').textContent !== molde.querySelector('.pace-sh-n').textContent) || cards[1];
+        const minutos = (c) => { const [hh, mm] = c.querySelector('.pace-sh-h').textContent.split(':').map(Number); return hh * 60 + mm; };
         const cab = document.querySelector('.pace-sh-cab');
         if (op === 'A') {
           const cab2 = cab.cloneNode(true);
@@ -83,31 +105,31 @@ for (const op of ['A', 'B', 'C']) {
           const meta = cab2.querySelector('*'); meta.textContent = 'Además, por tu cuenta';
           [...cab2.children].slice(1).forEach((x) => x.remove());
           const rej2 = rej.cloneNode(false);
-          rej2.appendChild(suelta('8:50', '2 min', molde));
-          rej2.appendChild(suelta('11:20', '4 min', otra));
+          rej2.appendChild(suelta(respira, 'Box 4·4·4·4', '8:50', '2 min'));
+          rej2.appendChild(suelta(estira, 'Cuello suave', '11:20', '4 min'));
           rej.after(cab2); cab2.after(rej2);
-          cab2.scrollIntoView({ block: 'center' });
+          rej2.scrollIntoView({ block: 'end' });
         } else if (op === 'B') {
-          rej.insertBefore(suelta('8:50', 'Por tu cuenta · 2 min', molde), rej.firstChild);
-          const tras = [...rej.children].find((c) => /^1[0-2]:/.test(c.querySelector('.pace-sh-h').textContent)) || null;
-          rej.insertBefore(suelta('11:20', 'Por tu cuenta · 4 min', otra), tras);
-          rej.scrollIntoView({ block: 'start' });
+          const meter = (c) => { const t = minutos(c); rej.insertBefore(c, [...rej.children].find((x) => minutos(x) > t) || null); };
+          meter(suelta(respira, 'Box 4·4·4·4', '8:50', 'por tu cuenta · 2 min'));
+          meter(suelta(estira, 'Cuello suave', '11:20', 'por tu cuenta · 4 min'));
+          rej.scrollIntoView({ block: 'end' });
         } else {
           const linea = document.createElement('button');
           linea.type = 'button'; linea.className = 'pace-rt-enlace';
           linea.style.cssText = 'display:block;margin:6px 0 10px;';
           linea.textContent = 'Y 2 sesiones por tu cuenta · 6 min ›';
           cab.after(linea);
-          cab.scrollIntoView({ block: 'start' });
+          rej.scrollIntoView({ block: 'end' });
         }
       }, op);
       await page.waitForTimeout(150);
-      await foto(page, '6' + op + '-' + ancho);
+      await foto(page, '6' + op + '-' + ancho, ancho === 'd' ? await recorteStats(page) : null);
     });
   }
 }
 
-/* 4 · «Cambiar» con un Foco en marcha. Jornada a las 9:00, el bloque 1 lleva 10 min. */
+/* 4 · «Cambiar» con un Foco en marcha. Jornada a las 9:00, bloque de 45; a las 9:10 se cambia a «Una hora». */
 const HOY4 = '2026-10-14';
 const JORNADA = { fecha: HOY4, opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} };
 async function enMarcha(page, context, ancho) {
@@ -115,48 +137,65 @@ async function enMarcha(page, context, ancho) {
   await sembrar(context, { ritmo: { dia: JORNADA }, soundOn: false, achievements: { 'first.step': { unlockedAt: 1 } } });
   await page.clock.install({ time: new Date(HOY4 + 'T09:00:00+02:00') });
   await irAlArtefacto(page);
+  await page.evaluate(() => document.fonts && document.fonts.ready);
   await page.waitForTimeout(300);
   await page.getByRole('button', { name: 'Empezar jornada', exact: true }).filter({ visible: true }).first().click();
   await page.waitForTimeout(250);
   await page.clock.fastForward(10 * 60 * 1000);
   await page.waitForTimeout(300);
 }
-for (const op of ['A', 'B', 'C']) {
-  for (const ancho of ['m', 'd']) {
-    if (op !== 'A' && ancho === 'm' && op === 'C') continue;
-    test('4' + op + ancho, async ({ page, context }) => {
-      await enMarcha(page, context, ancho);
-      if (op === 'A') {
-        /* La pregunta de la barra de arriba (la de cambiar de modo con un Foco empezado), con sus textos. */
-        await page.getByRole('button', { name: 'Pausa', exact: true }).filter({ visible: true }).first().click();
-        await page.waitForTimeout(400);
-        fs.writeFileSync(path.join(OUT, '4A-' + ancho + '.txt'), await page.evaluate(() => {
-          const m = [...document.querySelectorAll('[data-pace-modal-backdrop]')].pop();
-          return m ? m.innerHTML.slice(0, 3000) : 'SIN MODAL';
-        }));
-        await page.evaluate(() => {
-          const m = [...document.querySelectorAll('[data-pace-modal-backdrop]')].pop();
-          if (!m) return;
-          const hojas = [...m.querySelectorAll('*')].filter((e) => e.children.length === 0 && e.textContent.trim() && e.tagName !== 'BUTTON' && !e.closest('button'));
-          if (hojas[0]) hojas[0].textContent = 'Llevas 10 min de este bloque';
-          if (hojas[1]) hojas[1].textContent = 'Si cambias el día ahora, el bloque se pierde. ¿Lo terminas primero?';
-          hojas.slice(2).forEach((e) => { e.textContent = ''; });
-          const bs = [...m.querySelectorAll('button')].filter((b) => b.textContent.trim());
-          if (bs[0]) bs[0].textContent = 'Seguir con el bloque';
-          if (bs[1]) bs[1].textContent = 'Cambiar y dejarlo';
+const CUATRO = [['hoy', 'm'], ['A', 'm'], ['B', 'm'], ['B', 'd'], ['C', 'm']];
+for (const [op, ancho] of CUATRO) {
+  test('4' + op + ancho, async ({ page, context }) => {
+    await enMarcha(page, context, ancho);
+    if (op === 'hoy') {
+      /* Lo que pasa hoy: el día nuevo no sabe del bloque que corre. */
+      await page.evaluate(() => { ritmoPreguntar(); ritmoElegir('1h'); });
+      await page.waitForTimeout(500);
+    } else if (op === 'A') {
+      /* La misma ventana que la barra de arriba (Modal y Button de la app), con los textos de esta pregunta. */
+      await page.evaluate(() => {
+        const e = React.createElement, div = document.createElement('div');
+        document.body.appendChild(div);
+        ReactDOM.createRoot(div).render(e(Modal, { open: true, onClose: () => {}, maxWidth: 440, title: '¿Cambiar el día?' },
+          e('p', { style: { margin: '0 0 22px', color: 'var(--ink-2)', fontSize: 15, lineHeight: 1.55 } },
+            'Llevas 10 min de este bloque. Si cambias ahora, se pierde y no cuenta.'),
+          e('div', { style: { display: 'flex', gap: 10, justifyContent: 'flex-end', flexWrap: 'wrap' } },
+            e(Button, { variant: 'secondary' }, 'Cambiar y dejarlo'),
+            e(Button, { variant: 'primary' }, 'Seguir con el bloque'))));
+      });
+      await page.waitForTimeout(500);
+    } else if (op === 'B') {
+      /* El día nuevo empieza con el bloque que corre: a su hora (9:00) y con su duración (45). */
+      await page.evaluate(() => {
+        ritmoPreguntar(); ritmoElegir('1h');
+        ritmoGuardar((r) => (r.dia ? { dia: Object.assign({}, r.dia, { desde: 540, primerBloque: 45, pasado: [] }) } : {}));
+      });
+      await page.waitForTimeout(500);
+    } else {
+      await page.evaluate(() => {
+        [...document.querySelectorAll('.pace-rt-enlace')].filter((b) => b.textContent.trim() === 'Cambiar').forEach((b) => {
+          b.textContent = 'Cambiar, al acabar el bloque'; b.style.opacity = '0.45'; b.style.cursor = 'default'; b.disabled = true;
         });
-      } else if (op === 'B') {
-        await page.evaluate(() => { ritmoPreguntar(); ritmoElegir('1h'); });
-        await page.waitForTimeout(500);
-      } else {
-        await page.evaluate(() => {
-          [...document.querySelectorAll('.pace-rt-enlace')].filter((b) => b.textContent.trim() === 'Cambiar').forEach((b) => {
-            b.textContent = 'Cambiar, al acabar el bloque'; b.style.opacity = '0.5'; b.style.cursor = 'default'; b.disabled = true;
-          });
-        });
+      });
+    }
+    await page.waitForTimeout(150);
+    /* Qué pisa cada cosa: cajas de los textos y botones visibles que se cruzan. */
+    fs.writeFileSync(path.join(OUT, '4' + op + '-' + ancho + '.txt'), await page.evaluate(() => {
+      const vis = (el) => { const r = el.getBoundingClientRect(); const s = getComputedStyle(el); return r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && r.bottom > 0 && r.top < innerHeight; };
+      const panel = document.querySelector('.pace-rt-enlace') ? document.querySelector('.pace-rt-enlace').closest('section, div') : null;
+      const lineas = [];
+      const caja = [...document.querySelectorAll('.pace-rt-enlace')].filter(vis);
+      caja.forEach((b) => { const r = b.getBoundingClientRect(); lineas.push('enlace «' + b.textContent.trim() + '» ' + [r.left, r.top, r.right, r.bottom].map(Math.round).join(',')); });
+      const hojas = [...document.querySelectorAll('button, a, h1, h2, h3, p, span, div')].filter((el) => vis(el) && el.children.length === 0 && el.textContent.trim());
+      for (let i = 0; i < hojas.length; i++) for (let j = i + 1; j < hojas.length; j++) {
+        const a = hojas[i].getBoundingClientRect(), b = hojas[j].getBoundingClientRect();
+        const x = Math.min(a.right, b.right) - Math.max(a.left, b.left), y = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+        if (x > 1 && y > 1 && !hojas[i].contains(hojas[j]) && !hojas[j].contains(hojas[i])) lineas.push('SE CRUZAN «' + hojas[i].textContent.trim().slice(0, 30) + '» y «' + hojas[j].textContent.trim().slice(0, 30) + '»');
       }
-      await page.waitForTimeout(150);
-      await foto(page, '4' + op + '-' + ancho);
-    });
-  }
+      lineas.push('PANEL: ' + (document.querySelector('[data-pace-ritmo-panel]') || document.body).innerText.slice(0, 600));
+      return lineas.join('\n');
+    }));
+    await foto(page, '4' + op + '-' + ancho);
+  });
 }

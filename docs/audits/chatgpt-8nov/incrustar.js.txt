@@ -1,0 +1,11 @@
+const fs = require('fs'), path = require('path');
+const dir = process.argv[2], tpl = process.argv[3], out = process.argv[4];
+function medidas(b) { let i = 2; while (i < b.length) { const m = b[i + 1], len = b.readUInt16BE(i + 2); if (m >= 0xC0 && m <= 0xC2) return [b.readUInt16BE(i + 7), b.readUInt16BE(i + 5)]; i += 2 + len; } return null; }
+let html = fs.readFileSync(tpl, 'utf8');
+html = html.replace(/src="@@([^@]+)@@"([^>]*?)width="\d+" height="\d+"/g, (all, n, mid) => {
+  const b = fs.readFileSync(path.join(dir, n + '.jpg')); const [w, h] = medidas(b);
+  return 'src="data:image/jpeg;base64,' + b.toString('base64') + '"' + mid + 'width="' + w + '" height="' + h + '"';
+});
+if (/@@/.test(html)) throw new Error('queda un @@');
+fs.writeFileSync(out, html);
+console.log((Buffer.byteLength(html) / 1024).toFixed(1) + ' KB');

@@ -16,24 +16,24 @@ El 2 subió como «WIP:» por el uso, pero está terminado: verify en verde y la
 (158 pruebas) en verde salvo una que se pasó de tiempo al cerrar (`eventos-origen`, «el aro con plan»), que
 sola pasa. Sin versión, sin STATE ni CHANGELOG: eso lo pone la coordinadora al juntar.
 
-## Lo que falta: la página de 4, 6 y 7 para Ez
+## La página de 4, 6 y 7 · dónde me quedo (9 nov., 23:40)
 
-Nada montado. Se paró por el uso de la semana (95 %). El guion de las fotos está listo en
-`pintar-4-6-7.spec.js.txt`: se copia a `tests/__pintar.spec.js`, se corre con
-`PINTAR_OUT=<carpeta> PACE_E2E_PORT=8887 npx playwright test tests/__pintar.spec.js --workers=1` y se borra.
-Pinta sobre la app de verdad, a 360 y a 1280 la recomendada, en JPEG pequeños (la página, menos de 500 KB):
+Hecha y SIN PUBLICAR: la sesión paró con el uso de las 5 h al 100 %. Está entera en
+`pagina-4-6-7.html` (405 KB, fotos dentro). Falta solo publicarla con la herramienta Artifact desde esa
+ruta (icono «checklist») y dar la dirección a Ez. Recomendadas: **4B, 6A, 7A**.
 
-- **4 · «Cambiar» con un Foco en marcha.** A: preguntar con la misma ventana que la barra de arriba
-  («Llevas 10 min de este bloque…», «Seguir con el bloque» / «Cambiar y dejarlo»). B: sin preguntar, el bloque
-  en marcha pasa a ser el bloque 1 del día nuevo, a su hora y con su duración (como `ritmoBloqueEmpezado`).
-  C: «Cambiar» apagado hasta acabar el bloque. Recomendación pensada: **B** (nada tapa, nada se pierde, sin
-  pregunta nueva); la A tiene a favor que ya existe esa pregunta en la barra de arriba.
-- **6 · lo hecho por tu cuenta con jornada.** A: debajo, «Además, por tu cuenta» con las mismas tarjetas.
-  B: mezcladas por hora con «Por tu cuenta». C: una línea «Y 2 sesiones por tu cuenta · 6 min ›».
-  Recomendación: **A**. Casar sesión y parada por identidad para no duplicar.
-- **7 · «Hecha · 5 min» con una rutina de 2.** A: «Hecha · 2 min» (lo hecho de verdad; sin sesión casada,
-  solo «Hecha»). B: «Hecha» sin minutos. C: «Hecha · 2 de 5 min». Recomendación: **A**. Y la pausa abierta
-  que ya hiciste dice «Hecha», no «Ahora».
-
-El guion no se ha corrido: puede que algún selector del 4 (la ventana de la barra de arriba, el enlace
-«Cambiar» a 360) necesite ajuste. Mira las fotos antes de publicar.
+- Las fotos salen del guion corregido, `pintar-4-6-7.spec.js.txt` (14 fotos, todas miradas). Para
+  rehacerlas: copiarlo a `tests/__pintar.spec.js`, correr con `PINTAR_OUT=<carpeta>
+  PACE_E2E_PORT=8887 npx playwright test tests/__pintar.spec.js --workers=1 --project=chromium`,
+  luego `node incrustar.js.txt <carpeta> pagina-4-6-7.plantilla.html pagina-4-6-7.html`, y borrar el spec.
+- Lo que no salió como decía el guion de antes: la 4A no abre a 360 px (en el móvil no hay barra de
+  modos); ahora se pinta con el `Modal` y el `Button` de la app y los textos de la pregunta. La 4B del
+  guion pintaba el fallo de hoy, no la opción: ahora el día se recoloca con `desde: 540, primerBloque:
+  45, pasado: []` (sin `pasado`, `primerBloque` no se lee) y sale «Una hora · de 9:00 a 9:50», bloque
+  de 45 y pausa de cierre a las 9:45. Esa foto del fallo es ahora la de «hoy» del 4. La 6B metía las
+  11:20 antes de las 10:35 (ordena por hora). La 7 usa «hecha» en minúscula, como la app, y pinta
+  también la pausa de las 13:15 ya hecha (hoy dice «ahora»). En la 6, las sesiones sueltas son Box
+  4·4·4·4 y Cuello suave, que no están en el plan del día, para que no parezcan repetidas.
+- Qué tapa cada una (medido): A del 4 es una ventana y tapa la pantalla, como la de la barra de arriba
+  (lo dice la página); el resto no pisa nada. «Cambiar, al acabar el bloque» cabe a 360 px en la línea
+  del título sin tocar «Jornada entera».
