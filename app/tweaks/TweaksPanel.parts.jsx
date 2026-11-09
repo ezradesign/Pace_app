@@ -50,7 +50,7 @@ function AjustesSeccion({ titulo, ultima, accion, plegadaMovil, children }) {
         <div className="pace-aj-sec-titulo">
           {titulo}
           {accion ? <button type="button" className={'pace-aj-sec-accion' + (accion.soloMovil ? ' pace-aj-solo-movil' : '')}
-            onClick={accion.onClick}>{accion.texto}<span aria-hidden="true"> ›</span></button> : null}
+            onClick={accion.onClick} disabled={!!accion.apagado} {...(accion.marca ? { [accion.marca]: '' } : {})}>{accion.texto}<span aria-hidden="true"> ›</span></button> : null}
         </div>
         {children}
       </div>

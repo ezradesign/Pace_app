@@ -97,10 +97,13 @@ if (!_paceAjustesCss) {
     .pace-aj-nombre { font-family: var(--font-display); font-style: italic; font-size: 16px; font-weight: 500; color: var(--ink); flex: 1 1 auto; line-height: 1.1; }
     .pace-aj-sub { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 400; color: var(--ink-3); margin-top: 3px; letter-spacing: .1px; }
     .pace-aj-punto { width: 6px; height: 6px; border-radius: 50%; background: var(--pace-aj-m, var(--ink-3)); display: inline-block; flex: 0 0 auto; }
-    /* La línea de debajo de una fila, a la derecha bajo su control: «Escuchar ›» y dónde suena la
-       música (Ez, 6A del 8 nov.). Con el sonido apagado se atenúa como su fila. */
-    .pace-aj-bajo-fila { display: flex; justify-content: flex-end; margin: -2px 0 4px; font-size: 12px; color: var(--ink-3); letter-spacing: .1px; transition: opacity 180ms; }
-    .pace-aj-bajo-fila[data-atenuada] { opacity: .38; pointer-events: none; }
+    /* «La música suena solo en Respira» (Ez, 6A del 8 nov.): flota 4 s bajo «Música» al elegirla,
+       sin sumar alto, y no recoge toques. */
+    .pace-aj-globo-ancla { position: relative; height: 0; }
+    .pace-aj-globo { position: absolute; right: 0; top: -3px; z-index: 2; margin: 0; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--paper-2); color: var(--ink); font: 400 12px/1.3 var(--font-ui); white-space: nowrap; pointer-events: none; animation: pace-aj-globo 4s ease both; }
+    @keyframes pace-aj-globo { 0% { opacity: 0; transform: translateY(-3px); } 6%, 88% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) { .pace-aj-globo { animation: none; } }
+    .pace-aj-sec-accion:disabled { opacity: .38; cursor: default; }
     .pace-aj-nota { font-size: 10.5px; color: var(--ink-3); letter-spacing: .1px; line-height: 1.45; margin: -2px 0 6px; }
 
     /* pildoras: pista de papel-2 sin borde, la elegida en tinta */

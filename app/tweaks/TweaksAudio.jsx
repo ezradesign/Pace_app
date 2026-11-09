@@ -33,8 +33,34 @@
    Las piezas (`AjustesFila`, `AjustesPildoras`, `AjustesInterruptor`) vienen de
    `TweaksPanel.parts.jsx` por `window`: un `const` no cruza la IIFE (s148). */
 
+/* «ESCUCHAR» (Ez, 6A del 8 nov., R5 de ChatGPT): la voz se elegía sin poder oírla; para oír
+   cada una había que empezar una Respira. Suena la señal elegida como en una inhalación de 4 s,
+   por `playSound`, que es lo que suena en la sesión: «Inhala» con la voz, el soplo con el Tono.
+   La voz necesita su clip cargado y, si aún no lo está, sonaría el tono: se espera hasta 2 s a
+   que esté. Va en la línea del título «Oír» (TweaksPanel.jsx), como «Visita guiada ›»: una
+   línea más bajo la fila hacía scroll en el móvil de 640 px. */
+function paceEscucharSenal(state) {
+  const senal = state.voiceOn === false ? 'tono' : (state.voice === 'bradford' ? 'bradford' : 'sulafat');
+  let quedan = 20;
+  const suena = () => {
+    let lista = senal === 'tono';
+    try { lista = lista || window.paceVozCabe('breathe.inhale', 4); } catch (e) { lista = true; }
+    if (!lista && quedan-- > 0) { setTimeout(suena, 100); return; }
+    try { playSound('breathe.inhale', 4); } catch (e) { /* el sonido nunca rompe la app */ }
+  };
+  suena();
+}
+
 function TweaksAudioBlock({ state, set }) {
   const { t } = useT();
+  /* «La música suena solo en Respira», como aviso de 4 s al elegir «Música» (como «Auto» en el
+     runner): una línea fija hacía scroll en el móvil de 640 px. Flota bajo la fila sin sumar alto. */
+  const [notaMusica, setNotaMusica] = React.useState(0);
+  React.useEffect(() => {
+    if (!notaMusica) return undefined;
+    const r = setTimeout(() => setNotaMusica(0), 4000);
+    return () => clearTimeout(r);
+  }, [notaMusica]);
 
   /* El fondo son dos booleanos en el estado (`ambientOn`, `musicOn`) y tres
      pildoras aqui. s177: TRES OPCIONES Y NO DOS, pero sigue siendo UNA decision:
@@ -47,6 +73,7 @@ function TweaksAudioBlock({ state, set }) {
     set({ ambientOn: cual === 'amb', musicOn: cual === 'mus' });
     if (cual !== 'amb' && window.ambientDrone) window.ambientDrone.stop(400);
     if (cual !== 'mus' && window.paceMusica) window.paceMusica.stop(400);
+    setNotaMusica(cual === 'mus' ? Date.now() : 0);
   };
 
   /* Que marca la fase: 'tono' apaga la voz; 'sulafat' / 'bradford' la encienden
@@ -65,26 +92,12 @@ function TweaksAudioBlock({ state, set }) {
   const fondo = state.musicOn ? 'mus' : (state.ambientOn ? 'amb' : 'nada');
   const apagado = !state.soundOn;
 
-  /* «ESCUCHAR» (Ez, 6A del 8 nov., R5 de ChatGPT): la voz se elegía sin poder oírla; para oír
-     cada una había que empezar una Respira. Suena la señal elegida como en una inhalación de
-     4 s, por `playSound`, que es lo que suena en la sesión: «Inhala» con la voz, el soplo con
-     el Tono. La voz necesita su clip cargado y, si aún no lo está, sonaría el tono: se espera
-     hasta 2 s a que esté. Abrir Ajustes con una voz puesta ya la va cargando. */
+  /* Abrir Ajustes con una voz puesta ya la va cargando, para que «Escuchar» la diga a la primera. */
   React.useEffect(() => {
     if (!apagado && senal !== 'tono') {
       try { if (typeof window.paceVozInit === 'function') window.paceVozInit(senal); } catch (e) { /* sin Audio no hay precarga */ }
     }
   }, [senal, apagado]);
-  const escuchar = () => {
-    let quedan = 20;
-    const suena = () => {
-      let lista = senal === 'tono';
-      try { lista = lista || window.paceVozCabe('breathe.inhale', 4); } catch (e) { lista = true; }
-      if (!lista && quedan-- > 0) { setTimeout(suena, 100); return; }
-      try { playSound('breathe.inhale', 4); } catch (e) { /* el sonido nunca rompe la app */ }
-    };
-    suena();
-  };
 
   return (
     <React.Fragment>
@@ -100,11 +113,6 @@ function TweaksAudioBlock({ state, set }) {
           { v: 'bradford', name: t('settings.signal.deep') },
         ]} />
       </AjustesFila>
-      <div className="pace-aj-bajo-fila" data-atenuada={apagado ? '' : undefined}>
-        <button type="button" className="pace-aj-sec-accion" data-pace-aj-escuchar onClick={escuchar} disabled={apagado}>
-          {t('settings.signal.escuchar')}<span aria-hidden="true"> ›</span>
-        </button>
-      </div>
       <AjustesFila id="bg" nombre={t('settings.bg')} atenuada={apagado}>
         <AjustesPildoras aria={t('settings.bg')} valor={fondo} onChange={ponerFondo} apagado={apagado} opciones={[
           { v: 'nada', name: t('settings.bg.none') },
@@ -115,9 +123,11 @@ function TweaksAudioBlock({ state, set }) {
           { v: 'mus', name: t('settings.bg.music') },
         ]} />
       </AjustesFila>
-      <p className="pace-aj-bajo-fila" data-pace-aj-musica-nota data-atenuada={apagado ? '' : undefined}>{t('settings.bg.music.nota')}</p>
+      <div className="pace-aj-globo-ancla" role="status">
+        {notaMusica && !apagado ? <p key={notaMusica} className="pace-aj-globo" data-pace-aj-musica-nota>{t('settings.bg.music.nota')}</p> : null}
+      </div>
     </React.Fragment>
   );
 }
 
-Object.assign(window, { TweaksAudioBlock });
+Object.assign(window, { TweaksAudioBlock, paceEscucharSenal });

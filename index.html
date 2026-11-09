@@ -41816,10 +41816,13 @@ if (!_paceAjustesCss) {
     .pace-aj-nombre { font-family: var(--font-display); font-style: italic; font-size: 16px; font-weight: 500; color: var(--ink); flex: 1 1 auto; line-height: 1.1; }
     .pace-aj-sub { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 400; color: var(--ink-3); margin-top: 3px; letter-spacing: .1px; }
     .pace-aj-punto { width: 6px; height: 6px; border-radius: 50%; background: var(--pace-aj-m, var(--ink-3)); display: inline-block; flex: 0 0 auto; }
-    /* La línea de debajo de una fila, a la derecha bajo su control: «Escuchar ›» y dónde suena la
-       música (Ez, 6A del 8 nov.). Con el sonido apagado se atenúa como su fila. */
-    .pace-aj-bajo-fila { display: flex; justify-content: flex-end; margin: -2px 0 4px; font-size: 12px; color: var(--ink-3); letter-spacing: .1px; transition: opacity 180ms; }
-    .pace-aj-bajo-fila[data-atenuada] { opacity: .38; pointer-events: none; }
+    /* «La música suena solo en Respira» (Ez, 6A del 8 nov.): flota 4 s bajo «Música» al elegirla,
+       sin sumar alto, y no recoge toques. */
+    .pace-aj-globo-ancla { position: relative; height: 0; }
+    .pace-aj-globo { position: absolute; right: 0; top: -3px; z-index: 2; margin: 0; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--paper-2); color: var(--ink); font: 400 12px/1.3 var(--font-ui); white-space: nowrap; pointer-events: none; animation: pace-aj-globo 4s ease both; }
+    @keyframes pace-aj-globo { 0% { opacity: 0; transform: translateY(-3px); } 6%, 88% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) { .pace-aj-globo { animation: none; } }
+    .pace-aj-sec-accion:disabled { opacity: .38; cursor: default; }
     .pace-aj-nota { font-size: 10.5px; color: var(--ink-3); letter-spacing: .1px; line-height: 1.45; margin: -2px 0 6px; }
 
     /* pildoras: pista de papel-2 sin borde, la elegida en tinta */
@@ -41938,7 +41941,7 @@ Object.assign(window, { tweaksStyles, TWEAKS_PILL_TRANSITION });
 </script>
   <script>
 ;(function () {
-/* PACE - Foco - Cuerpo
+function _extends() {return _extends = Object.assign ? Object.assign.bind() : function (n) {for (var e = 1; e < arguments.length; e++) {var t = arguments[e];for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);}return n;}, _extends.apply(null, arguments);} /* PACE - Foco - Cuerpo
    Copyright (c) 2026 ezradesign
    Licensed under the Elastic License 2.0 - see LICENSE
 
@@ -41989,8 +41992,8 @@ function AjustesSeccion(_ref) {let { titulo, ultima, accion, plegadaMovil, child
     React.createElement("div", { className: "pace-aj-sec", "data-pace-aj-seccion": titulo, "data-pace-aj-plegada": plegadaMovil ? '' : undefined },
     React.createElement("div", { className: "pace-aj-sec-titulo" },
     titulo,
-    accion ? React.createElement("button", { type: "button", className: 'pace-aj-sec-accion' + (accion.soloMovil ? ' pace-aj-solo-movil' : ''),
-      onClick: accion.onClick }, accion.texto, React.createElement("span", { "aria-hidden": "true" }, " \u203A")) : null
+    accion ? React.createElement("button", _extends({ type: "button", className: 'pace-aj-sec-accion' + (accion.soloMovil ? ' pace-aj-solo-movil' : ''),
+      onClick: accion.onClick, disabled: !!accion.apagado }, accion.marca ? { [accion.marca]: '' } : {}), accion.texto, React.createElement("span", { "aria-hidden": "true" }, " \u203A")) : null
     ),
     children
     ),
@@ -42132,7 +42135,7 @@ Object.assign(window, {
   AJUSTES_MODULO, AjustesSeccion, AjustesFila, AjustesPildoras, AjustesInterruptor,
   AjustesPaso, AjustesAccion, AjustesAviso, MuestraPaleta, PictoCirculo
 });
-;Object.assign(window, { AjustesSeccion, AjustesFila, AjustesPildoras, AjustesInterruptor, AjustesPaso, AjustesAccion, AjustesAviso, MuestraPaleta, PictoCirculo });
+;Object.assign(window, { _extends, AjustesSeccion, AjustesFila, AjustesPildoras, AjustesInterruptor, AjustesPaso, AjustesAccion, AjustesAviso, MuestraPaleta, PictoCirculo });
 })();
 </script>
   <!-- TweaksAudio (s176): el bloque de sonido del panel. Va ANTES que
@@ -42174,8 +42177,34 @@ Object.assign(window, {
 
 
 
+
+
+
+
+
+
+function paceEscucharSenal(state) {
+  const senal = state.voiceOn === false ? 'tono' : state.voice === 'bradford' ? 'bradford' : 'sulafat';
+  let quedan = 20;
+  const suena = () => {
+    let lista = senal === 'tono';
+    try {lista = lista || window.paceVozCabe('breathe.inhale', 4);} catch (e) {lista = true;}
+    if (!lista && quedan-- > 0) {setTimeout(suena, 100);return;}
+    try {playSound('breathe.inhale', 4);} catch (e) {}
+  };
+  suena();
+}
+
 function TweaksAudioBlock(_ref) {let { state, set } = _ref;
   const { t } = useT();
+
+
+  const [notaMusica, setNotaMusica] = React.useState(0);
+  React.useEffect(() => {
+    if (!notaMusica) return undefined;
+    const r = setTimeout(() => setNotaMusica(0), 4000);
+    return () => clearTimeout(r);
+  }, [notaMusica]);
 
 
 
@@ -42188,6 +42217,7 @@ function TweaksAudioBlock(_ref) {let { state, set } = _ref;
     set({ ambientOn: cual === 'amb', musicOn: cual === 'mus' });
     if (cual !== 'amb' && window.ambientDrone) window.ambientDrone.stop(400);
     if (cual !== 'mus' && window.paceMusica) window.paceMusica.stop(400);
+    setNotaMusica(cual === 'mus' ? Date.now() : 0);
   };
 
 
@@ -42207,25 +42237,11 @@ function TweaksAudioBlock(_ref) {let { state, set } = _ref;
   const apagado = !state.soundOn;
 
 
-
-
-
-
   React.useEffect(() => {
     if (!apagado && senal !== 'tono') {
       try {if (typeof window.paceVozInit === 'function') window.paceVozInit(senal);} catch (e) {}
     }
   }, [senal, apagado]);
-  const escuchar = () => {
-    let quedan = 20;
-    const suena = () => {
-      let lista = senal === 'tono';
-      try {lista = lista || window.paceVozCabe('breathe.inhale', 4);} catch (e) {lista = true;}
-      if (!lista && quedan-- > 0) {setTimeout(suena, 100);return;}
-      try {playSound('breathe.inhale', 4);} catch (e) {}
-    };
-    suena();
-  };
 
   return (
     React.createElement(React.Fragment, null,
@@ -42241,11 +42257,6 @@ function TweaksAudioBlock(_ref) {let { state, set } = _ref;
       { v: 'bradford', name: t('settings.signal.deep') }] }
     )
     ),
-    React.createElement("div", { className: "pace-aj-bajo-fila", "data-atenuada": apagado ? '' : undefined },
-    React.createElement("button", { type: "button", className: "pace-aj-sec-accion", "data-pace-aj-escuchar": true, onClick: escuchar, disabled: apagado },
-    t('settings.signal.escuchar'), React.createElement("span", { "aria-hidden": "true" }, " \u203A")
-    )
-    ),
     React.createElement(AjustesFila, { id: "bg", nombre: t('settings.bg'), atenuada: apagado },
     React.createElement(AjustesPildoras, { aria: t('settings.bg'), valor: fondo, onChange: ponerFondo, apagado: apagado, opciones: [
       { v: 'nada', name: t('settings.bg.none') },
@@ -42256,13 +42267,15 @@ function TweaksAudioBlock(_ref) {let { state, set } = _ref;
       { v: 'mus', name: t('settings.bg.music') }] }
     )
     ),
-    React.createElement("p", { className: "pace-aj-bajo-fila", "data-pace-aj-musica-nota": true, "data-atenuada": apagado ? '' : undefined }, t('settings.bg.music.nota'))
+    React.createElement("div", { className: "pace-aj-globo-ancla", role: "status" },
+    notaMusica && !apagado ? React.createElement("p", { key: notaMusica, className: "pace-aj-globo", "data-pace-aj-musica-nota": true }, t('settings.bg.music.nota')) : null
+    )
     ));
 
 }
 
-Object.assign(window, { TweaksAudioBlock });
-;Object.assign(window, { TweaksAudioBlock });
+Object.assign(window, { TweaksAudioBlock, paceEscucharSenal });
+;Object.assign(window, { paceEscucharSenal, TweaksAudioBlock });
 })();
 </script>
   <script>
@@ -42577,7 +42590,10 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
 
     ),
 
-    React.createElement(AjustesSeccion, { titulo: t('settings.sec.oir') },
+
+
+    React.createElement(AjustesSeccion, { titulo: t('settings.sec.oir'), accion: { texto: t('settings.signal.escuchar'),
+        onClick: () => paceEscucharSenal(state), apagado: !state.soundOn, marca: 'data-pace-aj-escuchar' } },
     React.createElement(TweaksAudioBlock, { state: state, set: set })
     ),
 
