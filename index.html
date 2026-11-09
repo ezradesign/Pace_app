@@ -58,6 +58,14 @@
     return /^es\b/i.test(navigator.language || '') ? 'es' : 'en';
   }
 
+  function ponerIdioma(idioma) {
+    raiz.setAttribute('data-pace-landing-idioma', idioma);
+    raiz.lang = idioma;
+    document.title = idioma === 'en'
+      ? 'PACE · Active breaks for people who work at a desk'
+      : 'PACE · Pausas activas para quien trabaja sentado';
+  }
+
   var pendientes = [];
   var tituloApp = document.title;
   window.PACE_CARA = cara;
@@ -66,11 +74,11 @@
     try { localStorage.setItem(MARCA, 'app'); } catch (e) {}
   } else {
     var idioma = idiomaLanding();
-    raiz.setAttribute('data-pace-landing-idioma', idioma);
-    raiz.lang = idioma;
-    document.title = idioma === 'en'
-      ? 'PACE · Active breaks for people who work at a desk'
-      : 'PACE · Pausas activas para quien trabaja sentado';
+    ponerIdioma(idiomaLanding());
+    /* La app pone su título al cargar sus módulos (applyTheme, state-core.palette.jsx). */
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.PACE_CARA === 'landing') ponerIdioma(raiz.getAttribute('data-pace-landing-idioma'));
+    });
   }
 
   /* Lo que la app hace al arrancar (montar, abrir la base de eventos) pasa por aquí. */
@@ -105,8 +113,7 @@
     if (t.hasAttribute('data-pace-abrir')) { paceAbrirApp(); return; }
     var otro = raiz.getAttribute('data-pace-landing-idioma') === 'en' ? 'es' : 'en';
     try { localStorage.setItem('pace.landing.lang', otro); } catch (e) {}
-    raiz.setAttribute('data-pace-landing-idioma', otro);
-    raiz.lang = otro;
+    ponerIdioma(otro);
   });
 
   /* LA RED DE LOS EVENTOS: quien tiene eventos y no `localStorage` (caso raro) ve la app.

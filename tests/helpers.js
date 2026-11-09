@@ -80,6 +80,16 @@ async function sembrarPisando(context, extra) {
    «Nuevo sello» del toast. Medir con un instrumento y asertar con otro cuesta
    tres rojos. Si se anade un aserto de texto, leer antes su `textContent`. */
 
+/* LA RAÍZ CON DOS CARAS (landing/cara.js, Ez, 9 nov. 2026): un navegador vacío ve la landing, y
+   casi todas las pruebas abren la web vacía. La suite entra como quien ya vio la app: con la marca
+   que deja «Abrir PACE». La pone playwright.config.js en cada contexto (`use.storageState`), y la
+   heredan también los `browser.newContext()` de las pruebas (Playwright rellena con `use` lo que
+   no se le pasa). Las pruebas de la landing la quitan: tests/landing-cara.spec.js. */
+const MARCA_CARA = 'pace-cara';
+function estadoYaAbrio(base) {
+  return { cookies: [], origins: [{ origin: base, localStorage: [{ name: MARCA_CARA, value: 'app' }] }] };
+}
+
 /** Engancha los errores de consola y de pagina. Devuelve el array VIVO. */
 function capturarErrores(page) {
   const errores = [];
@@ -329,6 +339,8 @@ module.exports = {
   ponerHora,
   esperarModalAsentado,
   CLAVE_ESTADO,
+  MARCA_CARA,
+  estadoYaAbrio,
   RUTA_ARTEFACTO,
   SEMILLA,
   sembrar,
