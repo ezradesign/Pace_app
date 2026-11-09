@@ -95,7 +95,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.195.0 · actualizada el 9 de noviembre a las 16:48 · en esta cuenta, con la 0.195.0 en la web y la landing para elegir</div>
+    <div class="eyebrow">PACE · versión 0.195.0 · actualizada el 9 de noviembre a las 19:08 · en esta cuenta, con la 0.195.0 en la web y tres sesiones cazando y montando</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -131,16 +131,37 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <h2>Paso a paso</h2>
     <p class="nota">La pongo al día en cada paso. Si tienes la página abierta, se actualiza sola. Si un enlace no abre, es que está en tu otra cuenta.</p>
     <ol class="pasos">
-      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, 5 minutos</span>
-        <span class="t">Elegir las letras de la landing</span>
-        <span class="c"><span class="quien">Tú eliges; yo la junto.</span> <a href="https://claude.ai/artifact/WXqNcQ9XeojuhvSBgWoR76">La
-          página</a> tiene tres landings pintadas con el código de verdad, a 360 y a 1280, y botones para cambiar el idioma, el tema y
-          dónde va el «¿Ya usas PACE?». <b>Recomendada, la C</b>: corta y con capturas, con «¿Ya usas PACE? Ábrelo» en la cabecera.
-          Ya funciona en su rama con 17 pruebas: quien ya usa PACE ve la app y quien llega nuevo, la landing.</span></li>
-      <li class="paso marcha"><span class="estado">En marcha · GitHub</span>
-        <span class="t">Las pruebas de GitHub de la 0.195.0</span>
-        <span class="c"><span class="quien">Yo.</span> Ya está en la web, con 1432 pruebas en verde en el ordenador. Tu 1A de la caza («1 h» ya no
-          se queda sola en la frase del día) está montada y entra en la siguiente; la 2A deja los 320 px como están.</span></li>
+      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, 2 minutos · es lo que más ayuda de ChatGPT ahora</span>
+        <span class="t">Pasar a ChatGPT la revisión del cobro y de lo legal</span>
+        <span class="c"><span class="quien">Tú.</span> Lo que me trajiste el 5 de noviembre cubre datos y compra, pero no lo legal. Copia esto en
+          ChatGPT y tráeme su respuesta: compruebo cada cosa en el código antes de montar nada.
+          <pre class="prompt">Revisa en el repositorio público ezradesign/Pace_app, rama main, el cobro y lo legal de la web de PACE antes de la primera venta. Solo lectura. No repitas lo que ya está bien: quiero lo que puede salir mal.
+
+Contexto:
+- Vendo desde España como autónomo a consumidores de la UE y de fuera, con Stripe Managed Payments: Link cobra, pero el vendedor del producto sigo siendo yo.
+- Plan propuesto: empezar vendiendo solo el pago único de 19,99 € «de por vida» en la web. El mensual (2,99 € con 7 días de prueba) llegaría con v1. Hasta v1, PACE completo está abierto gratis para todos. Si ves motivo para hacerlo de otra forma, dímelo.
+- Lo legal está en borrador y sin publicar. Quiero dejar la revisión de un profesional para dentro de un mes.
+
+Lee: cobro/, functions/api/, app/state-compra.js, app/state-entitlement.jsx, premium/, gracias/, recuperar/, desistir/, legal/, privacy.html, docs/launch/cobro-web.md, docs/launch/desistir.md y docs/launch/legal-web.md.
+
+Cobro: busca casos concretos en los que alguien pague y no reciba su código, lo pierda o no pueda recuperarlo; otra persona lo consiga; o salga un código sin pagar. Incluye devoluciones, contracargos, pagar dos veces y qué pasa con un código de por vida si devuelvo el dinero. Una cosa ya la sé y está arreglada en la rama claude/guardar-atomico-166e3f, aún sin juntar a main: guardar() en functions/api/stripe.js no era atómico y dos renovaciones de la mensual a la vez podían dejar el código más corto. Revisa ese arreglo en esa rama (cobro/mensual.js, functions/api/stripe.js, renovar.js y recuperar.js, y tests/cobro-a-la-vez.spec.js) y dime si se le escapa algún caso.
+
+Legal: dime qué es obligatorio tener publicado ANTES de la primera venta y qué puede esperar un mes; en concreto, si mis datos del aviso legal pueden esperar. Revisa también si están bien resueltos el desistimiento, su pérdida en contenido digital y el botón para desistir; si «de por vida» está bien definido; si /premium promete algo que el código o las condiciones no cumplen; y cualquier contradicción entre condiciones, privacidad y /premium.
+
+Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien compra, y si bloquea la primera venta, va antes del mensual o puede esperar. Separa lo que has comprobado en el código de lo que deduces. En lo legal cita la norma y di con qué seguridad lo afirmas: no es asesoría y lo revisará un profesional.</pre></span></li>
+      <li class="paso marcha"><span class="estado">En marcha · yo · tres sesiones</span>
+        <span class="t">La landing, lo de ChatGPT y una caza nueva</span>
+        <span class="c"><span class="quien">Yo.</span>
+          <ol>
+            <li><b>La landing B</b>, la larga como /premium: se monta en su rama, con todas las pruebas de la app, y te la enseño antes
+              de juntarla.</li>
+            <li><b>Lo que encontró ChatGPT en tu día</b> (dijiste «Sí, así»): primero, probar si un bloque puede contar dos veces; luego,
+              arreglar la cuenta sin cambiar cómo se ve; y te pinta lo que se ve: «Cambiar» con un Foco en marcha, lo que haces por tu
+              cuenta en Estadísticas › Hoy y el «Hecha · 5 min».</li>
+            <li><b>Caza nueva:</b> cuánto tarda PACE en un móvil normal, si algo se acumula con la pestaña abierta todo el día, y qué
+              pasa cuando sale una versión nueva y la tienes abierta.</li>
+          </ol>
+          Tu 1A de la caza en seis anchos entra en la siguiente versión.</span></li>
       <li class="paso luego"><span class="estado">Lo siguiente tuyo · hoy, lunes 9 de noviembre · conmigo pantalla a pantalla</span>
         <span class="t">Subir la 0.191.1 a Google Play</span>
         <span class="c"><span class="quien">Tú la subes; yo te guío.</span> El archivo ya está bajado y firmado:
@@ -194,24 +215,6 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           <b>Con la primera venta real</b>, me das tu nombre, NIF, dirección, correo y teléfono, y publico el aviso legal y las
           condiciones. Lo decidiste sabiendo que lo apuntado los pide antes de cobrar. La revisión del profesional, en un
           mes. «Configura Tax» se deja hasta que lo confirme el gestor.</span></li>
-      <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo, 2 minutos · es lo que más ayuda de ChatGPT ahora</span>
-        <span class="t">Pasar a ChatGPT la revisión del cobro y de lo legal</span>
-        <span class="c"><span class="quien">Tú.</span> Lo que me trajiste el 5 de noviembre cubre datos y compra, pero no lo legal. Copia esto en
-          ChatGPT y tráeme su respuesta: compruebo cada cosa en el código antes de montar nada.
-          <pre class="prompt">Revisa en el repositorio público ezradesign/Pace_app, rama main, el cobro y lo legal de la web de PACE antes de la primera venta. Solo lectura. No repitas lo que ya está bien: quiero lo que puede salir mal.
-
-Contexto:
-- Vendo desde España como autónomo a consumidores de la UE y de fuera, con Stripe Managed Payments: Link cobra, pero el vendedor del producto sigo siendo yo.
-- Plan propuesto: empezar vendiendo solo el pago único de 19,99 € «de por vida» en la web. El mensual (2,99 € con 7 días de prueba) llegaría con v1. Hasta v1, PACE completo está abierto gratis para todos. Si ves motivo para hacerlo de otra forma, dímelo.
-- Lo legal está en borrador y sin publicar. Quiero dejar la revisión de un profesional para dentro de un mes.
-
-Lee: cobro/, functions/api/, app/state-compra.js, app/state-entitlement.jsx, premium/, gracias/, recuperar/, desistir/, legal/, privacy.html, docs/launch/cobro-web.md, docs/launch/desistir.md y docs/launch/legal-web.md.
-
-Cobro: busca casos concretos en los que alguien pague y no reciba su código, lo pierda o no pueda recuperarlo; otra persona lo consiga; o salga un código sin pagar. Incluye devoluciones, contracargos, pagar dos veces y qué pasa con un código de por vida si devuelvo el dinero. Una cosa ya la sé y está arreglada en la rama claude/guardar-atomico-166e3f, aún sin juntar a main: guardar() en functions/api/stripe.js no era atómico y dos renovaciones de la mensual a la vez podían dejar el código más corto. Revisa ese arreglo en esa rama (cobro/mensual.js, functions/api/stripe.js, renovar.js y recuperar.js, y tests/cobro-a-la-vez.spec.js) y dime si se le escapa algún caso.
-
-Legal: dime qué es obligatorio tener publicado ANTES de la primera venta y qué puede esperar un mes; en concreto, si mis datos del aviso legal pueden esperar. Revisa también si están bien resueltos el desistimiento, su pérdida en contenido digital y el botón para desistir; si «de por vida» está bien definido; si /premium promete algo que el código o las condiciones no cumplen; y cualquier contradicción entre condiciones, privacidad y /premium.
-
-Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien compra, y si bloquea la primera venta, va antes del mensual o puede esperar. Separa lo que has comprobado en el código de lo que deduces. En lo legal cita la norma y di con qué seguridad lo afirmas: no es asesoría y lo revisará un profesional.</pre></span></li>
       <li class="paso luego"><span class="estado">Con el gestor y el jurista · lo tuyo</span>
         <span class="t">Lo legal: tus datos y una revisión profesional</span>
         <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/GT6ZwHQHY6bKk7vBuYrUw2">la página</a>, en tu
@@ -233,8 +236,11 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
 
     </ol>
     <details class="plegado">
-      <summary>Lo hecho hasta hoy · 105 pasos</summary>
+      <summary>Lo hecho hasta hoy · 106 pasos</summary>
       <ol class="pasos">
+      <li class="paso hecho"><span class="estado">Hecho · 9 de noviembre, 19:00</span>
+        <span class="t">Elegiste la landing: la B, larga como /premium</span>
+        <span class="c"><span class="quien">Tú.</span> Y la C de la estructura: quien ya usa PACE ve la app, y quien llega nuevo, la landing.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · 9 de noviembre, 16:47 · tú dijiste «Júntalo con la A2»</span>
         <span class="t">La 0.195.0, en la web</span>
         <span class="c"><span class="quien">Yo.</span> Tus letras de la jornada y de lo nuevo, los dos arreglos de la primera parte de ChatGPT,
