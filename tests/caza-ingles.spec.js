@@ -52,7 +52,7 @@ test('ingles-2 · en inglés la voz habla inglés, nunca castellano', async ({ p
   });
   expect(await voz(), 'con la app en inglés suena la voz castellana, o ninguna').toEqual({
     encendida: true, cabe: [true, true, true],
-    archivos: ['sulafat-exhale.mp3', 'sulafat-hold.mp3', 'sulafat-inhale.mp3'],
+    archivos: ['sulafat-exhale.mp3', 'sulafat-hold.mp3', 'sulafat-inhale.mp3', 'sulafat-more.mp3'],
   });
   await page.keyboard.press('t');
   await expect(page.locator('[data-pace-aj-fila="signal"]')).not.toContainText('only speaks Spanish');

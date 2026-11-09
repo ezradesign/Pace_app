@@ -187,6 +187,11 @@ const PRECACHE = [
   '/app/breathe/voz/bradford-inhale.mp3',
   '/app/breathe/voz/bradford-hold.mp3',
   '/app/breathe/voz/bradford-exhale.mp3',
+  /* «Más» y «More», el segundo tramo del Suspiro fisiológico (9 nov. 2026), 103 KB más. */
+  '/app/breathe/voz/sulafat-mas.mp3',
+  '/app/breathe/voz/bradford-mas.mp3',
+  '/app/breathe/voz/sulafat-more.mp3',
+  '/app/breathe/voz/bradford-more.mp3',
   /* s146: glifos de logro del usuario, MASCARAS CSS.
      Mismo trato que el loto: archivo en web + precache, data URI solo en el
      standalone.

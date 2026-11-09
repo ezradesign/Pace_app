@@ -112,17 +112,31 @@ var PACE_VOZ_MARGEN = 0.15;
    un archivo de 6,88 s con casi todo silencio detras: no molesta, ver `fin`.
    Por eso la tabla va POR IDIOMA y dentro POR VOZ: el idioma lo pone la app
    (`state.lang`) y la voz, Ajustes. */
+/* «MÁS» Y «MORE», EL SEGUNDO TRAMO DEL SUSPIRO (9 nov. 2026). Es la única palabra que suena en una fase de
+   1 s (`corta`): la fase dura 1 s y con el margen la palabra cabe si dura 0,85 s o menos. Bhastrika y
+   Kapalabhati siguen con el tono porque dicen «Inhala», no esto. Medidas por ventanas de 10 ms y no muestra
+   a muestra: el «Más» de sulafat trae 0,75 s de ruido suave a −54 dB antes de la palabra, con picos sobre
+   −50, y el criterio de muestra lo tomaba por voz. La palabra va desde la ventana más fuerte hasta tres
+   seguidas bajo −50 dB a cada lado. Quedan: bradford «Más» 0,58 s y «More» 0,45; sulafat «Más» 0,84 y
+   «More» 0,89. Ese «More» se corta en 1,08 s y queda en 0,82, que cabe (Ez, 9 nov.: «¿no podemos ajustarlo
+   un poco?»): de 1,05 s en adelante es la cola de la «r», a −40 dB o menos, 28 por debajo de su pico, y la
+   voz sigue sonando `PACE_VOZ_COLA` detrás de `fin` con su fundido, así que se oye igual y no pisa «Exhale».
+   `vol`: estas tomas vienen más fuertes que las de su voz (el nivel de la palabra: bradford «Más» −19,5 dB
+   contra −26 de su «inhala» y «exhala»; sulafat «Más» −16,2 contra −23,3 y −19,2; sulafat «More» −15,8
+   contra −18,7 y −17,8). Se bajan para quedar entre sus vecinas; bradford «More» ya está entre ellas. */
 var PACE_VOZ_CLIPS = {
   es: {
     sulafat: {
       'breathe.inhale': { archivo: 'inhala', dur: 2.44, ini: 0.386, fin: 1.79 },
       'breathe.hold': { archivo: 'manten', dur: 2.56, ini: 0.021, fin: 1.341 },
       'breathe.exhale': { archivo: 'exhala', dur: 4.96, ini: 0.644, fin: 2.122 },
+      'breathe.inhale.more': { archivo: 'mas', dur: 2.12, ini: 0.75, fin: 1.59, vol: 0.56, corta: true },
     },
     bradford: {
       'breathe.inhale': { archivo: 'inhala', dur: 2.64, ini: 0.001, fin: 0.912 },
       'breathe.hold': { archivo: 'manten', dur: 2.4, ini: 0.001, fin: 1.219 },
       'breathe.exhale': { archivo: 'exhala', dur: 3.68, ini: 0.108, fin: 1.309 },
+      'breathe.inhale.more': { archivo: 'mas', dur: 0.8, ini: 0.05, fin: 0.63, vol: 0.47, corta: true },
     },
   },
   en: {
@@ -130,11 +144,13 @@ var PACE_VOZ_CLIPS = {
       'breathe.inhale': { archivo: 'inhale', dur: 6.88, ini: 0.29, fin: 2.26 },
       'breathe.hold': { archivo: 'hold', dur: 1.52, ini: 0.149, fin: 1.134 },
       'breathe.exhale': { archivo: 'exhale', dur: 2.68, ini: 0.831, fin: 2.65 },
+      'breathe.inhale.more': { archivo: 'more', dur: 1.6, ini: 0.26, fin: 1.08, vol: 0.75, corta: true },
     },
     bradford: {
       'breathe.inhale': { archivo: 'inhale', dur: 0.96, ini: 0.056, fin: 0.799 },
       'breathe.hold': { archivo: 'hold', dur: 0.72, ini: 0.031, fin: 0.612 },
       'breathe.exhale': { archivo: 'exhale', dur: 1.2, ini: 0.057, fin: 0.987 },
+      'breathe.inhale.more': { archivo: 'more', dur: 0.64, ini: 0.05, fin: 0.5, corta: true },
     },
   },
 };
@@ -214,8 +230,8 @@ function paceVozWebAudio(slot, desde) {
   var g = ctx.createGain();
   s.buffer = slot.buffer;
   g.gain.setValueAtTime(0, t0);
-  g.gain.linearRampToValueAtTime(1, t0 + f);
-  g.gain.setValueAtTime(1, t0 + resto - f);
+  g.gain.linearRampToValueAtTime(slot.vol, t0 + f);
+  g.gain.setValueAtTime(slot.vol, t0 + resto - f);
   g.gain.linearRampToValueAtTime(0, t0 + resto);
   s.connect(g);
   g.connect(ctx.destination);
@@ -272,7 +288,8 @@ function paceVozInit(voz) {
   var fichas = (PACE_VOZ_CLIPS[idioma] || {})[cual] || {};
   Object.keys(fichas).forEach(function (nombre) {
     var ficha = fichas[nombre];
-    var slot = { listo: false, ini: ficha.ini, fin: ficha.fin, palabra: ficha.fin - ficha.ini, audio: null, buffer: null, fuente: null, corte: null };
+    var slot = { listo: false, ini: ficha.ini, fin: ficha.fin, palabra: ficha.fin - ficha.ini, audio: null, buffer: null, fuente: null, corte: null,
+                 vol: typeof ficha.vol === 'number' ? ficha.vol : 1, corta: !!ficha.corta };
     juego[nombre] = slot;
     var url = 'app/breathe/voz/' + cual + '-' + ficha.archivo + '.mp3';
     paceVozDescodifica(slot, url);
@@ -312,7 +329,8 @@ function paceVozCabe(nombre, faseSeg) {
   if (!paceVozEncendida()) return false;
   var slot = paceVozInit(paceVozActiva())[nombre];
   if (!slot || !slot.listo) return false;
-  if (typeof faseSeg !== 'number' || !isFinite(faseSeg) || faseSeg < PACE_VOZ_FASE_MIN) return false;
+  /* La de una fase corta («Más») no mira el mínimo: su fase es de 1 s y está medida para caber. */
+  if (typeof faseSeg !== 'number' || !isFinite(faseSeg) || (!slot.corta && faseSeg < PACE_VOZ_FASE_MIN)) return false;
   /* Lo que puede pisar la senal siguiente es la PALABRA, no el archivo: la cola
      muda puede seguir corriendo sin molestar a nadie. */
   return (slot.palabra + PACE_VOZ_MARGEN) <= faseSeg;
@@ -339,6 +357,7 @@ function paceVozIntenta(nombre, faseSeg, alFallar) {
     var desde = Math.max(0, slot.ini - PACE_VOZ_PREV);
     if (paceVozWebAudio(slot, desde)) return true;
     slot.audio.currentTime = desde;
+    slot.audio.volume = slot.vol;
     var pedida = Date.now();
     var p = slot.audio.play();
     /* el `<audio>` tampoco sigue detras de la palabra (ver PACE_VOZ_COLA) */
