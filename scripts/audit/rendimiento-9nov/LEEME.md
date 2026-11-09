@@ -9,7 +9,17 @@
 - Página para Ez: https://claude.ai/artifact/4Fohyqi7Cth9iKGxE2FSSD (cuenta EcLj6): lo medido, lo arreglado y el aro A/B/C (B recomendada).
 - Montaje en esta tanda: `git archive HEAD` a `<scratchpad>/antes` y `despues` (con los cambios encima), `node scripts/web-dist.js`
   en cada uno, y los bancos copiados a `<scratchpad>/banco/` (servidor.js sirve `../<nombre>/dist`).
-Queda: el banco del paso de versión (sin empezar), el resultado de repetir `dia.js` y las propuestas de build (punto 5).
+- `dia.js` repetido (contra la rama, 1280): llega a las 18:00 SIN caerse; heap 4,2 → 5,65 MB, 1415 nodos, 8 intervalos desde el
+  mediodía. La caída de las 15:00 fue del instrumento. (Las etiquetas de las muestras van una hora corridas: fallo del banco.)
+- `version.js` (0.194 en dos pestañas, B en Respira → servidor a la rama, puerto aparte con `servidor.js`; `IDLE`/`ESPERA` en ms):
+  1) sin navegar no se entera: 0 peticiones de sw.js en 30 s tras 20 s de calma, y no hay `reg.update()` en el código (el aviso
+  del primer intento venía del `register()` de B, recién abierta); 2) al recargar, la página YA es la nueva (navegación
+  network-first) y aun así sale «Hay una versión nueva»; 3) mientras el SW nuevo espera, `caches.match` sirve la copia VIEJA de un
+  archivo con el mismo nombre (marca en streak.7.webp); 4) «Actualizar» en A recarga B a mitad de Respira y B no sigue en la sesión.
+  Tras activar queda solo `pace-v0.195.0` y sirve la copia nueva. Nada montado: V1 (preguntar al volver y cada hora, aviso fuera
+  de sesión) y V2 (la pestaña en sesión espera a acabar) van a la página como letras, B recomendada en las dos.
+- `fotobarra.js` y `fuentes.js`: las comparaciones de píxeles de las barras y de las fuentes.
+Queda: lo que Ez elija (aro, V1, V2; el aviso de más y los dibujos viejos van con V1/V2) y las propuestas de build (punto 5).
 
 ## La primera tanda
 
