@@ -1,5 +1,18 @@
 # Caza de rendimiento (9 nov.) · dónde me quedo
 
+**Segunda tanda (cuenta EcLj6, 9 nov., tarde).** Hecho y subido a la rama:
+- `7cc6b238` las cuatro barras con `transform` (`rellenoDeBarra`, ui/Primitives.jsx). Respira a 360 y CPU 4×: hilo ocupado
+  2,44 → 2,16 s de cada 6 (mediana de cinco pasadas; los fotogramas lentos bailan con la carga del PC y no concluyen).
+  Barra antes/después a 360 y 1280: solo el suavizado de los extremos (≤ 24/255). Prueba `tests/barras-transform.spec.js`.
+- `301c2b4b` fuentes: los cinco woff2 son VARIABLES (tabla fvar) → una @font-face por familia y estilo con rango de pesos,
+  0 píxeles distintos (1× y 2×, pesos 200-800, cursiva), 12 → 5 descargas, precache 272 → 265. Prueba `tests/fuentes-unicas.spec.js`.
+- Página para Ez: https://claude.ai/artifact/4Fohyqi7Cth9iKGxE2FSSD (cuenta EcLj6): lo medido, lo arreglado y el aro A/B/C (B recomendada).
+- Montaje en esta tanda: `git archive HEAD` a `<scratchpad>/antes` y `despues` (con los cambios encima), `node scripts/web-dist.js`
+  en cada uno, y los bancos copiados a `<scratchpad>/banco/` (servidor.js sirve `../<nombre>/dist`).
+Queda: el banco del paso de versión (sin empezar), el resultado de repetir `dia.js` y las propuestas de build (punto 5).
+
+## La primera tanda
+
 Parada al 89 % de la ventana de 5 h (resetea a las 21:00). Rama `claude/caza-rendimiento-9nov`.
 Nada del producto tocado todavía. Los bancos, en `scripts/audit/rendimiento-9nov/` (WIP en la rama).
 Montaje: `git archive 9ed68749` (0.194.0) y `git archive HEAD` (0.195.0) en el scratchpad, `node scripts/web-dist.js`
