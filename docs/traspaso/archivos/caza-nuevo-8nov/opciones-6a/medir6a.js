@@ -19,7 +19,7 @@ const ABRIR = { es: 'Abrir ajustes', en: 'Open settings' };
 
 async function caso(nav, html, lang, alto, android, foto) {
   const ctx = await nav.newContext({ viewport: { width: 360, height: alto }, locale: lang === 'es' ? 'es-ES' : 'en-US',
-    timezoneId: 'Europe/Madrid', colorScheme: 'light', hasTouch: true, serviceWorkers: 'block' });
+    timezoneId: 'Europe/Madrid', colorScheme: 'light', hasTouch: true, serviceWorkers: 'block', deviceScaleFactor: process.env.DPR ? Number(process.env.DPR) : 1 });
   await ctx.route('**/index.html', (r) => r.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: html }));
   await ctx.addInitScript(([e]) => { if (!localStorage.getItem('pace.state.v2')) localStorage.setItem('pace.state.v2', JSON.stringify(e)); }, [Object.assign({}, SEMILLA, { lang })]);
   const page = await ctx.newPage();
@@ -48,14 +48,30 @@ async function caso(nav, html, lang, alto, android, foto) {
     const fila = (id) => { const e = p.querySelector('[data-pace-aj-fila="' + id + '"]'); return e ? Math.round(e.getBoundingClientRect().height) : null; };
     return { scroll: p.scrollHeight - p.clientHeight, arriba: Math.round(r.top), alto: Math.round(r.height), pantalla: innerHeight,
       sobra: Math.round(max - p.scrollHeight), pct: Math.round(100 * r.height / innerHeight),
-      escuchar: vis('[data-pace-aj-escuchar]'), nota: vis('[data-pace-aj-musica-nota]'),
-      filaSenal: fila('signal'), filaFondo: fila('bg') };
+      escuchar: vis('[data-pace-aj-escuchar]'), nota: vis('[data-pace-aj-musica-nota]') || vis('[data-pace-aj-fila="bg"] .pace-aj-sub'),
+      filaSenal: fila('signal'), filaFondo: fila('bg'), tapa: (() => {
+        /* lo nuevo (Escuchar, la nota, la línea pequeña de «Suena detrás») no puede pisar nada */
+        const caja = (el) => { if (!el || !el.getClientRects().length) return null; const rg = document.createRange(); rg.selectNodeContents(el); const b = rg.getBoundingClientRect(); return b.width ? b : el.getBoundingClientRect(); };
+        const nuevos = [p.querySelector('[data-pace-aj-escuchar]'), p.querySelector('[data-pace-aj-musica-nota]'), p.querySelector('[data-pace-aj-fila="bg"] .pace-aj-sub')].filter(Boolean);
+        const otros = [...p.querySelectorAll('button, .pace-aj-sub, .pace-aj-sec-titulo, .pace-aj-nombre, .pace-aj-pista, p')];
+        const pisa = [];
+        for (const n of nuevos) { const a = caja(n); if (!a) continue;
+          for (const o of otros) { if (o === n || o.contains(n) || n.contains(o)) continue; const b = o.matches('.pace-aj-sec-titulo, .pace-aj-nombre') ? caja(o.firstChild && o.firstChild.nodeType === 3 ? o : o) : o.getBoundingClientRect();
+            if (!b || !b.width) continue;
+            const x = Math.min(a.right, b.right) - Math.max(a.left, b.left), y = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+            if (x > 1 && y > 1) pisa.push((n.getAttribute('data-pace-aj-escuchar') != null ? 'escuchar' : n.className) + ' / ' + (o.textContent || '').trim().slice(0, 24)); } }
+        return pisa; })() };
   });
   m.errores = errores;
   if (foto) {
     const png = await page.screenshot();
     if (process.env.PNGDIR) fs.writeFileSync(path.join(process.env.PNGDIR, foto + '.png'), png);
     m.foto = 'data:image/webp;base64,' + (await sharp(png).resize({ width: 300 }).webp({ quality: 66 }).toBuffer()).toString('base64');
+    if (alto === 640) {
+      const det = await page.locator('[data-pace-tweaks-panel] .pace-aj-sec:has([data-pace-aj-fila="signal"])').screenshot();
+      if (process.env.PNGDIR) fs.writeFileSync(path.join(process.env.PNGDIR, foto + '-detalle.png'), det);
+      m.detalle = 'data:image/webp;base64,' + (await sharp(det).webp({ quality: 72 }).toBuffer()).toString('base64');
+    }
   }
   await ctx.close();
   return m;
@@ -72,10 +88,10 @@ async function caso(nav, html, lang, alto, android, foto) {
       out[nombre] = {};
       for (const lang of ['es', 'en']) for (const alto of [640, 730, 800]) for (const android of [false, true]) {
         const clave = `${lang}-${alto}-${android ? 'and' : 'web'}`;
-        const foto = process.env.FOTOS === '1' && android && alto !== 730 ? nombre + '-' + clave : null;
+        const foto = process.env.FOTOS === '1' && android ? nombre + '-' + clave : null;
         out[nombre][clave] = await caso(nav, html, lang, alto, android, foto);
         const m = out[nombre][clave];
-        console.log(nombre.padEnd(9), clave.padEnd(12), 'scroll', String(m.scroll).padStart(4), 'sobra', String(m.sobra).padStart(4), 'arriba', m.arriba, m.pct + '%', 'esc', m.escuchar ? 1 : 0, 'nota', m.nota ? 1 : 0, 'filas', m.filaSenal, m.filaFondo, m.errores.length ? 'ERR ' + m.errores.join(' | ') : '');
+        console.log(nombre.padEnd(9), clave.padEnd(12), 'scroll', String(m.scroll).padStart(4), 'sobra', String(m.sobra).padStart(4), 'arriba', m.arriba, m.pct + '%', 'esc', m.escuchar ? 1 : 0, 'nota', m.nota ? 1 : 0, 'filas', m.filaSenal, m.filaFondo, 'pisa', m.tapa.length ? m.tapa.join(' ; ') : 'nada', m.errores.length ? 'ERR ' + m.errores.join(' | ') : '');
       }
     }
   } finally {

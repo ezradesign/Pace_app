@@ -1,0 +1,102 @@
+<title>Escuchar sin tapar nada</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Una columna de lectura: lo que cambió, la recomendación, y cada opción con su detalle a tamaño real, sus seis fotos en tira y sus cifras. */
+:root {
+  --papel: #f3eee3; --hoja: #fbf8f1; --tinta: #2c2a24; --tinta-2: #6a6457; --linea: #d9d1bf;
+  --oliva: #4f5d45; --terracota: #a45a3c; --oliva-suave: #e3e6d6; --terracota-suave: #f3e1d7;
+  --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --papel: #1d1a14; --hoja: #26221b; --tinta: #ece5d6; --tinta-2: #b3aa98; --linea: #423b2f;
+  --oliva: #a9b796; --terracota: #e0a080; --oliva-suave: #2f3528; --terracota-suave: #3a2a22; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --papel: #1d1a14; --hoja: #26221b; --tinta: #ece5d6; --tinta-2: #b3aa98; --linea: #423b2f;
+  --oliva: #a9b796; --terracota: #e0a080; --oliva-suave: #2f3528; --terracota-suave: #3a2a22; color-scheme: dark }
+body { background: var(--papel); color: var(--tinta); font: 17px/1.55 var(--sans);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 56px; }
+main { max-width: 760px; margin: 0 auto; display: grid; gap: 44px; }
+h1, h2 { font-family: var(--serif); font-style: italic; font-weight: 600; text-wrap: balance; margin: 0; }
+h1 { font-size: 2.3rem; line-height: 1.1; }
+h2 { font-size: 1.7rem; line-height: 1.15; }
+p { margin: 0; max-width: 62ch; }
+.etiqueta { font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--tinta-2); }
+.estado { justify-self: start; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; padding: 3px 10px; border-radius: 99px; background: var(--hoja); color: var(--tinta-2); border: 1px solid var(--linea); }
+.estado.si { background: var(--oliva-suave); color: var(--oliva); border-color: transparent; }
+header, section { display: grid; gap: 14px; }
+.reco { background: var(--hoja); border: 1px solid var(--linea); border-radius: 12px; padding: 18px 20px; display: grid; gap: 10px; }
+.reco h2 { font-size: 1.45rem; }
+.detalles { display: flex; flex-wrap: wrap; gap: 12px; }
+.detalles figure { flex: 0 1 324px; }
+.tira { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 6px; align-items: flex-start; }
+.tira figure { flex: 0 0 160px; }
+figure { margin: 0; display: grid; gap: 6px; min-width: 0; }
+figure img { width: 100%; height: auto; border: 1px solid var(--linea); border-radius: 10px; display: block; }
+figcaption { font-size: .85rem; color: var(--tinta-2); line-height: 1.35; }
+figcaption b { color: var(--tinta); font-weight: 600; }
+.cifras { font-size: .92rem; color: var(--tinta-2); }
+.cifras b { color: var(--tinta); font-weight: 600; }
+.tabla { overflow-x: auto; }
+table { border-collapse: collapse; font-size: .92rem; font-variant-numeric: tabular-nums; min-width: 600px; }
+th, td { text-align: left; padding: 7px 12px 7px 0; border-bottom: 1px solid var(--linea); vertical-align: top; }
+th { font-weight: 600; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--tinta-2); }
+td.mal { color: var(--terracota); font-weight: 600; }
+td.bien { color: var(--oliva); }
+.pie { font-size: .9rem; color: var(--tinta-2); display: grid; gap: 8px; }
+code { font-size: .88em; }
+</style>
+
+<main>
+  <header>
+    <span class="etiqueta">Caza de lo nuevo · 6A · segunda vuelta</span>
+    <h1>«Escuchar», sin tapar nada</h1>
+    <p>El aviso de la música de la A se ponía encima de otras opciones. Aquí van tres formas en las que nada tapa nada y los Ajustes no piden scroll en ningún móvil. Las tres dejan «Escuchar ›» donde lo viste, a la derecha de «Oír»: al tocarlo suena lo que tengas en «Marca la fase». Cambia solo qué se hace con la frase de la música.</p>
+  </header>
+
+  <div class="reco">
+    <span class="etiqueta">Lo que recomiendo</span>
+    <h2>La A2: la frase de la música en la línea pequeña de «Suena detrás»</h2>
+    <p>Es la única que da las dos cosas en todos los móviles, el tuyo incluido, sin tapar nada y sin que la hoja crezca. La frase está siempre a la vista, junto a la fila de la que habla, igual que «Mueve» va bajo «Descanso entre series».</p>
+    <p>Lo que cuesta: para caber en el alto de la fila, su letra es un punto más pequeña que la de esas otras líneas. La A1 deja la música sin explicar en ningún sitio, y la A3 no la enseña en tu móvil.</p>
+  </div>
+
+  <section>
+    <span class="estado">Opción A1</span>
+    <h2>Solo «Escuchar ›»</h2>
+    <p>«Escuchar ›» a la derecha de «Oír», y nada más. Los Ajustes no dicen dónde suena la música: quien elija «Música» y no la oiga en Foco no tiene nada que le diga por qué. Explicarlo dentro de Respira sería un cambio aparte, en otra pantalla, y no está pintado aquí.</p>
+    <div class="detalles">{{DETALLES_A1}}</div>
+    <div class="tira">{{FOTOS_A1}}</div>
+    <p class="cifras">{{CIFRAS_A1}}</p>
+  </section>
+
+  <section>
+    <span class="estado si">Opción A2 · recomendada</span>
+    <h2>«La música, solo en Respira» bajo «Suena detrás»</h2>
+    <p>«Escuchar ›» a la derecha de «Oír», y debajo del nombre «Suena detrás», en pequeño, «La música, solo en Respira» (en inglés, «Music plays only in Breathe»). Sale siempre, elijas lo que elijas, y no tapa nada: va en el hueco que deja el nombre, a la izquierda de los botones. Cabe en es y en en a 360 px de ancho sin partirse en dos líneas.</p>
+    <div class="detalles">{{DETALLES_A2}}</div>
+    <div class="tira">{{FOTOS_A2}}</div>
+    <p class="cifras">{{CIFRAS_A2}}</p>
+  </section>
+
+  <section>
+    <span class="estado">Opción A3</span>
+    <h2>La frase de la música, solo en móviles altos</h2>
+    <p>«Escuchar ›» siempre. La línea «La música suena solo en Respira», debajo de los botones de «Suena detrás», solo en móviles de 780 px de alto o más y en el ordenador. A 640 y a 730 no sale, así que en tu móvil se vería como la A1.</p>
+    <div class="detalles">{{DETALLES_A3}}</div>
+    <div class="tira">{{FOTOS_A3}}</div>
+    <p class="cifras">{{CIFRAS_A3}}</p>
+  </section>
+
+  <section>
+    <span class="etiqueta">Lo que sobra o falta, medido</span>
+    <div class="tabla">{{TABLA}}</div>
+    <p class="cifras">«Sobra» es lo que la hoja aún podría crecer sin pedir scroll; si faltara algo, habría que deslizar. El tope del 79 % se mide en tu móvil, a 360 × 730 en Android. «¿Tapa algo?» lo mide la app: busca si «Escuchar ›» o la frase de la música caen encima de cualquier botón, nombre o título. Con el aviso de la A daba «sí» ({{AVISO_PISA}}). Castellano e inglés dan lo mismo en todas las medidas.</p>
+  </section>
+
+  <div class="pie">
+    <p>Fotos y medidas de la app compilada, a 360 px de ancho, como en Android (con la fila de «Alarmas y recordatorios», que es la más alta), con «Música» recién elegida. Los detalles son la sección «Oír» a 360 × 640, a tamaño real. En el ordenador (1280 × 800, 1280 × 720 y 1536 × 710) caben las tres, y las 40 pruebas de Ajustes pasan con cada una.</p>
+    <p>Ramas: <code>claude/caza-nuevo-8nov-6a-a1</code>, <code>-a2</code> y <code>-a3</code>. Ninguna lleva prueba propia todavía: la que elijas se monta con la suya.</p>
+  </div>
+</main>
