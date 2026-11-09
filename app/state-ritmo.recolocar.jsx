@@ -203,7 +203,8 @@ function ritmoFocoEmpezo() {
   try {
     var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
     if (!v) return null;
-    if (v.endsAt && v.endsAt > Date.now()) return v.endsAt - (Number(v.minutes) || 0) * 60000;
+    /* en marcha, la hora guardada (con sus pausas); si la guardó una versión de antes, el final menos la duración */
+    if (v.endsAt && v.endsAt > Date.now()) return typeof v.inicio === 'number' && v.inicio <= v.endsAt ? v.inicio : v.endsAt - (Number(v.minutes) || 0) * 60000;
     return v.pausaMs > 0 && v.dia === new Date().toDateString() ? (v.inicio || null) : null;
   } catch (e) { return null; }
 }

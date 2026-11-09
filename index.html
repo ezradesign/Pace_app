@@ -13924,7 +13924,8 @@ function ritmoFocoEmpezo() {
   try {
     var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
     if (!v) return null;
-    if (v.endsAt && v.endsAt > Date.now()) return v.endsAt - (Number(v.minutes) || 0) * 60000;
+
+    if (v.endsAt && v.endsAt > Date.now()) return typeof v.inicio === 'number' && v.inicio <= v.endsAt ? v.inicio : v.endsAt - (Number(v.minutes) || 0) * 60000;
     return v.pausaMs > 0 && v.dia === new Date().toDateString() ? v.inicio || null : null;
   } catch (e) {return null;}
 }
@@ -24488,6 +24489,8 @@ function maybeNotifyFocusEnd(opts) {
 
 
 
+
+
 function loadPersistedFocusTimer(focusMode, focusMinutes) {
   try {
     const raw = localStorage.getItem(PACE_TIMER_KEY);
@@ -24498,8 +24501,9 @@ function loadPersistedFocusTimer(focusMode, focusMinutes) {
     const casa = saved && saved.mode === 'foco' && focusMode === 'foco' && saved.minutes === focusMinutes;
     const id = casa && typeof saved.id === 'string' ? saved.id : null;
     if (casa && typeof saved.endsAt === 'number' && saved.endsAt - ahora <= durMs) {
-      if (saved.endsAt > ahora) return { endsAt: saved.endsAt, id };
-      if (new Date(saved.endsAt).toDateString() === hoy) return { endsAt: saved.endsAt, id, vencido: true };
+      const inicio = focoInicioGuardado(saved.inicio, saved.endsAt, durMs);
+      if (saved.endsAt > ahora) return { endsAt: saved.endsAt, id, inicio };
+      if (new Date(saved.endsAt).toDateString() === hoy) return { endsAt: saved.endsAt, id, inicio, vencido: true };
     }
     if (casa && typeof saved.pausaMs === 'number' && saved.pausaMs > 0 && saved.pausaMs <= durMs && saved.dia === hoy) {
       return { pausaMs: saved.pausaMs, id, inicio: typeof saved.inicio === 'number' ? saved.inicio : null };
@@ -24515,12 +24519,21 @@ function loadPersistedFocusTimer(focusMode, focusMinutes) {
 
 
 
+function focoInicioGuardado(inicio, endsAt, durMs) {
+  return typeof inicio === 'number' && isFinite(inicio) && inicio > 0 && inicio <= endsAt - durMs + 1000 ? inicio : null;
+}
+
+
+
+
+
 
 function persistFocusTimer(runningFoco, endsAt, minutes, id, pausaMs, inicio) {
   try {
     const base = id ? { mode: 'foco', minutes, id } : { mode: 'foco', minutes };
     if (runningFoco && endsAt) {
-      localStorage.setItem(PACE_TIMER_KEY, JSON.stringify(Object.assign({ endsAt }, base)));
+      const desde = focoInicioGuardado(inicio, endsAt, (Number(minutes) || 0) * 60 * 1000);
+      localStorage.setItem(PACE_TIMER_KEY, JSON.stringify(Object.assign({ endsAt }, desde ? { inicio: desde } : {}, base)));
     } else if (typeof pausaMs === 'number' && pausaMs > 0) {
       localStorage.setItem(PACE_TIMER_KEY, JSON.stringify(Object.assign({ pausaMs, dia: new Date().toDateString(), inicio: inicio || null }, base)));
     } else {
@@ -24760,9 +24773,9 @@ Object.assign(window, {
   curvaSuave, curvaCaida, focusStyles,
 
   getFocusDescriptorKey, maybeNotifyFocusEnd, maybeRequestNotifyPermission,
-  loadPersistedFocusTimer, persistFocusTimer, olvidarFocoGuardado
+  loadPersistedFocusTimer, persistFocusTimer, focoInicioGuardado, olvidarFocoGuardado
 });
-;Object.assign(window, { getFocusDescriptorKey, maybeRequestNotifyPermission, maybeNotifyFocusEnd, loadPersistedFocusTimer, persistFocusTimer, olvidarFocoGuardado, curvaSuave, curvaCaida, focoElapsedSec, _paceFocoEmpezado, paceFocoEmpezadoPon, paceFocoEmpezado, usePaceFocoEmpezado, _pacePausaLleva, pacePausaEmpezadaPon, pacePausaLleva });
+;Object.assign(window, { getFocusDescriptorKey, maybeRequestNotifyPermission, maybeNotifyFocusEnd, loadPersistedFocusTimer, focoInicioGuardado, persistFocusTimer, olvidarFocoGuardado, curvaSuave, curvaCaida, focoElapsedSec, _paceFocoEmpezado, paceFocoEmpezadoPon, paceFocoEmpezado, usePaceFocoEmpezado, _pacePausaLleva, pacePausaEmpezadaPon, pacePausaLleva });
 })();
 </script>
   <!-- Piezas de UI del Pomodoro (s124): MinutesPicker extraído. Declara sus
@@ -25403,7 +25416,8 @@ function useFocoPestanas(o) {
       if (m.minutos !== u.minutos) {pendienteRef.current = m;return;}
       pendienteRef.current = null;
       u.bloqueRef.current = m.id;
-      u.inicioRef.current = m.endsAt - u.minutos * 60 * 1000;
+
+      u.inicioRef.current = focoInicioGuardado(m.inicio, m.endsAt, u.minutos * 60 * 1000) || m.endsAt - u.minutos * 60 * 1000;
       u.seguir(m.endsAt);
     } else if (m.id && m.id === u.bloqueRef.current) {
       if (m.tipo === 'pausa') u.congelar(m.restanteMs);else
@@ -30895,9 +30909,8 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
 
-
     if (g && g.endsAt) {
-      inicioBloqueRef.current = g.endsAt - durationSec * 1000;
+      inicioBloqueRef.current = g.inicio || g.endsAt - durationSec * 1000;
       bloqueRef.current = g.id || 'e' + g.endsAt;
       restore(g.endsAt);
     } else if (g && g.pausaMs) {
@@ -30922,7 +30935,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   useEffectFT(() => {
     if (!avisarCorreRef.current || !running || !endsAt) return;
     avisarCorreRef.current = false;
-    if (state.focusMode === 'foco') avisarPestanas({ tipo: 'corre', id: bloqueRef.current, endsAt });
+    if (state.focusMode === 'foco') avisarPestanas({ tipo: 'corre', id: bloqueRef.current, endsAt, inicio: inicioBloqueRef.current });
   }, [running, endsAt]);
 
   const completadoRef = useRefFT(null);

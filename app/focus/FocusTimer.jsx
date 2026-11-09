@@ -114,12 +114,11 @@ function FocusTimer({ onFinish }) {
     if (restoredRef.current) return;
     restoredRef.current = true;
     const g = loadPersistedFocusTimer(state.focusMode, state.focusMinutes);
-    /* Reanudado tras recargar: el inicio real se fue con la pestaña y se DERIVA
-       del final guardado — estimacion que ignora las pausas previas, por eso no
-       toca `activeSeconds`, que sigue siendo exacto. Si ya venció, `restore` lo
-       completa y lo cuenta en el acto. */
+    /* Reanudado tras recargar: el inicio guardado con él, con sus pausas dentro. Solo si lo
+       guardó una versión de antes (sin `inicio`) se DERIVA del final, una estimación que ignora
+       las pausas previas. Si ya venció, `restore` lo completa y lo cuenta en el acto. */
     if (g && g.endsAt) {
-      inicioBloqueRef.current = g.endsAt - durationSec * 1000;
+      inicioBloqueRef.current = g.inicio || g.endsAt - durationSec * 1000;
       bloqueRef.current = g.id || ('e' + g.endsAt);
       restore(g.endsAt);
     } else if (g && g.pausaMs) {
@@ -144,7 +143,7 @@ function FocusTimer({ onFinish }) {
   useEffectFT(() => {
     if (!avisarCorreRef.current || !running || !endsAt) return;
     avisarCorreRef.current = false;
-    if (state.focusMode === 'foco') avisarPestanas({ tipo: 'corre', id: bloqueRef.current, endsAt });
+    if (state.focusMode === 'foco') avisarPestanas({ tipo: 'corre', id: bloqueRef.current, endsAt, inicio: inicioBloqueRef.current });
   }, [running, endsAt]);
   /* La home del día nuevo (Ez, 3A del 7 nov. 2026): el «Ciclo completado» de un Foco de ayer se recoge al cambiar de día. */
   const completadoRef = useRefFT(null);

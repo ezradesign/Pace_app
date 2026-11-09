@@ -1,0 +1,162 @@
+/* Fotos para la página de 4, 6 y 7 (no es una prueba: se copia a tests/, se corre y se borra). */
+'use strict';
+const { test } = require('@playwright/test');
+const { sembrar, irAlArtefacto, esperarModalAsentado } = require('./helpers');
+const fs = require('fs'), path = require('path');
+const OUT = process.env.PINTAR_OUT;
+
+const JUEVES = new Date('2026-10-15T13:16:00+02:00');
+const BASE = {
+  cycle: 5, lastActiveDay: 'Thu Oct 15 2026', soundOn: false,
+  _historyMigrated: true, _weeklyStatsReindexed_v0_28_8: true, _historyRecalculated_v0_28_8: true,
+  water: { goal: 8, today: 5, lastReset: null },
+  achievements: { 'first.step': { unlockedAt: 1 } },
+  weeklyStats: {
+    focusMinutes: [210, 165, 240, 225, 0, 0, 0], breathMinutes: [9, 6, 12, 6, 0, 0, 0],
+    moveMinutes: [14, 10, 8, 11, 0, 0, 0], waterGlasses: [7, 6, 8, 5, 0, 0, 0], holdSeconds: [0, 0, 0, 0, 0, 0, 0],
+  },
+};
+const DIA = { fecha: '2026-10-15', opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {}, pausa: 5,
+  estados: { 1: 'hecha', 2: 'hecha', 3: 'hecha', 4: 'saltada' } };
+const ANCHOS = { m: { width: 360, height: 740 }, d: { width: 1280, height: 720 } };
+
+async function foto(page, nombre) {
+  fs.writeFileSync(path.join(OUT, nombre + '.jpg'), await page.screenshot({ type: 'jpeg', quality: 55 }));
+}
+
+async function hoy(page, context, ancho) {
+  await page.setViewportSize(ANCHOS[ancho]);
+  await sembrar(context, Object.assign({}, BASE, { ritmo: { dia: DIA } }));
+  await page.clock.install({ time: JUEVES });
+  await irAlArtefacto(page);
+  await page.evaluate(() => document.fonts && document.fonts.ready);
+  await page.getByRole('button', { name: 'Ver estadísticas' }).click();
+  await page.locator('[data-pace-stats-vistas]').waitFor({ state: 'visible' });
+  await esperarModalAsentado(page);
+  await page.waitForTimeout(300);
+}
+
+/* 7 · lo que dice una pausa hecha. */
+const SIETE = {
+  A: ['Hecha · 2 min', 'Hecha · 4 min', 'Hecha · 3 min'],
+  B: ['Hecha', 'Hecha', 'Hecha'],
+  C: ['Hecha · 2 de 5 min', 'Hecha · 4 de 5 min', 'Hecha · 3 de 15 min'],
+};
+for (const [op, textos] of Object.entries(SIETE)) {
+  for (const ancho of (op === 'A' ? ['m', 'd'] : ['m'])) {
+    test('7' + op + ancho, async ({ page, context }) => {
+      await hoy(page, context, ancho);
+      await page.evaluate((tx) => {
+        const hechas = [...document.querySelectorAll('[data-pace-hoy-parada="hecha"] .pace-sh-m')];
+        hechas.forEach((m, i) => { const h = m.querySelector('.pace-sh-h'); m.textContent = ''; m.appendChild(h); m.append(' · ' + tx[i % tx.length]); });
+        const r = document.querySelector('[data-pace-hoy-rejilla]');
+        r.scrollIntoView({ block: 'start' });
+      }, textos);
+      await page.waitForTimeout(150);
+      await foto(page, '7' + op + '-' + ancho);
+    });
+  }
+}
+
+/* 6 · lo hecho por tu cuenta con el día elegido. */
+for (const op of ['A', 'B', 'C']) {
+  for (const ancho of (op === 'A' ? ['m', 'd'] : ['m'])) {
+    test('6' + op + ancho, async ({ page, context }) => {
+      await hoy(page, context, ancho);
+      await page.evaluate((op) => {
+        const rej = document.querySelector('[data-pace-hoy-rejilla]');
+        const cards = [...rej.querySelectorAll('[data-pace-hoy-parada]')];
+        const molde = cards.find((c) => c.dataset.paceHoyParada === 'hecha') || cards[0];
+        const suelta = (hora, meta, fuente) => {
+          const c = (fuente || molde).cloneNode(true);
+          c.className = 'pace-sh-t pace-sh-hecha';
+          c.dataset.paceHoyParada = 'hecha';
+          const m = c.querySelector('.pace-sh-m'); const h = m.querySelector('.pace-sh-h');
+          h.textContent = hora; m.textContent = ''; m.appendChild(h); m.append(' · ' + meta);
+          return c;
+        };
+        const otra = cards.find((c) => c !== molde && c.dataset.paceHoyParada === 'hecha' && c.querySelector('.pace-sh-n').textContent !== molde.querySelector('.pace-sh-n').textContent) || cards[1];
+        const cab = document.querySelector('.pace-sh-cab');
+        if (op === 'A') {
+          const cab2 = cab.cloneNode(true);
+          cab2.style.marginTop = '18px';
+          const meta = cab2.querySelector('*'); meta.textContent = 'Además, por tu cuenta';
+          [...cab2.children].slice(1).forEach((x) => x.remove());
+          const rej2 = rej.cloneNode(false);
+          rej2.appendChild(suelta('8:50', '2 min', molde));
+          rej2.appendChild(suelta('11:20', '4 min', otra));
+          rej.after(cab2); cab2.after(rej2);
+          cab2.scrollIntoView({ block: 'center' });
+        } else if (op === 'B') {
+          rej.insertBefore(suelta('8:50', 'Por tu cuenta · 2 min', molde), rej.firstChild);
+          const tras = [...rej.children].find((c) => /^1[0-2]:/.test(c.querySelector('.pace-sh-h').textContent)) || null;
+          rej.insertBefore(suelta('11:20', 'Por tu cuenta · 4 min', otra), tras);
+          rej.scrollIntoView({ block: 'start' });
+        } else {
+          const linea = document.createElement('button');
+          linea.type = 'button'; linea.className = 'pace-rt-enlace';
+          linea.style.cssText = 'display:block;margin:6px 0 10px;';
+          linea.textContent = 'Y 2 sesiones por tu cuenta · 6 min ›';
+          cab.after(linea);
+          cab.scrollIntoView({ block: 'start' });
+        }
+      }, op);
+      await page.waitForTimeout(150);
+      await foto(page, '6' + op + '-' + ancho);
+    });
+  }
+}
+
+/* 4 · «Cambiar» con un Foco en marcha. Jornada a las 9:00, el bloque 1 lleva 10 min. */
+const HOY4 = '2026-10-14';
+const JORNADA = { fecha: HOY4, opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} };
+async function enMarcha(page, context, ancho) {
+  await page.setViewportSize(ANCHOS[ancho]);
+  await sembrar(context, { ritmo: { dia: JORNADA }, soundOn: false, achievements: { 'first.step': { unlockedAt: 1 } } });
+  await page.clock.install({ time: new Date(HOY4 + 'T09:00:00+02:00') });
+  await irAlArtefacto(page);
+  await page.waitForTimeout(300);
+  await page.getByRole('button', { name: 'Empezar jornada', exact: true }).filter({ visible: true }).first().click();
+  await page.waitForTimeout(250);
+  await page.clock.fastForward(10 * 60 * 1000);
+  await page.waitForTimeout(300);
+}
+for (const op of ['A', 'B', 'C']) {
+  for (const ancho of ['m', 'd']) {
+    if (op !== 'A' && ancho === 'm' && op === 'C') continue;
+    test('4' + op + ancho, async ({ page, context }) => {
+      await enMarcha(page, context, ancho);
+      if (op === 'A') {
+        /* La pregunta de la barra de arriba (la de cambiar de modo con un Foco empezado), con sus textos. */
+        await page.getByRole('button', { name: 'Pausa', exact: true }).filter({ visible: true }).first().click();
+        await page.waitForTimeout(400);
+        fs.writeFileSync(path.join(OUT, '4A-' + ancho + '.txt'), await page.evaluate(() => {
+          const m = [...document.querySelectorAll('[data-pace-modal-backdrop]')].pop();
+          return m ? m.innerHTML.slice(0, 3000) : 'SIN MODAL';
+        }));
+        await page.evaluate(() => {
+          const m = [...document.querySelectorAll('[data-pace-modal-backdrop]')].pop();
+          if (!m) return;
+          const hojas = [...m.querySelectorAll('*')].filter((e) => e.children.length === 0 && e.textContent.trim() && e.tagName !== 'BUTTON' && !e.closest('button'));
+          if (hojas[0]) hojas[0].textContent = 'Llevas 10 min de este bloque';
+          if (hojas[1]) hojas[1].textContent = 'Si cambias el día ahora, el bloque se pierde. ¿Lo terminas primero?';
+          hojas.slice(2).forEach((e) => { e.textContent = ''; });
+          const bs = [...m.querySelectorAll('button')].filter((b) => b.textContent.trim());
+          if (bs[0]) bs[0].textContent = 'Seguir con el bloque';
+          if (bs[1]) bs[1].textContent = 'Cambiar y dejarlo';
+        });
+      } else if (op === 'B') {
+        await page.evaluate(() => { ritmoPreguntar(); ritmoElegir('1h'); });
+        await page.waitForTimeout(500);
+      } else {
+        await page.evaluate(() => {
+          [...document.querySelectorAll('.pace-rt-enlace')].filter((b) => b.textContent.trim() === 'Cambiar').forEach((b) => {
+            b.textContent = 'Cambiar, al acabar el bloque'; b.style.opacity = '0.5'; b.style.cursor = 'default'; b.disabled = true;
+          });
+        });
+      }
+      await page.waitForTimeout(150);
+      await foto(page, '4' + op + '-' + ancho);
+    });
+  }
+}

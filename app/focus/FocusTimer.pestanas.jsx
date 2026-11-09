@@ -140,7 +140,8 @@ function useFocoPestanas(o) {
       if (m.minutos !== u.minutos) { pendienteRef.current = m; return; }
       pendienteRef.current = null;
       u.bloqueRef.current = m.id;
-      u.inicioRef.current = m.endsAt - u.minutos * 60 * 1000;
+      /* La hora de empezar viaja con el aviso; de una pestaña con la versión de antes, el final menos la duración. */
+      u.inicioRef.current = focoInicioGuardado(m.inicio, m.endsAt, u.minutos * 60 * 1000) || m.endsAt - u.minutos * 60 * 1000;
       u.seguir(m.endsAt);
     } else if (m.id && m.id === u.bloqueRef.current) {
       if (m.tipo === 'pausa') u.congelar(m.restanteMs);
