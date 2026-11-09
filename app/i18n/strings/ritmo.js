@@ -374,7 +374,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.st.jornada':              '{nombre} from {inicio} to {salida}, lunch at {comida}',
     'ritmo.st.jornada.sin':          '{nombre} from {inicio} to {salida}, no lunch break',
     'ritmo.st.media':                '{nombre} from {mediaInicio} to {mediaSalida}',
-    'ritmo.st.libre':                '{nombre}, no plan: PACE leaves you be',
+    'ritmo.st.libre':                '{nombre}: PACE leaves you be',
     'ritmo.st.saltar':               'Every week is different',
     'ritmo.st.ahoraNo':              'Not now, I’ll try it first',
     'ritmo.st.ahoraNo.nota':         'You can set it up later in Settings.',

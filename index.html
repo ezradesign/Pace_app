@@ -4317,7 +4317,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.st.jornada': '{nombre} from {inicio} to {salida}, lunch at {comida}',
   'ritmo.st.jornada.sin': '{nombre} from {inicio} to {salida}, no lunch break',
   'ritmo.st.media': '{nombre} from {mediaInicio} to {mediaSalida}',
-  'ritmo.st.libre': '{nombre}, no plan: PACE leaves you be',
+  'ritmo.st.libre': '{nombre}: PACE leaves you be',
   'ritmo.st.saltar': 'Every week is different',
   'ritmo.st.ahoraNo': 'Not now, I’ll try it first',
   'ritmo.st.ahoraNo.nota': 'You can set it up later in Settings.',
@@ -30065,6 +30065,8 @@ function LibraryShell(_ref)
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
   const [activos, setActivos] = useStateLib([]);
   const [vista, setVista] = useStateLib('catalogo');
+  const [lateral, setLateral] = useStateLib(null);
+  usePaceLateralPegado(lateral);
   usePace();
 
 
@@ -30261,7 +30263,7 @@ function LibraryShell(_ref)
 
 
 
-    React.createElement("aside", { className: "pace-lib-lateral" },
+    React.createElement("aside", { className: "pace-lib-lateral", ref: setLateral },
     React.createElement("p", { className: "pace-lib-lateral-tit" }, t('lib.filter.title')),
     chips,
 
@@ -30318,8 +30320,35 @@ function LibraryShell(_ref)
 
 }
 
+
+
+
+
+
+
+
+function usePaceLateralPegado(lat) {
+  useLayoutEffectLib(() => {
+    if (!lat || typeof ResizeObserver === 'undefined') return undefined;
+    let sc = lat.parentElement;
+    while (sc && !/(auto|scroll)/.test(getComputedStyle(sc).overflowY)) sc = sc.parentElement;
+    if (!sc) return undefined;
+    const poner = () => {
+      const cs = getComputedStyle(sc);
+      const hueco = sc.clientHeight - (parseFloat(cs.paddingTop) || 0) - (parseFloat(cs.paddingBottom) || 0);
+      const sobra = lat.offsetHeight - hueco;
+      lat.style.top = sobra > 0 ? -sobra + 'px' : '';
+    };
+    poner();
+    const ro = new ResizeObserver(poner);
+    ro.observe(lat);
+    ro.observe(sc);
+    return () => {ro.disconnect();lat.style.top = '';};
+  }, [lat]);
+}
+
 Object.assign(window, { LibraryShell });
-;Object.assign(window, { LibraryShell });
+;Object.assign(window, { LibraryShell, usePaceLateralPegado });
 })();
 </script>
   <!-- Aquí se cargaba `library-transition.js`, la transición biblioteca ->

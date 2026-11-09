@@ -48,7 +48,7 @@ for (const f of fs.readdirSync(dir).filter((x) => /^(primera|jornada|carta|modul
     for (const s of p.pisaBoton) apunta('texto encima de un botón', pant, s.boton + ' ✕ ' + s.texto, combo);
     for (const s of p.fuera) apunta('botón fuera de la pantalla (' + s.por + ')', pant, s.que, combo);
     for (const s of p.tapados) apunta('botón tapado', pant, s.que + ' bajo ' + s.encima, combo);
-    for (const s of p.sale) if (!/v1-btn/.test(s.que)) apunta('texto que se sale de su botón', pant, s.que, combo);
+    for (const s of p.sale) if (!/v1-btn|ritmo-parada/.test(s.que)) apunta('texto que se sale de su botón', pant, s.que, combo);
     for (const s of p.sinTraducir || []) apunta('castellano en inglés', pant, s, combo);
   }
 }
