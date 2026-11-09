@@ -37,7 +37,7 @@ async function caso(id, n, ceja, titulo, escena, alt, antes, ahora, sinMovil) {
   cabeza = cabeza.replace(/<title>[^<]*<\/title>/, '<title>PACE · Montado</title>')
     .replace(/\/\* Una columna[\s\S]*?\*\//, '/* Una columna de lectura, como una hoja de PACE: cada cambio con la foto de antes y la de ahora,\n   en el ordenador y en el móvil, y una línea llana debajo. Paleta y letras de la app. */');
   cabeza += '.sola img { width: 100%; height: auto; }\n.marca { display: inline-block; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; margin-bottom: .4rem; color: var(--ink-3); }\n' +
-    'figure.despues .marca { color: var(--focus, #6b7a3a); }\nfigure + figure { margin-top: .75rem; }\n.sin-foto { font-size: .94rem; color: var(--ink-2); }\n</style>\n';
+    'figure.despues .marca { color: var(--focus, #6b7a3a); }\nfigure + figure { margin-top: .75rem; }\n.sin-foto { font-size: .94rem; color: var(--ink-2); }\n.hecho + .hecho { margin-top: 1rem; }\n.hecho strong { color: var(--ink); font-weight: 600; }\n</style>\n';
 
   const casos = [
     await caso('cierre', 1, 'al acabar la jornada · 1A y S3', 'El aro de cierre, limpio y con tus minutos', 'cierre',
@@ -71,10 +71,14 @@ async function caso(id, n, ceja, titulo, escena, alt, antes, ahora, sinMovil) {
   ];
   const cuerpo = '<main class="hoja"><header class="cabecera"><span class="ceja">PACE · Montado · 8 nov. 2026</span>' +
     '<h1>Lo que elegiste, ya en la app</h1>' +
-    '<p class="intro">Las nueve letras del 8 nov.: las cinco de quien abre PACE cada día que tocan esta rama (1A, 2A, 3A, 4A y 5A) y las cuatro de la caza de la semana (S3, S6, S7 y S11). Cada cambio que se ve, como estaba y como queda, en el ordenador y en el móvil. Van juntas a la 0.195.0, que sube la coordinadora.</p>' +
+    '<p class="intro">Las nueve letras del 8 nov.: las cinco de quien abre PACE cada día que tocan esta rama (1A, 2A, 3A, 4A y 5A) y las cuatro de la caza de la semana (S3, S6, S7 y S11), más dos arreglos de la revisión de ChatGPT. Cada cambio que se ve, como estaba y como queda, en el ordenador y en el móvil. Van juntas a la 0.195.0, que sube la coordinadora.</p>' +
     '<div class="hecho"><span class="ceja">Sin foto</span><ul>' +
     '<li>S6: la carta ya no propone «pasa a ser de 2 minutos» a una pausa que ya era de 2.</li>' +
     '<li>La 6 (oír la voz en Ajustes) la monta otra sesión, con lo que vio alguien nuevo.</li>' +
+    '</ul></div>' +
+    '<div class="hecho"><span class="ceja">Los dos arreglos de la revisión de ChatGPT · también sin foto</span><ul>' +
+    '<li><strong>La carta mira la siguiente pausa que saltas.</strong> Si la pausa que más saltabas, la de las 10:35, ya la habías acortado o le habías dicho que no, la carta se quedaba callada aunque saltaras otra, la de las 15:45. Ahora pasa a esa.</li>' +
+    '<li><strong>Un día que no se pudo guardar no se pierde.</strong> Si algo fallaba al guardar el resumen de un día, se daba por guardado y la carta del lunes nunca lo veía. Ahora se guarda una copia del día y se vuelve a intentar: sale una sola vez, con las rutinas que cambiaste con «Otra».</li>' +
     '</ul></div></header>' + casos.join('\n') +
     '<footer class="pie"><span>Antes: la 0.194.0. Ahora: la rama <code>claude/usabilidad-8nov-587b48</code>. Un ordenador de 1280 × 800 y un móvil de 360 × 800, con el reloj adelantado. Cada cambio tiene su prueba, que sale en rojo sin él.</span></footer></main>\n';
   fs.mkdirSync(path.dirname(SALIDA), { recursive: true });

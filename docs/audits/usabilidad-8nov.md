@@ -88,6 +88,19 @@ Pruebas: `ritmo-por-tu-cuenta`, `foco-libre-minutos`, `ritmo-comida-bloque`, `ri
 y pasos en `aro-jornada`, `aro-modo-identidad`, `ritmo-motor`, `home-hasta-semana`, `ritmo` y `ritmo-reloj`.
 Cada arreglo con su mutante en rojo (`ritmo.spec.js` «mientras esperas…» es el recibo de S11).
 
+Y los dos arreglos de la revisión de ChatGPT (Ez: «Sí, los dos»), cada uno con su prueba y su mutante:
+
+- **`motorCortas`**: lo ya acortado o rechazado se descarta dentro del recorrido de grupos; una pausa de
+  las 10:35 acortada ya no tapa a la de las 15:45 (`ritmo-motor`).
+- **Resumen que revienta**: no se marca `ritmo.resumido`; el día va a `ritmo.sinResumir` y
+  `ritmoResumirAhora` lo reintenta (`ritmo-resumen-fallo`, nueva; dos mutantes: el `catch` de antes y sin
+  reintento).
+
+Las cuatro rojas de la primera vuelta de la suite: dos de `ritmo-carta` eran S6 haciendo lo suyo (la
+rutina sembrada a las 15:45 duraba 2 min; ahora una de 3); la de `ritmo-otra-carta` era 4A: cuatro
+pruebas cerraban la ventana con el primer botón del pie, que ahora es «Ya la hice por mi cuenta», y
+pasan a pulsar «Ahora no»; la C2 del calendario pasa sola seis veces de seis (carga).
+
 ## Dónde me quedaba antes de las letras
 
 - Página publicada (BMLmjb9…) y este informe, en la rama. Espera las letras de Ez.
