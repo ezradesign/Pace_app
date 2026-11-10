@@ -1,3 +1,9 @@
+# Dónde me quedo · 10 nov. 2026, tarde
+
+La auditoría externa que trajo Ez (`externa-10nov.md`) está comprobada punto a punto en `externa-10nov-comprobado.md` (40 puntos: 18 nuevos, 4 hechos en ramas, 8 en la lista de Ez, 10 decididos, ninguno falso), y las dos están juntas en una sola cola, `cola.md`. La página se rehízo en la misma dirección (versión 2), con las fotos como archivos del artifact para que pese 20 KB: se genera con `node genera.js` y se publica pasando cada foto en `files` como `fotos/<nombre>.jpg`. Lo que falta por mirar sigue igual (abajo); de la externa, por probar, la altura de los enlaces de la bienvenida.
+
+---
+
 # Dónde me quedo · auditoría con Fable 5.2 · 10 nov. 2026, 9:20
 
 Segunda tanda: paré al 84 % de las 5 h (la ventana se renueva a las 13:50), con «Weekly · Fable» al 44 %. **Hechas las miradas
