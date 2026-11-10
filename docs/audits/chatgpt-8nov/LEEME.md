@@ -16,11 +16,12 @@ El 2 subió como «WIP:» por el uso, pero está terminado: verify en verde y la
 (158 pruebas) en verde salvo una que se pasó de tiempo al cerrar (`eventos-origen`, «el aro con plan»), que
 sola pasa. Sin versión, sin STATE ni CHANGELOG: eso lo pone la coordinadora al juntar.
 
-## La página de 4, 6 y 7 · dónde me quedo (9 nov., 23:40)
+## La página de 4, 6 y 7 · dónde me quedo (10 nov.)
 
-Hecha y SIN PUBLICAR: la sesión paró con el uso de las 5 h al 100 %. Está entera en
-`pagina-4-6-7.html` (405 KB, fotos dentro). Falta solo publicarla con la herramienta Artifact desde esa
-ruta (icono «checklist») y dar la dirección a Ez. Recomendadas: **4B, 6A, 7A**.
+Publicada en la cuenta de esta rama: **https://claude.ai/artifact/KZFDp3zNhk4JAFHr13ysxq** («Letras 4, 6 y
+7 de la jornada»). Desde la otra cuenta esa dirección da 404: se republica desde `pagina-4-6-7.html`
+(405 KB, con las fotos dentro). Recomendadas: **4B, 6A, 7A**. Lo que falta es la letra de Ez en cada
+punto y, después, montarlas.
 
 - Las fotos salen del guion corregido, `pintar-4-6-7.spec.js.txt` (14 fotos, todas miradas). Para
   rehacerlas: copiarlo a `tests/__pintar.spec.js`, correr con `PINTAR_OUT=<carpeta>
