@@ -26,6 +26,7 @@ const pares = [
   ['LzG1sfc4e9ygARg9MpC7Tz', '6DsS35xJXsmcZrdtZiXhoL'], // la web más bonita (versión 5, «Montada: la B»)
   ['C2uFSMM8eWhcRxpXLGWkAx', '2QnMBypqSRVJCmPeNJazZA'], // las dos auditorías de Fable, en una cola
   ['RQxiSzrKLUSAUYkDxcBZhU', 'KZFDp3zNhk4JAFHr13ysxq'], // ChatGPT, letras 4, 6 y 7 de la jornada
+  ['H5UgBuqz5VeGnETpixxi96', 'XbtnS5xak95y1iJ8iXhKdU'], // las decisiones del 10 nov., «Lo que espera tu letra»
 ];
 
 const [de, hacia] = a === 'EcLj6' ? [1, 0] : [0, 1];
