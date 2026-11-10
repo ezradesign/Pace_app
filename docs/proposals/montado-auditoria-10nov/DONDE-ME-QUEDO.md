@@ -1,3 +1,20 @@
+# Montar la auditoría · terminado (10 nov. 2026, noche)
+
+Todo montado en la rama `claude/montar-auditoria-10nov-3ef28c`; espera el «júntalo» de Ez. Página para Ez:
+https://claude.ai/artifact/CpnFEkENADXDVU7K7u8k5M (copia: `montado.html`, con las fotos de `fotos/`).
+
+| Pieza | Commit | Pruebas |
+|---|---|---|
+| D-5 B · el día de v1 se quedan solo las acabadas | 6d265a88 | `tests/paso-v1.spec.js` (10, una nueva); el mutante que vuelve a `sessionsByRoutine` la pone en rojo |
+| D-4 C · el repo no dice dónde viven las llaves ni el detalle del fallo de cobro abierto | 7b4a964e | `verify`; lo ya subido sigue en el historial de git, y la rama `guardar-atomico` es pública |
+| Fotos de después de Ajustes, bienvenida e invitación, y la página | el de este archivo | 16 medidas: nada pisa, nada fuera, sin scroll |
+
+No se monta 3A (la línea de los lunes): espera su maqueta de móvil.
+
+---
+
+Lo que sigue es el plan de la sesión anterior, ya cumplido.
+
 # Montar la auditoría · dónde me quedo (10 nov. 2026, ~22:20, cuenta EcLj6)
 
 Parada por uso: 5 h al 82 % (regla del encargo: parar al 85 %). Rama `claude/montar-auditoria-10nov-3ef28c`,

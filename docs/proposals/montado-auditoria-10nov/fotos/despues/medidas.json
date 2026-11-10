@@ -158,5 +158,165 @@
   "scroll": 0,
   "fondo": 670,
   "alto": 710
+ },
+ {
+  "fase": "despues",
+  "foto": "ajustes-360-es-claro",
+  "botones": 9,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 702,
+  "alto": 740
+ },
+ {
+  "fase": "despues",
+  "foto": "ajustes-360-es-oscuro",
+  "botones": 9,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 702,
+  "alto": 740
+ },
+ {
+  "fase": "despues",
+  "foto": "ajustes-360-en-claro",
+  "botones": 9,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 702,
+  "alto": 740
+ },
+ {
+  "fase": "despues",
+  "foto": "ajustes-360-en-oscuro",
+  "botones": 9,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 702,
+  "alto": 740
+ },
+ {
+  "fase": "despues",
+  "foto": "ajustes-1536-es-claro",
+  "botones": 9,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 651,
+  "alto": 710
+ },
+ {
+  "fase": "despues",
+  "foto": "ajustes-1536-es-oscuro",
+  "botones": 9,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 651,
+  "alto": 710
+ },
+ {
+  "fase": "despues",
+  "foto": "ajustes-1536-en-claro",
+  "botones": 9,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 651,
+  "alto": 710
+ },
+ {
+  "fase": "despues",
+  "foto": "ajustes-1536-en-oscuro",
+  "botones": 9,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 651,
+  "alto": 710
+ },
+ {
+  "fase": "despues",
+  "foto": "bienvenida-360-es-claro",
+  "botones": 2,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 569,
+  "alto": 740
+ },
+ {
+  "fase": "despues",
+  "foto": "bienvenida-360-en-claro",
+  "botones": 2,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 569,
+  "alto": 740
+ },
+ {
+  "fase": "despues",
+  "foto": "bienvenida-1536-es-claro",
+  "botones": 2,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 548,
+  "alto": 710
+ },
+ {
+  "fase": "despues",
+  "foto": "bienvenida-1536-en-claro",
+  "botones": 2,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 537,
+  "alto": 710
+ },
+ {
+  "fase": "despues",
+  "foto": "invitacion-360-es-claro",
+  "botones": 3,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 703,
+  "alto": 740
+ },
+ {
+  "fase": "despues",
+  "foto": "invitacion-360-en-claro",
+  "botones": 3,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 703,
+  "alto": 740
+ },
+ {
+  "fase": "despues",
+  "foto": "invitacion-1536-es-claro",
+  "botones": 3,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 550,
+  "alto": 710
+ },
+ {
+  "fase": "despues",
+  "foto": "invitacion-1536-en-claro",
+  "botones": 3,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 550,
+  "alto": 710
  }
 ]
