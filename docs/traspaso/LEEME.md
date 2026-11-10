@@ -4,6 +4,12 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de noviembre de 2026, ~15:15, v0.196.0.
 
+## 10 nov., ~15:35: Ez eligió la B para la web y ya está montada en su rama
+
+- **Ez: «Me gusta la B la verdad».** Montada en `claude/landing-c-9nov` (769ea1b8, con `main` 0.196.0 ya dentro: 3c6f39db): la B, «Una jornada», en `landing/`, `premium/` y `beta/`; verify y las 59 pruebas de las tres páginas en verde, según la sesión. Las letras 3, 4 y 5, las recomendadas; la 2 (capturas en oscuro) se está rehaciendo. La página 6DsS35xJXsmcZrdtZiXhoL lleva arriba «Montada: la B».
+- **Falta el «júntalo» de Ez.** Al juntar: la suite entera con la landing y la B dentro, bump, CHANGELOG y fila en DECISIONES si no la lleva.
+- Uso a las 15:35: 5 h al 72 % (se reponen a las 20:00), «Weekly · Fable» al 60 %: la coordinadora, lo mínimo.
+
 ## AL RELEVO (10 nov., ~15:15): nada en marcha; dos páginas terminadas esperan a Ez. Empieza aquí; manda sobre todo lo de abajo
 
 Ez siguió en 5iWBf por la tarde y trajo una auditoría externa hecha en claude.ai con Fable. `main` = 0.196.0, sin nada por
