@@ -1,0 +1,162 @@
+[
+ {
+  "fase": "despues",
+  "foto": "cierre-libre-360-es-claro",
+  "botones": 7,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 716,
+  "alto": 740
+ },
+ {
+  "fase": "despues",
+  "foto": "cierre-libre-360-es-oscuro",
+  "botones": 7,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 716,
+  "alto": 740
+ },
+ {
+  "fase": "despues",
+  "foto": "cierre-libre-360-en-claro",
+  "botones": 7,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 716,
+  "alto": 740
+ },
+ {
+  "fase": "despues",
+  "foto": "cierre-libre-360-en-oscuro",
+  "botones": 7,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 716,
+  "alto": 740
+ },
+ {
+  "fase": "despues",
+  "foto": "cierre-libre-1536-es-claro",
+  "botones": 7,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 670,
+  "alto": 710
+ },
+ {
+  "fase": "despues",
+  "foto": "cierre-libre-1536-es-oscuro",
+  "botones": 7,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 670,
+  "alto": 710
+ },
+ {
+  "fase": "despues",
+  "foto": "cierre-libre-1536-en-claro",
+  "botones": 7,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 670,
+  "alto": 710
+ },
+ {
+  "fase": "despues",
+  "foto": "cierre-libre-1536-en-oscuro",
+  "botones": 7,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 670,
+  "alto": 710
+ },
+ {
+  "fase": "despues",
+  "foto": "cierre-jornada-360-es-claro",
+  "botones": 7,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 716,
+  "alto": 740
+ },
+ {
+  "fase": "despues",
+  "foto": "cierre-jornada-360-es-oscuro",
+  "botones": 7,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 716,
+  "alto": 740
+ },
+ {
+  "fase": "despues",
+  "foto": "cierre-jornada-360-en-claro",
+  "botones": 7,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 716,
+  "alto": 740
+ },
+ {
+  "fase": "despues",
+  "foto": "cierre-jornada-360-en-oscuro",
+  "botones": 7,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 716,
+  "alto": 740
+ },
+ {
+  "fase": "despues",
+  "foto": "cierre-jornada-1536-es-claro",
+  "botones": 7,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 670,
+  "alto": 710
+ },
+ {
+  "fase": "despues",
+  "foto": "cierre-jornada-1536-es-oscuro",
+  "botones": 7,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 670,
+  "alto": 710
+ },
+ {
+  "fase": "despues",
+  "foto": "cierre-jornada-1536-en-claro",
+  "botones": 7,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 670,
+  "alto": 710
+ },
+ {
+  "fase": "despues",
+  "foto": "cierre-jornada-1536-en-oscuro",
+  "botones": 7,
+  "pisan": [],
+  "fuera": [],
+  "scroll": 0,
+  "fondo": 670,
+  "alto": 710
+ }
+]
