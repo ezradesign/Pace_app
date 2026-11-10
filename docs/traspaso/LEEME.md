@@ -13,7 +13,7 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de 
   1. `1-horario-abierto.png`: «¿Cuánto trabajas hoy?» con el horario desplegado: aro de ~474 px, y la tarjeta lo corta por abajo.
   2. `2-rutina-elegida.png`: con «Una hora» elegida («Bloque 1 de 1»): ~503 px. **Le gusta.**
   3. `3-con-actividades.png`: con las tarjetas de Respira, Estira, Mueve e Hidrátate: ~434 px. **Le gusta.**
-  Lo que pide: el mismo aro en los tres estados de la home. Como le gustan dos tamaños distintos, falta que elija uno viéndolo.
+  **Ez lo precisó después: «es decir, queda raro el aro de cuánto trabajas hoy».** Lo que hay que arreglar es el estado 1 (el aro cortado por la tarjeta con el horario abierto); los estados 2 y 3 le gustan como están y no pide igualarlos. Que el aro mida lo mismo en los tres estados era lectura de la coordinadora, no suya: pintarle el estado 1 arreglado de dos o tres maneras (el aro de la 3, el de la 2, o la tarjeta más baja) y que elija.
   La rama `claude/caza-aro-fijo-10nov` montó otra cosa (372 px fijos según la ventana del navegador, pensando en 1536×710): sus
   medidas y sus pruebas sirven, el número no. **Siguiente paso:** sesión nueva en Opus con `cwd` en su worktree
   (`.claude/worktrees/caza-aro-fijo-10nov-8fa0c6`): medir el aro en los tres estados (y con el día en marcha) a 1920×860 y a
