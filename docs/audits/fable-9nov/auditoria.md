@@ -1,9 +1,10 @@
-# Auditoría de producto con Fable 5.2 · 9 nov. 2026 · A MEDIAS
+# Auditoría de producto con Fable 5.2 · 9 y 10 nov. 2026
 
 > Sobre `main` en 03c78e9b (v0.196.0), en la rama `claude/auditoria-fable-9nov-8401fc`. No monta nada en la app.
-> **Está a medias**: la sesión paró al 83 % de las 5 h, con otras dos sesiones corriendo a la vez. Lo que hay
-> abajo es lo que dio tiempo a comprobar; lo que falta, y cómo seguir, está en `DONDE-ME-QUEDO.md`.
-> **La página para Ez no está hecha.**
+> Hecha en dos tandas (la noche del 9 y la mañana del 10), cortadas por el uso de la cuenta. **Miradas 1 y 2, hechas y
+> vividas en la app; 3, 4 y 5, sin mirar** (`DONDE-ME-QUEDO.md`). La página para Ez: https://claude.ai/artifact/2QnMBypqSRVJCmPeNJazZA
+> (cuenta de 5iWBf; copia en `pagina.html`, que se genera con `node genera.js`).
+> **Lo vivido el 10 nov. está al final, en «Segunda tanda», y corrige F1 y F2 de la primera.**
 
 Cada punto dice cómo se comprobó: **[código]** es leído en el archivo y la línea que se citan; **[app]** es visto
 en la web de este worktree (puerto 8920) con Playwright, con su foto en `fotos/`; **[idea]** es propuesta, sin
@@ -103,10 +104,66 @@ Solo leído; nada de esto está vivido todavía.
 
 ## 5 · De paso
 
-- El lema del logo se lee «FVFN» en vez de «EVEN» en la portada de la bienvenida (`fotos/p1-01-bienvenida-1.png`).
+- El lema del logo se lee «FVFN» en vez de «EVEN» en la portada de la bienvenida (foto no guardada, por peso).
   Ez ya lo sabe y lo dejó como está el 4 nov.; se apunta porque es lo primero que ve alguien nuevo.
 
 ## Decisiones de Ez que pueden frenar la venta (dicho una vez)
 
 - **Vender el de por vida mientras todo está abierto** (5 nov.): quien compre hoy no recibe nada que no tenga ya.
   Por eso M2 importa: los únicos que comprarían ahora son quienes ya quieren a PACE, y son los que no ven el botón.
+
+## Segunda tanda (10 nov.): vivido en la app
+
+Con `guion/run.js` (pasos por la línea de órdenes, con el reloj de la página adelantado) y `guion/pinta.js` (las propuestas,
+pintadas cambiando el DOM en la página; nada se monta). Martes 10 nov. 2026, 9:05; 360 × 740 y 1280 × 720.
+
+### El Foco con los ejercicios, por libre (móvil) [app]
+
+1. «Empezar foco», 25 min. Al acabar: «CICLO COMPLETADO · Pausa bien hecha · Has cerrado un bloque. Elige tu pausa.», con la
+   propuesta «HOY AÚN NO HAY SESIÓN DE ESTIRA · Espalda de oficina · 3 MIN · Empezar», las otras tres en una línea y «Ahora no».
+2. «Empezar» abre la ficha «Antes de empezar» (qué necesitas, posición y pasos; aquí dice «2–3 MIN»), con otro «Empezar»;
+   después, «Prepárate» con su cuenta atrás. Tres toques hasta moverse.
+3. La rutina en «Auto» dura 2:31. El cierre: «¿Te ayudó esta pausa?» y un solo botón, «Volver al inicio» (`fotos/cierre-hoy-360.jpg`).
+4. La home al volver: el aro en «00:00», «Empezar otro ciclo» y «SIGUIENTE · CICLO 2 / 4». Por libre no hay cuenta de la pausa.
+
+- **F1, corregido**: por libre casi siempre HAY propuesta (regla 4 de `breakPropuesta`, `BreakMenu.support.jsx:213`: lo que el
+  plan del día tenga pendiente). El menú de cuatro tarjetas, que abre la biblioteca entera, solo sale con todo hecho. No es un problema.
+- **F2, confirmado y precisado**: el cierre del ejercicio no nombra el Foco. Por libre deja a la persona en la home con el aro
+  en 00:00; el paso siguiente («Empezar otro ciclo») está, pero a un toque y una pantalla de distancia. Es la propuesta 2.
+- **F3 · «Pausa bien hecha»** titula la ventana ANTES de hacer la pausa. Con jornada, la misma ventana dice «Tu pausa».
+- **F4 · Dos duraciones a un toque**: «3 MIN» en la propuesta y «2–3 MIN» en la ficha; con jornada, «2 MIN» y «1–2 MIN».
+
+### El Foco con los ejercicios, con jornada (portátil) [app]
+
+«Jornada entera» desde la tarjeta de la home: 9 bloques de 45 min, 7 pausas con su rutina y su hora, la comida y el cierre.
+Al acabar el bloque 1: «BLOQUE 1 DE 9 · HECHO · Tu pausa · 9:50 · Lo que toca ahora. · HOMBROS: SIN MOVER HOY · Empuje sencillo ·
+2 MIN», con «Hacer la pausa», «Seguir con el bloque 2», «Hidrátate · un vaso ahora ›», «Ya la hice por mi cuenta» y «Ahora no».
+Tras la rutina (1:15) y «Volver al inicio», el aro dice «PAUSA CORTA 02:13 · Empezar ya el bloque 2» y la parada queda «hecha»;
+al vencer, «BLOQUE 2 DE 9 · 45:00 · Pausa terminada · Empezar bloque 2». **Aquí el círculo está cerrado y bien resuelto.**
+
+- **F5 · La primera pausa del primer día** de la semana propuesta es «Empuje sencillo» (flexiones contra la mesa, nivel MEDIO).
+- **Aviso sobre el método**: con la ventana de la pausa abierta hay dos botones «Hacer la pausa» (el del aro, detrás, y el de
+  la ventana). Un clic por script en el de detrás dejó la ventana encima de la sesión; una persona no puede tocarlo. No es un fallo.
+
+### Quien no paga, desde v1 [app]
+
+Con el interruptor apagado (`Object.defineProperty`, como en `tests/caza-v1-compra.spec.js`):
+
+- **El día de v1**: la hoja «Siete días de PACE completo · Desde hoy, PACE completo es de pago. Como ya usabas PACE, lo tienes
+  entero hasta el martes, 17 de noviembre, sin tarjeta y sin pagar nada. Lo gratis sigue gratis. · Entendido». Clara.
+- **M5 · Ocho días después (19 nov.) la home es idéntica**: nada dice que la semana acabó. Idea: una nota en el sobre, una vez.
+- **La invitación con la tienda abierta** (al tocar «Tus rutinas»): las cuatro filas, «Un solo pago de 19,99 €, para siempre.»,
+  «Comprar, 19,99 €», «Ahora no» del mismo tamaño y «Tengo un código». Bien.
+- **M1, confirmado**: ni la jornada ni la tarjeta del día enseñan nada cerrado; `PaceCandado` y `paceAbrirPremium` no aparecen
+  en `app/ritmo/` (salvo el calendario), ni en la carta, ni en «Qué te ayuda».
+- **M2, confirmado en la app**: con el enlace de pago puesto y todo abierto, «Tus datos» solo ofrece «PACE completo · Introducir
+  código» (`fotos/ajustes-hoy-360.jpg`).
+
+### Las propuestas pintadas (`fotos/`)
+
+| Propuesta | Fotos | Medido |
+|---|---|---|
+| 1 · Fila de compra en Ajustes | `ajustes-hoy-360`, `ajustes-A-360` | Cabe; una fila más |
+| 2 · El cierre dice lo que sigue | `cierre-hoy-360`, `cierre-A-360`, `cierre-hoy-1280`, `cierre-A-1280` | El enlace acaba en 686 de 740 px y en 680 de 720 |
+| 3 · La línea de los lunes | `semana-hoy-1280`, `semana-A-1280`, `semana-A-360` | A 1280 cabe en la fila del resumen. **A 360 no cabe en la home: la tarjeta acaba en 742 de 740** |
+| 4 · La bienvenida sin «v1» | `bienvenida-hoy-360`, `bienvenida-A-360` | Mismo alto |

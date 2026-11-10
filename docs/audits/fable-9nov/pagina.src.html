@@ -1,0 +1,169 @@
+<title>Auditoría Fable de PACE</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400;1,500&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Una columna de lectura; arriba lo que mueve la venta, después las propuestas pintadas y la cola. Paleta y letra de PACE. */
+:root{--papel:#f2ece0;--hoja:#ebe5d6;--tinta:#221f1a;--tinta2:#5d574b;--linea:#cfc7b0;--oliva:#4f5e49;--terra:#a85f3f;--sobre-oliva:#f4f0e6;
+  --display:'Cormorant Garamond',Georgia,serif;--texto:'Inter',system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--papel:#1d1b17;--hoja:#27241f;--tinta:#ece5d6;--tinta2:#aaa291;--linea:#433f36;--oliva:#9fb394;--terra:#d68e6c;--sobre-oliva:#1d1b17;color-scheme:dark}}
+:root[data-theme="dark"]{--papel:#1d1b17;--hoja:#27241f;--tinta:#ece5d6;--tinta2:#aaa291;--linea:#433f36;--oliva:#9fb394;--terra:#d68e6c;--sobre-oliva:#1d1b17;color-scheme:dark}
+body{background:var(--papel);color:var(--tinta);font-family:var(--texto);font-size:16px;line-height:1.55;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+main{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+h1,h2,h3{font-family:var(--display);font-style:italic;font-weight:500;text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:2.3rem}h2{font-size:1.75rem}h3{font-size:1.3rem}
+p{margin:0;max-width:66ch}
+.rot{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta2)}
+.cab{display:flex;flex-direction:column;gap:10px}
+.primero{background:var(--oliva);color:var(--sobre-oliva);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:6px}
+.primero .rot{color:inherit;opacity:.8}.primero b{font-family:var(--display);font-style:italic;font-weight:500;font-size:1.45rem;line-height:1.2}
+ol.top{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;counter-reset:n}
+ol.top li{counter-increment:n;display:grid;grid-template-columns:2.2rem minmax(0,1fr);gap:4px 10px;padding:14px 0;border-top:1px solid var(--linea)}
+ol.top li::before{content:counter(n);font-family:var(--display);font-size:1.7rem;line-height:1;color:var(--terra);font-variant-numeric:tabular-nums}
+ol.top b{font-weight:600}ol.top span{grid-column:2;color:var(--tinta2);font-size:.95rem}
+section{display:flex;flex-direction:column;gap:14px}
+.prop{border-top:1px solid var(--linea);padding-top:18px;display:flex;flex-direction:column;gap:12px}
+.fotos{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start}
+figure{margin:0;display:flex;flex-direction:column;gap:6px;min-width:0}
+figure img{border:1px solid var(--linea);border-radius:10px;display:block}
+figure.m img{width:230px}figure.g{flex:1 1 100%}figure.g img{width:100%}
+figcaption{font-size:.8rem;color:var(--tinta2);max-width:230px}figure.g figcaption{max-width:none}
+figcaption b{color:var(--terra);font-weight:600}
+.letras{display:flex;flex-direction:column;gap:6px;font-size:.95rem}
+.letras div{display:grid;grid-template-columns:1.6rem minmax(0,1fr);gap:8px}
+.letras i{font-style:normal;font-weight:600;color:var(--terra)}
+.rec{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--oliva);color:var(--oliva);border-radius:99px;padding:1px 8px;white-space:nowrap}
+.tabla{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem;min-width:620px}
+th{text-align:left;font-weight:500;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tinta2);padding:8px 10px 8px 0;border-bottom:1px solid var(--linea)}
+td{padding:10px 10px 10px 0;border-bottom:1px solid var(--linea);vertical-align:top}
+td:first-child{font-variant-numeric:tabular-nums;color:var(--terra);width:1.6rem}
+td small{display:block;color:var(--tinta2);font-size:.82rem}
+ul{margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:6px;max-width:66ch}
+.nota{font-size:.88rem;color:var(--tinta2)}
+</style>
+<main>
+<header class="cab">
+  <span class="rot">PACE v0.196.0 · auditoría de producto con Fable 5.2 · 10 nov. 2026</span>
+  <h1>Qué mueve la venta, y qué es lo primero</h1>
+  <p>He usado PACE como alguien nuevo en el móvil y como alguien con jornada en el portátil, con el reloj adelantado, y la he abierto como la verá quien no pague desde v1. Aquí está lo de la venta y lo del Foco con los ejercicios. Nada está montado: las fotos son propuestas pintadas sobre la app.</p>
+  <div class="primero"><span class="rot">Lo primero</span><b>Poner en Ajustes una fila para comprar PACE completo.</b><span>Es poco trabajo y, sin ella, encender la venta en la web no la enseña a nadie que ya use PACE.</span></div>
+</header>
+
+<section>
+  <h2>Las seis cosas que más mueven la venta</h2>
+  <ol class="top">
+    <li><b>Un sitio para comprar dentro de la app, antes de v1.</b><span>Hoy el botón de compra solo sale al final de la bienvenida y al tocar algo cerrado, y hasta v1 no hay nada cerrado: quien ya usa PACE, que es quien antes pagaría, no lo ve nunca. Comprobado en la app con el enlace de pago puesto.</span></li>
+    <li><b>Que el ejercicio de la pausa devuelva al Foco.</b><span>Lo que hace que alguien vuelva cada día es el círculo bloque, pausa, bloque; hoy el cierre del ejercicio dice «Volver al inicio» y por libre el aro espera en 00:00.</span></li>
+    <li><b>Que la carta del lunes y la semana que cambia se puedan ver cerradas.</b><span>Son lo más propio de PACE completo y lo único de pago que, al no tenerlo, no aparece en ningún sitio: se apagan en silencio.</span></li>
+    <li><b>Decir cuándo acaba la semana de prueba.</b><span>El día de v1 la hoja la anuncia bien, pero ocho días después la app amanece igual y con cosas cerradas, sin una palabra: es el momento en que más sentido tiene ofrecer seguir.</span></li>
+    <li><b>Quitar «v1» de lo que lee alguien nuevo.</b><span>La primera pantalla que habla de dinero dice «hasta v1» dos veces, y nadie de fuera sabe qué es ni cuándo llega.</span></li>
+    <li><b>Que la prueba de siete días incluya una carta.</b><span>Quien prueba una semana y no recibe ninguna carta no ha visto lo que compra; ya lo apuntó ChatGPT (U4) y está puesto para después de v1: yo lo subiría antes.</span></li>
+  </ol>
+</section>
+
+<section>
+  <h2>Las propuestas, pintadas</h2>
+
+  <div class="prop">
+    <h3>1 · Una fila para comprar, en Ajustes</h3>
+    <p>En «Tus datos», con la tienda abierta. No salta sola ni tapa nada: abre la invitación de siempre con su botón de compra.</p>
+    <div class="fotos">
+      <figure class="m"><img data-f="ajustes-hoy-360.jpg" alt="Ajustes hoy: PACE completo solo ofrece introducir un código"><figcaption>Hoy, con el enlace de pago puesto: solo «Introducir código».</figcaption></figure>
+      <figure class="m"><img data-f="ajustes-A-360.jpg" alt="Ajustes con una fila «Tenerlo para siempre, 19,99 €»"><figcaption><b>A</b> · «Tenerlo para siempre · 19,99 €» y, debajo, «Tengo un código».</figcaption></figure>
+    </div>
+    <div class="letras">
+      <div><i>A</i><span>La fila nueva en Ajustes. <span class="rec">recomendada</span></span></div>
+      <div><i>B</i><span>Nada en la app: se compra solo desde pacegrass.app/premium.</span></div>
+    </div>
+  </div>
+
+  <div class="prop">
+    <h3>2 · El cierre del ejercicio dice lo que sigue</h3>
+    <p>Solo cuando el ejercicio venía de una pausa. Por libre, el botón empieza el ciclo siguiente; con jornada, vuelve a la pausa diciendo cuánto queda. La salida de siempre sigue debajo.</p>
+    <div class="fotos">
+      <figure class="m"><img data-f="cierre-hoy-360.jpg" alt="El cierre de hoy: un solo botón, «Volver al inicio»"><figcaption>Hoy: «Volver al inicio», y en la home el aro en 00:00 con «Empezar otro ciclo».</figcaption></figure>
+      <figure class="m"><img data-f="cierre-A-360.jpg" alt="El cierre con «Empezar el ciclo 2» y «Volver al inicio» debajo"><figcaption><b>A</b> · por libre: «Empezar el ciclo 2» y «Volver al inicio».</figcaption></figure>
+      <figure class="g"><img data-f="cierre-A-1280.jpg" alt="El cierre en el portátil, con jornada"><figcaption><b>A</b> · con jornada, a 1280: «Volver · te quedan 3 min de pausa» y «Empezar ya el bloque 2».</figcaption></figure>
+    </div>
+    <div class="letras">
+      <div><i>A</i><span>El botón del cierre nombra lo que sigue. <span class="rec">recomendada</span></span></div>
+      <div><i>B</i><span>El cierre no cambia; solo el aro, al volver por libre, enseña los minutos del ciclo siguiente en vez de 00:00.</span></div>
+      <div><i>C</i><span>Se queda como está.</span></div>
+    </div>
+  </div>
+
+  <div class="prop">
+    <h3>3 · Los lunes, un sitio para la carta que no tienes</h3>
+    <p>Desde v1 y solo para quien no tiene PACE completo, solo los lunes, que es cuando llegaría la carta. Una línea que se toca y abre la invitación. Todos los días sería pedir la compra cada vez que se abre la app, y eso está entre lo que no se hace.</p>
+    <div class="fotos">
+      <figure class="g"><img data-f="semana-A-1280.jpg" alt="La jornada en el portátil un lunes, con la línea «Los lunes, PACE completo te escribe tu semana»"><figcaption><b>A</b> · a 1280, en la fila del resumen: «Los lunes, PACE completo te escribe tu semana ›».</figcaption></figure>
+    </div>
+    <p class="nota">En el móvil no cabe en la home: pintada al pie de la tarjeta, se pasa 2 px a 360 × 740. Allí tendría que ir dentro de «Ver todo» o en el sobre, y eso pide su propia maqueta.</p>
+    <div class="letras">
+      <div><i>A</i><span>La línea de los lunes. <span class="rec">recomendada</span>, con la maqueta del móvil antes de montarla.</span></div>
+      <div><i>B</i><span>Nada hasta ver qué preguntan los primeros compradores.</span></div>
+    </div>
+  </div>
+
+  <div class="prop">
+    <h3>4 · La bienvenida, sin «v1»</h3>
+    <div class="fotos">
+      <figure class="m"><img data-f="bienvenida-hoy-360.jpg" alt="La pantalla de PACE completo de la bienvenida, hoy"><figcaption>Hoy: «Y hasta v1…» y «Al llegar v1…».</figcaption></figure>
+      <figure class="m"><img data-f="bienvenida-A-360.jpg" alt="La misma pantalla sin la palabra v1"><figcaption><b>A</b> · «Y mientras está en pruebas…» y «Cuando salga a la venta…».</figcaption></figure>
+    </div>
+    <div class="letras">
+      <div><i>A</i><span>Cambiar las frases, en la bienvenida y en la invitación («Llega con la versión 1»). <span class="rec">recomendada</span></span></div>
+      <div><i>B</i><span>Dejar «v1».</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>La cola, por orden</h2>
+  <div class="tabla"><table>
+    <tr><th></th><th>Qué es</th><th>Qué gana quien usa PACE</th><th>Cuesta</th><th>Cuándo</th></tr>
+    <tr><td>1</td><td>La fila de compra en Ajustes<small>propuesta 1</small></td><td>Quien ya lo usa puede tenerlo sin buscar la web</td><td>Poco</td><td>Antes de v1, al encender la venta</td></tr>
+    <tr><td>2</td><td>El cierre que dice lo que sigue<small>propuesta 2</small></td><td>Un toque menos, y sabe qué toca después de moverse</td><td>Poco</td><td>Antes de v1</td></tr>
+    <tr><td>3</td><td>La bienvenida y la invitación sin «v1»<small>propuesta 4</small></td><td>Entiende a la primera qué es gratis y hasta cuándo</td><td>Poco</td><td>Antes de v1</td></tr>
+    <tr><td>4</td><td>Una nota el día que acaba la semana de prueba, en el sobre, una vez<small>idea, sin pintar</small></td><td>No se encuentra cosas cerradas sin aviso</td><td>Medio</td><td>Antes de v1</td></tr>
+    <tr><td>5</td><td>La línea de los lunes<small>propuesta 3</small></td><td>Sabe que existe una semana que aprende</td><td>Medio</td><td>Con v1; falta la maqueta del móvil</td></tr>
+    <tr><td>6</td><td>Una carta dentro de los siete días de prueba<small>U4 de ChatGPT</small></td><td>Prueba lo que va a pagar</td><td>Medio</td><td>Hoy, después de v1; yo, antes</td></tr>
+    <tr><td>7</td><td>«Pausa bien hecha» titula la ventana antes de hacer la pausa<small>con jornada ya dice «Tu pausa»</small></td><td>No se le felicita por algo que aún no ha hecho</td><td>Poco</td><td>Antes de v1, con los textos</td></tr>
+    <tr><td>8</td><td>La misma rutina dice «3 min» en la pausa y «2–3 min» en su ficha, un toque después<small>y «2 min» y «1–2 min»</small></td><td>Una sola cifra</td><td>Poco</td><td>Antes de v1, con los textos</td></tr>
+    <tr><td>9</td><td>La primera pausa del primer día es «Empuje sencillo», flexiones contra la mesa, de nivel medio<small>visto con la semana propuesta, martes 9:50</small></td><td>Lo primero que PACE le pide es suave</td><td>Medio</td><td>Después de v1, con lo que digan los testers</td></tr>
+    <tr><td>10</td><td>Desde la pausa hasta moverse hay tres toques: «Empezar», «Empezar» otra vez en la ficha, y la cuenta atrás<small>el segundo ejercicio de una pausa larga ya entra directo</small></td><td>Menos pasos en una pausa de cinco minutos</td><td>Medio</td><td>Después de v1</td></tr>
+  </table></div>
+</section>
+
+<section>
+  <h2>Lo que funciona y no hay que tocar</h2>
+  <ul>
+    <li>Con jornada, el círculo está cerrado: la pausa dice qué toca y por qué, el aro cuenta la pausa y al acabar ofrece «Empezar bloque 2» sin arrancarlo solo.</li>
+    <li>Por libre casi siempre hay propuesta con su motivo («Hoy aún no hay sesión de Estira»), y «Ahora no» está a la vista.</li>
+    <li>La hoja del día de v1 y la invitación con el botón de compra son claras y no agobian.</li>
+    <li>La bienvenida y la home caben a 360 px sin scroll y sin un solo error.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tres decisiones tuyas que creo que frenan la venta</h2>
+  <p class="nota">Dicho una vez, con el porqué; no las reabro.</p>
+  <ul>
+    <li><b>Vender el de por vida mientras todo está abierto</b> (5 nov.): quien compre hoy no recibe nada nuevo, así que solo comprará quien ya quiere a PACE, y ese es justo quien no ve el botón. Con la propuesta 1 deja de frenar.</li>
+    <li><b>La carta dentro de la prueba, después de v1</b>: es la fila 6 de la cola.</li>
+    <li><b>La pantalla de PACE completo en la bienvenida, antes de usar nada</b> (15 y 27 oct.): mientras todo está abierto no vende y alarga la entrada con cuatro promesas que aún no se entienden.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Lo que queda por mirar</h2>
+  <ul>
+    <li>Los flujos de Mueve, Estira, Respira e Hidrátate, «Tus rutinas» y las rutinas nuevas que tendrían sentido.</li>
+    <li>La interfaz en oscuro, y módulo a módulo a 1280 px.</li>
+    <li>Lo que dicen /premium y la landing, y cómo llevan a comprar.</li>
+    <li>La pausa larga, la comida, el cierre del día y el móvil con la pantalla bloqueada.</li>
+    <li>Los logros, la valoración y Estadísticas sin PACE completo.</li>
+  </ul>
+  <p class="nota">El informe con la evidencia de cada punto está en la rama <code>claude/auditoria-fable-9nov-8401fc</code>, en <code>docs/audits/fable-9nov/auditoria.md</code>.</p>
+</section>
+</main>

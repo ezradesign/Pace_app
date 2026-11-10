@@ -1,4 +1,20 @@
-# Dónde me quedo · auditoría con Fable 5.2 · 9 nov. 2026, 23:40
+# Dónde me quedo · auditoría con Fable 5.2 · 10 nov. 2026, 9:20
+
+Segunda tanda: paré al 84 % de las 5 h (la ventana se renueva a las 13:50), con «Weekly · Fable» al 44 %. **Hechas las miradas
+1 y 2 y publicada la página** (https://claude.ai/artifact/2QnMBypqSRVJCmPeNJazZA, cuenta de 5iWBf). **Sin mirar: 3 (flujos de ejercicios y rutinas nuevas), 4 (interfaz en
+oscuro y a 1280 módulo a módulo) y 5**; tampoco /premium y la landing, la pausa larga, la comida, el móvil bloqueado, los logros
+ni la valoración.
+
+Para seguir: `guion/run.js` (pasos por la línea de órdenes: `t:` toca, `fin` acaba el bloque, `corre:` deja correr el reloj,
+`f:` foto; entorno `V1=1`, `TIENDA=1`, `MOVIL=0 ANCHO=1280 ALTO=720`, `HORA`, `ALMACEN`) y `guion/pinta.js`. Los dos esperan
+`p1-estado.json` y `v1-estado.json` a su lado: el primero lo deja `p1.js`; el segundo, abrir con `V1=1`, tocar «Entendido» y
+el paso `guarda:v1-estado.json`. Las rutas del arnés apuntan a este worktree. Dentro de una ventana abierta hay botones con el
+mismo nombre detrás: `run.js` toca el último del DOM. Para republicar la página: editar `pagina.src.html`, `node genera.js` y
+publicar `pagina.html` con su dirección.
+
+---
+
+## La nota de la primera tanda (9 nov.)
 
 Paré al 83 % de las 5 h (el tope del encargo era 85 % para el WIP y 90 % para parar), con «Weekly · Fable» al
 21 %. Al empezar ya estaba al 60 %: había otras dos sesiones corriendo. La ventana se renueva el 10 nov. a las
