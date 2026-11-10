@@ -2,7 +2,31 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de noviembre de 2026, 23:15, v0.197.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de noviembre de 2026, 23:30, v0.197.0.
+
+## AL RELEVO (10 nov., 23:30): EcLj6 con las 5 h al 86 % (se reponen a las 03:30). `main` tiene el CI en rojo por la hora. Empieza aquí
+
+- **CI de `main` en rojo (600fc0b5, run 42908610659), y no es por el commit, que solo toca este archivo:** cae
+  `tests/landing-cara.spec.js:106` («con la landing delante no se guarda nada, ni pasadas dos horas ni al irse»): aparece
+  `pace.state.v2` en `localStorage`. La prueba instala el reloj a la hora de verdad y avanza 2 h: **falla siempre que se pasa entre
+  las 22:00 y las 24:00** (en GitHub, hora UTC; aquí, la del PC). Reproducido aquí a las 23:22 con esa sola prueba; los CI de las
+  17:16 y las 17:46 la pasaron. Hipótesis sin comprobar en el código: al cruzar la medianoche algo guarda el estado aunque la landing
+  esté delante. **Lo primero al volver:** una caza corta: si es la app la que guarda (un fallo de verdad contra «no se guarda nada»),
+  arreglarlo con su prueba; y en todo caso fijar la hora de la prueba (el `MEDIODIA` de las demás) y añadir otra que cruce la
+  medianoche a propósito. Hasta entonces cualquier push hecho de noche saldrá en rojo en `e2e (1/2)`.
+- **Tres ramas nuevas, subidas, sin juntar** (las tres en Opus; informes leídos por la coordinadora, el código no):
+
+| Rama | Qué lleva | Página (EcLj6) | Espera |
+|---|---|---|---|
+| `claude/montar-auditoria-10nov-3ef28c` | 1A (c70dd11d), 2A (6093709b) y 4A (5c340017), con verify y sus pruebas en verde (28, 70 y 65). Paró al 82 %. **Falta:** D-5 B, D-4 C, las fotos de después de Ajustes, bienvenida e invitación, y la página «Montado»: el plan, en `docs/proposals/montado-auditoria-10nov/DONDE-ME-QUEDO.md` | sin publicar | retomarla (sesión nueva con `cwd` en su worktree) y luego el «júntalo» de Ez |
+| `claude/caza-aro-fijo-10nov` | Ez: «en el escritorio el tamaño del aro cambia según la ventana y siempre debería ser fijo». Medido: 372 px en su ventana, 650 en 1920×1080, 866 en 2560×1440 (el tope de 520 no frenaba) y encogía al ensanchar. Montada la A: 372 px fijos, solo encoge si no cabe; el móvil no cambia (0d80277b, 311dec0e); verify y 132 pruebas en verde. Tocó cuatro pruebas viejas y dos de `aro-jornada` pierden mordida; Firefox y Safari, sin probar | Xf1MUQNoyiBNjXPcgUc3Bj | que Ez la mire y diga «júntalo» u otra letra |
+| `claude/hopeful-booth-ba049e` | La página única de decisiones (af591732): «Ya decidido» arriba, la línea de los lunes en tres sitios del móvil (recomienda el sobre), D-6 con la opción D (recomienda «Ocaso 1» y «Búho 1»), 4, 6 y 7, el aro, V1 y V2, y las dos listas; copia en `docs/proposals/decisiones-10nov/` | H5UgBuqz5VeGnETpixxi96 | las letras de Ez |
+
+- **De 1A, para Ez:** con la fila nueva, «Tus datos» se pliega 34 px antes en el ordenador; y un defecto que ya existía: el panel de
+  Ajustes pide hasta 15 px de scroll entre 860 y 875 de alto. De 4A: /premium sigue diciendo «Llega con la versión 1».
+- **Ez tiene un texto para auditar fuera con Fable** el código nativo, la compra en el móvil y Ajustes (sexta pasada): cuando la
+  traiga, guardarla en `docs/audits/fable-9nov/` de la rama de la auditoría y comprobarla como las otras.
+- **Uso a las 23:25:** 5 h al 84-86 % con tres sesiones en Opus en 45 minutos; semana al 22 %, «Weekly · Fable» al 18 %.
 
 ## 10 nov., ~23:15: Ez contestó la auditoría y hay dos sesiones en marcha. Empieza aquí; manda sobre lo de abajo
 
