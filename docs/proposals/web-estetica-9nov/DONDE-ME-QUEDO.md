@@ -27,5 +27,5 @@ después `node docs/proposals/web-estetica-9nov/recortes.js --dist=<la carpeta d
 En 769ea1b8: el CSS de la B en `landing/landing.css` y en los `<style>` de `premium/index.html` y
 `beta/index.html`; la portada de /beta en dos grupos (`.cabeza`); la pantalla de la app de /premium por
 idioma y tema (`premium/app-*-{es,en}-{claro,oscuro}.webp`, de `capturas-app.js`); y las letras 3, 4 y 5
-recomendadas. **Falta la 2**: rehacer en oscuro las capturas de /beta y de PACE completo con su marco.
+recomendadas. La 2 (capturas en oscuro), en b259ae77: `capturas.js --beta-oscuro` y `capturas-premium.js --oscuro`.
 Las fotos de lo montado son `fotos/montada-*`; `comparar.js` las cruza con las de la maqueta de la B.
