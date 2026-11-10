@@ -18,7 +18,7 @@ const DIRS = {
     arregla: 'Arregla 1, 2 (el aspecto; los enlaces son la letra 3), 3 en el ordenador y en la landing del móvil, 4, 5, 6, 8 y 9. El 7 necesita capturas en oscuro (letra 2).',
     cambia: 'En el marcado solo cambian dos cosas: en /beta, la portada se agrupa en dos para poner las capturas en fila debajo del título; en /premium, la pantalla de la app es la nueva.' },
   b: { nombre: 'B · Una jornada', idea: 'La portada es el aro del Foco: el título dentro y el botón abajo, como «Empezar foco». De ahí baja la línea del día por el margen, con una parada en el color de cada módulo al empezar cada sección, y las capturas van grandes.', arregla: '', cambia: '' },
-  c: { nombre: 'C · Pulido sobrio', idea: 'Las bandas de hoy, arreglando solo lo medido: cabecera y pie iguales, capturas más grandes, líneas de unas 65 letras, la lista de los módulos con su dibujo y las preguntas más estrechas.', arregla: '', cambia: '' },
+  c: { nombre: 'C · Pulido sobrio', idea: 'Las bandas de hoy, arreglando solo lo medido: cabecera y pie iguales, capturas más grandes, líneas de unas 65 letras, la lista de los módulos con su dibujo y las preguntas más estrechas. En la landing, la lista de los módulos y sus dos capturas van lado a lado.', arregla: 'Arregla 1, 2 (el aspecto), 4, 5, 6 y 9, y el 3 a medias: la landing y el mosaico crecen; la portada de /beta, poco. No toca el 8: las bandas se quedan. El 7, como en todas, con la letra 2.', cambia: 'En el marcado solo cambia la pantalla de la app de /premium, como en la A.' },
 };
 
 const html = `<title>Tres direcciones para la web</title>
