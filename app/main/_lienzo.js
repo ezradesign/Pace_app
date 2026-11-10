@@ -79,17 +79,6 @@ var PACE_LIENZO_ALTO = 704;
   window.paceLienzo = { escala: 1 };
   window.paceLienzoAlto = function () { return (window.innerHeight || 0) / escala; };
   window.paceLienzoAncho = function () { return (window.innerWidth || 0) / escala; };
-  /* Cuánto se ha alejado el zoom del navegador (1 = sin alejar). `outerWidth` no cambia con el
-     zoom y `innerWidth` sí: al 33 % la ventana mide para la app tres veces su ancho. Un panel al
-     lado o el borde de la ventana solo pueden hacer `outerWidth` mayor, nunca menor, y por eso
-     solo se cree por debajo de 0,95. Lo usa el aro fijo de la home: en un monitor grande no
-     crece, pero con el zoom alejado se ve como al 100 %, que es lo que pidió el lienzo. */
-  window.paceZoomFuera = function () {
-    var o = window.outerWidth || 0, i = window.innerWidth || 0;
-    if (!o || !i) return 1;
-    var z = o / i;
-    return z < 0.95 ? z : 1;
-  };
   /* La caja de un elemento en px CSS, como sus `offsetHeight` y sus estilos. Sin lienzo
      devuelve la de siempre, sin copiarla. */
   window.paceCaja = function (el) {

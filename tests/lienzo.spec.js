@@ -18,16 +18,12 @@
 const { test, expect } = require('@playwright/test');
 const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior, fijarViewport } = require('./helpers');
 
-/* `exterior`: el ancho de la ventana de verdad cuando el zoom del navegador está alejado. Al
-   alejarlo, la ventana mide más para la app pero `outerWidth` no cambia, y así lo distingue el
-   aro fijo de un monitor grande (Playwright da siempre `outerWidth` = `innerWidth`). */
-async function abrirEn(browser, ancho, alto, exterior) {
+async function abrirEn(browser, ancho, alto) {
   const u = test.info().project.use;
   const context = await browser.newContext({
     viewport: { width: ancho, height: alto },
     baseURL: u.baseURL, locale: u.locale, timezoneId: u.timezoneId, colorScheme: u.colorScheme,
   });
-  if (exterior) await context.addInitScript((x) => { Object.defineProperty(window, 'outerWidth', { get: () => x }); }, exterior);
   await sembrar(context);
   const page = await context.newPage();
   const errores = capturarErrores(page);
@@ -60,11 +56,9 @@ for (const [ancho, alto] of [[1530, 702], [1024, 600], [1536, 704]]) {
   });
 }
 
-/* El monitor de 1080p (sin zoom) ya no compara el aro ni lo que va pegado a él: allí el aro
-   no crece con el lienzo (Ez, 10 nov. 2026, «siempre debería ser fijo»; tests/aro-fijo.spec.js). */
-for (const [ancho, alto, nombre, exterior] of [[3060, 1404, 'zoom al 50 %', 1530], [4636, 2127, 'zoom al 33 %', 1536], [1920, 969, 'monitor de 1080p']]) {
+for (const [ancho, alto, nombre] of [[3060, 1404, 'zoom al 50 %'], [4636, 2127, 'zoom al 33 %'], [1920, 969, 'monitor de 1080p']]) {
   test(`la home llena la ventana y queda como en la efectiva · ${nombre}`, async ({ browser }) => {
-    const grande = await abrirEn(browser, ancho, alto, exterior);
+    const grande = await abrirEn(browser, ancho, alto);
     const escala = await grande.page.evaluate(() => window.paceLienzo.escala);
     expect(escala, 'el lienzo no se puso').toBeGreaterThan(1);
 
@@ -80,8 +74,7 @@ for (const [ancho, alto, nombre, exterior] of [[3060, 1404, 'zoom al 50 %', 1530
     /* Y LA HOME EN SU SITIO: lo mismo que en una ventana del tamaño efectivo, con la
        tolerancia del redondeo de las letras al dibujarse más grandes (medido: ≤ 8 px). */
     const efectiva = await abrirEn(browser, Math.round(ancho / escala), Math.round(alto / escala));
-    const piezas = exterior ? ['[data-pace-dial-fit]', '[data-pace-activitybar]', '[data-pace-sidebar]', '[data-pace-tabs]'] : ['[data-pace-sidebar]', '[data-pace-tabs]'];
-    for (const sel of piezas) {
+    for (const sel of ['[data-pace-dial-fit]', '[data-pace-activitybar]', '[data-pace-sidebar]', '[data-pace-tabs]']) {
       const a = await caja(grande.page, sel), b = await caja(efectiva.page, sel);
       expect(a, 'no encuentro ' + sel + ' con el lienzo').not.toBeNull();
       expect(b, 'no encuentro ' + sel + ' en la ventana efectiva').not.toBeNull();

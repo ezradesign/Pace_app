@@ -374,8 +374,7 @@ y el aro se **recorta** en esa línea en lugar de quedar dibujado entero por det
 - `--pace-timer-d` → diámetro D del aro
 - `--pace-activities-overlap` → solapamiento **y** recorte (mismo valor, una sola fuente)
 
-**Tamaño del aro (fijo, Ez, 10 nov. 2026):** en escritorio mide **372 px de pantalla** y no crece
-nunca, tampoco con el lienzo; arranca en `min(0.42·W, 372px / escala)` y **encoge hasta
+**Tamaño del aro (D lo manda la ALTURA):** arranca en `min(0.42·W, 520px)` y **encoge hasta
 caber** (`overflowV ≤ 1`, 8 pasadas, suelo 205px) ⇒ D es el mayor círculo sin scroll.
 Dimensionarlo por ancho confundía causa con efecto: en la referencia v0.64 la proporción
 0.255·W era CONSECUENCIA de la altura (`flex:1 + 56vh`).
