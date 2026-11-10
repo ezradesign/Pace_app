@@ -2,7 +2,30 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de noviembre de 2026, ~23:35, v0.196.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de noviembre de 2026, ~9:00, v0.196.0.
+
+## 10 nov., ~9:00: las tres sesiones pararon anoche por el uso y siguen esta mañana. Empieza aquí
+
+- **Ez (10 nov.): «Espero a la bonita».** La landing B no se junta todavía: espera a que elija la estética de la web, y se juntan a la vez.
+- **Anoche, a las ~23:45, las 5 h llegaron al 100 %** con tres sesiones y la coordinadora (unos 25 minutos de trabajo). Lo guardado:
+
+| Sesión | Rama | Dónde quedó | Falta |
+|---|---|---|---|
+| `chatgpt-pagina` (`local_a381fb3d…`, Opus) | `claude/chatgpt-jornada-9nov` | b5a851b3: la página de 4, 6 y 7, hecha y sin publicar | publicarla en 5iWBf y apuntar su dirección |
+| `web-bonita` (`local_8a20426c…`) | `claude/landing-c-9nov` | dd552fae: los defectos de hoy medidos, sus guiones y tres direcciones pensadas (nota en `docs/proposals/`) | pintarlas y la página para Ez; sigue en **Opus** para no agotar «Weekly · Fable» |
+| `auditoria-fable` (`local_ce2d2349…`, Fable) | `claude/auditoria-fable-9nov-8401fc` | 2211eb40: informe parcial (lo de pago que no se ve, dónde se compra antes de v1, la bienvenida) y nota «dónde me quedo» | vivir el Foco con los ejercicios en la app y la página para Ez |
+
+- **El aviso de las 04:27 saltó a las 08:56** (el PC durmió). Uso al despertar: una sola vuelta de la coordinadora, con 325k de
+  contexto y la caché fría, costó el **19 % de las 5 h**. «Weekly · Fable», al 31 %; la semana, al 24 %. Las 5 h se reponen a las 13:50.
+- **Esta coordinadora pesa demasiado para seguir preguntándole cosas.** Lo nuevo, mejor en una sesión nueva de la MISMA cuenta
+  (5iWBf), que empieza ligera. Las tres sesiones avisan a la coordinadora vieja al acabar; la nueva las ve con `list_sessions`
+  y lee sus ramas. Ez pega esto:
+
+```
+Retomamos PACE en una sesión nueva de esta misma cuenta. Lee CLAUDE.md, STATE.md y el bloque «10 nov., ~9:00» de docs/traspaso/LEEME.md, y sigue como coordinadora. Mira con list_sessions cómo van las tres sesiones (chatgpt-pagina, web-bonita y auditoria-fable) y sus ramas, y dime qué páginas tengo ya para mirar. Haz pocas vueltas: este modelo gasta mucho.
+```
+
+- CI del commit de documentos de anoche (03c78e9b): en verde entero (42712881224, Android e iOS).
 
 ## 9 nov., ~23:35: relevo tomado en 5iWBf (5 h al 3 %, semana al 8 %). Empieza aquí; el bloque de las 21:00, debajo, ya está hecho
 
