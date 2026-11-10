@@ -1,7 +1,7 @@
 # La cola única: las auditorías de Fable del 9 y 10 nov., juntas
 
-La mía (`auditoria.md`, vivida en la app) y las cuatro pasadas de la externa (`externa-10nov.md` y
-`externa-10nov-pasadas-2-3-4.md`, leídas en `main`), comprobadas en `externa-10nov-comprobado.md` y
+La mía (`auditoria.md`, vivida en la app) y las cinco pasadas de la externa (`externa-10nov.md` y
+`externa-10nov-pasadas-2-3-4.md`, que lleva de la 2 a la 5, leídas en `main`), comprobadas en `externa-10nov-comprobado.md` y
 `externa-10nov-pasadas-2-3-4-comprobado.md`. Lo que ya está hecho en una rama se dice «ya hecho, espera tu júntalo». La
 página para Ez, con las fotos: https://claude.ai/artifact/C2uFSMM8eWhcRxpXLGWkAx (EcLj6; la copia de 5iWBf,
 2QnMBypqSRVJCmPeNJazZA, se queda en la primera cola).
@@ -32,7 +32,7 @@ página para Ez, con las fotos: https://claude.ai/artifact/C2uFSMM8eWhcRxpXLGWkA
 | 1 | Fila «Tenerlo para siempre · 19,99 €» en Ajustes | Puede comprarlo sin buscar la web | Poco | Antes de v1, al encender la venta |
 | 2 | La landing en la raíz | Entiende qué es PACE antes de abrir la app | Ya hecho, espera tu júntalo | Ya |
 | 3 | Abrir «Avísame» (el KV) | Puede dejar su correo y enterarse | Poco (tuyo) | Ya |
-| 4 | `robots.txt` y `sitemap.xml` propios; la versión fuera del título | Encuentra PACE en los buscadores con un nombre limpio | Poco | Antes de v1 |
+| 4 | `robots.txt` y `sitemap.xml` propios; la versión fuera del título y, con un bloque en marcha, la cuenta atrás en él (pasada 5, idea 4) | Encuentra PACE en los buscadores con un nombre limpio, y ve el reloj desde otra pestaña | Poco | Antes de v1 |
 | 5 | La cuenta de la jornada (puntos 1, 2, 3 y 5) | Ve cifras que cuadran | Ya hecho, espera tu júntalo | Ya |
 | 6 | Las letras de 4, 6 y 7 (recomendadas 4B 6A 7A) | «Cambiar» con un Foco en marcha y «Hoy» con lo hecho por libre | Tu letra, luego medio | Antes de v1 |
 | 7 | El `guardar()` atómico de la mensual | Una renovación nunca pisa otra | Ya hecho, espera tu júntalo | Antes del mensual |
@@ -53,30 +53,31 @@ página para Ez, con las fotos: https://claude.ai/artifact/C2uFSMM8eWhcRxpXLGWkA
 | 22 | Un tope de unos 3 s a la red al abrir PACE instalada; si no llega, la copia guardada (2.T2) | Con una wifi mala no se queda en blanco | Poco | Antes de v1 |
 | 23 | Capturas en el manifiesto | Chrome enseña una instalación con fotos | Poco | Antes de v1 |
 | 24 | «Rutina propia» y el manifiesto en inglés; el atajo de Mueve sin «movilidad» y uno de Estira (2.T5) | En inglés no hay nada a medias | Poco | Antes de v1 |
-| 25 | Aviso opcional a la hora de entrada (Android y iPhone) | Un motivo para abrir PACE cada mañana | Medio | Antes de v1 si cabe; si no, la primera actualización |
-| 26 | Las bibliotecas a mano en el móvil, sin abrir el cajón, con maqueta (4.E1) | «Un estiramiento de cuello ahora» está a un toque | Medio | Antes de v1 si cabe |
-| 27 | «¿Te ayudó?» menos veces, y el «No» con su porqué («aquí no podía», «difícil», «me molestó») (3.V3, 3.V4) | Contesta cuando importa, y un «aquí no podía» no le aparta la rutina una semana | Medio | Antes de v1 si cabe |
-| 28 | La línea de los lunes (propuesta 3; según D-3) | Sabe que existe una semana que aprende | Medio (falta la maqueta del móvil) | Con v1 |
-| 29 | Una carta dentro de los siete días de prueba (U4) | Prueba lo que va a pagar | Medio | Tú: después de v1. Las dos auditorías: antes |
-| 30 | Los logros de constancia por días de jornada (también lo piden 4.F4 y 4.F5) | Quien trabaja de lunes a viernes también los gana | Poco | Después de v1 |
-| 31 | «Con un plan» y «Primer ritual» cuentan las pausas que sirve «A tu ritmo» (4.F6) | Hace sus pausas y gana el logro | Poco | Después de v1 |
-| 32 | Esconder Foco/Pausa/Larga con la jornada en marcha; sin jornada, que la pausa dure lo que digas (4.F7) | Un solo sistema de pausas | Poco | Después de v1 |
-| 33 | «Foco manual» y «Ciclo N / 4», con maqueta | El aro explica lo que cuenta | Poco | Después de v1 |
-| 34 | La primera pausa del primer día, suave | Lo primero que pide PACE no cuesta | Medio | Después de v1 |
-| 35 | Menos toques hasta moverse (hoy tres) | La pausa empieza antes | Medio | Después de v1 |
-| 36 | Una pregunta en la bienvenida («¿qué te molesta más?» y «¿dónde trabajas?», 3.O2) | El plan se siente suyo y no le propone flexiones delante de la oficina | Medio | Después de v1 |
-| 37 | Marcar una reunión a mano en el día | El plan la rodea sin conectar el calendario | Medio | Después de v1 |
-| 38 | Una intensidad del día (ligera o entera), junto a V1 «Solo pausas» | Menos ocasiones de fallar la primera semana | Medio | Después de v1 |
-| 39 | Voz en Mueve y Estira | Hace el ejercicio sin mirar la pantalla | Mucho | Después de v1 |
-| 40 | Vibración al ritmo de las repeticiones en el móvil (3.5) | Lo sigue en silencio, en una oficina abierta | Medio | Después de v1 |
-| 41 | Una pausa para los ojos y otra de caminar a por agua (3.7) | Pausas discretas y una que une moverse y beber | Medio | Después de v1 |
-| 42 | Subir la dosis tras varios «Sí» («¿pasamos a 2 × 8?») (3.V2) | PACE crece con quien lo usa | Mucho | Después de v1 |
-| 43 | Una pregunta semanal de cómo está, con su línea, en la carta (3.V1; sin consejo médico) | Ve que le sirve, no solo lo que hizo | Mucho | Después de v1 |
-| 44 | El calendario de verdad: elegir calendarios y el permiso que no caduca | El plan ve todas sus reuniones | Mucho; espera tus altas | Después de v1 |
-| 45 | Una sola forma de evento en el calendario | Un evento igual lo ponga como lo ponga | Poco | Después de v1 |
-| 46 | Fuera de la precarga las láminas de Caminos (1 MB) y los dibujos grandes (2,1 MB) (2.T3) | La instalación baja menos | Poco | Después de v1 |
-| 47 | Cerrar la vía de la consola a lo abierto hasta v1 | Nada visible | Poco | El día de v1 |
-| 48 | Las cifras de `CONTENT.md` al día | Nada visible | Poco | Cuando toque |
+| 25 | Los botones del constructor de 24 px, más grandes para el dedo, con maqueta (pasada 5, idea 6) | Edita sus rutinas en el móvil sin errar el toque | Poco | Antes de v1 |
+| 26 | Aviso opcional a la hora de entrada (Android y iPhone) | Un motivo para abrir PACE cada mañana | Medio | Antes de v1 si cabe; si no, la primera actualización |
+| 27 | Las bibliotecas a mano en el móvil, sin abrir el cajón, con maqueta (4.E1) | «Un estiramiento de cuello ahora» está a un toque | Medio | Antes de v1 si cabe |
+| 28 | «¿Te ayudó?» menos veces, y el «No» con su porqué («aquí no podía», «difícil», «me molestó») (3.V3, 3.V4) | Contesta cuando importa, y un «aquí no podía» no le aparta la rutina una semana | Medio | Antes de v1 si cabe |
+| 29 | La línea de los lunes (propuesta 3; según D-3) | Sabe que existe una semana que aprende | Medio (falta la maqueta del móvil) | Con v1 |
+| 30 | Una carta dentro de los siete días de prueba (U4) | Prueba lo que va a pagar | Medio | Tú: después de v1. Las auditorías, también la pasada 5: antes |
+| 31 | Los logros de constancia por días de jornada (también lo piden 4.F4 y 4.F5) | Quien trabaja de lunes a viernes también los gana | Poco | Después de v1 |
+| 32 | «Con un plan» y «Primer ritual» cuentan las pausas que sirve «A tu ritmo» (4.F6) | Hace sus pausas y gana el logro | Poco | Después de v1 |
+| 33 | Esconder Foco/Pausa/Larga con la jornada en marcha; sin jornada, que la pausa dure lo que digas (4.F7) | Un solo sistema de pausas | Poco | Después de v1 |
+| 34 | «Foco manual» y «Ciclo N / 4», con maqueta | El aro explica lo que cuenta | Poco | Después de v1 |
+| 35 | La primera pausa del primer día, suave | Lo primero que pide PACE no cuesta | Medio | Después de v1 |
+| 36 | Menos toques hasta moverse (hoy tres) | La pausa empieza antes | Medio | Después de v1 |
+| 37 | Una pregunta en la bienvenida («¿qué te molesta más?» y «¿dónde trabajas?», 3.O2) | El plan se siente suyo y no le propone flexiones delante de la oficina | Medio | Después de v1 |
+| 38 | Marcar una reunión a mano en el día | El plan la rodea sin conectar el calendario | Medio | Después de v1 |
+| 39 | Una intensidad del día (ligera o entera), junto a V1 «Solo pausas» | Menos ocasiones de fallar la primera semana | Medio | Después de v1 |
+| 40 | Voz en Mueve y Estira | Hace el ejercicio sin mirar la pantalla | Mucho | Después de v1 |
+| 41 | Vibración al ritmo de las repeticiones en el móvil (3.5) | Lo sigue en silencio, en una oficina abierta | Medio | Después de v1 |
+| 42 | Una pausa para los ojos y otra de caminar a por agua (3.7) | Pausas discretas y una que une moverse y beber | Medio | Después de v1 |
+| 43 | Subir la dosis tras varios «Sí» («¿pasamos a 2 × 8?») (3.V2) | PACE crece con quien lo usa | Mucho | Después de v1 |
+| 44 | Una pregunta semanal de cómo está, con su línea, en la carta (3.V1; sin consejo médico) | Ve que le sirve, no solo lo que hizo | Mucho | Después de v1 |
+| 45 | El calendario de verdad: elegir calendarios y el permiso que no caduca | El plan ve todas sus reuniones | Mucho; espera tus altas | Después de v1 |
+| 46 | Una sola forma de evento en el calendario | Un evento igual lo ponga como lo ponga | Poco | Después de v1 |
+| 47 | Fuera de la precarga las láminas de Caminos (1 MB) y los dibujos grandes (2,1 MB) (2.T3) | La instalación baja menos | Poco | Después de v1 |
+| 48 | Cerrar la vía de la consola a lo abierto hasta v1 | Nada visible | Poco | El día de v1 |
+| 49 | Las cifras de `CONTENT.md` al día | Nada visible | Poco | Cuando toque |
 
 ## Las decisiones que las auditorías discuten (dicho una vez)
 
@@ -117,3 +118,37 @@ las 21 h) premian lo contrario de una jornada que acaba a su hora; «Nunca a med
 - **B** · Retirar «Búho» y «Ocaso» del catálogo; quien ya los tenga los conserva. **Recomendada**: van contra el tono de
   PACE, y uno es secreto: nadie los echa de menos.
 - **C** · Cambiarlos por uno de cerrar la jornada a su hora.
+
+**D-7 · Ofrecer PACE completo después de un «Sí» o al cerrar la jornada** (pasada 5). La regla de hoy, en `ROADMAP.md:157`:
+«Lo cerrado lleva un candado de línea fina y, al tocarlo, una invitación; nada propone algo cerrado.» Y en
+`DECISIONES_TECNICAS_VIGENTES.md:187`: «Lo cerrado se puede tocar y abre la invitación; "Para ahora" no propone nada
+cerrado». La regla prohíbe proponer una rutina cerrada, no ofrecer la compra; pero hoy la invitación solo sale al tocar un
+candado, en la bienvenida, el día de v1 y al acabar la prueba. La lista de «nunca» incluye «Publicidad o monetización
+intrusiva» (`ROADMAP.md:403`).
+- **A** · Como está; el momento semanal lo da D-3 B (la línea de los lunes). **Recomendada**: una oferta pegada a «¿Te
+  ayudó?» tuerce la respuesta que alimenta «Qué te ayuda», y el cierre del día es el momento de soltar el móvil.
+- **B** · Una línea discreta tras un «Sí» a «¿Te ayudó?», a quien no tiene PACE completo, como mucho una vez por semana.
+- **C** · Una línea en el cierre de una jornada completa, como mucho una vez por semana.
+
+## Ideas para después de v1 (pasada 5)
+
+La quinta pasada no trae fallos: trae ocho cosas que construir para que pagar merezca la pena. Comprobadas en
+`externa-10nov-pasadas-2-3-4-comprobado.md`, «Pasada 5». Ninguna choca con la lista de «nunca» (sin cuentas, sin
+wearables, sin IA visible), con la paleta ni con «sin gamificación agresiva», salvo lo que se dice en cada una. Antes de
+v1 solo suben dos cosas pequeñas, ya en la tabla: la cuenta atrás en el título (fila 4: es una línea de código, y quien
+usa PACE en una pestaña de la web no ve el reloj) y los botones de 24 px del constructor (fila 25: el constructor es de lo
+que se vende y en el móvil se usa con el dedo). La idea 3, el llavero del calendario, ya es el punto 13 del camino a v1.
+Por orden:
+
+| # | Idea | Dónde está ya | Tamaño | Cuándo |
+|---|---|---|---|---|
+| P1 | Una carta corta al tercer día de la prueba de 7 días (idea 2) | Fila 30 (U4); Ez la dejó para después de v1 (30 oct., 3A, `DECISIONES_PRODUCTO.md:60`) | Medio: la carta existe, pide tres días (`MOTOR_DIAS_CARTA = 3`) | La primera actualización tras v1; tercera auditoría que la pide antes |
+| P2 | Modo «Solo pausas», sin Pomodoro (idea 1) | `ROADMAP.md:103`, V1 sin fecha, «con maqueta y testers»; fila 39 | Grande: otra home, y en la web sin servidor solo avisa con PACE abierto | Después de v1, primero de lo nuevo |
+| P3 | PACE fuera de la app: «Pausar» y «Hacer la pausa» en el aviso fijo de Android (idea 4) | Ez eligió N4 A sin botones (27 oct.); la pieza nativa quedó preparada (`DECISIONES_PRODUCTO.md:112-122`) | Medio: pausar con el móvil bloqueado pide más pieza nativa | Después de v1 |
+| P4 | Partir de una rutina de PACE o duplicar una propia en el constructor (idea 6) | Nueva: solo hay crear y editar (`CustomRoutines.jsx`) | Pequeño | Después de v1 |
+| P5 | Programas con principio y fin sobre los Caminos (idea 5) | Caminos ocultos hasta después de v1 (`app/flags.js:57`); su reescritura y Travesías, fuera de v1 (`ROADMAP.md:136`) | Grande | Después de v1, si Ez reabre los Caminos |
+| P6 | Un widget con el bloque y la próxima pausa (idea 4) | `ROADMAP.md:381`: «widget de inicio (próximo break + vasos)» | Grande: nativo en Android y en el iPhone | Después de v1 |
+| P7 | Pasar los datos al móvil sin cuenta (idea 7) | En parte: la copia de «Tus datos» se exporta e importa a mano. Un QR no lleva un historial (cabe el código, no la historia) | Medio por archivo; grande si es automático | Después de v1 |
+| P8 | Resumen del año para compartir (idea 8) | «Wrapped», en «Fuera de v1» (`ROADMAP.md:318`); Año ya existe en Estadísticas (`app/stats/YearView.jsx`) | Medio | Después de v1; tiene sentido en diciembre |
+| P9 | Fijar una rutina propia a una hora del día (idea 6) | Nueva; choca con «A tu ritmo», que decide qué toca en cada pausa | Medio | Después de v1, con maqueta |
+| P10 | Una ventanita flotante con el aro en el ordenador (idea 4) | «Reloj de escritorio (Electron ligero)» en medio plazo; extensión de Chrome, fuera de v1 (`ROADMAP.md:316`) | Medio (Picture-in-Picture del navegador) a grande | Después de v1 |

@@ -1,6 +1,6 @@
-# La auditoría externa del 10 nov.: pasadas 2, 3 y 4, enteras
+# La auditoría externa del 10 nov.: pasadas 2 a 5, enteras
 
-Texto que Ez trajo de claude.ai (Fable, leyendo el repositorio público sin ejecutar la app), tal cual, sin resumir. Ez las pegó en el orden 3, 2, 4; aquí van en el suyo. La comprobación punto por punto, en `externa-10nov-pasadas-2-3-4-comprobado.md`.
+Texto que Ez trajo de claude.ai (Fable, leyendo el repositorio público sin ejecutar la app), tal cual, sin resumir. Ez pegó las tres primeras en el orden 3, 2, 4; aquí van en el suyo. La quinta llegó después y va al final. La comprobación punto por punto, en `externa-10nov-pasadas-2-3-4-comprobado.md`.
 
 ---
 
@@ -123,3 +123,29 @@ Cuarta pasada: he leído la racha, los logros, el motor del reloj, la barra late
 3. El botón «Pausa ahora» en móvil.
 
 No he comprobado si terminar un bloque de Foco, sin hacer ninguna pausa, mantiene la racha.
+
+---
+
+## Pasada 5
+
+Quinta pasada, centrada en qué construiría para que pagar merezca la pena. Lo que hoy se cobra (variedad entre días, carta del lunes, mes y año, constructor) es fácil de no echar de menos, así que yo añadiría cosas que se noten cada día. Sale de leer código y documentos; no he probado nada con usuarios y me he mantenido dentro de tu lista de «nunca» (sin cuentas, sin wearables, sin IA visible).
+Lo que implementaría, por orden
+
+1. Modo «Solo pausas», sin Pomodoro. Es lo que más mercado abre: mucha gente quiere que le avisen de moverse y no quiere temporizador de foco. Ya lo tienes apuntado como V1, sin fecha. [Source](https://raw.githubusercontent.com/ezradesign/Pace_app/main/ROADMAP.md) Moova, el competidor directo, se vende justo como recordatorios adaptados a tu horario. [Source](https://apps.apple.com/us/app/moova-stand-up-reminder/id1518522560) Lo pondría lo primero después de v1.
+2. Que la prueba de 7 días enseñe lo que se paga. La carta del lunes pide tres días de uso y llega cuando la prueba ya casi acaba; lo dejaste para después de v1 (U4). [Source](https://raw.githubusercontent.com/ezradesign/Pace_app/main/docs/product/DECISIONES_PRODUCTO.md) Yo lo adelantaría: una carta corta al tercer día con «esto he aprendido de ti y esto cambio mañana».
+3. El calendario como argumento de venta. Las apps de pausas de pago para Mac presumen de leer el calendario para no interrumpir reuniones y de detectar cámara o micrófono en uso. [Source](https://standlock.app/alternatives) Tú ya esquivas reuniones, pero en la web no funciona para nadie porque los dos identificadores están vacíos. Cerrar el llavero (punto 13) es terminar una función vendible, más que una tarea técnica.
+4. PACE fuera de la app. Hoy hay que abrirla para todo. Tres piezas:
+   * Botones en el aviso fijo de Android: «Pausar» y «Hacer la pausa». La pieza nativa ya está preparada para ellos. [Source](https://raw.githubusercontent.com/ezradesign/Pace_app/main/docs/product/DECISIONES_PRODUCTO.md)
+   * Un widget con el bloque actual y la próxima pausa.
+   * Una ventanita flotante con el aro en el ordenador. No he comprobado si la pestaña ya muestra la cuenta atrás en el título.
+5. Programas con principio y fin. «Cuatro semanas para el cuello» o «Espalda de oficina en 20 días», reutilizando los Caminos que tienes ocultos. Dan un motivo para seguir pagando el mensual y algo que enseñar en `/premium`.
+6. Un constructor más capaz. El editor que he leído solo añade ejercicios sueltos del registro, con duración en pasos de 5 segundos y flechas para ordenar. [Source](https://raw.githubusercontent.com/ezradesign/Pace_app/main/app/custom/CustomBuilder.jsx) Añadiría tres cosas:
+   * Partir de una rutina de PACE y modificarla, o duplicar una propia. No he visto esa opción en el editor, aunque podría estar en la tarjeta de la biblioteca.
+   * Fijar una rutina propia a una hora del día («mi rutina de las 11»).
+   * Botones más grandes: miden 24 px, pequeños para el dedo.
+7. Pasar los datos al móvil sin cuenta. Quien compra en la web y usa también el teléfono tiene dos historiales separados y solo copia manual. Un traspaso por código QR o por archivo en su propia nube encaja con «sin cuentas» y refuerza el de por vida.
+8. Resumen del año para compartir. Una imagen generada en el dispositivo con tus horas de foco y pausas. Es publicidad gratis y lo tienes en «fuera de v1».
+
+Una decisión que es tuya
+Tu regla dice que nada propone algo cerrado. Eso es elegante, pero implica que la invitación a pagar solo aparece cuando alguien toca un candado. El mejor momento para ofrecerlo suele ser justo después de un «Sí» a «¿Te ayudó?» o al cerrar una jornada completa. Yo probaría una línea discreta ahí, pero rompe la regla tal como está escrita.
+Si solo hicieras tres, serían el 2, el 3 y el 1, en ese orden: los dos primeros hacen que lo ya construido se pueda vender, y el tercero es el que más gente nueva trae.
