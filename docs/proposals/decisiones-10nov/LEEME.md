@@ -5,6 +5,10 @@ D-4 C, D-5 B, D-7 A) y sus secciones plegadas al final. Abierto: dónde va la l�
 `lunes` en `pinta.js`; recomendada el sobre), D-6 con la opción D (Ocaso y Búho con su dibujo, premiando otra cosa;
 `d6d`), 4, 6, 7, el aro, V1 y V2. Las piezas nuevas de la página, en `guion/partes-10nov-noche.html`.
 
+**En la cuenta 5iWBf (10 nov., noche): https://claude.ai/artifact/XbtnS5xak95y1iJ8iXhKdU**, con una nota en el apartado
+del aro: el del tamaño («¿Cuánto trabajas hoy?» con el horario abierto) se está repintando y llega en su propia página; el
+que sigue aquí es el de rendimiento (si se desliza), que es otra pregunta.
+
 Página para Ez con todo lo que espera su letra: D-1 a D-7 (auditoría de Fable), las propuestas 1, 2 y 4 de esa
 misma auditoría (la 3 es D-3 B), las letras 4, 6 y 7 de ChatGPT, el aro, V1 y V2 de la caza de rendimiento, S3 sin
 opciones, los «júntalos» y lo que solo puede hacer Ez. Publicada en la cuenta EcLj6:
