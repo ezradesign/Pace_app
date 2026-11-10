@@ -1,0 +1,530 @@
+{
+ "a-landing-360-es-claro": {
+  "alto": 4121,
+  "desborde": 0,
+  "capturas": [
+   300,
+   236,
+   236,
+   236,
+   236
+  ]
+ },
+ "a-landing-1280-es-claro": {
+  "alto": 3830,
+  "desborde": 0,
+  "capturas": [
+   340,
+   304,
+   304,
+   304,
+   304
+  ]
+ },
+ "a-premium-360-es-claro": {
+  "alto": 5143,
+  "desborde": 0,
+  "capturas": [
+   314,
+   216,
+   104,
+   104,
+   160,
+   160
+  ]
+ },
+ "a-premium-1280-es-claro": {
+  "alto": 4132,
+  "desborde": 0,
+  "capturas": [
+   534,
+   508,
+   254,
+   254,
+   254,
+   254
+  ]
+ },
+ "a-beta-360-es-claro": {
+  "alto": 3296,
+  "desborde": 0,
+  "capturas": [
+   223,
+   223,
+   223,
+   160
+  ]
+ },
+ "a-beta-1280-es-claro": {
+  "alto": 2725,
+  "desborde": 0,
+  "capturas": [
+   332,
+   332,
+   332,
+   160
+  ]
+ },
+ "hoy-landing-360-es-claro": {
+  "alto": 3600,
+  "desborde": 0,
+  "capturas": [
+   320,
+   158,
+   158,
+   158,
+   158
+  ]
+ },
+ "hoy-landing-360-es-oscuro": {
+  "alto": 3600,
+  "desborde": 0,
+  "capturas": [
+   320,
+   158,
+   158,
+   158,
+   158
+  ]
+ },
+ "hoy-landing-360-en-claro": {
+  "alto": 3614,
+  "desborde": 0,
+  "capturas": [
+   320,
+   158,
+   158,
+   158,
+   158
+  ]
+ },
+ "hoy-landing-360-en-oscuro": {
+  "alto": 3614,
+  "desborde": 0,
+  "capturas": [
+   320,
+   158,
+   158,
+   158,
+   158
+  ]
+ },
+ "hoy-landing-1280-es-claro": {
+  "alto": 3638,
+  "desborde": 0,
+  "capturas": [
+   340,
+   250,
+   250,
+   250,
+   250
+  ]
+ },
+ "hoy-landing-1280-es-oscuro": {
+  "alto": 3638,
+  "desborde": 0,
+  "capturas": [
+   340,
+   250,
+   250,
+   250,
+   250
+  ]
+ },
+ "hoy-landing-1280-en-claro": {
+  "alto": 3612,
+  "desborde": 0,
+  "capturas": [
+   340,
+   250,
+   250,
+   250,
+   250
+  ]
+ },
+ "hoy-landing-1280-en-oscuro": {
+  "alto": 3612,
+  "desborde": 0,
+  "capturas": [
+   340,
+   250,
+   250,
+   250,
+   250
+  ]
+ },
+ "hoy-premium-360-es-claro": {
+  "alto": 5102,
+  "desborde": 0,
+  "capturas": [
+   326,
+   216,
+   104,
+   104,
+   160,
+   160
+  ]
+ },
+ "hoy-premium-360-es-oscuro": {
+  "alto": 5102,
+  "desborde": 0,
+  "capturas": [
+   326,
+   216,
+   104,
+   104,
+   160,
+   160
+  ]
+ },
+ "hoy-premium-360-en-claro": {
+  "alto": 5294,
+  "desborde": 0,
+  "capturas": [
+   326,
+   216,
+   104,
+   104,
+   160,
+   160
+  ]
+ },
+ "hoy-premium-360-en-oscuro": {
+  "alto": 5294,
+  "desborde": 0,
+  "capturas": [
+   326,
+   216,
+   104,
+   104,
+   160,
+   160
+  ]
+ },
+ "hoy-premium-1280-es-claro": {
+  "alto": 3940,
+  "desborde": 0,
+  "capturas": [
+   559,
+   426,
+   213,
+   213,
+   213,
+   213
+  ]
+ },
+ "hoy-premium-1280-es-oscuro": {
+  "alto": 3940,
+  "desborde": 0,
+  "capturas": [
+   559,
+   426,
+   213,
+   213,
+   213,
+   213
+  ]
+ },
+ "hoy-premium-1280-en-claro": {
+  "alto": 3916,
+  "desborde": 0,
+  "capturas": [
+   559,
+   426,
+   213,
+   213,
+   213,
+   213
+  ]
+ },
+ "hoy-premium-1280-en-oscuro": {
+  "alto": 3916,
+  "desborde": 0,
+  "capturas": [
+   559,
+   426,
+   213,
+   213,
+   213,
+   213
+  ]
+ },
+ "hoy-beta-360-es-claro": {
+  "alto": 3214,
+  "desborde": 0,
+  "capturas": [
+   223,
+   223,
+   223,
+   160
+  ]
+ },
+ "hoy-beta-360-es-oscuro": {
+  "alto": 3214,
+  "desborde": 0,
+  "capturas": [
+   223,
+   223,
+   223,
+   160
+  ]
+ },
+ "hoy-beta-360-en-claro": {
+  "alto": 3170,
+  "desborde": 0,
+  "capturas": [
+   223,
+   223,
+   223,
+   160
+  ]
+ },
+ "hoy-beta-360-en-oscuro": {
+  "alto": 3170,
+  "desborde": 0,
+  "capturas": [
+   223,
+   223,
+   223,
+   160
+  ]
+ },
+ "hoy-beta-1280-es-claro": {
+  "alto": 2261,
+  "desborde": 0,
+  "capturas": [
+   178,
+   178,
+   178,
+   160
+  ]
+ },
+ "hoy-beta-1280-es-oscuro": {
+  "alto": 2261,
+  "desborde": 0,
+  "capturas": [
+   178,
+   178,
+   178,
+   160
+  ]
+ },
+ "hoy-beta-1280-en-claro": {
+  "alto": 2263,
+  "desborde": 0,
+  "capturas": [
+   178,
+   178,
+   178,
+   160
+  ]
+ },
+ "hoy-beta-1280-en-oscuro": {
+  "alto": 2263,
+  "desborde": 0,
+  "capturas": [
+   178,
+   178,
+   178,
+   160
+  ]
+ },
+ "a-landing-360-es-oscuro": {
+  "alto": 4121,
+  "desborde": 0,
+  "capturas": [
+   300,
+   236,
+   236,
+   236,
+   236
+  ]
+ },
+ "a-landing-360-en-claro": {
+  "alto": 4093,
+  "desborde": 0,
+  "capturas": [
+   300,
+   236,
+   236,
+   236,
+   236
+  ]
+ },
+ "a-landing-360-en-oscuro": {
+  "alto": 4093,
+  "desborde": 0,
+  "capturas": [
+   300,
+   236,
+   236,
+   236,
+   236
+  ]
+ },
+ "a-landing-1280-es-oscuro": {
+  "alto": 3830,
+  "desborde": 0,
+  "capturas": [
+   340,
+   304,
+   304,
+   304,
+   304
+  ]
+ },
+ "a-landing-1280-en-claro": {
+  "alto": 3805,
+  "desborde": 0,
+  "capturas": [
+   340,
+   304,
+   304,
+   304,
+   304
+  ]
+ },
+ "a-landing-1280-en-oscuro": {
+  "alto": 3805,
+  "desborde": 0,
+  "capturas": [
+   340,
+   304,
+   304,
+   304,
+   304
+  ]
+ },
+ "a-premium-360-es-oscuro": {
+  "alto": 5143,
+  "desborde": 0,
+  "capturas": [
+   314,
+   216,
+   104,
+   104,
+   160,
+   160
+  ]
+ },
+ "a-premium-360-en-claro": {
+  "alto": 5385,
+  "desborde": 0,
+  "capturas": [
+   314,
+   216,
+   104,
+   104,
+   160,
+   160
+  ]
+ },
+ "a-premium-360-en-oscuro": {
+  "alto": 5385,
+  "desborde": 0,
+  "capturas": [
+   314,
+   216,
+   104,
+   104,
+   160,
+   160
+  ]
+ },
+ "a-premium-1280-es-oscuro": {
+  "alto": 4132,
+  "desborde": 0,
+  "capturas": [
+   534,
+   508,
+   254,
+   254,
+   254,
+   254
+  ]
+ },
+ "a-premium-1280-en-claro": {
+  "alto": 4169,
+  "desborde": 0,
+  "capturas": [
+   534,
+   508,
+   254,
+   254,
+   254,
+   254
+  ]
+ },
+ "a-premium-1280-en-oscuro": {
+  "alto": 4169,
+  "desborde": 0,
+  "capturas": [
+   534,
+   508,
+   254,
+   254,
+   254,
+   254
+  ]
+ },
+ "a-beta-360-es-oscuro": {
+  "alto": 3296,
+  "desborde": 0,
+  "capturas": [
+   223,
+   223,
+   223,
+   160
+  ]
+ },
+ "a-beta-360-en-claro": {
+  "alto": 3282,
+  "desborde": 0,
+  "capturas": [
+   223,
+   223,
+   223,
+   160
+  ]
+ },
+ "a-beta-360-en-oscuro": {
+  "alto": 3282,
+  "desborde": 0,
+  "capturas": [
+   223,
+   223,
+   223,
+   160
+  ]
+ },
+ "a-beta-1280-es-oscuro": {
+  "alto": 2725,
+  "desborde": 0,
+  "capturas": [
+   332,
+   332,
+   332,
+   160
+  ]
+ },
+ "a-beta-1280-en-claro": {
+  "alto": 2681,
+  "desborde": 0,
+  "capturas": [
+   332,
+   332,
+   332,
+   160
+  ]
+ },
+ "a-beta-1280-en-oscuro": {
+  "alto": 2681,
+  "desborde": 0,
+  "capturas": [
+   332,
+   332,
+   332,
+   160
+  ]
+ }
+}

@@ -1,0 +1,199 @@
+/* PACE · la página para Ez con las direcciones de la web (escribe index.html junto a este archivo).
+   Uso: node docs/proposals/web-estetica-9nov/pagina.js — después de maqueta.js y recortes.js. */
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const AQUI = __dirname;
+const FOTOS = path.join(AQUI, 'fotos');
+const hay = fs.readdirSync(FOTOS).filter((f) => /^(hoy|a|b|c)-/.test(f)).map((f) => f.replace(/\.webp$/, ''));
+const medidas = JSON.parse(fs.readFileSync(path.join(FOTOS, 'medidas.json'), 'utf8'));
+const pesos = fs.existsSync(path.join(AQUI, 'pesos.json')) ? JSON.parse(fs.readFileSync(path.join(AQUI, 'pesos.json'), 'utf8')) : {};
+const kb = (n) => (n / 1024).toFixed(1).replace('.', ',') + ' KB';
+const peso = (d) => pesos[d] ? kb(pesos[d].gzip) + ' comprimido (' + kb(pesos[d].bruto) + ' sin comprimir)' + (pesos[d].fcp ? '; la landing sale en ' + pesos[d].fcp + ' ms (hoy, ' + pesos.hoy.fcp + ')' : '') : 'por medir';
+const listo = (d) => hay.some((k) => k.startsWith(d + '-'));
+
+const DIRS = {
+  a: { nombre: 'A · Cuaderno de campo', rec: true,
+    idea: 'Un solo papel, sin bandas de color. Un filete fino separa las secciones; donde hay texto, el título va al margen y el texto a su derecha; las capturas van montadas como láminas, con papel alrededor y un segundo filete fuera. Los cinco módulos llevan su dibujo de la app en las tres páginas, lo que se elige (el plato de por vida, «Lo que te llevas») lleva un segundo filete, como un sello, y los pasos de /beta van unidos por un hilo. Cabecera y pie, iguales en las tres.',
+    arregla: 'Arregla 1, 2 (el aspecto; los enlaces son la letra 3), 3 en el ordenador y en la landing del móvil, 4, 5, 6, 8 y 9. El 7 necesita capturas en oscuro (letra 2).',
+    cambia: 'En el marcado solo cambian dos cosas: en /beta, la portada se agrupa en dos para poner las capturas en fila debajo del título; en /premium, la pantalla de la app es la nueva.' },
+  b: { nombre: 'B · Una jornada', idea: 'La portada es el aro del Foco: el título dentro y el botón abajo, como «Empezar foco». De ahí baja la línea del día por el margen, con una parada en el color de cada módulo al empezar cada sección, y las capturas van grandes.', arregla: '', cambia: '' },
+  c: { nombre: 'C · Pulido sobrio', idea: 'Las bandas de hoy, arreglando solo lo medido: cabecera y pie iguales, capturas más grandes, líneas de unas 65 letras, la lista de los módulos con su dibujo y las preguntas más estrechas.', arregla: '', cambia: '' },
+};
+
+const html = `<title>Tres direcciones para la web</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500&family=Inter+Tight:wght@400;500&display=swap">
+<style>
+  /* Una columna de lectura (los colores y la letra de PACE) y un visor a lo ancho para las fotos. */
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858;
+    --line: #C9C0A8; --line-2: #B8AD8E; --focus: #3E5A3A; --cta: #50624D; --marco: #D9D2BE;
+    --display: 'Cormorant Garamond', Georgia, serif; --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536; --line-2: #5f5544; --focus: #7A9A6D; --cta: #8E9D88; --marco: #332d23; color-scheme: dark; } }
+  :root[data-theme="dark"] { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536; --line-2: #5f5544; --focus: #7A9A6D; --cta: #8E9D88; --marco: #332d23; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { background: var(--paper); color: var(--ink); font: 16px/1.6 var(--ui); }
+  .marco { max-width: 1100px; margin: 0 auto; padding-block: 8px 88px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  h1, h2, h3 { font-family: var(--display); font-style: italic; font-weight: 500; text-wrap: balance; color: var(--ink); }
+  h1 { font-size: clamp(38px, 8vw, 56px); line-height: 1.04; margin: 28px 0 14px; }
+  h2 { font-size: clamp(28px, 6vw, 36px); line-height: 1.1; margin: 64px 0 10px; padding-top: 28px; border-top: 1px solid var(--line); }
+  h3 { font-size: 24px; line-height: 1.2; margin: 0 0 6px; }
+  p, li { color: var(--ink-2); } p { margin: 0 0 12px; max-width: 44em; }
+  a { color: var(--focus); }
+  .kicker { font: 500 11px/1.4 var(--ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 6px; }
+  .lede { font-size: 18px; max-width: 38em; }
+  .defectos { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 10px; counter-reset: d; max-width: 46em; }
+  .defectos li { counter-increment: d; display: grid; grid-template-columns: 30px 1fr; gap: 10px; }
+  .defectos li::before { content: counter(d); font: italic 500 20px/1.5 var(--display); color: var(--ink); }
+  .fotos { display: grid; gap: 24px; margin: 26px 0 0; }
+  figure { margin: 0; min-width: 0; }
+  figure img { display: block; max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--paper-2); }
+  figcaption { font-size: 14px; color: var(--ink-3); margin-top: 8px; max-width: 44em; }
+  .dos-fotos { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+  .dir { border: 1px solid var(--line); border-radius: 10px; padding: 18px 18px 14px; margin: 16px 0; }
+  .dir.rec { border-color: var(--cta); outline: 1px solid var(--cta); outline-offset: 3px; }
+  .dir.pendiente { border-style: dashed; }
+  .dir .sello { font: 500 11px/1 var(--ui); letter-spacing: .12em; text-transform: uppercase; color: var(--paper); background: var(--cta); border-radius: 999px; padding: 5px 9px; margin-left: 8px; vertical-align: .35em; font-style: normal; }
+  .dir .dato { font-size: 14px; color: var(--ink-3); margin: 6px 0 0; }
+  /* El visor: los mandos arriba, pegados al hacer scroll, y la foto en su marco. */
+  .mandos { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--paper); border-bottom: 1px solid var(--line); padding: 10px 0; margin: 18px 0 16px; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper); }
+  .grupo { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .grupo > span { font: 500 11px/1 var(--ui); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin-right: 2px; }
+  .grupo button { font: 500 13px/1 var(--ui); color: var(--ink-2); background: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 8px 12px; cursor: pointer; }
+  .grupo button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .grupo button:disabled { opacity: .45; cursor: default; }
+  .grupo button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .escena { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+  .pantalla { background: var(--marco); border-radius: 14px; padding: 10px; max-width: 100%; }
+  .pantalla .vidrio { overflow-y: auto; overflow-x: hidden; border-radius: 6px; background: var(--paper-2); }
+  .pantalla img { display: block; width: 100%; height: auto; }
+  .pantalla.movil { width: 380px; } .pantalla.movil .vidrio { height: 680px; max-height: 78vh; }
+  .pantalla.ordenador { width: min(100%, 1020px); } .pantalla.ordenador .vidrio { aspect-ratio: 1280 / 720; max-height: 78vh; }
+  .pantalla .pie { font-size: 12px; color: var(--ink-3); margin: 8px 2px 0; }
+  .pantalla h3 { font-size: 19px; margin: 2px 2px 8px; }
+  .letras { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 18px; max-width: 46em; }
+  .letras li { border-bottom: 1px solid var(--line); padding-bottom: 16px; }
+  .letras .p { font: italic 500 22px/1.3 var(--display); color: var(--ink); margin: 0 0 8px; }
+  .letras .op { margin: 2px 0; }
+  .letras .op b { color: var(--ink); font-weight: 500; }
+  .letras .rec { color: var(--focus); font-weight: 500; }
+  .nota { font-size: 14px; color: var(--ink-3); }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+</style>
+<div class="marco">
+  <p class="kicker">PACE · la web · 10 nov. 2026</p>
+  <h1>Tres direcciones para la web</h1>
+  <p class="lede">La landing, PACE completo y /beta, pintadas con su marcado y su CSS de verdad y una capa de estilo encima. Nada está montado: la landing B sigue lista para juntar tal como está, y cualquiera de estas va después, con tu letra.</p>
+  <p>Ningún texto cambia. Recomiendo la A. ${['b', 'c'].every(listo) ? '' : '<b>Todavía falta:</b> ' + ['b', 'c'].filter((d) => !listo(d)).map((d) => DIRS[d].nombre).join(' y ') + ' (se están pintando; esta misma página se pondrá al día).'}</p>
+
+  <h2>Lo que tiene la web hoy</h2>
+  <p>Medido en la rama, a 360 y a 1280 px. Las tres se leen como tres webs parecidas, no como una.</p>
+  <ol class="defectos">
+    <li>La cabecera cambia de una página a otra: el logo mide 72 px de alto en la landing y 132 en las otras dos, y solo la landing dice «¿Ya usas PACE? Ábrelo».</li>
+    <li>El pie también cambia: la landing acaba en un botón y enlaza a PACE completo; /premium y /beta acaban en la vaca con un enlace, y no se enlazan entre ellas.</li>
+    <li>Las capturas se ven pequeñas: 250 px de ancho dentro de bandas de 1.068 en la landing y 178 px en la portada de /beta. En el móvil, 158 px en la landing y 104 px «Tu mes» y «Tu año» en /premium. Miden 540 de origen.</li>
+    <li>Los cinco módulos se dibujan de tres maneras: un punto de color en la landing, el dibujo pequeño en /premium y una píldora con el dibujo en /beta.</li>
+    <li>Hay líneas de unas 124 letras (la nota de «Avísame») y de 150 (la de «Lo que te llevas»). Lo cómodo ronda las 65.</li>
+    <li>En inglés, la portada de /premium enseña la app en castellano.</li>
+    <li>En oscuro, todas las capturas son de la app en claro: rectángulos crema sobre el fondo oscuro.</li>
+    <li>Todas las secciones son la misma banda, de color alterno, con el título arriba a la izquierda: nada marca el ritmo ni lo importante, como el precio o el regalo.</li>
+    <li>En el ordenador, las listas y las preguntas ocupan todo el ancho: en la landing, el nombre de un módulo y lo que hace quedan a unos 1.000 px el uno del otro.</li>
+  </ol>
+  <div class="fotos">
+    <figure><img src="fotos/defecto-cabeceras.webp" alt="Las cabeceras de la landing, de PACE completo y de /beta, una debajo de otra" loading="lazy"><figcaption>1 · Las tres cabeceras a 1280 px: landing, PACE completo y /beta.</figcaption></figure>
+    <figure><img src="fotos/defecto-capturas.webp" alt="La sección «Cinco maneras de parar» de la landing con las dos capturas pequeñas" loading="lazy"><figcaption>3 y 9 · «Cinco maneras de parar» en la landing, a 1280 px: dos capturas de 250 px y la lista a todo lo ancho.</figcaption></figure>
+    <div class="dos-fotos">
+      <figure><img src="fotos/defecto-modulos.webp" alt="Los módulos en la landing, en PACE completo y en /beta" loading="lazy"><figcaption>4 · Los módulos, de tres maneras (móvil).</figcaption></figure>
+      <figure><img src="fotos/defecto-oscuro.webp" alt="Las capturas de PACE completo en el tema oscuro" loading="lazy"><figcaption>7 · En oscuro, las capturas siguen en claro.</figcaption></figure>
+    </div>
+    <figure><img src="fotos/defecto-ingles.webp" alt="La portada de PACE completo en inglés, con la app en castellano" loading="lazy"><figcaption>6 · /premium en inglés: la app sale en castellano.</figcaption></figure>
+    <figure><img src="fotos/defecto-pies.webp" alt="Los pies de las tres páginas" loading="lazy"><figcaption>2 · Los tres pies.</figcaption></figure>
+  </div>
+
+  <h2>Las direcciones</h2>
+  ${Object.entries(DIRS).map(([d, o]) => `<div class="dir${o.rec ? ' rec' : ''}${listo(d) ? '' : ' pendiente'}">
+    <h3>${o.nombre}${o.rec ? '<span class="sello">Recomendada</span>' : ''}</h3>
+    <p>${o.idea}</p>
+    ${listo(d) ? `<p>${o.arregla}</p>${o.cambia ? '<p class="dato">' + o.cambia + '</p>' : ''}<p class="dato">Peso: ${peso(d)}.</p>` : '<p class="dato">Se está pintando.</p>'}
+  </div>`).join('\n  ')}
+
+  <div class="mandos" role="group" aria-label="Qué enseñar">
+    <div class="grupo" data-g="dir"><span>Dirección</span><button type="button" data-v="hoy">Hoy</button>${Object.entries(DIRS).map(([d, o]) => `<button type="button" data-v="${d}"${listo(d) ? '' : ' disabled'}>${o.nombre.split(' · ')[0]}</button>`).join('')}</div>
+    <div class="grupo" data-g="pagina"><span>Página</span><button type="button" data-v="landing">Landing</button><button type="button" data-v="premium">PACE completo</button><button type="button" data-v="beta">Beta</button></div>
+    <div class="grupo" data-g="idioma"><span>Idioma</span><button type="button" data-v="es">ES</button><button type="button" data-v="en">EN</button></div>
+    <div class="grupo" data-g="tema"><span>Tema</span><button type="button" data-v="claro">Claro</button><button type="button" data-v="oscuro">Oscuro</button></div>
+    <div class="grupo" data-g="ancho"><span>Pantalla</span><button type="button" data-v="360">Móvil</button><button type="button" data-v="1280">Ordenador</button></div>
+  </div>
+  <p class="nota" id="aviso" hidden></p>
+  <div class="escena" id="escena"></div>
+
+  <h2>Tus letras</h2>
+  <ol class="letras">
+    <li><p class="p">1 · ¿Qué dirección montamos en las tres páginas?</p>
+      <p class="op"><b>A · Cuaderno de campo</b> <span class="rec">(recomendada)</span>: es la que más defectos arregla sin tocar ninguna decisión tuya anterior (el mosaico de /premium, los platos, los pasos de /beta), y su aire de cuaderno es el de los logros y los dibujos de la app.</p>
+      <p class="op"><b>B · Una jornada</b>: la más vistosa; cambia el mosaico que elegiste el 23 oct.</p>
+      <p class="op"><b>C · Pulido sobrio</b>: la más segura; deja las bandas de hoy.</p>
+      <p class="op"><b>Ninguna</b>: la web se queda como está.</p></li>
+    <li><p class="p">2 · ¿Rehago las capturas en oscuro?</p>
+      <p class="op"><b>Sí</b> <span class="rec">(recomendada)</span>: con la app de la rama en su tema oscuro; cada navegador baja solo las de su tema, así que no pesa más para nadie (unos 350 KB más en el repo). Arregla el 7 en cualquier dirección.</p>
+      <p class="op"><b>No</b>: las capturas siguen en claro también en oscuro.</p></li>
+    <li><p class="p">3 · ¿El pie de las tres páginas enlaza a las otras dos?</p>
+      <p class="op"><b>Sí</b> <span class="rec">(recomendada)</span>: con textos que ya existen, «PACE completo» y «Android e iPhone»; hoy, desde /premium no se llega a /beta ni al revés.</p>
+      <p class="op"><b>No</b>: cada pie se queda con sus enlaces.</p></li>
+    <li><p class="p">4 · ¿La pantalla de la app de /premium, rehecha en su idioma y su tema?</p>
+      <p class="op"><b>Sí</b> <span class="rec">(recomendada)</span>: es la de las fotos de las direcciones, sacada de la app de la rama; arregla el 6.</p>
+      <p class="op"><b>No</b>: se queda la de hoy, en castellano.</p></li>
+    <li><p class="p">5 · Aparte, sin cambiar el aspecto: el idioma de entrada</p>
+      <p class="op">La landing sale en inglés si el navegador no está en castellano; /premium y /beta, en castellano si no está en inglés. Quien llega con el navegador en francés ve la landing en inglés y PACE completo en castellano.</p>
+      <p class="op"><b>Igualar las tres a la regla de la landing</b> <span class="rec">(recomendada)</span>: inglés salvo navegador en castellano. <b>Dejarlo</b>: como hoy.</p></li>
+  </ol>
+  <p class="nota">Generada con <code>docs/proposals/web-estetica-9nov/maqueta.js</code> y <code>pagina.js</code> en la rama <code>claude/landing-c-9nov</code>; la copia, con sus fotos, está en esa carpeta.</p>
+</div>
+<script>
+(function () {
+  var HAY = ${JSON.stringify(hay)};
+  var MEDIDAS = ${JSON.stringify(Object.fromEntries(hay.map((k) => [k, medidas[k] ? medidas[k].alto : null])))};
+  var NOMBRES = { hoy: 'Hoy', a: 'A · Cuaderno', b: 'B · Jornada', c: 'C · Pulido' };
+  var PAG = { landing: 'Landing', premium: 'PACE completo', beta: 'Beta' };
+  var estado = { dir: 'a', pagina: 'landing', idioma: 'es', tema: 'claro', ancho: '1280' };
+  try { var g = JSON.parse(localStorage.getItem('pace.web.visor') || 'null'); if (g) for (var k in g) if (k in estado) estado[k] = g[k]; } catch (e) {}
+  if (!HAY.some(function (x) { return x.indexOf(estado.dir + '-') === 0; })) estado.dir = 'a';
+  var escena = document.getElementById('escena'), aviso = document.getElementById('aviso');
+  function clave(d) { return [d, estado.pagina, estado.ancho, estado.idioma, estado.tema].join('-'); }
+  function pantalla(d) {
+    var k = clave(d), hayla = HAY.indexOf(k) >= 0;
+    var div = document.createElement('div');
+    div.className = 'pantalla ' + (estado.ancho === '360' ? 'movil' : 'ordenador');
+    div.innerHTML = '<h3>' + NOMBRES[d] + ' · ' + PAG[estado.pagina] + '</h3><div class="vidrio">' + (hayla ? '<img alt="' + NOMBRES[d] + ', ' + PAG[estado.pagina] + '" src="fotos/' + k + '.webp">' : '<p style="padding:16px">Esta combinación aún no está pintada.</p>') + '</div>' +
+      '<p class="pie">' + (estado.ancho === '360' ? '360 px' : '1280 px') + (MEDIDAS[k] ? ' · la página mide ' + MEDIDAS[k] + ' px de alto' : '') + '</p>';
+    return div;
+  }
+  function pintar() {
+    document.querySelectorAll('.grupo').forEach(function (gr) {
+      gr.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String(estado[gr.dataset.g] === b.dataset.v)); });
+    });
+    escena.innerHTML = '';
+    /* En el móvil, hoy al lado de la dirección elegida; en el ordenador, una sola. */
+    if (estado.ancho === '360' && estado.dir !== 'hoy') escena.appendChild(pantalla('hoy'));
+    escena.appendChild(pantalla(estado.dir));
+    aviso.hidden = estado.ancho === '360' || estado.dir === 'hoy';
+    aviso.textContent = 'En el ordenador se ve una pantalla cada vez: «Hoy» enseña la de ahora.';
+    try { localStorage.setItem('pace.web.visor', JSON.stringify(estado)); } catch (e) {}
+  }
+  document.querySelectorAll('.grupo').forEach(function (gr) {
+    gr.addEventListener('click', function (ev) {
+      var b = ev.target.closest('button'); if (!b || b.disabled) return;
+      estado[gr.dataset.g] = b.dataset.v; pintar();
+    });
+  });
+  pintar();
+})();
+</script>
+`;
+fs.writeFileSync(path.join(AQUI, 'index.html'), html);
+console.log('index.html', Math.round(html.length / 1024) + ' KB', hay.length + ' fotos');
