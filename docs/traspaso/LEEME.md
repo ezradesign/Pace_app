@@ -2,7 +2,31 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de noviembre de 2026, 17:45, v0.197.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de noviembre de 2026, 23:15, v0.197.0.
+
+## 10 nov., ~23:15: Ez contestó la auditoría y hay dos sesiones en marcha. Empieza aquí; manda sobre lo de abajo
+
+- **Ez (literal): «1A + 2A + 3A + 4A + D1A + D2A + d3A + D4C + D5B + D7A».** Los números son las cuatro propuestas pintadas de la
+  página de la auditoría (C2uFSMM8eWhcRxpXLGWkAx en EcLj6): 1A, fila de compra en Ajustes; 2A, el cierre del ejercicio nombra lo que
+  sigue; 3A, la línea de los lunes; 4A, la bienvenida y la invitación sin «v1». D-1 A, D-2 A y D-7 A son «como está». D-4 C: el repo
+  sigue público, sin decir dónde viven las llaves ni las notas de fallos de cobro abiertos. D-5 B: el día de v1 se quedan solo las
+  rutinas de pago que acabó alguna vez.
+- **3A y D-3 A se contradecían:** preguntado, Ez eligió **la línea de los lunes** (3A, que es D-3 B). Falta la maqueta del móvil antes
+  de montarla (en la home no cabe: se pasa 2 px a 360×740).
+- **D-6 (los logros «Búho» y «Ocaso»), sin letra:** Ez preguntó «¿No podemos adaptarlos para que sean útiles sin cambiar el glifo?».
+  Es una opción nueva (D): mismo dibujo y mismo id, cambia lo que premian. Se le pinta con ideas y una recomendada; aún no ha elegido.
+- **Sin contestar todavía:** las letras 4, 6 y 7 de ChatGPT, el aro, V1 y V2 de la caza de rendimiento, y los «júntalos» (ChatGPT 5,
+  1, 3 y 2; los dos arreglos invisibles de rendimiento; el `guardar()` atómico).
+- **Sesiones en marcha (Opus, cuenta EcLj6):** `montar-auditoria` (`local_a47804a5…`, worktree y rama propios cortados de `main`,
+  puertos 8950-8959) monta 1A, 2A, 4A, D-5 B y D-4 C con pruebas y una página «Montado»; espera el «júntalo» de Ez.
+  `p-gina-nica-con-todas-la` (`local_6db86888…`, worktree propio, puertos 8940-8949) hace UNA página con todo lo que sigue abierto:
+  la línea de los lunes en el móvil, D-6 con la opción D, 4, 6 y 7, el aro, V1 y V2, y las listas «Solo falta tu sí» y «Solo puedes
+  hacerlo tú»; copia en `docs/proposals/decisiones-10nov/` de su rama. Queda un worktree vacío de un arranque fallido:
+  `decisiones-10nov-227083`, sin cambios, se puede quitar.
+- **La primera pasada externa** (la de la v0.196.0, que Ez volvió a pegar a las ~19:20) ya estaba guardada y comprobada:
+  `externa-10nov.md` en la rama de la auditoría. Antes de comprobar una auditoría pegada, grep de una frase suya en esa carpeta.
+- **Ez ofrece auditar fuera con Fable** lo que haga falta (en claude.ai, sin gastar estas cuentas): pedírselo con un texto para pegar.
+- **Uso a las 22:40:** 5 h al 10 % (se reponen a las 03:30), semana al 12 %, «Weekly · Fable» al 13 %.
 
 ## AL RELEVO (10 nov., 17:15): la 0.197.0, juntada y en `main`. Manda sobre todo lo de abajo
 
