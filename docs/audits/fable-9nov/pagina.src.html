@@ -43,23 +43,35 @@ ul{margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:6px;max-w
 </style>
 <main>
 <header class="cab">
-  <span class="rot">PACE v0.196.0 · dos auditorías de Fable, juntas · 10 nov. 2026</span>
+  <span class="rot">PACE v0.197.0 · las auditorías de Fable, juntas · 10 nov. 2026</span>
   <h1>Qué mueve la venta, y qué es lo primero</h1>
-  <p>Aquí van juntas mi auditoría, hecha usando PACE en el móvil y en el portátil con el reloj adelantado, y la externa que trajiste, comprobada punto a punto en el código y en las ramas. De sus 40 puntos, 18 son nuevos, 4 ya están hechos en una rama que espera tu «júntalo», 8 ya estaban en tu lista y 10 los habías decidido tú; ninguno es falso. Nada está montado: las fotos son propuestas pintadas sobre la app.</p>
+  <p>Aquí van juntas mi auditoría, hecha usando PACE en el móvil y en el portátil con el reloj adelantado, y las cuatro pasadas de la externa que trajiste, comprobadas punto a punto en el código y en las ramas. La primera trajo 18 cosas nuevas de 40 y ninguna falsa; las otras tres, 23 nuevas de 38 y 3 falsas. Todo lo que vale está en una sola cola. Nada está montado: las fotos son propuestas pintadas sobre la app.</p>
   <div class="primero"><span class="rot">Lo primero</span><b>Poner en Ajustes una fila para comprar PACE completo.</b><span>Es poco trabajo y, sin ella, encender la venta en la web no la enseña a nadie que ya use PACE.</span></div>
 </header>
 
 <section>
-  <h2>Las siete cosas que más mueven la venta</h2>
+  <h2>Las ocho cosas que más mueven la venta</h2>
   <ol class="top">
     <li><b>Una fila para comprar en Ajustes.</b><span>Hasta v1 no hay nada cerrado, así que el botón de compra no sale nunca a quien ya usa PACE, que es quien antes pagaría. Comprobado en la app con el enlace de pago puesto.</span></li>
     <li><b>Que la web capte a quien llega.</b><span>Juntar la landing, que ya está hecha; abrir «Avísame»; y que robots.txt, sitemap.xml y el título del navegador no sean la app con su número de versión, como pasa hoy en pacegrass.app.</span></li>
+    <li><b>Antes de dar la prueba a los testers, dos arreglos.</b><span>Que su quinta pausa entera no gaste la única petición de valoración, que hoy se pide una vez y nunca más; y que en el móvil el fin de la pausa avise, con un sonido distinto del fin del Foco. Los dos son poco trabajo.</span></li>
     <li><b>Que el ejercicio de la pausa devuelva al Foco.</b><span>Lo que hace volver cada día es el círculo bloque, pausa, bloque; hoy el cierre del ejercicio dice «Volver al inicio» y, por libre, el aro espera en 00:00.</span></li>
     <li><b>Un aviso, si la persona lo quiere, a la hora de entrada.</b><span>Hoy el único aviso es el fin de un Foco, y PACE ya sabe tu horario: en Android y el iPhone puede darte los buenos días con tu jornada.</span></li>
     <li><b>Que lo de pago se vea.</b><span>La semana que cambia y la carta del lunes se apagan en silencio sin PACE completo, y ocho días después del día de v1 nada avisa de que acabó la prueba. Pide tu decisión D-3.</span></li>
     <li><b>Que las cifras del día cuadren.</b><span>La pausa contada como foco, lo hecho que se rehacía, la hora de empezar que se movía y el doble cómputo: ya hecho, espera tu júntalo. Y tus letras de 4, 6 y 7.</span></li>
     <li><b>Antes de cobrar, dos cuidados.</b><span>Que STATE.md no diga en qué disco viven las llaves, y la revisión de un fisioterapeuta que CONTENT.md pide antes de v1 para Fondos en silla, hoy gratis.</span></li>
   </ol>
+</section>
+
+<section>
+  <h2>Pasadas 2, 3 y 4: qué aportan</h2>
+  <p>Sí sirven, aunque menos que la primera. De 38 afirmaciones, 31 son ciertas, 4 a medias y 3 falsas; 23 son nuevas, 7 ya estaban en la cola y 5 las habías decidido tú. Ninguna estaba arreglada en una rama.</p>
+  <ul>
+    <li><b>Lo que más vale.</b> La valoración que se gastaría con los testers; el fin de la pausa sin aviso en el móvil y con el mismo sonido que el fin del Foco; los cambios de sentido, brazo o lado dentro de un paso, que nadie avisa («Brazos libres», «Giro sentado»); y «Levántate y sube», que descansa 90 s para 88 s de ejercicio.</li>
+    <li><b>Lo que es falso.</b> No hay analítica de Cloudflare en /premium ni en /gracias: lo miré en vivo. Y el permiso de alarmas exactas sí se declara en Android, lo pone el complemento de avisos; era el fallo que más alarmaba de la cuarta.</li>
+    <li><b>Lo que ya habías decidido.</b> El iPhone entra en v1 con la compra de Apple (leyó un comentario viejo del código); la alarma exacta se ofrece desde Ajustes; la colocación no espera a tu toque; la primera pausa del día es Mueve de pie; la barra lateral calla al cerrar la jornada.</li>
+    <li><b>Lo que entra en la cola.</b> Diecisiete filas nuevas o ampliadas, marcadas con su punto (2.2, 4.F2…), y dos decisiones: D-5 y D-6.</li>
+  </ul>
 </section>
 
 <section>
@@ -121,7 +133,7 @@ ul{margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:6px;max-w
 
 <section>
   <h2>Las decisiones que las auditorías discuten</h2>
-  <p class="nota">Las cuatro las tomaste tú. Las dos auditorías creen que frenan la venta; lo digo una vez, con letras y una recomendada.</p>
+  <p class="nota">D-1 a D-4 las tomaste tú, y las auditorías creen que frenan la venta. D-5 y D-6 son nuevas. Lo digo una vez, con letras y una recomendada.</p>
   <div class="prop">
     <h3>D-1 · El precio y el mensual</h3>
     <p>La externa vendería solo el de por vida, a 19,99 € de lanzamiento y más caro después: dice que el mensual casi nadie lo elegirá y trae casi toda la complejidad del cobro.</p>
@@ -156,6 +168,23 @@ ul{margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:6px;max-w
       <div><i>C</i><span>Público, pero sin decir dónde viven las llaves y sin las notas de fallos de cobro mientras estén abiertos. <span class="rec">recomendada</span> Las pruebas de cada subida gastan muchos minutos de GitHub, y en un repo privado, pasado un cupo, se pagan.</span></div>
     </div>
   </div>
+  <div class="prop">
+    <h3>D-5 · Qué rutinas de pago se quedan el día de v1</h3>
+    <p>Decidiste que se queda lo que ya hizo alguna vez. Hoy cuenta cualquier sesión empezada, terminada o no: quien abra las 18 unos segundos antes de v1 se las queda todas, y el repositorio público lo explica.</p>
+    <div class="letras">
+      <div><i>A</i><span>Como está: basta con haberla empezado.</span></div>
+      <div><i>B</i><span>Solo las que acabó alguna vez. <span class="rec">recomendada</span> Es lo que quiere decir «ya la hizo», y nadie pierde una rutina que de verdad usaba.</span></div>
+    </div>
+  </div>
+  <div class="prop">
+    <h3>D-6 · Los logros de trasnochar</h3>
+    <p>«Búho» (usar PACE de 2 a 4 de la madrugada) y «Ocaso» (cinco días con sesión después de las 21 h) premian lo contrario de una jornada que acaba a su hora. «Nunca a medianoche» ya existe.</p>
+    <div class="letras">
+      <div><i>A</i><span>Como están.</span></div>
+      <div><i>B</i><span>Retirarlos del catálogo; quien ya los tenga, los conserva. <span class="rec">recomendada</span> Van contra el tono de PACE.</span></div>
+      <div><i>C</i><span>Cambiarlos por uno de cerrar la jornada a su hora.</span></div>
+    </div>
+  </div>
 </section>
 
 <section>
@@ -164,37 +193,52 @@ ul{margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:6px;max-w
     <tr><th></th><th>Qué es</th><th>Qué gana quien usa PACE</th><th>Esfuerzo</th><th>Cuándo</th></tr>
     <tr><td>1</td><td>Fila «Tenerlo para siempre · 19,99 €» en Ajustes</td><td>Puede comprarlo sin buscar la web</td><td>Poco</td><td>Antes de v1, al encender la venta</td></tr>
     <tr><td>2</td><td>La landing en la raíz</td><td>Entiende qué es PACE antes de abrir la app</td><td>Ya hecho, espera tu júntalo</td><td>Ya</td></tr>
-    <tr><td>3</td><td>Abrir «Avísame»</td><td>Puede dejar su correo y enterarse</td><td>Poco, tuyo</td><td>Ya</td></tr>
-    <tr><td>4</td><td>robots.txt y sitemap.xml propios, y la versión fuera del título</td><td>Encuentra PACE en los buscadores con un nombre limpio</td><td>Poco</td><td>Antes de v1</td></tr>
-    <tr><td>5</td><td>Las cifras de la jornada (puntos 1, 2, 3 y 5 de ChatGPT)</td><td>Ve cifras que cuadran</td><td>Ya hecho, espera tu júntalo</td><td>Ya</td></tr>
-    <tr><td>6</td><td>Tus letras de 4, 6 y 7 (recomendadas 4B 6A 7A)</td><td>«Cambiar» con un Foco en marcha, y «Hoy» con lo hecho por libre</td><td>Tu letra, luego medio</td><td>Antes de v1</td></tr>
-    <tr><td>7</td><td>Que dos renovaciones del mensual no se pisen</td><td>Su suscripción nunca se descuadra</td><td>Ya hecho, espera tu júntalo</td><td>Antes del mensual</td></tr>
-    <tr><td>8</td><td>El cierre del ejercicio dice lo que sigue (propuesta 2)</td><td>Un toque menos, y sabe qué toca</td><td>Poco</td><td>Antes de v1</td></tr>
-    <tr><td>9</td><td>La bienvenida y la invitación sin «v1» (propuesta 4)</td><td>Entiende a la primera qué es gratis y hasta cuándo</td><td>Poco</td><td>Antes de v1</td></tr>
-    <tr><td>10</td><td>Que STATE.md no diga dónde viven las llaves</td><td>Nada a la vista; no da pistas a quien lee el repo</td><td>Poco</td><td>Antes de cobrar</td></tr>
-    <tr><td>11</td><td>Revisión de fisioterapeuta: Fondos en silla y los ejercicios aparcados</td><td>Lo que hace es seguro</td><td>Medio, de fuera</td><td>Antes de v1</td></tr>
-    <tr><td>12</td><td>Que el aviso de fin no sustituya en silencio al anterior</td><td>No se pierde el aviso del bloque siguiente</td><td>Poco</td><td>Antes de v1</td></tr>
-    <tr><td>13</td><td>Una nota, una vez, cuando acaba la semana de prueba de v1</td><td>No se encuentra cosas cerradas sin aviso</td><td>Medio</td><td>Antes de v1</td></tr>
-    <tr><td>14</td><td>«Pausa bien hecha» antes de hacerla, y «3 min» que un toque después es «2–3 min»</td><td>Textos que no se contradicen</td><td>Poco</td><td>Antes de v1</td></tr>
-    <tr><td>15</td><td>Pedir en Safari que lo guardado no se borre, y recomendar instalar</td><td>No pierde su historia ni su código</td><td>Poco</td><td>Antes de v1</td></tr>
-    <tr><td>16</td><td>Capturas en el manifiesto</td><td>Chrome enseña una instalación con fotos</td><td>Poco</td><td>Antes de v1</td></tr>
-    <tr><td>17</td><td>Aviso a la hora de entrada, si se quiere (Android y iPhone)</td><td>Un motivo para abrir PACE cada mañana</td><td>Medio</td><td>Antes de v1 si cabe</td></tr>
-    <tr><td>18</td><td>La línea de los lunes (propuesta 3, según D-3)</td><td>Sabe que existe una semana que aprende</td><td>Medio; falta la maqueta del móvil</td><td>Con v1</td></tr>
-    <tr><td>19</td><td>Una carta dentro de los siete días de prueba</td><td>Prueba lo que va a pagar</td><td>Medio</td><td>Tú: después de v1. Las dos auditorías: antes</td></tr>
-    <tr><td>20</td><td>Los logros de constancia por días de jornada</td><td>Quien trabaja de lunes a viernes también los gana</td><td>Poco</td><td>Después de v1</td></tr>
-    <tr><td>21</td><td>Esconder Foco · Pausa · Larga con la jornada en marcha</td><td>Un solo sistema de pausas</td><td>Poco</td><td>Después de v1</td></tr>
-    <tr><td>22</td><td>«Foco manual» y «Ciclo 1 / 4», con maqueta</td><td>El aro explica lo que cuenta</td><td>Poco</td><td>Después de v1</td></tr>
-    <tr><td>23</td><td>La primera pausa del primer día, suave</td><td>Lo primero que pide PACE no cuesta</td><td>Medio</td><td>Después de v1</td></tr>
-    <tr><td>24</td><td>Menos toques hasta moverse (hoy tres)</td><td>La pausa empieza antes</td><td>Medio</td><td>Después de v1</td></tr>
-    <tr><td>25</td><td>Una pregunta en la bienvenida: «¿qué te molesta más?»</td><td>El plan se siente suyo</td><td>Medio</td><td>Después de v1</td></tr>
-    <tr><td>26</td><td>Marcar una reunión a mano en el día</td><td>El plan la rodea sin conectar el calendario</td><td>Medio</td><td>Después de v1</td></tr>
-    <tr><td>27</td><td>Una intensidad del día, ligera o entera, junto a «Solo pausas»</td><td>Menos ocasiones de fallar la primera semana</td><td>Medio</td><td>Después de v1</td></tr>
-    <tr><td>28</td><td>Voz en Mueve y Estira</td><td>Hace el ejercicio sin mirar la pantalla</td><td>Mucho</td><td>Después de v1</td></tr>
-    <tr><td>29</td><td>El calendario de verdad: elegir calendarios y un permiso que no caduque</td><td>El plan ve todas sus reuniones</td><td>Mucho; espera tus altas</td><td>Después de v1</td></tr>
-    <tr><td>30</td><td>Una sola forma de evento en el calendario</td><td>El mismo evento, lo ponga como lo ponga</td><td>Poco</td><td>Después de v1</td></tr>
-    <tr><td>31</td><td>Sacar los dibujos de Caminos de lo que baja al instalar</td><td>La instalación pesa menos</td><td>Poco</td><td>Después de v1</td></tr>
-    <tr><td>32</td><td>Cerrar desde la consola lo abierto hasta v1</td><td>Nada a la vista</td><td>Poco</td><td>El día de v1</td></tr>
-    <tr><td>33</td><td>Poner al día las cifras de CONTENT.md</td><td>Nada a la vista</td><td>Poco</td><td>Cuando toque</td></tr>
+    <tr><td>3</td><td>Abrir «Avísame» (el KV)</td><td>Puede dejar su correo y enterarse</td><td>Poco (tuyo)</td><td>Ya</td></tr>
+    <tr><td>4</td><td>robots.txt y sitemap.xml propios; la versión fuera del título</td><td>Encuentra PACE en los buscadores con un nombre limpio</td><td>Poco</td><td>Antes de v1</td></tr>
+    <tr><td>5</td><td>La cuenta de la jornada (puntos 1, 2, 3 y 5)</td><td>Ve cifras que cuadran</td><td>Ya hecho, espera tu júntalo</td><td>Ya</td></tr>
+    <tr><td>6</td><td>Las letras de 4, 6 y 7 (recomendadas 4B 6A 7A)</td><td>«Cambiar» con un Foco en marcha y «Hoy» con lo hecho por libre</td><td>Tu letra, luego medio</td><td>Antes de v1</td></tr>
+    <tr><td>7</td><td>El guardar() atómico de la mensual</td><td>Una renovación nunca pisa otra</td><td>Ya hecho, espera tu júntalo</td><td>Antes del mensual</td></tr>
+    <tr><td>8</td><td>La valoración no se cuenta mientras PACE está abierto hasta v1 (2.2)</td><td>Los testers reciben la petición cuando su reseña ya es pública</td><td>Poco</td><td>Antes de dar la prueba a los testers</td></tr>
+    <tr><td>9</td><td>El fin de la pausa avisa en el móvil, con un sonido distinto del fin del Foco; en Android, la alarma exacta se ofrece también al empezar el primer Foco (4.F2, 4.F3, 2.T4)</td><td>Sabe sin mirar si toca parar o volver, y el aviso llega a su hora</td><td>Poco a medio</td><td>Antes de dar la prueba a los testers</td></tr>
+    <tr><td>10</td><td>/beta deja de decir «sin rachas» mientras haya logros de días seguidos (2.T1)</td><td>Lo que promete la página es lo que encuentra</td><td>Poco</td><td>Ya</td></tr>
+    <tr><td>11</td><td>El cierre del ejercicio dice lo que sigue (propuesta 2)</td><td>Un toque menos y sabe qué toca</td><td>Poco</td><td>Antes de v1</td></tr>
+    <tr><td>12</td><td>La bienvenida y la invitación sin «v1» (propuesta 4)</td><td>Entiende a la primera qué es gratis y hasta cuándo</td><td>Poco</td><td>Antes de v1</td></tr>
+    <tr><td>13</td><td>Sacar de STATE.md dónde viven las llaves</td><td>Nada visible; evita dar pistas a quien lee el repo</td><td>Poco</td><td>Antes de cobrar</td></tr>
+    <tr><td>14</td><td>La revisión de fisioterapeuta de Fondos en silla y los ejercicios aparcados</td><td>Lo que hace es seguro</td><td>Medio (de fuera)</td><td>Antes de v1</td></tr>
+    <tr><td>15</td><td>Los cambios de sentido, brazo o lado dentro de un paso se avisan, con señal y texto («Brazos libres», «Rotación lenta», «Círculos de tobillo», «Giro sentado», «Desliza el talón») (3.2)</td><td>Sigue el ejercicio sin leer la pantalla con el cuello girado</td><td>Medio</td><td>Antes de v1</td></tr>
+    <tr><td>16</td><td>Menos descanso en las rutinas suaves gratis: hoy «Levántate y sube» y «Piernas sin pasos» descansan tanto como trabajan (3.3)</td><td>La primera pausa del día no se siente lenta</td><td>Poco</td><td>Antes de v1</td></tr>
+    <tr><td>17</td><td>El aviso de fin no sustituye en silencio al anterior (una etiqueta por bloque)</td><td>No se pierde el aviso del bloque siguiente</td><td>Poco</td><td>Antes de v1</td></tr>
+    <tr><td>18</td><td>Una nota, una vez, cuando acaba la semana de prueba de v1</td><td>No se encuentra cosas cerradas sin aviso</td><td>Medio</td><td>Antes de v1</td></tr>
+    <tr><td>19</td><td>El correo de Stripe que recuerda el fin de la prueba, además de la hoja al abrir PACE (2.3)</td><td>El aviso de antes del cobro llega aunque no abra PACE</td><td>Poco (tuyo, en Stripe)</td><td>Antes de encender la mensual</td></tr>
+    <tr><td>20</td><td>«Pausa bien hecha» antes de hacerla, y la duración que cambia («3 min» y «2–3 min»)</td><td>Textos que no se contradicen</td><td>Poco</td><td>Antes de v1</td></tr>
+    <tr><td>21</td><td>Pedir que lo guardado no se borre en Safari, recomendar instalar y recordar la copia de vez en cuando (2.T6)</td><td>No pierde su historia ni su código</td><td>Poco</td><td>Antes de v1</td></tr>
+    <tr><td>22</td><td>Un tope de unos 3 s a la red al abrir PACE instalada; si no llega, la copia guardada (2.T2)</td><td>Con una wifi mala no se queda en blanco</td><td>Poco</td><td>Antes de v1</td></tr>
+    <tr><td>23</td><td>Capturas en el manifiesto</td><td>Chrome enseña una instalación con fotos</td><td>Poco</td><td>Antes de v1</td></tr>
+    <tr><td>24</td><td>«Rutina propia» y el manifiesto en inglés; el atajo de Mueve sin «movilidad» y uno de Estira (2.T5)</td><td>En inglés no hay nada a medias</td><td>Poco</td><td>Antes de v1</td></tr>
+    <tr><td>25</td><td>Aviso opcional a la hora de entrada (Android y iPhone)</td><td>Un motivo para abrir PACE cada mañana</td><td>Medio</td><td>Antes de v1 si cabe; si no, la primera actualización</td></tr>
+    <tr><td>26</td><td>Las bibliotecas a mano en el móvil, sin abrir el cajón, con maqueta (4.E1)</td><td>«Un estiramiento de cuello ahora» está a un toque</td><td>Medio</td><td>Antes de v1 si cabe</td></tr>
+    <tr><td>27</td><td>«¿Te ayudó?» menos veces, y el «No» con su porqué («aquí no podía», «difícil», «me molestó») (3.V3, 3.V4)</td><td>Contesta cuando importa, y un «aquí no podía» no le aparta la rutina una semana</td><td>Medio</td><td>Antes de v1 si cabe</td></tr>
+    <tr><td>28</td><td>La línea de los lunes (propuesta 3; según D-3)</td><td>Sabe que existe una semana que aprende</td><td>Medio (falta la maqueta del móvil)</td><td>Con v1</td></tr>
+    <tr><td>29</td><td>Una carta dentro de los siete días de prueba (U4)</td><td>Prueba lo que va a pagar</td><td>Medio</td><td>Tú: después de v1. Las dos auditorías: antes</td></tr>
+    <tr><td>30</td><td>Los logros de constancia por días de jornada (también lo piden 4.F4 y 4.F5)</td><td>Quien trabaja de lunes a viernes también los gana</td><td>Poco</td><td>Después de v1</td></tr>
+    <tr><td>31</td><td>«Con un plan» y «Primer ritual» cuentan las pausas que sirve «A tu ritmo» (4.F6)</td><td>Hace sus pausas y gana el logro</td><td>Poco</td><td>Después de v1</td></tr>
+    <tr><td>32</td><td>Esconder Foco/Pausa/Larga con la jornada en marcha; sin jornada, que la pausa dure lo que digas (4.F7)</td><td>Un solo sistema de pausas</td><td>Poco</td><td>Después de v1</td></tr>
+    <tr><td>33</td><td>«Foco manual» y «Ciclo N / 4», con maqueta</td><td>El aro explica lo que cuenta</td><td>Poco</td><td>Después de v1</td></tr>
+    <tr><td>34</td><td>La primera pausa del primer día, suave</td><td>Lo primero que pide PACE no cuesta</td><td>Medio</td><td>Después de v1</td></tr>
+    <tr><td>35</td><td>Menos toques hasta moverse (hoy tres)</td><td>La pausa empieza antes</td><td>Medio</td><td>Después de v1</td></tr>
+    <tr><td>36</td><td>Una pregunta en la bienvenida («¿qué te molesta más?» y «¿dónde trabajas?», 3.O2)</td><td>El plan se siente suyo y no le propone flexiones delante de la oficina</td><td>Medio</td><td>Después de v1</td></tr>
+    <tr><td>37</td><td>Marcar una reunión a mano en el día</td><td>El plan la rodea sin conectar el calendario</td><td>Medio</td><td>Después de v1</td></tr>
+    <tr><td>38</td><td>Una intensidad del día (ligera o entera), junto a V1 «Solo pausas»</td><td>Menos ocasiones de fallar la primera semana</td><td>Medio</td><td>Después de v1</td></tr>
+    <tr><td>39</td><td>Voz en Mueve y Estira</td><td>Hace el ejercicio sin mirar la pantalla</td><td>Mucho</td><td>Después de v1</td></tr>
+    <tr><td>40</td><td>Vibración al ritmo de las repeticiones en el móvil (3.5)</td><td>Lo sigue en silencio, en una oficina abierta</td><td>Medio</td><td>Después de v1</td></tr>
+    <tr><td>41</td><td>Una pausa para los ojos y otra de caminar a por agua (3.7)</td><td>Pausas discretas y una que une moverse y beber</td><td>Medio</td><td>Después de v1</td></tr>
+    <tr><td>42</td><td>Subir la dosis tras varios «Sí» («¿pasamos a 2 × 8?») (3.V2)</td><td>PACE crece con quien lo usa</td><td>Mucho</td><td>Después de v1</td></tr>
+    <tr><td>43</td><td>Una pregunta semanal de cómo está, con su línea, en la carta (3.V1; sin consejo médico)</td><td>Ve que le sirve, no solo lo que hizo</td><td>Mucho</td><td>Después de v1</td></tr>
+    <tr><td>44</td><td>El calendario de verdad: elegir calendarios y el permiso que no caduca</td><td>El plan ve todas sus reuniones</td><td>Mucho; espera tus altas</td><td>Después de v1</td></tr>
+    <tr><td>45</td><td>Una sola forma de evento en el calendario</td><td>Un evento igual lo ponga como lo ponga</td><td>Poco</td><td>Después de v1</td></tr>
+    <tr><td>46</td><td>Fuera de la precarga las láminas de Caminos (1 MB) y los dibujos grandes (2,1 MB) (2.T3)</td><td>La instalación baja menos</td><td>Poco</td><td>Después de v1</td></tr>
+    <tr><td>47</td><td>Cerrar la vía de la consola a lo abierto hasta v1</td><td>Nada visible</td><td>Poco</td><td>El día de v1</td></tr>
+    <tr><td>48</td><td>Las cifras de CONTENT.md al día</td><td>Nada visible</td><td>Poco</td><td>Cuando toque</td></tr>
   </table></div>
 </section>
 
@@ -215,8 +259,8 @@ ul{margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:6px;max-w
     <li>La interfaz en oscuro, y módulo a módulo a 1280 px.</li>
     <li>Lo que dicen /premium y la landing, y cómo llevan a comprar.</li>
     <li>La pausa larga, la comida, el cierre del día y el móvil con la pantalla bloqueada.</li>
-    <li>De la externa, por probar: la altura de los enlaces de la bienvenida (dice 25 px).</li>
+    <li>De la externa, por probar: la altura de los enlaces de la bienvenida (dice 25 px), la app instalada con una wifi mala y si el pulso del ejercicio se sigue sin sonido.</li>
   </ul>
-  <p class="nota">En la rama <code>claude/auditoria-fable-9nov-8401fc</code>, carpeta <code>docs/audits/fable-9nov/</code>: el informe (<code>auditoria.md</code>), la externa comprobada punto a punto (<code>externa-10nov-comprobado.md</code>) y esta cola (<code>cola.md</code>).</p>
+  <p class="nota">En la rama <code>claude/auditoria-fable-9nov-8401fc</code>, carpeta <code>docs/audits/fable-9nov/</code>: el informe (<code>auditoria.md</code>), la externa comprobada punto a punto (<code>externa-10nov-comprobado.md</code> y <code>externa-10nov-pasadas-2-3-4-comprobado.md</code>) y esta cola (<code>cola.md</code>).</p>
 </section>
 </main>
