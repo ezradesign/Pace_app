@@ -2,7 +2,61 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de noviembre de 2026, 23:15, v0.197.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de noviembre de 2026, 23:50, v0.197.0.
+
+## AL RELEVO (10 nov., 23:50): Ez migra a la otra cuenta (5iWBf). Empieza aquí; el bloque de las 23:30, debajo, sigue valiendo entero
+
+- **El aro: Ez aclaró qué quería decir, y NO es lo que se montó.** Literal: «El aro me refería a que cambia según la ventana en la
+  que estés, es decir, adjunto capturas; me gusta el tamaño de cuando tienes seleccionada la rutina y el tamaño de cuando hay los
+  bloques de mueve y estira». «Ventana» es el estado de la home, no el tamaño de la ventana del navegador. Sus tres capturas (en
+  `docs/traspaso/archivos/aro-10nov/`, a 1917 px de ancho y ~860 de alto, v0.197.0, medidas a ojo sobre la imagen):
+  1. `1-horario-abierto.png`: «¿Cuánto trabajas hoy?» con el horario desplegado: aro de ~474 px, y la tarjeta lo corta por abajo.
+  2. `2-rutina-elegida.png`: con «Una hora» elegida («Bloque 1 de 1»): ~503 px. **Le gusta.**
+  3. `3-con-actividades.png`: con las tarjetas de Respira, Estira, Mueve e Hidrátate: ~434 px. **Le gusta.**
+  **Ez lo precisó después: «es decir, queda raro el aro de cuánto trabajas hoy».** Lo que hay que arreglar es el estado 1 (el aro cortado por la tarjeta con el horario abierto); los estados 2 y 3 le gustan como están y no pide igualarlos. Que el aro mida lo mismo en los tres estados era lectura de la coordinadora, no suya: pintarle el estado 1 arreglado de dos o tres maneras (el aro de la 3, el de la 2, o la tarjeta más baja) y que elija.
+  La rama `claude/caza-aro-fijo-10nov` montó otra cosa (372 px fijos según la ventana del navegador, pensando en 1536×710): sus
+  medidas y sus pruebas sirven, el número no. **Siguiente paso:** sesión nueva en Opus con `cwd` en su worktree
+  (`.claude/worktrees/caza-aro-fijo-10nov-8fa0c6`): medir el aro en los tres estados (y con el día en marcha) a 1920×860 y a
+  1536×710, pintar los tres estados con el aro a 434 y a 503 (o el mayor que quepa en los tres sin tapar ni scroll), recomendar uno,
+  y rehacer la página Xf1MUQNoyiBNjXPcgUc3Bj (de EcLj6) en la cuenta nueva. La ventana de Ez hoy es ~1920×860, no 1536×710.
+- **Páginas de EcLj6 que dan 404 en 5iWBf** y hay que republicar desde la copia de su rama: decisiones (H5UgBuqz5VeGnETpixxi96,
+  `claude/hopeful-booth-ba049e:docs/proposals/decisiones-10nov/`) y el aro (`claude/caza-aro-fijo-10nov:docs/proposals/aro-fijo-10nov/`,
+  mejor tras rehacerla). La auditoría en 5iWBf (2QnMBypqSRVJCmPeNJazZA) se quedó en la primera cola: republicarla desde
+  `claude/auditoria-fable-9nov-8401fc:docs/audits/fable-9nov/pagina.html`. La hoja del repo lleva ids de 5iWBf y se publica tal cual
+  en 5iWBfHE7kD3dUVocdskmb6; antes, añadirle los pasos de hoy y los pares nuevos a `docs/traspaso/archivos/hoja-ids-cuentas.js`.
+- **Orden al llegar:** (1) el CI rojo de noche de la landing (bloque de las 23:30); (2) el aro, como arriba; (3) retomar
+  `claude/montar-auditoria-10nov-3ef28c` (D-5 B, D-4 C, fotos y página «Montado»); (4) republicar las páginas y la hoja;
+  (5) preguntarle a Ez lo abierto con la página de decisiones delante (la línea de los lunes en el móvil, D-6, 4, 6 y 7, el aro,
+  V1 y V2). Nada de esto está juntado: `main` = 0.197.0.
+- **Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y los bloques «AL RELEVO (10 nov., 23:50)» y «AL RELEVO (10 nov., 23:30)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Por este orden: caza el CI que cae de noche en la prueba de la landing; rehaz lo del aro con mis tres capturas (el mismo tamaño en los tres estados de la home); termina de montar D-5 B y D-4 C; y republica mi hoja de pasos y las páginas de decisiones, del aro y de la auditoría desde las copias de sus ramas. Después hazme las preguntas que sigan abiertas con su página delante. Haz pocas vueltas y usa sesiones en Opus: el modelo nuevo gasta mucho.
+```
+
+## AL RELEVO (10 nov., 23:30): EcLj6 con las 5 h al 86 % (se reponen a las 03:30). `main` tiene el CI en rojo por la hora. Empieza aquí
+
+- **CI de `main` en rojo (600fc0b5, run 42908610659), y no es por el commit, que solo toca este archivo:** cae
+  `tests/landing-cara.spec.js:106` («con la landing delante no se guarda nada, ni pasadas dos horas ni al irse»): aparece
+  `pace.state.v2` en `localStorage`. La prueba instala el reloj a la hora de verdad y avanza 2 h: **falla siempre que se pasa entre
+  las 22:00 y las 24:00** (en GitHub, hora UTC; aquí, la del PC). Reproducido aquí a las 23:22 con esa sola prueba; los CI de las
+  17:16 y las 17:46 la pasaron. Hipótesis sin comprobar en el código: al cruzar la medianoche algo guarda el estado aunque la landing
+  esté delante. **Lo primero al volver:** una caza corta: si es la app la que guarda (un fallo de verdad contra «no se guarda nada»),
+  arreglarlo con su prueba; y en todo caso fijar la hora de la prueba (el `MEDIODIA` de las demás) y añadir otra que cruce la
+  medianoche a propósito. Hasta entonces cualquier push hecho de noche saldrá en rojo en `e2e (1/2)`.
+- **Tres ramas nuevas, subidas, sin juntar** (las tres en Opus; informes leídos por la coordinadora, el código no):
+
+| Rama | Qué lleva | Página (EcLj6) | Espera |
+|---|---|---|---|
+| `claude/montar-auditoria-10nov-3ef28c` | 1A (c70dd11d), 2A (6093709b) y 4A (5c340017), con verify y sus pruebas en verde (28, 70 y 65). Paró al 82 %. **Falta:** D-5 B, D-4 C, las fotos de después de Ajustes, bienvenida e invitación, y la página «Montado»: el plan, en `docs/proposals/montado-auditoria-10nov/DONDE-ME-QUEDO.md` | sin publicar | retomarla (sesión nueva con `cwd` en su worktree) y luego el «júntalo» de Ez |
+| `claude/caza-aro-fijo-10nov` | Ez: «en el escritorio el tamaño del aro cambia según la ventana y siempre debería ser fijo». Medido: 372 px en su ventana, 650 en 1920×1080, 866 en 2560×1440 (el tope de 520 no frenaba) y encogía al ensanchar. Montada la A: 372 px fijos, solo encoge si no cabe; el móvil no cambia (0d80277b, 311dec0e); verify y 132 pruebas en verde. Tocó cuatro pruebas viejas y dos de `aro-jornada` pierden mordida; Firefox y Safari, sin probar | Xf1MUQNoyiBNjXPcgUc3Bj | que Ez la mire y diga «júntalo» u otra letra |
+| `claude/hopeful-booth-ba049e` | La página única de decisiones (af591732): «Ya decidido» arriba, la línea de los lunes en tres sitios del móvil (recomienda el sobre), D-6 con la opción D (recomienda «Ocaso 1» y «Búho 1»), 4, 6 y 7, el aro, V1 y V2, y las dos listas; copia en `docs/proposals/decisiones-10nov/` | H5UgBuqz5VeGnETpixxi96 | las letras de Ez |
+
+- **De 1A, para Ez:** con la fila nueva, «Tus datos» se pliega 34 px antes en el ordenador; y un defecto que ya existía: el panel de
+  Ajustes pide hasta 15 px de scroll entre 860 y 875 de alto. De 4A: /premium sigue diciendo «Llega con la versión 1».
+- **Ez tiene un texto para auditar fuera con Fable** el código nativo, la compra en el móvil y Ajustes (sexta pasada): cuando la
+  traiga, guardarla en `docs/audits/fable-9nov/` de la rama de la auditoría y comprobarla como las otras.
+- **Uso a las 23:25:** 5 h al 84-86 % con tres sesiones en Opus en 45 minutos; semana al 22 %, «Weekly · Fable» al 18 %.
 
 ## 10 nov., ~23:15: Ez contestó la auditoría y hay dos sesiones en marcha. Empieza aquí; manda sobre lo de abajo
 
