@@ -350,7 +350,11 @@ function playPhaseSound(phaseLabel, phaseDur) {
   /* La etiqueta viaja con la fase: dice el lado en Nadi Shodhana y distingue
      la primera inhalación del Suspiro de «Inhala más». */
   const musica = (tipo) => { try { if (window.paceMusica) window.paceMusica.fase(tipo, phaseDur, phaseLabel); } catch (e) {} };
-  if (phaseLabel === 'Inhala' || phaseLabel === 'Inhala más' ||
+  /* «Inhala más» tiene su palabra («Más», «More»), que sí suena en su fase de 1 s (Sound.voz.jsx). */
+  if (phaseLabel === 'Inhala más') {
+    try { playSound('breathe.inhale.more', phaseDur); } catch (e) {}
+    musica('in');
+  } else if (phaseLabel === 'Inhala' ||
       phaseLabel === 'Inhala oceánica' || phaseLabel === 'Inhala izq.' ||
       phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira' ||
       phaseLabel === 'Inhala al vientre') {

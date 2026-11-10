@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.195.0 · 9 de noviembre de 2026 (la versión de prueba de Play y TestFlight es la 0.191.1). Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.196.0 · 9 de noviembre de 2026 (la versión de prueba de Play y TestFlight es la 0.191.1). Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -63,9 +63,12 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 - **ChatGPT, segunda parte** (`docs/audits/chatgpt-8nov/respuesta-2-dia-tiempo-cuenta.md`): siete puntos ciertos; Ez dijo
   «Sí, así»: después de la 0.195.0, probar el doble cómputo, arreglar la cuenta (1, 3, 2) y pintar 4, 6 y 7. La del cobro y lo
   legal sigue en su hoja.
-- **Landing C** (9 nov., `claude/landing-c-9nov`, a medias): la raíz con dos caras; ante la duda, la app. Se pinta para Ez.
-- **La 1A de la caza** («1 h» no se queda sola en la frase del día), montada en `claude/caza-anchos-9nov-6a280f` (43655d1b): entra en la siguiente. La 2A deja 320 px como está.
-- **Esperan a Ez**: las letras de la landing (WXqNcQ9X…, 5iWBf), Play y TestFlight con la 0.191.1 (lunes 9) y los audios del suspiro.
+- **Landing C con la B de Ez** (9 nov., `claude/landing-c-9nov`): la raíz con dos caras y la landing larga como /premium, montada
+  (5f9629ea); su página para Ez, 3juJNAvBAFo8NKKKWLEc6J (5iWBf) y TUES7Hw31NwYXYBypdmHwK (EcLj6). Suite entera pasada. Ez (10 nov.): «Espero a la bonita»: se junta cuando elija la estética de la web.
+- **La 0.196.0, en `main` con el «Me valen todos los audios» de Ez (9 nov.), CI en verde entero (42693245511)**: «Más» y «More» en el segundo tramo del Suspiro con
+  las cuatro tomas de Ez (el «More» de sulafat, cortado en 1,08 s, ya cabe) y la 1A de la caza en seis anchos. 1449 pruebas en verde; la única roja (eventos-origen, «el navegador se cerró» con la máquina cargada) pasa sola, 4 de 4.
+- **Nada en marcha** (10 nov., 15:15). **Esperan a Ez dos páginas terminadas** (5iWBf): la web más bonita, 6DsS35xJXsmcZrdtZiXhoL (`claude/landing-c-9nov`: tres direcciones, recomendada A · Cuaderno de campo, y cinco letras; con su elección se monta y se junta con la landing B), y las dos auditorías de Fable en una sola cola, 2QnMBypqSRVJCmPeNJazZA (`claude/auditoria-fable-9nov-8401fc`, `docs/audits/fable-9nov/cola.md`: lo primero, una fila para comprar en Ajustes; y las decisiones D-1, D-2…). Y las tres letras de ChatGPT 2, KZFDp3zNhk4JAFHr13ysxq (`claude/chatgpt-jornada-9nov`). La caza de rendimiento: su página, R3vZVCMdEvKxWhyLHRmwvE. Dónde va cada una, en el relevo de `docs/traspaso/LEEME.md`.
+- **Esperan a Ez**: elegir el aro, V1 y V2 (R3vZVCMd…, 5iWBf), Play y TestFlight con la 0.191.1 (lunes 9), y la revisión de ChatGPT del cobro y lo legal.
 - **Lo legal para vender en la web**, en `main` con la 0.189.0 y las letras de Ez (1A 2A 3A 4A 5A): los borradores, sin
   publicar hasta sus datos (nombre, NIF y un contacto) y la revisión de un profesional (las preguntas para el gestor y el
   jurista, en `docs/launch/legal-web-para-ez.html`); y `/desistir`, cerrada hasta que Ez dé de alta Resend y ponga

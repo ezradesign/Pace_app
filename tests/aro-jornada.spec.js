@@ -52,7 +52,7 @@ test('en la pausa, el botón principal es hacerla y el bloque siguiente baja a e
   const errores = capturarErrores(page);
   await hastaLaPausa(page, context);
   await expect(cta(page)).toHaveText('Hacer la pausa');
-  expect(await relleno(cta(page)), 'el botón va relleno aunque el reloj corra').toBe(true);
+  await expect.poll(() => relleno(cta(page)), { message: 'el botón va relleno aunque el reloj corra' }).toBe(true);
   await expect(vis(page, '[data-pace-aro-seguir]')).toHaveText('Empezar ya el bloque 2');
 
   await cta(page).click();
@@ -72,7 +72,9 @@ test('con el plato hecho no propone repetirlo: el botón vuelve a empezar el blo
   await hastaLaPausa(page, context);
   await page.evaluate(() => ritmoPausaHecha(ritmoPausaAbierta().platos[0].id));
   await expect(cta(page)).toHaveText('Empezar ya el bloque 2');
-  expect(await relleno(cta(page)), 'contorno, como todo botón con el reloj en marcha').toBe(false);
+  /* Se espera al color y no se mira una sola vez: el texto cambia en el mismo pintado, pero el fondo puede llegar un
+     fotograma después, y en GitHub (9 nov.) la mirada única lo pilló aún relleno. */
+  await expect.poll(() => relleno(cta(page)), { message: 'contorno, como todo botón con el reloj en marcha' }).toBe(false);
   await expect(vis(page, '[data-pace-aro-seguir]')).toHaveCount(0);
 });
 

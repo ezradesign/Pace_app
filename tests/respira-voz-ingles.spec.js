@@ -34,7 +34,7 @@ const preparar = (page) => page.evaluate(async () => {
     await new Promise(res => setTimeout(res, 100));
   }
   return {
-    listo: Object.keys(v).length === 3 && Object.keys(v).every(k => v[k].listo),
+    listo: Object.keys(v).length === 4 && Object.keys(v).every(k => v[k].listo),   /* con «More» / «Más» del Suspiro */
     fuentes: Object.keys(v).map(k => ((v[k].audio && v[k].audio.src) || '').split('/').pop()).sort(),
   };
 });
@@ -53,7 +53,7 @@ test('en inglés, la voz clara pide «Inhale / Hold / Exhale» y calla al inhala
   await irAlArtefacto(page);
   const r = await preparar(page);
   expect(r.listo, 'GUARD: los clips ingleses no llegaron a listo').toBe(true);
-  expect(r.fuentes).toEqual(['sulafat-exhale.mp3', 'sulafat-hold.mp3', 'sulafat-inhale.mp3']);
+  expect(r.fuentes).toEqual(['sulafat-exhale.mp3', 'sulafat-hold.mp3', 'sulafat-inhale.mp3', 'sulafat-more.mp3']);
   expect(await page.evaluate(() => paceVozEncendida()), 'en inglés la voz sigue apagada').toBe(true);
 
   /* El «Inhale» (1,97 s + 0,15 de margen) no entra en 2 s y sí en 3. */
@@ -75,7 +75,7 @@ test('en inglés, la voz grave cabe en las 17 con voz, y en una fase de 1 s suen
   await irAlArtefacto(page);
   const r = await preparar(page);
   expect(r.listo, 'GUARD: los clips ingleses no llegaron a listo').toBe(true);
-  expect(r.fuentes).toEqual(['bradford-exhale.mp3', 'bradford-hold.mp3', 'bradford-inhale.mp3']);
+  expect(r.fuentes).toEqual(['bradford-exhale.mp3', 'bradford-hold.mp3', 'bradford-inhale.mp3', 'bradford-more.mp3']);
 
   /* «Inhale» (0,74 s) y «Hold» (0,58 s) cabrían en 1 s con su margen: callan por
      la regla de la fase mínima, no por la medida. En 2 s suenan las tres. */
@@ -97,5 +97,5 @@ test('cambiar el idioma cambia las palabras: de vuelta al castellano se piden la
   await page.evaluate(() => setState({ lang: 'es' }));
   const r = await preparar(page);
   expect(r.listo).toBe(true);
-  expect(r.fuentes).toEqual(['sulafat-exhala.mp3', 'sulafat-inhala.mp3', 'sulafat-manten.mp3']);
+  expect(r.fuentes).toEqual(['sulafat-exhala.mp3', 'sulafat-inhala.mp3', 'sulafat-manten.mp3', 'sulafat-mas.mp3']);
 });
