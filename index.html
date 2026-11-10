@@ -2506,6 +2506,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'session.prep': 'Prepárate',
   'session.startNow': 'Empezar ahora',
   'session.backToHome': 'Volver al inicio',
+  'session.sigue.ciclo': 'Empezar el ciclo {n}',
+  'session.sigue.pausa': 'Volver · te quedan {min} min de pausa',
+  'session.sigue.pausa.uno': 'Volver · te queda 1 min de pausa',
   'session.next': 'Siguiente',
   'session.focusDoneMeta': 'Foco completado',
   'session.focusDoneCopy': 'Un tramo de atención sostenida.',
@@ -2713,6 +2716,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'session.prep': 'Get ready',
   'session.startNow': 'Start now',
   'session.backToHome': 'Back to Home',
+  'session.sigue.ciclo': 'Start cycle {n}',
+  'session.sigue.pausa': 'Back · {min} min of break left',
+  'session.sigue.pausa.uno': 'Back · 1 min of break left',
   'session.next': 'Next',
   'session.focusDoneMeta': 'Focus complete',
   'session.focusDoneCopy': 'A stretch of sustained attention.',
@@ -17173,6 +17179,9 @@ let paceUltimaPuerta = null;
 function paceOrigenRepetir() {if (!paceOrigenPendiente) paceOrigenPendiente = paceUltimaPuerta;}
 
 
+function paceUltimaPuertaLeer() {return paceUltimaPuerta;}
+
+
 
 
 
@@ -17390,9 +17399,9 @@ Object.assign(window, {
   paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered,
   emitPathStepCompleted, emitPathCompleted, emitRitmoDia,
   paceUltimaSesionEmitida, paceOlvidarUltimaSesion,
-  paceOrigenSesion, paceOrigenPendienteLeer, paceOrigenRepetir
+  paceOrigenSesion, paceOrigenPendienteLeer, paceOrigenRepetir, paceUltimaPuertaLeer
 });
-;Object.assign(window, { paceOrigenSesion, paceOrigenPendienteLeer, paceOrigenRepetir, paceEmitirEvento, paceModuloDeCuerpo, paceStepKindEvento, paceFocusRoutineId, paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered, emitPathStepCompleted, emitPathCompleted, emitRitmoDia, paceUltimaSesionEmitida, paceOlvidarUltimaSesion });
+;Object.assign(window, { paceOrigenSesion, paceOrigenPendienteLeer, paceOrigenRepetir, paceUltimaPuertaLeer, paceEmitirEvento, paceModuloDeCuerpo, paceStepKindEvento, paceFocusRoutineId, paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered, emitPathStepCompleted, emitPathCompleted, emitRitmoDia, paceUltimaSesionEmitida, paceOlvidarUltimaSesion });
 })();
 </script>
   <!-- El paso a v1 (Ez, 15 oct.): la semana de prueba de quien ya usaba PACE y las rutinas de pago
@@ -20749,6 +20758,8 @@ function SessionDone(_ref4)
   if (sigue) doneMeta = sigue.meta;
   const label = doneButtonLabel || (sigue ? sigue.cta : t('session.backToHome'));
 
+  const despues = usePaceCierreSigue(!doneButtonLabel && !sigue && !sinContar);
+
 
 
 
@@ -20756,7 +20767,8 @@ function SessionDone(_ref4)
 
   const ctaCierre = { ...displayItalic, fontWeight: 500, fontSize: 19, letterSpacing: 0,
     borderRadius: 'var(--r-pill)', padding: '0 34px', height: 50 };
-  const btn = React.createElement(Button, { variant: "secondary", onClick: () => onExit('done'), style: ctaCierre }, label);
+  const btn = despues ? React.createElement(SessionDoneSigue, { sigue: despues, onExit: onExit, estilo: ctaCierre }) :
+  React.createElement(Button, { variant: "secondary", onClick: () => onExit('done'), style: ctaCierre }, label);
   const glifo = sessionDoneGlifo(routine);
 
   return (
@@ -21291,11 +21303,12 @@ Object.assign(window, { SessionPrep, sessionPrepCopy });
     [data-pace-session-done-hero][data-pace-session-done-glifo] svg {
       width: 100% !important; height: 100% !important;
     }
-    /* La salida del cierre es tonal, como «Pausar» (Ez, 12 oct.). */
-    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button {
+    /* La salida del cierre es tonal, como «Pausar» (Ez, 12 oct.). El enlace de debajo cuando el
+       cierre dice lo que sigue (SessionDone.sigue.jsx) no: es como «Ahora no». */
+    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button:not([data-pace-cierre-otra]) {
       background: var(--paper-2) !important; color: var(--ink) !important; border: 1px solid var(--line-2) !important;
     }
-    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button:hover {
+    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button:not([data-pace-cierre-otra]):hover {
       border-color: var(--ink-3) !important;
     }
     /* En el cierre, «Salir» va también en la serif itálica, como el resto de la pantalla
@@ -21555,6 +21568,95 @@ Object.assign(window, {
   SessionFeedback, sessionFeedbackStyles
 });
 ;Object.assign(window, { SessionFeedback });
+})();
+</script>
+  <!-- El cierre dice lo que sigue cuando venía de una pausa (Ez, 2A del 10 nov.): lo pinta SessionDone. -->
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const { useState: useStateSDS, useEffect: useEffectSDS } = React;
+
+
+function paceCierreSigue() {
+  try {
+    const s = getState();
+    const p = typeof ritmoPausaCuenta === 'function' ? ritmoPausaCuenta(s) : null;
+    if (p) {
+      const ms = p.hasta - Date.now();
+      return ms > 0 ? { tipo: 'jornada', min: Math.max(1, Math.ceil(ms / 60000)), n: p.n } : null;
+    }
+    const puerta = typeof paceUltimaPuertaLeer === 'function' ? paceUltimaPuertaLeer() : null;
+    if (!puerta || puerta.origin !== 'pausa') return null;
+    if (typeof ritmoPlan === 'function' && ritmoPlan(s)) return null;
+    if (s.focusMode !== 'foco' || localStorage.getItem('pace.timer.v1')) return null;
+    return { tipo: 'libre', n: (Number(s.cycle) || 0) % 4 + 1 };
+  } catch (e) {
+    return null;
+  }
+}
+
+
+function usePaceCierreSigue(activo) {
+  const [, setVuelta] = useStateSDS(0);
+  const sigue = activo ? paceCierreSigue() : null;
+  const jornada = !!(sigue && sigue.tipo === 'jornada');
+  useEffectSDS(() => {
+    if (!jornada) return undefined;
+    const id = setInterval(() => setVuelta((x) => x + 1), 15000);
+    return () => clearInterval(id);
+  }, [jornada]);
+  return sigue;
+}
+
+
+
+function SessionDoneSigue(_ref) {let { sigue, onExit, estilo } = _ref;
+  const { t, tn } = useT();
+  const arrancar = () => {onExit('done');try {window.dispatchEvent(new CustomEvent('pace:ritmo-seguir'));} catch (e) {}};
+  const volver = () => onExit('done');
+  const libre = sigue.tipo === 'libre';
+  const cta = libre ? tn('session.sigue.ciclo', { n: sigue.n }) :
+  tn(sigue.min === 1 ? 'session.sigue.pausa.uno' : 'session.sigue.pausa', { min: sigue.min });
+  const otra = libre ? t('session.backToHome') : tn('ritmo.pausa.ya', { n: sigue.n });
+  return (
+    React.createElement("div", { "data-pace-cierre-sigue": sigue.tipo, style: sessionDoneSigueStyles.caja },
+    React.createElement(Button, { variant: "secondary", onClick: libre ? arrancar : volver, style: estilo }, cta),
+    React.createElement("button", { type: "button", "data-pace-cierre-otra": true, onClick: libre ? volver : arrancar, style: sessionDoneSigueStyles.otra }, otra)
+    ));
+
+}
+
+const sessionDoneSigueStyles = {
+  caja: { display: 'flex', flexDirection: 'column', alignItems: 'center' },
+
+  otra: {
+    ...displayItalic,
+    fontSize: 15, color: 'var(--ink-3)',
+    background: 'none', border: 'none', padding: '4px 10px', marginTop: 8,
+    textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer'
+  }
+};
+
+Object.assign(window, { paceCierreSigue, usePaceCierreSigue, SessionDoneSigue });
+;Object.assign(window, { paceCierreSigue, usePaceCierreSigue, SessionDoneSigue });
 })();
 </script>
   <script>

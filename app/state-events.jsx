@@ -85,6 +85,9 @@ function paceOrigenPendienteLeer() { return paceOrigenPendiente; }
    primero no se consumió (una sesión que no contó), sigue valiendo esa. */
 let paceUltimaPuerta = null;
 function paceOrigenRepetir() { if (!paceOrigenPendiente) paceOrigenPendiente = paceUltimaPuerta; }
+/* La puerta de la última sesión contada: el cierre la mira para saber si venía de la pausa
+   (SessionDone.sigue.jsx). */
+function paceUltimaPuertaLeer() { return paceUltimaPuerta; }
 
 /* El ÚNICO punto que escribe en el almacén de eventos. Devuelve si se intentó,
    no si se commiteó: el append es asíncrono y el llamante no espera. Si el
@@ -304,5 +307,5 @@ Object.assign(window, {
   paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered,
   emitPathStepCompleted, emitPathCompleted, emitRitmoDia,
   paceUltimaSesionEmitida, paceOlvidarUltimaSesion,
-  paceOrigenSesion, paceOrigenPendienteLeer, paceOrigenRepetir,
+  paceOrigenSesion, paceOrigenPendienteLeer, paceOrigenRepetir, paceUltimaPuertaLeer,
 });

@@ -276,11 +276,12 @@
     [data-pace-session-done-hero][data-pace-session-done-glifo] svg {
       width: 100% !important; height: 100% !important;
     }
-    /* La salida del cierre es tonal, como «Pausar» (Ez, 12 oct.). */
-    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button {
+    /* La salida del cierre es tonal, como «Pausar» (Ez, 12 oct.). El enlace de debajo cuando el
+       cierre dice lo que sigue (SessionDone.sigue.jsx) no: es como «Ahora no». */
+    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button:not([data-pace-cierre-otra]) {
       background: var(--paper-2) !important; color: var(--ink) !important; border: 1px solid var(--line-2) !important;
     }
-    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button:hover {
+    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button:not([data-pace-cierre-otra]):hover {
       border-color: var(--ink-3) !important;
     }
     /* En el cierre, «Salir» va también en la serif itálica, como el resto de la pantalla
