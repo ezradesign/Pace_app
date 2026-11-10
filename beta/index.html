@@ -88,6 +88,9 @@
   /* Las capturas: en el móvil, una tira que se desliza; en el ordenador, en fila junto al título. */
   .tira { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 26px -16px 8px; padding: 0 16px 4px; scrollbar-width: none; }
   .tira::-webkit-scrollbar { display: none; }
+  /* Cada captura va en su <picture> (la oscura, para quien ve la página en oscuro): la tira sigue viendo la imagen. */
+  .tira picture { display: contents; }
+  .tira source { display: none; }
   .tira img { flex: 0 0 68%; width: 68%; height: auto; border-radius: 14px; border: 1px solid var(--line); background: var(--paper-2); scroll-snap-align: center; display: block; }
   /* LA B, «UNA JORNADA» (Ez, 10 nov. 2026), como la landing: la portada acaba en la línea del día
      (la primera parada, llena; las demás, huecas, en el color de su módulo) y de ahí baja una línea
@@ -186,9 +189,9 @@
       </div>
     </div>
     <div class="tira" tabindex="0" role="group" aria-label="Capturas de PACE en Android" data-en-aria="Screenshots of PACE on Android">
-      <img src="/beta/jornada-es.webp" data-en-src="/beta/jornada-en.webp" alt="Tu jornada en PACE: el aro del Foco y las pausas del día" data-en-alt="Your workday in PACE: the Focus ring and the breaks of the day" width="540" height="960">
-      <img src="/beta/respira-es.webp" data-en-src="/beta/respira-en.webp" alt="Respira: una técnica guiada, con voz" data-en-alt="Breathe: a guided technique with voice cues" width="540" height="960" loading="lazy">
-      <img src="/beta/logros-es.webp" data-en-src="/beta/logros-en.webp" alt="Los logros: sellos de cuaderno de campo, sin rachas" data-en-alt="Achievements: field-notebook stamps, no streaks" width="540" height="960" loading="lazy">
+      <picture><source media="(prefers-color-scheme: dark)" srcset="/beta/jornada-es-oscuro.webp" data-en-srcset="/beta/jornada-en-oscuro.webp"><img src="/beta/jornada-es.webp" data-en-src="/beta/jornada-en.webp" alt="Tu jornada en PACE: el aro del Foco y las pausas del día" data-en-alt="Your workday in PACE: the Focus ring and the breaks of the day" width="540" height="960"></picture>
+      <picture><source media="(prefers-color-scheme: dark)" srcset="/beta/respira-es-oscuro.webp" data-en-srcset="/beta/respira-en-oscuro.webp"><img src="/beta/respira-es.webp" data-en-src="/beta/respira-en.webp" alt="Respira: una técnica guiada, con voz" data-en-alt="Breathe: a guided technique with voice cues" width="540" height="960" loading="lazy"></picture>
+      <picture><source media="(prefers-color-scheme: dark)" srcset="/beta/logros-es-oscuro.webp" data-en-srcset="/beta/logros-en-oscuro.webp"><img src="/beta/logros-es.webp" data-en-src="/beta/logros-en.webp" alt="Los logros: sellos de cuaderno de campo, sin rachas" data-en-alt="Achievements: field-notebook stamps, no streaks" width="540" height="960" loading="lazy"></picture>
     </div>
   </div>
 
@@ -320,7 +323,7 @@
     return /^es\b/i.test(navigator.language || '') ? 'es' : 'en';
   }
   var ATRIBUTOS = [['data-en', 'textContent'], ['data-en-html', 'innerHTML'], ['data-en-aria', 'aria-label'],
-    ['data-en-alt', 'alt'], ['data-en-src', 'src']];
+    ['data-en-alt', 'alt'], ['data-en-src', 'src'], ['data-en-srcset', 'srcset']];
   var es = { title: document.title, desc: document.querySelector('meta[name=description]').content };
   var DESC_EN = 'Try PACE on Android or iPhone before anyone else: active breaks for people who work sitting down. Google asks for 12 people for 14 days to publish it. As a thank-you, PACE Complete for life.';
   var idioma = 'es';

@@ -162,6 +162,9 @@
      rutina propia y la de Respira. En el móvil, el mismo reparto en seis columnas: cabe en unos
      700 px en vez de los 1300 de poner la carta a todo lo ancho. */
   .mosaico { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; margin-top: 22px; max-width: 440px; }
+  /* Cada captura va en su <picture> (la oscura, para quien ve la página en oscuro): la rejilla sigue viendo la imagen. */
+  .mosaico picture { display: contents; }
+  .mosaico source { display: none; }
   .mosaico img { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid var(--line); background: var(--paper-2); }
   .mosaico .grande { grid-column: 1 / span 4; grid-row: 1 / span 2; border-radius: 14px; }
   .mosaico .lado { grid-column: span 2; }
@@ -242,11 +245,11 @@
   <section id="capturas">
     <h2 data-en="A look at PACE Complete">Así se ve PACE completo</h2>
     <div class="mosaico">
-      <img class="grande" src="/premium/carta-es.webp" data-en-src="/premium/carta-en.webp" alt="La carta del lunes: lo que te ayudó, las pausas hechas y los cambios de la semana" data-en-alt="The Monday letter: what helped you, the breaks you did and the week’s changes" width="540" height="960">
-      <img class="lado" src="/premium/mes-es.webp" data-en-src="/premium/mes-en.webp" alt="Tu mes en Estadísticas: cada día que practicaste" data-en-alt="Your month in Stats: every day you practiced" width="540" height="960" loading="lazy">
-      <img class="lado" src="/premium/ano-es.webp" data-en-src="/premium/ano-en.webp" alt="Tu año en Estadísticas: los meses y sus días" data-en-alt="Your year in Stats: the months and their days" width="540" height="960" loading="lazy">
-      <img class="bajo" src="/premium/rutina-propia-es.webp" data-en-src="/premium/rutina-propia-en.webp" alt="Una rutina propia en el constructor: sus ejercicios, el orden y el tiempo" data-en-alt="A routine of your own in the builder: its exercises, order and time" width="540" height="960" loading="lazy">
-      <img class="bajo" src="/premium/respira-honda-es.webp" data-en-src="/premium/respira-honda-en.webp" alt="Nadi Shodhana, una rutina profunda de Respira, en marcha" data-en-alt="Nadi Shodhana, one of the deeper Breathe routines, under way" width="540" height="960" loading="lazy">
+      <picture><source media="(prefers-color-scheme: dark)" srcset="/premium/carta-es-oscuro.webp" data-en-srcset="/premium/carta-en-oscuro.webp"><img class="grande" src="/premium/carta-es.webp" data-en-src="/premium/carta-en.webp" alt="La carta del lunes: lo que te ayudó, las pausas hechas y los cambios de la semana" data-en-alt="The Monday letter: what helped you, the breaks you did and the week’s changes" width="540" height="960"></picture>
+      <picture><source media="(prefers-color-scheme: dark)" srcset="/premium/mes-es-oscuro.webp" data-en-srcset="/premium/mes-en-oscuro.webp"><img class="lado" src="/premium/mes-es.webp" data-en-src="/premium/mes-en.webp" alt="Tu mes en Estadísticas: cada día que practicaste" data-en-alt="Your month in Stats: every day you practiced" width="540" height="960" loading="lazy"></picture>
+      <picture><source media="(prefers-color-scheme: dark)" srcset="/premium/ano-es-oscuro.webp" data-en-srcset="/premium/ano-en-oscuro.webp"><img class="lado" src="/premium/ano-es.webp" data-en-src="/premium/ano-en.webp" alt="Tu año en Estadísticas: los meses y sus días" data-en-alt="Your year in Stats: the months and their days" width="540" height="960" loading="lazy"></picture>
+      <picture><source media="(prefers-color-scheme: dark)" srcset="/premium/rutina-propia-es-oscuro.webp" data-en-srcset="/premium/rutina-propia-en-oscuro.webp"><img class="bajo" src="/premium/rutina-propia-es.webp" data-en-src="/premium/rutina-propia-en.webp" alt="Una rutina propia en el constructor: sus ejercicios, el orden y el tiempo" data-en-alt="A routine of your own in the builder: its exercises, order and time" width="540" height="960" loading="lazy"></picture>
+      <picture><source media="(prefers-color-scheme: dark)" srcset="/premium/respira-honda-es-oscuro.webp" data-en-srcset="/premium/respira-honda-en-oscuro.webp"><img class="bajo" src="/premium/respira-honda-es.webp" data-en-src="/premium/respira-honda-en.webp" alt="Nadi Shodhana, una rutina profunda de Respira, en marcha" data-en-alt="Nadi Shodhana, one of the deeper Breathe routines, under way" width="540" height="960" loading="lazy"></picture>
     </div>
   </section>
 

@@ -56,6 +56,9 @@ html[data-pace-landing-idioma="en"] #pace-landing [lang="es"] { display: none !i
 #pace-landing .pl-boton { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 9px 26px; border-radius: 999px; font: italic 500 18px/1.2 var(--l-display); text-decoration: none; background: var(--l-cta); color: var(--l-paper); border: 1px solid var(--l-cta); }
 #pace-landing .pl-boton.hueco { background: transparent; color: var(--l-cta); }
 #pace-landing a:focus-visible, #pace-landing button:focus-visible { outline: 2px solid var(--l-focus); outline-offset: 2px; }
+/* Cada captura va en su <picture>, con la oscura para quien ve la página en oscuro. */
+#pace-landing .pl-foto picture, #pace-landing .pl-par picture { display: contents; }
+#pace-landing picture source { display: none; }
 #pace-landing .pl-foto img, #pace-landing .pl-par img { width: 100%; height: auto; display: block; border: 1px solid var(--l-line); border-radius: 12px; background: var(--l-paper-2); }
 
 /* La portada acaba en la línea del día: la primera parada, llena («ahora»); las demás, huecas,

@@ -203,6 +203,9 @@ html[data-pace-landing-idioma="en"] #pace-landing [lang="es"] { display: none !i
 #pace-landing .pl-boton { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 9px 26px; border-radius: 999px; font: italic 500 18px/1.2 var(--l-display); text-decoration: none; background: var(--l-cta); color: var(--l-paper); border: 1px solid var(--l-cta); }
 #pace-landing .pl-boton.hueco { background: transparent; color: var(--l-cta); }
 #pace-landing a:focus-visible, #pace-landing button:focus-visible { outline: 2px solid var(--l-focus); outline-offset: 2px; }
+/* Cada captura va en su <picture>, con la oscura para quien ve la página en oscuro. */
+#pace-landing .pl-foto picture, #pace-landing .pl-par picture { display: contents; }
+#pace-landing picture source { display: none; }
 #pace-landing .pl-foto img, #pace-landing .pl-par img { width: 100%; height: auto; display: block; border: 1px solid var(--l-line); border-radius: 12px; background: var(--l-paper-2); }
 
 /* La portada acaba en la línea del día: la primera parada, llena («ahora»); las demás, huecas,
@@ -1461,8 +1464,8 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
           <a class="pl-boton" href="/?go=inicio" data-pace-abrir><span lang="es">Abrir PACE, es gratis</span><span lang="en">Open PACE, it is free</span></a>
         </div>
         <div class="pl-foto">
-          <img lang="es" src="/beta/jornada-es.webp" alt="Tu jornada en PACE: el aro del Foco y las pausas del día" width="540" height="960" loading="lazy">
-          <img lang="en" src="/beta/jornada-en.webp" alt="Your workday in PACE: the Focus ring and the breaks of the day" width="540" height="960" loading="lazy">
+          <picture><source media="(prefers-color-scheme: dark)" srcset="/beta/jornada-es-oscuro.webp"><img lang="es" src="/beta/jornada-es.webp" alt="Tu jornada en PACE: el aro del Foco y las pausas del día" width="540" height="960" loading="lazy"></picture>
+          <picture><source media="(prefers-color-scheme: dark)" srcset="/beta/jornada-en-oscuro.webp"><img lang="en" src="/beta/jornada-en.webp" alt="Your workday in PACE: the Focus ring and the breaks of the day" width="540" height="960" loading="lazy"></picture>
         </div>
       </div>
       <section>
@@ -1475,8 +1478,8 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
           <li><b><i style="background:var(--l-water)"></i><span lang="es">Hidrátate</span><span lang="en">Hydrate</span></b><span><span lang="es">tus vasos del día</span><span lang="en">your daily water log</span></span></li>
         </ul>
         <div class="pl-par">
-          <figure><img lang="es" src="/beta/respira-es.webp" alt="Respira: una técnica guiada, con voz" width="540" height="960" loading="lazy"><img lang="en" src="/beta/respira-en.webp" alt="Breathe: a guided technique with voice cues" width="540" height="960" loading="lazy"></figure>
-          <figure><img lang="es" src="/beta/logros-es.webp" alt="Los logros: sellos de cuaderno de campo, sin rachas" width="540" height="960" loading="lazy"><img lang="en" src="/beta/logros-en.webp" alt="Achievements: field-notebook stamps, no streaks" width="540" height="960" loading="lazy"></figure>
+          <figure><picture><source media="(prefers-color-scheme: dark)" srcset="/beta/respira-es-oscuro.webp"><img lang="es" src="/beta/respira-es.webp" alt="Respira: una técnica guiada, con voz" width="540" height="960" loading="lazy"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="/beta/respira-en-oscuro.webp"><img lang="en" src="/beta/respira-en.webp" alt="Breathe: a guided technique with voice cues" width="540" height="960" loading="lazy"></picture></figure>
+          <figure><picture><source media="(prefers-color-scheme: dark)" srcset="/beta/logros-es-oscuro.webp"><img lang="es" src="/beta/logros-es.webp" alt="Los logros: sellos de cuaderno de campo, sin rachas" width="540" height="960" loading="lazy"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="/beta/logros-en-oscuro.webp"><img lang="en" src="/beta/logros-en.webp" alt="Achievements: field-notebook stamps, no streaks" width="540" height="960" loading="lazy"></picture></figure>
         </div>
       </section>
       <!-- LA LANDING LARGA, «como /premium» (B, Ez, 9 nov. 2026): las capturas de PACE completo, las
@@ -1484,8 +1487,8 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
       <section>
         <h2><span lang="es">Así se ve PACE completo</span><span lang="en">A look at PACE Complete</span></h2>
         <div class="pl-par">
-          <figure><img lang="es" src="/premium/carta-es.webp" alt="La carta del lunes: lo que te ayudó, las pausas hechas y los cambios de la semana" width="540" height="960" loading="lazy"><img lang="en" src="/premium/carta-en.webp" alt="The Monday letter: what helped you, the breaks you did and the week’s changes" width="540" height="960" loading="lazy"></figure>
-          <figure><img lang="es" src="/premium/mes-es.webp" alt="Tu mes en Estadísticas: cada día que practicaste" width="540" height="960" loading="lazy"><img lang="en" src="/premium/mes-en.webp" alt="Your month in Stats: every day you practiced" width="540" height="960" loading="lazy"></figure>
+          <figure><picture><source media="(prefers-color-scheme: dark)" srcset="/premium/carta-es-oscuro.webp"><img lang="es" src="/premium/carta-es.webp" alt="La carta del lunes: lo que te ayudó, las pausas hechas y los cambios de la semana" width="540" height="960" loading="lazy"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="/premium/carta-en-oscuro.webp"><img lang="en" src="/premium/carta-en.webp" alt="The Monday letter: what helped you, the breaks you did and the week’s changes" width="540" height="960" loading="lazy"></picture></figure>
+          <figure><picture><source media="(prefers-color-scheme: dark)" srcset="/premium/mes-es-oscuro.webp"><img lang="es" src="/premium/mes-es.webp" alt="Tu mes en Estadísticas: cada día que practicaste" width="540" height="960" loading="lazy"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="/premium/mes-en-oscuro.webp"><img lang="en" src="/premium/mes-en.webp" alt="Your month in Stats: every day you practiced" width="540" height="960" loading="lazy"></picture></figure>
         </div>
       </section>
       <section>
