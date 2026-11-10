@@ -25,7 +25,7 @@ function variante(nombre, html) {
   let n = 0;
   const b = html
     .replace('var D = Math.min(widthCap * w, tope);', () => { n++; return 'var D = isDesktop ? tope : Math.min(widthCap * w, tope);'; })
-    .replace('if (over <= 0 || D <= piso) { reintentos = 0; break; }', () => { n++; return 'if (isDesktop || over <= 0 || D <= piso) { reintentos = 0; break; }'; });
+    .replace('if (over <= 0 || D <= piso) {reintentos = 0;break;}', () => { n++; return 'if (isDesktop || over <= 0 || D <= piso) {reintentos = 0;break;}'; });
   if (n !== 2) throw new Error('B: no encuentro las dos líneas del motor en index.html (' + n + ')');
   return b;
 }
@@ -79,7 +79,7 @@ const medir = (page) => page.evaluate(() => {
   const browser = await chromium.launch();
   const fotos = path.join(DIR, 'fotos');
   fs.mkdirSync(fotos, { recursive: true });
-  const filas = [];
+  const filas = process.env.OPCIONES ? JSON.parse(fs.readFileSync(path.join(DIR, 'opciones.json'), 'utf8')).filter((f) => !process.env.OPCIONES.split(',').includes(f.opcion)) : [];
   for (const v of (process.env.OPCIONES || 'C,A,B').split(',')) {
     const doc = variante(v, html);
     for (const [w, h] of VENTANAS) {
