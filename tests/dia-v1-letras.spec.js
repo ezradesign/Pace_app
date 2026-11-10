@@ -23,6 +23,7 @@ test.use({ serviceWorkers: 'block' });
 
 const HOJA = '[data-pace-premium-hoja]';
 const HABLA_V1 = /\bv1\b|\bversi[oó]n 1\b/i;
+const { HABLA_V1_SIN_NOMBRE } = require('../scripts/verify.dia-v1.js');
 const BASE = { firstSeen: 1, lang: 'es', langAuto: false, palette: 'crema', ritmo: { libre: true }, novedadesVistas: '*' };
 const USABA = {
   history: { days: { '2026-10-20': { focusMinutes: 50, breathMinutes: 5, moveMinutes: 6, waterGlasses: 4, holdSeconds: 0 } }, months: {}, years: {} },
@@ -121,7 +122,7 @@ test.describe('2A · la hoja del día de v1 cuenta las rutinas propias', () => {
 });
 
 test.describe('3B · la hoja de PACE completo sin tienda, el día de v1', () => {
-  test('en Android sin la compra de Play: «Llega con la versión 1» hasta v1 y «Pronto podrás tenerlo aquí» desde v1', async ({ page, context }) => {
+  test('en Android sin la compra de Play: «Llega cuando salga a la venta» hasta v1 y «Pronto podrás tenerlo aquí» desde v1', async ({ page, context }) => {
     await context.addInitScript(() => { window.Capacitor = { getPlatform: () => 'android', isNativePlatform: () => true }; });
     await sembrarUnaVez(context, {});
     await irAlArtefacto(page);
@@ -134,7 +135,7 @@ test.describe('3B · la hoja de PACE completo sin tienda, el día de v1', () => 
       await expect(page.locator(HOJA)).toHaveCount(0);
     };
     await invitar();
-    await expect(page.locator('[data-pace-premium-v1]')).toHaveText('Llega con la versión 1.');
+    await expect(page.locator('[data-pace-premium-v1]')).toHaveText('Llega cuando salga a la venta.');
     await cerrar();
 
     await page.evaluate(() => { window.PREMIUM_ABIERTO_HASTA_V1 = false; });
@@ -160,7 +161,9 @@ test.describe('4A · la lista del día de v1', () => {
     }));
     const hoy = await leer();
     expect(hoy.map((x) => x.d)).toEqual(hoy.map((x) => x.k));
-    expect(hoy.some((x) => HABLA_V1.test(x.es) || HABLA_V1.test(x.en)), 'hoy alguno dice v1').toBe(true);
+    /* Desde la 4A de Ez (10 nov.) ninguno dice «v1»: dicen «mientras está en pruebas» y «cuando salga a la venta». */
+    expect(hoy.some((x) => HABLA_V1.test(x.es) || HABLA_V1.test(x.en)), 'hoy alguno dice «v1»').toBe(false);
+    expect(hoy.some((x) => HABLA_V1_SIN_NOMBRE.test(x.es) || HABLA_V1_SIN_NOMBRE.test(x.en)), 'hoy alguno habla de v1 sin nombrarlo').toBe(true);
 
     await page.evaluate(() => { window.PREMIUM_ABIERTO_HASTA_V1 = false; });
     const despues = await leer();
@@ -170,6 +173,7 @@ test.describe('4A · la lista del día de v1', () => {
       expect(x.d, x.k + ' cambia').not.toBe(x.k);
       expect(typeof x.es === 'string' && typeof x.en === 'string', x.d + ' existe').toBe(true);
       expect(x.es + ' · ' + x.en).not.toMatch(HABLA_V1);
+      expect(x.es + ' · ' + x.en).not.toMatch(HABLA_V1_SIN_NOMBRE);
     });
   });
 

@@ -3,8 +3,9 @@
    Carga DESPUES de _bootstrap.js y ANTES de useT.jsx.
 
    NINGÚN PRECIO AQUÍ: las tiendas mandan sobre importe y moneda (ROADMAP, Fase 6).
-   Antes de poder comprar, la invitación dice que llega con la versión 1; desde v1, sin tienda,
-   que pronto se podrá tener ahí. Las que dicen «hasta v1» van en `PACE_TEXTOS_V1`
+   Antes de poder comprar, la invitación dice que llega cuando salga a la venta; desde v1, sin
+   tienda, que pronto se podrá tener ahí. Ninguna dice «v1» a quien la lee (Ez, 4A del 10 nov.:
+   «mientras está en pruebas», «cuando salga a la venta»). Las de «hasta v1» van en `PACE_TEXTOS_V1`
    (state-entitlement.jsx) con la que las sustituye, y `npm run verify` no deja ninguna fuera.
    El sello «Premium» de las tarjetas sigue en `premium.seal` y `lib.premium`.
 */
@@ -21,7 +22,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'premium.inc.letter.d':          'la carta del lunes',
     'premium.inc.stats':             'Tu mes, tu año y qué te ayuda',
     'premium.inc.stats.d':           'estadísticas',
-    'premium.v1':                    'Llega con la versión 1.',
+    'premium.v1':                    'Llega cuando salga a la venta.',
     'premium.later':                 'Ahora no',
     'premium.code.have':             'Tengo un código',
     'premium.code.label':            'Tu código o tu enlace',
@@ -64,9 +65,9 @@ Object.assign(window.PACE_STRINGS.es, {
     'premium.onb.vida.sola':         'Un solo pago de {vida}, para siempre.',
     'premium.onb.comprar':           'Comprar, {vida}',
     'premium.onb.aviso':             'Te avisamos dos días antes de que acabe la prueba.',
-    'premium.onb.abierto.lede':      'Y hasta v1, PACE completo también está abierto para todos:',
+    'premium.onb.abierto.lede':      'Y mientras está en pruebas, PACE completo también está abierto para todos:',
     'premium.onb.abierto.precios':   'Después, {mes} al mes con {dias} días gratis, o {vida} una vez.',
-    'premium.onb.abierto.aviso':     'Al llegar v1 tendrás tu semana de prueba, y las rutinas que ya hayas hecho se te quedan.',
+    'premium.onb.abierto.aviso':     'Cuando salga a la venta tendrás tu semana de prueba, y las rutinas que ya hayas hecho se te quedan.',
     'premium.code.lost':             '¿Lo has perdido? Recupéralo con tu correo',
     'premium.compra.error':          'No se ha podido abrir la compra. Prueba otra vez.',
     'premium.settings.prueba':       'Prueba hasta el {fecha}',
@@ -95,7 +96,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'premium.inc.letter.d':          'the Monday letter',
     'premium.inc.stats':             'Your month, your year and what helps',
     'premium.inc.stats.d':           'stats',
-    'premium.v1':                    'Coming with version 1.',
+    'premium.v1':                    'Coming when it goes on sale.',
     'premium.later':                 'Not now',
     'premium.code.have':             'I have a code',
     'premium.code.label':            'Your code or link',
@@ -138,9 +139,9 @@ Object.assign(window.PACE_STRINGS.en, {
     'premium.onb.vida.sola':         'One payment of {vida} for lifetime access.',
     'premium.onb.comprar':           'Buy for {vida}',
     'premium.onb.aviso':             'We will remind you two days before the trial ends.',
-    'premium.onb.abierto.lede':      'And until v1, PACE Complete is open to everyone too:',
+    'premium.onb.abierto.lede':      'And while it’s in testing, PACE Complete is open to everyone too:',
     'premium.onb.abierto.precios':   'Then, {mes} a month with {dias} days free, or {vida} once.',
-    'premium.onb.abierto.aviso':     'When v1 arrives you get your trial week, and the routines you have already done stay yours.',
+    'premium.onb.abierto.aviso':     'When it goes on sale you get your trial week, and the routines you have already done stay yours.',
     'premium.code.lost':             'Lost it? Get it back with your email',
     'premium.compra.error':          'Checkout couldn’t open. Try again.',
     'premium.settings.prueba':       'Trial until {fecha}',
