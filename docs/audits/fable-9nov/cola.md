@@ -2,7 +2,8 @@
 
 La mía (`auditoria.md`, vivida en la app) y las cinco pasadas de la externa (`externa-10nov.md` y
 `externa-10nov-pasadas-2-3-4.md`, que lleva de la 2 a la 5, leídas en `main`), comprobadas en `externa-10nov-comprobado.md` y
-`externa-10nov-pasadas-2-3-4-comprobado.md`. Lo que ya está hecho en una rama se dice «ya hecho, espera tu júntalo». La
+`externa-10nov-pasadas-2-3-4-comprobado.md`. La sexta (nativo, compra en el móvil y Ajustes, `externa-sexta-10nov.md`),
+comprobada en `externa-sexta-10nov-comprobado.md`: sus filas llevan una S y su detalle va al final. Lo que ya está hecho en una rama se dice «ya hecho, espera tu júntalo». La
 página para Ez, con las fotos: https://claude.ai/artifact/C2uFSMM8eWhcRxpXLGWkAx (EcLj6; la copia de 5iWBf,
 2QnMBypqSRVJCmPeNJazZA, se queda en la primera cola).
 
@@ -13,7 +14,9 @@ página para Ez, con las fotos: https://claude.ai/artifact/C2uFSMM8eWhcRxpXLGWkA
 2. **Que la web capte a quien llega.** Juntar la landing (ya hecha), abrir «Avísame» y que `robots.txt`, `sitemap.xml` y el
    título no sean la app con su versión. *(Externa X1, X2; tu lista.)*
 3. **Antes de dar la prueba a los testers, dos arreglos.** Que su quinta pausa no gaste la única petición de valoración, y
-   que en el móvil el fin de la pausa avise, con un sonido distinto del fin del Foco. *(Externa 2.2, 4.F2, 4.F3.)*
+   que en el móvil el fin de la pausa avise, con un sonido distinto del fin del Foco. *(Externa 2.2, 4.F2, 4.F3.)* Y dos
+   más de la sexta: que en el iPhone el fin del Foco suene (hoy no suena nada con PACE en el fondo), y que un Android
+   restaurado de la copia de Google no pueda borrar una reunión de verdad. *(Sexta, nº 1 y nº 4.)*
 4. **Que el ejercicio de la pausa devuelva al Foco.** El cierre dice «Volver al inicio» y, por libre, el aro espera en
    00:00. *(Mía, F2.)*
 5. **Un aviso opcional a la hora de entrada, en el móvil.** Hoy el único aviso es el fin de un Foco; PACE ya sabe tu horario.
@@ -38,6 +41,8 @@ página para Ez, con las fotos: https://claude.ai/artifact/C2uFSMM8eWhcRxpXLGWkA
 | 7 | El `guardar()` atómico de la mensual | Una renovación nunca pisa otra | Ya hecho, espera tu júntalo | Antes del mensual |
 | 8 | La valoración no se cuenta mientras PACE está abierto hasta v1 (2.2) | Los testers reciben la petición cuando su reseña ya es pública | Poco | Antes de dar la prueba a los testers |
 | 9 | El fin de la pausa avisa en el móvil, con un sonido distinto del fin del Foco; en Android, la alarma exacta se ofrece también al empezar el primer Foco (4.F2, 4.F3, 2.T4) | Sabe sin mirar si toca parar o volver, y el aviso llega a su hora | Poco a medio | Antes de dar la prueba a los testers |
+| S1 | En el iPhone el aviso de fin de Foco lleva la campana de PACE: hoy se programa sin sonido y la campana de PACE calla por él (sexta nº 1; según D-10) | Sabe que acabó el bloque sin mirar el móvil | Poco | Antes de dar la prueba a los testers del iPhone |
+| S2 | La lista de eventos de PACE en el calendario de Android se olvida en un móvil restaurado o reinstalado (sexta nº 4; según D-8) | Nunca le desaparece una reunión de verdad | Poco (una línea nativa) | Antes de dar la prueba a los testers |
 | 10 | /beta deja de decir «sin rachas» mientras haya logros de días seguidos (2.T1) | Lo que promete la página es lo que encuentra | Poco | Ya |
 | 11 | El cierre del ejercicio dice lo que sigue (propuesta 2) | Un toque menos y sabe qué toca | Poco | Antes de v1 |
 | 12 | La bienvenida y la invitación sin «v1» (propuesta 4) | Entiende a la primera qué es gratis y hasta cuándo | Poco | Antes de v1 |
@@ -51,12 +56,15 @@ página para Ez, con las fotos: https://claude.ai/artifact/C2uFSMM8eWhcRxpXLGWkA
 | 20 | «Pausa bien hecha» antes de hacerla, y la duración que cambia («3 min» y «2–3 min») | Textos que no se contradicen | Poco | Antes de v1 |
 | 21 | Pedir que lo guardado no se borre en Safari, recomendar instalar y recordar la copia de vez en cuando (2.T6) | No pierde su historia ni su código | Poco | Antes de v1 |
 | 22 | Un tope de unos 3 s a la red al abrir PACE instalada; si no llega, la copia guardada (2.T2) | Con una wifi mala no se queda en blanco | Poco | Antes de v1 |
+| S3 | Importar: la pregunta dice de qué día es la copia y avisa si es de una versión más nueva que la app; el selector acepta cualquier archivo (sexta nº 5, 25 y 6) | Sabe qué copia está metiendo, y la encuentra en Drive o WhatsApp | Poco | Antes de v1 |
+| S4 | Ajustes: el lector de pantalla lee el precio y el estado de las filas que son botón; «Audio» en la sección inglesa; los comentarios viejos del registro del iPhone y del interruptor (sexta nº 19, 20, 3 y 22) | Con lector de pantalla oye el precio antes de tocar | Poco | Antes de v1 |
 | 23 | Capturas en el manifiesto | Chrome enseña una instalación con fotos | Poco | Antes de v1 |
 | 24 | «Rutina propia» y el manifiesto en inglés; el atajo de Mueve sin «movilidad» y uno de Estira (2.T5) | En inglés no hay nada a medias | Poco | Antes de v1 |
 | 25 | Los botones del constructor de 24 px, más grandes para el dedo, con maqueta (pasada 5, idea 6) | Edita sus rutinas en el móvil sin errar el toque | Poco | Antes de v1 |
 | 26 | Aviso opcional a la hora de entrada (Android y iPhone) | Un motivo para abrir PACE cada mañana | Medio | Antes de v1 si cabe; si no, la primera actualización |
 | 27 | Las bibliotecas a mano en el móvil, sin abrir el cajón, con maqueta (4.E1) | «Un estiramiento de cuello ahora» está a un toque | Medio | Antes de v1 si cabe |
 | 28 | «¿Te ayudó?» menos veces, y el «No» con su porqué («aquí no podía», «difícil», «me molestó») (3.V3, 3.V4) | Contesta cuando importa, y un «aquí no podía» no le aparta la rutina una semana | Medio | Antes de v1 si cabe |
+| S5 | El paquete de las tiendas: la hoja de compra y la fila de Ajustes de las apps hablan con Play y con Apple (sexta nº 8 a 14; detalle al final) | Lo que dice la app tras pagar en la tienda es verdad | Medio; espera tus altas | Con Play Billing y la compra de Apple (puntos 14 y 15) |
 | 29 | La línea de los lunes (propuesta 3; según D-3) | Sabe que existe una semana que aprende | Medio (falta la maqueta del móvil) | Con v1 |
 | 30 | Una carta dentro de los siete días de prueba (U4) | Prueba lo que va a pagar | Medio | Tú: después de v1. Las auditorías, también la pasada 5: antes |
 | 31 | Los logros de constancia por días de jornada (también lo piden 4.F4 y 4.F5) | Quien trabaja de lunes a viernes también los gana | Poco | Después de v1 |
@@ -75,6 +83,7 @@ página para Ez, con las fotos: https://claude.ai/artifact/C2uFSMM8eWhcRxpXLGWkA
 | 44 | Una pregunta semanal de cómo está, con su línea, en la carta (3.V1; sin consejo médico) | Ve que le sirve, no solo lo que hizo | Mucho | Después de v1 |
 | 45 | El calendario de verdad: elegir calendarios y el permiso que no caduca | El plan ve todas sus reuniones | Mucho; espera tus altas | Después de v1 |
 | 46 | Una sola forma de evento en el calendario | Un evento igual lo ponga como lo ponga | Poco | Después de v1 |
+| S6 | Una copia espejo de lo guardado en un archivo del móvil, por si el iPhone vacía el almacén (sexta nº 16) | No pierde su historia con el móvil sin espacio | Medio | Después de v1 |
 | 47 | Fuera de la precarga las láminas de Caminos (1 MB) y los dibujos grandes (2,1 MB) (2.T3) | La instalación baja menos | Poco | Después de v1 |
 | 48 | Cerrar la vía de la consola a lo abierto hasta v1 | Nada visible | Poco | El día de v1 |
 | 49 | Las cifras de `CONTENT.md` al día | Nada visible | Poco | Cuando toque |
@@ -130,6 +139,30 @@ intrusiva» (`ROADMAP.md:403`).
 - **B** · Una línea discreta tras un «Sí» a «¿Te ayudó?», a quien no tiene PACE completo, como mucho una vez por semana.
 - **C** · Una línea en el cierre de una jornada completa, como mucho una vez por semana.
 
+**D-8 · La copia automática de Google en Android** (sexta, P1). Hoy está encendida y se lleva PACE entero a un móvil nuevo,
+con la lista de eventos que PACE puso en el calendario de ESTE móvil; en otro, esa lista puede señalar una reunión ajena.
+- **A** · Mantenerla, y que la lista se olvide en un móvil restaurado (la hora de instalación de Android guardada con ella).
+  **Recomendada**: sin cuentas, que la historia sobreviva al cambio de móvil es de lo poco que la protege.
+- **B** · Apagarla: un móvil nuevo empieza de cero, salvo con la copia de «Tus datos».
+- **C** · Como está.
+
+**D-9 · Con qué se cobra en las apps** (sexta, P2; para cuando estén tus altas).
+- **A** · Un complemento que habla directo con Play y con Apple, sin servicio de terceros. **Recomendada**: sigue «sin
+  cuenta, sin rastreo» y no cambia las fichas de privacidad.
+- **B** · Un servicio de terceros que lo gestiona (tipo RevenueCat).
+
+**D-10 · El sonido del fin de Foco en el iPhone** (sexta, P4). Hoy no suena nada con PACE en el fondo.
+- **A** · El sonido de avisos del iPhone.
+- **B** · La campana de PACE, la misma de la web y de Android. **Recomendada**: se reconoce como PACE.
+- **C** · Sin sonido en el aviso, y que PACE suene al volver.
+
+**D-11 · «Te avisamos dos días antes de que acabe la prueba», en las apps** (sexta, P5; con la mensual, después de v1).
+- **A** · Quitar la frase en las apps. **Recomendada** (la pasada prefería B): la tienda sabe cuándo acaba la prueba; la app
+  lo calcula, y el aviso dependería de un permiso que se puede negar.
+- **B** · Programar un aviso del móvil el día 5, al comprar.
+
+La P3 de la sexta (el calendario del iPhone en v1) ya la decidiste el 29 oct.: el archivo. No se pregunta.
+
 ## Ideas para después de v1 (pasada 5)
 
 La quinta pasada no trae fallos: trae ocho cosas que construir para que pagar merezca la pena. Comprobadas en
@@ -152,3 +185,45 @@ Por orden:
 | P8 | Resumen del año para compartir (idea 8) | «Wrapped», en «Fuera de v1» (`ROADMAP.md:318`); Año ya existe en Estadísticas (`app/stats/YearView.jsx`) | Medio | Después de v1; tiene sentido en diciembre |
 | P9 | Fijar una rutina propia a una hora del día (idea 6) | Nueva; choca con «A tu ritmo», que decide qué toca en cada pausa | Medio | Después de v1, con maqueta |
 | P10 | Una ventanita flotante con el aro en el ordenador (idea 4) | «Reloj de escritorio (Electron ligero)» en medio plazo; extensión de Chrome, fuera de v1 (`ROADMAP.md:316`) | Medio (Picture-in-Picture del navegador) a grande | Después de v1 |
+
+## La sexta pasada: nativo, compra en el móvil y Ajustes
+
+24 hallazgos comprobados en `externa-sexta-10nov-comprobado.md`: 15 ciertos, 4 a medias, 2 falsos (el registro del iPhone sí
+escribe; Google y Outlook no salen en el iPhone), 1 ya decidido y 2 que solo se saben en un móvil.
+
+**(a) Arreglos pequeños, sin decisión, listos para montar** (filas S3 y S4):
+- La pregunta de importar dice de qué día es la copia (`exportedAt`) y avisa si es de una versión más nueva (nº 25 y 5).
+- El selector de importar acepta cualquier archivo; lo que entra ya se valida (nº 6).
+- `AjustesAccion` no esconde al lector la derecha cuando es texto: el precio de la fila de compra, «caducada»,
+  «Introducir» (nº 19). Vale también para la rama 1A.
+- «Audio» en vez de «Sound» como nombre de la sección inglesa (nº 20).
+- Comentarios viejos: el registro del iPhone (`state-paso-v1.js:26-27`, `events-store.js:226-227`,
+  `events-adapter-null.js:12`) y el interruptor de 32x18 (`TweaksPanel.parts.jsx:66`) (nº 3 y 22).
+
+**(b) Lo que pide tu letra:** D-8 (S2), D-9, D-10 (S1) y D-11, arriba.
+
+**(c) Lo que solo se sabe con un móvil.** Las del iPhone esperan a que haya una versión de prueba instalable (TestFlight).
+1. **La copia de Google (Android, nº 4).** En el móvil con la beta, pulsa «Al calendario» un día con reuniones. Conecta el
+   móvil al PC y escribe `adb shell bmgr backupnow com.ezradesign.pace` (o en Ajustes del móvil › Google › Copia de
+   seguridad › «Crear copia ahora»). Desinstala PACE e instálalo otra vez desde Play. Abre PACE: ¿están tus días de antes?
+   Si están, la copia viaja y hace falta S2.
+2. **El sonido del aviso (iPhone, nº 1).** Con el sonido puesto, empieza un Foco de 5 minutos y bloquea el móvil. Al acabar,
+   ¿suena o solo se enciende la pantalla? Abre PACE: ¿suena la campana? El código dice que no sonará nada.
+3. **La música y el silencio (iPhone, nº 2).** Pon música en otra app y empieza una Respira con «Voz clara»: ¿se corta la
+   música? Repite con el interruptor de silencio puesto: ¿qué se oye, la voz, el tono o nada?
+4. **Copias entre versiones (nº 5).** Exporta la copia en la web (0.197.0) e impórtala en la beta de Android. Mira si
+   están los días, los logros y los minutos de Foco.
+5. **El selector (nº 6).** Exporta la copia a Drive. En otro móvil, «Importar una copia» y elige el archivo desde Drive,
+   desde Archivos y desde WhatsApp: ¿se puede tocar o sale en gris?
+Las pruebas 4 y 5 de la pasada (registro y calendario del iPhone) no hacen falta: el código ya dice que funcionan.
+
+**(d) El paquete de las tiendas** (fila S5; para cuando tengas las altas de Play y Apple):
+- La fila de Ajustes en las apps: «comprado» y «mensual» leídos de la tienda, «Restaurar compras» y «Gestionar» en el
+  iPhone (nº 8). La rama 1A cubre la web: «Tenerlo para siempre · 19,99 €» y «Tengo un código».
+- La hoja de compra: los días de prueba solo si la tienda los da (nº 9), «para siempre» solo con la de por vida (nº 10),
+  enlaces a condiciones y privacidad y la línea de renovación (nº 11), «no se pudieron cargar los precios · Reintentar»
+  (nº 12), lo último que dijo la tienda guardado con su fecha (nº 13), y una privacidad sin camino a la compra (nº 14).
+- La ficha del iPhone dice que el calendario es por archivo (P3, ya decidido).
+- Sin comprobar, a mirar al montarlas: normas 3.1.1, 3.1.2 y 2.1 de Apple; Billing 8 y objetivo 36 en Play; la declaración
+  de salud y la ficha de datos de Play; códigos de oferta de Apple para la de por vida; que lo comprado en TestFlight no
+  pasa a la versión publicada; el SDK de iOS 27 desde abril de 2027; las reglas de la UE y de EE. UU. sobre pagar fuera.
