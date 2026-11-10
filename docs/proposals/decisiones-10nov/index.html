@@ -64,238 +64,117 @@ svg.aro{width:100%;max-width:130px;display:block;margin:0 auto}
 .mando button{font:inherit;font-size:.9rem;color:var(--tinta);background:var(--papel);border:1px solid var(--linea);border-radius:999px;padding:5px 14px;cursor:pointer}
 .mando button[aria-pressed="true"]{background:var(--tinta);color:var(--papel);border-color:var(--tinta)}
 footer{font-size:.82rem;color:var(--tinta2);border-top:1px solid var(--linea);padding-top:14px}
+ul.decidido{margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:4px;max-width:70ch}
+ul.decidido b{font-weight:600;color:var(--oliva)}
+details.plegado{border-top:2px solid var(--tinta);padding-top:14px}
+details.plegado>summary{cursor:pointer;font-family:var(--display);font-style:italic;font-size:1.5rem}
+details.plegado[open]>summary{margin-bottom:8px}
 </style>
 
 <main>
+
 <header class="cab">
-  <p class="rot">PACE 0.197.0 · lo que espera tu letra · 10 nov. 2026</p>
-  <h1>Todas tus preguntas, en una página</h1>
-  <p>Aquí están juntas las preguntas que tenías repartidas en tres páginas: la auditoría (D-1 a D-7 y sus propuestas), la revisión de ChatGPT (4, 6 y 7) y la caza de rendimiento (el aro, V1 y V2). Cada una lleva cómo es hoy, sus opciones pintadas sobre la app de verdad y una recomendada. Nada está montado.</p>
-  <div class="atajo"><span class="rot" style="color:inherit;opacity:.85">Si te vale lo recomendado</span><b>Contesta «todo lo recomendado».</b><span>O letra a letra, por ejemplo «D-1 A, D-2 B, 4 B…». Las letras y los nombres son los de siempre.</span></div>
+  <p class="rot">PACE 0.197.0 · lo que espera tu letra · 10 nov. 2026, noche</p>
+  <h1>Lo que queda por decidir</h1>
+  <p>Ya contestaste la mitad mirando la auditoría. Arriba queda lo decidido, en una línea cada cosa; debajo, lo que sigue abierto, con sus opciones pintadas sobre la app de verdad y una recomendada. Nada está montado.</p>
+  <div class="atajo"><span class="rot" style="color:inherit;opacity:.85">Si te vale lo recomendado</span><b>Contesta «todo lo recomendado».</b><span>O pregunta a pregunta, por ejemplo «lunes 2, D-6 D con Ocaso 1 y Búho 1, 4 B…».</span></div>
 </header>
 
+<section aria-labelledby="t-hecho" class="hecho" style="display:flex;flex-direction:column;gap:10px">
+  <h2 id="t-hecho">Ya decidido</h2>
+  <ul class="decidido">
+    <li><b>Propuesta 1 · A</b>: una fila para comprar en Ajustes.</li>
+    <li><b>Propuesta 2 · A</b>: al acabar el ejercicio, el botón dice lo que sigue.</li>
+    <li><b>Propuesta 3 · A</b> (D-3 B): la línea de los lunes va; falta elegir dónde en el móvil, abajo.</li>
+    <li><b>Propuesta 4 · A</b>: la bienvenida y la invitación, sin «v1».</li>
+    <li><b>D-1 · A</b>: el precio como está, mensual con 7 días gratis y de por vida.</li>
+    <li><b>D-2 · A</b>: la bienvenida como está.</li>
+    <li><b>D-4 · C</b>: el repositorio público, sin decir dónde viven las llaves.</li>
+    <li><b>D-5 · B</b>: el día de v1 se quedan las rutinas de pago que se acabaron.</li>
+    <li><b>D-7 · A</b>: no se ofrece PACE completo tras un «Sí» ni al cerrar la jornada.</li>
+  </ul>
+  <p class="nota">Las monta otra sesión. Lo que se pintó de ellas sigue al final, plegado.</p>
+</section>
+
 <section aria-labelledby="t-tabla" style="display:flex;flex-direction:column;gap:12px">
-  <h2 id="t-tabla">Las dieciséis, de un vistazo</h2>
+  <h2 id="t-tabla">Lo que sigue abierto</h2>
   <div class="tabla"><table>
     <thead><tr><th>Pregunta</th><th>En una frase</th><th>Recomendada</th><th>Si la eliges</th></tr></thead>
     <tbody>
-      <tr><td colspan="4" class="rot" style="padding-top:14px">Frenan cobrar</td></tr>
-      <tr><td class="n"><a href="#d1">D-1</a></td><td>El precio: mensual y de por vida, o solo de por vida</td><td class="r">A · como está</td><td>Nada</td></tr>
-      <tr><td class="n"><a href="#d4">D-4</a></td><td>El repositorio, público o privado</td><td class="r">C · público, sin pistas</td><td>Poco</td></tr>
-      <tr><td class="n"><a href="#d5">D-5</a></td><td>Qué rutinas de pago se quedan el día de v1</td><td class="r">B · las acabadas</td><td>Poco</td></tr>
-      <tr><td class="n"><a href="#p1">Propuesta 1</a></td><td>Una fila para comprar en Ajustes</td><td class="r">A · la fila</td><td>Poco</td></tr>
-      <tr><td colspan="4" class="rot" style="padding-top:14px">Antes de v1</td></tr>
-      <tr><td class="n"><a href="#d2">D-2</a></td><td>Cuándo sale la pantalla de PACE completo en la bienvenida</td><td class="r">B · tras la primera pausa</td><td>Medio</td></tr>
-      <tr><td class="n"><a href="#p4">Propuesta 4</a></td><td>La bienvenida y la invitación, sin «v1»</td><td class="r">A · sin «v1»</td><td>Poco</td></tr>
-      <tr><td class="n"><a href="#p2">Propuesta 2</a></td><td>El final del ejercicio dice lo que sigue</td><td class="r">A · el botón lo nombra</td><td>Poco</td></tr>
-      <tr><td class="n"><a href="#d3">D-3</a></td><td>Una línea los lunes para la semana que no se ve</td><td class="r">B · la línea</td><td>Medio</td></tr>
-      <tr><td class="n"><a href="#d7">D-7</a></td><td>Ofrecer PACE completo tras un «Sí» o al cerrar la jornada</td><td class="r">A · no ofrecerlo</td><td>Nada</td></tr>
+      <tr><td class="n"><a href="#lunes">Lunes</a></td><td>Dónde va la línea de los lunes en el móvil</td><td class="r">2 · en el sobre</td><td>Medio</td></tr>
+      <tr><td class="n"><a href="#d6">D-6</a></td><td>Búho y Ocaso, con su dibujo, premiando otra cosa</td><td class="r">D · Ocaso 1 y Búho 1</td><td>Poco</td></tr>
       <tr><td class="n"><a href="#c4">4</a></td><td>«Cambiar» el día con un Foco en marcha</td><td class="r">B · el bloque pasa al día nuevo</td><td>Medio</td></tr>
       <tr><td class="n"><a href="#c6">6</a></td><td>Lo hecho por tu cuenta, en Estadísticas › Hoy</td><td class="r">A · debajo, aparte</td><td>Medio</td></tr>
       <tr><td class="n"><a href="#c7">7</a></td><td>Cuántos minutos dice una pausa hecha</td><td class="r">A · lo que hiciste</td><td>Poco</td></tr>
       <tr><td class="n"><a href="#aro">Aro</a></td><td>Cómo avanza el aro con un Foco en marcha</td><td class="r">B · sin deslizar en bloques largos</td><td>Poco</td></tr>
       <tr><td class="n"><a href="#v1">V1</a></td><td>Enterarse de una versión nueva con la web abierta</td><td class="r">B · preguntar al volver y cada hora</td><td>Medio</td></tr>
       <tr><td class="n"><a href="#v2">V2</a></td><td>No cortar una sesión al actualizar en otra pestaña</td><td class="r">B · espera a que acabe</td><td>Medio</td></tr>
-      <tr><td class="n"><a href="#d6">D-6</a></td><td>Los logros de trasnochar, Búho y Ocaso</td><td class="r">B · retirarlos</td><td>Poco</td></tr>
     </tbody>
   </table></div>
-  <p class="nota">Dar la prueba a los testers no espera a ninguna de estas: espera a dos arreglos que no piden letra (que la quinta pausa no gaste la petición de valoración y que el fin de la pausa avise en el móvil) y a lo que solo puedes hacer tú, al final. Una pregunta más de <code>STATE.md</code>, S3, aún no tiene opciones escritas: va al final.</p>
+  <p class="nota">Una pregunta más de <code>STATE.md</code>, S3, aún no tiene opciones escritas: va después de estas.</p>
 </section>
 
-<div class="grupo"><p class="rot">Primero</p><h2>Lo que frena cobrar</h2><p>El precio, lo que ve quien lee el código, lo que se queda cada uno el día de v1 y dónde se compra.</p></div>
+<div class="grupo"><p class="rot">Abierto</p><h2>Lo que falta</h2></div>
 
-<section class="q" id="d1">
-  <p class="rot">D-1</p>
-  <h3>¿Vendes el mensual con 7 días gratis y el de por vida, o solo el de por vida?</h3>
-  <p class="hoy"><b>Hoy:</b> desde v1, 2,99 € al mes con 7 días gratis o 19,99 € una vez (lo decidiste el 15 oct. y el 5 nov.). Hasta v1, en la web, solo el de por vida. La auditoría externa vendería solo el de por vida, a 19,99 € de lanzamiento y más caro después, porque cree que casi nadie elegirá el mensual y es lo que más complica el cobro.</p>
-  <div class="casos tabla"><table>
-    <thead><tr><th>Quién</th><th>A · como está</th><th>B · solo de por vida</th></tr></thead>
-    <tbody>
-      <tr><td><b>Lucía</b>, oficina, quiere probar antes de pagar</td><td>Empieza el mensual, prueba 7 días PACE completo sin pagar y decide</td><td>No puede probarlo: o paga 19,99 € a ciegas o se queda con lo gratis</td></tr>
-      <tr><td><b>Marco</b>, paga una vez y se olvida</td><td>Paga 19,99 € una vez</td><td>Paga 19,99 € una vez (y quien llegue más tarde, más)</td></tr>
-      <tr><td><b>Ana</b>, solo lo usa en temporada de cierre, dos meses</td><td>Paga 2,99 € dos meses (5,98 €) y lo deja</td><td>Paga 19,99 € o no lo compra</td></tr>
-    </tbody>
-  </table></div>
-  <div class="ops">
-    <div class="op reco"><header><i>A</i><span>Como está: mensual con 7 días gratis y de por vida, desde v1</span><span class="chip">Recomendada</span></header></div>
-    <div class="op"><header><i>B</i><span>Solo de por vida: 19,99 € de lanzamiento y más caro después</span></header></div>
-  </div>
-  <div class="porque"><b>Recomiendo A</b><span>La semana de prueba solo existe con el mensual, y es lo único que deja probar PACE completo sin pagar; lo difícil del cobro ya está hecho.</span></div>
-  <p class="coste">Si eliges A: <b>nada</b>. Si eliges B: <b>medio</b> (quitar el mensual de la tienda, la prueba y sus avisos, y los textos que lo nombran).</p>
-</section>
-
-<section class="q" id="d4">
-  <p class="rot">D-4</p>
-  <h3>¿Cierras el código de PACE antes de cobrar?</h3>
-  <p class="hoy"><b>Hoy:</b> el repositorio es público (18 oct.). Cualquiera puede leer en <code>STATE.md</code> en qué disco viven las llaves y, en las auditorías, fallos del cobro que aún no están cerrados.</p>
-  <div class="casos tabla"><table>
-    <thead><tr><th>Quién</th><th>A · como está</th><th>B · privado</th><th>C · público, sin pistas</th></tr></thead>
-    <tbody>
-      <tr><td><b>Tú</b>, cada mes</td><td>Las pruebas de cada subida no cuestan</td><td>Pasado el cupo gratis de GitHub, los minutos de pruebas se pagan (la suite entera son unos 43 min por subida)</td><td>No cuesta</td></tr>
-      <tr><td><b>Alguien curioso</b> que lee el repo</td><td>Sabe dónde viven las llaves y qué fallos de cobro siguen abiertos</td><td>No ve nada</td><td>Ve el código, sin dónde viven las llaves ni los fallos abiertos hasta cerrarlos</td></tr>
-      <tr><td><b>Un tester</b></td><td>Nada cambia</td><td>Nada cambia</td><td>Nada cambia</td></tr>
-    </tbody>
-  </table></div>
-  <div class="ops">
-    <div class="op"><header><i>A</i><span>Como está</span></header></div>
-    <div class="op"><header><i>B</i><span>Privado antes de encender la venta</span></header></div>
-    <div class="op reco"><header><i>C</i><span>Público, sin decir dónde viven las llaves y sin las notas de fallos de cobro mientras estén abiertos</span><span class="chip">Recomendada</span></header></div>
-  </div>
-  <div class="porque"><b>Recomiendo C</b><span>Quita las pistas y no paga minutos de pruebas, que en un repo privado se cobran.</span></div>
-  <p class="coste">Si eliges A: <b>nada</b>. B: <b>poco</b> (un botón, y el coste de cada mes). C: <b>poco</b> (sacar dos cosas de los textos y, mientras haya fallos de cobro abiertos, apuntarlos fuera del repo).</p>
-</section>
-
-<section class="q" id="d5">
-  <p class="rot">D-5</p>
-  <h3>El día de v1, ¿qué rutinas de pago se queda quien ya usaba PACE?</h3>
-  <p class="hoy"><b>Hoy:</b> decidiste que se queda «lo que ya hizo alguna vez», pero la app cuenta cualquier rutina empezada, terminada o no. Quien abra las 18 rutinas de pago unos segundos antes de v1 se las queda todas, y el código público lo explica.</p>
-  <div class="casos tabla"><table>
-    <thead><tr><th>Quién</th><th>A · basta con empezarla</th><th>B · solo las que acabó</th></tr></thead>
-    <tbody>
-      <tr><td><b>Pablo</b>: hizo enteras 3 rutinas de pago, varias veces</td><td>Se queda 3</td><td>Se queda 3</td></tr>
-      <tr><td><b>Sara</b>: abrió 10 para mirarlas y acabó 2</td><td>Se queda 10</td><td>Se queda 2</td></tr>
-      <tr><td><b>Alguien que leyó el código</b>: abre las 18 un segundo el día antes</td><td>Se queda las 18</td><td>No se queda ninguna</td></tr>
-    </tbody>
-  </table></div>
-  <div class="ops">
-    <div class="op"><header><i>A</i><span>Como está: basta con haberla empezado</span></header></div>
-    <div class="op reco"><header><i>B</i><span>Solo las que acabó alguna vez (o contestó «¿Te ayudó?», que solo sale al acabar)</span><span class="chip">Recomendada</span></header></div>
-  </div>
-  <div class="porque"><b>Recomiendo B</b><span>Es lo que quiere decir «ya la hizo», y nadie pierde una rutina que de verdad usaba.</span></div>
-  <p class="coste">Si eliges A: <b>nada</b>. B: <b>poco</b> (cambiar qué cuenta en la lista, con su prueba).</p>
-</section>
-
-<section class="q" id="p1">
-  <p class="rot">Propuesta 1</p>
-  <h3>¿Pones en Ajustes una fila para comprar PACE completo?</h3>
-  <p class="hoy"><b>Hoy:</b> hasta v1 no hay nada cerrado, así que el botón de compra no le sale nunca a quien ya usa PACE; con la tienda encendida, en Ajustes solo está «Introducir código».</p>
+<section class="q" id="lunes">
+  <p class="rot">La línea de los lunes · propuesta 3 A</p>
+  <h3>¿Dónde va, en el móvil, la línea de los lunes?</h3>
+  <p class="hoy"><b>Decidido:</b> los lunes, a quien no tiene PACE completo, una línea que se toca y abre la invitación: «Los lunes, PACE completo te escribe tu semana ›». En el ordenador va en la fila del resumen, como ya viste. <b>En la home del móvil no cabe</b>: al pie de la tarjeta se pasa 2 px a 360 × 740. Las fotos son un lunes desde v1, de alguien cuya semana de prueba ya acabó.</p>
   <div class="fotos">
-    <figure class="m"><img src="fotos/fable-ajustes-hoy-360.jpg" alt="Ajustes hoy, solo Introducir código" loading="lazy" width="720" height="1480"><figcaption>Hoy, con la tienda encendida.</figcaption></figure>
-    <figure class="m"><img src="fotos/fable-ajustes-A-360.jpg" alt="Ajustes con la fila Tenerlo para siempre" loading="lazy" width="720" height="1480"><figcaption><b>A</b> · «Tenerlo para siempre · 19,99 €» y, debajo, «Tengo un código».</figcaption></figure>
+    <figure class="m"><img src="fotos/d3-hoy-home-360.jpg" alt="Home del móvil con la jornada preparada" loading="lazy" width="720" height="1480"><figcaption>Hoy: la home del móvil, sin sitio para una línea más.</figcaption></figure>
   </div>
   <div class="ops">
-    <div class="op reco"><header><i>A</i><span>La fila nueva en Ajustes; abre la invitación de siempre con su botón de compra</span><span class="chip">Recomendada</span></header><p class="mide">No salta sola ni tapa nada: es una fila más en «Tus datos».</p></div>
-    <div class="op"><header><i>B</i><span>Nada en la app: se compra solo en pacegrass.app/premium</span></header></div>
-  </div>
-  <div class="porque"><b>Recomiendo A</b><span>Sin ella, encender la venta no se lo enseña a nadie que ya use PACE, que es quien antes pagaría.</span></div>
-  <p class="coste">Si eliges A: <b>poco</b>. B: <b>nada</b>.</p>
-</section>
-
-<div class="grupo"><p class="rot">Después</p><h2>Lo demás, antes de v1</h2><p>Lo que se ve y cómo se mueve. Cada foto es la app de verdad en el móvil a 360 px o en el ordenador a 1536 × 710, con la opción puesta encima.</p></div>
-
-<section class="q" id="d2">
-  <p class="rot">D-2</p>
-  <h3>En la bienvenida, ¿sale PACE completo al principio o después de la primera pausa?</h3>
-  <p class="hoy"><b>Hoy:</b> la bienvenida tiene tres pantallas: la de PACE, «¿Cómo es tu semana?» y PACE completo, con cuatro cosas que aún no entiende quien no ha hecho nada. Las dos auditorías lo ven pronto.</p>
-  <div class="fotos">
-    <figure class="m"><img src="fotos/d2-hoy-1-bienvenida-360.jpg" alt="Primera pantalla de la bienvenida" loading="lazy" width="720" height="1480"><figcaption>Hoy, 1 · la bienvenida.</figcaption></figure>
-    <figure class="m"><img src="fotos/d2-hoy-2-semana-360.jpg" alt="Cómo es tu semana, con Continuar" loading="lazy" width="720" height="1480"><figcaption>Hoy, 2 · tu semana, con «Continuar».</figcaption></figure>
-    <figure class="m"><img src="fotos/d2-hoy-3-completo-360.jpg" alt="Pantalla de PACE completo" loading="lazy" width="720" height="1480"><figcaption>Hoy, 3 · PACE completo, antes de hacer nada.</figcaption></figure>
-  </div>
-  <div class="ops">
-    <div class="op"><header><i>A</i><span>Como está: tres pantallas, PACE completo la última</span></header></div>
-    <div class="op reco"><header><i>B</i><span>Bienvenida y semana; PACE completo sale una vez, al acabar la primera pausa entera</span><span class="chip">Recomendada</span></header>
+    <div class="op"><header><i>1</i><span>Dentro de «Ver todo», bajo el resumen del día</span></header>
       <div class="fotos">
-        <figure class="m"><img src="fotos/d2-B-1-semana-360.jpg" alt="Tu semana con Comenzar" loading="lazy" width="720" height="1480"><figcaption><b>B</b>, 2 · la semana es la última: su botón ya dice «Comenzar» (lo pinta la propia app).</figcaption></figure>
-        <figure class="m"><img src="fotos/d2-B-3-completo-tras-pausa-360.jpg" alt="PACE completo con Tu primera pausa, hecha" loading="lazy" width="720" height="1480"><figcaption><b>B</b>, después · al acabar la primera pausa entera, la misma pantalla con «Tu primera pausa, hecha.» arriba.</figcaption></figure>
+        <figure class="m"><img src="fotos/d3-hoy-vertodo-360.jpg" alt="Ver todo hoy" loading="lazy" width="720" height="1480"><figcaption>«Ver todo», hoy.</figcaption></figure>
+        <figure class="m"><img src="fotos/d3-B-vertodo-360.jpg" alt="Ver todo con la línea de los lunes" loading="lazy" width="720" height="1480"><figcaption><b>1</b> · la línea bajo «6 h 5 min de foco · 7 pausas».</figcaption></figure>
       </div>
-      <figure class="d"><img src="fotos/d2-B-3-completo-tras-pausa-1536.jpg" alt="PACE completo tras la primera pausa, en el ordenador" loading="lazy" width="1536" height="710"><figcaption><b>B</b> a 1536 × 710.</figcaption></figure>
-      <p class="mide">Medido: la frase nueva no empuja nada fuera. El último botón queda a <b>592 de 740 px</b> en el móvil y a <b>560 de 710</b> en el ordenador, sin scroll.</p>
+      <p class="mide">Medido: la home no cambia. Dentro de «Ver todo», que ya se desliza, la línea ocupa <b>30 px</b> y baja la lista 30 px. Solo la ve quien abre «Ver todo».</p>
+    </div>
+    <div class="op reco"><header><i>2</i><span>En el sobre de arriba, donde llegaría la carta</span><span class="chip">Recomendada</span></header>
+      <div class="fotos">
+        <figure class="m"><img src="fotos/lunes-2-sobre-barra-360.jpg" alt="La barra de arriba con el sobre cerrado" loading="lazy" width="720" height="1480"><figcaption><b>2</b> · el lunes sale el sobre, cerrado con su lacre, junto a Estadísticas.</figcaption></figure>
+        <figure class="m"><img src="fotos/lunes-2-sobre-hoja-360.jpg" alt="La hoja del sobre con la carta del lunes" loading="lazy" width="720" height="1480"><figcaption><b>2</b> · al tocarlo, «La carta del lunes» y «Ver PACE completo ›».</figcaption></figure>
+      </div>
+      <p class="mide">Medido: el sobre entra en la barra en el hueco que ya había (de <b>176 a 216 px</b>, a 4 px de Estadísticas, como los demás iconos); no mueve ningún icono ni la fila de minutos. La hoja sale solo al tocarlo. Lo pinta la propia app: es una cosa más del sobre, como la carta y las novedades.</p>
+    </div>
+    <div class="op"><header><i>3</i><span>Una fila en el cajón, bajo «Tus rutinas»</span></header>
+      <div class="fotos">
+        <figure class="m"><img src="fotos/lunes-3-cajon-360.jpg" alt="El cajón con La carta del lunes" loading="lazy" width="720" height="1480"><figcaption><b>3</b> · «La carta del lunes PREMIUM ›», como «Tus rutinas».</figcaption></figure>
+      </div>
+      <p class="mide">Medido: la fila mide <b>32 px</b>; el cajón acaba a <b>696 de 740 px</b> (antes, 662) y sigue sin deslizarse. Solo la ve quien abre el cajón.</p>
     </div>
   </div>
-  <div class="porque"><b>Recomiendo B</b><span>Cuando ya sabe qué es una pausa, la oferta se entiende.</span></div>
-  <p class="coste">Si eliges A: <b>nada</b>. B: <b>medio</b> (sacar la pantalla del final de la bienvenida y enseñarla una vez tras la primera pausa entera, con su prueba).</p>
+  <div class="porque"><b>Recomiendo 2</b><span>El sobre es donde llegaría la carta del lunes: lo ve sin abrir nada, no empuja ni tapa nada, y solo sale los lunes.</span></div>
+  <p class="coste">Si eliges 1 o 3: <b>poco</b>. 2: <b>medio</b> (una cosa más del sobre que sale solo los lunes y abre la invitación).</p>
 </section>
 
-<section class="q" id="p4">
-  <p class="rot">Propuesta 4</p>
-  <h3>¿Quitas «v1» de la bienvenida y de la invitación?</h3>
-  <p class="hoy"><b>Hoy:</b> «Y hasta v1…» y «Al llegar v1…»: quien llega no sabe qué es «v1».</p>
-  <div class="fotos">
-    <figure class="m"><img src="fotos/fable-bienvenida-hoy-360.jpg" alt="Bienvenida con hasta v1" loading="lazy" width="720" height="1480"><figcaption>Hoy: «Y hasta v1…».</figcaption></figure>
-    <figure class="m"><img src="fotos/fable-bienvenida-A-360.jpg" alt="Bienvenida con mientras está en pruebas" loading="lazy" width="720" height="1480"><figcaption><b>A</b> · «Y mientras está en pruebas…» y «Cuando salga a la venta…».</figcaption></figure>
-  </div>
-  <div class="ops">
-    <div class="op reco"><header><i>A</i><span>Cambiar las frases, en la bienvenida y en la invitación («Llega con la versión 1»)</span><span class="chip">Recomendada</span></header></div>
-    <div class="op"><header><i>B</i><span>Dejar «v1»</span></header></div>
-  </div>
-  <div class="porque"><b>Recomiendo A</b><span>Se entiende a la primera qué es gratis y hasta cuándo.</span></div>
-  <p class="coste">Si eliges A: <b>poco</b> (textos en español e inglés). B: <b>nada</b>.</p>
-</section>
 
-<section class="q" id="p2">
-  <p class="rot">Propuesta 2</p>
-  <h3>Al acabar el ejercicio de una pausa, ¿el botón dice lo que sigue?</h3>
-  <p class="hoy"><b>Hoy:</b> dice «Volver al inicio» y, por libre, el aro espera en 00:00 con «Empezar otro ciclo».</p>
+<section class="q" id="d6">
+  <p class="rot">D-6</p>
+  <h3>¿Adaptamos Búho y Ocaso para que premien algo útil, sin cambiar su dibujo?</h3>
+  <p class="hoy"><b>Hoy:</b> «Ocaso» (el dibujo es una luna) pide cinco días con sesión después de las 21 h, y «Búho» (un búho en su rama), secreto, usar PACE entre las 2 y las 4 de la madrugada. Premian lo contrario de una jornada que acaba a su hora. Preguntaste si se pueden adaptar sin cambiar el dibujo: sí. Cada uno conserva su dibujo y su nombre por dentro, así que quien ya lo tenga lo conserva; cambia lo que premia y su frase.</p>
   <div class="fotos">
-    <figure class="m"><img src="fotos/fable-cierre-hoy-360.jpg" alt="Cierre con Volver al inicio" loading="lazy" width="720" height="1480"><figcaption>Hoy: «Volver al inicio».</figcaption></figure>
-    <figure class="m"><img src="fotos/fable-cierre-A-360.jpg" alt="Cierre con Empezar el ciclo 2" loading="lazy" width="720" height="1480"><figcaption><b>A</b>, por libre: «Empezar el ciclo 2» y, debajo, «Volver al inicio».</figcaption></figure>
+    <figure class="m"><img src="fotos/d6-hoy-360.jpg" alt="Logros, La jornada, con Ocaso marcado" loading="lazy" width="720" height="1480"><figcaption>Hoy: Ocaso, marcado. Búho está en Secretos, como «?».</figcaption></figure>
   </div>
-  <figure class="d"><img src="fotos/fable-cierre-A-1280.jpg" alt="Cierre con jornada, Volver te quedan 3 min de pausa" loading="lazy" width="1280" height="720"><figcaption><b>A</b>, con jornada, a 1280: «Volver · te quedan 3 min de pausa» y «Empezar ya el bloque 2».</figcaption></figure>
-  <div class="ops">
-    <div class="op reco"><header><i>A</i><span>El botón del final nombra lo que sigue; la salida de siempre, debajo</span><span class="chip">Recomendada</span></header></div>
-    <div class="op"><header><i>B</i><span>El final no cambia; solo el aro, al volver por libre, enseña los minutos del ciclo siguiente en vez de 00:00</span></header></div>
-    <div class="op"><header><i>C</i><span>Como está</span></header></div>
-  </div>
-  <div class="porque"><b>Recomiendo A</b><span>Un toque menos y sabe qué toca: es lo que cierra el círculo bloque, pausa, bloque.</span></div>
-  <p class="coste">Si eliges A: <b>poco</b>. B: <b>poco</b>. C: <b>nada</b>.</p>
-</section>
-
-<section class="q" id="d3">
-  <p class="rot">D-3 · con la propuesta 3</p>
-  <h3>¿Dices, los lunes, que existe una semana hecha a tu medida?</h3>
-  <p class="hoy"><b>Hoy:</b> la semana que cambia y la carta del lunes son lo más propio de PACE completo, y no se ven ni teniéndolo ni sin tenerlo (el 20 oct. decidiste «nada nuevo en pantalla»). Las fotos son un lunes desde v1, de alguien cuya semana de prueba ya acabó.</p>
-  <div class="fotos">
-    <figure class="m"><img src="fotos/d3-hoy-home-360.jpg" alt="Home del móvil con la jornada preparada" loading="lazy" width="720" height="1480"><figcaption>Hoy, la home del móvil: no queda sitio para una línea más.</figcaption></figure>
-    <figure class="m"><img src="fotos/d3-hoy-vertodo-360.jpg" alt="Ver todo, la jornada entera" loading="lazy" width="720" height="1480"><figcaption>Hoy, «Ver todo».</figcaption></figure>
-  </div>
-  <div class="ops">
-    <div class="op"><header><i>A</i><span>Como está</span></header></div>
-    <div class="op reco"><header><i>B</i><span>Una línea solo los lunes, a quien no tiene PACE completo: «Los lunes, PACE completo te escribe tu semana ›». Al tocarla, la invitación</span><span class="chip">Recomendada</span></header>
-      <div class="fotos">
-        <figure class="m"><img src="fotos/d3-B-vertodo-360.jpg" alt="Ver todo con la línea de los lunes" loading="lazy" width="720" height="1480"><figcaption><b>B</b> en el móvil, dentro de «Ver todo», bajo el resumen del día.</figcaption></figure>
-      </div>
-      <figure class="d"><img src="fotos/d3-B-home-1536.jpg" alt="Home del ordenador con la línea de los lunes" loading="lazy" width="1536" height="710"><figcaption><b>B</b> a 1536 × 710, en la fila del resumen de la tarjeta.</figcaption></figure>
-      <p class="mide">Medido: en el móvil la home no cambia; dentro de «Ver todo», que ya se desliza, la línea ocupa <b>30 px</b> y baja la lista 30 px. En el ordenador baja <b>12 px</b> lo de debajo y la página sigue sin scroll (0 px de más). Nada se pone encima de nada.</p>
+  <div class="op reco"><header><i>D</i><span>Adaptarlos: mismo dibujo, otra cosa que premiar</span><span class="chip">Recomendada</span></header>
+    <p><b>Ocaso</b>, tres ideas. Todas se calculan con lo que PACE ya guarda.</p>
+    <div class="fotos">
+      <figure class="m"><img src="fotos/d6-D-o1-360.jpg" alt="Ocaso, cinco jornadas cerradas a su hora" loading="lazy" width="720" height="1480"><figcaption><b>Ocaso 1</b> · Recomendada · «Cinco jornadas cerradas a su hora». Días en que la jornada llegó a «Jornada cerrada» sin empezar un Foco después de la hora de salida. Datos: tu horario (la hora de salida), el día de «A tu ritmo» y la hora a la que empieza cada Foco.</figcaption></figure>
+      <figure class="m"><img src="fotos/d6-D-o2-360.jpg" alt="Ocaso, cinco días con la pausa de cierre hecha" loading="lazy" width="720" height="1480"><figcaption><b>Ocaso 2</b> · «Cinco días con la pausa de cierre hecha». La pausa «Para cerrar la jornada», hecha. Datos: las pausas hechas del día, que ya llevan su motivo.</figcaption></figure>
+      <figure class="m"><img src="fotos/d6-D-o3-360.jpg" alt="Ocaso, cinco días con sesión y nada después de las 21 h" loading="lazy" width="720" height="1480"><figcaption><b>Ocaso 3</b> · «Cinco días con sesión y nada después de las 21 h». Lo contrario de hoy. Datos: la hora de cada sesión, que hoy ya se mira para dar Ocaso.</figcaption></figure>
     </div>
-    <div class="op"><header><i>C</i><span>B y, para quien sí lo tiene, una frase de la semana en el mismo sitio, como las de las pausas</span></header>
-      <div class="fotos">
-        <figure class="m"><img src="fotos/d3-C-vertodo-360.jpg" alt="Ver todo con Esta semana, más caderas" loading="lazy" width="720" height="1480"><figcaption><b>C</b>, con PACE completo: «Esta semana, más caderas: el martes te tocaron poco.»</figcaption></figure>
-      </div>
-      <figure class="d"><img src="fotos/d3-C-home-1536.jpg" alt="Home del ordenador con la frase de la semana" loading="lazy" width="1536" height="710"><figcaption><b>C</b> a 1536 × 710. Mismas medidas que B.</figcaption></figure>
+    <p><b>Búho</b>, dos ideas. Sigue siendo secreto.</p>
+    <div class="fotos">
+      <figure class="m"><img src="fotos/d6-D-b1-360.jpg" alt="Búho, contestaste Te ayudó 25 veces" loading="lazy" width="720" height="1480"><figcaption><b>Búho 1</b> · Recomendada · «Contestaste «¿Te ayudó?» 25 veces». El que observa y aprende qué te sienta bien. Datos: las respuestas a «¿Te ayudó?» de cada rutina (Sí, Un poco y No), que ya se guardan.</figcaption></figure>
+      <figure class="m"><img src="fotos/d6-D-b2-360.jpg" alt="Búho, siete días con sesión y ninguna entre las 23 y las 6" loading="lazy" width="720" height="1480"><figcaption><b>Búho 2</b> · «Siete días con sesión y ninguna entre las 23 y las 6». Datos: la hora de cada sesión. Se parece a «Nunca a medianoche» (30 días sin usar PACE tras las 23 h).</figcaption></figure>
     </div>
+    <figure class="d"><img src="fotos/d6-D-1536.jpg" alt="Logros en el ordenador con Ocaso 1 y Búho 1" loading="lazy" width="1536" height="710"><figcaption><b>D</b> con Ocaso 1 y Búho 1, a 1536 × 710.</figcaption></figure>
+    <p class="mide">Medido: con la frase nueva, la casilla de Ocaso mide lo mismo (139 px). La de Búho pasa de 127 a 140 px en el móvil (152 con Búho 2), lo mismo que sus vecinas de dos líneas: no empuja nada fuera, y el panel ya se desliza.</p>
   </div>
-  <div class="porque"><b>Recomiendo B</b><span>Una vez por semana, cuando llegaría la carta, y sin salir en la home: anuncia sin insistir.</span></div>
-  <p class="coste">Si eliges A: <b>nada</b>. B: <b>medio</b>. C: <b>medio y algo más</b> (la frase pide elegir cada semana un motivo que sea verdad).</p>
-</section>
-
-<section class="q" id="d7">
-  <p class="rot">D-7</p>
-  <h3>¿Ofreces PACE completo después de un «Sí» o al cerrar la jornada?</h3>
-  <p class="hoy"><b>Hoy:</b> la invitación solo sale al tocar un candado, en la bienvenida, el día de v1 y al acabar la prueba. Tu regla dice que nada propone algo cerrado, y en la lista de «nunca» está la publicidad intrusiva. Las fotos son un lunes desde v1, sin PACE completo.</p>
-  <div class="fotos">
-    <figure class="m"><img src="fotos/d7-hoy-si-360.jpg" alt="Final de la pausa tras contestar Sí" loading="lazy" width="720" height="1480"><figcaption><b>A</b> (hoy) · tras un «Sí» a «¿Te ayudó esta pausa?»: «Gracias».</figcaption></figure>
-    <figure class="m"><img src="fotos/d7-hoy-cierre-360.jpg" alt="Jornada cerrada" loading="lazy" width="720" height="1480"><figcaption><b>A</b> (hoy) · la jornada cerrada.</figcaption></figure>
-  </div>
-  <div class="ops">
-    <div class="op reco"><header><i>A</i><span>Como está; el momento de cada semana lo da la línea de los lunes (D-3 B)</span><span class="chip">Recomendada</span></header></div>
-    <div class="op"><header><i>B</i><span>Una línea tras un «Sí», a quien no tiene PACE completo, como mucho una vez por semana</span></header>
-      <div class="fotos">
-        <figure class="m"><img src="fotos/d7-B-si-360.jpg" alt="Gracias y la línea de PACE completo" loading="lazy" width="720" height="1480"><figcaption><b>B</b> · «Lo que te ayuda guía tu semana con PACE completo ›».</figcaption></figure>
-      </div>
-      <figure class="d"><img src="fotos/d7-B-si-1536.jpg" alt="La línea tras el Sí, en el ordenador" loading="lazy" width="1536" height="710"><figcaption><b>B</b> a 1536 × 710.</figcaption></figure>
-      <p class="mide">Medido: la línea (25 px) cabe entre «Gracias» y el botón; «Volver al inicio» no se mueve (<b>716 de 740 px</b> en el móvil, <b>670 de 710</b> en el ordenador).</p>
-    </div>
-    <div class="op"><header><i>C</i><span>Una línea al cerrar una jornada completa, como mucho una vez por semana</span></header>
-      <div class="fotos">
-        <figure class="m"><img src="fotos/d7-C-cierre-360.jpg" alt="Jornada cerrada con la línea de PACE completo" loading="lazy" width="720" height="1480"><figcaption><b>C</b> · «La semana que viene, a tu medida con PACE completo ›», al pie de la tarjeta.</figcaption></figure>
-      </div>
-      <figure class="d"><img src="fotos/d7-C-cierre-1536.jpg" alt="Jornada cerrada con la línea, en el ordenador" loading="lazy" width="1536" height="710"><figcaption><b>C</b> a 1536 × 710.</figcaption></figure>
-      <p class="mide">Medido: la tarjeta crece <b>38 px</b> en el móvil (acaba a 646 de 740) y <b>19 px</b> en el ordenador (685 de 710); sin scroll en ninguno.</p>
-    </div>
-  </div>
-  <div class="porque"><b>Recomiendo A</b><span>Una oferta pegada a «¿Te ayudó?» tuerce la respuesta que alimenta «Qué te ayuda», y el cierre del día es para soltar el móvil.</span></div>
-  <p class="coste">Si eliges A: <b>nada</b>. B: <b>poco</b>. C: <b>poco</b>.</p>
+  <p class="nota" style="margin-top:4px"><b>A</b> · como están. <b>B</b> · retirarlos del catálogo (quien los tenga los conserva). <b>C</b> · cambiarlos por un logro nuevo de cerrar la jornada a su hora, con otro dibujo.</p>
+  <div class="porque"><b>Recomiendo D, con Ocaso 1 y Búho 1</b><span>La luna ya dice «se acabó el día» y el búho «aprende»: premian lo que PACE vende, y nadie pierde lo que ganó.</span></div>
+  <p class="coste">Si eliges D: <b>poco</b> (la regla nueva de cada logro, sus frases en español e inglés y su prueba). B: <b>poco</b>. C: <b>medio</b>, con dibujo nuevo. A: <b>nada</b>.</p>
 </section>
 
 <section class="q" id="c4">
@@ -422,34 +301,6 @@ footer{font-size:.82rem;color:var(--tinta2);border-top:1px solid var(--linea);pa
   <p class="coste">Si eliges B: <b>medio</b>. A: <b>nada</b>.</p>
 </section>
 
-<section class="q" id="d6">
-  <p class="rot">D-6</p>
-  <h3>¿Retiras los logros que premian trasnochar?</h3>
-  <p class="hoy"><b>Hoy:</b> «Ocaso» pide cinco días con sesión después de las 21 h y «Búho», secreto, usar PACE entre las 2 y las 4 de la madrugada. Premian lo contrario de una jornada que acaba a su hora; «Nunca a medianoche» ya existe.</p>
-  <div class="fotos">
-    <figure class="m"><img src="fotos/d6-hoy-360.jpg" alt="Logros, La jornada, con Ocaso marcado" loading="lazy" width="720" height="1480"><figcaption>Hoy, en el móvil: Ocaso, marcado con un trazo. Búho está en Secretos, como «?».</figcaption></figure>
-  </div>
-  <figure class="d"><img src="fotos/d6-hoy-1536.jpg" alt="Logros en el ordenador con Ocaso y Búho marcados" loading="lazy" width="1536" height="710"><figcaption>Hoy, a 1536 × 710: Ocaso en La jornada y Búho en Secretos, marcados.</figcaption></figure>
-  <div class="ops">
-    <div class="op"><header><i>A</i><span>Como están</span></header></div>
-    <div class="op reco"><header><i>B</i><span>Retirarlos del catálogo; quien ya los tenga los conserva</span><span class="chip">Recomendada</span></header>
-      <div class="fotos">
-        <figure class="m"><img src="fotos/d6-B-360.jpg" alt="La jornada sin Ocaso" loading="lazy" width="720" height="1480"><figcaption><b>B</b> · La jornada, 0 / 7; Secretos, 0 / 12.</figcaption></figure>
-      </div>
-      <figure class="d"><img src="fotos/d6-B-1536.jpg" alt="Logros sin Ocaso ni Búho" loading="lazy" width="1536" height="710"><figcaption><b>B</b> a 1536 × 710.</figcaption></figure>
-    </div>
-    <div class="op"><header><i>C</i><span>Cambiarlos por uno de cerrar la jornada a su hora</span></header>
-      <div class="fotos">
-        <figure class="m"><img src="fotos/d6-C-360.jpg" alt="La jornada con A su hora" loading="lazy" width="720" height="1480"><figcaption><b>C</b> · «A su hora: cinco jornadas cerradas a su hora», en el sitio de Ocaso. Su dibujo sería otro.</figcaption></figure>
-      </div>
-      <figure class="d"><img src="fotos/d6-C-1536.jpg" alt="Logros con A su hora" loading="lazy" width="1536" height="710"><figcaption><b>C</b> a 1536 × 710.</figcaption></figure>
-    </div>
-  </div>
-  <p class="mide">Medido: quitar o cambiar una casilla no empuja nada fuera; el panel de logros ya se desliza.</p>
-  <div class="porque"><b>Recomiendo B</b><span>Van contra el tono de PACE, y uno es secreto: nadie los echa de menos.</span></div>
-  <p class="coste">Si eliges B: <b>poco</b>. C: <b>medio</b> (un logro nuevo con su dibujo y su prueba). A: <b>nada</b>.</p>
-</section>
-
 <section class="q" id="s3">
   <p class="rot">S3 · sin opciones todavía</p>
   <h3>Un código de PACE completo, ¿se puede pasar a otra persona?</h3>
@@ -473,7 +324,175 @@ footer{font-size:.82rem;color:var(--tinta2);border-top:1px solid var(--linea);pa
   <li><b>La revisión de un fisioterapeuta</b> de Fondos en silla y de los ejercicios aparcados, antes de v1.</li>
 </ul>
 
-<footer>Fotos nuevas (D-2, D-3, D-6 y D-7): la 0.197.0 en Chromium, español, tema claro, con el reloj puesto el 10 nov. a las 9:00 o el lunes 23 nov. a las 9:05, y lo de pago como sería desde v1. Las de las propuestas 1, 2 y 4 son de la auditoría de Fable; las de 4, 6 y 7, de la revisión de ChatGPT; el aro, de la caza de rendimiento. Nada de esto está en la app.</footer>
+
+<details class="plegado" id="decidido"><summary>Lo ya decidido, con lo que se pintó</summary>
+<div style="display:flex;flex-direction:column;gap:44px">
+<section class="q" id="d1">
+  <p class="rot">D-1</p>
+  <h3>¿Vendes el mensual con 7 días gratis y el de por vida, o solo el de por vida?</h3>
+  <p class="hoy"><b>Hoy:</b> desde v1, 2,99 € al mes con 7 días gratis o 19,99 € una vez (lo decidiste el 15 oct. y el 5 nov.). Hasta v1, en la web, solo el de por vida. La auditoría externa vendería solo el de por vida, a 19,99 € de lanzamiento y más caro después, porque cree que casi nadie elegirá el mensual y es lo que más complica el cobro.</p>
+  <div class="casos tabla"><table>
+    <thead><tr><th>Quién</th><th>A · como está</th><th>B · solo de por vida</th></tr></thead>
+    <tbody>
+      <tr><td><b>Lucía</b>, oficina, quiere probar antes de pagar</td><td>Empieza el mensual, prueba 7 días PACE completo sin pagar y decide</td><td>No puede probarlo: o paga 19,99 € a ciegas o se queda con lo gratis</td></tr>
+      <tr><td><b>Marco</b>, paga una vez y se olvida</td><td>Paga 19,99 € una vez</td><td>Paga 19,99 € una vez (y quien llegue más tarde, más)</td></tr>
+      <tr><td><b>Ana</b>, solo lo usa en temporada de cierre, dos meses</td><td>Paga 2,99 € dos meses (5,98 €) y lo deja</td><td>Paga 19,99 € o no lo compra</td></tr>
+    </tbody>
+  </table></div>
+  <div class="ops">
+    <div class="op reco"><header><i>A</i><span>Como está: mensual con 7 días gratis y de por vida, desde v1</span><span class="chip">Recomendada</span></header></div>
+    <div class="op"><header><i>B</i><span>Solo de por vida: 19,99 € de lanzamiento y más caro después</span></header></div>
+  </div>
+  <div class="porque"><b>Recomiendo A</b><span>La semana de prueba solo existe con el mensual, y es lo único que deja probar PACE completo sin pagar; lo difícil del cobro ya está hecho.</span></div>
+  <p class="coste">Si eliges A: <b>nada</b>. Si eliges B: <b>medio</b> (quitar el mensual de la tienda, la prueba y sus avisos, y los textos que lo nombran).</p>
+</section>
+
+<section class="q" id="d4">
+  <p class="rot">D-4</p>
+  <h3>¿Cierras el código de PACE antes de cobrar?</h3>
+  <p class="hoy"><b>Hoy:</b> el repositorio es público (18 oct.). Cualquiera puede leer en <code>STATE.md</code> en qué disco viven las llaves y, en las auditorías, fallos del cobro que aún no están cerrados.</p>
+  <div class="casos tabla"><table>
+    <thead><tr><th>Quién</th><th>A · como está</th><th>B · privado</th><th>C · público, sin pistas</th></tr></thead>
+    <tbody>
+      <tr><td><b>Tú</b>, cada mes</td><td>Las pruebas de cada subida no cuestan</td><td>Pasado el cupo gratis de GitHub, los minutos de pruebas se pagan (la suite entera son unos 43 min por subida)</td><td>No cuesta</td></tr>
+      <tr><td><b>Alguien curioso</b> que lee el repo</td><td>Sabe dónde viven las llaves y qué fallos de cobro siguen abiertos</td><td>No ve nada</td><td>Ve el código, sin dónde viven las llaves ni los fallos abiertos hasta cerrarlos</td></tr>
+      <tr><td><b>Un tester</b></td><td>Nada cambia</td><td>Nada cambia</td><td>Nada cambia</td></tr>
+    </tbody>
+  </table></div>
+  <div class="ops">
+    <div class="op"><header><i>A</i><span>Como está</span></header></div>
+    <div class="op"><header><i>B</i><span>Privado antes de encender la venta</span></header></div>
+    <div class="op reco"><header><i>C</i><span>Público, sin decir dónde viven las llaves y sin las notas de fallos de cobro mientras estén abiertos</span><span class="chip">Recomendada</span></header></div>
+  </div>
+  <div class="porque"><b>Recomiendo C</b><span>Quita las pistas y no paga minutos de pruebas, que en un repo privado se cobran.</span></div>
+  <p class="coste">Si eliges A: <b>nada</b>. B: <b>poco</b> (un botón, y el coste de cada mes). C: <b>poco</b> (sacar dos cosas de los textos y, mientras haya fallos de cobro abiertos, apuntarlos fuera del repo).</p>
+</section>
+
+<section class="q" id="d5">
+  <p class="rot">D-5</p>
+  <h3>El día de v1, ¿qué rutinas de pago se queda quien ya usaba PACE?</h3>
+  <p class="hoy"><b>Hoy:</b> decidiste que se queda «lo que ya hizo alguna vez», pero la app cuenta cualquier rutina empezada, terminada o no. Quien abra las 18 rutinas de pago unos segundos antes de v1 se las queda todas, y el código público lo explica.</p>
+  <div class="casos tabla"><table>
+    <thead><tr><th>Quién</th><th>A · basta con empezarla</th><th>B · solo las que acabó</th></tr></thead>
+    <tbody>
+      <tr><td><b>Pablo</b>: hizo enteras 3 rutinas de pago, varias veces</td><td>Se queda 3</td><td>Se queda 3</td></tr>
+      <tr><td><b>Sara</b>: abrió 10 para mirarlas y acabó 2</td><td>Se queda 10</td><td>Se queda 2</td></tr>
+      <tr><td><b>Alguien que leyó el código</b>: abre las 18 un segundo el día antes</td><td>Se queda las 18</td><td>No se queda ninguna</td></tr>
+    </tbody>
+  </table></div>
+  <div class="ops">
+    <div class="op"><header><i>A</i><span>Como está: basta con haberla empezado</span></header></div>
+    <div class="op reco"><header><i>B</i><span>Solo las que acabó alguna vez (o contestó «¿Te ayudó?», que solo sale al acabar)</span><span class="chip">Recomendada</span></header></div>
+  </div>
+  <div class="porque"><b>Recomiendo B</b><span>Es lo que quiere decir «ya la hizo», y nadie pierde una rutina que de verdad usaba.</span></div>
+  <p class="coste">Si eliges A: <b>nada</b>. B: <b>poco</b> (cambiar qué cuenta en la lista, con su prueba).</p>
+</section>
+
+<section class="q" id="p1">
+  <p class="rot">Propuesta 1</p>
+  <h3>¿Pones en Ajustes una fila para comprar PACE completo?</h3>
+  <p class="hoy"><b>Hoy:</b> hasta v1 no hay nada cerrado, así que el botón de compra no le sale nunca a quien ya usa PACE; con la tienda encendida, en Ajustes solo está «Introducir código».</p>
+  <div class="fotos">
+    <figure class="m"><img src="fotos/fable-ajustes-hoy-360.jpg" alt="Ajustes hoy, solo Introducir código" loading="lazy" width="720" height="1480"><figcaption>Hoy, con la tienda encendida.</figcaption></figure>
+    <figure class="m"><img src="fotos/fable-ajustes-A-360.jpg" alt="Ajustes con la fila Tenerlo para siempre" loading="lazy" width="720" height="1480"><figcaption><b>A</b> · «Tenerlo para siempre · 19,99 €» y, debajo, «Tengo un código».</figcaption></figure>
+  </div>
+  <div class="ops">
+    <div class="op reco"><header><i>A</i><span>La fila nueva en Ajustes; abre la invitación de siempre con su botón de compra</span><span class="chip">Recomendada</span></header><p class="mide">No salta sola ni tapa nada: es una fila más en «Tus datos».</p></div>
+    <div class="op"><header><i>B</i><span>Nada en la app: se compra solo en pacegrass.app/premium</span></header></div>
+  </div>
+  <div class="porque"><b>Recomiendo A</b><span>Sin ella, encender la venta no se lo enseña a nadie que ya use PACE, que es quien antes pagaría.</span></div>
+  <p class="coste">Si eliges A: <b>poco</b>. B: <b>nada</b>.</p>
+</section>
+
+<section class="q" id="d2">
+  <p class="rot">D-2</p>
+  <h3>En la bienvenida, ¿sale PACE completo al principio o después de la primera pausa?</h3>
+  <p class="hoy"><b>Hoy:</b> la bienvenida tiene tres pantallas: la de PACE, «¿Cómo es tu semana?» y PACE completo, con cuatro cosas que aún no entiende quien no ha hecho nada. Las dos auditorías lo ven pronto.</p>
+  <div class="fotos">
+    <figure class="m"><img src="fotos/d2-hoy-1-bienvenida-360.jpg" alt="Primera pantalla de la bienvenida" loading="lazy" width="720" height="1480"><figcaption>Hoy, 1 · la bienvenida.</figcaption></figure>
+    <figure class="m"><img src="fotos/d2-hoy-2-semana-360.jpg" alt="Cómo es tu semana, con Continuar" loading="lazy" width="720" height="1480"><figcaption>Hoy, 2 · tu semana, con «Continuar».</figcaption></figure>
+    <figure class="m"><img src="fotos/d2-hoy-3-completo-360.jpg" alt="Pantalla de PACE completo" loading="lazy" width="720" height="1480"><figcaption>Hoy, 3 · PACE completo, antes de hacer nada.</figcaption></figure>
+  </div>
+  <div class="ops">
+    <div class="op"><header><i>A</i><span>Como está: tres pantallas, PACE completo la última</span></header></div>
+    <div class="op reco"><header><i>B</i><span>Bienvenida y semana; PACE completo sale una vez, al acabar la primera pausa entera</span><span class="chip">Recomendada</span></header>
+      <div class="fotos">
+        <figure class="m"><img src="fotos/d2-B-1-semana-360.jpg" alt="Tu semana con Comenzar" loading="lazy" width="720" height="1480"><figcaption><b>B</b>, 2 · la semana es la última: su botón ya dice «Comenzar» (lo pinta la propia app).</figcaption></figure>
+        <figure class="m"><img src="fotos/d2-B-3-completo-tras-pausa-360.jpg" alt="PACE completo con Tu primera pausa, hecha" loading="lazy" width="720" height="1480"><figcaption><b>B</b>, después · al acabar la primera pausa entera, la misma pantalla con «Tu primera pausa, hecha.» arriba.</figcaption></figure>
+      </div>
+      <figure class="d"><img src="fotos/d2-B-3-completo-tras-pausa-1536.jpg" alt="PACE completo tras la primera pausa, en el ordenador" loading="lazy" width="1536" height="710"><figcaption><b>B</b> a 1536 × 710.</figcaption></figure>
+      <p class="mide">Medido: la frase nueva no empuja nada fuera. El último botón queda a <b>592 de 740 px</b> en el móvil y a <b>560 de 710</b> en el ordenador, sin scroll.</p>
+    </div>
+  </div>
+  <div class="porque"><b>Recomiendo B</b><span>Cuando ya sabe qué es una pausa, la oferta se entiende.</span></div>
+  <p class="coste">Si eliges A: <b>nada</b>. B: <b>medio</b> (sacar la pantalla del final de la bienvenida y enseñarla una vez tras la primera pausa entera, con su prueba).</p>
+</section>
+
+<section class="q" id="p4">
+  <p class="rot">Propuesta 4</p>
+  <h3>¿Quitas «v1» de la bienvenida y de la invitación?</h3>
+  <p class="hoy"><b>Hoy:</b> «Y hasta v1…» y «Al llegar v1…»: quien llega no sabe qué es «v1».</p>
+  <div class="fotos">
+    <figure class="m"><img src="fotos/fable-bienvenida-hoy-360.jpg" alt="Bienvenida con hasta v1" loading="lazy" width="720" height="1480"><figcaption>Hoy: «Y hasta v1…».</figcaption></figure>
+    <figure class="m"><img src="fotos/fable-bienvenida-A-360.jpg" alt="Bienvenida con mientras está en pruebas" loading="lazy" width="720" height="1480"><figcaption><b>A</b> · «Y mientras está en pruebas…» y «Cuando salga a la venta…».</figcaption></figure>
+  </div>
+  <div class="ops">
+    <div class="op reco"><header><i>A</i><span>Cambiar las frases, en la bienvenida y en la invitación («Llega con la versión 1»)</span><span class="chip">Recomendada</span></header></div>
+    <div class="op"><header><i>B</i><span>Dejar «v1»</span></header></div>
+  </div>
+  <div class="porque"><b>Recomiendo A</b><span>Se entiende a la primera qué es gratis y hasta cuándo.</span></div>
+  <p class="coste">Si eliges A: <b>poco</b> (textos en español e inglés). B: <b>nada</b>.</p>
+</section>
+
+<section class="q" id="p2">
+  <p class="rot">Propuesta 2</p>
+  <h3>Al acabar el ejercicio de una pausa, ¿el botón dice lo que sigue?</h3>
+  <p class="hoy"><b>Hoy:</b> dice «Volver al inicio» y, por libre, el aro espera en 00:00 con «Empezar otro ciclo».</p>
+  <div class="fotos">
+    <figure class="m"><img src="fotos/fable-cierre-hoy-360.jpg" alt="Cierre con Volver al inicio" loading="lazy" width="720" height="1480"><figcaption>Hoy: «Volver al inicio».</figcaption></figure>
+    <figure class="m"><img src="fotos/fable-cierre-A-360.jpg" alt="Cierre con Empezar el ciclo 2" loading="lazy" width="720" height="1480"><figcaption><b>A</b>, por libre: «Empezar el ciclo 2» y, debajo, «Volver al inicio».</figcaption></figure>
+  </div>
+  <figure class="d"><img src="fotos/fable-cierre-A-1280.jpg" alt="Cierre con jornada, Volver te quedan 3 min de pausa" loading="lazy" width="1280" height="720"><figcaption><b>A</b>, con jornada, a 1280: «Volver · te quedan 3 min de pausa» y «Empezar ya el bloque 2».</figcaption></figure>
+  <div class="ops">
+    <div class="op reco"><header><i>A</i><span>El botón del final nombra lo que sigue; la salida de siempre, debajo</span><span class="chip">Recomendada</span></header></div>
+    <div class="op"><header><i>B</i><span>El final no cambia; solo el aro, al volver por libre, enseña los minutos del ciclo siguiente en vez de 00:00</span></header></div>
+    <div class="op"><header><i>C</i><span>Como está</span></header></div>
+  </div>
+  <div class="porque"><b>Recomiendo A</b><span>Un toque menos y sabe qué toca: es lo que cierra el círculo bloque, pausa, bloque.</span></div>
+  <p class="coste">Si eliges A: <b>poco</b>. B: <b>poco</b>. C: <b>nada</b>.</p>
+</section>
+
+<section class="q" id="d7">
+  <p class="rot">D-7</p>
+  <h3>¿Ofreces PACE completo después de un «Sí» o al cerrar la jornada?</h3>
+  <p class="hoy"><b>Hoy:</b> la invitación solo sale al tocar un candado, en la bienvenida, el día de v1 y al acabar la prueba. Tu regla dice que nada propone algo cerrado, y en la lista de «nunca» está la publicidad intrusiva. Las fotos son un lunes desde v1, sin PACE completo.</p>
+  <div class="fotos">
+    <figure class="m"><img src="fotos/d7-hoy-si-360.jpg" alt="Final de la pausa tras contestar Sí" loading="lazy" width="720" height="1480"><figcaption><b>A</b> (hoy) · tras un «Sí» a «¿Te ayudó esta pausa?»: «Gracias».</figcaption></figure>
+    <figure class="m"><img src="fotos/d7-hoy-cierre-360.jpg" alt="Jornada cerrada" loading="lazy" width="720" height="1480"><figcaption><b>A</b> (hoy) · la jornada cerrada.</figcaption></figure>
+  </div>
+  <div class="ops">
+    <div class="op reco"><header><i>A</i><span>Como está; el momento de cada semana lo da la línea de los lunes (D-3 B)</span><span class="chip">Recomendada</span></header></div>
+    <div class="op"><header><i>B</i><span>Una línea tras un «Sí», a quien no tiene PACE completo, como mucho una vez por semana</span></header>
+      <div class="fotos">
+        <figure class="m"><img src="fotos/d7-B-si-360.jpg" alt="Gracias y la línea de PACE completo" loading="lazy" width="720" height="1480"><figcaption><b>B</b> · «Lo que te ayuda guía tu semana con PACE completo ›».</figcaption></figure>
+      </div>
+      <figure class="d"><img src="fotos/d7-B-si-1536.jpg" alt="La línea tras el Sí, en el ordenador" loading="lazy" width="1536" height="710"><figcaption><b>B</b> a 1536 × 710.</figcaption></figure>
+      <p class="mide">Medido: la línea (25 px) cabe entre «Gracias» y el botón; «Volver al inicio» no se mueve (<b>716 de 740 px</b> en el móvil, <b>670 de 710</b> en el ordenador).</p>
+    </div>
+    <div class="op"><header><i>C</i><span>Una línea al cerrar una jornada completa, como mucho una vez por semana</span></header>
+      <div class="fotos">
+        <figure class="m"><img src="fotos/d7-C-cierre-360.jpg" alt="Jornada cerrada con la línea de PACE completo" loading="lazy" width="720" height="1480"><figcaption><b>C</b> · «La semana que viene, a tu medida con PACE completo ›», al pie de la tarjeta.</figcaption></figure>
+      </div>
+      <figure class="d"><img src="fotos/d7-C-cierre-1536.jpg" alt="Jornada cerrada con la línea, en el ordenador" loading="lazy" width="1536" height="710"><figcaption><b>C</b> a 1536 × 710.</figcaption></figure>
+      <p class="mide">Medido: la tarjeta crece <b>38 px</b> en el móvil (acaba a 646 de 740) y <b>19 px</b> en el ordenador (685 de 710); sin scroll en ninguno.</p>
+    </div>
+  </div>
+  <div class="porque"><b>Recomiendo A</b><span>Una oferta pegada a «¿Te ayudó?» tuerce la respuesta que alimenta «Qué te ayuda», y el cierre del día es para soltar el móvil.</span></div>
+  <p class="coste">Si eliges A: <b>nada</b>. B: <b>poco</b>. C: <b>poco</b>.</p>
+</section>
+</div></details>
+
+<footer>Fotos nuevas: la 0.197.0 en Chromium, español, tema claro, con el reloj puesto el 10 nov. a las 9:00 o el lunes 23 nov. a las 9:05, y lo de pago como sería desde v1. Las de las propuestas 1, 2 y 4 son de la auditoría de Fable; las de 4, 6 y 7, de la revisión de ChatGPT; el aro, de la caza de rendimiento. Nada de esto está en la app.</footer>
 </main>
 
 <script>

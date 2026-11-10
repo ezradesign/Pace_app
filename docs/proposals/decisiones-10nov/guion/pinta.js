@@ -174,6 +174,101 @@ const tareas = {
       await browser.close();
     }
   },
+
+  // La línea de los lunes en el móvil (Ez, 10 nov.: va la línea; en la home no cabe). Tres sitios:
+  // 1 «Ver todo» lo pinta d3; aquí, 2 el sobre de arriba y 3 una fila en el cajón.
+  async lunes(movil) {
+    if (!movil) return;
+    const arriba = (page) => page.evaluate(() => [...document.querySelectorAll('button')]
+      .filter((b) => b.getBoundingClientRect().top < 110 && b.getBoundingClientRect().height > 0)
+      .map((b) => (b.getAttribute('aria-label') || b.innerText.trim()) + '@' + Math.round(b.getBoundingClientRect().left) + '-' + Math.round(b.getBoundingClientRect().right)));
+    {
+      const { browser, page } = await L.abrir({ movil, v1: true, hora: LUNES, estado: SIN });
+      await prepararJornada(page);
+      const antes = await arriba(page);
+      // El sobre lo pinta la propia app: se le apunta una fuente más, como la carta o las novedades.
+      await page.evaluate(() => {
+        paceSobreApuntar({ clave: 'lunes-maqueta', de: () => ({ sinLeer: true, titulo: 'Tu semana, escrita para ti', fecha: '2026-11-23', tipo: 'PACE completo',
+          cuando: 'lunes, 23 nov.', tituloHoja: 'La carta del lunes',
+          lineas: ['Los lunes, PACE completo te escribe tu semana: lo que te ayudó, lo que se mueve y por qué.', 'Ver PACE completo ›'], leer: () => {} }) });
+        setState({ _maqueta: Date.now() });
+      });
+      await page.clock.runFor(800);
+      const despues = await arriba(page);
+      console.log('lunes sobre, barra antes ' + JSON.stringify(antes) + '\n  después ' + JSON.stringify(despues));
+      await L.foto(page, 'lunes-2-sobre-barra-360');
+      const nombre = await page.evaluate((antes) => {
+        const b = [...document.querySelectorAll('button')].filter((x) => x.getBoundingClientRect().top < 110 && x.getBoundingClientRect().height > 0)
+          .find((x) => !antes.some((a) => a.startsWith((x.getAttribute('aria-label') || x.innerText.trim()) + '@')));
+        return b ? (b.getAttribute('aria-label') || b.innerText.trim()) : null;
+      }, antes);
+      console.log('lunes sobre, botón nuevo: ' + nombre);
+      if (nombre) { await page.getByRole('button', { name: nombre, exact: true }).first().click(); await page.clock.runFor(900); }
+      await L.foto(page, 'lunes-2-sobre-hoja-360');
+      await browser.close();
+    }
+    {
+      const { browser, page } = await L.abrir({ movil, v1: true, hora: LUNES, estado: SIN });
+      await prepararJornada(page);
+      await L.toca(page, 'Abrir panel');
+      const m = await page.evaluate(() => {
+        const hoja = [...document.querySelectorAll('*')].filter((e) => e.children.length === 0 && /^Tus rutinas$/.test(e.textContent.trim()) && e.getBoundingClientRect().height > 0)[0];
+        if (!hoja) return 'sin Tus rutinas';
+        let fila = hoja.closest('button') || hoja;
+        while (!fila.matches('button') && fila.parentElement && fila.getBoundingClientRect().width < 200) fila = fila.parentElement;
+        const visibles = (raiz) => [...raiz.querySelectorAll('*')].filter((e) => e.getBoundingClientRect().height > 0);
+        let caj = fila; while (caj.parentElement && caj.getBoundingClientRect().height < innerHeight * 0.8) caj = caj.parentElement;
+        const fondo = () => Math.round(visibles(caj).reduce((a, e) => Math.max(a, e.getBoundingClientRect().bottom), 0));
+        const fondoAntes = fondo();
+        const n = fila.cloneNode(true);
+        const t = [...n.querySelectorAll('*')].concat([n]).find((e) => e.children.length === 0 && /^Tus rutinas$/.test(e.textContent.trim()));
+        if (t) t.textContent = 'La carta del lunes';
+        fila.insertAdjacentElement('afterend', n);
+        return { fila: Math.round(n.getBoundingClientRect().height), fondoAntes, fondoDespues: fondo(), alto: innerHeight, scrollCajon: caj.scrollHeight - caj.clientHeight };
+      });
+      console.log('lunes cajón ' + JSON.stringify(m));
+      await L.foto(page, 'lunes-3-cajon-360');
+      await browser.close();
+    }
+  },
+
+  // D-6 D: Ocaso y Búho conservan dibujo e id y premian otra cosa. Ganados, para que se vea el dibujo.
+  async d6d(movil) {
+    const s = suf(movil);
+    const ganados = Object.assign({}, L.SEMILLA, { achievements: { 'master.dusk': { unlockedAt: 1 }, 'secret.night.owl': { unlockedAt: 1 } } });
+    const ideas = movil ? [
+      ['master.dusk', 'o1', 'Ocaso', 'Cinco jornadas cerradas a su hora'],
+      ['master.dusk', 'o2', 'Ocaso', 'Cinco días con la pausa de cierre hecha'],
+      ['master.dusk', 'o3', 'Ocaso', 'Cinco días con sesión y nada después de las 21 h'],
+      ['secret.night.owl', 'b1', 'Búho', 'Contestaste «¿Te ayudó?» 25 veces'],
+      ['secret.night.owl', 'b2', 'Búho', 'Siete días con sesión y ninguna entre las 23 y las 6'],
+    ] : [['master.dusk', 'o1', 'Ocaso', 'Cinco jornadas cerradas a su hora'], ['secret.night.owl', 'b1', 'Búho', 'Contestaste «¿Te ayudó?» 25 veces']];
+    const { browser, page } = await L.abrir({ movil, hora: '2026-11-10T09:00:00', estado: ganados });
+    await L.toca(page, 'Ver logros');
+    const pon = (page, idea) => page.evaluate(([id, nom, frase, movil]) => {
+      const t = document.querySelector('[data-pace-ach="' + id + '"]');
+      const h = [...t.querySelectorAll('div')].filter((e) => e.children.length === 0 && e.textContent.trim());
+      const antes = Math.round(t.getBoundingClientRect().height);
+      h[0].textContent = nom; h[1].textContent = frase; t.title = frase;
+      t.style.outline = '2px solid var(--focus, #4f5e49)'; t.style.outlineOffset = '4px'; t.style.borderRadius = '10px';
+      if (movil) t.scrollIntoView({ block: 'center' });
+      return { casilla: [antes, Math.round(t.getBoundingClientRect().height)] };
+    }, [idea[0], idea[2], idea[3], movil]);
+    if (!movil) {
+      for (const idea of ideas) console.log('d6d ' + idea[1] + ' 1536 ' + JSON.stringify(await pon(page, idea)));
+      await page.evaluate(() => {
+        const a = document.querySelector('[data-pace-ach-cat="jornada"] h3'); a.scrollIntoView({ block: 'start' });
+        let sc = a.parentElement; while (sc && sc.scrollHeight <= sc.clientHeight + 1) sc = sc.parentElement; if (sc) sc.scrollTop -= 60;
+      });
+      await L.foto(page, 'd6-D-' + s);
+      await browser.close(); return;
+    }
+    for (const idea of ideas) {
+      console.log('d6d ' + idea[1] + ' ' + JSON.stringify(await pon(page, idea)));
+      await L.foto(page, 'd6-D-' + idea[1] + '-' + s);
+    }
+    await browser.close();
+  },
 };
 
 (async () => {

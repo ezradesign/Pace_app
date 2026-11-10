@@ -1,5 +1,10 @@
 # Las decisiones del 10 nov., en una página
 
+**Versión 2 (10 nov., noche):** con lo que Ez ya contestó arriba en «Ya decidido» (propuestas 1A 2A 3A 4A, D-1 A, D-2 A,
+D-4 C, D-5 B, D-7 A) y sus secciones plegadas al final. Abierto: dónde va la línea de los lunes en el móvil (tres sitios,
+`lunes` en `pinta.js`; recomendada el sobre), D-6 con la opción D (Ocaso y Búho con su dibujo, premiando otra cosa;
+`d6d`), 4, 6, 7, el aro, V1 y V2. Las piezas nuevas de la página, en `guion/partes-10nov-noche.html`.
+
 Página para Ez con todo lo que espera su letra: D-1 a D-7 (auditoría de Fable), las propuestas 1, 2 y 4 de esa
 misma auditoría (la 3 es D-3 B), las letras 4, 6 y 7 de ChatGPT, el aro, V1 y V2 de la caza de rendimiento, S3 sin
 opciones, los «júntalos» y lo que solo puede hacer Ez. Publicada en la cuenta EcLj6:
