@@ -10,15 +10,14 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de 
 - **Falta el «júntalo» de Ez.** Al juntar: la suite entera con la landing y la B dentro, bump, CHANGELOG y fila en DECISIONES si no la lleva.
 - Uso a las 15:35: 5 h al 72 % (se reponen a las 20:00), «Weekly · Fable» al 60 %: la coordinadora, lo mínimo.
 
-## AL RELEVO (10 nov., ~15:15): nada en marcha; dos páginas terminadas esperan a Ez. Empieza aquí; manda sobre todo lo de abajo
+## AL RELEVO (10 nov., 16:27): la unión 0.197.0 de la web, a medias y SIN subir a `main`. Empieza aquí; manda sobre todo lo de abajo
 
-Ez siguió en 5iWBf por la tarde y trajo una auditoría externa hecha en claude.ai con Fable. `main` = 0.196.0, sin nada por
-subir. Ninguna sesión trabajando ni CronCreate vivo. Uso a las 15:15: 5 h al 55 % (se reponen a las 20:00), semana al 42 %,
-«Weekly · Fable» al 57 % (las sesiones pasaron a Opus; despertar a la coordinadora con la caché fría cuesta un 20 % de las 5 h).
+Ez dijo «Júntalo» (~15:45) a la landing con la B; la coordinadora le encargó la unión entera a la sesión de `claude/landing-c-9nov`, que paró
+al 92 % de las 5 h (se reponen a las 20:00). `main` sigue en 0.196.0 y nadie la está tocando.
 
 | Rama | Dónde quedó | Página (5iWBf) | Espera |
 |---|---|---|---|
-| `claude/landing-c-9nov` | 74ca7e04: la estética de la web, terminada: nueve defectos de hoy con foto y tres direcciones pintadas (A · Cuaderno de campo, recomendada; B · Una jornada; C · Pulido sobrio); nada de `landing/`, `premium/` ni `beta/` tocado; cómo montarla, en `docs/proposals/web-estetica-9nov/DONDE-ME-QUEDO.md` | 6DsS35xJXsmcZrdtZiXhoL | las cinco letras de Ez; después, montar encima de 39e7476e y juntar con la landing B («Espero a la bonita») |
+| `claude/landing-c-9nov` | e6bf90d4 (y la nota de este relevo): la B, «Una jornada», elegida por Ez y montada en la landing, /premium y /beta, con las letras 2-5 recomendadas (capturas en oscuro y en su idioma, pie con enlaces cruzados, idioma de entrada como la landing); `main` traído (limpio), **bump a 0.197.0, build y verify en verde**; las 59 pruebas de las tres páginas en verde. **La suite entera NO se pasó**: el segundo plano la cortó a los 10 min (iba por la 57, sin rojas). **Falta, en orden:** la suite entera (`npm run test:e2e` con `PACE_E2E_PORT`, en un segundo plano que dure una hora), STATE, CHANGELOG y LEEME (el guion está hecho: `docs-0197.js` en el scratchpad de la sesión, se rehace en cinco minutos), push de la rama, `git push origin HEAD:main` (avance limpio) y el CI; la web, sin comprobar | 6DsS35xJXsmcZrdtZiXhoL | nada de Ez: terminar la unión |
 | `claude/auditoria-fable-9nov-8401fc` | 3f29f391: las dos auditorías de Fable en una cola (`docs/audits/fable-9nov/cola.md`); la externa, entera en `externa-10nov.md` y comprobada en `externa-10nov-comprobado.md` (40 puntos: 18 nuevos, 4 hechos en ramas, 8 en la lista de Ez, 10 decididos, 0 falsos, según la sesión; la coordinadora solo leyó la cola) | 2QnMBypqSRVJCmPeNJazZA | que Ez la lea y conteste D-1, D-2, D-3…; lo primero de la cola: una fila para comprar en Ajustes |
 | `claude/chatgpt-jornada-9nov` | b7bbf20e | KZFDp3zNhk4JAFHr13ysxq | tres letras (recomendadas 4B 6A 7A) y el «júntalo» de 5, 1, 3 y 2 |
 
@@ -26,7 +25,7 @@ Sin sesión, en cola: las propuestas de build de la caza de rendimiento y sus le
 de la auditoría se monta sin las letras de Ez. Para abrir otra cuenta o una sesión nueva, Ez pega esto:
 
 ```
-Retomamos PACE. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (10 nov., ~15:15)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Si es otra cuenta, republica mi hoja de pasos y las páginas de la web más bonita, la auditoría y ChatGPT 4, 6 y 7 desde las copias de sus ramas. Haz pocas vueltas y usa sesiones en Opus: el modelo nuevo gasta mucho.
+Retomamos PACE. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (10 nov., 16:27)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Si es otra cuenta, republica mi hoja de pasos y las páginas de la web más bonita, la auditoría y ChatGPT 4, 6 y 7 desde las copias de sus ramas. Haz pocas vueltas y usa sesiones en Opus: el modelo nuevo gasta mucho.
 ```
 
 ## Relevo de la mañana (10 nov., ~9:15): 5iWBf con las 5 h al 100 % (se reponen a las 13:50; semana 34 %, «Weekly · Fable» 48 %). Empieza aquí; manda sobre todo lo de abajo
