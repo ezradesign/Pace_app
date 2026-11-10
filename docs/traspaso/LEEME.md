@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de noviembre de 2026, 17:15, v0.197.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de noviembre de 2026, 17:45, v0.197.0.
 
 ## AL RELEVO (10 nov., 17:15): la 0.197.0, juntada y en `main`. Manda sobre todo lo de abajo
 
@@ -16,6 +16,21 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de 
   D-1, D-2, D-3…), las tres letras de ChatGPT 4, 6 y 7 (`claude/chatgpt-jornada-9nov`, KZFDp3zNhk4JAFHr13ysxq) y la caza de
   rendimiento (R3vZVCMdEvKxWhyLHRmwvE). De la tabla de las 16:27, la fila de `claude/landing-c-9nov` ya no vale.
 
+- **Comprobado por la coordinadora (17:45, cuenta EcLj6):** `main` = 6a78f010; CI 42852875437 en verde entero (verify, e2e 1/2 y 2/2,
+  Safari; Android 42852875164 e iOS 42852875428); pacegrass.app sirve la 0.197.0 y alguien nuevo ve la landing B en la raíz.
+- **Páginas en EcLj6** (republicadas el 10 nov.; los pares con 5iWBf, en `docs/traspaso/archivos/hoja-ids-cuentas.js`, que da la
+  vuelta en los dos sentidos con `--a=EcLj6|5iWBf`): la hoja, EcLj6io4wM9pGjtQ5wd1CT; la web más bonita, LzG1sfc4e9ygARg9MpC7Tz;
+  la auditoría, C2uFSMM8eWhcRxpXLGWkAx; ChatGPT 4, 6 y 7, RQxiSzrKLUSAUYkDxcBZhU; la caza de rendimiento, 4Fohyqi7Cth9iKGxE2FSSD.
+- **La auditoría externa, pasadas 2 a 5** (Ez las trajo a las ~16:50; `claude/auditoria-fable-9nov-8401fc`, 023fea30): 38
+  afirmaciones, 31 ciertas, 4 a medias y 3 falsas; 23 nuevas, 7 ya en la cola y 5 ya decididas, según la sesión (la coordinadora
+  leyó el recuento y la cola, no cada prueba). Lo nuevo está en la misma cola (`docs/audits/fable-9nov/cola.md`) y en la página
+  de EcLj6; la de 5iWBf (2QnMBypqSRVJCmPeNJazZA) se queda en la primera cola: al volver allí, republicarla desde `pagina.html`.
+  Pregunta nueva, D-7: ofrecer PACE completo tras un «Sí» o al cerrar la jornada (recomendada A, como está). La fila 2 de la
+  cola aún dice que la landing espera el júntalo: ya está juntada. **Espera a Ez:** D-1 a D-7.
+- **Un texto pegado por Ez se saca del `.jsonl` de la sesión** con un guion de diez líneas (busca la frase, se queda con el
+  mensaje `user` más largo) y se le pasa a la sesión por ruta: así llega entero sin reescribirlo.
+- **Uso a las 17:45:** 5 h al 53 % (se reponen a las 21:20), semana al 7 %, «Weekly · Fable» al 5 %. Cuatro sesiones en Opus
+  (la unión con su suite, las páginas, la auditoría) y una coordinadora de pocas vueltas: 48 puntos de las 5 h en 1 h 15.
 ## 10 nov., ~15:35: Ez eligió la B para la web y ya está montada en su rama
 
 - **Ez: «Me gusta la B la verdad».** Montada en `claude/landing-c-9nov` (769ea1b8, con `main` 0.196.0 ya dentro: 3c6f39db): la B, «Una jornada», en `landing/`, `premium/` y `beta/`; verify y las 59 pruebas de las tres páginas en verde, según la sesión. Las letras 3, 4 y 5, las recomendadas; la 2 (capturas en oscuro) se está rehaciendo. La página 6DsS35xJXsmcZrdtZiXhoL lleva arriba «Montada: la B».
