@@ -2,7 +2,19 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de noviembre de 2026, ~15:15, v0.196.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de noviembre de 2026, 17:15, v0.197.0.
+
+## AL RELEVO (10 nov., 17:15): la 0.197.0, juntada y en `main`. Manda sobre todo lo de abajo
+
+- **La web, en `main` con el «Júntalo» de Ez:** la raíz con dos caras y la estética B, «Una jornada», en la landing, /premium
+  y /beta, con las letras 2-5 recomendadas (pie con enlaces cruzados, capturas en oscuro y en su idioma, idioma de entrada como
+  la landing). `claude/landing-c-9nov` queda juntada: no tiene nada más.
+- Suite entera en verde: 1467 pasadas, 2 saltadas (el audio del iPhone, saltadas a propósito) y ninguna roja, en 43,2 min. El CI de `main` y lo visto en pacegrass.app, en el informe de la sesión que juntó (y en `gh run list`).
+- Las capturas en oscuro se rehacen con `node scripts/play/capturas.js <puerto> --beta-oscuro` y `capturas-premium.js <puerto> --oscuro`;
+  la pantalla de la app de /premium, con `docs/proposals/web-estetica-9nov/capturas-app.js`.
+- **Siguen esperando a Ez**, como en el relevo de las 16:27: la auditoría (`claude/auditoria-fable-9nov-8401fc`, 2QnMBypqSRVJCmPeNJazZA:
+  D-1, D-2, D-3…), las tres letras de ChatGPT 4, 6 y 7 (`claude/chatgpt-jornada-9nov`, KZFDp3zNhk4JAFHr13ysxq) y la caza de
+  rendimiento (R3vZVCMdEvKxWhyLHRmwvE). De la tabla de las 16:27, la fila de `claude/landing-c-9nov` ya no vale.
 
 ## 10 nov., ~15:35: Ez eligió la B para la web y ya está montada en su rama
 
