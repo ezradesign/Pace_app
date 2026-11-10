@@ -136,10 +136,13 @@ function TweaksPanel({ open, onClose }) {
   useEffectTW(() => { if (!open) { setVistaDatos(false); setPidiendoBorrar(null); } }, [open]);
   /* «Pantalla baja» es el alto que ve la app, el del lienzo (main/_lienzo.js): una media query
      miraría la ventana real, que con la app crecida en una pantalla grande es más alta que ella. */
-  const [bajo, setBajo] = useStateTW(() => paceLienzoAlto() < 860);
+  /* Con la fila para comprar (PremiumSection.jsx, Ez 1A del 10 nov.), la sección mide 34 px más y
+     se pliega 34 px antes: donde antes cabía sin scroll, sigue cabiendo. */
+  const umbralBajo = () => 860 + (typeof premiumPlanEnAjustes === 'function' && premiumPlanEnAjustes() ? 34 : 0);
+  const [bajo, setBajo] = useStateTW(() => paceLienzoAlto() < umbralBajo());
   useEffectTW(() => {
     if (!open) return undefined;
-    const mirar = () => setBajo(paceLienzoAlto() < 860);
+    const mirar = () => setBajo(paceLienzoAlto() < umbralBajo());
     mirar();
     window.addEventListener('resize', mirar);
     return () => window.removeEventListener('resize', mirar);

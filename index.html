@@ -4068,6 +4068,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'premium.settings.forever': 'Para siempre',
   'premium.settings.until': 'Hasta el {fecha}',
   'premium.settings.enter': 'Introducir código',
+  'premium.settings.vida': 'Tenerlo para siempre',
   'premium.settings.code': 'Código',
   'premium.settings.tester': 'Tester n.º {n}',
   'premium.settings.manage': 'Gestionar la suscripción',
@@ -4141,6 +4142,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'premium.settings.forever': 'Lifetime access',
   'premium.settings.until': 'Until {fecha}',
   'premium.settings.enter': 'Enter code',
+  'premium.settings.vida': 'Get it for life',
   'premium.settings.code': 'Code',
   'premium.settings.tester': 'Tester no. {n}',
   'premium.settings.manage': 'Manage subscription',
@@ -42289,6 +42291,7 @@ Object.assign(window, { TweaksDataSection, paceDescargarCopia, paceDescargarResc
 
 
 
+
 function premiumFechaTexto(datos, lang) {
   const fin = typeof datos.expiresAt === 'number' ? new Date(datos.expiresAt) :
   typeof datos.expiresAt === 'string' && typeof parseLocalDateKey === 'function' ? parseLocalDateKey(datos.expiresAt) : null;
@@ -42298,6 +42301,21 @@ function premiumFechaTexto(datos, lang) {
 
 
 
+
+
+
+
+
+
+
+function premiumPlanEnAjustes(lang) {
+  if (!(window.paceLicenciaPermitida && window.paceLicenciaPermitida())) return null;
+  const est = window.paceLicenciaEstado ? window.paceLicenciaEstado() : { estado: 'ninguno' };
+  if (est.estado === 'vigente' || est.estado === 'caducado') return null;
+  if (window.pacePruebaV1Hasta && window.pacePruebaV1Hasta()) return null;
+  if (!(window.paceTiendaAbierta && window.paceTiendaAbierta())) return null;
+  return (window.paceTiendaPlanes(lang) || []).find((p) => p.plan === 'vida') || null;
+}
 
 function PremiumSection() {
   const { t, tn, lang } = useT();
@@ -42367,6 +42385,20 @@ function PremiumSection() {
       ));
 
   }
+  const vida = premiumPlanEnAjustes(lang);
+  if (vida) {
+    return (
+      React.createElement(React.Fragment, null,
+      React.createElement(AjustesAccion, { suave: true, onClick: () => paceAbrirPremium({}),
+        derecha: React.createElement("span", { "data-pace-aj-comprar": vida.plan }, vida.precio) },
+      t('premium.settings.vida')
+      ),
+      React.createElement(AjustesAccion, { suave: true, onClick: () => paceAbrirPremium({ modo: 'codigo' }), derecha: t('premium.settings.enter') },
+      t('premium.code.have')
+      )
+      ));
+
+  }
   if (permitida) {
     return (
       React.createElement(AjustesAccion, { suave: true, onClick: () => paceAbrirPremium({ modo: 'codigo' }), derecha: t('premium.settings.enter') },
@@ -42381,8 +42413,8 @@ function PremiumSection() {
 
 }
 
-Object.assign(window, { PremiumSection });
-;Object.assign(window, { premiumFechaTexto, PremiumSection });
+Object.assign(window, { PremiumSection, premiumPlanEnAjustes });
+;Object.assign(window, { premiumFechaTexto, premiumPlanEnAjustes, PremiumSection });
 })();
 </script>
   <!-- TweaksPanel.support (s163): estilo SIN UI del panel -- `tweaksStyles`, la
@@ -43080,10 +43112,13 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
   useEffectTW(() => {if (!open) {setVistaDatos(false);setPidiendoBorrar(null);}}, [open]);
 
 
-  const [bajo, setBajo] = useStateTW(() => paceLienzoAlto() < 860);
+
+
+  const umbralBajo = () => 860 + (typeof premiumPlanEnAjustes === 'function' && premiumPlanEnAjustes() ? 34 : 0);
+  const [bajo, setBajo] = useStateTW(() => paceLienzoAlto() < umbralBajo());
   useEffectTW(() => {
     if (!open) return undefined;
-    const mirar = () => setBajo(paceLienzoAlto() < 860);
+    const mirar = () => setBajo(paceLienzoAlto() < umbralBajo());
     mirar();
     window.addEventListener('resize', mirar);
     return () => window.removeEventListener('resize', mirar);
