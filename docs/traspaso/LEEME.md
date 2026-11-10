@@ -4,9 +4,32 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de noviembre de 2026, ~9:00, v0.196.0.
 
+## AL RELEVO (10 nov., ~9:15): 5iWBf con las 5 h al 100 % (se reponen a las 13:50; semana 34 %, «Weekly · Fable» 48 %). Empieza aquí; manda sobre todo lo de abajo
+
+`main` = 0.196.0, sin nada por subir. Ninguna sesión trabajando y ningún CronCreate vivo. Las tres ramas, con todo subido:
+
+| Rama | Dónde quedó | Página (5iWBf) | Falta |
+|---|---|---|---|
+| `claude/auditoria-fable-9nov-8401fc` | fe6f66e9: **la auditoría acabó aquí**, antes de leer el aviso de pausa: la venta y el Foco con los ejercicios, vividos en la app; informe en `docs/audits/fable-9nov/` | 2QnMBypqSRVJCmPeNJazZA | la coordinadora no la ha leído: leer el informe, comprobar que la página abre, ponerla en la hoja y quitar de la hoja el paso «Ahora» de pegarla en claude.ai (ya no hace falta, salvo que Ez quiera una segunda opinión) |
+| `claude/landing-c-9nov` | 9c24336a: la estética de la web, con los defectos de hoy y las direcciones A y C pintadas (dos idiomas, dos temas, móvil y ordenador) | 6DsS35xJXsmcZrdtZiXhoL | la dirección B (`docs/proposals/web-estetica-9nov/DONDE-ME-QUEDO.md`); que Ez elija. Ez: «Espero a la bonita» para juntar la landing B |
+| `claude/chatgpt-jornada-9nov` | b7bbf20e: la página de 4, 6 y 7 | KZFDp3zNhk4JAFHr13ysxq | tres letras de Ez y su «júntalo» de 5, 1, 3 y 2 |
+
+- Las páginas de 5iWBf dan 404 en EcLj6: se republican desde la copia de cada rama. La hoja del repo lleva ids de 5iWBf; en EcLj6
+  se da la vuelta con `docs/traspaso/archivos/hoja-ids-cuentas.js`. La hoja aún no enlaza la auditoría ni la web: es lo primero.
+- **Esperan a Ez:** mirar la auditoría, la web más bonita y la página de 4, 6 y 7; el aro, V1 y V2 (R3vZVCMdEvKxWhyLHRmwvE); subir
+  la 0.191.1 a Play y darla en TestFlight; la revisión del cobro y lo legal para ChatGPT.
+- **Con Fable 5.2:** una ventana de 5 h dura 20-25 minutos con dos sesiones en Fable. Coordinadora de pocas vueltas y contexto
+  pequeño; las sesiones, en Opus salvo donde pese el criterio. EcLj6 tenía la semana al 94-98 % el 9 nov. por la noche.
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (10 nov., ~9:15)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Republica mi hoja de pasos y las tres páginas nuevas (la auditoría, la web más bonita y la de ChatGPT 4, 6 y 7) en esta cuenta, lee la auditoría y dime qué es lo primero. Haz pocas vueltas: el modelo nuevo gasta mucho.
+```
+
 ## 10 nov., ~9:11: la auditoría se pausa aquí y sigue fuera; listo para migrar. Empieza aquí
 
-- **Ez (9:20): «al 85 %-90 % dejamos toda la sesión lista para migrar; la auditoría la podemos pausar aquí y hacerla externa con
+- **Ez (9:10): «al 85 %-90 % dejamos toda la sesión lista para migrar; la auditoría la podemos pausar aquí y hacerla externa con
   el mismo modelo para no gastar tokens en las cuentas de Claude Code».** Hecho así: a `auditoria-fable` (`local_ce2d2349…`) se
   le pidió WIP con push y parar; su rama, `claude/auditoria-fable-9nov-8401fc`, con el informe a medias en `docs/audits/fable-9nov/`.
   El texto para pegar en claude.ai está en la hoja, en el paso «Ahora». Cuando Ez traiga la respuesta: guardarla entera en
@@ -15,7 +38,7 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de 
   y el «júntalo» de 5, 1, 3 y 2. Esa sesión ya acabó.
 - **Sigue en marcha solo `web-bonita`** (`local_8a20426c…`, Opus, `claude/landing-c-9nov`): pinta primero su dirección recomendada y
   publica pronto. Para con WIP al 85-90 % de las 5 h.
-- **Uso a las 9:20:** 5 h al 76 % (se reponen a las 13:50), semana al 31 %, «Weekly · Fable» al 42 %. Veinte minutos de dos
+- **Uso a las 9:10:** 5 h al 76 % (se reponen a las 13:50), semana al 31 %, «Weekly · Fable» al 42 %. Veinte minutos de dos
   sesiones en Fable y una en Opus gastaron 57 puntos de las 5 h. EcLj6 tenía la semana al 94-98 % anoche.
 - **Para migrar o seguir en una sesión nueva**, el texto del bloque de abajo sirve tal cual, cambiando «10 nov., ~9:00» por
   «10 nov., ~9:11».
