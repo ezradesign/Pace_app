@@ -141,7 +141,8 @@ test('la tarjeta sin jornada no lleva subtítulo y le deja alto al aro', async (
   await page.waitForTimeout(500);
   await expect(page.locator('[data-pace-ritmo-tarjeta]').filter({ visible: true })).not.toContainText('El tiempo incluye las pausas');
   const aro = await page.evaluate(() => Math.round(document.querySelector('[data-pace-dial-fit]').getBoundingClientRect().width));
-  expect(aro, 'a 1917×857 medía 391').toBeGreaterThan(440);
+  /* Desde el aro fijo (Ez, 10 nov. 2026) ya no crece hasta 440: le basta con llegar a su tamaño. */
+  expect(aro, 'a 1917×857 medía 391').toBeGreaterThanOrEqual(371);
   expect(await page.evaluate(() => { const b = document.querySelector('[data-pace-home-body]'); return b.scrollHeight - b.clientHeight; })).toBeLessThanOrEqual(1);
 });
 
@@ -151,7 +152,7 @@ test('con la jornada preparada, sin la frase de ayuda, el aro también crece', a
   await page.waitForTimeout(500);
   await expect(vis(page, '[data-pace-ritmo-panel]')).not.toContainText('Cada bloque es un pomodoro');
   const aro = await page.evaluate(() => Math.round(document.querySelector('[data-pace-dial-fit]').getBoundingClientRect().width));
-  expect(aro, 'con la frase medía 392').toBeGreaterThan(410);
+  expect(aro, 'con la frase medía 392').toBeGreaterThanOrEqual(371);
 });
 
 test('ni un píxel de scroll con la jornada preparada a 1280×800: en Windows 1 px ya saca la barra', async ({ page, context }) => {

@@ -70,22 +70,19 @@
   /* s197: el corte vive en `_responsive.corte.js` (una vertical de hasta 1024 lleva
      piel de móvil). Con el fallback de siempre por si este archivo corriera antes. */
   var DESKTOP_MQ = typeof PACE_CORTE_ESC === 'string' ? PACE_CORTE_ESC : '(min-width: 769px)';
-  /* D lo manda la ALTURA, no el ancho — como en la referencia v0.64, donde el
-     aro salía de `flex:1 + 56vh`. Se arranca del mayor aro admisible y el bucle
-     de abajo lo ENCOGE hasta que no haya scroll: así D es siempre el círculo
-     más grande que cabe, que es lo que lo mantiene protagonista (§6).
-
-     Antes se arrancaba de 0.255·W (la proporción medida en la captura de
-     referencia, 1536×700 → 392). Reproducía el ancho de la referencia pero
-     confundía causa con efecto: en la referencia ese 0.255 era CONSECUENCIA de
-     la altura disponible. Al fijarlo por ancho, a 1280×720 salía D=326 —
-     dejando altura sin usar y, sobre todo, rompiendo el contrato de
-     solapamiento: el interior tiene ~72px FIJOS (CTA 44px por a11y + fila de
-     CICLO) y a D pequeño esos fijos se comen el 16 % (ratio real 0.135).
-     Con D por altura, a 1536×700 sale D≈378 ≈ la referencia. */
+  /* Se arranca del aro fijo (o del techo por ancho, si es menor) y el bucle de
+     abajo lo ENCOGE hasta que no haya scroll. Un arranque por ancho a secas
+     (0.255·W) dejaba altura sin usar y rompía el solapamiento: el interior tiene
+     ~72px FIJOS (CTA 44px por a11y + fila de CICLO). */
   var WIDTH_CAP = 0.42;        // techo por ancho: el aro nunca acapara la fila
-  var D_MAX = 520;             // tope absoluto del aro (identidad); deja «espacio
-                               // negativo» en monitores grandes
+  /* EL ARO DE ESCRITORIO TIENE UN TAMAÑO FIJO (Ez, 10 nov. 2026: «siempre debería ser fijo»).
+     Mide D_FIJO px de pantalla, el que tenía en su ventana (1536×710), y no crece nunca: ni con
+     una ventana más alta ni con el lienzo, que agranda todo lo demás. Solo encoge cuando no
+     cabe, porque la home no hace scroll. Con el lienzo puesto D va en px CSS, así que se
+     divide por la escala; con el zoom del navegador alejado, la escala ya compensa el zoom y
+     el aro se ve como al 100 %. En el móvil el aro sigue saliendo por ancho, hasta D_MAX. */
+  var D_FIJO = 372;
+  var D_MAX = 520;
   var D_FLOOR = 205;           // suelo con interior aún legible; por debajo, scroll
                                // de seguridad en viewports extremos
   /* s128: el motor corre también en móvil/tablet (≤768). Constantes propias de
@@ -310,7 +307,9 @@
     // Medir la altura fija por partes es frágil (paddings del root, tarjeta de
     // Camino más alta con el eyebrow s122…), así que se mide el desbordamiento
     // real y se corrige — robusto ante idioma/contenido.
-    var D = Math.min(widthCap * w, D_MAX);
+    var escala = (window.paceLienzo && window.paceLienzo.escala) || 1;
+    var tope = isDesktop ? D_FIJO / Math.max(1, escala * paceZoomFuera()) : D_MAX;
+    var D = Math.min(widthCap * w, tope);
     if (D < dFloor) D = dFloor;
     D = Math.round(D);
     applyD(D, dial);

@@ -1990,6 +1990,17 @@ var PACE_LIENZO_ALTO = 704;
   window.paceLienzoAncho = function () {return (window.innerWidth || 0) / escala;};
 
 
+
+
+
+  window.paceZoomFuera = function () {
+    var o = window.outerWidth || 0,i = window.innerWidth || 0;
+    if (!o || !i) return 1;
+    var z = o / i;
+    return z < 0.95 ? z : 1;
+  };
+
+
   window.paceCaja = function (el) {
     var r = el.getBoundingClientRect();
     if (escala === 1) return r;
@@ -52512,18 +52523,15 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
 
 
-
-
-
-
-
-
-
-
-
   var WIDTH_CAP = 0.42;
-  var D_MAX = 520;
 
+
+
+
+
+
+  var D_FIJO = 372;
+  var D_MAX = 520;
   var D_FLOOR = 205;
 
 
@@ -52748,7 +52756,9 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
 
 
-    var D = Math.min(widthCap * w, D_MAX);
+    var escala = window.paceLienzo && window.paceLienzo.escala || 1;
+    var tope = isDesktop ? D_FIJO / Math.max(1, escala * paceZoomFuera()) : D_MAX;
+    var D = Math.min(widthCap * w, tope);
     if (D < dFloor) D = dFloor;
     D = Math.round(D);
     applyD(D, dial);
