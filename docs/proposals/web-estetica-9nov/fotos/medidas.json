@@ -1054,5 +1054,269 @@
    332,
    160
   ]
+ },
+ "montada-landing-360-es-claro": {
+  "alto": 4302,
+  "desborde": 0,
+  "capturas": [
+   280,
+   226,
+   226,
+   226,
+   226
+  ]
+ },
+ "montada-landing-360-es-oscuro": {
+  "alto": 4302,
+  "desborde": 0,
+  "capturas": [
+   280,
+   226,
+   226,
+   226,
+   226
+  ]
+ },
+ "montada-landing-360-en-claro": {
+  "alto": 4435,
+  "desborde": 0,
+  "capturas": [
+   280,
+   226,
+   226,
+   226,
+   226
+  ]
+ },
+ "montada-landing-360-en-oscuro": {
+  "alto": 4435,
+  "desborde": 0,
+  "capturas": [
+   280,
+   226,
+   226,
+   226,
+   226
+  ]
+ },
+ "montada-landing-1280-es-claro": {
+  "alto": 4437,
+  "desborde": 0,
+  "capturas": [
+   320,
+   372,
+   372,
+   372,
+   372
+  ]
+ },
+ "montada-landing-1280-es-oscuro": {
+  "alto": 4437,
+  "desborde": 0,
+  "capturas": [
+   320,
+   372,
+   372,
+   372,
+   372
+  ]
+ },
+ "montada-landing-1280-en-claro": {
+  "alto": 4411,
+  "desborde": 0,
+  "capturas": [
+   320,
+   372,
+   372,
+   372,
+   372
+  ]
+ },
+ "montada-landing-1280-en-oscuro": {
+  "alto": 4411,
+  "desborde": 0,
+  "capturas": [
+   320,
+   372,
+   372,
+   372,
+   372
+  ]
+ },
+ "montada-premium-360-es-claro": {
+  "alto": 5411,
+  "desborde": 0,
+  "capturas": [
+   290,
+   191,
+   91,
+   91,
+   141,
+   141
+  ]
+ },
+ "montada-premium-360-es-oscuro": {
+  "alto": 5411,
+  "desborde": 0,
+  "capturas": [
+   290,
+   191,
+   91,
+   91,
+   141,
+   141
+  ]
+ },
+ "montada-premium-360-en-claro": {
+  "alto": 5653,
+  "desborde": 0,
+  "capturas": [
+   290,
+   191,
+   91,
+   91,
+   141,
+   141
+  ]
+ },
+ "montada-premium-360-en-oscuro": {
+  "alto": 5653,
+  "desborde": 0,
+  "capturas": [
+   290,
+   191,
+   91,
+   91,
+   141,
+   141
+  ]
+ },
+ "montada-premium-1280-es-claro": {
+  "alto": 4215,
+  "desborde": 0,
+  "capturas": [
+   501,
+   464,
+   232,
+   232,
+   232,
+   232
+  ]
+ },
+ "montada-premium-1280-es-oscuro": {
+  "alto": 4215,
+  "desborde": 0,
+  "capturas": [
+   501,
+   464,
+   232,
+   232,
+   232,
+   232
+  ]
+ },
+ "montada-premium-1280-en-claro": {
+  "alto": 4225,
+  "desborde": 0,
+  "capturas": [
+   501,
+   464,
+   232,
+   232,
+   232,
+   232
+  ]
+ },
+ "montada-premium-1280-en-oscuro": {
+  "alto": 4225,
+  "desborde": 0,
+  "capturas": [
+   501,
+   464,
+   232,
+   232,
+   232,
+   232
+  ]
+ },
+ "montada-beta-360-es-claro": {
+  "alto": 3504,
+  "desborde": 0,
+  "capturas": [
+   223,
+   223,
+   223,
+   160
+  ]
+ },
+ "montada-beta-360-es-oscuro": {
+  "alto": 3504,
+  "desborde": 0,
+  "capturas": [
+   223,
+   223,
+   223,
+   160
+  ]
+ },
+ "montada-beta-360-en-claro": {
+  "alto": 3507,
+  "desborde": 0,
+  "capturas": [
+   223,
+   223,
+   223,
+   160
+  ]
+ },
+ "montada-beta-360-en-oscuro": {
+  "alto": 3507,
+  "desborde": 0,
+  "capturas": [
+   223,
+   223,
+   223,
+   160
+  ]
+ },
+ "montada-beta-1280-es-claro": {
+  "alto": 2801,
+  "desborde": 0,
+  "capturas": [
+   332,
+   332,
+   332,
+   160
+  ]
+ },
+ "montada-beta-1280-es-oscuro": {
+  "alto": 2801,
+  "desborde": 0,
+  "capturas": [
+   332,
+   332,
+   332,
+   160
+  ]
+ },
+ "montada-beta-1280-en-claro": {
+  "alto": 2804,
+  "desborde": 0,
+  "capturas": [
+   332,
+   332,
+   332,
+   160
+  ]
+ },
+ "montada-beta-1280-en-oscuro": {
+  "alto": 2804,
+  "desborde": 0,
+  "capturas": [
+   332,
+   332,
+   332,
+   160
+  ]
  }
 }

@@ -22,10 +22,10 @@ Desde la raíz del repo, con `index.html` compilado:
 después `node docs/proposals/web-estetica-9nov/recortes.js --dist=<la carpeta de dist que usó>` y
 `node docs/proposals/web-estetica-9nov/pagina.js`.
 
-## Al montar la que elija Ez
+## Montada: la B (Ez, 10 nov.)
 
-Pasar el CSS de la dirección a `landing/landing.css` y a los `<style>` de `premium/index.html` y
-`beta/index.html`, sin los prefijos `html body main.marco` de la maqueta; los dibujos de los módulos,
-como en `maqueta.glifos.js`; y los dos retoques de marcado de `retocar()` (la portada de /beta en dos
-grupos con A o B; la pantalla de la app de /premium por idioma y tema, de `capturas/`, con `<picture>`).
-Las 17 pruebas de `landing-cara` y las de `premium-pagina` y `beta-pagina` tienen que seguir en verde.
+En 769ea1b8: el CSS de la B en `landing/landing.css` y en los `<style>` de `premium/index.html` y
+`beta/index.html`; la portada de /beta en dos grupos (`.cabeza`); la pantalla de la app de /premium por
+idioma y tema (`premium/app-*-{es,en}-{claro,oscuro}.webp`, de `capturas-app.js`); y las letras 3, 4 y 5
+recomendadas. **Falta la 2**: rehacer en oscuro las capturas de /beta y de PACE completo con su marco.
+Las fotos de lo montado son `fotos/montada-*`; `comparar.js` las cruza con las de la maqueta de la B.

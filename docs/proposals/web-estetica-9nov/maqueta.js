@@ -36,13 +36,13 @@ const GUARDAR = { 360: 360, 1280: 1000 };
 
 const cssGlifos = require('./maqueta.glifos.js');
 function cssDe(dir) {
-  if (dir === 'hoy') return '';
+  if (dir === 'hoy' || dir === 'montada') return '';
   return cssGlifos() + fs.readFileSync(path.join(AQUI, 'dir-' + dir + '.css'), 'utf8');
 }
 
 /* Lo que una dirección cambia en el marcado (en la maqueta; al montarla iría al HTML). */
 function retocar({ dir, pagina, idioma, tema }) {
-  if (dir === 'hoy') return;
+  if (dir === 'hoy' || dir === 'montada') return;
   /* /premium: la pantalla de la app de la portada, rehecha con la app de la rama en su idioma y tema. */
   if (pagina === 'premium') {
     const s = document.querySelector('.portada picture source'); const i = document.querySelector('.portada picture img');

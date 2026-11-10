@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const AQUI = __dirname;
 const FOTOS = path.join(AQUI, 'fotos');
-const hay = fs.readdirSync(FOTOS).filter((f) => /^(hoy|a|b|c)-/.test(f)).map((f) => f.replace(/\.webp$/, ''));
+const hay = fs.readdirSync(FOTOS).filter((f) => /^(montada|hoy|a|b|c)-/.test(f)).map((f) => f.replace(/\.webp$/, ''));
 const medidas = JSON.parse(fs.readFileSync(path.join(FOTOS, 'medidas.json'), 'utf8'));
 const pesos = fs.existsSync(path.join(AQUI, 'pesos.json')) ? JSON.parse(fs.readFileSync(path.join(AQUI, 'pesos.json'), 'utf8')) : {};
 const kb = (n) => (n / 1024).toFixed(1).replace('.', ',') + ' KB';
@@ -88,8 +88,29 @@ const html = `<title>Tres direcciones para la web</title>
 <div class="marco">
   <p class="kicker">PACE · la web · 10 nov. 2026</p>
   <h1>Tres direcciones para la web</h1>
-  <p class="lede">La landing, PACE completo y /beta, pintadas con su marcado y su CSS de verdad y una capa de estilo encima. Nada está montado: la landing B sigue lista para juntar tal como está, y cualquiera de estas va después, con tu letra.</p>
-  <p>Ningún texto cambia. Recomiendo la A. ${['b', 'c'].every(listo) ? '' : '<b>Todavía falta:</b> ' + ['b', 'c'].filter((d) => !listo(d)).map((d) => DIRS[d].nombre).join(' y ') + ' (se están pintando; esta misma página se pondrá al día).'}</p>
+  <p class="lede">Elegiste la B, «Una jornada» (10 nov.). Ya está montada en la rama <code>claude/landing-c-9nov</code>, en la landing, en PACE completo y en /beta, y espera tu «júntalo». Nada está en la web todavía.</p>
+
+  <h2>Montada: la B</h2>
+  <p>Las tres páginas tal como quedan, sacadas de la rama. En el visor de más abajo están todas: «Montada», en los dos idiomas, los dos temas, el móvil y el ordenador; en el móvil, con la maqueta de la B al lado.</p>
+  <div class="escena">
+    <div class="pantalla movil"><h3>Landing</h3><div class="vidrio"><img src="fotos/montada-landing-360-es-claro.webp" alt="La landing con la B montada, en el móvil" loading="lazy"></div><p class="pie">360 px · castellano · claro</p></div>
+    <div class="pantalla movil"><h3>PACE completo</h3><div class="vidrio"><img src="fotos/montada-premium-360-es-claro.webp" alt="PACE completo con la B montada, en el móvil" loading="lazy"></div><p class="pie">360 px · castellano · claro</p></div>
+    <div class="pantalla movil"><h3>Beta</h3><div class="vidrio"><img src="fotos/montada-beta-360-es-claro.webp" alt="/beta con la B montada, en el móvil" loading="lazy"></div><p class="pie">360 px · castellano · claro</p></div>
+  </div>
+  <h3 style="margin-top:28px">Lo que cambia respecto a la maqueta</h3>
+  <ul class="defectos" style="counter-reset:none">
+    <li style="grid-template-columns:1fr">El pie de las tres páginas lleva un enlace más (la letra 3): en el móvil, la fila de enlaces pasa a dos líneas y la página crece 33 px. Lo demás coincide con la maqueta foto a foto, salvo diferencias de un píxel en el suavizado de la letra.</li>
+    <li style="grid-template-columns:1fr">La landing sigue saliendo igual de rápido: unos 90 ms con la B montada, frente a 72-88 antes (nueve pasadas; la diferencia es ruido).</li>
+    <li style="grid-template-columns:1fr">Las pruebas de las tres páginas, en verde: las 17 de la raíz con dos caras, las de PACE completo (con «Avísame» y los botones de compra) y las de /beta (con sus botones), 59 en total.</li>
+  </ul>
+  <h3 style="margin-top:28px">Lo que no contestaste: van mis recomendadas</h3>
+  <ul class="defectos" style="counter-reset:none">
+    <li style="grid-template-columns:1fr"><span><b>3 · El pie enlaza a las otras dos páginas: sí.</b> Con textos que ya existían: «Android e iPhone» en la landing y en PACE completo, «PACE completo» en /beta.</span></li>
+    <li style="grid-template-columns:1fr"><span><b>4 · La pantalla de la app de PACE completo, en su idioma y su tema: sí.</b> Sacada de la app de la rama; la de antes salía en castellano y en claro.</span></li>
+    <li style="grid-template-columns:1fr"><span><b>5 · El idioma de entrada, como la landing: sí.</b> PACE completo y /beta salen en castellano si el navegador está en castellano y, si no, en inglés.</span></li>
+    <li style="grid-template-columns:1fr"><span><b>2 · Las capturas en oscuro: sí, pero en otra tanda.</b> Son dieciséis capturas con su marco que hay que rehacer; hasta entonces, en oscuro siguen saliendo en claro, como hoy.</span></li>
+  </ul>
+  <p class="nota">Lo de abajo es la propuesta tal como la viste: los defectos de antes, las tres direcciones y tus letras.</p>
 
   <h2>Lo que tiene la web hoy</h2>
   <p>Medido en la rama, a 360 y a 1280 px. Las tres se leen como tres webs parecidas, no como una.</p>
@@ -123,7 +144,7 @@ const html = `<title>Tres direcciones para la web</title>
   </div>`).join('\n  ')}
 
   <div class="mandos" role="group" aria-label="Qué enseñar">
-    <div class="grupo" data-g="dir"><span>Dirección</span><button type="button" data-v="hoy">Hoy</button>${Object.entries(DIRS).map(([d, o]) => `<button type="button" data-v="${d}"${listo(d) ? '' : ' disabled'}>${o.nombre.split(' · ')[0]}</button>`).join('')}</div>
+    <div class="grupo" data-g="dir"><span>Dirección</span><button type="button" data-v="montada">Montada</button><button type="button" data-v="hoy">Hoy</button>${Object.entries(DIRS).map(([d, o]) => `<button type="button" data-v="${d}"${listo(d) ? '' : ' disabled'}>${o.nombre.split(' · ')[0]}</button>`).join('')}</div>
     <div class="grupo" data-g="pagina"><span>Página</span><button type="button" data-v="landing">Landing</button><button type="button" data-v="premium">PACE completo</button><button type="button" data-v="beta">Beta</button></div>
     <div class="grupo" data-g="idioma"><span>Idioma</span><button type="button" data-v="es">ES</button><button type="button" data-v="en">EN</button></div>
     <div class="grupo" data-g="tema"><span>Tema</span><button type="button" data-v="claro">Claro</button><button type="button" data-v="oscuro">Oscuro</button></div>
@@ -134,7 +155,7 @@ const html = `<title>Tres direcciones para la web</title>
 
   <h2>Tus letras</h2>
   <ol class="letras">
-    <li><p class="p">1 · ¿Qué dirección montamos en las tres páginas?</p>
+    <li><p class="p">1 · ¿Qué dirección montamos en las tres páginas? <span class="rec">Contestada: la B.</span></p>
       <p class="op"><b>A · Cuaderno de campo</b> <span class="rec">(recomendada)</span>: arregla lo mismo que la B sin quitar ancho en el móvil, que es donde llega casi todo el mundo, y con menos adorno; su aire de cuaderno es el de los logros y los dibujos de la app.</p>
       <p class="op"><b>B · Una jornada</b>: la más vistosa y la que más se parece a la app (el aro y la línea del día); en el móvil todo queda 38 px más estrecho.</p>
       <p class="op"><b>C · Pulido sobrio</b>: la más segura; deja las bandas de hoy.</p>
@@ -158,11 +179,11 @@ const html = `<title>Tres direcciones para la web</title>
 (function () {
   var HAY = ${JSON.stringify(hay)};
   var MEDIDAS = ${JSON.stringify(Object.fromEntries(hay.map((k) => [k, medidas[k] ? medidas[k].alto : null])))};
-  var NOMBRES = { hoy: 'Hoy', a: 'A · Cuaderno', b: 'B · Jornada', c: 'C · Pulido' };
+  var NOMBRES = { montada: 'Montada', hoy: 'Hoy', a: 'A · Cuaderno', b: 'B · Jornada', c: 'C · Pulido' };
   var PAG = { landing: 'Landing', premium: 'PACE completo', beta: 'Beta' };
-  var estado = { dir: 'a', pagina: 'landing', idioma: 'es', tema: 'claro', ancho: '1280' };
-  try { var g = JSON.parse(localStorage.getItem('pace.web.visor') || 'null'); if (g) for (var k in g) if (k in estado) estado[k] = g[k]; } catch (e) {}
-  if (!HAY.some(function (x) { return x.indexOf(estado.dir + '-') === 0; })) estado.dir = 'a';
+  var estado = { dir: 'montada', pagina: 'landing', idioma: 'es', tema: 'claro', ancho: '1280' };
+  try { var g = JSON.parse(localStorage.getItem('pace.web.visor.montada') || 'null'); if (g) for (var k in g) if (k in estado) estado[k] = g[k]; } catch (e) {}
+  if (!HAY.some(function (x) { return x.indexOf(estado.dir + '-') === 0; })) estado.dir = 'montada';
   var escena = document.getElementById('escena'), aviso = document.getElementById('aviso');
   function clave(d) { return [d, estado.pagina, estado.ancho, estado.idioma, estado.tema].join('-'); }
   function pantalla(d) {
@@ -178,12 +199,12 @@ const html = `<title>Tres direcciones para la web</title>
       gr.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String(estado[gr.dataset.g] === b.dataset.v)); });
     });
     escena.innerHTML = '';
-    /* En el móvil, hoy al lado de la dirección elegida; en el ordenador, una sola. */
-    if (estado.ancho === '360' && estado.dir !== 'hoy') escena.appendChild(pantalla('hoy'));
+    /* En el móvil, al lado: la maqueta de la B junto a lo montado, y hoy junto a cada dirección. En el ordenador, una sola. */
+    if (estado.ancho === '360' && estado.dir !== 'hoy') escena.appendChild(pantalla(estado.dir === 'montada' ? 'b' : 'hoy'));
     escena.appendChild(pantalla(estado.dir));
     aviso.hidden = estado.ancho === '360' || estado.dir === 'hoy';
     aviso.textContent = 'En el ordenador se ve una pantalla cada vez: «Hoy» enseña la de ahora.';
-    try { localStorage.setItem('pace.web.visor', JSON.stringify(estado)); } catch (e) {}
+    try { localStorage.setItem('pace.web.visor.montada', JSON.stringify(estado)); } catch (e) {}
   }
   document.querySelectorAll('.grupo').forEach(function (gr) {
     gr.addEventListener('click', function (ev) {
