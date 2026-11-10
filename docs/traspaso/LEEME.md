@@ -4,6 +4,22 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de noviembre de 2026, ~9:00, v0.196.0.
 
+## 10 nov., ~9:11: la auditoría se pausa aquí y sigue fuera; listo para migrar. Empieza aquí
+
+- **Ez (9:20): «al 85 %-90 % dejamos toda la sesión lista para migrar; la auditoría la podemos pausar aquí y hacerla externa con
+  el mismo modelo para no gastar tokens en las cuentas de Claude Code».** Hecho así: a `auditoria-fable` (`local_ce2d2349…`) se
+  le pidió WIP con push y parar; su rama, `claude/auditoria-fable-9nov-8401fc`, con el informe a medias en `docs/audits/fable-9nov/`.
+  El texto para pegar en claude.ai está en la hoja, en el paso «Ahora». Cuando Ez traiga la respuesta: guardarla entera en
+  `docs/audits/fable-9nov/`, comprobar cada punto en el código (como con las de ChatGPT) y darle una página con una sola cola.
+- **La página de 4, 6 y 7, publicada: KZFDp3zNhk4JAFHr13ysxq** (5iWBf; `claude/chatgpt-jornada-9nov`, b7bbf20e). Espera tres letras de Ez
+  y el «júntalo» de 5, 1, 3 y 2. Esa sesión ya acabó.
+- **Sigue en marcha solo `web-bonita`** (`local_8a20426c…`, Opus, `claude/landing-c-9nov`): pinta primero su dirección recomendada y
+  publica pronto. Para con WIP al 85-90 % de las 5 h.
+- **Uso a las 9:20:** 5 h al 76 % (se reponen a las 13:50), semana al 31 %, «Weekly · Fable» al 42 %. Veinte minutos de dos
+  sesiones en Fable y una en Opus gastaron 57 puntos de las 5 h. EcLj6 tenía la semana al 94-98 % anoche.
+- **Para migrar o seguir en una sesión nueva**, el texto del bloque de abajo sirve tal cual, cambiando «10 nov., ~9:00» por
+  «10 nov., ~9:11».
+
 ## 10 nov., ~9:00: las tres sesiones pararon anoche por el uso y siguen esta mañana. Empieza aquí
 
 - **Ez (10 nov.): «Espero a la bonita».** La landing B no se junta todavía: espera a que elija la estética de la web, y se juntan a la vez.

@@ -95,7 +95,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.196.0 · actualizada el 10 de noviembre a las 9:00 · las tres sesiones pararon anoche al agotarse el uso y siguen esta mañana</div>
+    <div class="eyebrow">PACE · versión 0.196.0 · actualizada el 10 de noviembre a las 9:11 · la revisión de la app sigue fuera de aquí, para no gastar el uso; la web más bonita, en marcha</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -131,7 +131,29 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <h2>Paso a paso</h2>
     <p class="nota">La pongo al día en cada paso. Si tienes la página abierta, se actualiza sola. Si un enlace no abre, es que está en tu otra cuenta.</p>
     <ol class="pasos">
-      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, 2 minutos · es lo que más ayuda de ChatGPT ahora</span>
+      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, 2 minutos · como propusiste, fuera de Claude Code</span>
+        <span class="t">Pasar la revisión de la app a Claude, en el chat, con el modelo nuevo</span>
+        <span class="c"><span class="quien">Tú.</span> Aquí gastaba el uso de la cuenta en veinte minutos, así que la he parado con lo hecho
+          guardado en su rama. Copia esto en claude.ai con el modelo nuevo y tráeme su respuesta: compruebo cada cosa en el código
+          y te la doy en una página, por orden.
+          <pre class="prompt">Audita PACE como producto. Es una app de pausas activas para quien trabaja sentado: Foco (tipo Pomodoro), Respira, Mueve, Estira, Hidrátate, logros y «A tu ritmo», que reparte el día. El código es público: repositorio ezradesign/Pace_app en GitHub, rama main (versión 0.196.0). La web es https://pacegrass.app, con /premium y /beta. Solo lectura.
+
+Empieza por lo ya hecho, para no repetirlo:
+- En la rama claude/auditoria-fable-9nov-8401fc, la carpeta docs/audits/fable-9nov/: un informe a medias y la nota de dónde quedó. Sigue desde ahí.
+- En main: CLAUDE.md, STATE.md, ROADMAP.md («Camino a v1.0»), docs/product/DECISIONES_PRODUCTO.md, docs/audits/chatgpt-28oct/, docs/audits/chatgpt-8nov/ y docs/launch/.
+Lo que ya decidí no lo reabras. Si crees que una decisión mía frena la venta, dilo una vez, aparte, con el porqué.
+
+Quiero, por este orden de importancia:
+1. Monetización, en la web y en el móvil. Qué es gratis y qué es PACE completo hoy (app/state-entitlement.jsx, app/state-compra.js, la invitación, /premium). El recorrido de alguien nuevo: llegar, primera sesión, volver al día siguiente, entender qué se paga, querer pagarlo y pagar. Dónde se ve el valor de PACE completo y dónde no; qué hay de pago que nadie llega a ver; qué falta para pagar con gusto. Diferencias entre la web (un código, sin cuenta) y las tiendas. Qué hace volver: la carta del lunes, los logros, los avisos.
+2. Cómo se integra el Foco con los ejercicios: qué pasa al acabar un bloque, qué propone la pausa y por qué, pausa corta y larga, con jornada («A tu ritmo») y sin ella, «Ver ejercicio», qué cuenta y qué no, y la vuelta al Foco. Busca pasos de más y momentos en que no se sabe qué toca.
+3. Flujos de ejercicios: Mueve, Estira, Respira, Hidrátate y «Tus rutinas». Qué rutinas o recorridos nuevos servirían a quien trabaja sentado, sin inventar técnica (la base es NHS, ACSM y OMS; lo que toque salud lleva su aviso).
+4. Interfaz: jerarquía, coherencia, estados vacíos y la primera vez, en móvil y en ordenador.
+5. Dudas, fallos e incoherencias que veas de paso.
+
+Límites: el tono de PACE es calmado, artesanal y cuidado. Nada de gamificación agresiva, rachas, urgencias falsas ni cifras o reseñas inventadas. Sin cuentas y sin rastreo: los datos se quedan en el equipo. Lo que hoy es gratis sigue gratis. Los precios están decididos: 2,99 € al mes con 7 días de prueba y 19,99 € de por vida; antes de la versión 1, solo el de por vida y solo en la web.
+
+Formato: arriba, las cinco a ocho cosas que más mueven la venta, por orden, cada una con su porqué en una frase. Después, una sola lista ordenada con todo lo demás: qué es, qué gana quien usa PACE, cuánto cuesta hacerlo (poco, medio o mucho) y si va antes o después de la versión 1. Para cada hallazgo, el archivo y la línea, o el caso paso a paso. Separa lo que has comprobado en el código de lo que es idea tuya. En español llano. Si no puedes leer un archivo, dilo en vez de suponerlo.</pre></span></li>
+      <li class="paso luego"><span class="estado">Lo siguiente tuyo · 2 minutos · es lo que más ayuda de ChatGPT ahora</span>
         <span class="t">Pasar a ChatGPT la revisión del cobro y de lo legal</span>
         <span class="c"><span class="quien">Tú.</span> Lo que me trajiste el 5 de noviembre cubre datos y compra, pero no lo legal. Copia esto en
           ChatGPT y tráeme su respuesta: compruebo cada cosa en el código antes de montar nada.
@@ -149,25 +171,17 @@ Cobro: busca casos concretos en los que alguien pague y no reciba su código, lo
 Legal: dime qué es obligatorio tener publicado ANTES de la primera venta y qué puede esperar un mes; en concreto, si mis datos del aviso legal pueden esperar. Revisa también si están bien resueltos el desistimiento, su pérdida en contenido digital y el botón para desistir; si «de por vida» está bien definido; si /premium promete algo que el código o las condiciones no cumplen; y cualquier contradicción entre condiciones, privacidad y /premium.
 
 Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien compra, y si bloquea la primera venta, va antes del mensual o puede esperar. Separa lo que has comprobado en el código de lo que deduces. En lo legal cita la norma y di con qué seguridad lo afirmas: no es asesoría y lo revisará un profesional.</pre></span></li>
-      <li class="paso marcha"><span class="estado">En marcha · yo · tres sesiones · pararon anoche por el uso y siguen desde las 9:00</span>
-        <span class="t">La web más bonita, la página de ChatGPT y la app mirada entera</span>
-        <span class="c"><span class="quien">Yo.</span>
-          <ol>
-            <li><b>La web más bonita</b>, como pediste: la landing, /beta y /premium. Una sesión mira primero qué falla hoy, con
-              fotos, y te pinta dos o tres maneras distintas de dejarlas, con una recomendada. No cambia ningún texto ni monta
-              nada hasta que elijas.</li>
-            <li><b>La página de ChatGPT que faltaba</b>: «Cambiar» con un Foco en marcha, lo que haces por tu cuenta en
-              Estadísticas › Hoy y el «Hecha · 5 min», pintados sobre la app para que elijas letra. Lo demás de esa revisión ya
-              está hecho en su rama y espera tu «júntalo».</li>
-            <li><b>La app, mirada entera con el modelo nuevo</b>: cómo encaja el Foco con los ejercicios, los recorridos de
-              Mueve, Estira y Respira, la interfaz, y qué hace falta para que PACE completo se venda bien en la web y en el
-              móvil. Te lo doy en una página, por orden de importancia y con lo que recomiendo; lo que ya decidiste no se
-              vuelve a preguntar.</li>
-          </ol>
-          Anoche pararon las tres a los veinte minutos, al agotarse el uso de la cuenta, con lo hecho guardado: la página de
-          ChatGPT está hecha y falta publicarla; la web tiene medidos los defectos de hoy y pensadas tres direcciones, y falta
-          pintarlas; y la revisión de la app va por la mitad. Te aviso según salga cada página. La caza de rendimiento ya está
-          hecha en su rama y espera tus letras (más abajo).</span></li>
+      <li class="paso marcha"><span class="estado">En marcha · yo · una sesión</span>
+        <span class="t">La web más bonita: la landing, /beta y /premium</span>
+        <span class="c"><span class="quien">Yo.</span> Ya tiene medidos, con fotos, los defectos de hoy y pensadas tres maneras de dejarlas.
+          Ahora las pinta, empezando por la que recomienda, y te publica la página en cuanto la primera esté. No cambia ningún
+          texto ni monta nada hasta que elijas.</span></li>
+      <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo, unos 5 minutos</span>
+        <span class="t">Elegir tres letras de lo que encontró ChatGPT en tu día</span>
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/KZFDp3zNhk4JAFHr13ysxq">la página</a>, en esta cuenta).
+          Pintado sobre la app: qué hace «Cambiar» con un Foco en marcha, dónde sale lo que haces por tu cuenta en Estadísticas ›
+          Hoy y qué dice «Hecha · 5 min» cuando la rutina fue de 2. Lo demás de esa revisión ya está hecho en su rama, sin cambiar
+          nada a la vista, y espera tu «júntalo».</span></li>
       <li class="paso luego"><span class="estado">Espera a la web más bonita · dijiste «Espero a la bonita» el 10 de noviembre</span>
         <span class="t">Juntar la landing B</span>
         <span class="c"><span class="quien">Tú dices «júntalo»; yo lo subo</span> (<a href="https://claude.ai/artifact/3juJNAvBAFo8NKKKWLEc6J">la página</a>, en esta cuenta).
