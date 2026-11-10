@@ -16,7 +16,7 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de 
 - **D-6 (los logros «Búho» y «Ocaso»), sin letra:** Ez preguntó «¿No podemos adaptarlos para que sean útiles sin cambiar el glifo?».
   Es una opción nueva (D): mismo dibujo y mismo id, cambia lo que premian. Se le pinta con ideas y una recomendada; aún no ha elegido.
 - **Sin contestar todavía:** las letras 4, 6 y 7 de ChatGPT, el aro, V1 y V2 de la caza de rendimiento, y los «júntalos» (ChatGPT 5,
-  1, 3 y 2; los dos arreglos invisibles de rendimiento; el `guardar()` atómico).
+  1, 3 y 2; los dos arreglos invisibles de rendimiento; el arreglo del cobro mensual).
 - **Sesiones en marcha (Opus, cuenta EcLj6):** `montar-auditoria` (`local_a47804a5…`, worktree y rama propios cortados de `main`,
   puertos 8950-8959) monta 1A, 2A, 4A, D-5 B y D-4 C con pruebas y una página «Montado»; espera el «júntalo» de Ez.
   `p-gina-nica-con-todas-la` (`local_6db86888…`, worktree propio, puertos 8940-8949) hace UNA página con todo lo que sigue abierto:
@@ -753,7 +753,7 @@ Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RE
 | `claude/recorrido-6nov-645d6b` | `local_09cd451b…` | 3 arreglos del recorrido + lo que eligió Ez (1A 2A 3A 5A; 4C sin tocar), ya con `main` 0.192.0 dentro. WIP d7995d2e: cinco mutantes en rojo y `verify` en verde | Las pruebas vecinas (`aro-jornada`, `ritmo-*`, `hora-y-medianoche`, `bloques-cortos`) y las fotos del después en la página de Ez (Pd8CZq71NjTMimaydP3caM, en EcLj6: en 5iWBf, republicar `docs/traspaso/archivos/recorrido-6nov/pagina-ez.html`). Después, la suite entera y enseñárselo a Ez para su «júntalo» |
 | `claude/abierta-horas-7nov-a2419d` | `local_d3dda760…` | PACE abierto horas: tres fallos arreglados con prueba (e30c0015) y el informe en WIP (3c404579), en `docs/audits/abierta-horas-7nov.md` | `npm run verify`, las pruebas vecinas y el banco del service worker sin red |
 | `claude/accesibilidad-7nov-e36d06` | `local_b7d2e5c1…` | A medias: tres pruebas nuevas (nombres, teclado y movimiento reducido) y cambios en `app/`; WIP guardado por la coordinadora (828d6060 y e1432c8a) | Leer el informe `docs/audits/accesibilidad-7nov.md` (si lo hay) y el diff; terminar, `verify`, sus pruebas y la página para Ez con lo visual (contraste) |
-| `claude/guardar-atomico-166e3f` | `local_84fe474b…` | Terminado: un periodo por llave en `cobro/mensual.js`, 89 del cobro en verde, dos mutantes | Espera la revisión de ChatGPT (Ez tiene el texto, que también pide revisar este arreglo) y su «júntalo» |
+| `claude/guardar-atomico-166e3f` | `local_84fe474b…` | Terminado: el arreglo del cobro mensual, con sus pruebas y dos mutantes | Espera la revisión de ChatGPT (Ez tiene el texto, que también pide revisar este arreglo) y su «júntalo» |
 | `claude/landing-web-5ec1e5` | — | Propuesta | Las letras de Ez (en 5iWBf, su página es E3tcsR3FnywQNmnCpymxrp) |
 
 Se retoman con sesión nueva, `cwd` en su carpeta de `.claude/worktrees/` y `use_worktree: false`, leyendo su informe; puertos del 8882 en adelante. No más de tres sesiones a la vez. Al juntar: un `git merge` de cada rama (tiene `main` dentro o casi), `index.html` rehecho con el build, `PACE_standalone.html` como estaba, el censo de `verify.integridad.js` sumado a mano y la suite entera.
@@ -764,9 +764,9 @@ Se retoman con sesión nueva, `cwd` en su carpeta de `.claude/worktrees/` y `use
 
 **Trampas de hoy:** en PowerShell, `Remove-Item` está bloqueado; para quitar un worktree con `node_modules` enlazado, primero `cmd /c rmdir <carpeta>\node_modules` (quita solo el enlace) y después `git worktree remove`. Un `cd` en Bash a una carpeta de worktree mueve la sesión: usa `git -C` o `( cd … )`. `logros-sin-pronto-ddf6d6` y `sweet-moser-38e06d` quedan vacías y bloqueadas.
 
-## 6 nov., ~23:40: v0.192.0 en `main`; guardar() y el recorrido, en sus ramas
+## 6 nov., ~23:40: v0.192.0 en `main`; el arreglo del cobro y el recorrido, en sus ramas
 
-Con el «Júntalo» de Ez: la tanda (`claude/tanda-jornada-catalogo`: la jornada 1A 2B y X, y catálogo, cifras y Auto B) entró por avance rápido y subió a 0.192.0. La suite de la tanda, 1315 en verde: dos pruebas de avisos esperaban «Pausar» y dentro de la jornada es «Pausar foco» (puestas al día); con la versión subida, 83 de artefacto, jornada, Caminos y pago, en verde. **En sus ramas:** `claude/guardar-atomico-166e3f` (sesión `local_84fe474b…`, parada), con `guardar()` arreglado (un periodo por llave en `cobro/mensual.js`, 89 del cobro en verde y dos mutantes en rojo), espera la revisión de ChatGPT (Ez la pasa con el texto de la hoja, que también pide revisar ese arreglo) y su «júntalo»; `claude/recorrido-6nov-645d6b` (sesión `local_09cd451b…`, en marcha, puerto 8876), el recorrido entero sobre la tanda: arregla fallos claros y deja lo visual en una página para Ez. Quitados los worktrees ya juntados, con `backups/ramas-6nov-2026.bundle` antes; `logros-sin-pronto-ddf6d6` y `sweet-moser-38e06d` quedan vacías y bloqueadas por Windows. La 0.191.1 sigue siendo la versión de prueba: Ez dijo «más tarde» a subirla a Play.
+Con el «Júntalo» de Ez: la tanda (`claude/tanda-jornada-catalogo`: la jornada 1A 2B y X, y catálogo, cifras y Auto B) entró por avance rápido y subió a 0.192.0. La suite de la tanda, 1315 en verde: dos pruebas de avisos esperaban «Pausar» y dentro de la jornada es «Pausar foco» (puestas al día); con la versión subida, 83 de artefacto, jornada, Caminos y pago, en verde. **En sus ramas:** `claude/guardar-atomico-166e3f` (sesión `local_84fe474b…`, parada), con el arreglo del cobro mensual (sus pruebas en verde y dos mutantes en rojo), espera la revisión de ChatGPT (Ez la pasa con el texto de la hoja, que también pide revisar ese arreglo) y su «júntalo»; `claude/recorrido-6nov-645d6b` (sesión `local_09cd451b…`, en marcha, puerto 8876), el recorrido entero sobre la tanda: arregla fallos claros y deja lo visual en una página para Ez. Quitados los worktrees ya juntados, con `backups/ramas-6nov-2026.bundle` antes; `logros-sin-pronto-ddf6d6` y `sweet-moser-38e06d` quedan vacías y bloqueadas por Windows. La 0.191.1 sigue siendo la versión de prueba: Ez dijo «más tarde» a subirla a Play.
 
 ## 6 nov., ~21:50: coordina EcLj6…; la 0.191.1, bajada y en TestFlight
 
@@ -793,7 +793,7 @@ El sí a la versión de prueba vale solo si está en el mensaje de Ez. Si no vie
 3. **Después, con su «júntalo»:** `maqueta-jornada-40d7ea` (88597eb8; jornada 1A 2B y X; fotos en 5P7oysx4zRBMe7qvhRjFgZ; sin probar en WebKit ni en móvil real) y `catalogo-cifras-auto-5ba756` (01086d31; carpeta `version-de-prueba-7b9668`; Auto B). En una tanda, con una suite, y salen como actualización durante los 14 días.
 4. **Espera a Ez:** el estado de TestFlight (si está lista, el enlace público va a /beta); la parte legal de ChatGPT, con el prompt de la hoja; las letras de la landing (E3tcsR3FnywQNmnCpymxrp); Año nuevo, que se repite, y Vaca feliz; oír las horas con TalkBack; y los testers, que ya busca.
 5. **Para encender la venta:** Resend y la dirección real de 19,99 € en `PACE_TIENDA_WEB.enlaces.vida`. Con la primera venta real, ese mismo día, sus datos y publicar `legal/`. La revisión profesional, en un mes.
-6. **Propuesto y sin decidir, tras la beta:** un recorrido entero en móvil y escritorio, y arreglar `guardar()` antes del mensual; pide el OK de Ez. Descanso de manos, después de v1 (`dibujos-22oct/para-revisar/manos-boca-arriba-5nov.jpg`). Quitar los worktrees juntados, con un bundle antes: Ez dijo sí.
+6. **Propuesto y sin decidir, tras la beta:** un recorrido entero en móvil y escritorio, y el arreglo del cobro antes del mensual; pide el OK de Ez. Descanso de manos, después de v1 (`dibujos-22oct/para-revisar/manos-boca-arriba-5nov.jpg`). Quitar los worktrees juntados, con un bundle antes: Ez dijo sí.
 
 ## 6 nov., ~18:45: v0.191.1 subida
 
@@ -1562,7 +1562,7 @@ gastó el 58 % de sus 5 horas en 50 minutos: Ez decidió seguir con las dos en p
       (nombres con guion: `sulafat-inhale.mp3`…), y que Ez las oiga antes de subir.
   - `ios-preparar` terminó: **el iPhone está preparado en v0.164.0** (proyecto `ios/`, `nativo.js` e
     `ios.js`, workflow `iOS` y la guía `docs/launch/app-store/guia.html`). Para TestFlight espera la
-    cuenta de Apple Developer de Ez y su llave de la API (`PACE-llave-apple`). Su hueco es para el
+    cuenta de Apple Developer de Ez y su llave de la API. Su hueco es para el
     calendario (abajo), cuando haya uso para abrir una sesión.
 - **iPhone, decisiones de Ez (14 oct.):**
   - la cuenta de Apple Developer, a su nombre (todavía no está creada);
@@ -1637,7 +1637,7 @@ La coordinadora es la única que sube a `main` (`docs/WORKFLOW.md` §9) y usa `P
 - **`claude/premium-codigos-tester` (PACE completo):** ya juntada con v0.156.0, choques resueltos y
   `verify` en verde (5a9a905). Falta: la suite entera; fotos para Ez del candado, la invitación y
   «Tengo un código» en la app de hoy; su sí; subirla como v0.157.0. Ez ya dijo «sí, y enséñamelo».
-  Los 15 enlaces de tester están en `~/PACE-llave-licencias/codigos-tester.csv` y solo funcionan
+  Los 15 enlaces de tester los guarda Ez, con las llaves, y solo funcionan
   cuando esto esté publicado.
 - **`claude/caza-foco-estado-d6bd17` (caza en Foco y lo guardado):** once hallazgos reproducidos en
   `docs/traspaso/CAZA_FOCO_ESTADO_10OCT.md`; el arreglo de las dos pestañas (pierde datos) estaba en
@@ -1670,8 +1670,7 @@ La coordinadora es la única que sube a `main` (`docs/WORKFLOW.md` §9) y usa `P
 - **iPhone (Ez, 9 oct.): PACE en Safari ahora y la app de la App Store después de v1.** La
   revisión en el motor de Safari encontró el aviso falso de «versión nueva» en la primera visita
   (arreglado en v0.151.0) y nada más en la home. Falta que un tester con iPhone mire el sonido.
-- La llave de los códigos de tester existe desde el 9 oct. (`PACE-llave-licencias`, en el PC de
-  Ez; la pública, `k1`, en `claude/premium-codigos-tester`). Ez tiene ya los ids del calendario,
+- La llave de los códigos de tester existe desde el 9 oct. (la privada, fuera del repo; la pública, `k1`, en `claude/premium-codigos-tester`). Ez tiene ya los ids del calendario,
   la lista de testers y los textos de logros, y los está pasando.
 - El logo (`app/ui/pace-logo.png`) dice «FVFN» en vez de «EVEN» en la propia imagen: Ez lo
   vuelve a exportar.
@@ -1827,7 +1826,7 @@ antes de trabajar y mira en `git log` qué subió la otra.
   «Otra», las horas a las que paras), con la carta del lunes como su cara, enseñado antes en una
   página.
 - **Android:** la llave de subida a Play existe desde el 7 de octubre. El original y su contraseña
-  están en la carpeta `PACE-llave-play` del usuario de Ez en su PC, y GitHub tiene una copia en los
+  los guarda Ez fuera del repo, y GitHub tiene una copia en los
   secretos del repo, con la que el workflow `Android` firma el AAB en cada push a `main` y lo guarda
   en el borrador de release `vX.Y.Z` (`PACE-X.Y.Z.aab`). El APK de prueba es otra app, «PACE prueba»
   (`com.ezradesign.pace.prueba`).
@@ -1878,8 +1877,8 @@ primera versión de pago, en web y Android.
   tarjeta cerrada con candado de línea fina y la invitación al tocarla; se tomó la opción B
   (semana de estadísticas gratis; mes, año y «qué te ayuda» de pago), propuesta en
   `docs/proposals/premium-pace-completo.html`. En la web el código es un enlace firmado que la app
-  comprueba sin servidor; la llave privada la crea Ez en su PC con `npm run licencia:llaves`
-  (carpeta `~/PACE-llave-licencias`, fuera del repo) y cada enlace sale con
+  comprueba sin servidor; la llave privada la crea Ez en local con `npm run licencia:llaves`
+  (fuera del repo) y cada enlace sale con
   `npm run licencia:codigo -- N`. En Android, Google Play no deja códigos propios: los testers
   recibirán un código promocional de Play del producto «PACE completo» (hasta 500 por trimestre)
   cuando la app lleve Play Billing (Fase 6).
@@ -1922,19 +1921,18 @@ primera versión de pago, en web y Android.
 | Glifos | Faltan 2 de ejercicio (rana y pica en escritorio; el descanso ya usa la figura que respira), 6 que rehacer porque no casan con su ejercicio (`archivos/glifos/revision-glifos.html`) y 19 de los 96 de logro. GPT Image bloquea las figuras desnudas y Ez no las quiere vestidas. | Rehacer los prompts desde el preámbulo con el que se hicieron los 59, sin ropa y sin que salte el filtro. Prompts y nombres de archivo en `archivos/glifos/prompts-glifos.md`. |
 | «A tu ritmo» semanal | Es lo que se paga en v1 (Fase 3). La parte gratis (la semana en la bienvenida y en Ajustes, y el día ya contestado) está en v0.148.0. | El motor que aprende de cada persona y adapta la semana, con la carta del lunes (premium): primero una página para Ez con qué aprende, con qué datos y cómo lo cuenta. |
 | Caza de bugs | v0.143.2: «Primera calistenia» y «Primer estirón» iban cruzados entre Mueve y Estira y los logros decían «Extra»; arreglado, y a quien ya los tenía se le corrigen solos. v0.143.3: la cuenta atrás de las sesiones pisaba su frase en el móvil. v0.143.4: la preparación de Mueve y Estira decía «De pie» en las 8 rutinas de silla y las 2 de suelo; en Android la bienvenida decía «en tu navegador»; a 360 px los botones de Hidrátate partían su texto; cuando la pausa proponía agua, su botón decía «Empezar» y no sumaba nada (ahora «Un vaso más», que lo suma; decisión de Ez, que dejó «Muévete» como está y eligió «En la silla»). Revisadas a 360 y 1280 la home, logros, estadísticas, ajustes, las tres bibliotecas y la entrada a las sesiones; a 360, en español e inglés, Foco en marcha, el menú de pausa, Hidrátate, la bienvenida y una sesión entera de Respira, Mueve y Estira. | La lista de Ez ya no tiene nada pendiente (Ez, 7 oct.). Después, una búsqueda en paralelo dejó 37 hallazgos SIN VERIFICAR en `CAZA_BUGS_7OCT.md` (modo oscuro, inglés, Respira e Hidrátate): reproducirlos uno a uno y arreglar los que se confirmen. El 8 de octubre, v0.148.2 arregla seis que no cambian lo que se ve (respira-4, 7, 8 y 11, ingles-9 y el `lang` de ingles-6); los que cambian algo visible, con antes y después, esperan la elección de Ez. Sin revisar: Foco, el estado guardado y la pantalla de «A tu ritmo» por dentro (la está tocando el hilo de la semana). |
-| PACE completo y códigos de tester | En `main` desde v0.157.0 (12 oct.): candado, invitación, «Para ahora» sin cerradas, la licencia firmada (`app/state-licencia.js`), su fila de Ajustes y los scripts. La llave existe desde el 9 oct. (la pública, `k1`, en `app/licencia.llaves.js`; la privada, en `PACE-llave-licencias` del PC de Ez) y los 15 enlaces de tester, desde el 12 oct., en `codigos-tester.csv` de esa carpeta. | Ez manda a cada tester su enlace y apunta a quién da cuál. En la Fase 6, Play Billing con el producto «PACE completo» y sus códigos promocionales para los testers de Android. Las estadísticas de mes y año se cierran con la Fase 4. Cómo se cobra en la web (Stripe, firma automática con k2, 2,99 € al mes con 7 días gratis y 19,99 € de por vida, landing en `/premium`), decidido por Ez el 15 oct.: `DECISIONES_PRODUCTO.md`. |
+| PACE completo y códigos de tester | En `main` desde v0.157.0 (12 oct.): candado, invitación, «Para ahora» sin cerradas, la licencia firmada (`app/state-licencia.js`), su fila de Ajustes y los scripts. La llave existe desde el 9 oct. (la pública, `k1`, en `app/licencia.llaves.js`; la privada, fuera del repo) y los 15 enlaces de tester, desde el 12 oct., guardados con ella. | Ez manda a cada tester su enlace y apunta a quién da cuál. En la Fase 6, Play Billing con el producto «PACE completo» y sus códigos promocionales para los testers de Android. Las estadísticas de mes y año se cierran con la Fase 4. Cómo se cobra en la web (Stripe, firma automática con k2, 2,99 € al mes con 7 días gratis y 19,99 € de por vida, landing en `/premium`), decidido por Ez el 15 oct.: `DECISIONES_PRODUCTO.md`. |
 | Escala con el zoom | Hecha en v0.145.0 (`app/main/_lienzo.js`), medida del 90 al 33 % y en monitores de 1080p y 1440p. | Mirarla en Safari de Mac si alguien lo usa. Nada más. |
 
 ## Lo que espera a Ez
 
-1. Copiar la carpeta `PACE-llave-play` de su PC (la llave de subida a Play) en su disco duro, con
-   la contraseña aparte.
+1. Guardar una copia de la llave de subida a Play fuera del ordenador, con la contraseña aparte.
 2. Dar de alta PACE en Google Cloud y Microsoft Entra y pasar los ids.
 3. Crear la app en Play Console y reunir unos 15 testers con Android (Google pide 12 durante 14
    días; tiene 5 o 6).
 4. Nuevas tomas de música con ElevenLabs (2 o 3 de pranayama con tanpura) y los glifos que falten.
-5. En su PC, una vez: `npm run licencia:llaves` (o pedírselo a Claude allí) y una copia de la carpeta
-   `PACE-llave-licencias` fuera del ordenador, como la de Play. Luego, la lista de testers (número y
+5. En su PC, una vez: `npm run licencia:llaves` (o pedírselo a Claude allí) y una copia de la llave
+   fuera del ordenador, como la de Play. Luego, la lista de testers (número y
    si usan web, Android o los dos) y `npm run licencia:codigo -- 1-15` para sus enlaces.
 
 ## Maquetas publicadas (cuenta anterior)
@@ -1946,10 +1944,8 @@ primera versión de pago, en web y Android.
 
 ## Lo que no está en el repo, a propósito
 
-Claves, contraseñas, tokens y correos personales no se suben nunca. La llave de Play va en los
-secretos de GitHub, y su original, con la contraseña, en la carpeta `PACE-llave-play` del PC de Ez.
-La llave privada de los códigos de PACE completo vive en `~/PACE-llave-licencias` del PC de Ez, con
-la lista de enlaces dados (`codigos-tester.csv`); `verify` falla si una llave privada entra aquí.
+Claves, contraseñas, tokens y correos personales no se suben nunca. Las llaves privadas (la de Play, la de los códigos de PACE completo y la de Apple) viven fuera del
+repo; dónde, lo sabe Ez y no se escribe aquí (D-4 C, 10 nov.). `verify` falla si una llave privada entra aquí.
 El correo de contacto de PACE, `hola.ezradesign@gmail.com`, sí está: es público a propósito
 (privacidad y ficha de Play). El historial de las conversaciones no se migra: lo que importa está
 aquí y en `git log`.

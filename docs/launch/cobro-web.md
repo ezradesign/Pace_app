@@ -13,9 +13,9 @@ En la carpeta de PACE, abre una terminal y escribe:
 npm run licencia:k2
 ```
 
-Deja dos archivos en tu carpeta `PACE-llave-licencias`, junto a la de k1 y la de Play:
+Deja dos archivos en la carpeta de las llaves, fuera del repo:
 
-- `k2.privada.pem`: la copia de seguridad. Llévala al disco duro con las otras.
+- `k2.privada.pem`: la copia de seguridad. Guárdala fuera del ordenador, con las otras.
 - `k2.para-cloudflare.txt`: lo mismo en una sola línea, para pegarla en Cloudflare (paso 2). Bórralo
   después; si te hace falta otra vez, `npm run licencia:k2 -- --cloudflare` lo vuelve a escribir.
 

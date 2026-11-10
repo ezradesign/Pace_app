@@ -1249,16 +1249,15 @@ El detalle de cada caso está en `STATE.md`, «Deuda conocida».
 
 ### Nuevo el 6 nov.
 
-De la lista de abajo ya están en `main` el 1, el 3, el 5 y el 6; el 4 entra con `maqueta-jornada` y sigue el 2 (`guardar()`), antes
+De la lista de abajo ya están en `main` el 1, el 3, el 5 y el 6; el 4 entra con `maqueta-jornada` y sigue el 2 (un arreglo del cobro), antes
 del mensual. Lo que toca, por orden, en el bloque «AL RELEVO (6 nov., ~21:25)» de `LEEME.md`.
 
 ### Nuevo el 5 nov.
 
 1. **La tienda web con un solo plan**, en marcha en `premium-solo-vida`: `paceTiendaWebLista` exige los dos enlaces (`every`) y
    `planes()` filtra por precio y no por enlace (`app/state-compra.js`). Pequeño, con su prueba.
-2. **Antes de encender la mensual:** `guardar()` en `functions/api/stripe.js` no serializa (KV no tiene transacciones) y su
-   comentario promete de más: «dos a la vez escriben lo mismo» solo vale para el mismo aviso repetido. Prueba con intercalado de
-   verdad, no con `await` en fila, y una solución que garantice el orden por suscripción.
+2. **Antes de encender la mensual:** un arreglo del cobro, con su prueba (el detalle, fuera de la copia pública: Ez, D-4 C del
+   10 nov.).
 3. **El sobre: actualizaciones, novedades y avisos puntuales** (Ez, 30 oct. y 5 nov.), con maqueta y después de la versión de
    prueba. Cada cosa, una fuente con `paceSobreApuntar` (`app/shell/Sobre.jsx`), no otro icono. Hoy, con varias, abre solo una:
    la maqueta tiene que resolver cómo caben.

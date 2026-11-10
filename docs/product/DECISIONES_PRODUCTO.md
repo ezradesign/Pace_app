@@ -34,7 +34,7 @@ pasa de 392 a 426 px a 1917×857 y de 305 a 332 a 1536×710.
 
 - **Solo el de por vida, solo en la web, hasta v1.** «Solo el de por vida hasta v1 y en web (no android e ios) ya podríamos cerrar
   la parte premium». Hasta v1 PACE completo está abierto: quien pagara cada mes pagaría por algo gratis. El mensual llega con v1, y
-  antes hay que cerrar la concurrencia de `guardar()` en `functions/api/stripe.js`.
+  antes hay que juntar un arreglo del cobro mensual que espera revisión.
 - **Sus datos legales, al registrar la primera venta real; la revisión profesional, en un mes**, hablado con el gestor. Ez lo decide
   sabiendo que `docs/launch/legal-web.md` pide esos datos antes de cobrar.
 

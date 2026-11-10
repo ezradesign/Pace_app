@@ -121,7 +121,7 @@
 <div class="tbl"><table>
   <tr><th>Llave</th><th>Quién la tiene</th><th>Para qué sirve</th></tr>
   <tr><td><strong>Llave de la app</strong></td><td>Google, y nadie más</td><td>Es la que llevan los móviles de la gente. La crea Google la primera vez que subes («firma de apps de Google Play», <em>Play App Signing</em>). Tú no la ves nunca.</td></tr>
-  <tr><td><strong>Llave de subida</strong></td><td>Tú: la carpeta <code>PACE-llave-play</code> de tu PC, y una copia en los secretos de GitHub</td><td>Solo demuestra a Google que el archivo que subes es tuyo. GitHub la usa para firmar el <code>.aab</code> en cada versión.</td></tr>
+  <tr><td><strong>Llave de subida</strong></td><td>Tú, fuera del repo, y una copia en los secretos de GitHub</td><td>Solo demuestra a Google que el archivo que subes es tuyo. GitHub la usa para firmar el <code>.aab</code> en cada versión.</td></tr>
 </table></div>
 
 <p>La primera vez que subas el archivo, Play te preguntará por la firma de apps. <strong>Acepta la
@@ -142,12 +142,12 @@ Google. Lo que pasa es que no puedes subir versiones hasta que Google te acepte 
 
 <div class="card warn">
   <span class="tag">Pendiente</span>
-  <p><strong>Cómo guardarla bien.</strong> Hoy la llave vive en tu PC y en GitHub. Si el PC se rompe,
+  <p><strong>Cómo guardarla bien.</strong> GitHub tiene una copia, pero si pierdes la tuya,
   GitHub no te la devuelve: los secretos no se pueden leer, solo usar. Por eso:</p>
   <ul>
-    <li>Copia la carpeta <code>PACE-llave-play</code> a <strong>un pendrive</strong> que guardes en casa, y a <strong>un segundo sitio</strong> fuera de casa (otro pendrive en casa de alguien de confianza, o una nube con contraseña fuerte y verificación en dos pasos).</li>
+    <li>Ten <strong>dos copias fuera del ordenador</strong>, y una de ellas fuera de casa.</li>
     <li>Guarda <strong>la contraseña aparte</strong> del archivo: en un gestor de contraseñas, o en papel. Llave y contraseña juntas en la misma nube es lo único que no conviene.</li>
-    <li>Una vez al año, comprueba que el pendrive se sigue leyendo.</li>
+    <li>Una vez al año, comprueba que las copias se siguen leyendo.</li>
     <li>Nunca la mandes por WhatsApp ni por correo, y nunca la subas al repo.</li>
   </ul>
 </div>
@@ -399,7 +399,7 @@ hay que preguntarse «¿esto ya lo tienen los testers?» ni se repite un número
 <!-- ============================================================ -->
 <h2 id="preguntas"><span class="num">9</span>Lo que queda pendiente</h2>
 <ol class="q">
-  <li><strong>Encontrar el disco duro</strong> y copiar en él la carpeta <code>PACE-llave-play</code>. La contraseña, aparte (gestor de contraseñas o papel). Mejor aún si hay una segunda copia fuera de casa.</li>
+  <li><strong>Guardar una copia de la llave de Play fuera del ordenador.</strong> La contraseña, aparte (gestor de contraseñas o papel). Mejor aún si hay una segunda copia fuera de casa.</li>
   <li><strong>Mandar los mensajes</strong> de WhatsApp y LinkedIn de <code>testers.md</code> hasta tener unos 15 correos.</li>
   <li><strong>Crear la app en Play Console</strong> y rellenar lo del <a href="#primera">punto 3</a>, con la ficha en español y en inglés y todos los países.</li>
   <li><strong>Primer viernes:</strong> subir a la prueba interna, probar en tu móvil y, si va bien, abrir la prueba cerrada y mandar el enlace.</li>
