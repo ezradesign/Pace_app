@@ -2,16 +2,21 @@
  "hoy": {
   "bruto": 0,
   "gzip": 0,
-  "fcp": 88
+  "fcp": 72
  },
  "a": {
   "bruto": 12332,
   "gzip": 3292,
-  "fcp": 88
+  "fcp": 104
+ },
+ "b": {
+  "bruto": 14565,
+  "gzip": 3601,
+  "fcp": 84
  },
  "c": {
   "bruto": 6927,
   "gzip": 2002,
-  "fcp": 92
+  "fcp": 96
  }
 }

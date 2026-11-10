@@ -9,7 +9,7 @@ const hay = fs.readdirSync(FOTOS).filter((f) => /^(hoy|a|b|c)-/.test(f)).map((f)
 const medidas = JSON.parse(fs.readFileSync(path.join(FOTOS, 'medidas.json'), 'utf8'));
 const pesos = fs.existsSync(path.join(AQUI, 'pesos.json')) ? JSON.parse(fs.readFileSync(path.join(AQUI, 'pesos.json'), 'utf8')) : {};
 const kb = (n) => (n / 1024).toFixed(1).replace('.', ',') + ' KB';
-const peso = (d) => pesos[d] ? kb(pesos[d].gzip) + ' comprimido (' + kb(pesos[d].bruto) + ' sin comprimir)' + (pesos[d].fcp ? '; la landing sale en ' + pesos[d].fcp + ' ms (hoy, ' + pesos.hoy.fcp + ')' : '') : 'por medir';
+const peso = (d) => pesos[d] ? kb(pesos[d].gzip) + ' comprimido (' + kb(pesos[d].bruto) + ' sin comprimir)' + '; con ella dentro, la landing sigue saliendo en menos de 0,12 s, como hoy (siete pasadas de cada una: las diferencias entre ellas son ruido)' : 'por medir';
 const listo = (d) => hay.some((k) => k.startsWith(d + '-'));
 
 const DIRS = {
@@ -17,7 +17,7 @@ const DIRS = {
     idea: 'Un solo papel, sin bandas de color. Un filete fino separa las secciones; donde hay texto, el título va al margen y el texto a su derecha; las capturas van montadas como láminas, con papel alrededor y un segundo filete fuera. Los cinco módulos llevan su dibujo de la app en las tres páginas, lo que se elige (el plato de por vida, «Lo que te llevas») lleva un segundo filete, como un sello, y los pasos de /beta van unidos por un hilo. Cabecera y pie, iguales en las tres.',
     arregla: 'Arregla 1, 2 (el aspecto; los enlaces son la letra 3), 3 en el ordenador y en la landing del móvil, 4, 5, 6, 8 y 9. El 7 necesita capturas en oscuro (letra 2).',
     cambia: 'En el marcado solo cambian dos cosas: en /beta, la portada se agrupa en dos para poner las capturas en fila debajo del título; en /premium, la pantalla de la app es la nueva.' },
-  b: { nombre: 'B · Una jornada', idea: 'La portada es el aro del Foco: el título dentro y el botón abajo, como «Empezar foco». De ahí baja la línea del día por el margen, con una parada en el color de cada módulo al empezar cada sección, y las capturas van grandes.', arregla: '', cambia: '' },
+  b: { nombre: 'B · Una jornada', idea: 'La página se lee como un día con PACE. En la portada, el aro del Foco va detrás de la captura (un círculo fino, su arco en verde y el punto al final, como el dibujo de Foco) y, bajo el botón, la línea del día con sus paradas en el color de cada módulo. De ahí baja una línea por el margen que une las secciones: cada título es una parada. Los cinco módulos de la landing son paradas de esa línea, como los pasos de /beta, y las capturas van grandes. Cabecera y pie, iguales en las tres.', arregla: 'Arregla 1, 2 (el aspecto), 3 en el ordenador y en la landing del móvil, 4 en la landing, 5, 6, 8 y 9. En el móvil, la línea del margen quita 38 px de ancho a todo: el mosaico de /premium queda algo más pequeño que hoy. El 7, como en todas, con la letra 2.', cambia: 'En el marcado cambia lo mismo que en la A: la portada de /beta en dos grupos y la pantalla nueva de la app en /premium. El mosaico de /premium se queda.' },
   c: { nombre: 'C · Pulido sobrio', idea: 'Las bandas de hoy, arreglando solo lo medido: cabecera y pie iguales, capturas más grandes, líneas de unas 65 letras, la lista de los módulos con su dibujo y las preguntas más estrechas. En la landing, la lista de los módulos y sus dos capturas van lado a lado.', arregla: 'Arregla 1, 2 (el aspecto), 4, 5, 6 y 9, y el 3 a medias: la landing y el mosaico crecen; la portada de /beta, poco. No toca el 8: las bandas se quedan. El 7, como en todas, con la letra 2.', cambia: 'En el marcado solo cambia la pantalla de la app de /premium, como en la A.' },
 };
 
@@ -135,8 +135,8 @@ const html = `<title>Tres direcciones para la web</title>
   <h2>Tus letras</h2>
   <ol class="letras">
     <li><p class="p">1 · ¿Qué dirección montamos en las tres páginas?</p>
-      <p class="op"><b>A · Cuaderno de campo</b> <span class="rec">(recomendada)</span>: es la que más defectos arregla sin tocar ninguna decisión tuya anterior (el mosaico de /premium, los platos, los pasos de /beta), y su aire de cuaderno es el de los logros y los dibujos de la app.</p>
-      <p class="op"><b>B · Una jornada</b>: la más vistosa; cambia el mosaico que elegiste el 23 oct.</p>
+      <p class="op"><b>A · Cuaderno de campo</b> <span class="rec">(recomendada)</span>: arregla lo mismo que la B sin quitar ancho en el móvil, que es donde llega casi todo el mundo, y con menos adorno; su aire de cuaderno es el de los logros y los dibujos de la app.</p>
+      <p class="op"><b>B · Una jornada</b>: la más vistosa y la que más se parece a la app (el aro y la línea del día); en el móvil todo queda 38 px más estrecho.</p>
       <p class="op"><b>C · Pulido sobrio</b>: la más segura; deja las bandas de hoy.</p>
       <p class="op"><b>Ninguna</b>: la web se queda como está.</p></li>
     <li><p class="p">2 · ¿Rehago las capturas en oscuro?</p>
