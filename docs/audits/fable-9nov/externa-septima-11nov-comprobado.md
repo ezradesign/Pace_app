@@ -6,9 +6,9 @@ cuatro ramas antes de juntarlas; ya están juntas, así que sus «rama 2, 3 y 4�
 Los arreglos van en la rama `claude/septima-comprobada-11nov`, sin versión nueva.
 
 **Cuenta:** 16 puntos. **10 ciertos** (n.º 1, 4, 6, 7, 9, 10, 12, 14, 15 y 16), **3 a medias** (n.º 2, 3 y 5), **1 falso**
-(n.º 13), **1 ya resuelto al juntar** (n.º 11) y **1 que pide la letra de Ez** (n.º 8, cierto en lo que supone). Arreglados:
-todos los ciertos y a medias menos el n.º 9, que solo se deja dicho en el comentario, y los n.º 11 y 12, que ya no aplican
-(el 12 era el 7).
+(n.º 13), **1 ya resuelto al juntar** (n.º 11) y **1 que pedía la letra de Ez** (n.º 8, cierto en lo que supone; Ez
+eligió la A a las 15:10 y está montada). Arreglados: todos los ciertos y a medias menos el n.º 9, que solo se deja dicho en
+el comentario, y los n.º 11 y 12, que ya no aplican (el 12 era el 7).
 
 **Lo más importante, por orden:**
 1. **n.º 7, cierto:** con la salida a las 17:00, un último bloque de 16:30 visto al volver a las 18:00 (el móvil bloqueado,
@@ -67,10 +67,11 @@ todos los ciertos y a medias menos el n.º 9, que solo se deja dicho en el comen
   verdad en el aro (pausado 40 min; con PACE cerrado de 16:40 a 18:00): con la cuenta vieja caen. Lo que la pasada no dijo:
   esos dos días, además de no salir «tarde», **cuentan** para Ocaso (al empezar a las 16:30 el día se recompone con un solo
   bloque antes de la salida, y queda cerrado con él).
-- **n.º 8** ¿«Una hora» da Ocaso? · **cierto lo que supone; pide la letra de Ez (pregunta 1)**: `ocaso.js:46` no mira la
-  opción ni la hora. **Medido**: cinco días de «Una hora» con su bloque hecho dan «Cinco jornadas cerradas a su hora». La
-  prueba que lo dice está en `tests/logros-ocaso-buho.spec.js` («HOY, a falta de la letra de Ez…»); si Ez elige que no,
-  se da la vuelta. La regla no se ha tocado.
+- **n.º 8** ¿«Una hora» da Ocaso? · **cierto lo que supone; decidido por Ez (11 nov., 15:10: «S1 ocaso: A, solo jornada y
+  media jornada»)**: `ocaso.js:46` no miraba la opción ni la hora, y cinco días de «Una hora» con su bloque hecho daban
+  «Cinco jornadas cerradas a su hora» (medido con una prueba antes de la letra). **Montado** (e45f651c):
+  solo cuentan los días de jornada y de media jornada (`PACE_OCASO_OPCIONES`). Pruebas en `tests/logros-ocaso-buho.spec.js`:
+  «Una hora» y «Dos horas» no lo dan, la media jornada sí, y quien ya lo tenía lo conserva (D-6 D).
 - **n.º 9** El «No» que se puede deshacer no mira Búho · **cierto**: `app/state-feedback.jsx:100` sale antes de
   `paceBuhoMirar()` (`:103`), y `SessionFeedback.jsx:57` emite el evento al salir pero no mira Búho. Si ese «No» es la
   respuesta 25, Búho llega al acabar la siguiente sesión. **Solo dicho en el comentario** (1b2cbeea): darlo al contestar lo
@@ -121,9 +122,8 @@ no sale: `premiumPlanEnAjustes` lo quita a propósito en la prueba (`:39`). Es u
 
 ## Preguntas para Ez
 
-1. **¿Cuenta para Ocaso un día de «Una hora»?** Hoy sí: cinco días de «Una hora» con su bloque hecho dan «Cinco jornadas
-   cerradas a su hora». Opciones: **A** solo la jornada y la media jornada; **B** también «Dos horas»; **C** como hoy,
-   cualquier día cerrado con sus bloques. **Recomiendo A**: el logro habla de jornadas.
+1. ~~¿Cuenta para Ocaso un día de «Una hora»?~~ **Contestada: A** (solo jornada y media jornada), montada.
 2. **En la semana de prueba, ¿la fila de Ajustes ofrece «Tenerlo para siempre»?** Hoy solo dice hasta cuándo dura y deja
    poner un código. **A** añadir debajo «Tenerlo para siempre · 19,99 €» (con maqueta antes); **B** dejarla como está.
-   **Recomiendo A**: es la semana en que más sentido tiene comprarlo.
+   **Recomiendo A**: es la semana en que más sentido tiene comprarlo. **Ez ya dijo A** (11 nov.): va con su maqueta, en
+   otra sesión; aquí solo se confirma lo que enseña hoy.
