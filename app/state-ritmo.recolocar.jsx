@@ -35,6 +35,7 @@ function ritmoDesfase(ms, hasta) {
    medio queda como margen libre). Sin él, ahora. `minutos`, los que contó el aro: lo
    que el bloque suma de foco, sin las veces que se pausó (ver `ritmoFocoMin`). */
 function ritmoBloqueTerminado(inicioMs, finMs, minutos) {
+  inicioMs = ritmoDesdeHoy(inicioMs);   /* el empezado ayer es del día nuevo desde medianoche (4B) */
   /* El plan base: el bloque que cruzó la salida aún abre su pausa de cierre aunque ya sea la hora. */
   var p = ritmoPlanBase(getState());
   if (!p || p.hechos < 1) return;
@@ -198,13 +199,22 @@ function ritmoMirarSalida() {
 document.addEventListener('visibilitychange', ritmoMirarSalida);
 setInterval(ritmoMirarSalida, typeof PACE_DIA_CADA_MS === 'number' ? PACE_DIA_CADA_MS : 60 * 1000);
 
-/* Cuándo empezó el Foco en marcha o en pausa (ms), o null: lo dice la clave del aro. */
+/* Un instante de un día anterior cuenta, para el día de hoy, desde su medianoche: la hora de reloj
+   de las 23:50 de ayer (1430 min) leída en el plan de hoy era «después de la salida». */
+function ritmoDesdeHoy(ms) {
+  if (typeof ms !== 'number' || !isFinite(ms)) return ms;
+  var cero = new Date(); cero.setHours(0, 0, 0, 0);
+  return ms < cero.getTime() ? cero.getTime() : ms;
+}
+
+/* Cuándo empezó el Foco en marcha o en pausa (ms), o null: lo dice la clave del aro. Empezado
+   ayer, desde la medianoche (`ritmoDesdeHoy`). */
 function ritmoFocoEmpezo() {
   try {
     var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
     if (!v) return null;
     /* en marcha, la hora guardada (con sus pausas); si la guardó una versión de antes, el final menos la duración */
-    if (v.endsAt && v.endsAt > Date.now()) return typeof v.inicio === 'number' && v.inicio <= v.endsAt ? v.inicio : v.endsAt - (Number(v.minutes) || 0) * 60000;
+    if (v.endsAt && v.endsAt > Date.now()) return ritmoDesdeHoy(typeof v.inicio === 'number' && v.inicio <= v.endsAt ? v.inicio : v.endsAt - (Number(v.minutes) || 0) * 60000);
     return v.pausaMs > 0 && v.dia === new Date().toDateString() ? (v.inicio || null) : null;
   } catch (e) { return null; }
 }
@@ -215,15 +225,21 @@ function ritmoFocoEmpezo() {
    día nuevo se lo quedaba como suyo con otra hora. Ahora ese bloque es el bloque 1 del día nuevo, a la
    hora a la que empezó y con la duración del aro (`desde`, `primerBloque` y `pasado: []`, sin el cual
    la regla no lee `primerBloque`). Vale en marcha, en pausa y acabado sin contar todavía (lo que mira
-   `ritmoFocoCorriendo`); uno empezado ayer no. Lo llama ritmoElegir; lo vigila
-   tests/ritmo-cambiar-en-marcha.spec.js. */
+   `ritmoFocoCorriendo`). Uno empezado antes de medianoche y aún en marcha también pasa al día nuevo
+   (4B, séptima pasada de Fable, n.º 4): empieza a las 0:00 y dura lo que le queda desde entonces;
+   antes no entraba (otro día) y la pausa volvía a caer en mitad del bloque. Lo llama ritmoElegir;
+   lo vigila tests/ritmo-cambiar-en-marcha.spec.js. */
 function ritmoFocoDelDiaNuevo() {
   if (typeof ritmoFocoCorriendo !== 'function' || !ritmoFocoCorriendo()) return null;
   try {
     var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
     var min = Number(v && v.minutes) || 0;
     var inicio = typeof v.inicio === 'number' && isFinite(v.inicio) ? v.inicio : (v.endsAt ? v.endsAt - min * 60000 : null);
-    if (!min || inicio == null || inicio > Date.now() || new Date(inicio).toDateString() !== new Date().toDateString()) return null;
+    if (!min || inicio == null || inicio > Date.now()) return null;
+    if (ritmoDesdeHoy(inicio) !== inicio) {
+      if (!(v.endsAt > Date.now())) return null;   /* en pausa desde ayer no corre (`ritmoFocoCorriendo`) */
+      return { desde: 0, min: Math.max(1, Math.round((v.endsAt - ritmoDesdeHoy(inicio)) / 60000)) };
+    }
     var d = new Date(inicio);
     return { desde: d.getHours() * 60 + d.getMinutes(), min: min };
   } catch (e) { return null; }
@@ -272,5 +288,5 @@ function ritmoFocoHecho(p) {
   return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) { return a + ritmoFocoMin(f); }, 0) : 0;
 }
 
-Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoDelDiaNuevo, ritmoFocoHecho, ritmoFocoMin, ritmoFijarLoHecho,
+Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoDesdeHoy, ritmoFocoEmpezo, ritmoFocoDelDiaNuevo, ritmoFocoHecho, ritmoFocoMin, ritmoFijarLoHecho,
   ritmoMinutosDelPlan, ritmoMinutosDevolver });
