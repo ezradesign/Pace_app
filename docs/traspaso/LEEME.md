@@ -2,9 +2,25 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 11 de noviembre de 2026, 15:15, v0.198.1.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 11 de noviembre de 2026, 18:15, v0.199.0.
 
-## 11 nov., 17:10 (cuenta 5iWBf, la coordinadora ya en Opus): la 0.199.0, subida. Manda sobre lo de abajo
+## AL RELEVO (11 nov., 18:15): Ez migra de 5iWBf a EcLj6. Empieza aquí; manda sobre lo de abajo
+
+- **`main` = 0.199.0, subida y con GitHub en verde entero** (run 43060307342 sobre da56e0a5). Lleva la rama de rendimiento (aro B, V1 B, V2 B, R2 A, barras y fuentes) y la séptima comprobada. No hay nada a medias: ninguna sesión trabajando, ninguna rama esperando «júntalo» de esta tanda.
+- **La lista que manda para «¿qué toca?» es la página nueva «Lo que queda hasta v1»** (en 5iWBf, UkETeVK2Ee97N8kSvupwC8; copia en `docs/traspaso/pendiente/pendiente.html`). Solo lo pendiente, en cuatro tramos; al hacer un paso se QUITA (los números los pone un contador). En EcLj6 no existe: publicarla como página nueva y apuntar el par en `docs/traspaso/archivos/hoja-ids-cuentas.js`. La hoja de pasos (EcLj6io4wM9pGjtQ5wd1CT) se quedó en las 12:45: ponerle en el «Ahora» lo de hoy (0.199.0 en la web, y la lista de lo pendiente enlazada) en la misma vuelta.
+- **Siguiente, sesiones en Opus de una en una:**
+  1. **D-8 A y D-10 B**, rama nueva desde `main`. Encargo: filas S2 y S1 de `docs/audits/fable-9nov/cola.md` y nº 4 y nº 1 de `externa-sexta-10nov-comprobado.md` (las dos en la rama `claude/auditoria-fable-9nov-8401fc`, con `git show`). D-8 A: la copia de Google se mantiene, y PACE olvida en un Android restaurado o reinstalado la lista de eventos que escribió en el calendario, para no borrar nunca una reunión de verdad. D-10 B: en el iPhone el aviso de fin de Foco suena con la campana de PACE (hoy se programa sin sonido y la campana calla por él); cuidado con la 0.198.1, que arregló que la campana sonara otra vez al reabrir PACE. Pruebas con mutante, `verify`, vecinas con `--workers=1`, commit sin `Co-Authored-By`, push de su rama y página «Montado» para Ez.
+  2. **La octava** (`externa-octava-11nov.md` de esa misma rama): comprobar sus 28 puntos y montar sus diez pruebas con las cinco letras de Ez (O1 A a O5 A, en el bloque de las 15:15). **Lo primero, repartir las pruebas del CI:** `e2e (2/2)` tardó 24 min 47 s de un tope de 25.
+  3. Lo demás, en el orden de la lista de lo pendiente.
+- **Esperan a Ez:** el sí a S3 y S4, el «júntalo» de `claude/guardar-atomico-166e3f` (cobro mensual) y pasar a ChatGPT la revisión del cobro y lo legal (texto en la hoja de pasos).
+- **Trampa de hoy:** la sesión de R2 dejó un servidor de pruebas de su worktree en el puerto 8765; la suite lo detecta y se niega. Lanzar la suite con `PACE_E2E_PORT=8775` (o cerrar ese servidor).
+- **En 5iWBf, a las 18:15:** 5 h al ~88 % (se reponen a las 19:30), semana al 80 %, «Weekly · Fable» al 96 %. La coordinadora pasó a Opus a las 16:15.
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (11 nov., 18:15)» de arriba del todo de docs/traspaso/LEEME.md, y sigue como coordinadora. main está en la 0.199.0 con GitHub en verde. Por este orden: publica en esta cuenta mi lista «Lo que queda hasta v1» (docs/traspaso/pendiente/pendiente.html), apunta su par y pon al día mi hoja de pasos; encarga en Opus D-8 y D-10, y después la octava revisión con mis cinco letras (lo primero, repartir las pruebas de GitHub, que rozan el tope de 25 minutos), de una en una; y enséñame lo que acabe cada una antes de juntarlo. Haz pocas vueltas.
+```
+
+## 11 nov., 17:10 (cuenta 5iWBf, la coordinadora ya en Opus): la 0.199.0, subida
 
 - **La 0.199.0 lleva la rama de rendimiento con R2 A (d214578e) y la séptima comprobada** (`claude/septima-comprobada-11nov`, afc4b5d4). Suite entera sobre el `index.html` que se sube: **1549 en verde, 2 saltadas a propósito, ninguna roja** (47 min, puerto 8775: la sesión de R2 dejó un servidor de su worktree en el 8765 y la guarda de la suite lo cazó). Subida a `main` a las ~17:10. **CI: verde entero en da56e0a5** (mismo código más la página de lo pendiente, run 43060307342). El de 1adebaf9 cayó solo en Safari y no por la app: la máquina se colgó instalando los paquetes de WebKit (`exit code 124`, sin llegar a probar nada). **Ojo: `e2e (2/2)` tardó 24 min 47 s de un tope de 25**, y Safari 18 min por la instalación lenta: repartir las pruebas es lo primero de la octava, antes de que corte por tiempo.
 - **Siguen, sesiones en Opus de una en una:** (1) D-8 A y D-10 B (filas S2 y S1 de `docs/audits/fable-9nov/cola.md`, en `claude/auditoria-fable-9nov-8401fc`); (2) la octava (`externa-octava-11nov.md` de esa rama): comprobar sus 28 puntos y montar sus diez pruebas, con las cinco letras de Ez ya dadas (O1 A a O5 A, abajo). S2 A va con maqueta, en el paquete de v1. Con el CI justo de tiempo en `e2e (2/2)` (22 min de 25), la octava mira también el reparto.
