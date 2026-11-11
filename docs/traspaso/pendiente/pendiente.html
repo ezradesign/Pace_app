@@ -1,0 +1,190 @@
+<title>Lo que queda hasta v1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de lectura con cuatro tramos en orden: solo lo pendiente. Cada paso dice quién lo hace con una
+   etiqueta (yo, tú, espera tu alta) y el único paso en marcha va apartado. Paleta y letras de PACE (DESIGN_SYSTEM.md). */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F695B;
+  --line: #D6CDB6; --focus: #3E5A3A; --focus-soft: rgba(62, 90, 58, 0.10);
+  --terra: #9E4F33; --terra-soft: rgba(158, 79, 51, 0.09);
+  --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --focus-soft: rgba(152, 181, 139, 0.14);
+  --terra: #E8A98F; --terra-soft: rgba(232, 169, 143, 0.12); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --focus-soft: rgba(152, 181, 139, 0.14);
+  --terra: #E8A98F; --terra-soft: rgba(232, 169, 143, 0.12); color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.55; }
+.hoja { max-width: 720px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 36px 64px; display: flex; flex-direction: column; gap: 40px; }
+h1, h2 { font-family: var(--serif); font-style: italic; font-weight: 500; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(38px, 8vw, 52px); line-height: 1.02; }
+h2 { font-size: 28px; line-height: 1.1; }
+p { margin: 0; max-width: 64ch; color: var(--ink-2); }
+b { color: var(--ink); font-weight: 600; }
+a { color: var(--focus); }
+.eyebrow { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+header, section { display: flex; flex-direction: column; gap: 14px; }
+.nota { font-size: 14px; color: var(--ink-3); }
+.leyenda { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 13px; color: var(--ink-3); align-items: center; }
+
+.quien { display: inline-block; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; border-radius: 999px; padding: 2px 9px; white-space: nowrap; }
+.yo { color: var(--focus); background: var(--focus-soft); }
+.tu { color: var(--terra); background: var(--terra-soft); }
+.alta { color: var(--ink-2); border: 1px solid var(--line); }
+
+.pasos { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.paso { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 2px 14px; padding: 11px 12px; border-radius: 14px; }
+.paso > .n { grid-row: span 2; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-family: var(--serif); font-style: italic; font-size: 18px; line-height: 1; border: 1.5px solid var(--line); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.paso.ahora { background: var(--terra-soft); border: 1px solid var(--terra); }
+.paso.ahora > .n { background: var(--terra); border-color: var(--terra); color: var(--paper); }
+.paso .t { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; font-weight: 600; color: var(--ink); }
+.paso .c { color: var(--ink-2); font-size: 15px; max-width: 60ch; min-width: 0; }
+.paso ul { margin: 6px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 3px; }
+.hito { margin: 2px 0 0 56px; font-size: 14px; color: var(--focus); font-weight: 500; }
+@media (max-width: 420px) { .hito { margin-left: 12px; } }
+
+ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; max-width: 64ch; color: var(--ink-2); }
+.plegado { border-top: 1px solid var(--line); padding-top: 10px; }
+.plegado > summary { cursor: pointer; font-size: 15px; color: var(--ink-2); padding: 6px 2px; }
+.plegado[open] > summary { margin-bottom: 10px; }
+summary:focus-visible, a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+</style>
+
+<main class="hoja">
+  <header>
+    <div class="eyebrow">PACE · versión 0.199.0 · 11 de noviembre, 17:30</div>
+    <h1>Lo que queda hasta v1</h1>
+    <p>Solo lo pendiente, en orden. Lo hecho no sale aquí; está en tu hoja de pasos. <b>El código ya no marca la fecha</b>: la
+      marcan doce testers durante 14 días seguidos y tus altas para cobrar. Desde que la prueba con testers empiece a contar,
+      v1 puede salir en unas tres semanas.</p>
+    <div class="leyenda"><span class="quien yo">Yo</span> lo hago yo <span class="quien tu">Tú</span> te toca a ti
+      <span class="quien alta">Tu alta</span> espera una cuenta a tu nombre</div>
+  </header>
+
+  <section>
+    <h2>1 · La versión de prueba sólida</h2>
+    <p class="nota">Lo que decidiste el 11 de noviembre: a Play y al iPhone va una versión buena, no la 0.191.1.</p>
+    <ol class="pasos">
+      <li class="paso ahora"><span class="n">1</span><span class="t">Que GitHub dé en verde la 0.199.0 <span class="quien yo">Yo · ahora</span></span>
+        <span class="c">Aquí pasaron las 1549 pruebas. GitHub la está probando otra vez, también en Safari, Android y el iPhone.</span></li>
+      <li class="paso"><span class="n">2</span><span class="t">D-8 y D-10 <span class="quien yo">Yo</span></span>
+        <span class="c">En el iPhone, el fin del Foco suena con la campana de PACE. Y un Android restaurado desde la copia de
+          Google no puede borrar una reunión tuya.</span></li>
+      <li class="paso"><span class="n">3</span><span class="t">La octava revisión de Fable <span class="quien yo">Yo</span></span>
+        <span class="c">Compruebo sus 28 puntos sobre las pruebas y monto sus diez pruebas, con tus cinco letras: la semana de
+          prueba no se alarga editando una copia, la home sin scroll con la letra del sistema hasta el 115 %, una versión mínima
+          de Android y de Safari, el archivo de Play solo con GitHub en verde y el aviso de la apnea cada vez.</span></li>
+      <li class="paso"><span class="n">4</span><span class="t">Dos arreglos pensando en los testers <span class="quien yo">Yo</span></span>
+        <span class="c">Que la quinta pausa de un tester no gaste la única vez que PACE pide la valoración. Y que en el móvil el fin
+          de la pausa avise, con un sonido distinto del fin del Foco.</span></li>
+      <li class="paso"><span class="n">5</span><span class="t">Un sí a cuatro arreglos pequeños <span class="quien tu">Tú</span></span>
+        <span class="c">Importar dice de qué día es la copia, avisa si es de una versión más nueva y la encuentra en Drive o
+          WhatsApp; el lector de pantalla lee el precio en Ajustes; y «Audio» en la parte inglesa
+          (<a href="https://claude.ai/artifact/2QnMBypqSRVJCmPeNJazZA">la auditoría</a>, filas S3 y S4).</span></li>
+      <li class="paso"><span class="n">6</span><span class="t">Un «júntalo» y una revisión de ChatGPT <span class="quien tu">Tú</span></span>
+        <span class="c">El arreglo de los dos cobros de la mensual a la vez, hecho en su rama. Y pasar a ChatGPT la revisión del
+          cobro y de lo legal: el texto para copiar está en tu hoja de pasos.</span></li>
+    </ol>
+    <p class="hito">Con eso, la versión de prueba sólida, con GitHub en verde.</p>
+  </section>
+
+  <section>
+    <h2>2 · La prueba con testers</h2>
+    <ol class="pasos" start="7">
+      <li class="paso"><span class="n">7</span><span class="t">Subirla a Play y al iPhone <span class="quien tu">Tú, conmigo</span></span>
+        <span class="c">A la prueba cerrada de Play y a TestFlight, una pantalla por mensaje. De paso, el párrafo «A tu ritmo» en
+          la ficha de Play, y las seis capturas rehechas una sola vez, con la jornada dentro.</span></li>
+      <li class="paso"><span class="n">8</span><span class="t">Doce testers durante 14 días <span class="quien tu">Tú</span></span>
+        <span class="c">Tienes 5 o 6. Todos a pacegrass.app/beta, con el texto de LinkedIn ya escrito, y a cada uno su código de
+          PACE completo. Al cumplirse los 14 días se pide a Google el acceso a producción.</span></li>
+      <li class="paso"><span class="n">9</span><span class="t">Lo pequeño de antes de v1, como actualizaciones <span class="quien yo">Yo</span></span>
+        <span class="c">Mientras corren los 14 días:
+          <ul>
+            <li>que los buscadores encuentren PACE con un nombre limpio, y la cuenta atrás del bloque en la pestaña;</li>
+            <li>avisar de los cambios de lado o de sentido dentro de un ejercicio;</li>
+            <li>menos descanso en «Levántate y sube» y «Piernas sin pasos»;</li>
+            <li>que un aviso de fin no pise al del bloque siguiente;</li>
+            <li>una nota, una sola vez, cuando acaba la semana de prueba de v1;</li>
+            <li>que con una wifi mala PACE no se quede en blanco al abrir, y que Safari no borre lo guardado;</li>
+            <li>/beta sin «sin rachas», textos de la pausa que no se contradigan, el inglés que falta y las fotos al instalar;</li>
+            <li>los botones del constructor de rutinas más grandes para el dedo (te lo pinto antes).</li>
+          </ul></span></li>
+      <li class="paso"><span class="n">10</span><span class="t">Que lo mire un fisioterapeuta <span class="quien tu">Tú</span></span>
+        <span class="c">Fondos en silla y los ejercicios aparcados: es la revisión que el contenido pide antes de v1.</span></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>3 · Cobrar</h2>
+    <p class="nota">Cada alta tuya desbloquea un trozo de código mío. Caben dentro de los 14 días.</p>
+    <ol class="pasos" start="11">
+      <li class="paso"><span class="n">11</span><span class="t">El perfil de pagos de Play <span class="quien alta">Tu alta</span></span>
+        <span class="c">Con él monto la compra en Android, restaurarla al cambiar de móvil y los códigos de tus testers.</span></li>
+      <li class="paso"><span class="n">12</span><span class="t">El acuerdo de apps de pago de Apple <span class="quien alta">Tu alta</span></span>
+        <span class="c">Con tu banco, el formulario W-8BEN, el programa para pequeñas empresas y una dirección visible en Europa.
+          Con él monto la compra de Apple, «Restaurar compras», la ficha y la revisión de la App Store.</span></li>
+      <li class="paso"><span class="n">13</span><span class="t">Tus datos, un profesional y el correo para desistir <span class="quien alta">Tu alta</span></span>
+        <span class="c">Tu nombre, tu NIF y un contacto, la revisión de un profesional y el alta en Resend. Con eso salen lo legal
+          y el botón para desistir, y se puede encender ya la venta de por vida en la web.</span></li>
+      <li class="paso"><span class="n">14</span><span class="t">«Tenerlo para siempre» durante la semana de prueba <span class="quien yo">Yo</span></span>
+        <span class="c">Elegiste enseñarlo también en Ajustes mientras dura la prueba de v1. Te lo pinto antes de montarlo.</span></li>
+      <li class="paso"><span class="n">15</span><span class="t">El correo de Stripe antes del fin de la prueba <span class="quien tu">Tú, en Stripe</span></span>
+        <span class="c">Para que el aviso de antes del cobro llegue aunque no abras PACE. Antes de encender la mensual.</span></li>
+      <li class="paso"><span class="n">16</span><span class="t">Las altas de Google Cloud y Microsoft <span class="quien alta">Tu alta</span></span>
+        <span class="c">Con ellas hago el calendario que se mantiene solo. Google tarda semanas en revisar la app: falta decidir si
+          v1 lo espera o sale con el calendario «en pruebas».</span></li>
+      <li class="paso"><span class="n">17</span><span class="t">Abrir «Avísame» <span class="quien tu">Tú</span></span>
+        <span class="c">Conectar su almacén en Cloudflare y decirme qué nombre firma su privacidad.</span></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>4 · El día de v1</h2>
+    <ol class="pasos" start="18">
+      <li class="paso"><span class="n">18</span><span class="t">PACE se puede comprar <span class="quien yo">Yo</span> <span class="quien tu">Tú</span></span>
+        <span class="c">En la web, en Android y en el iPhone: 2,99 € al mes con 7 días de prueba, o 19,99 € de por vida. Se cierra
+          lo abierto hasta v1 sin quitar nada a quien ya lo usaba, «Da de pastar a la vaca» sale de la web y se prueba comprar,
+          restaurar y cancelar en los tres.</span></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Si cabe antes de v1</h2>
+    <p class="nota">No frenan la fecha. Si no caben, van en la primera actualización.</p>
+    <ul class="lista">
+      <li>Un aviso opcional a la hora de entrada, en Android y en el iPhone.</li>
+      <li>Las bibliotecas de Mueve y Estira a mano en el móvil, sin abrir el cajón (con maqueta).</li>
+      <li>«¿Te ayudó?» menos veces, y el «No» con su porqué («aquí no podía», «difícil»).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Lo tuyo, cuando puedas</h2>
+    <ul class="lista">
+      <li>La verificación en dos pasos en GitHub, Cloudflare, Stripe, Google y Apple.</li>
+      <li>Una segunda copia de las llaves fuera de casa.</li>
+      <li>Dos dibujos de logros: Año nuevo y Vaca feliz.</li>
+      <li>Probar en tu Android lo privado del calendario, y oír la voz de Respira y los cuencos.</li>
+      <li>Apagar en GitHub las propuestas automáticas de Dependabot, dejando las alertas.</li>
+    </ul>
+  </section>
+
+  <details class="plegado">
+    <summary>Después de v1 (lo decides con lo que digan los testers)</summary>
+    <ul class="lista">
+      <li>Un modo «Solo pausas», sin Foco, y una intensidad del día, ligera o entera.</li>
+      <li>Una carta del lunes dentro de los siete días de prueba (dijiste después de v1).</li>
+      <li>Logros de constancia por días de jornada, y que «Con un plan» y «Primer ritual» cuenten las pausas de «A tu ritmo».</li>
+      <li>La primera pausa del primer día más suave, menos toques hasta moverse y una pregunta en la bienvenida.</li>
+      <li>Marcar una reunión a mano en el día, sin conectar el calendario.</li>
+      <li>Voz en Mueve y Estira, y vibración al ritmo de las repeticiones.</li>
+      <li>Los Caminos, que vuelven.</li>
+    </ul>
+  </details>
+</main>
