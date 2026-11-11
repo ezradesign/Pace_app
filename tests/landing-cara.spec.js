@@ -8,7 +8,7 @@
 const fs = require('fs');
 const path = require('path');
 const { test, expect } = require('@playwright/test');
-const { RUTA_ARTEFACTO, CLAVE_ESTADO, MARCA_CARA, SEMILLA } = require('./helpers');
+const { RUTA_ARTEFACTO, CLAVE_ESTADO, MARCA_CARA, SEMILLA, MEDIODIA } = require('./helpers');
 const { paraApps } = require('../scripts/android-www.js');
 
 const INDEX = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
@@ -108,7 +108,8 @@ test('con la landing delante no se guarda nada, ni pasadas dos horas ni al irse'
   if (INDEX.indexOf(app[0]) < 0) throw new Error('GUARD: el arranque de los eventos ya no pasa por paceCuandoAbra');
   for (const [html, idb] of [[INDEX, []], [INDEX.replace(app[0], () => app[1]), ['pace.events']]]) {
     const { ctx, page } = await abrirCon(browser, html);
-    await page.clock.install();
+    /* A mediodía: a la hora real, entre las 22:00 y las 24:00 cruzaba la medianoche (la prueba de abajo). */
+    await page.clock.install({ time: MEDIODIA });
     await page.reload();
     expect(await leerCara(page)).toBe('landing');
     await page.clock.fastForward('02:00:00');
@@ -116,6 +117,24 @@ test('con la landing delante no se guarda nada, ni pasadas dos horas ni al irse'
     await page.clock.fastForward('00:01:00');
     const guardado = await page.evaluate(async () => ({ ls: Object.keys(localStorage), idb: (await indexedDB.databases()).map((d) => d.name) }));
     expect(guardado, html === INDEX ? 'index.html' : 'MUTANTE').toEqual({ ls: [], idb });
+    await ctx.close();
+  }
+});
+
+/* La medianoche con la landing delante: los vigilantes del día (state-core.dia.js y los de «A tu
+   ritmo») relevan el día cada minuto aunque la app no haya montado, y `persistState` lo escribía; la
+   próxima visita veía la app. El MUTANTE quita la guarda de `persistState` y tiene que guardar. */
+test('con la landing delante tampoco se guarda nada al pasar la medianoche', async ({ browser }) => {
+  const guarda = ["if (_paceSinGuardar || window.PACE_CARA === 'landing') return;", 'if (_paceSinGuardar) return;'];
+  if (INDEX.indexOf(guarda[0]) < 0) throw new Error('GUARD: persistState ya no mira la landing');
+  const noche = new Date(MEDIODIA); noche.setHours(23, 0, 0, 0);
+  for (const [html, ls] of [[INDEX, []], [INDEX.replace(guarda[0], () => guarda[1]), [CLAVE_ESTADO]]]) {
+    const { ctx, page } = await abrirCon(browser, html);
+    await page.clock.install({ time: noche });
+    await page.reload();
+    expect(await leerCara(page)).toBe('landing');
+    await page.clock.fastForward('02:00:00');
+    expect(await page.evaluate(() => Object.keys(localStorage)), html === INDEX ? 'index.html' : 'MUTANTE').toEqual(ls);
     await ctx.close();
   }
 });

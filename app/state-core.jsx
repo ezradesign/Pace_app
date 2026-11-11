@@ -382,11 +382,11 @@ let _state = loadState();
 const _listeners = new Set();
 let _paceSinGuardar = false; // una copia importada ya escrita: nada se guarda hasta recargar (paceAdoptarEstado)
 
-/* Si el navegador no deja guardar (lleno o bloqueado), lo dice ui/UpdatePrompt.jsx (AvisoNoGuarda), y
-   `_paceGuardadoAtrasado` dice que lo guardado es más viejo que la memoria (ensureDayFresh). */
+/* CON LA LANDING DELANTE NO SE GUARDA (landing/cara.js): los vigilantes de cada minuto relevan el día en memoria a medianoche y, si escribieran, la próxima visita vería la app. Lo relevado se guarda con el primer gesto en la app.
+   Si el navegador no deja guardar, lo dice AvisoNoGuarda (ui/UpdatePrompt.jsx); `_paceGuardadoAtrasado` dice que lo guardado es más viejo que la memoria (ensureDayFresh). */
 let _paceGuardadoAtrasado = false;
 function persistState() {
-  if (_paceSinGuardar) return;
+  if (_paceSinGuardar || window.PACE_CARA === 'landing') return;
   try { localStorage.setItem(LS_KEY, JSON.stringify(_state)); _paceGuardadoAtrasado = false; } catch (e) {
     _paceGuardadoAtrasado = true; try { window.__paceNoGuarda = true; window.dispatchEvent(new CustomEvent('pace:no-guarda')); } catch (e2) {}
   }
