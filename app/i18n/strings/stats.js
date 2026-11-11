@@ -36,6 +36,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'stats.hoy.vasos.de':              'de {m} vasos',
     'stats.hoy.libre':                 'Por libre',
     'stats.hoy.vacio':                 'Hoy aún no hay pausas en PACE.',
+    'stats.hoy.suelta':                'Además, por tu cuenta',   /* con el día elegido, lo hecho fuera de sus pausas (6A, 11 nov.) */
     'stats.cerrado':                   'Es parte de PACE completo',
     'stats.tab.week':                  'Semana',
     'stats.tab.month':                 'Mes',
@@ -135,6 +136,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'stats.hoy.vasos.de':              'of {m} glasses',
     'stats.hoy.libre':                 'Unplanned',
     'stats.hoy.vacio':                 'No PACE breaks yet today.',
+    'stats.hoy.suelta':                'Also, on your own',
     'stats.cerrado':                   'Part of PACE Complete',
     'stats.tab.week':                  'Week',
     'stats.tab.month':                 'Month',

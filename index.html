@@ -3481,6 +3481,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'stats.hoy.vasos.de': 'de {m} vasos',
   'stats.hoy.libre': 'Por libre',
   'stats.hoy.vacio': 'Hoy aún no hay pausas en PACE.',
+  'stats.hoy.suelta': 'Además, por tu cuenta',
   'stats.cerrado': 'Es parte de PACE completo',
   'stats.tab.week': 'Semana',
   'stats.tab.month': 'Mes',
@@ -3580,6 +3581,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'stats.hoy.vasos.de': 'of {m} glasses',
   'stats.hoy.libre': 'Unplanned',
   'stats.hoy.vacio': 'No PACE breaks yet today.',
+  'stats.hoy.suelta': 'Also, on your own',
   'stats.cerrado': 'Part of PACE Complete',
   'stats.tab.week': 'Week',
   'stats.tab.month': 'Month',
@@ -40158,6 +40160,13 @@ Object.assign(window, { statsNumero, fmtTime, StatsLineaTotales, StatsTotales, s
 
 
 
+
+
+
+
+
+
+
 const STATS_HOY_MODULO = { breathe: 'respira', move: 'mueve', stretch: 'estira' };
 
 
@@ -40181,22 +40190,36 @@ function statsHoyParadas(plan) {
 
 
 function statsHoySesiones() {
-  let ev = [];
-  try {
-    const snap = window.paceEventsSnapshot && window.paceEventsSnapshot();
-    ev = snap && Array.isArray(snap.events) ? snap.events : [];
-  } catch (e) {ev = [];}
-  const hoy = typeof todayISO === 'function' ? todayISO() : '';
-  return ev.filter((e) => e && e.type === 'session.completed' && e.localDay === hoy && e.payload && STATS_HOY_MODULO[e.payload.module]).
+  return ritmoSesionesHoy().
   map((e) => {
     const f = new Date(e.occurredAt);
     const rutina = window.resolveAnyRoutine && window.resolveAnyRoutine(e.payload.routineId) || { id: e.payload.routineId, name: e.payload.routineId };
     return { modulo: STATS_HOY_MODULO[e.payload.module], rutina, desde: f.getHours() * 60 + f.getMinutes(),
-      min: sessionCreditedMinutes(e), cuando: f.getTime() };
+      min: sessionCreditedMinutes(e), cuando: f.getTime(), runId: e.runId || null };
   }).
 
 
   sort((a, b) => a.cuando - b.cuando);
+}
+
+
+function statsHoySueltas(state) {
+  const por = (ritmoDe(state).dia || {}).sesiones || {};
+  const suyas = new Set();
+  Object.keys(por).forEach((n) => (Array.isArray(por[n]) ? por[n] : []).forEach((id) => suyas.add(id)));
+  return statsHoySesiones().filter((s) => !s.runId || !suyas.has(s.runId));
+}
+
+
+function StatsHoySesiones(_ref) {let { sesiones, t, lang } = _ref;
+  return (
+    React.createElement(StatsHoyRejilla, { n: sesiones.length },
+    sesiones.map((s, k) =>
+    React.createElement(StatsHoyTarjeta, { key: k, modulos: [s.modulo], nombre: ritmoNombre(s.rutina, t, lang),
+      hora: ritmoHora(s.desde), meta: s.min + ' min', estado: "hecha" })
+    )
+    ));
+
 }
 
 
@@ -40209,7 +40232,7 @@ function statsHoyTotales(state, t) {
 
 
 
-function StatsHoyTarjeta(_ref) {let { modulos, nombre, hora, meta, estado, larga } = _ref;
+function StatsHoyTarjeta(_ref2) {let { modulos, nombre, hora, meta, estado, larga } = _ref2;
   return (
     React.createElement("div", { className: 'pace-sh-t' + (estado ? ' pace-sh-' + estado : ''), "data-pace-hoy-parada": estado || 'luego',
       style: { '--c': RITMO_COLOR[modulos[0]], '--cd': letraDe(RITMO_COLOR[modulos[0]]) } },
@@ -40237,12 +40260,12 @@ function statsHoyMeta(p, t, hechas) {
   return it.dur + ' min';
 }
 
-function StatsHoyRejilla(_ref2) {let { n, children } = _ref2;
+function StatsHoyRejilla(_ref3) {let { n, children } = _ref3;
   const clase = 'pace-sh-rejilla' + (n > 10 ? ' pace-sh-mucho' : '') + (n > 15 ? ' pace-sh-muchisimo' : '');
   return React.createElement("div", { className: clase, "data-pace-hoy-rejilla": n }, children);
 }
 
-function StatsHoy(_ref3) {let { state, onClose } = _ref3;
+function StatsHoy(_ref4) {let { state, onClose } = _ref4;
   const { t, lang } = useT();
   const R = ritmoDe(state);
   const plan = R.libre ? null : ritmoPlan(state);
@@ -40250,6 +40273,7 @@ function StatsHoy(_ref3) {let { state, onClose } = _ref3;
   if (plan) {
     const paradas = statsHoyParadas(plan);
     const hechas = ritmoMinutosHechos(state);
+    const sueltas = statsHoySueltas(state);
     return (
       React.createElement("div", { "data-pace-hoy-view": "menu" },
       React.createElement(StatsTotales, { items: statsHoyTotales(state, t) }),
@@ -40263,7 +40287,13 @@ function StatsHoy(_ref3) {let { state, onClose } = _ref3;
           nombre: p.comida ? t('ritmo.comida') : ritmoPlatos(p.it, t, lang), hora: ritmoHora(p.it.desde),
           meta: statsHoyMeta(p, t, hechas), estado: p.comida ? 'comida' : p.estado });
       })
-      )
+      ),
+      sueltas.length ?
+      React.createElement("div", { "data-pace-hoy-sueltas": sueltas.length },
+      React.createElement("div", { className: "pace-sh-cab pace-sh-suelta" }, React.createElement(Meta, null, t('stats.hoy.suelta'))),
+      React.createElement(StatsHoySesiones, { sesiones: sueltas, t: t, lang: lang })
+      ) :
+      null
       ));
 
   }
@@ -40279,20 +40309,13 @@ function StatsHoy(_ref3) {let { state, onClose } = _ref3;
     React.createElement(Meta, null, t('stats.hoy.libre')),
     React.createElement("button", { type: "button", className: "pace-rt-enlace pace-rt-fuerte", "data-pace-hoy-volver": true, onClick: volver }, t('ritmo.volver'))
     ),
-    sesiones.length ?
-    React.createElement(StatsHoyRejilla, { n: sesiones.length },
-    sesiones.map((s, k) =>
-    React.createElement(StatsHoyTarjeta, { key: k, modulos: [s.modulo], nombre: ritmoNombre(s.rutina, t, lang),
-      hora: ritmoHora(s.desde), meta: s.min + ' min', estado: "hecha" })
-    )
-    ) :
-    React.createElement("p", { className: "pace-sh-vacio", "data-pace-hoy-vacio": true }, t('stats.hoy.vacio'))
+    sesiones.length ? React.createElement(StatsHoySesiones, { sesiones: sesiones, t: t, lang: lang }) : React.createElement("p", { className: "pace-sh-vacio", "data-pace-hoy-vacio": true }, t('stats.hoy.vacio'))
     ));
 
 }
 
-Object.assign(window, { StatsHoy, statsHoyParadas, statsHoySesiones, statsHoyTotales });
-;Object.assign(window, { statsHoyParadas, statsHoySesiones, statsHoyTotales, StatsHoyTarjeta, statsHoyMeta, StatsHoyRejilla, StatsHoy });
+Object.assign(window, { StatsHoy, statsHoyParadas, statsHoySesiones, statsHoySueltas, statsHoyTotales });
+;Object.assign(window, { statsHoyParadas, statsHoySesiones, statsHoySueltas, StatsHoySesiones, statsHoyTotales, StatsHoyTarjeta, statsHoyMeta, StatsHoyRejilla, StatsHoy });
 })();
 </script>
   <script>
@@ -41469,6 +41492,7 @@ Object.assign(window, { PathStats });
        pasa a dos columnas y el escritorio a una línea por nombre; con más de quince, a seis
        por fila: una jornada de 5:00 a 23:30 cabe sin scroll en el escritorio. */
     .pace-sh-cab { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 0 2px 8px; }
+    .pace-sh-cab.pace-sh-suelta { margin-top: 18px; }   /* «Además, por tu cuenta» (6A), aparte del plan */
     .pace-sh-rejilla { display: grid; grid-template-columns: minmax(0, 1fr); }
     .pace-sh-t { display: flex; gap: 10px; align-items: center; padding: 3px 2px; min-width: 0; min-height: 28px;
       border-bottom: 1px solid var(--paper-3); }
