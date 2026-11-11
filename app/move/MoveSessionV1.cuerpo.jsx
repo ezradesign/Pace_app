@@ -267,7 +267,7 @@ function CuerpoV1(p) {
               borderRadius: 2, position: 'relative', overflow: 'hidden', transition: 'height 220ms',
             }}>
               {i === stepIdx && (
-                <div style={{ position: 'absolute', inset: 0, width: `${v1StepProgress(step, side, elapsed) * 100}%`, background: accent, transition: 'width 1s linear' }} />
+                <div data-pace-relleno style={{ ...rellenoDeBarra(v1StepProgress(step, side, elapsed)), background: accent }} />
               )}
             </div>
           ))}

@@ -1,0 +1,32 @@
+/* Home con un bloque de Foco en marcha: animaciones vivas, fotogramas y hilo principal, a CPU 4×. */
+'use strict';
+const WT = 'C:/Users/ezrav/Desktop/Proyectos/Desarrollo de aplicaciones/Pace_app/.claude/worktrees/caza-rendimiento-9nov';
+const { chromium } = require(WT + '/node_modules/@playwright/test');
+const { SEMILLA, CLAVE_ESTADO } = require(WT + '/tests/helpers.js');
+const fs = require('fs');
+const [ , , PUERTO = 8910, ANCHO = 360, ALTO = 640, NOMBRE = 'foco' ] = process.argv;
+(async () => {
+  const browser = await chromium.launch();
+  const movil = Number(ANCHO) < 768;
+  const context = await browser.newContext({ viewport: { width: +ANCHO, height: +ALTO }, deviceScaleFactor: movil ? 2 : 1, isMobile: movil, hasTouch: movil, locale: 'es-ES', timezoneId: 'Europe/Madrid', serviceWorkers: 'block' });
+  await context.addInitScript(([k, s]) => { localStorage.setItem(k, JSON.stringify(s)); }, [CLAVE_ESTADO, SEMILLA]);
+  await context.addInitScript(() => { window.__lt = []; new PerformanceObserver((l) => l.getEntries().forEach((e) => window.__lt.push(Math.round(e.duration)))).observe({ type: 'longtask' }); });
+  const p = await context.newPage();
+  await p.goto('http://localhost:' + PUERTO + '/');
+  await p.locator('[data-pace-dial-number]').waitFor();
+  await p.getByRole('button', { name: 'Empezar foco', exact: true }).click();
+  await p.waitForTimeout(3000);
+  if (process.env.CSS) await p.addStyleTag({ content: process.env.CSS });
+  const cdp = await context.newCDPSession(p);
+  await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 });
+  await p.waitForTimeout(1000);
+  const anims = await p.evaluate(() => document.getAnimations().filter((a) => a.playState === 'running').map((a) => (a.animationName || a.transitionProperty) + '@' + (a.effect.target.tagName || '') + (a.effect.target.getAttribute && [...a.effect.target.attributes].map((x) => x.name).filter((n) => n.startsWith('data-')).slice(0, 2).join(' ') || '')));
+  await browser.startTracing(p, { categories: ['devtools.timeline', 'disabled-by-default-devtools.timeline', 'v8.execute'] });
+  const f = await p.evaluate(() => new Promise((res) => { const d = []; let u = performance.now(); const fin = u + 6000; const lt0 = window.__lt.length;
+    const g = (t) => { d.push(t - u); u = t; if (t < fin) requestAnimationFrame(g); else res({ n: d.length, media: +(d.reduce((a, b) => a + b, 0) / d.length).toFixed(1), mas33: d.filter((x) => x > 33.4).length, peor: Math.round(Math.max(...d)), largas: window.__lt.slice(lt0) }); };
+    requestAnimationFrame(g); }));
+  fs.writeFileSync('salida/' + NOMBRE + '.trace.json', await browser.stopTracing());
+  const nodos = await p.evaluate(() => document.querySelectorAll('*').length);
+  console.log(JSON.stringify({ anims, ...f, nodosDOM: nodos }));
+  await browser.close();
+})();

@@ -1,0 +1,111 @@
+<title>Montado: rendimiento</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+  /* Una columna de lectura, como la página de las letras: por cada letra, qué cambia y luego antes / después,
+     el móvil (360 × 740) y el ordenador (1536 × 710). La paleta y las letras son las de PACE. */
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6E675A;
+    --line: #C9C0A8; --focus: #3E5A3A; --focus-soft: rgba(62, 90, 58, 0.10); --terra: #A85A3E;
+    --font-display: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
+    --font-ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536; --focus: #98B58B; --focus-soft: rgba(122, 154, 109, 0.14); --terra: #D99477; color-scheme: dark } }
+  :root[data-theme="dark"] {
+    --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536; --focus: #98B58B; --focus-soft: rgba(122, 154, 109, 0.14); --terra: #D99477; color-scheme: dark }
+  body { background: var(--paper); color: var(--ink); font-family: var(--font-ui); font-size: 16px; line-height: 1.55;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 64px; }
+  main { max-width: 1040px; margin: 0 auto; display: grid; gap: 52px; }
+  h1, h2 { font-family: var(--font-display); font-style: italic; font-weight: 500; margin: 0; text-wrap: balance; line-height: 1.1; }
+  h1 { font-size: clamp(34px, 6vw, 48px); }
+  h2 { font-size: clamp(26px, 4.4vw, 34px); }
+  p, ul { margin: 0; max-width: 66ch; }
+  ul { padding-left: 20px; display: grid; gap: 6px; }
+  .eyebrow { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+  header, section { display: grid; gap: 18px; }
+  section { border-top: 1px solid var(--line); padding-top: 30px; }
+  .letra { display: inline-block; font-family: var(--font-ui); font-style: normal; font-size: 13px; font-weight: 600;
+    color: var(--focus); background: var(--focus-soft); border-radius: 999px; padding: 2px 10px; vertical-align: middle; margin-left: 6px; }
+  .dos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 18px; }
+  .antes-despues { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+  figure { margin: 0; display: grid; gap: 6px; min-width: 0; }
+  figure img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); }
+  figcaption { font-size: 13px; color: var(--ink-3); }
+  figcaption b { color: var(--ink-2); font-weight: 600; }
+  .movil { max-width: 560px; }
+  .cuadro { background: var(--paper-2); border-radius: 12px; padding: 18px 20px; display: grid; gap: 10px; }
+  .cuadro h2 { font-size: 26px; }
+  @media (max-width: 420px) { .antes-despues { gap: 8px; } }
+
+  .cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 14px; }
+  .cifra { background: var(--paper-2); border-radius: 12px; padding: 14px 16px; display: grid; gap: 2px; }
+  .cifra b { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 30px; line-height: 1.1; }
+  .cifra span { font-size: 13px; color: var(--ink-3); }
+  .mira { border-left: 3px solid var(--terra); padding-left: 14px; }
+</style>
+
+<main>
+  <header>
+    <div class="eyebrow">Caza de rendimiento · 11 nov. 2026</div>
+    <h1>Montado: el aro, la versión nueva y las pestañas</h1>
+    <p>Las tres letras que elegiste ya están en la rama, todas la <b>B</b>. Van solas, a la espera de tu «júntalo»:
+      ni versión nueva ni nada de <code>main</code> tocado. Con ellas van también lo de antes de esta rama, las barras que
+      avanzan y las fuentes descargadas una sola vez.</p>
+  </header>
+
+  <section>
+    <div class="eyebrow">El aro durante un Foco</div>
+    <h2>Solo se desliza si el paso se nota <span class="letra">B</span></h2>
+    <p><b>A la vista no cambia nada.</b> Con un bloque de 25 min en el móvil, el aro avanza medio píxel cada segundo. Antes,
+      el teléfono pintaba esos medio píxel deslizándolos 60 veces por segundo. Ahora, cuando el paso es tan pequeño, el aro
+      da su saltito de medio píxel sin animarlo, y no se distingue. En los bloques cortos o en un aro grande, donde el paso
+      sí se ve, sigue deslizándose como siempre.</p>
+    <div class="cifras">
+      <div class="cifra"><b>2,17 s → 0,55 s</b><span>trabajo del móvil en cada 6 s de Foco (360 px, móvil lento simulado)</span></div>
+      <div class="cifra"><b>2 → 0</b><span>animaciones en marcha con el Foco corriendo</span></div>
+    </div>
+    <p class="mira"><b>Qué mirar:</b> un Foco de 25 min en tu móvil durante un minuto: el aro debe avanzar igual que siempre,
+      sin tirones. Y uno de 5 min: ahí se sigue deslizando.</p>
+  </section>
+
+  <section>
+    <div class="eyebrow">Cuando hay una versión nueva</div>
+    <h2>PACE pregunta al volver y cada hora <span class="letra">B</span></h2>
+    <ul>
+      <li><b>Antes:</b> si tenías PACE abierto todo el día, nunca se enteraba de que había versión nueva. Y al recargar, ya en
+        la nueva, salía igualmente «Hay una versión nueva».</li>
+      <li><b>Ahora:</b> al volver a la pestaña, y mientras la tienes delante, PACE mira si hay versión nueva, como mucho una vez
+        por hora. El aviso no sale encima de Respira, Mueve, Estira ni de un Foco en marcha: espera a que acabes. Y si ya
+        estás en la versión nueva, no sale.</li>
+      <li><b>De paso:</b> con una sola pestaña abierta y ya en la versión nueva, PACE termina de ponerse al día sin preguntarte.
+        Así deja de enseñar algún dibujo viejo que se llame igual que el nuevo.</li>
+    </ul>
+    <p class="mira"><b>Qué mirar:</b> después de juntarlo, deja la web abierta, sube otra versión y vuelve a la pestaña pasada
+      una hora: debe salir el aviso, y no en medio de una sesión.</p>
+  </section>
+
+  <section>
+    <div class="eyebrow">Dos pestañas abiertas</div>
+    <h2>La pestaña con una sesión espera a que acabe <span class="letra">B</span></h2>
+    <ul>
+      <li><b>Antes:</b> pulsar «Actualizar» en una pestaña recargaba la otra aunque estuvieras a mitad de Respira, y la sesión
+        se perdía.</li>
+      <li><b>Ahora:</b> la pestaña con una sesión en marcha sigue con ella. Cuando sales de la sesión, se pone al día sola.</li>
+    </ul>
+    <p class="mira"><b>Qué mirar:</b> con dos pestañas, empieza Respira en una y pulsa «Actualizar» en la otra: Respira debe seguir.
+      Al salir de Respira, esa pestaña se recarga una vez.</p>
+  </section>
+
+  <section class="cuadro">
+    <h2>Lo que queda para ti</h2>
+    <ul>
+      <li>Con <b>varias pestañas</b> abiertas, la que ya está en la versión nueva sigue enseñando algún dibujo viejo hasta que
+        pulses «Actualizar» en otra o las cierres todas. Arreglarlo sin preguntar recargaría las demás. ¿Lo dejamos así?</li>
+      <li>Al acabar una sesión, la pestaña que esperaba se recarga enseguida. Si al salir de la sesión salía un sello o un aviso,
+        puede no dar tiempo a verlo. ¿Esperamos también a que no haya nada abierto?</li>
+    </ul>
+  </section>
+</main>

@@ -59,6 +59,9 @@ test('con la página ya controlada, un worker nuevo en espera sí se anuncia', a
     controlada = await page.evaluate(() => !!navigator.serviceWorker.controller);
   }
   expect(controlada, 'la página no llegó a cargar controlada por el worker').toBe(true);
+  /* El worker de prueba es esta misma build: la página se hace pasar por una vieja, porque si ya
+     es la versión del worker en espera no hay nada que avisar (tests/sw-version.spec.js). */
+  await page.evaluate(() => { window.PACE_VERSION = 'v0.0.1'; });
   await page.evaluate(() => navigator.serviceWorker.register('sw.js?prueba=version-nueva'));
   await expect(page.locator('[data-pace-update-prompt]')).toBeVisible({ timeout: 15_000 });
   expect(await page.evaluate(async () => !!(await navigator.serviceWorker.getRegistration()).waiting)).toBe(true);

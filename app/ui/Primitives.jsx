@@ -38,6 +38,20 @@ function letraDe(color) {
   return m ? 'var(--' + m[1] + '-deep)' : color;
 }
 
+/* EL RELLENO DE UNA BARRA QUE AVANZA CADA SEGUNDO. Ocupa todo el ancho y se desplaza a la izquierda
+   con `transform`, que el navegador mueve sin rehacer la página; con `width` maquetaba y pintaba en
+   cada fotograma de la transición (Respira a 360 px con CPU 4×: 31 fotogramas lentos de cada 6 s, y
+   13 así). Por eso el padre TIENE que recortar (`overflow: hidden`). `p` fuera de [0, 1] o sin número
+   se acota: un relleno de más se saldría por la izquierda y no se vería. */
+function rellenoDeBarra(p) {
+  const v = Number.isFinite(p) ? Math.min(1, Math.max(0, p)) : 0;
+  return {
+    position: 'absolute', inset: 0,
+    transform: `translateX(${(v - 1) * 100}%)`,
+    transition: 'transform 1s linear',
+  };
+}
+
 function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subtitle, ariaLabel, cabecera, relleno, capa = 100 }) {
   const { t } = useT();
   /* s198 · el dialogo se comporta como un dialogo (ui/Dialogo.jsx): rol y
@@ -400,4 +414,4 @@ function PaceConIcono({ texto }) {
   return <React.Fragment>{m[3]} <span aria-hidden="true">{m[4]}</span></React.Fragment>;
 }
 
-Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic, letraDe, paceSinIcono, PaceConIcono });
+Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic, letraDe, rellenoDeBarra, paceSinIcono, PaceConIcono });

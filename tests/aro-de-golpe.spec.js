@@ -18,7 +18,9 @@
 const { test, expect } = require('@playwright/test');
 const { sembrar, irAlArtefacto } = require('./helpers');
 
-test.beforeEach(async ({ context }) => { await sembrar(context); });
+/* Un bloque de 5 min: el paso de cada segundo mide más de 1 px y el aro se desliza. Con 25 min
+   no se desliza nunca (aro B, tests/aro-paso.spec.js) y aquí no habría nada que comparar. */
+test.beforeEach(async ({ context }) => { await sembrar(context, { focusMinutes: 5 }); });
 
 async function segundos(page, n) {
   for (let i = 0; i < n; i++) { await page.clock.runFor(1000); await page.waitForTimeout(8); }
