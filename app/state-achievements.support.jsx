@@ -242,7 +242,6 @@ function checkFechasSenaladas() {
 /* --- secretos de hora y de dosis ------------------------------------------ */
 function checkSecretosDeHora() {
   const h = new Date().getHours();
-  if (h >= 2 && h < 4) unlockAchievement('secret.night.owl');
   if (h === 14) unlockAchievement('secret.lunch');
 }
 

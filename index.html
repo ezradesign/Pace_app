@@ -6346,7 +6346,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.stats.streak.30.title': 'Thirty dawns',
   'ach.item.stats.streak.30.desc': 'Thirty days with a session before 9:00',
   'ach.item.master.dusk.title': 'Nightfall',
-  'ach.item.master.dusk.desc': 'Five days with a session after 21:00',
+  'ach.item.master.dusk.desc': 'Five workdays closed on time',
   'ach.item.master.midnight.never.title': 'Before midnight',
   'ach.item.master.midnight.never.desc': '30 days with no use after 23:00',
   'ach.item.master.pomodoro.8.title': 'A day of eight',
@@ -6362,7 +6362,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.secret.cow.click.title': 'Happy cow',
   'ach.item.secret.cow.click.desc': 'Did you tickle her?',
   'ach.item.secret.night.owl.title': 'Night owl',
-  'ach.item.secret.night.owl.desc': 'Use the app between 2:00 and 4:00',
+  'ach.item.secret.night.owl.desc': 'You answered “Did it help?” 25 times',
   'ach.item.secret.lunch.title': 'Midday pause',
   'ach.item.secret.lunch.desc': 'A session at 14:00',
   'ach.item.secret.rain.title': 'Mental rain',
@@ -7569,7 +7569,7 @@ const defaultState = {
 
 
   dawnDates: [],
-  duskDates: [],
+  duskDates: [], ocasoDias: [], ocasoTarde: null,
   planDates: [],
   respiraHoy: { fecha: null, n: 0 },
 
@@ -8378,7 +8378,6 @@ function checkFechasSenaladas() {
 
 function checkSecretosDeHora() {
   const h = new Date().getHours();
-  if (h >= 2 && h < 4) unlockAchievement('secret.night.owl');
   if (h === 14) unlockAchievement('secret.lunch');
 }
 
@@ -8494,6 +8493,7 @@ function completePomodoro(bloque) {
   if (focusMinsAtCompletion >= 45 && bumpCount('foco.largo') >= 5) {
     unlockAchievement('master.long.focus');
   }
+  if (typeof paceOcasoFoco === 'function') paceOcasoFoco(focusMinsAtCompletion);
   checkTimeOfDayAchievements();
   checkSilentDayAchievement();
   updateStreak();
@@ -8685,8 +8685,8 @@ function checkPlanAchievements() {
 
 
 
+
 const DAWN_DIAS = 5;
-const DUSK_DIAS = 5;
 
 function marcaDia(campo, limite) {
   const hoy = new Date().toDateString();
@@ -8702,7 +8702,9 @@ function checkTimeOfDayAchievements() {
   const now = new Date();
   const h = now.getHours();
   if (h < 7 && marcaDia('dawnDates', DAWN_DIAS) >= DAWN_DIAS) unlockAchievement('master.dawn');
-  if (h >= 21 && marcaDia('duskDates', DUSK_DIAS) >= DUSK_DIAS) unlockAchievement('master.dusk');
+
+  if (typeof paceOcasoMirar === 'function') paceOcasoMirar();
+  if (typeof paceBuhoMirar === 'function') paceBuhoMirar();
   if (h < 9) {
     const today = now.toDateString();
     const s = getState();
@@ -9123,9 +9125,91 @@ Object.assign(window, {
   conMinutosQueCuentan,
   updateStreak,
   checkStatsAchievements,
-  checkAllPathsCompleted
+  checkAllPathsCompleted,
+  checkTimeOfDayAchievements
 });
 ;Object.assign(window, { checkPlanAchievements, marcaDia, checkTimeOfDayAchievements, checkCollectorAchievements, checkSilentDayAchievement, checkRoutineCountAchievements, checkStatsAchievements, checkAllPathsCompleted, checkPrimerDiaDeVerdad, checkRetreatAchievement, unlockAchievement, flushAchievementToast, updateStreak, conMinutosQueCuentan, completeBreathSession, logrosDeRespira, completeMoveSession, logrosDeMueve, completeExtraSession, logrosDeEstira });
+})();
+</script>
+  <!-- Ocaso y Búho con lo que premian ahora (Ez, D-6 D del 11 nov.). DESPUÉS de state-achievements. -->
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   OCASO Y BÚHO, CON LO QUE PREMIAN AHORA (Ez, D-6 D del 11 nov. 2026: «D adaptarlos»)
+   ============================================================
+   Premiaban trasnochar: Ocaso, cinco días con sesión después de las 21 h, y Búho, usar PACE entre
+   las 2 y las 4. Es lo contrario de una jornada que acaba a su hora. Conservan su dibujo, su id y su
+   nombre, así que quien ya los tenía los conserva; cambia lo que premian:
+
+     · OCASO (`master.dusk`): cinco jornadas cerradas a su hora. Cuenta el día en que la jornada
+       llega a «Jornada cerrada» con todos sus bloques hechos (no la que se cierra sola por la hora
+       con bloques sin hacer), y no lo cuenta si ese día se empezó un Foco después de la hora de
+       salida (`ocasoTarde`). Si el Foco tardío llega después de cerrar, el día sale de la cuenta,
+       salvo que ese día ya diera el logro: un logro no se quita.
+     · BÚHO (`secret.night.owl`, sigue secreto): contestar «¿Te ayudó?» 25 veces (Sí, Un poco o
+       No; «Ahora no» no cuenta). Sale de los contadores de `routineFeedback`, que ya se guardaban:
+       quien ya llevaba 25 lo recibe en su próxima sesión.
+
+   Se miran desde `checkTimeOfDayAchievements` (al acabar cualquier sesión), desde el final de un
+   Foco (`paceOcasoFoco`) y al contestar (`recordRoutineFeedback`). Nunca lanzan.
+   ============================================================ */
+
+var PACE_OCASO_DIAS = 5;
+var PACE_BUHO_RESPUESTAS = 25;
+
+
+function paceOcasoFoco(minutos) {
+  try {
+    var p = typeof ritmoPlan === 'function' ? ritmoPlan(getState()) : null;
+    if (!p || !p.m || typeof ritmoTrasElFin !== 'function') return;
+    var empezo = Date.now() - (Number(minutos) || 0) * 60000;
+    if (ritmoTrasElFin(p.m, empezo)) setState({ ocasoTarde: todayISO() });
+  } catch (e) {}
+}
+
+
+function paceOcasoMirar() {
+  try {
+    var s = getState();
+    var hoy = todayISO();
+    var lista = Array.isArray(s.ocasoDias) ? s.ocasoDias.slice() : [];
+    var esta = lista.indexOf(hoy) >= 0;
+    var tarde = s.ocasoTarde === hoy;
+    var p = typeof ritmoPlan === 'function' ? ritmoPlan(s) : null;
+    var cerrada = !!p && p.total > 0 && p.hechos >= p.total;
+    if (cerrada && !tarde && !esta) {
+      lista = lista.concat([hoy]).slice(-PACE_OCASO_DIAS * 3);
+      setState({ ocasoDias: lista });
+    } else if (tarde && esta) {
+      lista = lista.filter(function (d) {return d !== hoy;});
+      setState({ ocasoDias: lista });
+    }
+    if (lista.length >= PACE_OCASO_DIAS) unlockAchievement('master.dusk');
+  } catch (e) {}
+}
+
+
+function paceBuhoRespuestas(s) {
+  var fb = s && s.routineFeedback && typeof s.routineFeedback === 'object' ? s.routineFeedback : {};
+  var n = 0;
+  Object.keys(fb).forEach(function (id) {
+    var r = fb[id] || {};
+    ['yes', 'some', 'no'].forEach(function (k) {var v = Number(r[k]);if (isFinite(v) && v > 0) n += v;});
+  });
+  return n;
+}
+
+function paceBuhoMirar() {
+  try {
+    if (paceBuhoRespuestas(getState()) >= PACE_BUHO_RESPUESTAS) unlockAchievement('secret.night.owl');
+  } catch (e) {}
+}
+
+Object.assign(window, { PACE_OCASO_DIAS, PACE_BUHO_RESPUESTAS, paceOcasoFoco, paceOcasoMirar, paceBuhoRespuestas, paceBuhoMirar });
+;Object.assign(window, { PACE_OCASO_DIAS, PACE_BUHO_RESPUESTAS, paceOcasoFoco, paceOcasoMirar, paceBuhoRespuestas, paceBuhoMirar });
 })();
 </script>
   <!-- El código de PACE completo: las llaves PÚBLICAS que lo comprueban y la
@@ -10682,6 +10766,8 @@ function recordRoutineFeedback(routineId, response, opciones) {
 
   if (opciones && opciones.sinEvento) return;
   if (typeof emitFeedbackAnswered === 'function') emitFeedbackAnswered(id, resp);
+
+  if (resp !== 'later' && typeof paceBuhoMirar === 'function') paceBuhoMirar();
 }
 
 
@@ -39454,6 +39540,7 @@ const ACHIEVEMENT_CATALOG = [
 
 
 
+
 { id: 'master.dawn', cat: 'jornada', title: 'Amanecer', desc: 'Cinco días con sesión antes de las 7am', glyph: '↑', glyphSvg: GLYPH_SVG['master.dawn'] },
 { id: 'morning.5', cat: 'jornada', title: 'Madrugadora', desc: '5 sesiones antes de las 9am', glyph: '☀' },
 
@@ -39462,7 +39549,7 @@ const ACHIEVEMENT_CATALOG = [
 
 
 { id: 'stats.streak.30', cat: 'jornada', title: 'Treinta amaneceres', desc: 'Treinta días con sesión antes de las 9', glyph: '✦' },
-{ id: 'master.dusk', cat: 'jornada', title: 'Ocaso', desc: 'Cinco días con sesión después de las 21h', glyph: '↓', glyphSvg: GLYPH_SVG['master.dusk'] },
+{ id: 'master.dusk', cat: 'jornada', title: 'Ocaso', desc: 'Cinco jornadas cerradas a su hora', glyph: '↓', glyphSvg: GLYPH_SVG['master.dusk'] },
 { id: 'master.midnight.never', cat: 'jornada', title: 'Nunca a medianoche', desc: '30 días sin uso tras 23h', glyph: '○' },
 { id: 'master.pomodoro.8', cat: 'jornada', title: 'Jornada de ocho', desc: '8 Pomodoros en un día', glyph: 'VIII', glyphSvg: GLYPH_SVG['master.pomodoro.8'] },
 { id: 'master.focus.day', cat: 'jornada', title: 'Día de foco', desc: '4h de foco en un día', glyph: 'IV', glyphSvg: GLYPH_SVG['master.focus.day'] },
@@ -39471,7 +39558,7 @@ const ACHIEVEMENT_CATALOG = [
 
 
 { id: 'secret.cow.click', cat: 'secretos', title: 'Vaca feliz', desc: '¿Le hiciste cosquillas?', glyph: '?', glyphSvg: GLYPH_SVG['secret.cow.click'], secret: true },
-{ id: 'secret.night.owl', cat: 'secretos', title: 'Búho', desc: 'Usa la app entre 2 y 4am', glyph: '?', secret: true },
+{ id: 'secret.night.owl', cat: 'secretos', title: 'Búho', desc: 'Contestaste «¿Te ayudó?» 25 veces', glyph: '?', secret: true },
 { id: 'secret.lunch', cat: 'secretos', title: 'Pausa de mediodía', desc: 'Sesión a las 14:00', glyph: '?', secret: true },
 { id: 'secret.rain', cat: 'secretos', title: 'Lluvia mental', desc: '3 respiraciones seguidas', glyph: '?', secret: true },
 { id: 'secret.first.monday', cat: 'secretos', title: 'Primer lunes', desc: 'Primer lunes del mes', glyph: '?', secret: true },

@@ -99,6 +99,8 @@ function recordRoutineFeedback(routineId, response, opciones) {
      registro no se reescribe, asi que SessionFeedback lo emite al salir. */
   if (opciones && opciones.sinEvento) return;
   if (typeof emitFeedbackAnswered === 'function') emitFeedbackAnswered(id, resp);
+  /* Búho: 25 respuestas (Ez, D-6 D del 11 nov.; state-achievements.ocaso.js). */
+  if (resp !== 'later' && typeof paceBuhoMirar === 'function') paceBuhoMirar();
 }
 
 /* restaurarRoutineFeedback — «Deshacer»: deja la entrada de la rutina como estaba antes

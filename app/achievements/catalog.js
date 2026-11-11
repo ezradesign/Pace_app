@@ -101,7 +101,8 @@ const ACHIEVEMENT_CATALOG = [
 
   // La jornada (65-73) — s168: SALE de maestria (la hora a la que trabajas no
   // es profundidad en nada) y recoge el racimo que el CODIGO ya trataba junto:
-  // checkTimeOfDayAchievements() desbloquea dawn, dusk, morning.5 y
+  // checkTimeOfDayAchievements() desbloquea dawn, dusk (desde el 11 nov., las jornadas cerradas
+  // a su hora: state-achievements.ocaso.js), morning.5 y
   // stats.streak.30 en la MISMA funcion, y las dos ultimas comparten la lista
   // `morningDates` (5 dias y 30 dias de la misma condicion) desde tres familias
   // distintas. La idea de la familia: a que hora empiezas y cierras el dia, y
@@ -114,7 +115,7 @@ const ACHIEVEMENT_CATALOG = [
      verdad, que es lo que su titulo dice, sobre la lista `morningDates` que ya
      existia. El id no se toca. */
   { id: 'stats.streak.30', cat: 'jornada', title: 'Treinta amaneceres', desc: 'Treinta días con sesión antes de las 9', glyph: '✦' },
-  { id: 'master.dusk', cat: 'jornada', title: 'Ocaso', desc: 'Cinco días con sesión después de las 21h', glyph: '↓', glyphSvg: GLYPH_SVG['master.dusk'] },
+  { id: 'master.dusk', cat: 'jornada', title: 'Ocaso', desc: 'Cinco jornadas cerradas a su hora', glyph: '↓', glyphSvg: GLYPH_SVG['master.dusk'] },
   { id: 'master.midnight.never', cat: 'jornada', title: 'Nunca a medianoche', desc: '30 días sin uso tras 23h', glyph: '○' },
   { id: 'master.pomodoro.8', cat: 'jornada', title: 'Jornada de ocho', desc: '8 Pomodoros en un día', glyph: 'VIII', glyphSvg: GLYPH_SVG['master.pomodoro.8'] },
   { id: 'master.focus.day', cat: 'jornada', title: 'Día de foco', desc: '4h de foco en un día', glyph: 'IV', glyphSvg: GLYPH_SVG['master.focus.day'] },
@@ -123,7 +124,7 @@ const ACHIEVEMENT_CATALOG = [
 
   // Secretos (74-86)
   { id: 'secret.cow.click', cat: 'secretos', title: 'Vaca feliz', desc: '¿Le hiciste cosquillas?', glyph: '?', glyphSvg: GLYPH_SVG['secret.cow.click'], secret: true },
-  { id: 'secret.night.owl', cat: 'secretos', title: 'Búho', desc: 'Usa la app entre 2 y 4am', glyph: '?', secret: true },
+  { id: 'secret.night.owl', cat: 'secretos', title: 'Búho', desc: 'Contestaste «¿Te ayudó?» 25 veces', glyph: '?', secret: true },
   { id: 'secret.lunch', cat: 'secretos', title: 'Pausa de mediodía', desc: 'Sesión a las 14:00', glyph: '?', secret: true },
   { id: 'secret.rain', cat: 'secretos', title: 'Lluvia mental', desc: '3 respiraciones seguidas', glyph: '?', secret: true },
   { id: 'secret.first.monday', cat: 'secretos', title: 'Primer lunes', desc: 'Primer lunes del mes', glyph: '?', secret: true },

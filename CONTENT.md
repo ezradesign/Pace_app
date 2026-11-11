@@ -449,6 +449,17 @@ maestría y se disolvió estadísticas, que suelta su color para la familia nuev
 El nombre **«Ritmo»** se descartó porque ya está cogido: `stats.title` es
 «Ritmo», o sea el propio panel de estadísticas.
 
+**Ocaso y Búho premian otra cosa desde el 11 nov. 2026** (Ez, D-6 D: «D adaptarlos»). Premiaban trasnochar
+(Ocaso, cinco días con sesión después de las 21 h; Búho, usar PACE entre las 2 y las 4), lo contrario de una
+jornada que acaba a su hora. Conservan dibujo, id y nombre, y quien ya los tenía los conserva:
+
+| Logro | Id | Ahora premia | En inglés |
+|---|---|---|---|
+| Ocaso | `master.dusk` | Cinco jornadas cerradas a su hora: todos los bloques hechos y ningún Foco empezado después de la salida | Five workdays closed on time |
+| Búho (secreto) | `secret.night.owl` | Contestaste «¿Te ayudó?» 25 veces (Sí, Un poco o No; «Ahora no» no cuenta) | You answered “Did it help?” 25 times |
+
+Las reglas, en `app/state-achievements.ocaso.js`; la prueba, `tests/logros-ocaso-buho.spec.js`.
+
 **«La jornada» no se inventó: el código ya la trataba junta.**
 `checkTimeOfDayAchievements()` (`state-achievements.jsx`) desbloquea
 `master.dawn`, `master.dusk`, `morning.5` y `stats.streak.30` en la MISMA
