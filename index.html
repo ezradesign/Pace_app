@@ -24238,6 +24238,17 @@ Object.assign(window, { PremiumInvitacion, PremiumAvisoPrueba, PremiumPasoV1, Pa
 
 const { useState: useStateUP, useEffect: useEffectUP } = React;
 
+
+
+
+function paceEnSesion() {
+  try {
+    if (document.querySelector('[data-pace-session-root]')) return true;
+    const foco = JSON.parse(localStorage.getItem('pace.timer.v1') || 'null');
+    return !!(foco && typeof foco.endsAt === 'number' && foco.endsAt > Date.now());
+  } catch (e) {return false;}
+}
+
 function UpdatePrompt() {
   const { t } = useT();
   const [visible, setVisible] = useStateUP(false);
@@ -24250,7 +24261,15 @@ function UpdatePrompt() {
     return () => window.removeEventListener('pace:sw-waiting', h);
   }, []);
 
-  if (!visible) return null;
+
+  const [, setOcupada] = useStateUP(false);
+  useEffectUP(() => {
+    if (!visible) return;
+    const id = setInterval(() => setOcupada(paceEnSesion()), 2000);
+    return () => clearInterval(id);
+  }, [visible]);
+
+  if (!visible || paceEnSesion()) return null;
 
   const apply = () => {
     const reg = window.__paceSwWaitingReg;
@@ -24370,8 +24389,8 @@ function AvisoNoGuarda() {
 
 }
 
-Object.assign(window, { UpdatePrompt, AvisoNoGuarda });
-;Object.assign(window, { UpdatePrompt, AvisoNoGuarda });
+Object.assign(window, { UpdatePrompt, AvisoNoGuarda, paceEnSesion });
+;Object.assign(window, { paceEnSesion, UpdatePrompt, AvisoNoGuarda });
 })();
 </script>
   <!-- Dial circular compartido (s76): consumido por FocusTimer (home) y
@@ -53599,16 +53618,45 @@ arrancar();
            la página, con `reg.waiting` aún apuntando a él, y la primera visita
            salía con «Hay una versión nueva» (tests/sw-aviso.safari.spec.js). */
         var hadController = !!navigator.serviceWorker.controller;
+        /* La versión de un worker (sw.js contesta VERSION con su CACHE_NAME), o null si no
+           contesta a tiempo: un worker de antes no sabe contestar y entonces todo va como siempre. */
+        function versionDe(sw) {
+          return new Promise(function(res) {
+            if (!sw || typeof MessageChannel !== 'function') return res(null);
+            var canal = new MessageChannel();
+            var plazo = setTimeout(function() { res(null); }, 1500);
+            canal.port1.onmessage = function(e) { clearTimeout(plazo); res((e.data && e.data.version) || null); };
+            try { sw.postMessage({ type: 'VERSION' }, [canal.port2]); } catch (e) { clearTimeout(plazo); res(null); }
+          });
+        }
+        function esEstaPagina(v) { return !!v && !!window.PACE_VERSION && v === 'pace-' + window.PACE_VERSION; }
         navigator.serviceWorker.register('sw.js').then(function(reg) {
           function announceWaiting() {
             if (!reg.waiting || !hadController) return;
             /* El mismo worker que ya manda no es una versión nueva (Safari
                puede dejarlo un instante en `waiting` tras activarlo). */
             if (reg.waiting === reg.active || reg.waiting === navigator.serviceWorker.controller) return;
-            window.__paceSwWaitingReg = reg;
-            window.dispatchEvent(new CustomEvent('pace:sw-waiting'));
+            var esperando = reg.waiting;
+            versionDe(esperando).then(function(v) {
+              if (reg.waiting !== esperando) return;
+              /* La página ya es esa versión: nada que avisar (sw.js, ACTIVAR_SI_SOLA). */
+              if (esEstaPagina(v)) { try { esperando.postMessage({ type: 'ACTIVAR_SI_SOLA' }); } catch (e) {} return; }
+              window.__paceSwWaitingReg = reg;
+              window.dispatchEvent(new CustomEvent('pace:sw-waiting'));
+            });
           }
           announceWaiting(); // quedó esperando de una visita anterior
+          /* PREGUNTAR POR UNA VERSIÓN NUEVA AL VOLVER Y CADA HORA (Ez, V1 B, 11 nov. 2026). El
+             navegador solo mira sw.js al navegar, y una pestaña abierta todo el día no se enteraba
+             nunca. Al volver a la pestaña y mientras se ve, como mucho una vez por hora. */
+          var HORA_MS = 60 * 60 * 1000, ultimaMirada = Date.now();
+          function mirarVersion() {
+            if (document.visibilityState !== 'visible' || Date.now() - ultimaMirada < HORA_MS) return;
+            ultimaMirada = Date.now();
+            try { reg.update().catch(function() {}); } catch (e) {}
+          }
+          document.addEventListener('visibilitychange', mirarVersion);
+          setInterval(mirarVersion, 5 * 60 * 1000);
           reg.addEventListener('updatefound', function() {
             var nw = reg.installing;
             if (!nw) return;
@@ -53617,9 +53665,19 @@ arrancar();
             });
           });
         }).catch(function() {});
+        /* LA PESTAÑA CON UNA SESIÓN EN MARCHA NO SE RECARGA (Ez, V2 B, 11 nov. 2026). «Actualizar»
+           en otra pestaña activa el worker nuevo en todas, y esta recargaba a mitad de Respira y la
+           sesión se perdía: ahora espera a que acabe (paceEnSesion, ui/UpdatePrompt.jsx). La que ya
+           es la versión nueva no recarga. */
         navigator.serviceWorker.addEventListener('controllerchange', function() {
           if (!hadController) { hadController = true; return; }
-          window.location.reload();
+          versionDe(navigator.serviceWorker.controller).then(function(v) {
+            if (esEstaPagina(v)) return;
+            (function recargar() {
+              if (typeof window.paceEnSesion === 'function' && window.paceEnSesion()) { setTimeout(recargar, 2000); return; }
+              window.location.reload();
+            })();
+          });
         });
       });
     }

@@ -12,6 +12,17 @@
 
 const { useState: useStateUP, useEffect: useEffectUP } = React;
 
+/* Una sesión en marcha: Respira, Mueve o Estira montadas (pasan por SessionShell) o un Foco
+   corriendo (`pace.timer.v1` con su final en el futuro; lo comparten las pestañas). Ni el aviso de
+   versión nueva ni la recarga del worker nuevo la interrumpen (Ez, V1 B y V2 B, 11 nov. 2026). */
+function paceEnSesion() {
+  try {
+    if (document.querySelector('[data-pace-session-root]')) return true;
+    const foco = JSON.parse(localStorage.getItem('pace.timer.v1') || 'null');
+    return !!(foco && typeof foco.endsAt === 'number' && foco.endsAt > Date.now());
+  } catch (e) { return false; }
+}
+
 function UpdatePrompt() {
   const { t } = useT();
   const [visible, setVisible] = useStateUP(false);
@@ -24,7 +35,15 @@ function UpdatePrompt() {
     return () => window.removeEventListener('pace:sw-waiting', h);
   }, []);
 
-  if (!visible) return null;
+  /* Mientras esté pendiente, se mira cada 2 s si hay sesión: el aviso se aparta y vuelve al acabar. */
+  const [, setOcupada] = useStateUP(false);
+  useEffectUP(() => {
+    if (!visible) return;
+    const id = setInterval(() => setOcupada(paceEnSesion()), 2000);
+    return () => clearInterval(id);
+  }, [visible]);
+
+  if (!visible || paceEnSesion()) return null;
 
   const apply = () => {
     const reg = window.__paceSwWaitingReg;
@@ -144,4 +163,4 @@ function AvisoNoGuarda() {
   );
 }
 
-Object.assign(window, { UpdatePrompt, AvisoNoGuarda });
+Object.assign(window, { UpdatePrompt, AvisoNoGuarda, paceEnSesion });

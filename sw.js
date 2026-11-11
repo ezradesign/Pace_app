@@ -318,8 +318,19 @@ self.addEventListener('install', (event) => {
   );
 });
 
+/* La página pregunta la VERSIÓN de un worker (en espera o el que manda) para no avisar ni recargar
+   si ya es esa versión: al recargar, la navegación trae el HTML nuevo antes de que el worker nuevo
+   active, y salía «Hay una versión nueva» estando ya en ella. Con esa página como ÚNICA pestaña,
+   ACTIVAR_SI_SOLA activa el worker sin preguntar: no cambia nada a la vista y deja de servir la
+   copia vieja de los archivos que se llaman igual. Con más pestañas espera: las otras son viejas. */
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
+  const tipo = event.data && event.data.type;
+  if (tipo === 'SKIP_WAITING') self.skipWaiting();
+  if (tipo === 'VERSION' && event.ports && event.ports[0]) event.ports[0].postMessage({ version: CACHE_NAME });
+  if (tipo === 'ACTIVAR_SI_SOLA') {
+    event.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true })
+      .then((lista) => (lista.length <= 1 ? self.skipWaiting() : undefined)));
+  }
 });
 
 /* s89 (A-3 auditoria): borrar caches de versiones anteriores. Antes cada
