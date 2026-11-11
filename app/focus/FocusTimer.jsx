@@ -68,7 +68,7 @@ function FocusTimer({ onFinish }) {
          asi que llegar a 0 es haber contado eso; lo pausado va en elapsed. */
       /* `fin`: el evento va a la hora a la que acabó, no a la de enterarse (el portátil cerrado,
          PACE cerrado): el motor saca de ahí tu hora de salida. */
-      completeFocusSession('home', { minutes: minutos, bloque, fin: finBloque,
+      completeFocusSession('home', { minutes: minutos, bloque, fin: finBloque, inicio,
         elapsedSeconds: focoElapsedSec(inicio, durationSec, finBloque),
         activeSeconds: durationSec });
       /* Aviso PWA (s102): solo si el usuario lo activó en Ajustes Y la

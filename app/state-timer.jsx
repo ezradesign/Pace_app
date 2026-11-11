@@ -42,7 +42,7 @@ function focoContadosCon(lista, id) {
   var antes = Array.isArray(lista) ? lista.filter(function (x) { return x !== id; }) : [];
   return antes.concat([id]).slice(-FOCO_CONTADOS_MAX);
 }
-function completePomodoro(bloque) {
+function completePomodoro(bloque, cuando) {
   ensureDayFresh();
   const focusMinsAtCompletion = getState().focusMinutes;
   setState(prev => ({ ...prev, cycle: prev.cycle + 1,
@@ -58,7 +58,9 @@ function completePomodoro(bloque) {
   if (focusMinsAtCompletion >= 45 && bumpCount('foco.largo') >= 5) {
     unlockAchievement('master.long.focus');
   }
-  if (typeof paceOcasoFoco === 'function') paceOcasoFoco(focusMinsAtCompletion);
+  /* Con la hora a la que empezó de verdad y la de acabar: «ahora menos lo que dura» falla con
+     un Foco pausado o visto al volver (state-achievements.ocaso.js). */
+  if (typeof paceOcasoFoco === 'function') paceOcasoFoco(focusMinsAtCompletion, cuando && cuando.inicio, cuando && cuando.fin);
   checkTimeOfDayAchievements();
   checkSilentDayAchievement();
   updateStreak();
@@ -84,7 +86,7 @@ function completeFocusSession(context, opts) {
     addFocusMinutes(mins);
     if (typeof updateStreak === 'function') updateStreak();
   } else {
-    sumados = completePomodoro(opts && opts.bloque);
+    sumados = completePomodoro(opts && opts.bloque, opts);
   }
   /* s172 · DUAL-WRITE: el evento va DESPUES de la escritura legacy y no puede
      alterarla (`emitSessionCompleted` se traga sus propios fallos). Foco solo

@@ -24,13 +24,31 @@
 var PACE_OCASO_DIAS = 5;
 var PACE_BUHO_RESPUESTAS = 25;
 
-/* Al acabar un Foco de `minutos`: si empezó después de la hora de salida, hoy no cuenta. */
-function paceOcasoFoco(minutos) {
+/* Al acabar un Foco de `minutos`: si empezó después de la hora de salida de su día, ese día no
+   cuenta. `inicioMs` es la hora a la que empezó de verdad (la guarda `pace.timer.v1`, con sus
+   pausas dentro) y `finMs`, la hora a la que acabó. «Ahora menos lo que dura el bloque» fallaba
+   con un Foco pausado (empezó antes de lo que sale) y con uno que acabó con el móvil bloqueado o
+   PACE dormido (ahora es la hora de volver): con la salida a las 17:00, un bloque de 16:30 visto a
+   las 18:00 dejaba el día fuera. Esa cuenta queda solo de reserva, desde el final.
+   El día es el del inicio: un Foco empezado a las 23:50 tras la salida que acaba a las 00:15 saca
+   de la cuenta el día de AYER, con la salida que se apuntó al contarlo (`ocasoSalida`); el plan de
+   hoy no sabe nada de ayer. Lo vigila tests/logros-ocaso-buho.spec.js. */
+function paceOcasoFoco(minutos, inicioMs, finMs) {
   try {
-    var p = typeof ritmoPlan === 'function' ? ritmoPlan(getState()) : null;
-    if (!p || !p.m || typeof ritmoTrasElFin !== 'function') return;
-    var empezo = Date.now() - (Number(minutos) || 0) * 60000;
-    if (ritmoTrasElFin(p.m, empezo)) setState({ ocasoTarde: todayISO() });
+    if (typeof ritmoTrasElFin !== 'function') return;
+    var ahora = Date.now();
+    var fin = typeof finMs === 'number' && isFinite(finMs) && finMs <= ahora ? finMs : ahora;
+    var empezo = typeof inicioMs === 'number' && isFinite(inicioMs) && inicioMs <= fin ? inicioMs : fin - (Number(minutos) || 0) * 60000;
+    var dia = toISODate(empezo);
+    if (dia === todayISO()) {
+      var p = typeof ritmoPlan === 'function' ? ritmoPlan(getState()) : null;
+      if (p && p.m && ritmoTrasElFin(p.m, empezo)) setState({ ocasoTarde: dia });
+      return;
+    }
+    var s = getState(), sal = s.ocasoSalida;
+    if (!sal || sal.fecha !== dia || !ritmoTrasElFin(sal, empezo)) return;
+    var lista = Array.isArray(s.ocasoDias) ? s.ocasoDias.filter(function (d) { return d !== dia; }) : [];
+    setState({ ocasoTarde: dia, ocasoDias: lista });
   } catch (e) {}
 }
 
@@ -46,7 +64,8 @@ function paceOcasoMirar() {
     var cerrada = !!p && p.total > 0 && p.hechos >= p.total;
     if (cerrada && !tarde && !esta) {
       lista = lista.concat([hoy]).slice(-PACE_OCASO_DIAS * 3);
-      setState({ ocasoDias: lista });
+      /* La salida del día contado, por si un Foco empezado después acaba pasada la medianoche. */
+      setState({ ocasoDias: lista, ocasoSalida: { fecha: hoy, fin: p.m.fin, finDesde: p.m.finDesde != null ? p.m.finDesde : null } });
     } else if (tarde && esta) {
       lista = lista.filter(function (d) { return d !== hoy; });
       setState({ ocasoDias: lista });
