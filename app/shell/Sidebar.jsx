@@ -279,6 +279,7 @@ function Sidebar() {
 
       <SidebarFooter
         onMisRutinas={() => emitir('custom')}
+        onLunes={() => { if (esCajon()) set({ sidebarCollapsed: true }); paceLunesAbrir(t); }}
         onSupport={() => window.dispatchEvent(new CustomEvent('pace:open-support'))}
       />
       </div>

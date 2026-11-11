@@ -4844,7 +4844,11 @@ Object.assign(window.PACE_STRINGS.es, {
   'sobre.novedades.tipo': 'Novedades',
   'sobre.novedades.titulo': 'Qué hay de nuevo',
   'sobre.carta.tipo': 'Carta',
-  'sobre.carta.abrir': 'Abrir la carta'
+  'sobre.carta.abrir': 'Abrir la carta',
+  'lunes.titulo': 'La carta del lunes',
+  'lunes.sobre': 'Los lunes, PACE completo te escribe tu semana: lo que te ayudó, lo que se mueve y por qué.',
+  'lunes.ver': 'Ver PACE completo',
+  'lunes.linea': 'Los lunes, PACE completo te escribe tu semana'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -4856,7 +4860,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'sobre.novedades.tipo': 'What’s new',
   'sobre.novedades.titulo': 'What’s new',
   'sobre.carta.tipo': 'Letter',
-  'sobre.carta.abrir': 'Open the letter'
+  'sobre.carta.abrir': 'Open the letter',
+  'lunes.titulo': 'The Monday letter',
+  'lunes.sobre': 'On Mondays, PACE Complete writes you your week: what helped, what changes and why.',
+  'lunes.ver': 'See PACE Complete',
+  'lunes.linea': 'On Mondays, PACE Complete writes you your week'
 });
 })();
 </script>
@@ -7503,6 +7511,7 @@ const defaultState = {
   licencia: null,
 
   premiumAvisoPrueba: null, novedadesVistas: null,
+  lunesVisto: null,
 
 
   focusMode: 'foco',
@@ -27783,8 +27792,11 @@ function SidebarLatestAchievement(_ref7) {let { ultimo, onOpen } = _ref7;
 
 
 
-function SidebarFooter(_ref8) {let { onSupport, onMisRutinas } = _ref8;
+function SidebarFooter(_ref8) {let { onSupport, onMisRutinas, onLunes } = _ref8;
   const { t } = useT();
+  const [stPie] = usePace();
+
+  const lunes = typeof paceLunesToca === 'function' && paceLunesToca(stPie) && esCajon();
   const apoyo = typeof paceApoyoVisible !== 'function' || paceApoyoVisible();
   return (
     React.createElement("div", { style: sidebarStyles.footer, "data-pace-sidebar-pie": true },
@@ -27793,6 +27805,13 @@ function SidebarFooter(_ref8) {let { onSupport, onMisRutinas } = _ref8;
     typeof PremiumSeal === 'function' ? React.createElement(PremiumSeal, { style: sidebarStyles.pieSello }) : null,
     React.createElement("span", { "aria-hidden": "true", style: sidebarStyles.pieChev }, "\u203A")
     ),
+    lunes ?
+    React.createElement("button", { style: sidebarStyles.pieFila, onClick: onLunes, "data-pace-lunes-fila": true },
+    React.createElement("span", null, t('lunes.titulo')),
+    typeof PremiumSeal === 'function' ? React.createElement(PremiumSeal, { style: sidebarStyles.pieSello }) : null,
+    React.createElement("span", { "aria-hidden": "true", style: sidebarStyles.pieChev }, "\u203A")
+    ) :
+    null,
     apoyo ?
     React.createElement("button", { style: { ...sidebarStyles.pieFila, ...sidebarStyles.pieApoyo }, onClick: onSupport, title: t('support.sidebar.title') },
     React.createElement("span", null, t('support.sidebar.label')),
@@ -28105,6 +28124,7 @@ function Sidebar() {
 
     React.createElement(SidebarFooter, {
       onMisRutinas: () => emitir('custom'),
+      onLunes: () => {if (esCajon()) set({ sidebarCollapsed: true });paceLunesAbrir(t);},
       onSupport: () => window.dispatchEvent(new CustomEvent('pace:open-support')) }
     )
     )
@@ -47369,6 +47389,9 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
 .pace-rt-der-col .pace-rt-sobre { order: 2; }
 .pace-rt-sobre { display: flex; align-items: center; justify-content: flex-end; gap: 14px; }
 .pace-rt-sobre .pace-rt-meta { font-size: 9px; letter-spacing: 0.14em; }
+/* La línea de los lunes (ritmo.lunes.jsx): bajo el resumen y sin ancho propio, o el título se encoge (DECISIONES, 11 nov.). */
+.pace-rt-sobre:has(.pace-rt-lunes) { flex-wrap: wrap; row-gap: 2px; }
+.pace-rt-lunes { flex-basis: 100%; contain: inline-size; text-align: right; background: none; border: 0; padding: 0; margin: 0 0 0 -14px; font-family: var(--font-display); font-style: italic; font-size: 15px; color: var(--ink-2); cursor: pointer; white-space: nowrap; } .pace-rt-lunes:hover { color: var(--ink); }
 @container (min-width: 1000px) {
   .pace-rt-der-col { flex-direction: row; align-items: center; gap: 14px; }
   .pace-rt-der-col .pace-rt-sobre { order: 0; }
@@ -48449,7 +48472,8 @@ function RitmoSobre(_ref2) {let { m } = _ref2;
     React.createElement("div", { className: "pace-rt-sobre", "data-pace-ritmo-resumen": true },
     React.createElement("span", { className: "pace-rt-meta" }, ritmoResumen(m, tn, ritmoMetaVasos(st))),
     React.createElement("button", { className: "pace-rt-enlace", onClick: ritmoPreguntar }, t('ritmo.cambiar')),
-    React.createElement(RitmoAlCalendario, null)
+    React.createElement(RitmoAlCalendario, null),
+    typeof RitmoLunes === 'function' ? React.createElement(RitmoLunes, null) : null
     ));
 
 }
@@ -49778,6 +49802,75 @@ function RitmoAprendido(_ref5) {let { state } = _ref5;
 
 Object.assign(window, { ritmoCartaStyles, RitmoCartaLeida, RitmoCartaVentana, ritmoCartaAbrir, RitmoCartaRaiz, RitmoAprendido });
 ;Object.assign(window, { ritmoCartaNumero, ritmoCartaRutina, ritmoCartaDiasPlural, ritmoCartaFecha, ritmoCartaFechas, RitmoCartaCambio, ritmoCartaPreguntaTexto, RitmoCartaPie, RitmoCartaLeida, RitmoCartaVentana, ritmoCartaAbrir, RitmoCartaRaiz, ritmoAprendidoTexto, RitmoAprendido });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   LA LÍNEA DE LOS LUNES (Ez: 3A de la auditoría del 10 nov.; el móvil, el 11 nov.: «Linea 2 en el
+   sobre + 3 en la side bar»)
+   ============================================================
+   Los lunes, que es cuando llegaría la carta, quien no tiene PACE completo ve dónde estaría:
+   «Los lunes, PACE completo te escribe tu semana ›», y tocarla abre la invitación. Solo los lunes:
+   todos los días sería pedir la compra cada vez que se abre la app.
+
+   DÓNDE: en el ordenador, en la fila del resumen del día (`RitmoSobre`, RitmoPanel.jsx). En el
+   móvil la home no tiene sitio (se pasaba 2 px a 360×740), y va en DOS sitios a la vez: en el
+   sobre de arriba, donde llegaría la carta (cerrado hasta que se abre ese lunes), y en una fila
+   del cajón bajo «Tus rutinas» (`SidebarFooter`). El sobre y la fila no salen en el ordenador.
+
+   QUIÉN: desde v1, sin PACE completo y sin la semana de prueba (`puedeAprender()`, la misma
+   puerta que la carta), y con la bienvenida acabada. Antes de v1 todo está abierto y no sale.
+   ============================================================ */
+
+
+function paceLunesToca(s) {
+  try {
+    if (window.PREMIUM_ABIERTO_HASTA_V1 === true) return false;
+    if (typeof puedeAprender !== 'function' || puedeAprender()) return false;
+    if (!s || s.firstSeen == null) return false;
+    return new Date().getDay() === 1;
+  } catch (e) {
+    return false;
+  }
+}
+
+function paceLunesAbrir(t) {
+  try {paceAbrirPremium({ nombre: t('lunes.titulo') });} catch (e) {}
+}
+
+
+if (typeof paceSobreApuntar === 'function') {
+  paceSobreApuntar({ clave: 'lunes', de: (s, t, tn, lang) => {
+      if (!paceLunesToca(s) || !(typeof paceEsMovil === 'function' && paceEsMovil())) return null;
+      const hoy = typeof todayISO === 'function' ? todayISO() : '';
+      return {
+        sinLeer: s.lunesVisto !== hoy, titulo: t('lunes.titulo'), fecha: hoy, tipo: t('premium.name'),
+        cuando: paceFechaCorta(hoy, lang, { weekday: 'long', day: 'numeric', month: 'short' }),
+        tituloHoja: t('lunes.titulo'), lineas: [t('lunes.sobre')],
+        leer: () => {if (getState().lunesVisto !== hoy) setState({ lunesVisto: hoy });},
+        abrir: () => paceLunesAbrir(t), enlace: t('lunes.ver')
+      };
+    } });
+}
+
+
+function RitmoLunes() {
+  const { t } = useT();
+  const [st] = usePace();
+  if (!paceLunesToca(st)) return null;
+  return (
+    React.createElement("button", { type: "button", className: "pace-rt-lunes", "data-pace-lunes-linea": true, onClick: () => paceLunesAbrir(t) },
+    t('lunes.linea'), " ", React.createElement("span", { "aria-hidden": "true" }, "\u203A")
+    ));
+
+}
+
+Object.assign(window, { paceLunesToca, paceLunesAbrir, RitmoLunes });
+;Object.assign(window, { paceLunesToca, paceLunesAbrir, RitmoLunes });
 })();
 </script>
   <script>

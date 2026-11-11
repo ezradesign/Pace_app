@@ -105,6 +105,7 @@ const defaultState = {
   licencia: null,
   // La suscripción (`order`) cuyo aviso del fin de la prueba ya salió (PremiumInvitacion.jsx).
   premiumAvisoPrueba: null, novedadesVistas: null, /* el id de las novedades del sobre ya leídas; '*' las apaga (shell/Sobre.novedades.js) */
+  lunesVisto: null, /* el lunes (YYYY-MM-DD) en que se abrió la línea de los lunes del sobre (ritmo/ritmo.lunes.jsx) */
 
   // Foco
   focusMode: 'foco',

@@ -12,6 +12,10 @@ Object.assign(window.PACE_STRINGS.es, {
     'sobre.novedades.titulo':   'Qué hay de nuevo',
     'sobre.carta.tipo':         'Carta',
     'sobre.carta.abrir':        'Abrir la carta',
+    'lunes.titulo':             'La carta del lunes',
+    'lunes.sobre':              'Los lunes, PACE completo te escribe tu semana: lo que te ayudó, lo que se mueve y por qué.',
+    'lunes.ver':                'Ver PACE completo',
+    'lunes.linea':              'Los lunes, PACE completo te escribe tu semana',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -24,4 +28,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'sobre.novedades.titulo':   'What’s new',
     'sobre.carta.tipo':         'Letter',
     'sobre.carta.abrir':        'Open the letter',
+    'lunes.titulo':             'The Monday letter',
+    'lunes.sobre':              'On Mondays, PACE Complete writes you your week: what helped, what changes and why.',
+    'lunes.ver':                'See PACE Complete',
+    'lunes.linea':              'On Mondays, PACE Complete writes you your week',
 });

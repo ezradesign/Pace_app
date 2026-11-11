@@ -91,6 +91,9 @@
 .pace-rt-der-col .pace-rt-sobre { order: 2; }
 .pace-rt-sobre { display: flex; align-items: center; justify-content: flex-end; gap: 14px; }
 .pace-rt-sobre .pace-rt-meta { font-size: 9px; letter-spacing: 0.14em; }
+/* La línea de los lunes (ritmo.lunes.jsx): bajo el resumen y sin ancho propio, o el título se encoge (DECISIONES, 11 nov.). */
+.pace-rt-sobre:has(.pace-rt-lunes) { flex-wrap: wrap; row-gap: 2px; }
+.pace-rt-lunes { flex-basis: 100%; contain: inline-size; text-align: right; background: none; border: 0; padding: 0; margin: 0 0 0 -14px; font-family: var(--font-display); font-style: italic; font-size: 15px; color: var(--ink-2); cursor: pointer; white-space: nowrap; } .pace-rt-lunes:hover { color: var(--ink); }
 @container (min-width: 1000px) {
   .pace-rt-der-col { flex-direction: row; align-items: center; gap: 14px; }
   .pace-rt-der-col .pace-rt-sobre { order: 0; }
