@@ -51,8 +51,11 @@ function paceAroCartaRecordado(clave) {
   var d = paceAroCartaLeer()[clave];
   return typeof d === 'number' && d > 0 ? d : null;
 }
-/* Solo escribe si cambia: el motor corre en cada resize y en cada cambio del stack. */
+/* Solo escribe si cambia: el motor corre en cada resize y en cada cambio del stack. Con la landing
+   delante, nunca: `landing/cara.js` enseña la app a quien tenga una clave `pace.*`, y hoy no llega
+   aquí solo porque la app no monta; la guarda no depende de eso (como `persistState`). */
 function paceAroCartaRecordar(clave, D) {
+  if (window.PACE_CARA === 'landing') return;
   var m = paceAroCartaLeer();
   if (m[clave] === D) return;
   delete m[clave];

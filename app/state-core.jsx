@@ -163,7 +163,7 @@ const defaultState = {
      cambiar el dia, asi no crece. Van en defaultState porque una clave que solo
      nace al dispararse el detector no sale en un export. */
   dawnDates: [],
-  duskDates: [], ocasoDias: [], ocasoTarde: null, /* Ocaso, desde el 11 nov.: jornadas cerradas a su hora (state-achievements.ocaso.js) */
+  duskDates: [], ocasoDias: [], ocasoTarde: null, ocasoSalida: {}, /* Ocaso, desde el 11 nov.: jornadas cerradas a su hora (state-achievements.ocaso.js); la salida, un objeto: con `null` el saneado lo borraría */
   planDates: [],
   respiraHoy: { fecha: null, n: 0 },
 

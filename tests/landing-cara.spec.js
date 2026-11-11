@@ -139,6 +139,21 @@ test('con la landing delante tampoco se guarda nada al pasar la medianoche', asy
   }
 });
 
+/* El tamaño del aro (`pace.aro.carta.v1`) se escribe sin gesto, desde el motor de la home. Hoy no corre
+   con la landing delante porque la app no monta, pero la guarda no depende de eso (séptima pasada de Fable,
+   n.º 6). El MUTANTE quita la guarda y tiene que guardar. */
+test('con la landing delante el aro no recuerda su tamaño', async ({ browser }) => {
+  const guarda = ["  if (window.PACE_CARA === 'landing') return;\n  var m = paceAroCartaLeer();", '  var m = paceAroCartaLeer();'];
+  if (INDEX.indexOf(guarda[0]) < 0) throw new Error('GUARD: paceAroCartaRecordar ya no mira la landing');
+  for (const [html, ls] of [[INDEX, []], [INDEX.replace(guarda[0], () => guarda[1]), ['pace.aro.carta.v1']]]) {
+    const { ctx, page } = await abrirCon(browser, html);
+    expect(await leerCara(page)).toBe('landing');
+    await page.evaluate(() => window.paceAroCartaRecordar('1536x710|es', 372));
+    expect(await page.evaluate(() => Object.keys(localStorage)), html === INDEX ? 'index.html' : 'MUTANTE').toEqual(ls);
+    await ctx.close();
+  }
+});
+
 test('«Abrir PACE» abre la app en el sitio, sin recargar, y deja la marca', async ({ page }) => {
   await page.goto(RUTA_ARTEFACTO);
   await expect(page.locator('#pace-landing h1')).toBeVisible();
