@@ -6,6 +6,8 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 11 de 
 
 ## AL RELEVO (11 nov., 10:54): 5iWBf llega al 90 % de las 5 h (se reponen a las 14:30). Empieza aquí; el detalle, en el bloque de las 09:45, debajo
 
+**11:15: la A del aro YA ESTÁ subida (7443d12b en `claude/caza-aro-fijo-10nov`) y 5iWBf está al 94 % de las 5 h: aquí se para; el punto 1 de abajo está hecho, se sigue por el 2.** Verify verde, `tests/aro-horario.spec.js` (5, con tres mutantes) y 117 de e2e de aro, home, jornada, lienzo y ritmo. Con actividades / horario abierto / rutina elegida: 447 / 447 / 515 px a 1920×860 y 372 / 372 / 426 a 1536×710; el móvil, igual (331). Toca `app/main/home-geometry.js` (498 líneas), `app/main/home-geometry.horario.js` (nuevo) y `PACE.html`. Guarda una clave nueva, `pace.aro.carta.v1` (el tamaño por ventana e idioma): al juntar, comprobar que nunca se escribe con la landing delante, porque `landing/cara.js` enseña la app si ve una clave `pace.*`. Falta su fila en `DECISIONES_TECNICAS_VIGENTES.md`. Página NgV2uX97ZxRZTXEePWvcGG con «Montada la A». También hoy: `ROADMAP.md` abre «Camino a v1.0» con lo que queda en cuatro tramos (la rama de la auditoría toca dos líneas de más abajo), y falta llevarlo a la hoja de pasos. Ez tiene una pregunta sin contestar: si subió ya la 0.191.1 a Play y a TestFlight.
+
 Ez (10:54): «Podemos llevar el uso de esta sesión hasta el 90 % antes de migrar», y quiere aprovechar que tiene Fable hasta el 12 nov.,
 aquí y en una app externa que no gasta. Por orden:
 
