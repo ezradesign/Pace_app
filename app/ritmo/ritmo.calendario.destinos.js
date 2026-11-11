@@ -105,6 +105,39 @@ function calendarioAndroidEsDePace(e) {
   return !!(e && e.id != null && Object.prototype.hasOwnProperty.call(calendarioAndroidPropios(), String(e.id)));
 }
 
+/* LA LISTA ES DE ESTE MÓVIL (Ez, D-8 A del 11 nov. 2026). La copia automática de Google se
+   lleva el almacén entero a un Android restaurado, y con él esta lista; allí los ids son de
+   otro calendario y pueden nombrar una reunión de verdad, que PACE borraría o cambiaría. Por
+   eso va con la hora en que se instaló PACE en el móvil (`paceAndroidInstalado`): si no casa
+   (móvil restaurado o PACE reinstalado), si no está (una versión de antes) o si Android no la
+   da, la lista se olvida antes de leer el calendario. Se mira una vez por proceso, y todo lo
+   que lee el calendario del móvil pasa por `calendarioAndroidEventos` (lo cuenta verify). */
+var CALENDARIO_ANDROID_INSTALADO = 'pace.calendario.android.instalado';
+var _calendarioAndroidListo = null;
+
+function calendarioAndroidListo() {
+  if (_calendarioAndroidListo) return _calendarioAndroidListo;
+  var pedir = typeof paceAndroidInstalado === 'function' ? paceAndroidInstalado() : Promise.resolve(null);
+  _calendarioAndroidListo = pedir.then(null, function () { return null; }).then(function (instalado) {
+    var guardada = null;
+    try { guardada = localStorage.getItem(CALENDARIO_ANDROID_INSTALADO); } catch (e) {}
+    if (instalado !== null && guardada === String(instalado)) return;
+    /* '{}' y no quitar la clave: sin ella se apuntaría lo que dice `pace.calendario.escrito`,
+       que viaja en la misma copia con ids del otro móvil. */
+    try {
+      localStorage.setItem(CALENDARIO_ANDROID_CLAVE, '{}');
+      if (instalado !== null) localStorage.setItem(CALENDARIO_ANDROID_INSTALADO, String(instalado));
+      else localStorage.removeItem(CALENDARIO_ANDROID_INSTALADO);
+    } catch (e) {}
+  });
+  return _calendarioAndroidListo;
+}
+
+/* Los eventos del calendario del móvil entre `desde` y `hasta`, con la lista ya comprobada. */
+function calendarioAndroidEventos(desde, hasta, propio) {
+  return calendarioAndroidListo().then(function () { return paceAndroidCalendarioEventos(desde, hasta, propio); });
+}
+
 /* Crear y borrar en el calendario del móvil, apuntándolo. Lo creado se marca privado DESPUÉS
    de apuntarlo: si eso falla, PACE lo reconoce como suyo y lo arregla en la vuelta siguiente. */
 function calendarioAndroidCrear(calendarioId, ev) {
@@ -180,7 +213,7 @@ function calendarioAcceso(destino) {
 function calendarioLeer(destino, pase, iso) {
   var d = calendarioDiaMs(iso);
   if (destino === 'android') {
-    return paceAndroidCalendarioEventos(d[0], d[1]).then(function (lista) {
+    return calendarioAndroidEventos(d[0], d[1]).then(function (lista) {
       return lista.filter(function (e) { return !e.todoElDia && !e.libre && !e.cancelado && !calendarioAndroidEsDePace(e); });
     });
   }
@@ -190,7 +223,7 @@ function calendarioLeer(destino, pase, iso) {
 /* Paso 3 en Android: borra lo de PACE que queda de hoy y crea lo nuevo. */
 function calendarioEscribirAndroid(eventos, iso, ahoraMs, calendarioId) {
   var d = calendarioDiaMs(iso);
-  return paceAndroidCalendarioEventos(Math.max(d[0], ahoraMs), d[1]).then(function (lista) {
+  return calendarioAndroidEventos(Math.max(d[0], ahoraMs), d[1]).then(function (lista) {
     var viejos = lista.filter(function (e) { return calendarioAndroidEsDePace(e) && e.fin > ahoraMs; });
     return viejos.reduce(function (p, e) { return p.then(function () { return calendarioAndroidBorrar(e.id); }); }, Promise.resolve());
   }).then(function () {
@@ -348,5 +381,5 @@ try { calendarioArrancar(); } catch (e) {}
 Object.assign(window, {
   CALENDARIO_DESTINOS, calendarioDestinos, calendarioConectado, calendarioLlevar, calendarioRefrescarReuniones, calendarioReunionesEstado,
   calendarioGuardarOcupado, calendarioBajarIcs, calendarioRefrescoCortar,
-  calendarioAndroidEsDePace, calendarioAndroidApuntar, calendarioAndroidCrear, calendarioAndroidCambiar, calendarioAndroidBorrar,
+  calendarioAndroidEsDePace, calendarioAndroidEventos, calendarioAndroidApuntar, calendarioAndroidCrear, calendarioAndroidCambiar, calendarioAndroidBorrar,
 });
