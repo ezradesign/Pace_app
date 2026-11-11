@@ -193,6 +193,7 @@ test('«Borrar todos mis datos» borra TODAS las claves de PACE, no solo el esta
     localStorage.setItem('pace.breathe.v1', '{"v":1}');
     localStorage.setItem('pace.darkDays.v1', '["2026-09-01"]');
     localStorage.setItem('pace.state.v2.rescate', '{"v":1,"raw":"x"}');
+    localStorage.setItem('pace.aro.carta.v1', '{"1x1|zz":111}');
   });
   await aceptarAvisosPace(page);
   await page.getByRole('button', { name: 'Abrir ajustes' }).click();
@@ -206,7 +207,11 @@ test('«Borrar todos mis datos» borra TODAS las claves de PACE, no solo el esta
   ['pace.timer.v1', 'pace.breathe.v1', 'pace.darkDays.v1', 'pace.state.v2.rescate'].forEach((k) =>
     expect(claves, k + ' sobrevivio al borrado total').not.toContain(k));
   /* GUARD: el borrado paso de verdad (si no, lo de arriba no prueba nada). */
-  expect(claves.filter(k => k.indexOf('pace.') === 0 && k.indexOf('pace.events.') !== 0 && k !== CLAVE_ESTADO)).toEqual([]);
+  /* `pace.aro.carta.v1` puede volver tras la recarga, como el estado: es el tamaño del aro para esta ventana, que la home
+     mide al pintarse. Lo que no puede es conservar lo de antes del borrado. */
+  const ARO = 'pace.aro.carta.v1';
+  expect(await page.evaluate((k) => localStorage.getItem(k) || '', ARO), 'el tamaño del aro de antes sobrevivio al borrado total').not.toContain('1x1|zz');
+  expect(claves.filter(k => k.indexOf('pace.') === 0 && k.indexOf('pace.events.') !== 0 && k !== CLAVE_ESTADO && k !== ARO)).toEqual([]);
 });
 
 /* AUDITORÍA DEL 21 OCT. (ChatGPT, comprobada por la coordinadora) · 1 y 5.
