@@ -31,6 +31,7 @@ const pares = [
   ['1WwJbuD5qTtXJWNzVg7B7Q', 'CpnFEkENADXDVU7K7u8k5M'], // «Montado» de la auditoría (1A, 2A, 4A, lunes, Ocaso y Búho)
   ['LaTcRknTpPcJAa6joPncjX', 'RifLYxtf23zjW51atRD4U3'], // «Montado» de 4 B, 6 A y 7 A
   ['2nykmo2ZLNTrDyud6Qs6dM', '89XwWvAiaLnEJFPDVZ9pCY'], // «Montado» de rendimiento (aro B, V1 B y V2 B)
+  ['LtUEUn4yjYXjyq4AqJEtqV', 'UkETeVK2Ee97N8kSvupwC8'], // «Lo que queda hasta v1», la lista corta de solo lo pendiente
 ];
 
 const [de, hacia] = a === 'EcLj6' ? [1, 0] : [0, 1];

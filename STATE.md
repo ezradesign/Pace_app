@@ -48,7 +48,8 @@ de Android con sus 14 días seguidos, que aún no han empezado, y el alta para c
 ## Espera a Ez
 
 La lista, por orden y sin jerga, en su hoja de pasos (`docs/traspaso/hoja-de-ruta-20oct.html`), una por cuenta:
-https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 y https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT. Ez se pierde
+https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 y https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT. La lista corta de solo
+lo pendiente, «Lo que queda hasta v1» (`docs/traspaso/pendiente/pendiente.html`): UkETeVK2Ee97N8kSvupwC8 y LtUEUn4yjYXjyq4AqJEtqV. Ez se pierde
 con mucho abierto: a «¿qué toca?», una sola cosa.
 
 - **La versión de prueba: la 0.191.1 NO se sube (Ez, 11 nov.: «estamos esperando a tener una versión sólida y buena para subir»).** Cuando la haya, el camino es este, con su número: `subidas-play\PACE-0.191.1.aab`, a la prueba interna y

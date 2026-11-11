@@ -2,7 +2,16 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 11 de noviembre de 2026, 18:15, v0.199.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 11 de noviembre de 2026, 19:00, v0.199.0.
+
+## 11 nov., 19:00 (cuenta EcLj6): la lista publicada aquí, la hoja al día y D-8 y D-10 en marcha. Manda sobre lo de abajo
+
+- **«Lo que queda hasta v1», publicada en EcLj6: LtUEUn4yjYXjyq4AqJEtqV** (su par con UkETeVK2Ee97N8kSvupwC8, en `docs/traspaso/archivos/hoja-ids-cuentas.js`). La copia del repo (`docs/traspaso/pendiente/pendiente.html`) lleva ahora los ids de EcLj6 y enlaza la hoja de pasos: para republicarla en 5iWBf, pasarla antes por el guion con `--a=5iWBf`.
+- **La hoja de pasos, al día en EcLj6 a las 18:55** (EcLj6io4wM9pGjtQ5wd1CT): el «Ahora» es D-8 y D-10; hecho, la 0.199.0; después, la octava; y enlaza la lista corta. La de 5iWBf sigue diciendo la 0.198.1.
+- **EN MARCHA desde las 18:55: D-8 A y D-10 B**, sesión `local_20dafeed-453b-4098-a3d5-2cebb0b6e156` en Opus, con worktree propio desde `main` (su rama lleva `d8-d10-11nov` en el nombre: `git worktree list`). Tiene orden de dejar una página «Montado» en `docs/proposals/montado-d8-d10-11nov/` y de parar al 85 % de las 5 h con un WIP. Al acabar: leer su informe y su diff, **enseñárselo a Ez y esperar su «júntalo»**; no se junta sin su sí.
+- **Después, la octava** (punto 2 del bloque de las 18:15, debajo): sin arrancar. Lo primero de su encargo, repartir las pruebas del CI (`.github/workflows/ci.yml`: `e2e` va en dos trozos con `--shard` y `timeout-minutes: 25`).
+- El servidor viejo del puerto 8765 sigue ahí (PID 8136): las pruebas, con `PACE_E2E_PORT=8775`.
+- **Uso en EcLj6 a las 18:47:** 5 h al 6 % (se reponen a las 23:40), semana al 38 %, «Weekly · Fable» al 48 %.
 
 ## AL RELEVO (11 nov., 18:15): Ez migra de 5iWBf a EcLj6. Empieza aquí; manda sobre lo de abajo
 
