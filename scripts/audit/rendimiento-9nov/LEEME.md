@@ -1,5 +1,19 @@
 # Caza de rendimiento (9 nov.) · dónde me quedo
 
+**Tercera tanda (11 nov.): las tres letras de Ez, todas la B, montadas.** `main` (0.198.0) juntado antes; precache 269.
+- `415a9fea` aro B: `pasoDelAroPx` + `useDiametroAro` (ui/TimerDial.jsx, 493 líneas). Sin transición si el paso de un
+  segundo mide < 1 px sobre lo pintado. `foco.js` a 360, CPU 4× (con la marca `pace-cara` en el contexto; tres pasadas):
+  hilo ocupado antes 2,17 / 2,34 / 2,14 s de cada 6, después 0,69 / 0,26 / 0,55 s; animaciones vivas 2 → 0.
+  Prueba `tests/aro-paso.spec.js`; `aro-de-golpe` usa ahora un bloque de 5 min. Mutante (`deGolpe = salto`) cae.
+- `04a36e0e` V1 B y V2 B: PACE.html (registro: `versionDe`, `mirarVersion` al volver y cada 5 min con tope de 1 h,
+  `controllerchange` que espera a `paceEnSesion`), sw.js (`VERSION`, `ACTIVAR_SI_SOLA`), ui/UpdatePrompt.jsx
+  (`paceEnSesion`, el aviso se aparta en sesión). Prueba `tests/sw-version.spec.js` (4) y `sw-aviso.safari` ajustada
+  (la página se hace pasar por vieja). Los cuatro mutantes caen. El aviso de más y la copia vieja con UNA pestaña: arreglados.
+- Para Ez (en la página): con varias pestañas, la ya nueva sigue sirviendo la copia vieja hasta que se active el worker;
+  y la recarga al acabar la sesión no espera a que se cierre un sello o aviso. Página «Montado»:
+  https://claude.ai/artifact/2nykmo2ZLNTrDyud6Qs6dM (`docs/proposals/montado-rendimiento-11nov/montado.html`).
+- Queda: las propuestas de build (punto 5) y que la coordinadora pase la suite entera al juntar.
+
 **Segunda tanda (cuenta EcLj6, 9 nov., tarde).** Hecho y subido a la rama:
 - `7cc6b238` las cuatro barras con `transform` (`rellenoDeBarra`, ui/Primitives.jsx). Respira a 360 y CPU 4×: hilo ocupado
   2,44 → 2,16 s de cada 6 (mediana de cinco pasadas; los fotogramas lentos bailan con la carga del PC y no concluyen).
