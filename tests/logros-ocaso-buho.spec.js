@@ -161,23 +161,37 @@ test.describe('Ocaso con bloques de verdad', () => {
     expect(await tiene(page, 'master.dusk')).toBe(true);
   });
 
-  /* PREGUNTA DE EZ (séptima pasada de Fable, n.º 8): esto es lo que pasa HOY, no una regla decidida.
-     «Una hora» cierra su jornada con uno o dos bloques, y cinco días así dan «Cinco jornadas cerradas a
-     su hora». Si Ez decide que solo cuenten la jornada y la media, esta prueba se da la vuelta. */
-  test('HOY, a falta de la letra de Ez: cinco días de «Una hora» con sus bloques dan Ocaso', async ({ page, context }) => {
-    await abrir(page, context, {}, new Date('2026-11-16T11:00:00'));
-    for (let d = 0; d < 5; d++) {
-      if (d) await page.clock.fastForward(DIA);
-      const p = await page.evaluate(() => {
-        const s = window.getState();
-        window.setState({ cycle: 20, ritmo: Object.assign({}, s.ritmo, { libre: false,
-          dia: { fecha: window.todayISO(), opcion: '1h', desde: 600, cicloBase: 0, cambios: {} } }) });
-        const x = window.ritmoPlan(window.getState());
-        return { total: x.total, hechos: x.hechos };
-      });
-      expect(p.total, 'GUARD: «Una hora» son uno o dos bloques').toBeLessThanOrEqual(2);
-      await mirar(page);
-    }
+  /* Solo la jornada y la media jornada (Ez, «S1 ocaso: A», 11 nov.; séptima pasada de Fable, n.º 8).
+     «Una hora» y «Dos horas» se cierran con uno o dos bloques: cinco así daban «Cinco jornadas
+     cerradas a su hora». La media jornada sí cuenta. */
+  for (const [opcion, desde, hora, cuenta] of [['1h', 600, '11:00', false], ['2h', 600, '12:00', false], ['media', 540, '13:30', true]]) {
+    test(`cinco días de «${opcion}» con sus bloques ${cuenta ? 'dan' : 'no dan'} Ocaso`, async ({ page, context }) => {
+      await abrir(page, context, {}, new Date('2026-11-16T' + hora + ':00'));
+      for (let d = 0; d < 5; d++) {
+        if (d) await page.clock.fastForward(DIA);
+        const p = await page.evaluate(([o, de]) => {
+          const s = window.getState();
+          window.setState({ cycle: 20, ritmo: Object.assign({}, s.ritmo, { libre: false,
+            dia: { fecha: window.todayISO(), opcion: o, desde: de, cicloBase: 0, cambios: {} } }) });
+          const x = window.ritmoPlan(window.getState());
+          return { total: x.total, hechos: x.hechos, opcion: x.m.opcion };
+        }, [opcion, desde]);
+        expect(p.opcion === opcion && p.total > 0 && p.hechos >= p.total, 'GUARD: el día queda con todos sus bloques').toBe(true);
+        await mirar(page);
+      }
+      expect(await tiene(page, 'master.dusk')).toBe(cuenta);
+      expect((await page.evaluate(() => window.getState().ocasoDias)).length).toBe(cuenta ? 5 : 0);
+    });
+  }
+
+  test('quien ya tenía Ocaso por días de «Una hora» lo conserva', async ({ page, context }) => {
+    await abrir(page, context, { achievements: { 'master.dusk': { unlockedAt: 1 } } }, new Date('2026-11-16T11:00:00'));
+    await page.evaluate(() => {
+      const s = window.getState();
+      window.setState({ cycle: 20, ritmo: Object.assign({}, s.ritmo, { libre: false,
+        dia: { fecha: window.todayISO(), opcion: '1h', desde: 600, cicloBase: 0, cambios: {} } }) });
+    });
+    await mirar(page);
     expect(await tiene(page, 'master.dusk')).toBe(true);
   });
 });

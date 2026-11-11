@@ -12,7 +12,9 @@
        llega a «Jornada cerrada» con todos sus bloques hechos (no la que se cierra sola por la hora
        con bloques sin hacer), y no lo cuenta si ese día se empezó un Foco después de la hora de
        salida (`ocasoTarde`). Si el Foco tardío llega después de cerrar, el día sale de la cuenta,
-       salvo que ese día ya diera el logro: un logro no se quita.
+       salvo que ese día ya diera el logro: un logro no se quita. Solo cuentan los días de jornada
+       y de media jornada (Ez, «S1 ocaso: A», 11 nov.): «Una hora» y «Dos horas» se cierran con uno
+       o dos bloques, y cinco así no son cinco jornadas. Quien ya lo tenía lo conserva.
      · BÚHO (`secret.night.owl`, sigue secreto): contestar «¿Te ayudó?» 25 veces (Sí, Un poco o
        No; «Ahora no» no cuenta). Sale de los contadores de `routineFeedback`, que ya se guardaban:
        quien ya llevaba 25 lo recibe en su próxima sesión.
@@ -53,6 +55,7 @@ function paceOcasoFoco(minutos, inicioMs, finMs) {
 }
 
 /* ¿Hoy es una jornada cerrada a su hora? Apunta o quita el día y da el logro con cinco. */
+var PACE_OCASO_OPCIONES = ['jornada', 'media'];
 function paceOcasoMirar() {
   try {
     var s = getState();
@@ -61,7 +64,7 @@ function paceOcasoMirar() {
     var esta = lista.indexOf(hoy) >= 0;
     var tarde = s.ocasoTarde === hoy;
     var p = typeof ritmoPlan === 'function' ? ritmoPlan(s) : null;
-    var cerrada = !!p && p.total > 0 && p.hechos >= p.total;
+    var cerrada = !!p && PACE_OCASO_OPCIONES.indexOf(p.m.opcion) !== -1 && p.total > 0 && p.hechos >= p.total;
     if (cerrada && !tarde && !esta) {
       lista = lista.concat([hoy]).slice(-PACE_OCASO_DIAS * 3);
       /* La salida del día contado, por si un Foco empezado después acaba pasada la medianoche. */
@@ -91,4 +94,4 @@ function paceBuhoMirar() {
   } catch (e) {}
 }
 
-Object.assign(window, { PACE_OCASO_DIAS, PACE_BUHO_RESPUESTAS, paceOcasoFoco, paceOcasoMirar, paceBuhoRespuestas, paceBuhoMirar });
+Object.assign(window, { PACE_OCASO_DIAS, PACE_OCASO_OPCIONES, PACE_BUHO_RESPUESTAS, paceOcasoFoco, paceOcasoMirar, paceBuhoRespuestas, paceBuhoMirar });
