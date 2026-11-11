@@ -49,7 +49,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     # Un CI rojo o cancelado no compila nada; a mano, siempre.
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    # Solo el CI de un push: las corridas a hora fija del CI no rehacen el AAB de una version ya subida.
+    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
     env:
       HAY_LLAVE: ${{ secrets.PACE_UPLOAD_KEYSTORE != '' }}
       # El commit que el CI probo; a mano, el de la rama elegida.

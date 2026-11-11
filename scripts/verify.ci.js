@@ -78,6 +78,14 @@ function tandaCI(ctx) {
   if (!/workflow_run:\s*\n\s+workflows: \[CI\]/.test(android)) malAndroid.push('no arranca tras el workflow CI (`workflow_run`)');
   if (android.indexOf("github.event.workflow_run.conclusion == 'success'") < 0) malAndroid.push('no mira que el CI acabara en verde');
   if (/--target "\$GITHUB_SHA"/.test(android)) malAndroid.push('apunta el borrador al último commit de main y no al que probó el CI');
+  if (android.indexOf("github.event.workflow_run.event == 'push'") < 0) malAndroid.push('una corrida del CI a hora fija rehace el AAB de una versión que quizá ya se subió');
+
+  /* A horas fijas (la octava, nº 3): de noche, a las 00:30 y en lunes, que es cuando salen los
+     fallos de fecha; y por evento, para que esas corridas no cancelen la de un push. */
+  var crones = (yml.split('\njobs:')[0].match(/- cron: '[^']+'/g) || []).length;
+  if (crones < 3) ctx.falla('ci.yml: ' + crones + ' corridas a hora fija y tienen que ser al menos tres (23:30, 00:30 y el lunes, hora de Madrid)');
+  else if (yml.indexOf('group: ci-${{ github.event_name }}-') < 0) ctx.falla('ci.yml: la concurrencia no va por evento y una corrida a hora fija cancelaría la de un push');
+  else ctx.ok('ci.yml: ' + crones + ' corridas a hora fija, en su propio grupo');
   if (malAndroid.length) ctx.falla('android.yml: ' + malAndroid.join('; '));
   else ctx.ok('android.yml: el AAB firmado solo sale tras un CI en verde, del commit que probó');
 

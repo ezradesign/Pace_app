@@ -30,14 +30,24 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+  # A HORAS FIJAS (la octava, nº 3, 11 nov. 2026): la suite solo corria a la hora a la que se
+  # sube codigo, y los fallos que salen de noche (el relevo del dia) o en lunes tardaban semanas
+  # en verse. GitHub cuenta en UTC: son las 23:30 y las 00:30 de Madrid en invierno (22:30 y
+  # 23:30 en verano) y el lunes a las 08:00. La de las 00:30 cubre tambien el dia 1 de cada mes.
+  # Solo corren sobre `main`. No disparan el AAB de Android: android.yml solo mira CI de un push.
+  schedule:
+    - cron: '30 22 * * *'
+    - cron: '30 23 * * *'
+    - cron: '0 7 * * 1'
 
 # Solo lectura: este workflow no publica nada ni escribe en el repo.
 permissions:
   contents: read
 
 # Un push encima de otro cancela el anterior: interesa el ultimo estado.
+# Por evento: una corrida a hora fija no cancela la de un push, ni al reves.
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
