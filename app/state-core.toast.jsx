@@ -97,6 +97,12 @@ function onToast(listener) {
   return () => _toastListeners.delete(listener);
 }
 
+/* ¿Queda algún aviso por salir? Lo mira la recarga de una versión nueva (paceAlgoAbierto, ui/UpdatePrompt.jsx):
+   el sello que se ganó en la sesión espera aquí hasta que se cierra, y recargar en ese rato lo perdía. */
+function _avisosEnEspera() {
+  return _deferredToasts.length > 0 || _pendingToasts.length > 0;
+}
+
 /* `paceAvisoTaparia` lo mira también la fila de ToastHost (ui/Toast.jsx) antes de sacar el
    siguiente sello: esta espera solo cubre la salida del primero. */
-Object.assign(window, { showToast, onToast, setCaminoUiActive, paceAvisoTaparia: _avisoTaparia });
+Object.assign(window, { showToast, onToast, setCaminoUiActive, paceAvisoTaparia: _avisoTaparia, paceAvisosEnEspera: _avisosEnEspera });

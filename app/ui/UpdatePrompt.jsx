@@ -23,6 +23,19 @@ function paceEnSesion() {
   } catch (e) { return false; }
 }
 
+/* Algo abierto que se está mirando: un diálogo de la pila, la UI de un Camino, un diálogo propio a la
+   vista (Ajustes) o un sello a la vista o por salir. Lo mismo que hace esperar a los sellos
+   (`toastTapado`, ui/Toast.jsx), sin registro aparte. Lo fijo no cuenta, porque ninguno es un diálogo:
+   las barras de versión nueva y de «no deja guardar» son `role="status"`, y la barra lateral tampoco.
+   La pestaña que esperaba a que acabara la sesión espera también a esto antes de recargar (Ez, R2 A,
+   11 nov. 2026): al salir de Respira, el sello que se acaba de ganar salía y la recarga lo borraba. */
+function paceAlgoAbierto() {
+  try {
+    if (typeof toastTapado === 'function' && toastTapado()) return true;
+    return typeof paceSelloPendiente === 'function' && paceSelloPendiente();
+  } catch (e) { return false; }
+}
+
 function UpdatePrompt() {
   const { t } = useT();
   const [visible, setVisible] = useStateUP(false);
@@ -163,4 +176,4 @@ function AvisoNoGuarda() {
   );
 }
 
-Object.assign(window, { UpdatePrompt, AvisoNoGuarda, paceEnSesion });
+Object.assign(window, { UpdatePrompt, AvisoNoGuarda, paceEnSesion, paceAlgoAbierto });

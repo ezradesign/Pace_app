@@ -12,6 +12,9 @@
 - Para Ez (en la página): con varias pestañas, la ya nueva sigue sirviendo la copia vieja hasta que se active el worker;
   y la recarga al acabar la sesión no espera a que se cierre un sello o aviso. Página «Montado»:
   https://claude.ai/artifact/2nykmo2ZLNTrDyud6Qs6dM (`docs/proposals/montado-rendimiento-11nov/montado.html`).
+- R2 A de Ez (11 nov.): la pestaña que esperó a la sesión espera también a que no haya nada abierto (`paceAlgoAbierto` en
+  ui/UpdatePrompt.jsx: `toastTapado` + `paceSelloPendiente`, más un segundo de respiro al salir). Dos pruebas R2 en `sw-version`, rojas sin la condición.
+  Con varias pestañas, la copia vieja se queda así (Ez, A).
 - Queda: las propuestas de build (punto 5) y que la coordinadora pase la suite entera al juntar.
 
 **Segunda tanda (cuenta EcLj6, 9 nov., tarde).** Hecho y subido a la rama:

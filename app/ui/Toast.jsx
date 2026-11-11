@@ -60,6 +60,16 @@ function toastTapado() {
   } catch (e) { return false; }
 }
 
+/* ¿Hay un sello a la vista, en su fundido o esperando turno en la fila? ToastHost lo dice desde dentro
+   (`colaRef` y `activoRef` son suyos); la recarga de una versión nueva espera a que no quede ninguno. */
+let _toastHostOcupado = () => false;
+function paceSelloPendiente() {
+  try {
+    if (typeof paceAvisosEnEspera === 'function' && paceAvisosEnEspera()) return true;
+    return _toastHostOcupado();
+  } catch (e) { return false; }
+}
+
 /* Lo que solo oye el lector de pantalla. */
 const toastSoloLector = { position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap' };
 
@@ -134,6 +144,7 @@ function ToastHost() {
   const activoRef = useRefTO(false);
   const siguienteRef = useRefTO(null);
   const esperaRef = useRefTO(null);
+  _toastHostOcupado = () => activoRef.current || colaRef.current.length > 0;
   siguienteRef.current = () => {
     if (activoRef.current || !colaRef.current.length) return;
     /* El siguiente de la fila espera, como el primero, a que se cierre lo que se abrió. */
@@ -254,4 +265,4 @@ function ToastHost() {
   );
 }
 
-Object.assign(window, { ToastHost });
+Object.assign(window, { ToastHost, toastTapado, paceSelloPendiente });

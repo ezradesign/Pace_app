@@ -8010,8 +8010,14 @@ function onToast(listener) {
 
 
 
-Object.assign(window, { showToast, onToast, setCaminoUiActive, paceAvisoTaparia: _avisoTaparia });
-;Object.assign(window, { _avisoTaparia, _intentarAvisos, _esperarHueco, _emitToast, showToast, setCaminoUiActive, onToast });
+function _avisosEnEspera() {
+  return _deferredToasts.length > 0 || _pendingToasts.length > 0;
+}
+
+
+
+Object.assign(window, { showToast, onToast, setCaminoUiActive, paceAvisoTaparia: _avisoTaparia, paceAvisosEnEspera: _avisosEnEspera });
+;Object.assign(window, { _avisoTaparia, _intentarAvisos, _esperarHueco, _emitToast, showToast, setCaminoUiActive, onToast, _avisosEnEspera });
 })();
 </script>
   <!-- state-core.dia: el cambio de dia con la app abierta (al volver la pagina al
@@ -23621,6 +23627,16 @@ function toastTapado() {
 }
 
 
+
+let _toastHostOcupado = () => false;
+function paceSelloPendiente() {
+  try {
+    if (typeof paceAvisosEnEspera === 'function' && paceAvisosEnEspera()) return true;
+    return _toastHostOcupado();
+  } catch (e) {return false;}
+}
+
+
 const toastSoloLector = { position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap' };
 
 
@@ -23694,6 +23710,7 @@ function ToastHost() {
   const activoRef = useRefTO(false);
   const siguienteRef = useRefTO(null);
   const esperaRef = useRefTO(null);
+  _toastHostOcupado = () => activoRef.current || colaRef.current.length > 0;
   siguienteRef.current = () => {
     if (activoRef.current || !colaRef.current.length) return;
 
@@ -23814,8 +23831,8 @@ function ToastHost() {
 
 }
 
-Object.assign(window, { ToastHost });
-;Object.assign(window, { toastHuecoDelAro, toastTapado, SelloEnAro, ToastHost });
+Object.assign(window, { ToastHost, toastTapado, paceSelloPendiente });
+;Object.assign(window, { toastHuecoDelAro, toastTapado, paceSelloPendiente, SelloEnAro, ToastHost });
 })();
 </script>
   <!-- La invitación a PACE completo: se abre al tocar algo cerrado. -->
@@ -24249,6 +24266,19 @@ function paceEnSesion() {
   } catch (e) {return false;}
 }
 
+
+
+
+
+
+
+function paceAlgoAbierto() {
+  try {
+    if (typeof toastTapado === 'function' && toastTapado()) return true;
+    return typeof paceSelloPendiente === 'function' && paceSelloPendiente();
+  } catch (e) {return false;}
+}
+
 function UpdatePrompt() {
   const { t } = useT();
   const [visible, setVisible] = useStateUP(false);
@@ -24389,8 +24419,8 @@ function AvisoNoGuarda() {
 
 }
 
-Object.assign(window, { UpdatePrompt, AvisoNoGuarda, paceEnSesion });
-;Object.assign(window, { paceEnSesion, UpdatePrompt, AvisoNoGuarda });
+Object.assign(window, { UpdatePrompt, AvisoNoGuarda, paceEnSesion, paceAlgoAbierto });
+;Object.assign(window, { paceEnSesion, paceAlgoAbierto, UpdatePrompt, AvisoNoGuarda });
 })();
 </script>
   <!-- Dial circular compartido (s76): consumido por FocusTimer (home) y
@@ -53668,13 +53698,22 @@ arrancar();
         /* LA PESTAÑA CON UNA SESIÓN EN MARCHA NO SE RECARGA (Ez, V2 B, 11 nov. 2026). «Actualizar»
            en otra pestaña activa el worker nuevo en todas, y esta recargaba a mitad de Respira y la
            sesión se perdía: ahora espera a que acabe (paceEnSesion, ui/UpdatePrompt.jsx). La que ya
-           es la versión nueva no recarga. */
+           es la versión nueva no recarga.
+           Y LA QUE ESPERÓ A LA SESIÓN ESPERA TAMBIÉN A QUE NO HAYA NADA ABIERTO (Ez, R2 A, 11 nov.):
+           al salir de la sesión sale el sello que se ganó en ella, o se abre la pausa, y recargar en
+           ese instante lo borraba (paceAlgoAbierto). Igual con la pestaña oculta: lo que se dejó
+           abierto debe seguir ahí al volver. Lo fijo (barras, barra lateral) no cuenta. La pestaña
+           sin sesión recarga como siempre, también la que pulsó «Actualizar». Al salir de la sesión se
+           deja un segundo de respiro antes de mirar: el sello y la pausa llegan un instante después. */
         navigator.serviceWorker.addEventListener('controllerchange', function() {
           if (!hadController) { hadController = true; return; }
           versionDe(navigator.serviceWorker.controller).then(function(v) {
             if (esEstaPagina(v)) return;
+            var esperoSesion = false, respiro = false;
             (function recargar() {
-              if (typeof window.paceEnSesion === 'function' && window.paceEnSesion()) { setTimeout(recargar, 2000); return; }
+              if (typeof window.paceEnSesion === 'function' && window.paceEnSesion()) { esperoSesion = true; respiro = false; setTimeout(recargar, 2000); return; }
+              if (esperoSesion && !respiro) { respiro = true; setTimeout(recargar, 1000); return; }
+              if (esperoSesion && typeof window.paceAlgoAbierto === 'function' && window.paceAlgoAbierto()) { setTimeout(recargar, 1000); return; }
               window.location.reload();
             })();
           });

@@ -6,6 +6,8 @@
  * no sale si la página ya es la versión nueva.
  * V2: «Actualizar» en una pestaña recargaba la otra a mitad de Respira. Ahora la pestaña con una
  * sesión en marcha espera a que acabe.
+ * R2: y al acabar, espera también a que no haya nada abierto: el sello ganado en la sesión, que sale
+ * al volver a la home, o una ventana que se abra encima (Ez, R2 A, 11 nov. 2026).
  *
  * La versión nueva se simula como en sw-aviso.safari.spec.js: el MISMO sw.js con otra dirección
  * queda instalado y en espera. Ese worker contesta la versión de esta build, así que para que
@@ -122,4 +124,67 @@ test('V2: «Actualizar» en una pestaña no recarga la otra a mitad de Respira; 
 
   await otra.locator('[data-pace-session-root]').getByRole('button', { name: /Salir/ }).click();
   await expect.poll(() => sigue(otra), { message: 'al acabar la sesión no se actualizó', timeout: 10_000 }).toBe(false);
+});
+
+/* R2: lo que había a la vista en el momento de recargar (`pagehide`), y cuántas veces cargó la pestaña. */
+async function prepararR2(page, context, marca) {
+  await context.addInitScript(() => {
+    try { sessionStorage.setItem('__cargas', String(Number(sessionStorage.getItem('__cargas') || 0) + 1)); } catch (e) {}
+    window.addEventListener('pagehide', () => {
+      try {
+        const visto = (sel) => [...document.querySelectorAll(sel)].some((e) => e.getClientRects().length > 0);
+        sessionStorage.setItem('__alRecargar', JSON.stringify({
+          sello: !!document.querySelector('[data-pace-sello-aro], [data-pace-toast]'), dialogo: visto('[role="dialog"]') }));
+      } catch (e) {}
+    });
+  });
+  await sembrar(context);
+  await irAlArtefacto(page);
+  await controlada(page);
+  await abrirRespira(page);
+  await vieja(page);
+  await nueva(page, marca);
+  await esperarEnPagina(page, () => !!(window.__paceSwWaitingReg && window.__paceSwWaitingReg.waiting), null, { timeout: 15_000 });
+  const antes = await cargas(page);
+  /* Un sello ganado en la sesión (su aviso espera a que se cierre) y «Actualizar» pulsado en otra
+     pestaña, que es lo mismo que activar aquí el worker nuevo. */
+  await page.evaluate(() => {
+    sessionStorage.removeItem('__alRecargar');
+    showToast({ type: 'achievement', id: window.ACHIEVEMENT_CATALOG[0].id });
+    window.__paceSwWaitingReg.waiting.postMessage({ type: 'SKIP_WAITING' });
+  });
+  await esperarEnPagina(page, (m) => new RegExp('prueba=' + m).test((navigator.serviceWorker.controller || {}).scriptURL || ''), marca, { timeout: 15_000 });
+  await page.waitForTimeout(2500);
+  expect(await sigue(page), 'GUARD: recargó a mitad de Respira (V2)').toBe(true);
+  await page.locator('[data-pace-session-root]').getByRole('button', { name: /Salir/ }).click();
+  await expect(page.locator('[data-pace-sello-aro], [data-pace-toast]').first(), 'GUARD: el sello no salió al volver a la home').toBeVisible({ timeout: 5000 });
+  return antes;
+}
+const cargas = (page) => page.evaluate(() => Number(sessionStorage.getItem('__cargas') || 0));
+const alRecargar = (page) => page.evaluate(() => JSON.parse(sessionStorage.getItem('__alRecargar') || 'null'));
+
+test('R2: al salir de la sesión, la recarga espera a que se vaya el sello ganado en ella', async ({ page, context }) => {
+  const antes = await prepararR2(page, context, 'r2-sello');
+  await expect.poll(() => sigue(page), { message: 'pasado el sello no se actualizó', timeout: 10_000 }).toBe(false);
+  await page.waitForTimeout(3000);
+  expect(await alRecargar(page), 'recargó con el sello a la vista').toEqual({ sello: false, dialogo: false });
+  expect(await cargas(page), 'no recargó una sola vez').toBe(antes + 1);
+});
+
+test('R2: y a que se cierre la ventana que se abrió encima', async ({ page, context }) => {
+  const antes = await prepararR2(page, context, 'r2-ventana');
+  await page.getByRole('button', { name: /Hidrátate/ }).first().click();
+  const vasos = page.getByRole('dialog', { name: /Hidrátate/ });
+  await expect(vasos).toBeVisible();
+  /* El sello dura 3 s y la recarga mira cada segundo: con la ventana abierta, pasado el sello, sigue. */
+  await page.waitForTimeout(5000);
+  expect(await sigue(page), 'recargó con Hidrátate abierta').toBe(true);
+  await expect(vasos, 'la ventana se cerró sola').toBeVisible();
+
+  await page.keyboard.press('Escape');
+  await expect(vasos).toHaveCount(0);
+  await expect.poll(() => sigue(page), { message: 'al cerrar la ventana no se actualizó', timeout: 10_000 }).toBe(false);
+  await page.waitForTimeout(3000);
+  expect(await alRecargar(page), 'recargó con algo abierto').toEqual({ sello: false, dialogo: false });
+  expect(await cargas(page), 'no recargó una sola vez').toBe(antes + 1);
 });
