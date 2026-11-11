@@ -96,7 +96,10 @@ function recordRoutineFeedback(routineId, response, opciones) {
      tampoco emite si la sesion correlacionada no es esta rutina — el `runId`
      de §7.1 referencia una sesion que EXISTE, no se inventa.
      `sinEvento`: el «No» se puede deshacer mientras la pantalla sigue abierta, y el
-     registro no se reescribe, asi que SessionFeedback lo emite al salir. */
+     registro no se reescribe, asi que SessionFeedback lo emite al salir. Tampoco mira
+     Búho: si ese «No» es la respuesta 25, el logro llega al acabar la siguiente sesión
+     (`checkTimeOfDayAchievements`), no al salir. Darlo aquí lo dejaría ganado aunque
+     se deshiciera el «No», y un logro no se quita. */
   if (opciones && opciones.sinEvento) return;
   if (typeof emitFeedbackAnswered === 'function') emitFeedbackAnswered(id, resp);
   /* Búho: 25 respuestas (Ez, D-6 D del 11 nov.; state-achievements.ocaso.js). */
