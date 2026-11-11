@@ -6,6 +6,8 @@ const fs = require('fs');
 const path = require('path');
 const DIR = __dirname;
 const M = JSON.parse(fs.readFileSync(path.join(DIR, 'opciones.json'), 'utf8'));
+/* La A ya montada (montada.js), si está medida. */
+const MONT = fs.existsSync(path.join(DIR, 'montada.json')) ? JSON.parse(fs.readFileSync(path.join(DIR, 'montada.json'), 'utf8')) : null;
 
 const fila = (op, est, w, lang = 'es') => M[op].find((f) => f.estado === est && f.w === w && f.lang === lang);
 const salto = (op, w, lang = 'es') => M[op].find((f) => f.estado === 'salto 3→1' && f.w === w && f.lang === lang).salto;
@@ -46,6 +48,24 @@ const opcion = (op) => {
     <figure>${foto('hoy-2-1920x860', 1920, 860, 'Rutina elegida, como hoy')}<figcaption>Rutina elegida · ${h2.aro} px · como hoy</figcaption></figure>
   </div>
   <figure class="otra">${foto(op + '-1-1536x710', 1536, 710, 'Opción ' + op + ' en la ventana de 1536 por 710')}<figcaption>En tu otra ventana, 1536×710: aro de ${b.aro} px (hoy ${fila('hoy', '1', 1536).aro}), se ve el ${b.aroVisible} %.</figcaption></figure>
+</section>`;
+};
+
+const montada = () => {
+  const m = (est, w, lang = 'es') => MONT.escritorio.find((f) => f.estado === est && f.w === w && f.lang === lang);
+  const limpia = MONT.escritorio.filter((f) => f.aro).every((f) => f.scroll === 0 && f.fondo <= f.ventana)
+    && MONT.movil.every((f) => f.scroll === 0);
+  const fila3 = (w, h) => ['3', '1', '2'].map((e) => {
+    const f = m(e, w);
+    const nombre = { 3: 'Con actividades', 1: 'Horario abierto', 2: 'Rutina elegida' }[e];
+    return `<figure>${foto('montada-' + e + '-' + w + 'x' + h, w, h, nombre + ', montada, a ' + w + ' por ' + h)}<figcaption>${e === '1' ? '<b>' : ''}${nombre} · ${f.aro} px · se ve el ${f.aroVisible} %${e === '1' ? '</b>' : ''}</figcaption></figure>`;
+  }).join('');
+  return `<section class="opcion reco" id="montada">
+  <div class="cab"><span class="letra">A</span><h2>Montada la A</h2><span class="sello">11 nov.</span></div>
+  <p>Elegiste la A. Ya está en la app, en la rama del aro, a falta de juntarla: al abrir el horario el aro no se mueve (${m('3', 1920).aro} px en tu ventana, ${m('3', 1536).aro} en la otra) y la tarjeta lo corta a la misma altura que las actividades. Si recargas con el horario abierto, el aro recuerda su tamaño. La rutina elegida y las actividades siguen exactamente como estaban, y el móvil no cambia.</p>
+  <div class="tres">${fila3(1920, 860)}</div>
+  <div class="tres">${fila3(1536, 710)}</div>
+  <p class="datos">${limpia ? 'Sin scroll y sin nada tapado' : 'Ojo: hay scroll'} en los tres estados, a 1920×860 y a 1536×710, en español y en inglés; en el móvil (360×740), el aro mide ${MONT.movil[0].aro} px con el horario abierto y cerrado, como antes.</p>
 </section>`;
 };
 
@@ -123,8 +143,10 @@ ${css}
   <p class="lead">Dijiste que el aro de «¿Cuánto trabajas hoy?», con el horario abierto, queda raro, y que te gustan los otros dos. Aquí está por qué pasa y tres maneras de arreglarlo. En las tres, el aro con actividades y el de la rutina elegida se quedan exactamente como están.</p>
 </header>
 
+${MONT ? montada() : ''}
+
 <section>
-  <h2>Hoy, en tu ventana (1920×860)</h2>
+  <h2>Antes, en tu ventana (1920×860)</h2>
   <div class="tres">
     <figure>${foto('hoy-3-1920x860', 1920, 860, 'Hoy, con actividades')}<figcaption>Con actividades · aro de ${h3.aro} px · se ve el ${h3.aroVisible} %</figcaption></figure>
     <figure>${foto('hoy-1-1920x860', 1920, 860, 'Hoy, horario abierto')}<figcaption><b>Horario abierto · ${h1.aro} px · se ve el ${h1.aroVisible} %</b></figcaption></figure>
@@ -140,7 +162,7 @@ ${['A', 'B', 'C'].map(opcion).join('\n\n')}
   <h2>Recomiendo la A</h2>
   <p>Es la más tranquila: mientras ajustas el horario, el aro no se mueve, porque tiene el tamaño que ya te gusta con las actividades, y lo corta la tarjeta a la misma altura que en los otros dos estados. La tarjeta no se toca. La B te da el aro grande antes, pero obliga a apretar la tarjeta en dos líneas, justo lo que no elegiste el 5 de noviembre. La C arregla el corte pero hace que el aro encoja al abrir el horario y vuelva a crecer al elegir.</p>
   ${tabla()}
-  <p class="pierde">Medido sobre la app de verdad (v0.197.0) a las 10:00, con la barra lateral abierta. Dime una letra y la monto.</p>
+  <p class="pierde">Medido sobre la app de verdad (v0.197.0) a las 10:00, con la barra lateral abierta. Elegiste la A el 11 de noviembre: está montada arriba.</p>
 </section>
 </main>
 `;

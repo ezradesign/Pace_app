@@ -52440,6 +52440,79 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
+   EL ARO CON EL HORARIO ABIERTO (Ez, 11 nov. 2026: la A de docs/proposals/aro-horario-10nov).
+
+   Con «¿Cuánto trabajas hoy?» abierto en escritorio, el panel del horario hace de horizonte y
+   no lleva rótulo encima: con el solape de las actividades (16 % de D) su canto subía hasta
+   dejar ver el 82 % del aro, y el aro crecía al abrirlo (447 → 487 px a 1920×860). Ez: «queda
+   raro». Con las actividades y con la rutina elegida se ve el 89-90 %, y esos dos le gustan.
+
+   Lo que pide la A, y lo que este archivo le da al motor (home-geometry.js):
+     · el canto del panel corta el aro donde lo cortan las actividades, a 0,925 D desde
+       arriba: solape = 7,5 % de D más la banda de padding que hay encima del canto;
+     · el aro tiene el tamaño que tenía con las actividades, así que abrir el horario no lo
+       mueve. Ese tamaño solo se puede MEDIR con las actividades en pantalla, y la pregunta
+       abierta se guarda para todo el día: al recargar, la app abre ya con el horario. Por
+       eso se recuerda por ventana e idioma, en `pace.aro.carta.v1` (prefijo `pace.`, así
+       que «Borrar todo» se lo lleva). Sin recuerdo (una ventana que nunca vio las
+       actividades), el motor toma el mayor aro que cabe con ese mismo corte: unos píxeles
+       más pequeño, nunca cortado ni con scroll.
+   Solo lee y guarda números: no sabe de React ni del estado de la app. */
+
+var PACE_ARO_CANTO_HORARIO = 0.075;
+var PACE_ARO_CARTA_CLAVE = 'pace.aro.carta.v1';
+var PACE_ARO_CARTA_MAX = 24;
+var paceAroCartaMemo = null;
+
+
+
+function paceAroHorarioAbierto() {
+  var p = document.querySelector('.pace-rt-esc[data-pace-ritmo-estado="pregunta"]');
+  return !!(p && p.getClientRects().length);
+}
+
+function paceAroCartaVisible() {
+  var t = document.querySelector('[data-pace-ritmo-tarjeta]');
+  return !!(t && t.getClientRects().length && document.querySelector('[data-pace-activitybar-chip]'));
+}
+
+function paceAroCartaClave(body) {
+  return body.clientWidth + 'x' + body.clientHeight + '|' + (document.documentElement.lang || '');
+}
+function paceAroCartaLeer() {
+  if (paceAroCartaMemo) return paceAroCartaMemo;
+  try {paceAroCartaMemo = JSON.parse(localStorage.getItem(PACE_ARO_CARTA_CLAVE) || '{}') || {};} catch (e) {paceAroCartaMemo = {};}
+  if (typeof paceAroCartaMemo !== 'object' || Array.isArray(paceAroCartaMemo)) paceAroCartaMemo = {};
+  return paceAroCartaMemo;
+}
+function paceAroCartaRecordado(clave) {
+  var d = paceAroCartaLeer()[clave];
+  return typeof d === 'number' && d > 0 ? d : null;
+}
+
+function paceAroCartaRecordar(clave, D) {
+  var m = paceAroCartaLeer();
+  if (m[clave] === D) return;
+  delete m[clave];
+  m[clave] = D;
+  var claves = Object.keys(m);
+  for (var i = 0; i < claves.length - PACE_ARO_CARTA_MAX; i++) delete m[claves[i]];
+  try {localStorage.setItem(PACE_ARO_CARTA_CLAVE, JSON.stringify(m));} catch (e) {}
+}
+
+Object.assign(window, {
+  PACE_ARO_CANTO_HORARIO, paceAroHorarioAbierto, paceAroCartaVisible, paceAroCartaClave,
+  paceAroCartaRecordado, paceAroCartaRecordar
+});
+;Object.assign(window, { PACE_ARO_CANTO_HORARIO, PACE_ARO_CARTA_CLAVE, PACE_ARO_CARTA_MAX, paceAroCartaMemo, paceAroHorarioAbierto, paceAroCartaVisible, paceAroCartaClave, paceAroCartaLeer, paceAroCartaRecordado, paceAroCartaRecordar });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
    Ayudante de geometría de la HOME DESKTOP (s126).
 
    OBJETIVO. Reproducir la composición de la captura de referencia (v0.64 a
@@ -52461,14 +52534,9 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
      --pace-timer-d            → tamaño del aro y escalas interiores (calc)
      --pace-activities-overlap → cuánto suben las Actividades sobre el círculo
 
-   UN MOTOR, DOS PIELES (corregido en s149; hasta aquí esta cabecera seguía
-   diciendo «encapsulado en Desktop, en mobile/tablet borra las dos variables y
-   sale», y **eso dejó de ser cierto en s128**). El motor corre en TODO viewport
-   y publica las dos variables siempre; lo que cambia por debajo de 769px son las
-   CONSTANTES de la piel —el aro arranca por ANCHO en vez de por altura, y su
-   suelo es mayor por legibilidad—, no el algoritmo. `DESKTOP_MQ` sigue
-   existiendo para elegir piel y para reaccionar al cruce del breakpoint, no para
-   apagarse. Ver la nota de s128 junto a `WIDTH_CAP_MOBILE`, más abajo.
+   UN MOTOR, DOS PIELES. Corre en TODO viewport y publica las variables siempre;
+   por debajo de 769px cambian las CONSTANTES de la piel (el aro arranca por ANCHO
+   y su suelo es mayor), no el algoritmo. `DESKTOP_MQ` elige piel y vigila el cruce.
 
    QUÉ NODOS SON OBLIGATORIOS Y CUÁLES NO (s156). Obligatorios: la región de la
    home y el aro. **Actividades y la tarjeta de Camino son OPCIONALES**: se miden
@@ -52595,10 +52663,6 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
   var reintentos = 0;
   var rootStyle = document.documentElement.style;
 
-
-
-
-
   function setVar(name, val) {
     if (rootStyle.getPropertyValue(name) !== val) rootStyle.setProperty(name, val);
   }
@@ -52647,7 +52711,7 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
 
 
-  function applyD(D, dial) {
+  function applyD(D, dial, horario) {
     setVar('--pace-timer-d', D + 'px');
     var dialBottom = paceCaja(dial).bottom;
     var cicloBottom = cicloBottomWithin(dial);
@@ -52666,7 +52730,6 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
     Math.max(0, Math.round(dialBottom - cicloBottom - CICLO_GAP)) :
     Math.round(D * OVERLAP_TARGET);
     var overlap = Math.min(Math.round(D * OVERLAP_TARGET), maxOverlap);
-    setVar('--pace-activities-overlap', overlap + 'px');
 
 
 
@@ -52691,6 +52754,10 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
     var banda = chip && barra ?
     Math.max(0, Math.round(paceCaja(chip).top - paceCaja(barra).top)) :
     0;
+
+
+    if (horario) overlap = Math.min(maxOverlap, Math.round(D * PACE_ARO_CANTO_HORARIO) + banda);
+    setVar('--pace-activities-overlap', overlap + 'px');
 
 
 
@@ -52722,6 +52789,7 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
     var widthCap = isDesktop ? WIDTH_CAP : WIDTH_CAP_MOBILE;
     var dFloor = isDesktop ? D_FLOOR : D_FLOOR_MOBILE;
+    var horario = isDesktop && paceAroHorarioAbierto();
 
 
 
@@ -52749,9 +52817,12 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
 
     var D = Math.min(widthCap * w, D_MAX);
+
+    var clave = paceAroCartaClave(body);
+    if (horario && paceAroCartaRecordado(clave)) D = Math.min(D, paceAroCartaRecordado(clave));
     if (D < dFloor) D = dFloor;
     D = Math.round(D);
-    applyD(D, dial);
+    applyD(D, dial, horario);
 
 
 
@@ -52804,7 +52875,7 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
       if (overPrevio !== null && over >= overPrevio) {
         D = dPrevio;
-        applyD(D, dial);
+        applyD(D, dial, horario);
 
 
 
@@ -52817,7 +52888,7 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
 
       D = Math.max(piso, D - Math.ceil(over / 0.84));
-      applyD(D, dial);
+      applyD(D, dial, horario);
     }
 
 
@@ -52829,12 +52900,13 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
       var dAntes = D,sobra = medirOver();
       for (var k = 0; k < 2 && sobra > 1 && D - Math.ceil(sobra / 0.84) >= duro; k++) {
         D -= Math.ceil(sobra / 0.84);
-        applyD(D, dial);
+        applyD(D, dial, horario);
         sobra = medirOver();
       }
-      if (sobra > 1 && D !== dAntes) {D = dAntes;applyD(D, dial);}
+      if (sobra > 1 && D !== dAntes) {D = dAntes;applyD(D, dial, horario);}
     }
 
+    if (isDesktop && paceAroCartaVisible()) paceAroCartaRecordar(clave, D);
 
 
 
