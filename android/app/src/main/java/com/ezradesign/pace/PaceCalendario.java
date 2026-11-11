@@ -3,10 +3,13 @@ package com.ezradesign.pace;
 import android.Manifest;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.CalendarContract;
 import androidx.core.content.ContextCompat;
+import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
@@ -23,9 +26,31 @@ import com.getcapacitor.annotation.CapacitorPlugin;
  *
  * Usa el permiso de escribir en el calendario que ya pidio el complemento; sin el, falla, y la web
  * lo cuenta como «No se pudo».
+ *
+ * Y la hora en que se instalo PACE en este movil (`instalado`), que la web guarda junto a la lista
+ * de eventos que puso PACE: la copia de Google se lleva esa lista a un movil restaurado, donde los
+ * ids nombran eventos de otra persona. Alli, o tras reinstalar, la hora no casa y la lista se
+ * olvida (Ez, D-8 A del 11 nov. 2026). Una actualizacion no cambia `firstInstallTime`.
  */
 @CapacitorPlugin(name = "PaceCalendario")
 public class PaceCalendario extends Plugin {
+
+    @PluginMethod
+    @SuppressWarnings("deprecation")
+    public void instalado(PluginCall call) {
+        try {
+            PackageManager pm = getContext().getPackageManager();
+            String paquete = getContext().getPackageName();
+            PackageInfo info = Build.VERSION.SDK_INT >= 33
+                ? pm.getPackageInfo(paquete, PackageManager.PackageInfoFlags.of(0))
+                : pm.getPackageInfo(paquete, 0);
+            JSObject r = new JSObject();
+            r.put("instalado", info.firstInstallTime);
+            call.resolve(r);
+        } catch (Exception e) {
+            call.reject("No se pudo leer la hora de instalacion", e);
+        }
+    }
 
     @PluginMethod
     public void privado(PluginCall call) {

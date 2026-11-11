@@ -28,9 +28,13 @@ const JORNADA = { fecha: FECHA, opcion: 'jornada', desde: 540, cicloBase: 0, cam
 const MINUTO = 61 * 1000;
 const vis = (page, sel) => page.locator(sel).filter({ visible: true });
 
-async function comoAndroid(context) {
-  await context.addInitScript(() => {
-    const nativo = window.__nativo = { llamadas: [], eventos: [], siguiente: 100, fallaLista: false, fallaPrivado: false };
+/* `o.eventos`: lo que ya hay en el calendario del móvil; `o.instalado`: la hora de instalación
+   que da Android (PaceCalendario.instalado); `o.guardado`: lo que trae el almacén de PACE. */
+async function comoAndroid(context, opciones) {
+  await context.addInitScript((o) => {
+    Object.keys(o.guardado || {}).forEach((k) => { if (localStorage.getItem(k) === null) localStorage.setItem(k, o.guardado[k]); });
+    const nativo = window.__nativo = { llamadas: [], eventos: (o.eventos || []).slice(), siguiente: 100, fallaLista: false, fallaPrivado: false,
+      instalado: o.instalado === undefined ? 1760000000000 : o.instalado };
     const apunta = (metodo, contesta) => function (opts) {
       nativo.llamadas.push({ metodo, opts: opts === undefined ? null : JSON.parse(JSON.stringify(opts)) });
       try { return Promise.resolve(contesta(opts)); } catch (e) { return Promise.reject(e); }
@@ -61,16 +65,17 @@ async function comoAndroid(context) {
             if (!e) throw new Error('El evento no está en el calendario: ' + op.id);
             e.accessLevel = 3;
           }),
+          instalado: apunta('instalado', () => ({ instalado: nativo.instalado })),
         },
       },
     };
-  });
+  }, opciones || {});
 }
 const llamadas = (page, metodo) => page.evaluate((m) => window.__nativo.llamadas.filter((l) => l.metodo === m).map((l) => l.opts), metodo);
 const dePace = (page) => page.evaluate(() => window.__nativo.eventos.filter((e) => (e.description || '').includes('pacegrass.app')));
 
-async function abrir(page, context) {
-  await comoAndroid(context);
+async function abrir(page, context, opciones) {
+  await comoAndroid(context, opciones);
   await sembrar(context, { ritmo: { dia: JORNADA }, sidebarCollapsed: true });
   await page.clock.install({ time: NUEVE });
   await irAlArtefacto(page);
@@ -171,5 +176,60 @@ test.describe('en Android', () => {
     const mios = await dePace(page);
     expect(new Set(mios.map((e) => e.title + e.startDate)).size, 'hay eventos de PACE repetidos').toBe(mios.length);
     expect(mios.every((e) => e.accessLevel === 3), 'tras el reintento queda alguno sin marcar').toBe(true);
+  });
+});
+
+/* D-8 A (Ez, 11 nov. 2026; sexta revisión externa, n.º 4). La copia automática de Google se
+   lleva a un Android restaurado el almacén entero de PACE, y con él `pace.calendario.android`:
+   los ids de los eventos que PACE puso en el calendario del OTRO móvil. En el nuevo, el id 7
+   puede ser una reunión de verdad, y PACE la borraba al llevar el día (o al ponerlo al día
+   solo) y dejaba de contarla como reunión. Ahora la lista va con la hora de instalación de
+   Android y se olvida si no casa. Rojo sin `calendarioAndroidListo` (que no mire la hora). */
+const HORA = (h) => new Date(FECHA + 'T' + h + ':00+02:00').getTime();
+const REUNION = { id: '7', title: 'Revisión con Ana', startDate: HORA('12:00'), endDate: HORA('12:30'),
+  isAllDay: false, availability: 0, status: 'confirmed' };
+const DEL_OTRO_MOVIL = { 'pace.calendario.android': JSON.stringify({ 7: { fin: HORA('12:30') } }),
+  'pace.calendario.android.instalado': '1700000000000' };
+
+test.describe('D-8 · en un Android restaurado de la copia de Google', () => {
+  test.use({ viewport: { width: 360, height: 730 }, isMobile: true, hasTouch: true });
+
+  for (const modo of ['de una vez', 'solo']) {
+    test(`PACE no borra la reunión cuyo id venía en la lista del otro móvil (${modo})`, async ({ page, context }) => {
+      await abrir(page, context, { eventos: [REUNION], guardado: DEL_OTRO_MOVIL, instalado: 1762000000000 });
+      const hoja = await hojaMovil(page);
+      if (modo === 'de una vez') await hoja.locator('[data-pace-cal-mantener]').uncheck();
+      await hoja.locator('[data-pace-cal-destino="android"] button').click();
+      await expect(hoja.locator('[data-pace-cal-aviso="ok"]'))
+        .toContainText(modo === 'solo' ? 'se pone al día solo' : 'bloques en tu calendario');
+      expect((await llamadas(page, 'deleteEvent')).map((o) => o.id), 'PACE borró la reunión de otra persona').not.toContain('7');
+      expect((await llamadas(page, 'modifyEvent')).map((o) => o.id), 'PACE cambió la reunión de otra persona').not.toContain('7');
+      expect(await page.evaluate(() => window.__nativo.eventos.some((e) => e.id === '7'))).toBe(true);
+      expect(await page.evaluate(() => getState().ritmo.ocupado.tramos.length), 'la reunión no cuenta como reunión').toBe(1);
+      const guardado = await page.evaluate(() => [JSON.parse(localStorage.getItem('pace.calendario.android')),
+        localStorage.getItem('pace.calendario.android.instalado')]);
+      expect(Object.keys(guardado[0])).not.toContain('7');
+      expect(guardado[1], 'no guardó la hora de instalación de este móvil').toBe('1762000000000');
+    });
+  }
+
+  test('una versión de antes (la lista sin hora) también se olvida', async ({ page, context }) => {
+    await abrir(page, context, { eventos: [REUNION], guardado: { 'pace.calendario.android': DEL_OTRO_MOVIL['pace.calendario.android'] } });
+    const hoja = await hojaMovil(page);
+    await hoja.locator('[data-pace-cal-mantener]').uncheck();
+    await hoja.locator('[data-pace-cal-destino="android"] button').click();
+    await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('bloques en tu calendario');
+    expect((await llamadas(page, 'deleteEvent')).map((o) => o.id)).not.toContain('7');
+  });
+
+  test('CONTROL · en el mismo móvil, lo que puso PACE se sigue quitando y cambiando', async ({ page, context }) => {
+    const mio = { id: '7', title: 'Foco 1 de 9', description: 'pacegrass.app', startDate: HORA('12:00'), endDate: HORA('12:30'),
+      isAllDay: false, availability: 1, status: 'confirmed' };
+    await abrir(page, context, { eventos: [mio], guardado: DEL_OTRO_MOVIL, instalado: 1700000000000 });
+    const hoja = await hojaMovil(page);
+    await hoja.locator('[data-pace-cal-mantener]').uncheck();
+    await hoja.locator('[data-pace-cal-destino="android"] button').click();
+    await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toContainText('bloques en tu calendario');
+    expect((await llamadas(page, 'deleteEvent')).map((o) => o.id), 'olvidó la lista en el mismo móvil').toContain('7');
   });
 });

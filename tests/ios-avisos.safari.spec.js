@@ -301,3 +301,57 @@ test.describe('en el iPhone, el aviso de fin dice lo que viene', () => {
     expect([aviso.title, aviso.body]).toEqual(['Foco completado', 'Ciclo cerrado. Elige tu micro-pausa.']);
   });
 });
+
+/* D-10 B (Ez, 11 nov. 2026; sexta revisión externa, n.º 1). Sin `sound`, iOS entrega el aviso mudo,
+   y la campana de PACE calla por él: con PACE en el fondo no sonaba nada. Ahora el aviso lleva la
+   campana de PACE (`campana-aviso.wav`, junto a index.html en la app), y sigue siendo UNA: ni PACE al
+   volver, ni al abrirla después de que iOS la cerrara (la 0.198.1). Con el sonido apagado en
+   Ajustes, mudo, como la campana. Rojo sin `aviso.sound` en ios.js. NO CUBRE que iOS lo toque:
+   eso, en un iPhone con TestFlight. */
+test.describe('D-10 · en el iPhone, el aviso de fin de Foco suena con la campana de PACE', () => {
+  const sonidoDelAviso = async (page) => (await programados(page)).map((n) => n.sound);
+
+  test('con el sonido encendido, el aviso lleva la campana y PACE no suena otra vez al volver', async ({ page, context }) => {
+    await abrir(page, context, {}, { soundOn: true });
+    await empezarFoco(page);
+    await alFondo(page);
+    await esperarEnPagina(page, () => !!window.__nativo.puestos[1]);
+    expect(await sonidoDelAviso(page), 'el aviso de iOS va mudo').toEqual(['campana-aviso.wav']);
+    const archivo = await page.evaluate(async () => {
+      const r = await fetch('campana-aviso.wav');
+      const b = new Uint8Array(await r.arrayBuffer());
+      return { ok: r.ok, cabecera: String.fromCharCode.apply(null, Array.from(b.slice(8, 12))) };
+    });
+    expect(archivo, 'el sonido que nombra el aviso no está junto a la app').toEqual({ ok: true, cabecera: 'WAVE' });
+    await acabarBloque(context);
+    await expect(cta(page)).toHaveText('Empezar otro ciclo');
+    expect(await campanasDeFin(page), 'con el aviso sonando, PACE tocó también su campana').toBe(0);
+    await alVolver(page);
+    await context.clock.runFor(1500);
+    expect(await campanasDeFin(page), 'al volver, sonó otra vez').toBe(0);
+  });
+
+  test('si iOS cerró PACE con el aviso puesto, al abrirla no vuelve a sonar', async ({ page, context }) => {
+    await abrir(page, context, {}, { soundOn: true });
+    await empezarFoco(page);
+    await alFondo(page);
+    await esperarEnPagina(page, () => !!window.__nativo.puestos[1]);
+    expect(await sonidoDelAviso(page)).toEqual(['campana-aviso.wav']);
+    await page.close();
+    await context.clock.fastForward(BLOQUE + 60 * 1000);
+    const otra = await context.newPage();
+    await otra.goto(RUTA_ARTEFACTO);
+    await otra.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
+    await expect(otra.locator('[data-pace-cta]')).toHaveText('Empezar otro ciclo');
+    await otra.waitForTimeout(300);
+    expect(await campanasDeFin(otra), 'al abrir PACE, el bloque que ya sonó en el aviso volvió a sonar').toBe(0);
+  });
+
+  test('CONTROL · con el sonido apagado en Ajustes, el aviso va mudo', async ({ page, context }) => {
+    await abrir(page, context, {}, { soundOn: false });
+    await empezarFoco(page);
+    await alFondo(page);
+    await esperarEnPagina(page, () => !!window.__nativo.puestos[1]);
+    expect(await sonidoDelAviso(page)).toEqual([undefined]);
+  });
+});

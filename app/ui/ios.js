@@ -33,6 +33,11 @@
      bloque es suya y PACE no toca la suya (`paceIosCampana`): ni al volver, ni al
      abrir PACE despues de que iOS la cerrara. Un aviso cuya hora ya paso no se
      quita: ya sono. Si no lo tenia (sin permiso o fallido), suena PACE.
+     Y suena CON LA CAMPANA DE PACE (Ez, D-10 B del 11 nov. 2026): sin `sound`
+     iOS lo entrega mudo, y con PACE en el fondo no sonaba nada. Es la misma
+     receta de Web Audio grabada en `campana-aviso.wav` (scripts/campana-aviso.js),
+     que el complemento busca en `public/`. Con el sonido apagado en Ajustes de
+     PACE, el aviso va mudo, como la campana.
    - EL PERMISO. Solo se programa con el permiso dado: sin el, iOS guarda el
      aviso sin enseñarlo y la campana de PACE callaria por el. Al volver se mira
      otra vez (puede venir de los Ajustes del iPhone) y `pace:avisos-nativo`
@@ -64,6 +69,15 @@
 
 var PACE_IOS_AVISO_FOCO_ID = 1; // un solo aviso de fin de Foco a la vez, como en Android
 var PACE_IOS_AVISO_CLAVE = 'pace.ios.aviso';
+var PACE_IOS_AVISO_SONIDO = 'campana-aviso.wav';
+
+/* El sonido del aviso: la campana de PACE si el sonido esta encendido en Ajustes; si no, ninguno. */
+function paceIosAvisoSonido() {
+  try {
+    var s = typeof getState === 'function' ? getState() : null;
+    return s && s.soundOn ? PACE_IOS_AVISO_SONIDO : null;
+  } catch (e) { return null; }
+}
 
 /* Lo que dejo el proceso anterior. Sin la clave (una version de antes de guardarla) no se sabe
    si dejo un aviso puesto: `quizas`, y lo primero que se recoloca con la app delante lo quita. */
@@ -194,10 +208,10 @@ function paceIosAvisoAjustar() {
   if (quiere) {
     if (a.puesto === quiere.endsAt) return null;
     var textos = paceNativoTextosFin(quiere);
-    return paceIosPedir('LocalNotifications', 'schedule', { notifications: [{
-      id: PACE_IOS_AVISO_FOCO_ID, title: textos.title, body: textos.body,
-      schedule: { at: new Date(quiere.endsAt) },
-    }] }).then(function () {
+    var aviso = { id: PACE_IOS_AVISO_FOCO_ID, title: textos.title, body: textos.body, schedule: { at: new Date(quiere.endsAt) } };
+    var sonido = paceIosAvisoSonido();
+    if (sonido) aviso.sound = sonido;
+    return paceIosPedir('LocalNotifications', 'schedule', { notifications: [aviso] }).then(function () {
       a.puesto = quiere.endsAt;
       a.quizas = false;
       a.fallo = null;

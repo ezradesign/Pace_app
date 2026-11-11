@@ -92,6 +92,7 @@ function chequeaAndroid(ctx) {
   chequeaAvisoFijo(ctx);
   chequeaValoracion(ctx);
   chequeaPlay(ctx);
+  chequeaListaDelMovil(ctx);
 }
 
 /* La ventana de Google Play para valorar PACE (Ez, 15 oct., reseñas punto 6): una sola vez, tras la
@@ -179,6 +180,36 @@ function chequeaAvisoFijo(ctx) {
   if (!/paceAndroidPedir\('PaceAvisoFijo', 'poner'/.test(web) || !/paceAndroidPedir\('PaceAvisoFijo', 'quitar'/.test(web)) malas.push('app/ui/android.avisos.js ya no pone y quita el aviso fijo');
   if (malas.length) malas.forEach(function (m) { ctx.falla('android: ' + m); });
   else ctx.ok('android: el aviso fijo con el movil bloqueado cuenta solo, se va al final, no suena y no lleva botones');
+}
+
+/* La lista de eventos de PACE en el calendario del movil es de ESTE movil (Ez, D-8 A del 11 nov.):
+   la copia de Google la lleva a un Android restaurado, donde sus ids nombran reuniones de otra
+   persona. Se olvida si la hora de instalacion no casa, y eso solo protege si TODA lectura del
+   calendario del movil pasa antes por esa comprobacion (`calendarioAndroidEventos`). */
+function chequeaListaDelMovil(ctx) {
+  var JAVA = 'android/app/src/main/java/com/ezradesign/pace/';
+  var pieza = (leer(JAVA + 'PaceCalendario.java') || '').toString();
+  var puente = (leer('app/ui/android.calendario.js') || '').toString();
+  var destinos = (leer('app/ritmo/ritmo.calendario.destinos.js') || '').toString();
+  var malas = [];
+  if (!/public void instalado\(PluginCall call\)/.test(pieza) || !/firstInstallTime/.test(pieza)) malas.push('PaceCalendario.java ya no da la hora de instalacion (instalado, firstInstallTime)');
+  if (!/paceAndroidPedir\('PaceCalendario', 'instalado'\)/.test(puente)) malas.push('app/ui/android.calendario.js ya no pide la hora de instalacion');
+  if (!/function calendarioAndroidEventos\([^)]*\) \{\s*return calendarioAndroidListo\(\)\.then/.test(destinos)) malas.push('calendarioAndroidEventos ya no espera a calendarioAndroidListo');
+  var fuera = [];
+  (function recorrer(rel) {
+    fs.readdirSync(path.join(ROOT, rel), { withFileTypes: true }).forEach(function (e) {
+      var hijo = rel + '/' + e.name;
+      if (e.isDirectory()) return recorrer(hijo);
+      if (!/\.jsx?$/.test(e.name) || hijo === 'app/ui/android.calendario.js') return;
+      var src = fs.readFileSync(path.join(ROOT, hijo), 'utf8');
+      var n = (src.match(/paceAndroidCalendarioEventos\(/g) || []).length;
+      if (hijo === 'app/ritmo/ritmo.calendario.destinos.js') n -= 1;
+      if (n > 0) fuera.push(hijo);
+    });
+  })('app');
+  if (fuera.length) malas.push('lee el calendario del movil sin comprobar antes la lista (usa calendarioAndroidEventos): ' + fuera.join(', '));
+  if (malas.length) malas.forEach(function (m) { ctx.falla('android: ' + m); });
+  else ctx.ok('android: la lista de eventos de PACE se olvida en un movil restaurado o reinstalado antes de leer el calendario');
 }
 
 function chequeaPlay(ctx) {

@@ -85,6 +85,30 @@ function chequeaIos(ctx) {
   chequeaFranjas(ctx, crema, oscura);
   chequeaTienda(ctx, icono.archivo);
   chequeaComplementos(ctx);
+  chequeaCampanaAviso(ctx);
+}
+
+/* El aviso de fin de Foco suena con la campana de PACE (Ez, D-10 B del 11 nov.). Lo que falla
+   sin que nada falle: un archivo que el complemento no encuentra (fuera de la raiz de www/), o
+   que iOS no sabe tocar (no PCM, mas de 30 s), deja el aviso mudo; y una receta cambiada en
+   Sound.jsx deja al iPhone con la campana vieja. */
+function chequeaCampanaAviso(ctx) {
+  var campana = require('./campana-aviso.js');
+  var www = require('./android-www.js');
+  var web = texto('app/ui/ios.js');
+  var malas = [];
+  var hay = leer(campana.ARCHIVO), w = campana.leerWav(hay);
+  if (!w) malas.push(campana.ARCHIVO + ' no esta o no es un .wav');
+  else if (w.formato !== 1 || w.bits !== 16 || !(w.segundos > 0.2 && w.segundos < 30)) malas.push(campana.ARCHIVO + ' no es PCM de 16 bits de menos de 30 s, y iOS no lo toca');
+  else {
+    var nuevo = campana.leerWav(campana.campanaWav()), dif = nuevo.datos.length === w.datos.length ? 0 : Infinity;
+    for (var i = 0; dif <= 2 && i < w.datos.length; i += 2) dif = Math.max(dif, Math.abs(w.datos.readInt16LE(i) - nuevo.datos.readInt16LE(i)));
+    if (dif > 2) malas.push(campana.ARCHIVO + ' ya no es la receta pomodoro.end de Sound.jsx -- vuelve a correr node scripts/campana-aviso.js');
+  }
+  if (www.listaWww().indexOf(campana.ARCHIVO) === -1) malas.push(campana.ARCHIVO + ' no va en la raiz de www/, y el complemento de avisos no lo encuentra');
+  if (web.indexOf("var PACE_IOS_AVISO_SONIDO = '" + campana.ARCHIVO + "';") === -1 || !/aviso\.sound = sonido/.test(web)) malas.push('app/ui/ios.js ya no programa el aviso con la campana de PACE');
+  if (malas.length) malas.forEach(function (m) { ctx.falla('ios: ' + m); });
+  else ctx.ok('ios: el aviso de fin de Foco suena con la campana de PACE (' + campana.ARCHIVO + ', la receta de Sound.jsx de hoy)');
 }
 
 /* La ventana de Apple para valorar PACE (Ez, 4A del 28 oct.), con las reglas de la de Android
@@ -200,6 +224,8 @@ function chequeaTienda(ctx, archivoIcono) {
 var NO_CUBRE_IOS = [
   'ios: se comparan las copias y la configuracion, no como se VEN el icono, el arranque y las franjas ' +
     '-- eso se mira en un iPhone (TestFlight), y si el proyecto compila lo dice el workflow iOS',
+  'ios: de la campana del aviso se mira el archivo y que se pida; que iOS la toque con PACE en el fondo, ' +
+    'en un iPhone con TestFlight',
   'ios: de la valoracion se mira que la pieza este en el proyecto y registrada, no que Apple ensene la ventana ' +
     '(tiene su tope y no lo dice) -- eso, en un iPhone con TestFlight',
 ];

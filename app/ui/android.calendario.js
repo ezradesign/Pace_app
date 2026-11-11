@@ -125,7 +125,16 @@ function paceAndroidCalendarioPrivado(id) {
   return paceAndroidPedir('PaceCalendario', 'privado', { id: String(id) });
 }
 
+/* La hora (ms) en que se instaló PACE en este móvil, o null si Android no la da. Cambia en un
+   móvil restaurado de la copia de Google y al reinstalar; no al actualizar. Con ella se sabe si
+   la lista de eventos de PACE es de este móvil (ritmo.calendario.destinos.js). */
+function paceAndroidInstalado() {
+  return paceAndroidPedir('PaceCalendario', 'instalado').then(function (r) {
+    return r && typeof r.instalado === 'number' && isFinite(r.instalado) && r.instalado > 0 ? r.instalado : null;
+  }, function () { return null; });
+}
+
 Object.assign(window, {
   paceAndroidCalendario, paceAndroidCalendarioPermiso, paceAndroidCalendarioTienePermiso, paceAndroidCalendarios, paceAndroidCalendarioEventos,
-  paceAndroidCalendarioCrear, paceAndroidCalendarioCambiar, paceAndroidCalendarioBorrar, paceAndroidCalendarioPrivado,
+  paceAndroidCalendarioCrear, paceAndroidCalendarioCambiar, paceAndroidCalendarioBorrar, paceAndroidCalendarioPrivado, paceAndroidInstalado,
 });
