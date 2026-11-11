@@ -34,17 +34,17 @@
 
 const { useRef: useRefRL, useLayoutEffect: useLayoutEffectRL, useState: useStateRL, useEffect: useEffectRL, useCallback: useCallbackRL } = React;
 
-function RitmoEtiqueta({ it, final, t, tn, lang, estado }) {
+function RitmoEtiqueta({ it, final, t, tn, lang, estado, min }) {
   let nombre, meta;
   if (it.tipo === 'comida') {
     nombre = t('ritmo.comida');
     meta = t('ritmo.comida.lejos');
   } else if (estado) {
-    /* s195: lo pasado dice si se hizo: «hecha · 3 min» o «saltada» */
+    /* s195: lo pasado dice si se hizo: «hecha · 3 min» (los que hiciste, 7A) o «saltada» */
     nombre = it.larga ? it.platos.map((p, i) => (
       <React.Fragment key={p.id}>{i ? <br /> : null}{i ? '+ ' : ''}{ritmoNombre(p.rutina, t, lang)}</React.Fragment>
     )) : ritmoPlatos(it, t, lang);
-    meta = estado === 'hecha' ? t('ritmo.hecha') + ' · ' + it.dur + ' min' : t('ritmo.' + (estado === 'cuenta' ? 'cuenta' : 'saltada'));
+    meta = estado === 'hecha' ? ritmoMetaHecha(min, t) : t('ritmo.' + (estado === 'cuenta' ? 'cuenta' : 'saltada'));
   } else if (it.larga) {
     nombre = it.platos.map((p, i) => (
       <React.Fragment key={p.id}>{i ? <br /> : null}{i ? '+ ' : ''}{ritmoNombre(p.rutina, t, lang)}</React.Fragment>
@@ -192,6 +192,7 @@ function RitmoLinea({ plan }) {
   const m = plan.m;
   const iActual = ritmoIndiceAhora(plan);
   const ultimo = m.items.length - 1;
+  const hechas = ritmoMinutosHechos();   /* los minutos que hiciste en cada pausa (7A) */
   /* La ficha solo vale para una parada que aún no toca: si el día avanza, se cierra. */
   const fichaVale = ficha && ficha.i > iActual && m.items[ficha.i] && m.items[ficha.i].platos && m.items[ficha.i].platos.length;
   const fichaRef = useRefRL(null);
@@ -266,7 +267,7 @@ function RitmoLinea({ plan }) {
               onClick={() => abierta ? ritmoEmpezarParada(it) : setFicha((f) => (f && f.i === i ? null : { i, antes: null }))}>
               {abierta ? <span className="pace-rt-ahora-tag">{t('ritmo.ahora')}</span> : null}
               {it.platos.map((p) => <RitmoGlifo key={p.id} modulo={p.modulo} />)}
-              <RitmoEtiqueta it={it} final={i === ultimo} t={t} tn={tn} lang={lang} estado={estado} />
+              <RitmoEtiqueta it={it} final={i === ultimo} t={t} tn={tn} lang={lang} estado={estado} min={hechas[ritmoOrdinal(m, it)]} />
             </button>
           );
         })}

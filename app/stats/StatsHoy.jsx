@@ -14,6 +14,13 @@
    relleno al 22 % con borde entero, la saltada va al 40 % y a trazos, y lo pasado sin marca se
    queda como estaba. Mismas reglas y mismos colores (`RITMO_COLOR`).
 
+   LO HECHO POR TU CUENTA SE VE (Ez, 6A del 11 nov. 2026; revisión de ChatGPT, punto 6). Con el día
+   elegido solo salían las paradas del plan: una Respira antes de elegirlo, o una rutina entre dos
+   pausas, sumaba en los totales de arriba y no salía debajo. Ahora, tras las paradas, un título
+   pequeño, «Además, por tu cuenta», y esas sesiones con las mismas tarjetas, por hora. Son las de
+   hoy que no apuntó ninguna pausa del día (`dia.sesiones`, por `runId`): una rutina hecha en una
+   pausa sale una vez, en su parada, aunque otra con el mismo nombre se hiciera suelta.
+
    UN DÍA LARGO CABE IGUAL: con más de diez paradas las tarjetas van en una línea (y en el
    móvil, en dos columnas), y con más de quince el escritorio pone seis por fila. Así una
    jornada de 5:00 a 23:30 no pide scroll en el escritorio. */
@@ -28,8 +35,10 @@ function statsHoyParadas(plan) {
   m.items.forEach((it, i) => {
     if (it.tipo === 'comida') { out.push({ it, comida: true }); return; }
     if (!(it.tipo === 'pausa' || it.tipo === 'cierre') || !it.platos || !it.platos.length) return;
-    const marca = (plan.estados || {})[ritmoOrdinal(m, it)] || null;
-    out.push({ it, estado: i === iActual ? 'ahora' : i < iActual ? (marca || 'pasada') : null });
+    const n = ritmoOrdinal(m, it);
+    const marca = (plan.estados || {})[n] || null;
+    /* la de ahora sigue con su marco de «ahora» (`estado`), pero si ya la hiciste lo dice (`marca`, 7A) */
+    out.push({ it, n, marca, estado: i === iActual ? 'ahora' : i < iActual ? (marca || 'pasada') : null });
   });
   return out;
 }
@@ -39,22 +48,36 @@ function statsHoyParadas(plan) {
    se sumaron a la semana (Ez, 2A del 22 oct.): las tarjetas suman lo mismo que el total de
    arriba. Las guardadas antes de v0.174.4 no los traen y siguen con su cifra de ejercicio. */
 function statsHoySesiones() {
-  let ev = [];
-  try {
-    const snap = window.paceEventsSnapshot && window.paceEventsSnapshot();
-    ev = (snap && Array.isArray(snap.events)) ? snap.events : [];
-  } catch (e) { ev = []; }
-  const hoy = typeof todayISO === 'function' ? todayISO() : '';
-  return ev.filter((e) => e && e.type === 'session.completed' && e.localDay === hoy && e.payload && STATS_HOY_MODULO[e.payload.module])
+  return ritmoSesionesHoy()
     .map((e) => {
       const f = new Date(e.occurredAt);
       const rutina = (window.resolveAnyRoutine && window.resolveAnyRoutine(e.payload.routineId)) || { id: e.payload.routineId, name: e.payload.routineId };
       return { modulo: STATS_HOY_MODULO[e.payload.module], rutina, desde: f.getHours() * 60 + f.getMinutes(),
-               min: sessionCreditedMinutes(e), cuando: f.getTime() };
+               min: sessionCreditedMinutes(e), cuando: f.getTime(), runId: e.runId || null };
     })
     /* Por el instante y no por la hora de reloj: el día que se atrasa la hora, de 2:00 a
        3:00 pasa dos veces y lo de la segunda vuelta salía antes que lo de la primera. */
     .sort((a, b) => a.cuando - b.cuando);
+}
+
+/* Con el día elegido, las sesiones de hoy que no son de ninguna de sus pausas (6A). */
+function statsHoySueltas(state) {
+  const por = (ritmoDe(state).dia || {}).sesiones || {};
+  const suyas = new Set();
+  Object.keys(por).forEach((n) => (Array.isArray(por[n]) ? por[n] : []).forEach((id) => suyas.add(id)));
+  return statsHoySesiones().filter((s) => !s.runId || !suyas.has(s.runId));
+}
+
+/* Las sesiones sueltas: la misma tarjeta, hecha, con su hora y sus minutos. */
+function StatsHoySesiones({ sesiones, t, lang }) {
+  return (
+    <StatsHoyRejilla n={sesiones.length}>
+      {sesiones.map((s, k) => (
+        <StatsHoyTarjeta key={k} modulos={[s.modulo]} nombre={ritmoNombre(s.rutina, t, lang)}
+          hora={ritmoHora(s.desde)} meta={s.min + ' min'} estado="hecha" />
+      ))}
+    </StatsHoyRejilla>
+  );
 }
 
 /* Los cuatro totales de hoy. El agua, contra la meta de Ajustes: «5 de 8 vasos». */
@@ -82,10 +105,13 @@ function StatsHoyTarjeta({ modulos, nombre, hora, meta, estado, larga }) {
   );
 }
 
-function statsHoyMeta(p, t) {
-  const { it, estado } = p;
+/* Una pausa hecha dice los minutos que hiciste, no los del hueco (Ez, 7A del 11 nov. 2026;
+   `ritmoMinutosHechos`, state-ritmo.pausa.jsx); la de ahora, si ya la hiciste, también. */
+function statsHoyMeta(p, t, hechas) {
+  const { it } = p;
+  const estado = p.estado === 'ahora' && (p.marca === 'hecha' || p.marca === 'cuenta') ? p.marca : p.estado;
   if (p.comida) return ritmoDuracion(it.dur);
-  if (estado === 'hecha') return t('ritmo.hecha') + ' · ' + it.dur + ' min';
+  if (estado === 'hecha') return ritmoMetaHecha((hechas || {})[p.n], t);
   if (estado === 'saltada') return t('ritmo.saltada');
   if (estado === 'cuenta') return t('ritmo.cuenta');   /* sin minutos: no hubo sesión (4A del 8 nov.) */
   if (estado === 'ahora') return t('ritmo.ahora.min');
@@ -104,6 +130,8 @@ function StatsHoy({ state, onClose }) {
 
   if (plan) {
     const paradas = statsHoyParadas(plan);
+    const hechas = ritmoMinutosHechos(state);
+    const sueltas = statsHoySueltas(state);
     return (
       <div data-pace-hoy-view="menu">
         <StatsTotales items={statsHoyTotales(state, t)} />
@@ -115,9 +143,15 @@ function StatsHoy({ state, onClose }) {
             const modulos = p.comida ? ['comida'] : p.it.platos.map((x) => x.modulo);
             return <StatsHoyTarjeta key={k} modulos={modulos} larga={p.it.larga}
               nombre={p.comida ? t('ritmo.comida') : ritmoPlatos(p.it, t, lang)} hora={ritmoHora(p.it.desde)}
-              meta={statsHoyMeta(p, t)} estado={p.comida ? 'comida' : p.estado} />;
+              meta={statsHoyMeta(p, t, hechas)} estado={p.comida ? 'comida' : p.estado} />;
           })}
         </StatsHoyRejilla>
+        {sueltas.length ? (
+          <div data-pace-hoy-sueltas={sueltas.length}>
+            <div className="pace-sh-cab pace-sh-suelta"><Meta>{t('stats.hoy.suelta')}</Meta></div>
+            <StatsHoySesiones sesiones={sueltas} t={t} lang={lang} />
+          </div>
+        ) : null}
       </div>
     );
   }
@@ -133,16 +167,9 @@ function StatsHoy({ state, onClose }) {
         <Meta>{t('stats.hoy.libre')}</Meta>
         <button type="button" className="pace-rt-enlace pace-rt-fuerte" data-pace-hoy-volver onClick={volver}>{t('ritmo.volver')}</button>
       </div>
-      {sesiones.length ? (
-        <StatsHoyRejilla n={sesiones.length}>
-          {sesiones.map((s, k) => (
-            <StatsHoyTarjeta key={k} modulos={[s.modulo]} nombre={ritmoNombre(s.rutina, t, lang)}
-              hora={ritmoHora(s.desde)} meta={s.min + ' min'} estado="hecha" />
-          ))}
-        </StatsHoyRejilla>
-      ) : <p className="pace-sh-vacio" data-pace-hoy-vacio>{t('stats.hoy.vacio')}</p>}
+      {sesiones.length ? <StatsHoySesiones sesiones={sesiones} t={t} lang={lang} /> : <p className="pace-sh-vacio" data-pace-hoy-vacio>{t('stats.hoy.vacio')}</p>}
     </div>
   );
 }
 
-Object.assign(window, { StatsHoy, statsHoyParadas, statsHoySesiones, statsHoyTotales });
+Object.assign(window, { StatsHoy, statsHoyParadas, statsHoySesiones, statsHoySueltas, statsHoyTotales });

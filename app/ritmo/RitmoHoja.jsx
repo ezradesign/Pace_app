@@ -10,6 +10,7 @@ function RitmoLista({ plan }) {
   const { t, tn, lang } = useT();
   const m = plan.m;
   const iActual = ritmoIndiceAhora(plan);
+  const hechas = ritmoMinutosHechos();   /* los minutos que hiciste en cada pausa (7A) */
   return (
     <div className="pace-rt-lista" data-pace-ritmo-lista>
       {m.items.map((it, i) => {
@@ -40,7 +41,7 @@ function RitmoLista({ plan }) {
            recupera la tinta y su glifo se rellena; la saltada baja al 40 % y puntea. */
         const estado = !comida && pasado ? (plan.estados || {})[ritmoOrdinal(m, it)] || null : null;
         const meta = comida ? tn('ritmo.comida.lista', { d: ritmoDuracion(it.dur) })
-          : estado ? (estado === 'hecha' ? t('ritmo.hecha') + ' · ' + it.dur + ' min' : t('ritmo.' + (estado === 'cuenta' ? 'cuenta' : 'saltada')))
+          : estado ? (estado === 'hecha' ? ritmoMetaHecha(hechas[ritmoOrdinal(m, it)], t) : t('ritmo.' + (estado === 'cuenta' ? 'cuenta' : 'saltada')))
           : ritmoMetaPlato(it, t, tn);
         return (
           <div key={i} className={'pace-rt-li pace-rt-plato' + (pasado && estado !== 'hecha' && estado !== 'cuenta' ? ' pace-rt-pasado' : '') + (estado ? ' pace-rt-' + estado : '')}

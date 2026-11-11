@@ -32,8 +32,9 @@ function ritmoDesfase(ms, hasta) {
    empezó el bloque (FocusTimer), para contarlo bien si cambió la hora mientras, y
    `finMs` cuándo acabó: con el portátil cerrado o PACE cerrado, PACE se entera al
    volver, y el bloque dura lo que duró y no hasta la hora de volver (el rato de en
-   medio queda como margen libre). Sin él, ahora. */
-function ritmoBloqueTerminado(inicioMs, finMs) {
+   medio queda como margen libre). Sin él, ahora. `minutos`, los que contó el aro: lo
+   que el bloque suma de foco, sin las veces que se pausó (ver `ritmoFocoMin`). */
+function ritmoBloqueTerminado(inicioMs, finMs, minutos) {
   /* El plan base: el bloque que cruzó la salida aún abre su pausa de cierre aunque ya sea la hora. */
   var p = ritmoPlanBase(getState());
   if (!p || p.hechos < 1) return;
@@ -60,12 +61,44 @@ function ritmoBloqueTerminado(inicioMs, finMs) {
   var desde = Math.max(t, fin);
   if (ultimo && desde !== ultimo.desde + ultimo.dur) {
     var pasado = ritmoCongelar(p.m.items.slice(0, p.m.items.indexOf(ultimo) + 1));
-    pasado[pasado.length - 1].dur = fin - ultimo.desde;
+    var hecho = pasado[pasado.length - 1];
+    hecho.dur = fin - ultimo.desde;
+    hecho.foco = Number(minutos) > 0 ? Number(minutos) : ultimo.dur;
     cambios.pasado = pasado; cambios.desde = desde; cambios.primerBloque = null; cambios.pausaPendiente = true;
   }
   ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {}; });
 }
 /* La pausa hecha, lo hecho de cada plato y la cuenta del aro: state-ritmo.pausa.jsx. */
+
+/* LO HECHO NO SE RECOMPONE (revisión de ChatGPT, 9 nov. 2026, punto 3). El día se compone en vivo
+   con la cadencia, el horario y las reuniones de ahora, y solo `dia.pasado` queda fuera. Si nada se
+   había recolocado (bloques a su hora), cambiar a «después de cada bloque» con seis bloques de 5
+   hechos de 9:00 a 9:30 los recomponía con pausas en medio, y la pausa «hecha» (va por ordinal)
+   pasaba a ser la de las 9:05. Antes de aplicar uno de esos cambios se congela lo hecho: hasta la
+   pausa abierta si la hay (sigue abierta y con lo hecho de ella) o hasta el último bloque; el resto
+   se compone desde que acaba eso, o desde ahora. Con un Foco en marcha, todo lo de antes de él, y él
+   sigue a su hora y con su duración (como al empezarlo, `ritmoBloqueEmpezado`). Si ya estaba en la
+   historia no se toca: congelar dos veces no mueve nada. Sin nada hecho, o con el día cerrado o
+   terminado, no hay nada que proteger. Lo llaman bloquesElegir, ritmoHorario, ritmoGuardarSemana y
+   calendarioGuardarOcupado ANTES de guardar su cambio. */
+function ritmoFijarLoHecho() {
+  var s = getState(), R = ritmoDe(s);
+  if (!R.dia || R.libre) return;
+  var p = ritmoPlanBase(s);
+  if (!p || p.hechos < 1 || !p.actual || ritmoPasadaLaSalida(p)) return;
+  var corre = typeof ritmoFocoCorriendo === 'function' && ritmoFocoCorriendo();
+  var hasta = corre ? p.actual : (p.pausa || p.m.focos[p.hechos - 1]);
+  var corte = p.m.items.indexOf(hasta) + (corre ? 0 : 1);
+  var ya = (R.dia.pasado || []).length;
+  if (!p.m.items.slice(ya, corte).some(function (it) { return it.tipo !== 'libre'; })) return;
+  var antes = p.m.items.slice(0, corte);
+  while (antes.length && antes[antes.length - 1].tipo === 'libre') antes.pop();
+  var fin = antes[antes.length - 1];
+  var cambios = { pasado: ritmoCongelar(antes), pausaPendiente: false,
+    desde: corre ? p.actual.desde : Math.max(ritmoAhoraExacto(), fin.desde + fin.dur),
+    primerBloque: corre ? p.actual.dur : null };
+  ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {}; });
+}
 /* Empezar un bloque cierra la pausa y, si la hora no es la del plan, RECOLOCA:
    lo anterior al bloque se congela como historia y el resto se recompone desde
    ahora, con la duración con la que el aro arranca (`minutos`). Llegar antes es
@@ -170,8 +203,29 @@ function ritmoFocoEmpezo() {
   try {
     var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
     if (!v) return null;
-    if (v.endsAt && v.endsAt > Date.now()) return v.endsAt - (Number(v.minutes) || 0) * 60000;
+    /* en marcha, la hora guardada (con sus pausas); si la guardó una versión de antes, el final menos la duración */
+    if (v.endsAt && v.endsAt > Date.now()) return typeof v.inicio === 'number' && v.inicio <= v.endsAt ? v.inicio : v.endsAt - (Number(v.minutes) || 0) * 60000;
     return v.pausaMs > 0 && v.dia === new Date().toDateString() ? (v.inicio || null) : null;
+  } catch (e) { return null; }
+}
+
+/* «CAMBIAR» CON UN FOCO EN MARCHA (Ez, 4B del 11 nov. 2026; revisión de ChatGPT, punto 4). El día nuevo
+   se componía desde la hora de elegir y no sabía del bloque que corría: con un bloque de 45 empezado a
+   las 9:00, elegir «Una hora» a las 9:10 ponía la pausa a las 9:35, en mitad del bloque, y al acabar el
+   día nuevo se lo quedaba como suyo con otra hora. Ahora ese bloque es el bloque 1 del día nuevo, a la
+   hora a la que empezó y con la duración del aro (`desde`, `primerBloque` y `pasado: []`, sin el cual
+   la regla no lee `primerBloque`). Vale en marcha, en pausa y acabado sin contar todavía (lo que mira
+   `ritmoFocoCorriendo`); uno empezado ayer no. Lo llama ritmoElegir; lo vigila
+   tests/ritmo-cambiar-en-marcha.spec.js. */
+function ritmoFocoDelDiaNuevo() {
+  if (typeof ritmoFocoCorriendo !== 'function' || !ritmoFocoCorriendo()) return null;
+  try {
+    var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
+    var min = Number(v && v.minutes) || 0;
+    var inicio = typeof v.inicio === 'number' && isFinite(v.inicio) ? v.inicio : (v.endsAt ? v.endsAt - min * 60000 : null);
+    if (!min || inicio == null || inicio > Date.now() || new Date(inicio).toDateString() !== new Date().toDateString()) return null;
+    var d = new Date(inicio);
+    return { desde: d.getHours() * 60 + d.getMinutes(), min: min };
   } catch (e) { return null; }
 }
 
@@ -205,10 +259,18 @@ function ritmoMinutosSonTuyos(s, r) {
   return r.minutosPlan === null || [15, 25, 35, 45].indexOf(s.focusMinutes) !== -1;
 }
 
+/* LO QUE UN BLOQUE SUMA DE FOCO (revisión de ChatGPT, 9 nov. 2026). Un bloque de 45 pausado 20
+   minutos ocupa en la línea de 9:00 a 10:05 (`dur`, 65: la línea dice la verdad), pero de foco son
+   los 45 que contó el aro (`foco`, que pone `ritmoBloqueTerminado` al congelarlo), los mismos que
+   Estadísticas. Las cuentas del día leen esto: lo hecho al cerrar, la pausa larga (75 min de foco)
+   y el foco seguido de los bloques cortos. Un bloque sin `foco` (del plan, o de antes) es su `dur`. */
+function ritmoFocoMin(f) {
+  return f ? (typeof f.foco === 'number' && f.foco >= 0 ? f.foco : f.dur || 0) : 0;
+}
 /* Los minutos de foco hechos hoy en el plan: los de sus bloques terminados. */
 function ritmoFocoHecho(p) {
-  return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) { return a + (f.dur || 0); }, 0) : 0;
+  return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) { return a + ritmoFocoMin(f); }, 0) : 0;
 }
 
-Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho,
+Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoDelDiaNuevo, ritmoFocoHecho, ritmoFocoMin, ritmoFijarLoHecho,
   ritmoMinutosDelPlan, ritmoMinutosDevolver });

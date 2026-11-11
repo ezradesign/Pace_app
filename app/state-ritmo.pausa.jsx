@@ -76,8 +76,11 @@ function ritmoSigueCierre(routine, doneMeta, t) {
 }
 
 /* Una sesión terminada con la pausa abierta la deja HECHA (de lo que sea: hiciste una
-   pausa, s195) y, si es uno de sus platos, lo apunta como hecho. */
-function ritmoPausaHecha(routineId) {
+   pausa, s195) y, si es uno de sus platos, lo apunta como hecho. Y apunta QUÉ SESIÓN fue
+   (`runId`) en `dia.sesiones` = { ordinal: [runId] }: de ahí salen los minutos que hiciste
+   (7A) y qué sesiones de hoy fueron por tu cuenta (6A); la casa es por quién es, no por el
+   nombre de la rutina. */
+function ritmoPausaHecha(routineId, runId) {
   var a = ritmoPausaAbierta();
   if (!a) return;
   var esPlato = !!routineId && a.platos.some(function (pl) { return pl.id === routineId; });
@@ -90,9 +93,46 @@ function ritmoPausaHecha(routineId) {
       var ya = Array.isArray(cambio.platos[a.n]) ? cambio.platos[a.n] : [];
       if (ya.indexOf(routineId) === -1) cambio.platos[a.n] = ya.concat([routineId]);
     }
+    if (runId) {
+      cambio.sesiones = Object.assign({}, r.dia.sesiones || {});
+      var suyas = Array.isArray(cambio.sesiones[a.n]) ? cambio.sesiones[a.n] : [];
+      if (suyas.indexOf(runId) === -1) cambio.sesiones[a.n] = suyas.concat([runId]);
+    }
     return { dia: Object.assign({}, r.dia, cambio) };
   });
 }
+
+/* LOS MINUTOS DE UNA PAUSA HECHA SON LOS QUE HICISTE (Ez, 7A del 11 nov. 2026; revisión de ChatGPT,
+   punto 7). Estadísticas › Hoy, la línea y la hoja decían «hecha · 5 min», los minutos del hueco del
+   plan, aunque la rutina durara 2. Ahora suman los de las sesiones de esa pausa (`dia.sesiones`), con
+   la cifra que se sumó al total de arriba (`sessionCreditedMinutes`). Sin sesión detrás en el registro
+   (hecha antes de apuntarlas, o sin almacén), «hecha» a secas: nunca los del hueco.
+   `ritmoSesionesHoy`: las sesiones de Respira, Mueve y Estira que el registro guardó con el día de hoy. */
+function ritmoSesionesHoy() {
+  var ev = [];
+  try {
+    var snap = window.paceEventsSnapshot && window.paceEventsSnapshot();
+    ev = (snap && Array.isArray(snap.events)) ? snap.events : [];
+  } catch (e) { ev = []; }
+  var hoy = typeof todayISO === 'function' ? todayISO() : '';
+  return ev.filter(function (e) {
+    return e && e.type === 'session.completed' && e.localDay === hoy && e.payload && RITMO_MODULO_SESION[e.payload.module];
+  });
+}
+var RITMO_MODULO_SESION = { breathe: 'respira', move: 'mueve', stretch: 'estira' };
+/* { ordinal: minutos } de las pausas con alguna sesión suya en el registro. */
+function ritmoMinutosHechos(s) {
+  var por = (ritmoDe(s || getState()).dia || {}).sesiones || {};
+  var ns = Object.keys(por);
+  if (!ns.length) return {};
+  var min = {}, out = {};
+  ritmoSesionesHoy().forEach(function (e) { if (e.runId) min[e.runId] = sessionCreditedMinutes(e); });
+  ns.forEach(function (n) {
+    (Array.isArray(por[n]) ? por[n] : []).forEach(function (id) { if (min[id] != null) out[n] = (out[n] || 0) + min[id]; });
+  });
+  return out;
+}
+function ritmoMetaHecha(min, t) { return min != null ? t('ritmo.hecha') + ' · ' + min + ' min' : t('ritmo.hecha'); }
 
 /* «YA LA HICE POR MI CUENTA» (Ez, 4A del 8 nov. 2026; Q5 de las revisiones de ChatGPT). Quien hacía
    la pausa a su manera (agua, una vuelta) sin abrir la rutina solo podía pulsar «Seguir» o «Ahora no»,
@@ -206,5 +246,6 @@ function ritmoPausaCerrarConElDia() {
 
 Object.assign(window, {
   ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta,
+  ritmoSesionesHoy, ritmoMinutosHechos, ritmoMetaHecha, RITMO_MODULO_SESION,
   ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia, ritmoParadaHasta,
 });
