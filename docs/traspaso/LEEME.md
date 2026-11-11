@@ -2,9 +2,38 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 11 de noviembre de 2026, 09:45, v0.197.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 11 de noviembre de 2026, 11:20, v0.197.0.
 
-## 11 nov., 09:45 (cuenta 5iWBf): lo de anoche está hecho en sus ramas y Ez dio ocho letras. Empieza aquí; manda sobre lo de abajo
+## AL RELEVO (11 nov., 11:20): 5iWBf llega al 90 % de las 5 h (se reponen a las 14:30). Empieza aquí; el detalle, en el bloque de las 09:45, debajo
+
+Ez (11:10): «Podemos llevar el uso de esta sesión hasta el 90 % antes de migrar», y quiere aprovechar que tiene Fable hasta el 12 nov.,
+aquí y en una app externa que no gasta. Por orden:
+
+1. **La A del aro.** La monta la sesión que lo pintó, en `claude/caza-aro-fijo-10nov` (worktree `.claude/worktrees/caza-aro-fijo-10nov-8fa0c6`).
+   Está subida si la rama tiene un commit posterior a ef797608. Si el tope la cortó a medias: `git status` en su worktree y una
+   sesión nueva en Opus con `cwd` ahí que la termine (el encargo entero, en el bloque de las 09:45).
+2. **Juntarlo todo como 0.198.0: el «Sí, todo junto» de Ez ya está dado**, no se vuelve a preguntar. Las cuatro ramas, por este
+   orden: `claude/caza-ci-landing-noche-5ea50b`, `claude/montar-auditoria-10nov-3ef28c`, `claude/chatgpt-jornada-9nov` y
+   `claude/caza-aro-fijo-10nov`. Choques que ya se ven: `app/state-core.jsx` (el arreglo del CI lo deja en 499 líneas y la línea de
+   los lunes también lo toca: puede pasar de 500 y hay que trocear), `app/state-ritmo.jsx` (497), el censo de textos de
+   `scripts/verify.integridad.js` (dos ramas lo suben), `DECISIONES_TECNICAS_VIGENTES.md` (filas de las tres, más la del CI, que
+   está propuesta en el informe y sin escribir: «Con la landing delante, `persistState` no escribe…»), y `STATE.md` y este archivo
+   (la rama de la auditoría los recortó por D-4 C: se conservan los relevos de `main` y se aplican sus recortes). Después: bump,
+   build, suite entera, `STATE.md`, `CHANGELOG.md`, push y CI en verde, de día (antes de las 23:00).
+3. **Republicar en la cuenta que siga** las páginas que Ez tiene que poder abrir: decisiones, aro (con la A montada), las dos
+   «Montado» (`docs/proposals/montado-auditoria-10nov/` y `docs/proposals/montado-4-6-7-11nov/`), la auditoría y la hoja de pasos,
+   que además necesita los pasos de hoy.
+4. **Cola de montaje, sesiones en Opus de una en una:** el aro de rendimiento B con V1 B y V2 B (`claude/caza-rendimiento-9nov`);
+   D-8 A y D-10 B (filas S2 y S1 de la cola de la auditoría). Sin el sí de Ez: los arreglos pequeños S3 y S4.
+5. **Fable hasta el 12 nov.:** dos textos listos para la app externa en `docs/audits/textos-externa-11nov.md` (séptima pasada, lo
+   montado hoy; octava, las pruebas). Lo que traiga Ez se guarda y se comprueba como las otras seis. Dentro de Claude, lo que más
+   rinde con Fable es la coordinadora que junta (el punto 2), no las sesiones.
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (11 nov., 11:20)» de docs/traspaso/LEEME.md (y el de las 09:45, debajo, para el detalle), y sigue como coordinadora. Por este orden: comprueba que la A del aro está subida en su rama; junta las cuatro ramas como 0.198.0 (mi «Sí, todo junto» ya está dado) con la suite entera y el CI en verde; republica mis páginas en esta cuenta; y encarga en Opus, de una en una, el aro de rendimiento con V1 y V2, y D-8 y D-10. Haz pocas vueltas: el modelo nuevo gasta mucho.
+```
+
+## 11 nov., 09:45 (cuenta 5iWBf): lo de anoche está hecho en sus ramas y Ez dio ocho letras. Manda sobre lo de abajo
 
 - **Nada juntado: `main` = 0.197.0.** Lo que pedía el relevo de las 23:50 está hecho, cada cosa en su rama y subida:
 
