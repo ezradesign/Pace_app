@@ -1,0 +1,129 @@
+/* B · UNA JORNADA
+   La página se lee como un día con PACE. La portada lleva el aro del Foco detrás de la captura (un
+   círculo fino con su arco en verde y el punto al final, como el dibujo de Foco) y, bajo el botón,
+   la línea del día con sus paradas en el color de cada módulo. De ahí baja una línea por el margen
+   que une las secciones: cada título es una parada. Los cinco módulos son paradas de esa línea, como
+   los pasos de /beta, y las capturas van grandes. Cabecera y pie, iguales en las tres. Ningún color
+   nuevo: todo sale de los tokens que ya usan. */
+
+html #pace-landing { --paper: var(--l-paper); --paper-2: var(--l-paper-2); --ink: var(--l-ink); --ink-2: var(--l-ink-2); --ink-3: var(--l-ink-3);
+  --line: var(--l-line); --line-2: var(--l-line-2); --focus: var(--l-focus); --cta: var(--l-cta); --breathe: var(--l-breathe);
+  --move: var(--l-move); --extra: var(--l-extra); --hydrate: var(--l-water); --display: var(--l-display); --ui: var(--l-ui); overflow-x: clip; }
+html body main.marco { overflow-x: clip; }
+html body main.marco { --hydrate: #5F8A9B; }
+
+/* La cabecera y el pie, como en la A. */
+html #pace-landing .pl-cab, html body main.marco > header { padding: 14px 0; }
+html #pace-landing .pl-vaca img, html body main.marco > header img { height: 72px; width: auto; }
+html #pace-landing .pl-ya { max-width: 7.4em; }
+html #pace-landing .pl-pie, html body main.marco > footer { margin: 0; padding: 26px 0 48px; border-top: 1px solid var(--line); justify-content: flex-start; column-gap: 12px; }
+html #pace-landing .pl-pie::before { content: ''; width: 61px; height: 40px; flex: 0 0 auto; background: url(/premium/vaca.webp) center / contain no-repeat; }
+html body main.marco .pie-marca img { height: 40px; }
+html body main.marco .pie-marca span { display: inline-flex; align-items: center; min-height: 46px; padding: 9px 26px; border-radius: 999px; background: var(--cta); color: var(--paper); font: italic 500 18px/1.2 var(--display); }
+@media (prefers-color-scheme: dark) { html #pace-landing .pl-pie::before { filter: invert(1); } }
+
+/* La letra. */
+html #pace-landing h1, html body main.marco h1 { font-size: clamp(42px, 11vw, 72px); line-height: 1.02; letter-spacing: -.01em; margin: 0 0 20px; }
+html #pace-landing h2, html body main.marco h2 { font-size: clamp(32px, 7.6vw, 46px); line-height: 1.08; }
+html body main.marco .avisame h2, html body main.marco .regalo h2 { font-size: clamp(28px, 6.4vw, 32px); }
+html #pace-landing .pl-lede, html body main.marco .lede { font-size: 18px; line-height: 1.55; max-width: 30em; margin-bottom: 24px; }
+html #pace-landing main p, html body main.marco > section p { max-width: 36em; }
+html #pace-landing .pl-boton, html body main.marco .boton { min-height: 46px; padding: 9px 26px; font-size: 18px; }
+
+/* La portada: el texto acaba en la línea del día. La primera parada, llena (es «ahora»); las demás,
+   huecas, cada una en el color de su módulo, como en la app. */
+html #pace-landing .pl-portada, html body main.marco .portada { padding: 32px 0 56px; }
+html #pace-landing .pl-portada > div:first-child, html body main.marco .portada > div:first-child { position: relative; padding-bottom: 60px; }
+html #pace-landing .pl-portada > div:first-child::before, html body main.marco .portada > div:first-child::before {
+  content: ''; position: absolute; left: 5px; bottom: 26px; width: 286px; border-top: 1px solid var(--line-2); }
+html #pace-landing .pl-portada > div:first-child::after, html body main.marco .portada > div:first-child::after {
+  content: ''; position: absolute; left: 0; bottom: 21px; width: 11px; height: 11px; border-radius: 50%; background: var(--focus);
+  box-shadow: 40px 0 0 -1.5px var(--paper), 40px 0 0 0 var(--breathe), 80px 0 0 -1.5px var(--paper), 80px 0 0 0 var(--move),
+    120px 0 0 -1.5px var(--paper), 120px 0 0 0 var(--extra), 160px 0 0 -1.5px var(--paper), 160px 0 0 0 var(--hydrate),
+    200px 0 0 -1.5px var(--paper), 200px 0 0 0 var(--focus), 240px 0 0 -1.5px var(--paper), 240px 0 0 0 var(--breathe),
+    280px 0 0 -1.5px var(--paper), 280px 0 0 0 var(--move); }
+
+/* El aro detrás de la captura de la portada: un círculo fino, su arco en verde y el punto al final.
+   Detrás de una captura alta, el arco va a la derecha, donde se ve; detrás de la del ordenador, arriba. */
+html #pace-landing .pl-foto, html body main.marco .portada .foto { position: relative; isolation: isolate; }
+html body main.marco .portada .foto { overflow: visible; }
+html body main.marco .portada .foto picture { display: block; overflow: hidden; border-radius: 13px; }
+html #pace-landing .pl-foto::before, html body main.marco .portada .foto::before {
+  content: ''; position: absolute; z-index: -1; left: 50%; top: 50%; width: 136%; aspect-ratio: 1; border-radius: 50%;
+  border: 1.5px solid var(--line); border-right-color: var(--focus); transform: translate(-50%, -50%) rotate(-10deg); }
+html #pace-landing .pl-foto::after, html body main.marco .portada .foto::after {
+  content: ''; position: absolute; z-index: -1; left: 50%; top: 50%; width: 11px; height: 11px; border-radius: 50%; background: var(--focus);
+  margin-left: 55.7%; margin-top: 39%; transform: translate(-50%, -50%); }
+html #pace-landing .pl-foto { max-width: 280px; margin: 56px auto 40px; }
+html body main.marco .portada .foto { margin: 64px 18px 40px; }
+
+/* La línea que baja por el margen y une las secciones; cada título es una parada. */
+html #pace-landing main section:nth-of-type(n), html body main.marco > section:nth-of-type(n) {
+  position: relative; background: none; border-radius: 0; margin: 0; padding: 44px 0 40px 38px; }
+html #pace-landing main section::before, html body main.marco > section::before {
+  content: ''; position: absolute; left: 10px; top: 0; bottom: 0; border-left: 1px solid var(--line-2); }
+html #pace-landing main section::after, html body main.marco > section::after {
+  content: ''; position: absolute; left: 4px; top: 55px; width: 13px; height: 13px; border-radius: 50%; box-sizing: border-box;
+  background: var(--paper); border: 1.5px solid var(--c, var(--focus)); }
+html #pace-landing main section:nth-of-type(5n+1), html body main.marco > section:nth-of-type(5n+1) { --c: var(--focus); }
+html #pace-landing main section:nth-of-type(5n+2), html body main.marco > section:nth-of-type(5n+2) { --c: var(--breathe); }
+html #pace-landing main section:nth-of-type(5n+3), html body main.marco > section:nth-of-type(5n+3) { --c: var(--move); }
+html #pace-landing main section:nth-of-type(5n+4), html body main.marco > section:nth-of-type(5n+4) { --c: var(--extra); }
+html #pace-landing main section:nth-of-type(5n+5), html body main.marco > section:nth-of-type(5n+5) { --c: var(--hydrate); }
+
+/* Los cinco módulos, como paradas: su dibujo dentro de un círculo de su color, unidos por la línea. */
+html #pace-landing .pl-mods { position: relative; gap: 6px; }
+html #pace-landing .pl-mods::before { content: ''; position: absolute; left: 18px; top: 24px; bottom: 24px; border-left: 1px dashed var(--line-2); }
+html #pace-landing .pl-mods li { position: relative; display: flex; align-items: center; justify-content: flex-start; gap: 4px 14px; flex-wrap: wrap; border-bottom: 0; padding: 7px 0 7px 52px; min-height: 50px; }
+html #pace-landing .pl-mods li::before { content: ''; position: absolute; left: 0; top: 50%; width: 37px; height: 37px; margin-top: -18.5px; border-radius: 50%; box-sizing: border-box; background: var(--paper); border: 1.5px solid var(--c); }
+html #pace-landing .pl-mods i { position: absolute; left: 7.5px; top: 50%; width: 22px; height: 22px; margin: -11px 0 0; border-radius: 0;
+  -webkit-mask: var(--g) center / contain no-repeat; mask: var(--g) center / contain no-repeat; }
+html #pace-landing .pl-mods b { font-size: 23px; }
+html #pace-landing .pl-mods li > span { text-align: left; }
+html #pace-landing .pl-mods li:nth-child(1) { --c: var(--focus); --g: var(--g-foco); }
+html #pace-landing .pl-mods li:nth-child(2) { --c: var(--breathe); --g: var(--g-respira); }
+html #pace-landing .pl-mods li:nth-child(3) { --c: var(--move); --g: var(--g-mueve); }
+html #pace-landing .pl-mods li:nth-child(4) { --c: var(--extra); --g: var(--g-estira); }
+html #pace-landing .pl-mods li:nth-child(5) { --c: var(--hydrate); --g: var(--g-agua); }
+
+/* Las capturas, grandes: en el móvil, en tira, como /beta. */
+html #pace-landing .pl-foto img, html #pace-landing .pl-par img, html body main.marco .tira img, html body main.marco .mosaico img { border-radius: 12px; }
+html #pace-landing .pl-par { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 24px -16px 0 -54px; padding: 0 16px 6px 54px; scrollbar-width: none; }
+html #pace-landing .pl-par figure { flex: 0 0 78%; scroll-snap-align: center; }
+html body main.marco > section .tira { margin-left: -54px; padding-left: 54px; }
+
+/* Las promesas y lo que se elige. */
+html #pace-landing .pl-promesas li, html body main.marco .promesas li { font-size: clamp(24px, 5.8vw, 30px); line-height: 1.25; }
+html #pace-landing .pl-promesas li::before, html body main.marco .promesas li::before { width: 9px; height: 9px; border-width: 1.5px; }
+html #pace-landing .pl-preg summary, html body main.marco summary { font-size: 22px; }
+html body main.marco .regalo, html body main.marco .plato.delante { border-width: 1.5px; }
+
+@media (min-width: 600px) {
+  html #pace-landing .pl-pie nav, html body main.marco > footer > .pie-enlaces { margin-left: auto; }
+  html body main.marco .mosaico { gap: 20px; }
+}
+
+@media (min-width: 900px) {
+  html #pace-landing .pl-vaca img, html body main.marco > header img { height: 100px; }
+  html #pace-landing .pl-ya { max-width: none; }
+  html #pace-landing .pl-portada { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 72px; padding: 40px 0 80px; }
+  html body main.marco .portada { gap: 80px; padding: 40px 0 80px; }
+  html #pace-landing .pl-foto { max-width: 320px; margin: 40px auto; }
+  html body main.marco .portada .foto { margin: 40px 40px 40px 0; }
+  html body main.marco .portada .foto::before { width: 104%; border-right-color: var(--line); border-top-color: var(--focus); }
+  html body main.marco .portada .foto::after { margin-left: 30%; margin-top: -42.6%; }
+  html #pace-landing main section:nth-of-type(n), html body main.marco > section:nth-of-type(n) { padding: 64px 0 60px 88px; }
+  html #pace-landing main section::before, html body main.marco > section::before { left: 31px; }
+  html #pace-landing main section::after, html body main.marco > section::after { left: 23px; top: 79px; width: 17px; height: 17px; }
+  html #pace-landing .pl-mods { max-width: 640px; }
+  html #pace-landing .pl-mods li { min-height: 54px; }
+  html #pace-landing .pl-par { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; max-width: 780px; overflow: visible; margin: 40px 0 0; padding: 0; }
+  html #pace-landing .pl-dos, html body main.marco .dos { gap: 72px; }
+  html body main.marco .mosaico { max-width: none; gap: 26px; }
+  /* /beta: el título arriba y las tres capturas, grandes, en fila debajo. */
+  html body main.marco .portada.maq-beta { display: block; }
+  html body main.marco .maq-beta .maq-titulo { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); column-gap: 72px; align-items: end; }
+  html body main.marco .maq-beta .maq-titulo h1 { margin: 0; }
+  html body main.marco .maq-beta .maq-resto > :last-child { margin-bottom: 0; }
+  html body main.marco .maq-beta .tira { margin-top: 48px; gap: 36px; }
+}

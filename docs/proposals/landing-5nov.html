@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landing y web de PACE</title>
+<meta name="robots" content="noindex">
+<!-- Propuesta para pensar (5 nov. 2026). No monta nada: ni la app ni la web cambian.
+     Colores de app/tokens.css y de /premium; serif itálica en los títulos.
+     Los bocetos de la landing están dibujados aquí, no son la página publicada. -->
+<style>
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858;
+    --line: #C9C0A8; --line-2: #B8AD8E; --focus: #3E5A3A; --cta: #50624D; --premium: #9C6B2E;
+    --breathe: #C97A5D; --move: #9A7B4F; --extra: #6B7A8F; --bad: #A4472F;
+    --display: 'Cormorant Garamond', Georgia, serif; --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+      --line: #4d4536; --line-2: #5f5544; --focus: #7A9A6D; --cta: #8E9D88; --premium: #C99A5B; --breathe: #D99477; --bad: #D98A70; }
+  }
+  :root[data-theme="dark"] { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+      --line: #4d4536; --line-2: #5f5544; --focus: #7A9A6D; --cta: #8E9D88; --premium: #C99A5B; --breathe: #D99477; --bad: #D98A70; }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.6 var(--ui); }
+  .marco { max-width: 1060px; margin: 0 auto; padding: 0 16px 80px; }
+  h1, h2, h3, .serif { font-family: var(--display); font-style: italic; font-weight: 500; }
+  h1 { font-size: clamp(36px, 8vw, 54px); line-height: 1.05; margin: 36px 0 12px; }
+  h2 { font-size: clamp(28px, 6vw, 36px); line-height: 1.1; margin: 56px 0 10px; }
+  h3 { font-size: 24px; line-height: 1.15; margin: 0 0 6px; }
+  p { color: var(--ink-2); margin: 0 0 12px; }
+  .kicker { font: 500 11px/1.4 var(--ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 6px; }
+  .lede { font-size: 17px; max-width: 40em; }
+  a { color: var(--focus); }
+  code { font: 13px ui-monospace, Consolas, monospace; background: var(--paper-2); padding: 1px 5px; border-radius: 4px; color: var(--ink); }
+  .caja { border: 1px solid var(--line); background: var(--paper-2); border-radius: 14px; padding: 16px 18px; margin: 14px 0; }
+  .caja.rec { border-color: var(--cta); border-width: 2px; }
+  .etq { display: inline-block; font: 500 11px/1 var(--ui); letter-spacing: .1em; text-transform: uppercase; padding: 5px 9px; border-radius: 999px; border: 1px solid var(--line-2); color: var(--ink-3); margin-right: 6px; }
+  .etq.si { color: var(--cta); border-color: var(--cta); }
+  .etq.no { color: var(--bad); border-color: var(--bad); }
+  .rejilla { display: grid; gap: 14px; grid-template-columns: 1fr; }
+  @media (min-width: 820px) { .rejilla.tres { grid-template-columns: repeat(3, 1fr); } .rejilla.dos { grid-template-columns: 1fr 1fr; } }
+  svg.dib { width: 100%; height: auto; display: block; margin: 6px 0 10px; }
+  svg.dib text { font: 12px var(--ui); fill: var(--ink-2); }
+  svg.dib .t { font: italic 500 16px var(--display); fill: var(--ink); }
+  svg.dib rect.c { fill: var(--paper); stroke: var(--line-2); stroke-width: 1.4; }
+  svg.dib rect.v { fill: none; stroke: var(--cta); stroke-width: 2; }
+  svg.dib rect.l { fill: var(--paper); stroke: var(--premium); stroke-width: 1.6; }
+  svg.dib path { fill: none; stroke: var(--ink-3); stroke-width: 1.4; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 10px 0; }
+  th, td { text-align: left; vertical-align: top; padding: 9px 10px; border-top: 1px solid var(--line); color: var(--ink-2); }
+  th { font: 500 11px/1.4 var(--ui); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); border-top: 0; }
+  td:first-child { color: var(--ink); font-weight: 500; }
+  .tabla { overflow-x: auto; }
+  .tabla table { min-width: 640px; }
+  .ok { color: var(--cta); font-weight: 500; } .mal { color: var(--bad); font-weight: 500; } .med { color: var(--premium); font-weight: 500; }
+  ul.l { padding-left: 18px; margin: 0 0 12px; color: var(--ink-2); } ul.l li { margin-bottom: 4px; }
+  /* Bocetos */
+  .bocetos { display: grid; gap: 22px; grid-template-columns: 1fr; align-items: start; }
+  @media (min-width: 900px) { .bocetos { grid-template-columns: 372px 1fr; } }
+  .marco-tel { width: 372px; max-width: 100%; border: 1px solid var(--line-2); border-radius: 16px; overflow: hidden; background: var(--paper); }
+  .marco-pc { border: 1px solid var(--line-2); border-radius: 12px; overflow: hidden; background: var(--paper); position: relative; }
+  .pie-boceto { font-size: 12px; color: var(--ink-3); margin: 6px 0 0; }
+  /* Dentro del boceto: calcado de /premium */
+  .m { font: 16px/1.55 var(--ui); color: var(--ink); background: var(--paper); }
+  .m p { color: var(--ink-2); }
+  .m .cab { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; }
+  .m .marca { font: italic 500 30px/1 var(--display); letter-spacing: .02em; }
+  .m .idi { font: 500 11px/1 var(--ui); letter-spacing: .1em; color: var(--ink-3); border: 1px solid var(--line-2); border-radius: 999px; padding: 7px 11px; }
+  .m h1 { font-size: 40px; margin: 6px 0 12px; } .m h2 { font-size: 31px; margin: 0 0 10px; }
+  .m .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 8px 24px; border-radius: 999px; font: italic 500 17px/1.2 var(--display); background: var(--cta); color: var(--paper); }
+  .m .btn.h { background: transparent; color: var(--cta); border: 1px solid var(--cta); }
+  .m .sec { padding: 22px 16px; border-top: 1px solid var(--line); }
+  .m .foto { aspect-ratio: 9/16; max-height: 300px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper-2); display: grid; place-items: center; text-align: center; color: var(--ink-3); font-size: 12px; padding: 10px; }
+  .m .mods { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .m .mod { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: var(--paper-2); }
+  .m .mod b { font: italic 500 20px/1.1 var(--display); display: block; }
+  .m .mod span { font-size: 13px; color: var(--ink-3); }
+  .m .pt { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+  .m .tres { display: grid; gap: 10px; }
+  .m .pie { padding: 18px 16px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-3); display: flex; gap: 14px; flex-wrap: wrap; }
+  .m .pc-portada { display: grid; grid-template-columns: 1.05fr 1fr; gap: 40px; padding: 20px 56px 36px; align-items: center; }
+  .m .pc-portada h1 { font-size: 58px; }
+  .m .pc-sec { padding: 32px 56px; border-top: 1px solid var(--line); }
+  .m .pc-mods { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .m .pc-dos { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .m .pc-pie { padding: 20px 56px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-3); display: flex; gap: 22px; }
+  .m .pc-foto { aspect-ratio: 16/10; border: 1px solid var(--line); border-radius: 14px; background: var(--paper-2); display: grid; place-items: center; color: var(--ink-3); font-size: 13px; text-align: center; padding: 10px; }
+  .opc { display: flex; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+  .opc:first-of-type { border-top: 0; }
+  .letra { flex: none; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--cta); color: var(--cta); display: grid; place-items: center; font: italic 500 17px/1 var(--display); }
+  .opc.r .letra { background: var(--cta); color: var(--paper); }
+  .opc p { margin: 0; } .opc b { color: var(--ink); font-weight: 500; }
+  .pregunta { margin-top: 26px; } .pregunta h3 { font-size: 26px; }
+  details { border-top: 1px solid var(--line); padding: 10px 0; } details summary { cursor: pointer; color: var(--ink); font-weight: 500; }
+  details > *:not(summary) { margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="marco">
+
+<p class="kicker" style="margin-top:28px">5 nov. 2026 · para pensar, no se monta nada</p>
+<h1>Una landing y la estructura de la web</h1>
+<p class="lede">Hoy <code>pacegrass.app</code> es la propia app en la raíz, y al lado hay páginas sueltas: <code>/premium</code>, <code>/beta</code>, <code>/gracias</code>, <code>/recuperar</code>, <code>/desistir</code>. Esta página responde cinco cosas con lo que he mirado en el repositorio. Al final, las preguntas, con letras.</p>
+
+<div class="caja rec">
+  <p class="kicker">En corto</p>
+  <p style="color:var(--ink)"><b>No hace falta una landing nueva para vender.</b> <code>/premium</code> ya hace de landing: dice qué es gratis, qué es PACE completo, enseña capturas, trae preguntas, la devolución y los enlaces legales. <b>Lo que sí conviene antes de pedir la verificación a Google</b> son cuatro retoques pequeños y decidir qué dirección das como «página principal». <b>No muevas la app de sitio</b> (opción B): es la que más cosas toca y no te da nada que no tengas ya con los retoques.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<h2>1 · ¿Hace falta una landing ya?</h2>
+
+<div class="rejilla tres">
+  <div class="caja">
+    <h3>Antes de la primera venta</h3>
+    <p><span class="etq si">No hace falta nueva</span></p>
+    <p>Lo que una venta en la web pide ya existe: la página que explica (<code>/premium</code>), la política de privacidad (<code>/privacy</code>), la de seguridad (<code>/safety</code>), el desistimiento (<code>/desistir</code>), recuperar un código (<code>/recuperar</code>) y un correo de contacto.</p>
+    <p><b>Qué cambia si la haces:</b> casi nada para la venta; solo más bonita la primera impresión.</p>
+  </div>
+  <div class="caja">
+    <h3>Antes de la verificación de Google</h3>
+    <p><span class="etq">Retoques, sí</span></p>
+    <p>Google, para abrir el calendario a todo el mundo, revisa la «página principal» que das en la pantalla de permisos. Hoy esa dirección sería la raíz, que es la app: una página sin título sobre qué hace, sin descripción y con la versión en el título (<code>PACE · Foco · Cuerpo — v0.190.0</code>).</p>
+    <p><b>Qué cambia:</b> si das <code>/premium</code> como página principal, ya lo tienes casi todo; falta un párrafo que cuente para qué se usa el calendario y que lo diga con las mismas palabras que la privacidad.</p>
+    <p class="pie-boceto">No he consultado hoy las reglas de Google; lo que pide exactamente lo dirá su consola. Lo que sé del repo: las altas están en <code>docs/CALENDARIO_ALTAS.md</code> y «Marca» pide página principal, privacidad y dominio.</p>
+  </div>
+  <div class="caja">
+    <h3>Después</h3>
+    <p><span class="etq">Cuando haya tráfico</span></p>
+    <p>Si algún día quieres que quien busque «pausas activas» encuentre PACE, o que la raíz explique antes de abrir, ahí tiene sentido la raíz con dos caras (opción C). Antes, no.</p>
+    <p><b>Qué pasa si no se hace nunca:</b> quien llegue a la raíz sin conocer PACE abre la app directamente (con su bienvenida) y no ve el escaparate; y Google casi no leerá nada de la raíz, porque es una app que se dibuja con JavaScript.</p>
+  </div>
+</div>
+
+<!-- ============ 2 ============ -->
+<h2>2 · La estructura: tres opciones</h2>
+<p class="lede">Una cuarta, poner la app en <code>app.pacegrass.app</code> y la landing en la raíz, la descarto: otro subdominio es otro «sitio» para el navegador y la gente perdería sus datos (lo mismo que ya decidiste con <code>paceweb.pages.dev</code>, que sigue vivo sin redirigir por eso).</p>
+
+<div class="rejilla tres">
+  <div class="caja rec">
+    <p class="kicker">Opción A · recomendada</p>
+    <h3>La app en la raíz y /premium de escaparate</h3>
+    <svg class="dib" viewBox="0 0 300 190" role="img" aria-label="La raíz es la app; al lado, premium, beta y legales">
+      <rect class="v" x="10" y="10" width="280" height="56" rx="10"/><text class="t" x="24" y="34">pacegrass.app/</text><text x="24" y="54">la app, como hoy</text>
+      <path d="M40 66v26M110 66v26M180 66v26M250 66v26"/>
+      <rect class="l" x="10" y="92" width="64" height="44" rx="8"/><text x="18" y="118">/premium</text>
+      <rect class="c" x="80" y="92" width="60" height="44" rx="8"/><text x="94" y="118">/beta</text>
+      <rect class="c" x="146" y="92" width="64" height="44" rx="8"/><text x="152" y="112">/privacy</text><text x="152" y="126">/safety</text>
+      <rect class="c" x="216" y="92" width="74" height="44" rx="8"/><text x="222" y="112">/gracias</text><text x="222" y="126">/desistir…</text>
+      <text x="10" y="164">El escaparate (con borde dorado) es la landing.</text>
+    </svg>
+    <p>No se mueve nada. <code>/premium</code> crece un poco y es lo que se enseña, se enlaza desde Play y se da a Google.</p>
+  </div>
+  <div class="caja">
+    <p class="kicker">Opción B</p>
+    <h3>Landing en la raíz y la app en otra ruta</h3>
+    <svg class="dib" viewBox="0 0 300 190" role="img" aria-label="La raíz es la landing; la app pasa a una ruta">
+      <rect class="l" x="10" y="10" width="280" height="56" rx="10"/><text class="t" x="24" y="34">pacegrass.app/</text><text x="24" y="54">landing nueva</text>
+      <path d="M60 66v26M150 66v26M240 66v26"/>
+      <rect class="v" x="10" y="92" width="100" height="44" rx="8"/><text x="18" y="112">/abrir (la app)</text><text x="18" y="126">antes en la raíz</text>
+      <rect class="c" x="116" y="92" width="80" height="44" rx="8"/><text x="124" y="118">/beta /premium</text>
+      <rect class="c" x="202" y="92" width="88" height="44" rx="8"/><text x="210" y="118">legales…</text>
+      <text x="10" y="164">La app tiene que irse a otra ruta, y no puede ser /app.</text>
+    </svg>
+    <p>Es lo que decía la nota antigua. Da la mejor raíz, pero obliga a mover la app, y su ruta natural, <code>/app/</code>, <b>ya está ocupada</b>: ahí viven los dibujos y medios de la app (<code>/app/glyphs/…</code>, en el service worker). Habría que usar otro nombre.</p>
+  </div>
+  <div class="caja">
+    <p class="kicker">Opción C</p>
+    <h3>La raíz con dos caras</h3>
+    <svg class="dib" viewBox="0 0 300 190" role="img" aria-label="Misma raíz: la app para quien ya usa PACE y la landing para quien llega nuevo">
+      <rect class="l" x="10" y="10" width="280" height="40" rx="10"/><text class="t" x="24" y="35">pacegrass.app/</text>
+      <path d="M80 50v22M220 50v22"/>
+      <rect class="v" x="10" y="72" width="130" height="50" rx="8"/><text x="18" y="94">ya usa PACE, o abre</text><text x="18" y="108">desde el icono: la app</text>
+      <rect class="l" x="160" y="72" width="130" height="50" rx="8"/><text x="168" y="94">llega nuevo:</text><text x="168" y="108">la landing</text>
+      <text x="10" y="150">La misma dirección decide por quién llega.</text>
+      <text x="10" y="168">Sigue /premium, /beta… como hoy.</text>
+    </svg>
+    <p>La app no cambia de dirección, así que no se rompe ningún enlace. Pero la raíz tendría que decidir antes de pintar, y es la parte delicada (ver abajo).</p>
+  </div>
+</div>
+
+<div class="caja rec">
+  <p style="color:var(--ink)"><b>Mi recomendación: A ahora, y C solo si Google o el tráfico lo piden.</b> A cuesta unas horas, no toca datos, ni service worker, ni enlaces, y deja a Google una página principal clara. B es la única que puede dejar a gente sin sus datos o con la PWA mal instalada; no lo haría sin una razón que A y C no den.</p>
+</div>
+
+<!-- ============ 3 ============ -->
+<h2>3 · Qué se rompería en cada opción</h2>
+<p>Comprobado leyendo el repo, no probado en un navegador. El mismo <b>origen</b> (<code>pacegrass.app</code>) guarda lo mismo aunque cambie la ruta; solo cambiar de dominio o subdominio lo pierde.</p>
+
+<div class="tabla"><table>
+  <tr><th>Qué</th><th>A · app en la raíz</th><th>B · app en otra ruta</th><th>C · raíz con dos caras</th></tr>
+  <tr><td>Quien ya tiene datos (<code>localStorage</code> <code>pace.state.v2</code>, IndexedDB <code>pace.events.v1</code>)</td>
+    <td><span class="ok">Nada.</span> Mismo origen y misma ruta.</td>
+    <td><span class="med">Se conservan</span>: <code>localStorage</code> es del origen, no de la ruta. <span class="mal">Pero</span> quien abra la raíz creyendo que es la app verá la landing, y le parecerá que ha desaparecido.</td>
+    <td><span class="ok">Se conservan.</span> Cuidado: si la raíz decide mal («no hay datos») a alguien con datos, le enseña la landing. Hay que decidir con el dato real, y con prudencia ante errores de lectura.</td></tr>
+  <tr><td>La PWA instalada y su service worker (<code>sw.js</code>, alcance <code>/</code>)</td>
+    <td><span class="ok">Nada.</span></td>
+    <td><span class="mal">Se rompe</span> lo siguiente: el manifiesto manda abrir <code>/</code> (<code>start_url</code>, <code>scope</code>, <code>id</code> = <code>/</code>) y sus tres atajos (<code>/?go=focus</code>…); el respaldo sin red del service worker devuelve <code>/</code> como app; <code>main.jsx</code> lee <code>?go=</code> en la raíz. Cambiar el <code>id</code> haría que el navegador lo vea como otra app instalada; cambiar solo <code>start_url</code> vale, pero hay que tocar los tres sitios a la vez.</td>
+    <td><span class="med">Aguanta</span> si «abierta desde el icono» manda siempre a la app (<code>display-mode: standalone</code>). El respaldo sin red debe devolver la app, no la landing. Un service worker caducado puede servir la cara vieja un rato.</td></tr>
+  <tr><td>Enlaces de Google Play, <code>/beta</code> y códigos de tester</td>
+    <td><span class="ok">Nada.</span> El enlace de Play (<code>play.google.com/apps/testing/com.ezradesign.pace</code>) es externo; <code>/beta</code> tiene su carpeta; los 15 enlaces de tester son <code>…/#codigo=PACE1…</code> y abren la raíz, que es la app.</td>
+    <td><span class="mal">Se rompen los enlaces de tester ya enviados</span>: <code>#codigo=</code> aterrizaría en la landing, que tendría que reenviarlo con el trozo del código a la app. «Abrir PACE» de <code>/premium</code> y <code>/beta</code> apunta a <code>/</code> (hay que cambiarlo en ambas). Los enlaces de la app de Android no cambian: la app va empaquetada, no carga la web.</td>
+    <td><span class="ok">Aguantan</span> si la regla es «si lleva <code>#codigo=</code> o <code>?go=</code>, es la app».</td></tr>
+  <tr><td>Calendario (Google y Microsoft)</td>
+    <td><span class="ok">Nada.</span> Origen y dirección de vuelta (<code>/calendario.html</code>) iguales.</td>
+    <td><span class="ok">Nada</span> si <code>calendario.html</code> se queda en la raíz: la vuelta es <code>location.origin + '/calendario.html'</code>. Si se moviera, habría que rehacer las altas en Google y Microsoft y volver a esperar.</td>
+    <td><span class="ok">Nada.</span></td></tr>
+  <tr><td>SEO</td>
+    <td><span class="med">Igual que hoy:</span> la raíz casi no dice nada a un buscador. <code>/premium</code> ya tiene <code>description</code>; no hay <code>canonical</code>, <code>sitemap</code> ni <code>robots</code> en el repo. Se arregla añadiendo esos tres.</td>
+    <td><span class="ok">Mejor raíz</span> para buscar. Pero la app movida pierde las direcciones que tuviera ganadas (pocas hoy).</td>
+    <td><span class="med">Buena raíz</span> si el buscador, que no tiene datos guardados, recibe la landing. Hay que vigilar que el texto sea el mismo que ve cualquier persona nueva.</td></tr>
+  <tr><td>Los otros dominios</td>
+    <td><span class="ok">Nada.</span> <code>paceweb.pages.dev</code> sigue como está.</td>
+    <td><span class="mal">Doble trabajo:</span> hay que hacerlo también ahí, o los testers viejos ven la landing en la raíz de ese dominio.</td>
+    <td><span class="ok">Nada nuevo.</span></td></tr>
+  <tr><td>Lo que hay que tocar y probar</td>
+    <td>Cuatro retoques en páginas y tres ficheros nuevos de texto.</td>
+    <td>Manifiesto, service worker, <code>main.jsx</code>, <code>web-dist.js</code>, dos páginas, <code>verify</code>, varias pruebas e2e y la web en vivo.</td>
+    <td>La decisión previa a pintar en <code>index.html</code>, el service worker, su prueba con y sin datos, y la landing.</td></tr>
+</table></div>
+
+<details><summary>Lo que sale de la lectura de <code>web-dist.js</code></summary>
+  <p>Una página nueva entra en <code>WEB_ARCHIVOS</code> o <code>WEB_CARPETAS</code>, o no se publica, y <code>verify</code> falla si la raíz tiene una que no está en ninguna lista. El build de Cloudflare es <code>node scripts/web-dist.js</code> y publica <code>dist/</code>. Cuatro retoques de A no obligan a tocar nada de eso; una landing en carpeta nueva, sí (una línea).</p>
+</details>
+
+<!-- ============ 4 ============ -->
+<h2>4 · Qué contaría la landing</h2>
+<p class="lede">La misma voz de <code>/premium</code>: calmada, corta, sin cifras ni promesas que no estén ya escritas en la app. Lo que veas aquí sin marca es nuevo; lo demás se reutiliza tal cual.</p>
+
+<div class="rejilla dos">
+  <div class="caja">
+    <p class="kicker">Se reutiliza de /premium</p>
+    <ul class="l">
+      <li>Portada: «Pausas activas para quien trabaja sentado» y el botón «Abrir PACE, es gratis».</li>
+      <li>«Gratis, y lo seguirá siendo» y «PACE completo», en dos columnas.</li>
+      <li>«Así se ve PACE completo»: el mosaico de capturas.</li>
+      <li>«Tres cosas que no van a cambiar» y la prueba/devolución en 14 días (si sigue valiendo con el pago único).</li>
+      <li>Preguntas, pie con privacidad, seguridad, contacto y desistir, y el cambio ES/EN.</li>
+    </ul>
+  </div>
+  <div class="caja">
+    <p class="kicker">Se reutiliza de /beta</p>
+    <ul class="l">
+      <li>Las tres capturas (jornada, respira, logros), ya en español e inglés.</li>
+      <li>Los pasos para Android y iPhone, con la insignia de Google Play.</li>
+      <li>El bloque <code>data-enlaces</code>: los enlaces viven en un solo sitio.</li>
+    </ul>
+    <p class="kicker" style="margin-top:12px">Sería nuevo</p>
+    <ul class="l">
+      <li>Una línea de qué es cada parte (Foco, Respira, Mueve, Estira, Hidrátate).</li>
+      <li>Para qué se usa el calendario y que es opcional (para Google).</li>
+      <li>Dónde se compra hoy: solo la web, pago único de por vida; Android y iPhone, cuando lleguen.</li>
+    </ul>
+  </div>
+</div>
+<p>Sin inventar: no pongo número de usuarios, valoraciones ni «recomendado por». Las 35 rutinas salen del propio <code>/premium</code> (conviene recontarlas el día que se monte). El precio, el de la tienda de la web (<code>PACE_TIENDA_WEB</code>); no lo escribo aquí. Tampoco «dibujado a mano»: los dibujos son de GPT Image, y «hecha por una persona» sí vale.</p>
+
+<div class="bocetos">
+  <div>
+    <p class="kicker">Móvil · 360 px</p>
+    <div class="marco-tel"><div class="m">
+      <div class="cab"><span class="marca">PACE</span><span class="idi"><b>ES</b> · EN</span></div>
+      <div style="padding:0 16px 22px">
+        <h1>Pausas activas para quien trabaja sentado.</h1>
+        <p>Foco, respiración, movilidad y agua, a tu ritmo. Sin cuenta, sin anuncios, sin rastreo: lo tuyo se queda en tu dispositivo.</p>
+        <span class="btn">Abrir PACE, es gratis</span>
+        <div class="foto" style="margin-top:18px">captura de la jornada<br>(la de /premium)</div>
+      </div>
+      <div class="sec"><h2>Cinco maneras de parar</h2>
+        <div class="mods">
+          <div class="mod"><b><i class="pt" style="background:var(--focus)"></i>Foco</b><span>Pomodoro y pausas</span></div>
+          <div class="mod"><b><i class="pt" style="background:var(--breathe)"></i>Respira</b><span>con voz</span></div>
+          <div class="mod"><b><i class="pt" style="background:var(--move)"></i>Mueve</b><span>rutinas de pie</span></div>
+          <div class="mod"><b><i class="pt" style="background:var(--extra)"></i>Estira</b><span>movilidad</span></div>
+          <div class="mod"><b><i class="pt" style="background:#5D8AA8"></i>Hidrátate</b><span>tus vasos</span></div>
+        </div>
+      </div>
+      <div class="sec"><h2>Gratis, y lo seguirá siendo</h2><p>El Foco entero, «A tu ritmo» cada día, las rutinas de siempre, Hidrátate y los logros.</p>
+        <h2 style="margin-top:18px">PACE completo</h2><p>Las rutinas más profundas, pausas que cambian de un día a otro y una semana a tu medida. Pago único, de por vida, en la web.</p>
+        <span class="btn h">Ver PACE completo</span></div>
+      <div class="sec"><h2>Tres cosas que no cambian</h2><p>Lo gratis sigue gratis. Lo comprado no se quita. Tus datos, en tu dispositivo.</p></div>
+      <div class="sec"><h2>Android e iPhone</h2><p>Prueba cerrada en Google Play y en TestFlight: <u>cómo unirte</u>.</p></div>
+      <div class="sec"><h2>Para qué usa PACE el calendario</h2><p>Solo si tú lo conectas, para poner tus pausas libres entre tus reuniones. <u>Privacidad</u>.</p></div>
+      <div class="pie"><span>Privacidad</span><span>Seguridad</span><span>Contacto</span><span>Desistir</span></div>
+    </div></div>
+    <p class="pie-boceto">Textos tomados de /premium; los dos últimos bloques y «Cinco maneras de parar» son nuevos.</p>
+  </div>
+
+  <div>
+    <p class="kicker">Escritorio · 1280 px (reducido a lo que cabe)</p>
+    <div class="marco-pc" id="pcmarco"><div class="m" id="pc" style="width:1280px;transform-origin:0 0">
+      <div class="cab" style="padding:20px 56px"><span class="marca">PACE</span><span class="idi"><b>ES</b> · EN</span></div>
+      <div class="pc-portada">
+        <div><h1>Pausas activas para quien trabaja sentado.</h1>
+          <p style="font-size:19px;max-width:30em">Foco, respiración, movilidad y agua, a tu ritmo. Sin cuenta, sin anuncios, sin rastreo: lo tuyo se queda en tu dispositivo.</p>
+          <span class="btn">Abrir PACE, es gratis</span> &nbsp; <span class="btn h">Ver PACE completo</span></div>
+        <div class="pc-foto" style="aspect-ratio:16/11">captura de escritorio: el aro del Foco y «A tu ritmo»<br>(la de /premium)</div>
+      </div>
+      <div class="pc-sec"><h2>Cinco maneras de parar</h2>
+        <div class="pc-mods">
+          <div class="mod"><b><i class="pt" style="background:var(--focus)"></i>Foco</b><span>Pomodoro y pausas</span></div>
+          <div class="mod"><b><i class="pt" style="background:var(--breathe)"></i>Respira</b><span>con voz</span></div>
+          <div class="mod"><b><i class="pt" style="background:var(--move)"></i>Mueve</b><span>rutinas de pie</span></div>
+          <div class="mod"><b><i class="pt" style="background:var(--extra)"></i>Estira</b><span>movilidad</span></div>
+          <div class="mod"><b><i class="pt" style="background:#5D8AA8"></i>Hidrátate</b><span>tus vasos</span></div>
+        </div></div>
+      <div class="pc-sec pc-dos">
+        <div><h2>Gratis, y lo seguirá siendo</h2><p>El Foco entero, «A tu ritmo» cada día, las rutinas de siempre, Hidrátate y los logros.</p></div>
+        <div><h2>PACE completo</h2><p>Las rutinas más profundas, pausas que cambian de un día a otro y una semana a tu medida. Pago único, de por vida, en la web.</p></div>
+      </div>
+      <div class="pc-sec pc-dos">
+        <div><h2>Android e iPhone</h2><p>Prueba cerrada en Google Play y en TestFlight: cómo unirte.</p></div>
+        <div><h2>Para qué usa PACE el calendario</h2><p>Solo si tú lo conectas, para poner tus pausas libres entre tus reuniones. Privacidad.</p></div>
+      </div>
+      <div class="pc-pie"><span>Privacidad</span><span>Seguridad</span><span>Contacto</span><span>Desistir</span></div>
+    </div></div>
+    <p class="pie-boceto">Sin fotos reales (este boceto no las lleva): en la página publicada irían las de <code>/premium</code>.</p>
+  </div>
+</div>
+
+<div class="caja">
+  <p class="kicker">Qué falta para montarla (si eliges hacerla)</p>
+  <ul class="l">
+    <li>Con A: los cuatro retoques —descripción y dirección canónica en la raíz, <code>sitemap</code> y <code>robots</code>, un párrafo del calendario en <code>/premium</code>, y «Marca» de Google apuntando a <code>/premium</code>— y que <code>/premium</code> deje de hablar de cuota mensual cuando esté el pago único (lo trabaja otra sesión; aquí no lo toco).</li>
+    <li>Con B o C: una carpeta nueva en <code>WEB_CARPETAS</code>, y lo de la tabla de arriba.</li>
+    <li>Antes de cualquier cambio visual, maqueta con opciones, como siempre.</li>
+  </ul>
+</div>
+
+<!-- ============ 5 ============ -->
+<h2>5 · Los worktrees, sin jerga</h2>
+<p class="lede">Un <i>worktree</i> es una carpeta de trabajo extra del mismo proyecto. El proyecto vive en una carpeta principal (<code>Pace_app</code>, rama <code>main</code>) y cada sesión de Claude abre la suya dentro de <code>.claude/worktrees/</code>, con una rama propia que empieza por <code>claude/</code>. Así dos sesiones no se pisan los archivos. Nada llega a <code>main</code> hasta que la coordinadora lo junta y sube.</p>
+
+<svg class="dib" viewBox="0 0 700 150" role="img" aria-label="Carpeta principal con main y varias carpetas de sesión alrededor">
+  <rect class="v" x="10" y="10" width="190" height="60" rx="10"/><text class="t" x="24" y="36">Pace_app</text><text x="24" y="56">rama main · lo que se publica</text>
+  <path d="M200 40h60"/>
+  <rect class="c" x="260" y="10" width="430" height="60" rx="10"/><text x="274" y="34">.claude/worktrees/ · una carpeta por sesión</text><text x="274" y="54">cada una con su rama claude/… y sin node_modules</text>
+  <rect class="c" x="260" y="86" width="130" height="44" rx="8"/><text x="270" y="106">ya juntadas</text><text x="270" y="120">sobran</text>
+  <rect class="l" x="400" y="86" width="140" height="44" rx="8"/><text x="410" y="106">con trabajo sin juntar</text><text x="410" y="120">no tocar</text>
+  <rect class="v" x="550" y="86" width="140" height="44" rx="8"/><text x="560" y="106">sesión viva</text><text x="560" y="120">no tocar</text>
+</svg>
+
+<p>Hoy hay <b>13 carpetas registradas además de la principal</b> y <b>83 ramas</b> en el repositorio. Esto es lo que he comprobado con git (sin cambiar nada):</p>
+<div class="tabla"><table>
+  <tr><th>Carpeta</th><th>Estado</th><th>Qué sobra</th></tr>
+  <tr><td>hungry-borg, infallible-taussig, media-jornada-tarde, sweet-moser, version-de-prueba</td><td>Todo lo suyo ya está en <code>main</code>; sin cambios sueltos.</td><td><span class="ok">Se pueden retirar</span> (la rama y los commits quedan en <code>main</code>).</td></tr>
+  <tr><td>logros-sin-pronto, rana-y-palmas</td><td>Ya juntadas en <code>main</code>, sin cambios sueltos. Tienen sesión enlazada (una parada, otra fallida).</td><td><span class="med">Retirar cuando cierres esas sesiones.</span></td></tr>
+  <tr><td>vigilant-jackson</td><td>Igual que <code>main</code> (a un commit), sin trabajo propio.</td><td><span class="ok">Se puede retirar.</span></td></tr>
+  <tr><td>maqueta-sobre</td><td>Igual que <code>main</code> pero con una sesión trabajando ahora.</td><td><span class="med">Déjala.</span></td></tr>
+  <tr><td>elegant-sammet (5 commits), maqueta-jornada (1), premium-solo-vida (5)</td><td>Tienen commits que <b>no están en <code>main</code></b>. <code>premium-solo-vida</code> tiene la sesión trabajando.</td><td><span class="mal">No tocar.</span> Primero juntar o decidir.</td></tr>
+  <tr><td>landing-web (esta)</td><td>Rama de esta propuesta, con un commit propio.</td><td>Se retira cuando decidas.</td></tr>
+  <tr><td>nifty-wozniak, runner-claro</td><td>Aparecen como carpetas en <code>.claude/worktrees/</code> pero git ya no las tiene registradas.</td><td><span class="med">Mirar a mano antes de nada</span>; no sé qué hay dentro.</td></tr>
+</table></div>
+<p>Retirar una carpeta ya juntada no pierde nada: la rama y sus commits siguen en <code>main</code>. Lo que cuesta es el espacio y el ruido de la lista. Yo no he borrado ni retirado nada.</p>
+
+<!-- ============ PREGUNTAS ============ -->
+<h2>Para ti, con letras</h2>
+
+<div class="pregunta">
+  <h3>1 · ¿Dónde vive la app?</h3>
+  <div class="opc r"><span class="letra">A</span><p><b>La app en la raíz y /premium de escaparate (recomendada).</b> No se mueve nada.</p></div>
+  <div class="opc"><span class="letra">B</span><p><b>Landing en la raíz y la app en otra ruta.</b> La que más toca.</p></div>
+  <div class="opc"><span class="letra">C</span><p><b>La raíz con dos caras.</b> La app sigue donde está; para quien llega nuevo, landing.</p></div>
+</div>
+<div class="pregunta">
+  <h3>2 · ¿Cuándo?</h3>
+  <div class="opc r"><span class="letra">A</span><p><b>Los cuatro retoques ahora, antes de vender y de pedir a Google (recomendada).</b></p></div>
+  <div class="opc"><span class="letra">B</span><p><b>Una landing completa antes de vender.</b> Más bonito, más tiempo.</p></div>
+  <div class="opc"><span class="letra">C</span><p><b>Esperar a que Google lo pida.</b> Y que el plazo de Google corra más tarde.</p></div>
+</div>
+<div class="pregunta">
+  <h3>3 · ¿Qué dirección doy a Google como página principal?</h3>
+  <div class="opc r"><span class="letra">A</span><p><b>/premium (recomendada).</b></p></div>
+  <div class="opc"><span class="letra">B</span><p><b>La raíz, que es la app.</b></p></div>
+</div>
+<div class="pregunta">
+  <h3>4 · Si más adelante hay landing, ¿cuánta?</h3>
+  <div class="opc r"><span class="letra">A</span><p><b>Corta (recomendada):</b> la del boceto, con los enlaces de siempre.</p></div>
+  <div class="opc"><span class="letra">B</span><p><b>Larga:</b> con las capturas grandes y las preguntas, como /premium.</p></div>
+</div>
+<div class="pregunta">
+  <h3>5 · Los worktrees</h3>
+  <div class="opc r"><span class="letra">A</span><p><b>La coordinadora retira las ya juntadas y sin sesión (recomendada)</b>, y te dice cuáles antes. No se toca ninguna con trabajo sin juntar.</p></div>
+  <div class="opc"><span class="letra">B</span><p><b>Dejarlo todo como está.</b></p></div>
+</div>
+
+</div>
+<script>
+  /* Escala el boceto de 1280 px al ancho disponible. */
+  (function () {
+    var marco = document.getElementById('pcmarco'), pc = document.getElementById('pc');
+    function ajustar() {
+      var k = marco.clientWidth / 1280;
+      pc.style.transform = 'scale(' + k + ')';
+      marco.style.height = (pc.offsetHeight * k) + 'px';
+    }
+    ajustar(); window.addEventListener('resize', ajustar);
+  })();
+</script>
+</body>
+</html>

@@ -300,6 +300,11 @@ function validateInlineScripts(htmlContent, htmlPath) {
   console.log('  [OK] validateInlineScripts: ' + inlineCount + ' scripts inline validados.');
 }
 
+/* LA RAÍZ CON DOS CARAS (opción C, Ez, 9 nov. 2026): landing/montar.js, solo para index.html. */
+function montarLanding(html) {
+  return require('./landing/montar.js').montarLanding(html, { ROOT: ROOT, readFileClean: readFileClean, validateSyntax: validateSyntax });
+}
+
 /* ---------------------------------------------------------------------------
    MAIN
    --------------------------------------------------------------------------- */
@@ -545,6 +550,7 @@ function main() {
   if (indexHtml.indexOf('rel="manifest"') === -1) {
     console.warn('  [WARN] index.html sin <link rel="manifest"> (ancla <link rel="icon"> no encontrada)');
   }
+  indexHtml = montarLanding(indexHtml);
   fs.writeFileSync(indexPath, indexHtml, 'utf8');
   console.log('✓ index.html generado (standalone + <link rel="manifest">)');
 

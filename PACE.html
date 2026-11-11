@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.195.0</title>
+  <title>PACE · Foco · Cuerpo — v0.197.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -672,11 +672,17 @@
         console.error('PACE - Componentes no cargaron en 5 s. Comprueba la red.');
       }
     }
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function() { mount(); });
-    } else {
-      mount();
+    function arrancar() {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() { mount(); });
+      } else {
+        mount();
+      }
     }
+    /* LA RAÍZ CON DOS CARAS (landing/cara.js, solo en el index.html de la web): con la
+       landing delante, la app monta al pulsar «Abrir PACE». Sin ella, como siempre. */
+    if (typeof window.paceCuandoAbra === 'function') window.paceCuandoAbra(arrancar);
+    else arrancar();
   </script>
 
   <!-- PWA · Service Worker (sesión 37 · v0.19.0 · registro; s102 · v0.47.0 ·

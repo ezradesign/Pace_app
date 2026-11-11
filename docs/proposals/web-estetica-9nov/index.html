@@ -1,0 +1,207 @@
+<title>Tres direcciones para la web</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500&family=Inter+Tight:wght@400;500&display=swap">
+<style>
+  /* Una columna de lectura (los colores y la letra de PACE) y un visor a lo ancho para las fotos. */
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858;
+    --line: #C9C0A8; --line-2: #B8AD8E; --focus: #3E5A3A; --cta: #50624D; --marco: #D9D2BE;
+    --display: 'Cormorant Garamond', Georgia, serif; --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536; --line-2: #5f5544; --focus: #7A9A6D; --cta: #8E9D88; --marco: #332d23; color-scheme: dark; } }
+  :root[data-theme="dark"] { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536; --line-2: #5f5544; --focus: #7A9A6D; --cta: #8E9D88; --marco: #332d23; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { background: var(--paper); color: var(--ink); font: 16px/1.6 var(--ui); }
+  .marco { max-width: 1100px; margin: 0 auto; padding-block: 8px 88px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  h1, h2, h3 { font-family: var(--display); font-style: italic; font-weight: 500; text-wrap: balance; color: var(--ink); }
+  h1 { font-size: clamp(38px, 8vw, 56px); line-height: 1.04; margin: 28px 0 14px; }
+  h2 { font-size: clamp(28px, 6vw, 36px); line-height: 1.1; margin: 64px 0 10px; padding-top: 28px; border-top: 1px solid var(--line); }
+  h3 { font-size: 24px; line-height: 1.2; margin: 0 0 6px; }
+  p, li { color: var(--ink-2); } p { margin: 0 0 12px; max-width: 44em; }
+  a { color: var(--focus); }
+  .kicker { font: 500 11px/1.4 var(--ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 6px; }
+  .lede { font-size: 18px; max-width: 38em; }
+  .defectos { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 10px; counter-reset: d; max-width: 46em; }
+  .defectos li { counter-increment: d; display: grid; grid-template-columns: 30px 1fr; gap: 10px; }
+  .defectos li::before { content: counter(d); font: italic 500 20px/1.5 var(--display); color: var(--ink); }
+  .fotos { display: grid; gap: 24px; margin: 26px 0 0; }
+  figure { margin: 0; min-width: 0; }
+  figure img { display: block; max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--paper-2); }
+  figcaption { font-size: 14px; color: var(--ink-3); margin-top: 8px; max-width: 44em; }
+  .dos-fotos { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+  .dir { border: 1px solid var(--line); border-radius: 10px; padding: 18px 18px 14px; margin: 16px 0; }
+  .dir.rec { border-color: var(--cta); outline: 1px solid var(--cta); outline-offset: 3px; }
+  .dir.pendiente { border-style: dashed; }
+  .dir .sello { font: 500 11px/1 var(--ui); letter-spacing: .12em; text-transform: uppercase; color: var(--paper); background: var(--cta); border-radius: 999px; padding: 5px 9px; margin-left: 8px; vertical-align: .35em; font-style: normal; }
+  .dir .dato { font-size: 14px; color: var(--ink-3); margin: 6px 0 0; }
+  /* El visor: los mandos arriba, pegados al hacer scroll, y la foto en su marco. */
+  .mandos { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--paper); border-bottom: 1px solid var(--line); padding: 10px 0; margin: 18px 0 16px; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper); }
+  .grupo { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .grupo > span { font: 500 11px/1 var(--ui); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin-right: 2px; }
+  .grupo button { font: 500 13px/1 var(--ui); color: var(--ink-2); background: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 8px 12px; cursor: pointer; }
+  .grupo button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .grupo button:disabled { opacity: .45; cursor: default; }
+  .grupo button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .escena { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+  .pantalla { background: var(--marco); border-radius: 14px; padding: 10px; max-width: 100%; }
+  .pantalla .vidrio { overflow-y: auto; overflow-x: hidden; border-radius: 6px; background: var(--paper-2); }
+  .pantalla img { display: block; width: 100%; height: auto; }
+  .pantalla.movil { width: 380px; } .pantalla.movil .vidrio { height: 680px; max-height: 78vh; }
+  .pantalla.ordenador { width: min(100%, 1020px); } .pantalla.ordenador .vidrio { aspect-ratio: 1280 / 720; max-height: 78vh; }
+  .pantalla .pie { font-size: 12px; color: var(--ink-3); margin: 8px 2px 0; }
+  .pantalla h3 { font-size: 19px; margin: 2px 2px 8px; }
+  .letras { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 18px; max-width: 46em; }
+  .letras li { border-bottom: 1px solid var(--line); padding-bottom: 16px; }
+  .letras .p { font: italic 500 22px/1.3 var(--display); color: var(--ink); margin: 0 0 8px; }
+  .letras .op { margin: 2px 0; }
+  .letras .op b { color: var(--ink); font-weight: 500; }
+  .letras .rec { color: var(--focus); font-weight: 500; }
+  .nota { font-size: 14px; color: var(--ink-3); }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+</style>
+<div class="marco">
+  <p class="kicker">PACE · la web · 10 nov. 2026</p>
+  <h1>Tres direcciones para la web</h1>
+  <p class="lede">Elegiste la B, «Una jornada» (10 nov.). Ya está montada en la rama <code>claude/landing-c-9nov</code>, en la landing, en PACE completo y en /beta, y espera tu «júntalo». Nada está en la web todavía.</p>
+
+  <h2>Montada: la B</h2>
+  <p>Las tres páginas tal como quedan, sacadas de la rama. En el visor de más abajo están todas: «Montada», en los dos idiomas, los dos temas, el móvil y el ordenador; en el móvil, con la maqueta de la B al lado.</p>
+  <div class="escena">
+    <div class="pantalla movil"><h3>Landing</h3><div class="vidrio"><img src="fotos/montada-landing-360-es-claro.webp" alt="La landing con la B montada, en el móvil, en claro" loading="lazy"></div><p class="pie">360 px · castellano · claro</p></div>
+    <div class="pantalla movil"><h3>PACE completo</h3><div class="vidrio"><img src="fotos/montada-premium-360-es-claro.webp" alt="PACE completo con la B montada, en el móvil, en claro" loading="lazy"></div><p class="pie">360 px · castellano · claro</p></div>
+    <div class="pantalla movil"><h3>Beta</h3><div class="vidrio"><img src="fotos/montada-beta-360-es-claro.webp" alt="/beta con la B montada, en el móvil, en claro" loading="lazy"></div><p class="pie">360 px · castellano · claro</p></div>
+    <div class="pantalla movil"><h3>Landing</h3><div class="vidrio"><img src="fotos/montada-landing-360-es-oscuro.webp" alt="La landing con la B montada, en el móvil, en oscuro" loading="lazy"></div><p class="pie">360 px · castellano · oscuro</p></div>
+    <div class="pantalla movil"><h3>PACE completo</h3><div class="vidrio"><img src="fotos/montada-premium-360-es-oscuro.webp" alt="PACE completo con la B montada, en el móvil, en oscuro" loading="lazy"></div><p class="pie">360 px · castellano · oscuro</p></div>
+    <div class="pantalla movil"><h3>Beta</h3><div class="vidrio"><img src="fotos/montada-beta-360-es-oscuro.webp" alt="/beta con la B montada, en el móvil, en oscuro" loading="lazy"></div><p class="pie">360 px · castellano · oscuro</p></div>
+  </div>
+  <h3 style="margin-top:28px">Lo que cambia respecto a la maqueta</h3>
+  <ul class="defectos" style="counter-reset:none">
+    <li style="grid-template-columns:1fr">El pie de las tres páginas lleva un enlace más (la letra 3): en el móvil, la fila de enlaces pasa a dos líneas y la página crece 33 px. Lo demás coincide con la maqueta foto a foto, salvo diferencias de un píxel en el suavizado de la letra.</li>
+    <li style="grid-template-columns:1fr">La landing sigue saliendo igual de rápido: unos 90 ms con la B montada, frente a 72-88 antes (nueve pasadas; la diferencia es ruido).</li>
+    <li style="grid-template-columns:1fr">Las pruebas de las tres páginas, en verde: las 17 de la raíz con dos caras, las de PACE completo (con «Avísame» y los botones de compra) y las de /beta (con sus botones), 59 en total.</li>
+  </ul>
+  <h3 style="margin-top:28px">Lo que no contestaste: van mis recomendadas</h3>
+  <ul class="defectos" style="counter-reset:none">
+    <li style="grid-template-columns:1fr"><span><b>3 · El pie enlaza a las otras dos páginas: sí.</b> Con textos que ya existían: «Android e iPhone» en la landing y en PACE completo, «PACE completo» en /beta.</span></li>
+    <li style="grid-template-columns:1fr"><span><b>4 · La pantalla de la app de PACE completo, en su idioma y su tema: sí.</b> Sacada de la app de la rama; la de antes salía en castellano y en claro.</span></li>
+    <li style="grid-template-columns:1fr"><span><b>5 · El idioma de entrada, como la landing: sí.</b> PACE completo y /beta salen en castellano si el navegador está en castellano y, si no, en inglés.</span></li>
+    <li style="grid-template-columns:1fr"><span><b>2 · Las capturas en oscuro: sí.</b> Las dieciséis de /beta y de PACE completo, rehechas con la app de la rama y su marco en oscuro; cada navegador baja solo las de su tema.</span></li>
+  </ul>
+  <p class="nota">Lo de abajo es la propuesta tal como la viste: los defectos de antes, las tres direcciones y tus letras.</p>
+
+  <h2>Lo que tiene la web hoy</h2>
+  <p>Medido en la rama, a 360 y a 1280 px. Las tres se leen como tres webs parecidas, no como una.</p>
+  <ol class="defectos">
+    <li>La cabecera cambia de una página a otra: el logo mide 72 px de alto en la landing y 132 en las otras dos, y solo la landing dice «¿Ya usas PACE? Ábrelo».</li>
+    <li>El pie también cambia: la landing acaba en un botón y enlaza a PACE completo; /premium y /beta acaban en la vaca con un enlace, y no se enlazan entre ellas.</li>
+    <li>Las capturas se ven pequeñas: 250 px de ancho dentro de bandas de 1.068 en la landing y 178 px en la portada de /beta. En el móvil, 158 px en la landing y 104 px «Tu mes» y «Tu año» en /premium. Miden 540 de origen.</li>
+    <li>Los cinco módulos se dibujan de tres maneras: un punto de color en la landing, el dibujo pequeño en /premium y una píldora con el dibujo en /beta.</li>
+    <li>Hay líneas de unas 124 letras (la nota de «Avísame») y de 150 (la de «Lo que te llevas»). Lo cómodo ronda las 65.</li>
+    <li>En inglés, la portada de /premium enseña la app en castellano.</li>
+    <li>En oscuro, todas las capturas son de la app en claro: rectángulos crema sobre el fondo oscuro.</li>
+    <li>Todas las secciones son la misma banda, de color alterno, con el título arriba a la izquierda: nada marca el ritmo ni lo importante, como el precio o el regalo.</li>
+    <li>En el ordenador, las listas y las preguntas ocupan todo el ancho: en la landing, el nombre de un módulo y lo que hace quedan a unos 1.000 px el uno del otro.</li>
+  </ol>
+  <div class="fotos">
+    <figure><img src="fotos/defecto-cabeceras.webp" alt="Las cabeceras de la landing, de PACE completo y de /beta, una debajo de otra" loading="lazy"><figcaption>1 · Las tres cabeceras a 1280 px: landing, PACE completo y /beta.</figcaption></figure>
+    <figure><img src="fotos/defecto-capturas.webp" alt="La sección «Cinco maneras de parar» de la landing con las dos capturas pequeñas" loading="lazy"><figcaption>3 y 9 · «Cinco maneras de parar» en la landing, a 1280 px: dos capturas de 250 px y la lista a todo lo ancho.</figcaption></figure>
+    <div class="dos-fotos">
+      <figure><img src="fotos/defecto-modulos.webp" alt="Los módulos en la landing, en PACE completo y en /beta" loading="lazy"><figcaption>4 · Los módulos, de tres maneras (móvil).</figcaption></figure>
+      <figure><img src="fotos/defecto-oscuro.webp" alt="Las capturas de PACE completo en el tema oscuro" loading="lazy"><figcaption>7 · En oscuro, las capturas siguen en claro.</figcaption></figure>
+    </div>
+    <figure><img src="fotos/defecto-ingles.webp" alt="La portada de PACE completo en inglés, con la app en castellano" loading="lazy"><figcaption>6 · /premium en inglés: la app sale en castellano.</figcaption></figure>
+    <figure><img src="fotos/defecto-pies.webp" alt="Los pies de las tres páginas" loading="lazy"><figcaption>2 · Los tres pies.</figcaption></figure>
+  </div>
+
+  <h2>Las direcciones</h2>
+  <div class="dir rec">
+    <h3>A · Cuaderno de campo<span class="sello">Recomendada</span></h3>
+    <p>Un solo papel, sin bandas de color. Un filete fino separa las secciones; donde hay texto, el título va al margen y el texto a su derecha; las capturas van montadas como láminas, con papel alrededor y un segundo filete fuera. Los cinco módulos llevan su dibujo de la app en las tres páginas, lo que se elige (el plato de por vida, «Lo que te llevas») lleva un segundo filete, como un sello, y los pasos de /beta van unidos por un hilo. Cabecera y pie, iguales en las tres.</p>
+    <p>Arregla 1, 2 (el aspecto; los enlaces son la letra 3), 3 en el ordenador y en la landing del móvil, 4, 5, 6, 8 y 9. El 7 necesita capturas en oscuro (letra 2).</p><p class="dato">En el marcado solo cambian dos cosas: en /beta, la portada se agrupa en dos para poner las capturas en fila debajo del título; en /premium, la pantalla de la app es la nueva.</p><p class="dato">Peso: 3,2 KB comprimido (12,0 KB sin comprimir); con ella dentro, la landing sigue saliendo en menos de 0,12 s, como hoy (siete pasadas de cada una: las diferencias entre ellas son ruido).</p>
+  </div>
+  <div class="dir">
+    <h3>B · Una jornada</h3>
+    <p>La página se lee como un día con PACE. En la portada, el aro del Foco va detrás de la captura (un círculo fino, su arco en verde y el punto al final, como el dibujo de Foco) y, bajo el botón, la línea del día con sus paradas en el color de cada módulo. De ahí baja una línea por el margen que une las secciones: cada título es una parada. Los cinco módulos de la landing son paradas de esa línea, como los pasos de /beta, y las capturas van grandes. Cabecera y pie, iguales en las tres.</p>
+    <p>Arregla 1, 2 (el aspecto), 3 en el ordenador y en la landing del móvil, 4 en la landing, 5, 6, 8 y 9. En el móvil, la línea del margen quita 38 px de ancho a todo: el mosaico de /premium queda algo más pequeño que hoy. El 7, como en todas, con la letra 2.</p><p class="dato">En el marcado cambia lo mismo que en la A: la portada de /beta en dos grupos y la pantalla nueva de la app en /premium. El mosaico de /premium se queda.</p><p class="dato">Peso: 3,5 KB comprimido (14,2 KB sin comprimir); con ella dentro, la landing sigue saliendo en menos de 0,12 s, como hoy (siete pasadas de cada una: las diferencias entre ellas son ruido).</p>
+  </div>
+  <div class="dir">
+    <h3>C · Pulido sobrio</h3>
+    <p>Las bandas de hoy, arreglando solo lo medido: cabecera y pie iguales, capturas más grandes, líneas de unas 65 letras, la lista de los módulos con su dibujo y las preguntas más estrechas. En la landing, la lista de los módulos y sus dos capturas van lado a lado.</p>
+    <p>Arregla 1, 2 (el aspecto), 4, 5, 6 y 9, y el 3 a medias: la landing y el mosaico crecen; la portada de /beta, poco. No toca el 8: las bandas se quedan. El 7, como en todas, con la letra 2.</p><p class="dato">En el marcado solo cambia la pantalla de la app de /premium, como en la A.</p><p class="dato">Peso: 2,0 KB comprimido (6,8 KB sin comprimir); con ella dentro, la landing sigue saliendo en menos de 0,12 s, como hoy (siete pasadas de cada una: las diferencias entre ellas son ruido).</p>
+  </div>
+
+  <div class="mandos" role="group" aria-label="Qué enseñar">
+    <div class="grupo" data-g="dir"><span>Dirección</span><button type="button" data-v="montada">Montada</button><button type="button" data-v="hoy">Hoy</button><button type="button" data-v="a">A</button><button type="button" data-v="b">B</button><button type="button" data-v="c">C</button></div>
+    <div class="grupo" data-g="pagina"><span>Página</span><button type="button" data-v="landing">Landing</button><button type="button" data-v="premium">PACE completo</button><button type="button" data-v="beta">Beta</button></div>
+    <div class="grupo" data-g="idioma"><span>Idioma</span><button type="button" data-v="es">ES</button><button type="button" data-v="en">EN</button></div>
+    <div class="grupo" data-g="tema"><span>Tema</span><button type="button" data-v="claro">Claro</button><button type="button" data-v="oscuro">Oscuro</button></div>
+    <div class="grupo" data-g="ancho"><span>Pantalla</span><button type="button" data-v="360">Móvil</button><button type="button" data-v="1280">Ordenador</button></div>
+  </div>
+  <p class="nota" id="aviso" hidden></p>
+  <div class="escena" id="escena"></div>
+
+  <h2>Tus letras</h2>
+  <ol class="letras">
+    <li><p class="p">1 · ¿Qué dirección montamos en las tres páginas? <span class="rec">Contestada: la B.</span></p>
+      <p class="op"><b>A · Cuaderno de campo</b> <span class="rec">(recomendada)</span>: arregla lo mismo que la B sin quitar ancho en el móvil, que es donde llega casi todo el mundo, y con menos adorno; su aire de cuaderno es el de los logros y los dibujos de la app.</p>
+      <p class="op"><b>B · Una jornada</b>: la más vistosa y la que más se parece a la app (el aro y la línea del día); en el móvil todo queda 38 px más estrecho.</p>
+      <p class="op"><b>C · Pulido sobrio</b>: la más segura; deja las bandas de hoy.</p>
+      <p class="op"><b>Ninguna</b>: la web se queda como está.</p></li>
+    <li><p class="p">2 · ¿Rehago las capturas en oscuro?</p>
+      <p class="op"><b>Sí</b> <span class="rec">(recomendada)</span>: con la app de la rama en su tema oscuro; cada navegador baja solo las de su tema, así que no pesa más para nadie (unos 350 KB más en el repo). Arregla el 7 en cualquier dirección.</p>
+      <p class="op"><b>No</b>: las capturas siguen en claro también en oscuro.</p></li>
+    <li><p class="p">3 · ¿El pie de las tres páginas enlaza a las otras dos?</p>
+      <p class="op"><b>Sí</b> <span class="rec">(recomendada)</span>: con textos que ya existen, «PACE completo» y «Android e iPhone»; hoy, desde /premium no se llega a /beta ni al revés.</p>
+      <p class="op"><b>No</b>: cada pie se queda con sus enlaces.</p></li>
+    <li><p class="p">4 · ¿La pantalla de la app de /premium, rehecha en su idioma y su tema?</p>
+      <p class="op"><b>Sí</b> <span class="rec">(recomendada)</span>: es la de las fotos de las direcciones, sacada de la app de la rama; arregla el 6.</p>
+      <p class="op"><b>No</b>: se queda la de hoy, en castellano.</p></li>
+    <li><p class="p">5 · Aparte, sin cambiar el aspecto: el idioma de entrada</p>
+      <p class="op">La landing sale en inglés si el navegador no está en castellano; /premium y /beta, en castellano si no está en inglés. Quien llega con el navegador en francés ve la landing en inglés y PACE completo en castellano.</p>
+      <p class="op"><b>Igualar las tres a la regla de la landing</b> <span class="rec">(recomendada)</span>: inglés salvo navegador en castellano. <b>Dejarlo</b>: como hoy.</p></li>
+  </ol>
+  <p class="nota">Generada con <code>docs/proposals/web-estetica-9nov/maqueta.js</code> y <code>pagina.js</code> en la rama <code>claude/landing-c-9nov</code>; la copia, con sus fotos, está en esa carpeta.</p>
+</div>
+<script>
+(function () {
+  var HAY = ["a-beta-1280-en-claro","a-beta-1280-en-oscuro","a-beta-1280-es-claro","a-beta-1280-es-oscuro","a-beta-360-en-claro","a-beta-360-en-oscuro","a-beta-360-es-claro","a-beta-360-es-oscuro","a-landing-1280-en-claro","a-landing-1280-en-oscuro","a-landing-1280-es-claro","a-landing-1280-es-oscuro","a-landing-360-en-claro","a-landing-360-en-oscuro","a-landing-360-es-claro","a-landing-360-es-oscuro","a-premium-1280-en-claro","a-premium-1280-en-oscuro","a-premium-1280-es-claro","a-premium-1280-es-oscuro","a-premium-360-en-claro","a-premium-360-en-oscuro","a-premium-360-es-claro","a-premium-360-es-oscuro","b-beta-1280-en-claro","b-beta-1280-en-oscuro","b-beta-1280-es-claro","b-beta-1280-es-oscuro","b-beta-360-en-claro","b-beta-360-en-oscuro","b-beta-360-es-claro","b-beta-360-es-oscuro","b-landing-1280-en-claro","b-landing-1280-en-oscuro","b-landing-1280-es-claro","b-landing-1280-es-oscuro","b-landing-360-en-claro","b-landing-360-en-oscuro","b-landing-360-es-claro","b-landing-360-es-oscuro","b-premium-1280-en-claro","b-premium-1280-en-oscuro","b-premium-1280-es-claro","b-premium-1280-es-oscuro","b-premium-360-en-claro","b-premium-360-en-oscuro","b-premium-360-es-claro","b-premium-360-es-oscuro","c-beta-1280-en-claro","c-beta-1280-en-oscuro","c-beta-1280-es-claro","c-beta-1280-es-oscuro","c-beta-360-en-claro","c-beta-360-en-oscuro","c-beta-360-es-claro","c-beta-360-es-oscuro","c-landing-1280-en-claro","c-landing-1280-en-oscuro","c-landing-1280-es-claro","c-landing-1280-es-oscuro","c-landing-360-en-claro","c-landing-360-en-oscuro","c-landing-360-es-claro","c-landing-360-es-oscuro","c-premium-1280-en-claro","c-premium-1280-en-oscuro","c-premium-1280-es-claro","c-premium-1280-es-oscuro","c-premium-360-en-claro","c-premium-360-en-oscuro","c-premium-360-es-claro","c-premium-360-es-oscuro","hoy-beta-1280-en-claro","hoy-beta-1280-en-oscuro","hoy-beta-1280-es-claro","hoy-beta-1280-es-oscuro","hoy-beta-360-en-claro","hoy-beta-360-en-oscuro","hoy-beta-360-es-claro","hoy-beta-360-es-oscuro","hoy-landing-1280-en-claro","hoy-landing-1280-en-oscuro","hoy-landing-1280-es-claro","hoy-landing-1280-es-oscuro","hoy-landing-360-en-claro","hoy-landing-360-en-oscuro","hoy-landing-360-es-claro","hoy-landing-360-es-oscuro","hoy-premium-1280-en-claro","hoy-premium-1280-en-oscuro","hoy-premium-1280-es-claro","hoy-premium-1280-es-oscuro","hoy-premium-360-en-claro","hoy-premium-360-en-oscuro","hoy-premium-360-es-claro","hoy-premium-360-es-oscuro","montada-beta-1280-en-claro","montada-beta-1280-en-oscuro","montada-beta-1280-es-claro","montada-beta-1280-es-oscuro","montada-beta-360-en-claro","montada-beta-360-en-oscuro","montada-beta-360-es-claro","montada-beta-360-es-oscuro","montada-landing-1280-en-claro","montada-landing-1280-en-oscuro","montada-landing-1280-es-claro","montada-landing-1280-es-oscuro","montada-landing-360-en-claro","montada-landing-360-en-oscuro","montada-landing-360-es-claro","montada-landing-360-es-oscuro","montada-premium-1280-en-claro","montada-premium-1280-en-oscuro","montada-premium-1280-es-claro","montada-premium-1280-es-oscuro","montada-premium-360-en-claro","montada-premium-360-en-oscuro","montada-premium-360-es-claro","montada-premium-360-es-oscuro"];
+  var MEDIDAS = {"a-beta-1280-en-claro":2681,"a-beta-1280-en-oscuro":2681,"a-beta-1280-es-claro":2725,"a-beta-1280-es-oscuro":2725,"a-beta-360-en-claro":3282,"a-beta-360-en-oscuro":3282,"a-beta-360-es-claro":3296,"a-beta-360-es-oscuro":3296,"a-landing-1280-en-claro":3805,"a-landing-1280-en-oscuro":3805,"a-landing-1280-es-claro":3830,"a-landing-1280-es-oscuro":3830,"a-landing-360-en-claro":4093,"a-landing-360-en-oscuro":4093,"a-landing-360-es-claro":4121,"a-landing-360-es-oscuro":4121,"a-premium-1280-en-claro":4169,"a-premium-1280-en-oscuro":4169,"a-premium-1280-es-claro":4132,"a-premium-1280-es-oscuro":4132,"a-premium-360-en-claro":5385,"a-premium-360-en-oscuro":5385,"a-premium-360-es-claro":5143,"a-premium-360-es-oscuro":5143,"b-beta-1280-en-claro":2804,"b-beta-1280-en-oscuro":2804,"b-beta-1280-es-claro":2801,"b-beta-1280-es-oscuro":2801,"b-beta-360-en-claro":3507,"b-beta-360-en-oscuro":3507,"b-beta-360-es-claro":3470,"b-beta-360-es-oscuro":3470,"b-landing-1280-en-claro":4411,"b-landing-1280-en-oscuro":4411,"b-landing-1280-es-claro":4437,"b-landing-1280-es-oscuro":4437,"b-landing-360-en-claro":4402,"b-landing-360-en-oscuro":4402,"b-landing-360-es-claro":4302,"b-landing-360-es-oscuro":4302,"b-premium-1280-en-claro":4225,"b-premium-1280-en-oscuro":4225,"b-premium-1280-es-claro":4215,"b-premium-1280-es-oscuro":4215,"b-premium-360-en-claro":5619,"b-premium-360-en-oscuro":5619,"b-premium-360-es-claro":5378,"b-premium-360-es-oscuro":5378,"c-beta-1280-en-claro":2257,"c-beta-1280-en-oscuro":2257,"c-beta-1280-es-claro":2293,"c-beta-1280-es-oscuro":2293,"c-beta-360-en-claro":3150,"c-beta-360-en-oscuro":3150,"c-beta-360-es-claro":3194,"c-beta-360-es-oscuro":3194,"c-landing-1280-en-claro":3466,"c-landing-1280-en-oscuro":3466,"c-landing-1280-es-claro":3491,"c-landing-1280-es-oscuro":3491,"c-landing-360-en-claro":3940,"c-landing-360-en-oscuro":3940,"c-landing-360-es-claro":3927,"c-landing-360-es-oscuro":3927,"c-premium-1280-en-claro":4027,"c-premium-1280-en-oscuro":4027,"c-premium-1280-es-claro":4027,"c-premium-1280-es-oscuro":4027,"c-premium-360-en-claro":5274,"c-premium-360-en-oscuro":5274,"c-premium-360-es-claro":5082,"c-premium-360-es-oscuro":5082,"hoy-beta-1280-en-claro":2263,"hoy-beta-1280-en-oscuro":2263,"hoy-beta-1280-es-claro":2261,"hoy-beta-1280-es-oscuro":2261,"hoy-beta-360-en-claro":3170,"hoy-beta-360-en-oscuro":3170,"hoy-beta-360-es-claro":3214,"hoy-beta-360-es-oscuro":3214,"hoy-landing-1280-en-claro":3612,"hoy-landing-1280-en-oscuro":3612,"hoy-landing-1280-es-claro":3638,"hoy-landing-1280-es-oscuro":3638,"hoy-landing-360-en-claro":3614,"hoy-landing-360-en-oscuro":3614,"hoy-landing-360-es-claro":3600,"hoy-landing-360-es-oscuro":3600,"hoy-premium-1280-en-claro":3916,"hoy-premium-1280-en-oscuro":3916,"hoy-premium-1280-es-claro":3940,"hoy-premium-1280-es-oscuro":3940,"hoy-premium-360-en-claro":5294,"hoy-premium-360-en-oscuro":5294,"hoy-premium-360-es-claro":5102,"hoy-premium-360-es-oscuro":5102,"montada-beta-1280-en-claro":2804,"montada-beta-1280-en-oscuro":2804,"montada-beta-1280-es-claro":2801,"montada-beta-1280-es-oscuro":2801,"montada-beta-360-en-claro":3507,"montada-beta-360-en-oscuro":3507,"montada-beta-360-es-claro":3504,"montada-beta-360-es-oscuro":3504,"montada-landing-1280-en-claro":4411,"montada-landing-1280-en-oscuro":4411,"montada-landing-1280-es-claro":4437,"montada-landing-1280-es-oscuro":4437,"montada-landing-360-en-claro":4435,"montada-landing-360-en-oscuro":4435,"montada-landing-360-es-claro":4302,"montada-landing-360-es-oscuro":4302,"montada-premium-1280-en-claro":4225,"montada-premium-1280-en-oscuro":4225,"montada-premium-1280-es-claro":4215,"montada-premium-1280-es-oscuro":4215,"montada-premium-360-en-claro":5653,"montada-premium-360-en-oscuro":5653,"montada-premium-360-es-claro":5411,"montada-premium-360-es-oscuro":5411};
+  var NOMBRES = { montada: 'Montada', hoy: 'Hoy', a: 'A · Cuaderno', b: 'B · Jornada', c: 'C · Pulido' };
+  var PAG = { landing: 'Landing', premium: 'PACE completo', beta: 'Beta' };
+  var estado = { dir: 'montada', pagina: 'landing', idioma: 'es', tema: 'claro', ancho: '1280' };
+  try { var g = JSON.parse(localStorage.getItem('pace.web.visor.montada') || 'null'); if (g) for (var k in g) if (k in estado) estado[k] = g[k]; } catch (e) {}
+  if (!HAY.some(function (x) { return x.indexOf(estado.dir + '-') === 0; })) estado.dir = 'montada';
+  var escena = document.getElementById('escena'), aviso = document.getElementById('aviso');
+  function clave(d) { return [d, estado.pagina, estado.ancho, estado.idioma, estado.tema].join('-'); }
+  function pantalla(d) {
+    var k = clave(d), hayla = HAY.indexOf(k) >= 0;
+    var div = document.createElement('div');
+    div.className = 'pantalla ' + (estado.ancho === '360' ? 'movil' : 'ordenador');
+    div.innerHTML = '<h3>' + NOMBRES[d] + ' · ' + PAG[estado.pagina] + '</h3><div class="vidrio">' + (hayla ? '<img alt="' + NOMBRES[d] + ', ' + PAG[estado.pagina] + '" src="fotos/' + k + '.webp">' : '<p style="padding:16px">Esta combinación aún no está pintada.</p>') + '</div>' +
+      '<p class="pie">' + (estado.ancho === '360' ? '360 px' : '1280 px') + (MEDIDAS[k] ? ' · la página mide ' + MEDIDAS[k] + ' px de alto' : '') + '</p>';
+    return div;
+  }
+  function pintar() {
+    document.querySelectorAll('.grupo').forEach(function (gr) {
+      gr.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String(estado[gr.dataset.g] === b.dataset.v)); });
+    });
+    escena.innerHTML = '';
+    /* En el móvil, al lado: la maqueta de la B junto a lo montado, y hoy junto a cada dirección. En el ordenador, una sola. */
+    if (estado.ancho === '360' && estado.dir !== 'hoy') escena.appendChild(pantalla(estado.dir === 'montada' ? 'b' : 'hoy'));
+    escena.appendChild(pantalla(estado.dir));
+    aviso.hidden = estado.ancho === '360' || estado.dir === 'hoy';
+    aviso.textContent = 'En el ordenador se ve una pantalla cada vez: «Hoy» enseña la de ahora.';
+    try { localStorage.setItem('pace.web.visor.montada', JSON.stringify(estado)); } catch (e) {}
+  }
+  document.querySelectorAll('.grupo').forEach(function (gr) {
+    gr.addEventListener('click', function (ev) {
+      var b = ev.target.closest('button'); if (!b || b.disabled) return;
+      estado[gr.dataset.g] = b.dataset.v; pintar();
+    });
+  });
+  pintar();
+})();
+</script>

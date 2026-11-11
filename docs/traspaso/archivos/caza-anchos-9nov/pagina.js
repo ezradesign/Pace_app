@@ -32,7 +32,7 @@ ul { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
 </style>
 <main>
   <header style="display:grid;gap:8px">
-    <p class="meta">Para Ez · 9 de noviembre · lo que lleva la 0.195.0</p>
+    <p class="meta">Para Ez · 9 de noviembre · la 0.195.0 y, con tu 1A, la siguiente</p>
     <h1>Caza de los anchos</h1>
     <p>He mirado todas las pantallas de PACE en siete tamaños (de un móvil de 320 px a tu ventana de 1536), en castellano y en inglés, en claro y en oscuro: 140 recorridos, medidos con la página y no solo a ojo. Ya incluye lo de la jornada y lo de «Tus rutinas» que eligiste el 8.</p>
   </header>
@@ -51,29 +51,22 @@ ul { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
       <h3>El día libre, en inglés, repetía su nombre</h3>
       <p>En la bienvenida en inglés decía <code>No plan, no plan: PACE leaves you be</code>. Ahora dice <code>No plan: PACE leaves you be</code>. En castellano no cambia nada.</p>
     </div>
-    <p class="meta">Los dos llevan su prueba, y la prueba falla si se quita el arreglo.</p>
+    <p class="meta">Cada arreglo lleva su prueba, y la prueba falla si se quita el arreglo.</p>
   </section>
 
   <section>
-    <h2>Lo que espera a tu letra</h2>
+    <h2>Lo que elegiste</h2>
     <div class="ficha">
-      <h3><span class="letra">1</span>«1 h» se queda sola en una línea</h3>
-      <p>En el móvil, a 360 px y en castellano, la frase del día parte justo antes de la hora de comer y deja «1 h» sola debajo. En inglés cabe en una línea.</p>
+      <h3><span class="letra">1A</span>La frase del día, en dos líneas parecidas</h3>
+      <p>En el móvil, a 360 px y en castellano, la frase del día partía justo antes de la hora de comer y dejaba «1 h» sola debajo. Ahora se reparte en dos líneas parecidas, con el mismo texto. La tarjeta no crece: a 320, 390 y 768 px y en inglés tiene las mismas líneas que antes y la home sigue sin scroll desde 360.</p>
       <div class="par">
-        <figure>${img('op-1A-equilibrada-es.jpg', 'Opción 1A')}<figcaption><span class="letra">1A</span>Repartir la frase en dos líneas parecidas.<span class="recom">recomendada</span></figcaption></figure>
-        <figure>${img('op-1-hoy-es.jpg', 'Opción 1B, como hoy')}<figcaption><span class="letra">1B</span>Como hoy.</figcaption></figure>
+        <figure>${img('frase-antes-es.jpg', 'Antes: 1 h sola en la segunda línea')}<figcaption>Antes: «1 h» sola en la segunda línea.</figcaption></figure>
+        <figure>${img('frase-ahora-es.jpg', 'Ahora: la frase en dos líneas parecidas')}<figcaption>Ahora: «comida 14:00 · 1 h» juntas en la segunda.</figcaption></figure>
       </div>
-      <p>Recomiendo la 1A: la frase se lee de un tirón y la tarjeta no crece.</p>
     </div>
     <div class="ficha">
-      <h3><span class="letra">2</span>Los móviles muy pequeños (320 px)</h3>
-      <p>A 320 px ya aceptaste que la home pida un poco de scroll. Pasa lo mismo en otros tres sitios:</p>
-      <ul>
-        <li>los Ajustes piden de 58 a 101 px de scroll (a 360 px no piden nada);</li>
-        <li>la fila «Ahora» corta su línea pequeña con «…» («2 min · Hombros: sin mo…»);</li>
-        <li>los filtros de Mueve y Estira se deslizan de lado.</li>
-      </ul>
-      <p><span class="letra">2A</span>Dejarlo así, como la home a 320 px.<span class="recom">recomendada</span> <span class="letra" style="margin-left:10px">2B</span>Apretar esas tres cosas también a 320 px (te lo pintaría antes).</p>
+      <h3><span class="letra">2A</span>Los móviles muy pequeños (320 px), como están</h3>
+      <p>Como la home a 320 px: los Ajustes con un poco de scroll, la línea pequeña de «Ahora» con «…» y los filtros que se deslizan de lado se quedan así. No he tocado nada.</p>
     </div>
   </section>
 

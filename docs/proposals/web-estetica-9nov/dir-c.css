@@ -1,0 +1,50 @@
+/* C · PULIDO SOBRIO
+   Las bandas de hoy, arreglando solo lo medido: cabecera y pie iguales en las tres, capturas más
+   grandes, líneas de unas 65 letras, la lista de los módulos con su dibujo, y las listas y las
+   preguntas más estrechas en el ordenador. Ningún color nuevo. */
+
+html #pace-landing { --paper: var(--l-paper); --paper-2: var(--l-paper-2); --ink: var(--l-ink); --ink-2: var(--l-ink-2); --ink-3: var(--l-ink-3);
+  --line: var(--l-line); --line-2: var(--l-line-2); --focus: var(--l-focus); --cta: var(--l-cta); --display: var(--l-display); --ui: var(--l-ui); }
+
+/* La cabecera, igual en las tres. */
+html #pace-landing .pl-vaca img, html body main.marco > header img { height: 80px; width: auto; }
+html #pace-landing .pl-cab, html body main.marco > header { padding: 16px 0; }
+html #pace-landing .pl-ya { max-width: 7.4em; }
+
+/* Los módulos con su dibujo, como en /premium y /beta. */
+html #pace-landing .pl-mods i { width: 22px; height: 22px; border-radius: 0; margin-right: 10px; vertical-align: -0.26em;
+  -webkit-mask: var(--g) center / contain no-repeat; mask: var(--g) center / contain no-repeat; }
+html #pace-landing .pl-mods li:nth-child(1) i { --g: var(--g-foco); }
+html #pace-landing .pl-mods li:nth-child(2) i { --g: var(--g-respira); }
+html #pace-landing .pl-mods li:nth-child(3) i { --g: var(--g-mueve); }
+html #pace-landing .pl-mods li:nth-child(4) i { --g: var(--g-estira); }
+html #pace-landing .pl-mods li:nth-child(5) i { --g: var(--g-agua); }
+
+/* Las parejas de capturas de la landing, en tira en el móvil, como /beta. */
+html #pace-landing .pl-par { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 20px -16px 0; padding: 0 16px 4px; scrollbar-width: none; }
+html #pace-landing .pl-par figure { flex: 0 0 70%; scroll-snap-align: center; }
+
+/* Líneas cómodas. */
+html #pace-landing main p, html body main.marco > section p { max-width: 38em; }
+
+/* El pie: la vaca y «Abrir PACE» como botón, igual en las tres. */
+html #pace-landing .pl-pie { justify-content: flex-start; column-gap: 12px; }
+html #pace-landing .pl-pie::before { content: ''; width: 70px; height: 46px; flex: 0 0 auto; background: url(/premium/vaca.webp) center / contain no-repeat; }
+html body main.marco .pie-marca span { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 24px; border-radius: 999px; background: var(--cta); color: var(--paper); font: italic 500 17px/1.2 var(--display); }
+@media (prefers-color-scheme: dark) { html #pace-landing .pl-pie::before { filter: invert(1); } }
+@media (min-width: 600px) { html #pace-landing .pl-pie nav { margin-left: auto; } }
+
+@media (min-width: 900px) {
+  html #pace-landing .pl-vaca img, html body main.marco > header img { height: 108px; }
+  html #pace-landing .pl-ya { max-width: none; }
+  /* La lista y sus dos capturas, lado a lado; las otras capturas, más grandes. */
+  html #pace-landing main > section:first-of-type { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 56px; align-items: start; }
+  html #pace-landing main > section:first-of-type > h2, html #pace-landing main > section:first-of-type > .pl-mods { grid-column: 1; }
+  html #pace-landing main > section:first-of-type > .pl-par { grid-column: 2; grid-row: 1 / span 2; margin: 0; }
+  html #pace-landing .pl-par { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 620px; overflow: visible; margin: 8px 0 0; padding: 0; }
+  html #pace-landing .pl-foto { max-width: 380px; }
+  html body main.marco .mosaico { max-width: none; gap: 20px; }
+  html body main.marco .portada:has(.tira) { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+  /* Las listas y las preguntas, más estrechas. */
+  html #pace-landing .pl-preg details, html body main.marco details, html #pace-landing .pl-promesas { max-width: 720px; }
+}

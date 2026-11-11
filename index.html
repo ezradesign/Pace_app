@@ -3,7 +3,295 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.195.0</title>
+  <!--pace-landing-->
+  <script>
+/* PACE · LA RAÍZ CON DOS CARAS (opción C, Ez, 9 nov. 2026)
+   ==========================================================
+   La misma dirección enseña la app a quien ya la usa y la landing a quien llega nuevo. Se
+   decide aquí, en el <head> de index.html y antes de pintar nada: sin redirigir, sin saltos.
+   El build (paso 9 de build-standalone.js) lo mete solo en index.html, entre las marcas
+   `pace-landing`; `android-www.js` lo quita al copiar a www/, así que en Android y en iPhone
+   no existe y la app monta como siempre.
+
+   VE LA APP: Android e iPhone; quien llega con `#codigo=` o `?go=`; quien abre desde el icono
+   instalado; quien ya la vio alguna vez (la marca `pace-cara`); quien tiene algo guardado de la
+   app (cualquier clave `pace.*` que no sea de las páginas sueltas). ANTE CUALQUIER ERROR, LA APP:
+   nunca se le esconde a quien ya la usa.
+
+   LA MARCA LLEVA GUION Y NO PUNTO a propósito: «Borrar todo» barre las claves `pace.*`
+   (wipeLocalState, state-core.jsx) y quien borra sus datos sigue usando PACE.
+
+   Con la landing delante, la app no monta ni abre su base de eventos hasta «Abrir PACE»:
+   quien solo mira la landing no se lleva nada guardado. Lo aplazado pasa por `paceCuandoAbra`. */
+(function () {
+  var raiz = document.documentElement;
+  var MARCA = 'pace-cara';
+  /* Las páginas sueltas guardan su idioma con `pace.`: no son de la app. */
+  var AJENAS = { 'pace.premium.lang': 1, 'pace.beta.lang': 1, 'pace.landing.lang': 1 };
+
+  function decidir() {
+    if (window.Capacitor || location.protocol === 'capacitor:') return 'app';
+    if (/(^#|[#&])codigo=/.test(location.hash)) return 'app';
+    if (/[?&]go=/.test(location.search)) return 'app';
+    /* Sin soporte de display-mode, `browser` no casa y sale la app: se yerra hacia la app. */
+    if (!window.matchMedia || !window.matchMedia('(display-mode: browser)').matches) return 'app';
+    if (navigator.standalone === true) return 'app';
+    var ls = window.localStorage;
+    if (ls.getItem(MARCA)) return 'app';
+    for (var i = 0; i < ls.length; i++) {
+      var k = ls.key(i);
+      if (k && k.indexOf('pace.') === 0 && !AJENAS[k]) return 'app';
+    }
+    return 'landing';
+  }
+
+  var cara = 'app';
+  try { cara = decidir(); } catch (e) { cara = 'app'; }
+
+  function idiomaLanding() {
+    try {
+      var m = location.search.match(/[?&]lang=(es|en)\b/);
+      if (m) return m[1];
+      var g = localStorage.getItem('pace.landing.lang');
+      if (g === 'es' || g === 'en') return g;
+    } catch (e) {}
+    return /^es\b/i.test(navigator.language || '') ? 'es' : 'en';
+  }
+
+  function ponerIdioma(idioma) {
+    raiz.setAttribute('data-pace-landing-idioma', idioma);
+    raiz.lang = idioma;
+    document.title = idioma === 'en'
+      ? 'PACE · Active breaks for people who work at a desk'
+      : 'PACE · Pausas activas para quien trabaja sentado';
+  }
+
+  var pendientes = [];
+  var tituloApp = document.title;
+  window.PACE_CARA = cara;
+  raiz.setAttribute('data-pace-cara', cara);
+  if (cara === 'app') {
+    try { localStorage.setItem(MARCA, 'app'); } catch (e) {}
+  } else {
+    var idioma = idiomaLanding();
+    ponerIdioma(idiomaLanding());
+    /* La app pone su título al cargar sus módulos (applyTheme, state-core.palette.jsx). */
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.PACE_CARA === 'landing') ponerIdioma(raiz.getAttribute('data-pace-landing-idioma'));
+    });
+  }
+
+  /* Lo que la app hace al arrancar (montar, abrir la base de eventos) pasa por aquí. */
+  function paceCuandoAbra(fn) {
+    if (window.PACE_CARA !== 'landing') fn(); else pendientes.push(fn);
+  }
+
+  /* «Abrir PACE»: la app en el sitio, sin recargar. */
+  function paceAbrirApp() {
+    if (window.PACE_CARA !== 'landing') return;
+    try { localStorage.setItem(MARCA, 'app'); } catch (e) {}
+    window.PACE_CARA = 'app';
+    raiz.setAttribute('data-pace-cara', 'app');
+    raiz.removeAttribute('data-pace-landing-idioma');
+    raiz.lang = 'es';
+    document.title = tituloApp;
+    try { window.scrollTo(0, 0); } catch (e) {}
+    var cola = pendientes; pendientes = [];
+    for (var i = 0; i < cola.length; i++) { try { cola[i](); } catch (e) { setTimeout(function () { throw e; }); } }
+  }
+
+  window.paceCuandoAbra = paceCuandoAbra;
+  window.paceAbrirApp = paceAbrirApp;
+  if (cara !== 'landing') return;
+
+  /* Clics de la landing por delegación: el marcado llega después de este script. */
+  document.addEventListener('click', function (ev) {
+    var t = ev.target && ev.target.closest ? ev.target.closest('[data-pace-abrir], [data-pace-landing-idioma-boton]') : null;
+    if (!t || window.PACE_CARA !== 'landing') return;
+    if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button > 0) return;
+    ev.preventDefault();
+    if (t.hasAttribute('data-pace-abrir')) { paceAbrirApp(); return; }
+    var otro = raiz.getAttribute('data-pace-landing-idioma') === 'en' ? 'es' : 'en';
+    try { localStorage.setItem('pace.landing.lang', otro); } catch (e) {}
+    ponerIdioma(otro);
+  });
+
+  /* LA RED DE LOS EVENTOS: quien tiene eventos y no `localStorage` (caso raro) ve la app.
+     Es asíncrono, así que va después de pintar; no crea la base si no existe. */
+  try {
+    if (!window.indexedDB || typeof indexedDB.databases !== 'function') return;
+    indexedDB.databases().then(function (lista) {
+      var hay = false;
+      for (var i = 0; i < lista.length; i++) if (lista[i] && lista[i].name === 'pace.events') hay = true;
+      if (!hay) return;
+      var pet = indexedDB.open('pace.events');
+      pet.onsuccess = function () {
+        var db = pet.result;
+        try {
+          if (!db.objectStoreNames.contains('contenedor')) { db.close(); return; }
+          var get = db.transaction('contenedor', 'readonly').objectStore('contenedor').get('pace.events.v1');
+          get.onsuccess = function () {
+            db.close();
+            var c = null;
+            try { c = typeof get.result === 'string' ? JSON.parse(get.result) : get.result; } catch (e) { c = { events: [1] }; }
+            if (c && c.events && c.events.length) paceAbrirApp();
+          };
+          get.onerror = function () { db.close(); };
+        } catch (e) { try { db.close(); } catch (e2) {} }
+      };
+    }, function () {});
+  } catch (e) {}
+})();
+
+  </script>
+  <style>
+/* PACE · la landing de la raíz (opción C de la estructura, Ez, 9 nov. 2026). La letra y los
+   botones son los de /premium y /beta, que son los de la app. Todo va bajo #pace-landing: la hoja
+   de la app está en la misma página. Las fuentes ya las declara app/tokens.css.
+   LA ESTÉTICA ES LA B, «UNA JORNADA» (Ez, 10 nov. 2026; https://claude.ai/artifact/6DsS35xJXsmcZrdtZiXhoL):
+   la página se lee como un día con PACE. En la portada, el aro del Foco detrás de la captura y, bajo
+   el botón, la línea del día con sus paradas; de ahí baja una línea por el margen y cada título es
+   una parada. /premium y /beta llevan lo mismo: si cambia algo aquí, cambia en las tres. */
+html[data-pace-cara="app"] #pace-landing { display: none !important; }
+html[data-pace-cara="landing"] #root { display: none !important; }
+/* El lienzo de la app (_lienzo.js) pone `zoom` en la raíz en ventanas grandes: no a la landing. */
+html[data-pace-cara="landing"] { zoom: 1 !important; background: #F2EDE0; }
+html[data-pace-cara="landing"] body { background: #F2EDE0; }
+#pace-landing {
+  --l-paper: #F2EDE0; --l-paper-2: #EAE4D4; --l-ink: #1F1C17; --l-ink-2: #4A453C; --l-ink-3: #6F6858;
+  --l-line: #C9C0A8; --l-line-2: #B8AD8E; --l-focus: #3E5A3A; --l-cta: #50624D;
+  --l-breathe: #C97A5D; --l-move: #9A7B4F; --l-extra: #6B7A8F; --l-water: #5D8AA8;
+  --l-display: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  --l-ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  /* Los dibujos de los módulos, los de la app (ActivityBar.jsx), como máscaras. */
+  --glifo-foco: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2028%2028%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.35%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2214%22%20cy%3D%2214%22%20r%3D%229.5%22%20opacity%3D%220.3%22%2F%3E%3Cpath%20d%3D%22M14%204.5a9.5%209.5%200%200%201%208.23%204.75%22%2F%3E%3Ccircle%20cx%3D%2222.23%22%20cy%3D%229.25%22%20r%3D%221.5%22%20fill%3D%22black%22%20stroke%3D%22none%22%2F%3E%3C%2Fsvg%3E");
+  --glifo-respira: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2028%2028%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.35%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M14%204.5v9%22%2F%3E%3Cpath%20d%3D%22M14%2010.5c-1.2%200-2.2-.4-3-1.2%20M14%2010.5c1.2%200%202.2-.4%203-1.2%22%2F%3E%3Cpath%20d%3D%22M11%2010.2c-2.2.3-4.2%201.4-5.3%203.3-1.3%202.2-1.4%205-.6%207.6.5%201.6%201.6%202.7%203.1%202.8%201.4.1%202.4-.8%202.8-2.2.6-2.1.8-4.6.8-7.1%200-1.7-.1-3.2-.8-4.4z%22%2F%3E%3Cpath%20d%3D%22M17%2010.2c2.2.3%204.2%201.4%205.3%203.3%201.3%202.2%201.4%205%20.6%207.6-.5%201.6-1.6%202.7-3.1%202.8-1.4.1-2.4-.8-2.8-2.2-.6-2.1-.8-4.6-.8-7.1%200-1.7.1-3.2.8-4.4z%22%2F%3E%3C%2Fsvg%3E");
+  --glifo-mueve: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2028%2028%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.35%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223%22%20y%3D%2210%22%20width%3D%222.2%22%20height%3D%228%22%20rx%3D%220.6%22%2F%3E%3Crect%20x%3D%225.6%22%20y%3D%228%22%20width%3D%222.4%22%20height%3D%2212%22%20rx%3D%220.6%22%2F%3E%3Cpath%20d%3D%22M8%2014h12%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%228%22%20width%3D%222.4%22%20height%3D%2212%22%20rx%3D%220.6%22%2F%3E%3Crect%20x%3D%2222.8%22%20y%3D%2210%22%20width%3D%222.2%22%20height%3D%228%22%20rx%3D%220.6%22%2F%3E%3C%2Fsvg%3E");
+  --glifo-estira: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2028%2028%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.35%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%2021c3-8%207-12%2010-12s7%204%2010%2012%22%2F%3E%3Ccircle%20cx%3D%2214%22%20cy%3D%227.5%22%20r%3D%221.6%22%2F%3E%3Cpath%20d%3D%22M4%2022h20%22%20opacity%3D%220.35%22%20stroke-dasharray%3D%221.5%202.5%22%2F%3E%3C%2Fsvg%3E");
+  --glifo-agua: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2028%2028%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.35%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M14%203.5c-3.6%205.2-7%208.6-7%2012.6a7%207%200%200%200%2014%200c0-4-3.4-7.4-7-12.6z%22%2F%3E%3Cpath%20d%3D%22M10.5%2015.5c0%202%201.3%203.6%203%203.9%22%20opacity%3D%220.55%22%2F%3E%3C%2Fsvg%3E");
+  background: var(--l-paper); color: var(--l-ink); font: 16px/1.6 var(--l-ui); min-height: 100vh;
+  -webkit-text-size-adjust: 100%;
+  /* El aro de la portada sale del ancho: se corta en el borde de la pantalla, sin scroll lateral. */
+  overflow-x: clip;
+}
+@media (prefers-color-scheme: dark) {
+  html[data-pace-cara="landing"], html[data-pace-cara="landing"] body { background: #1d1a14; }
+  #pace-landing { --l-paper: #1d1a14; --l-paper-2: #26211a; --l-ink: #EDE5D3; --l-ink-2: #c0b49e; --l-ink-3: #B2A995;
+    --l-line: #4d4536; --l-line-2: #5f5544; --l-focus: #7A9A6D; --l-cta: #8E9D88; --l-breathe: #D99477; }
+  /* El logo en oscuro es el mismo PNG invertido, como en la app. */
+  #pace-landing .pl-vaca img, #pace-landing .pl-pie::before { filter: invert(1); }
+}
+/* Los dos idiomas están en el HTML; se ve el que pone landing/cara.js (sin JS, castellano). Solo
+   se esconde el otro, con !important: un `display` de clase (.pl-foto img) no puede sacarlo. */
+html:not([data-pace-landing-idioma="en"]) #pace-landing [lang="en"],
+html[data-pace-landing-idioma="en"] #pace-landing [lang="es"] { display: none !important; }
+#pace-landing a { color: var(--l-focus); }
+#pace-landing .pl-marco { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+#pace-landing .pl-cab { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; }
+#pace-landing .pl-vaca img { height: 72px; width: auto; display: block; }
+#pace-landing .pl-cab-der { display: flex; align-items: center; gap: 12px; }
+#pace-landing .pl-ya { font-size: 14px; color: var(--l-ink-2); text-decoration: none; text-align: right; line-height: 1.3; max-width: 7.4em; }
+#pace-landing .pl-ya b { color: var(--l-focus); font-weight: 500; border-bottom: 1px solid var(--l-line-2); }
+#pace-landing .pl-idioma { font: 500 11px/1 var(--l-ui); letter-spacing: .1em; color: var(--l-ink-3); background: none; border: 1px solid var(--l-line-2); border-radius: 999px; padding: 7px 11px; cursor: pointer; white-space: nowrap; }
+#pace-landing .pl-idioma b { color: var(--l-ink); font-weight: 500; }
+#pace-landing h1, #pace-landing h2 { font-family: var(--l-display); font-style: italic; font-weight: 500; color: var(--l-ink); text-wrap: balance; }
+#pace-landing h1 { font-size: clamp(42px, 11vw, 72px); line-height: 1.02; letter-spacing: -.01em; margin: 0 0 20px; }
+#pace-landing h2 { font-size: clamp(32px, 7.6vw, 46px); line-height: 1.08; margin: 0 0 12px; }
+#pace-landing p { color: var(--l-ink-2); margin: 0 0 14px; }
+#pace-landing main p { max-width: 36em; }
+#pace-landing .pl-lede { font-size: 18px; line-height: 1.55; max-width: 30em; margin-bottom: 24px; }
+#pace-landing .pl-boton { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 9px 26px; border-radius: 999px; font: italic 500 18px/1.2 var(--l-display); text-decoration: none; background: var(--l-cta); color: var(--l-paper); border: 1px solid var(--l-cta); }
+#pace-landing .pl-boton.hueco { background: transparent; color: var(--l-cta); }
+#pace-landing a:focus-visible, #pace-landing button:focus-visible { outline: 2px solid var(--l-focus); outline-offset: 2px; }
+/* Cada captura va en su <picture>, con la oscura para quien ve la página en oscuro. */
+#pace-landing .pl-foto picture, #pace-landing .pl-par picture { display: contents; }
+#pace-landing picture source { display: none; }
+#pace-landing .pl-foto img, #pace-landing .pl-par img { width: 100%; height: auto; display: block; border: 1px solid var(--l-line); border-radius: 12px; background: var(--l-paper-2); }
+
+/* La portada acaba en la línea del día: la primera parada, llena («ahora»); las demás, huecas,
+   cada una en el color de su módulo, como en la app. */
+#pace-landing .pl-portada { padding: 32px 0 56px; }
+#pace-landing .pl-portada > div:first-child { position: relative; padding-bottom: 60px; }
+#pace-landing .pl-portada > div:first-child::before { content: ''; position: absolute; left: 5px; bottom: 26px; width: 286px; border-top: 1px solid var(--l-line-2); }
+#pace-landing .pl-portada > div:first-child::after { content: ''; position: absolute; left: 0; bottom: 21px; width: 11px; height: 11px; border-radius: 50%; background: var(--l-focus);
+  box-shadow: 40px 0 0 -1.5px var(--l-paper), 40px 0 0 0 var(--l-breathe), 80px 0 0 -1.5px var(--l-paper), 80px 0 0 0 var(--l-move),
+    120px 0 0 -1.5px var(--l-paper), 120px 0 0 0 var(--l-extra), 160px 0 0 -1.5px var(--l-paper), 160px 0 0 0 var(--l-water),
+    200px 0 0 -1.5px var(--l-paper), 200px 0 0 0 var(--l-focus), 240px 0 0 -1.5px var(--l-paper), 240px 0 0 0 var(--l-breathe),
+    280px 0 0 -1.5px var(--l-paper), 280px 0 0 0 var(--l-move); }
+/* El aro detrás de la captura: un círculo fino con su arco en verde y el punto al final, como el
+   dibujo de Foco. Detrás de una captura alta, el arco va a la derecha, donde se ve. */
+#pace-landing .pl-foto { position: relative; isolation: isolate; max-width: 280px; margin: 56px auto 40px; }
+#pace-landing .pl-foto::before { content: ''; position: absolute; z-index: -1; left: 50%; top: 50%; width: 136%; aspect-ratio: 1; border-radius: 50%;
+  border: 1.5px solid var(--l-line); border-right-color: var(--l-focus); transform: translate(-50%, -50%) rotate(-10deg); }
+#pace-landing .pl-foto::after { content: ''; position: absolute; z-index: -1; left: 50%; top: 50%; width: 11px; height: 11px; border-radius: 50%;
+  background: var(--l-focus); margin-left: 55.7%; margin-top: 39%; transform: translate(-50%, -50%); }
+
+/* La línea que baja por el margen y une las secciones; cada título es una parada, en el color de un módulo. */
+#pace-landing main section { position: relative; padding: 44px 0 40px 38px; }
+#pace-landing main section::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; border-left: 1px solid var(--l-line-2); }
+#pace-landing main section::after { content: ''; position: absolute; left: 4px; top: 55px; width: 13px; height: 13px; border-radius: 50%; box-sizing: border-box;
+  background: var(--l-paper); border: 1.5px solid var(--parada, var(--l-focus)); }
+#pace-landing main section:nth-of-type(5n+2) { --parada: var(--l-breathe); }
+#pace-landing main section:nth-of-type(5n+3) { --parada: var(--l-move); }
+#pace-landing main section:nth-of-type(5n+4) { --parada: var(--l-extra); }
+#pace-landing main section:nth-of-type(5n+5) { --parada: var(--l-water); }
+
+/* Los cinco módulos, como paradas: su dibujo de la app dentro de un círculo de su color. */
+#pace-landing .pl-mods { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; position: relative; }
+#pace-landing .pl-mods::before { content: ''; position: absolute; left: 18px; top: 24px; bottom: 24px; border-left: 1px dashed var(--l-line-2); }
+#pace-landing .pl-mods li { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; min-height: 50px; padding: 7px 0 7px 52px; }
+#pace-landing .pl-mods li::before { content: ''; position: absolute; left: 0; top: 50%; width: 37px; height: 37px; margin-top: -18.5px; border-radius: 50%; box-sizing: border-box;
+  background: var(--l-paper); border: 1.5px solid var(--parada); }
+#pace-landing .pl-mods b { font: italic 500 23px/1.2 var(--l-display); color: var(--l-ink); white-space: nowrap; }
+#pace-landing .pl-mods i { position: absolute; left: 7.5px; top: 50%; width: 22px; height: 22px; margin-top: -11px;
+  -webkit-mask: var(--glifo) center / contain no-repeat; mask: var(--glifo) center / contain no-repeat; }
+#pace-landing .pl-mods li > span { font-size: 14px; color: var(--l-ink-3); }
+#pace-landing .pl-mods li:nth-child(1) { --parada: var(--l-focus); --glifo: var(--glifo-foco); }
+#pace-landing .pl-mods li:nth-child(2) { --parada: var(--l-breathe); --glifo: var(--glifo-respira); }
+#pace-landing .pl-mods li:nth-child(3) { --parada: var(--l-move); --glifo: var(--glifo-mueve); }
+#pace-landing .pl-mods li:nth-child(4) { --parada: var(--l-extra); --glifo: var(--glifo-estira); }
+#pace-landing .pl-mods li:nth-child(5) { --parada: var(--l-water); --glifo: var(--glifo-agua); }
+
+/* Las parejas de capturas: en el móvil, una tira que se desliza, como en /beta. */
+#pace-landing .pl-par { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 24px -16px 0 -54px; padding: 0 16px 6px 54px; scrollbar-width: none; }
+#pace-landing .pl-par::-webkit-scrollbar { display: none; }
+#pace-landing .pl-par figure { flex: 0 0 78%; margin: 0; scroll-snap-align: center; }
+#pace-landing .pl-dos > div + div { margin-top: 32px; }
+/* Las tres promesas y las preguntas, como en /premium. */
+#pace-landing .pl-promesas { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+#pace-landing .pl-promesas li { font: italic 500 clamp(24px, 5.8vw, 30px)/1.25 var(--l-display); color: var(--l-ink); padding-left: 22px; position: relative; }
+#pace-landing .pl-promesas li::before { content: ''; position: absolute; left: 2px; top: .55em; width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--l-cta); }
+#pace-landing .pl-preg details { border-bottom: 1px dashed var(--l-line); padding: 12px 0; }
+#pace-landing .pl-preg details:last-of-type { border-bottom: 0; }
+#pace-landing .pl-preg summary { cursor: pointer; font: italic 500 22px/1.3 var(--l-display); color: var(--l-ink); list-style: none; display: flex; align-items: baseline; gap: 12px; }
+#pace-landing .pl-preg summary::-webkit-details-marker { display: none; }
+#pace-landing .pl-preg summary::before { content: '+'; flex: 0 0 14px; font: 400 21px/1 var(--l-ui); color: var(--l-cta); }
+#pace-landing .pl-preg details[open] > summary::before { content: '–'; }
+#pace-landing .pl-preg details p { margin: 8px 0 4px; }
+/* El pie, como en /premium y /beta: la vaca, «Abrir PACE» y los enlaces. */
+#pace-landing .pl-pie { padding: 26px 0 48px; border-top: 1px solid var(--l-line); display: flex; flex-wrap: wrap; align-items: center; gap: 16px 12px; }
+#pace-landing .pl-pie::before { content: ''; width: 61px; height: 40px; flex: 0 0 auto; background: url(/premium/vaca.webp) center / contain no-repeat; }
+#pace-landing .pl-pie nav { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+#pace-landing .pl-pie nav a { font: italic 400 18px/1.3 var(--l-display); color: var(--l-ink-2); text-decoration: none; border-bottom: 1px solid var(--l-line-2); }
+@media (min-width: 600px) { #pace-landing .pl-pie nav { margin-left: auto; } }
+@media (min-width: 900px) {
+  #pace-landing .pl-vaca img { height: 100px; }
+  #pace-landing .pl-ya { max-width: none; }
+  #pace-landing .pl-portada { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 72px; align-items: center; padding: 40px 0 80px; }
+  #pace-landing .pl-foto { max-width: 320px; margin: 40px auto; }
+  #pace-landing main section { padding: 64px 0 60px 88px; }
+  #pace-landing main section::before { left: 31px; }
+  #pace-landing main section::after { left: 23px; top: 79px; width: 17px; height: 17px; }
+  #pace-landing .pl-mods { max-width: 640px; }
+  #pace-landing .pl-mods li { min-height: 54px; }
+  #pace-landing .pl-par { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; max-width: 780px; overflow: visible; margin: 40px 0 0; padding: 0; }
+  #pace-landing .pl-dos { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; }
+  #pace-landing .pl-dos > div + div { margin-top: 0; }
+}
+
+  </style>
+  <!--/pace-landing-->
+  <title>PACE · Foco · Cuerpo — v0.197.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1152,6 +1440,109 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
   </style>
 </head>
 <body>
+  <!--pace-landing-->
+  <!-- LA LANDING DE LA RAÍZ (estructura C y landing B, larga, Ez, 9 nov. 2026). La ve quien llega por primera vez sin
+       nada guardado (landing/cara.js decide). Los textos son los de /premium, /beta y privacy.html:
+       sin cifras inventadas. Cada texto va en los dos idiomas; el CSS enseña uno. «Abrir PACE»
+       lleva `data-pace-abrir`: abre la app en el sitio, y si el JS fallara, `/?go=inicio` cae en
+       la regla de `?go=` y también abre la app. -->
+  <!--email_off-->
+  <div id="pace-landing">
+  <div class="pl-marco">
+    <header class="pl-cab">
+      <a class="pl-vaca" href="/?go=inicio" data-pace-abrir><img src="/premium/vaca.webp" alt="PACE" width="91" height="60"></a>
+      <div class="pl-cab-der">
+        <a class="pl-ya" href="/?go=inicio" data-pace-abrir><span lang="es">¿Ya usas PACE? <b>Ábrelo</b></span><span lang="en">Already use PACE? <b>Open it</b></span></a>
+        <button class="pl-idioma" type="button" data-pace-landing-idioma-boton><span lang="es"><b>ES</b> · EN</span><span lang="en">ES · <b>EN</b></span></button>
+      </div>
+    </header>
+    <main>
+      <div class="pl-portada">
+        <div>
+          <h1><span lang="es">Pausas activas para quien trabaja sentado.</span><span lang="en">Active breaks for people who work at a desk.</span></h1>
+          <p class="pl-lede"><span lang="es">Foco, respiración, movilidad y agua, a tu ritmo. Sin cuenta, sin anuncios, sin rastreo: lo tuyo se queda en tu equipo.</span><span lang="en">Focus, breathing, mobility and water. At your pace. No account, ads or tracking. Your data stays on your device.</span></p>
+          <a class="pl-boton" href="/?go=inicio" data-pace-abrir><span lang="es">Abrir PACE, es gratis</span><span lang="en">Open PACE, it is free</span></a>
+        </div>
+        <div class="pl-foto">
+          <picture><source media="(prefers-color-scheme: dark)" srcset="/beta/jornada-es-oscuro.webp"><img lang="es" src="/beta/jornada-es.webp" alt="Tu jornada en PACE: el aro del Foco y las pausas del día" width="540" height="960" loading="lazy"></picture>
+          <picture><source media="(prefers-color-scheme: dark)" srcset="/beta/jornada-en-oscuro.webp"><img lang="en" src="/beta/jornada-en.webp" alt="Your workday in PACE: the Focus ring and the breaks of the day" width="540" height="960" loading="lazy"></picture>
+        </div>
+      </div>
+      <section>
+        <h2><span lang="es">Cinco maneras de parar</span><span lang="en">Five ways to take a break</span></h2>
+        <ul class="pl-mods">
+          <li><b><i style="background:var(--l-focus)"></i><span lang="es">Foco</span><span lang="en">Focus</span></b><span><span lang="es">Pomodoro, pausas y aviso</span><span lang="en">Pomodoro, breaks and reminders</span></span></li>
+          <li><b><i style="background:var(--l-breathe)"></i><span lang="es">Respira</span><span lang="en">Breathe</span></b><span><span lang="es">técnicas guiadas, con voz</span><span lang="en">guided techniques, with voice</span></span></li>
+          <li><b><i style="background:var(--l-move)"></i><span lang="es">Mueve</span><span lang="en">Move</span></b><span><span lang="es">rutinas de pie</span><span lang="en">standing routines</span></span></li>
+          <li><b><i style="background:var(--l-extra)"></i><span lang="es">Estira</span><span lang="en">Stretch</span></b><span><span lang="es">movilidad</span><span lang="en">mobility</span></span></li>
+          <li><b><i style="background:var(--l-water)"></i><span lang="es">Hidrátate</span><span lang="en">Hydrate</span></b><span><span lang="es">tus vasos del día</span><span lang="en">your daily water log</span></span></li>
+        </ul>
+        <div class="pl-par">
+          <figure><picture><source media="(prefers-color-scheme: dark)" srcset="/beta/respira-es-oscuro.webp"><img lang="es" src="/beta/respira-es.webp" alt="Respira: una técnica guiada, con voz" width="540" height="960" loading="lazy"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="/beta/respira-en-oscuro.webp"><img lang="en" src="/beta/respira-en.webp" alt="Breathe: a guided technique with voice cues" width="540" height="960" loading="lazy"></picture></figure>
+          <figure><picture><source media="(prefers-color-scheme: dark)" srcset="/beta/logros-es-oscuro.webp"><img lang="es" src="/beta/logros-es.webp" alt="Los logros: sellos de cuaderno de campo, sin rachas" width="540" height="960" loading="lazy"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="/beta/logros-en-oscuro.webp"><img lang="en" src="/beta/logros-en.webp" alt="Achievements: field-notebook stamps, no streaks" width="540" height="960" loading="lazy"></picture></figure>
+        </div>
+      </section>
+      <!-- LA LANDING LARGA, «como /premium» (B, Ez, 9 nov. 2026): las capturas de PACE completo, las
+           tres cosas que no van a cambiar y las preguntas, con los textos de /premium. -->
+      <section>
+        <h2><span lang="es">Así se ve PACE completo</span><span lang="en">A look at PACE Complete</span></h2>
+        <div class="pl-par">
+          <figure><picture><source media="(prefers-color-scheme: dark)" srcset="/premium/carta-es-oscuro.webp"><img lang="es" src="/premium/carta-es.webp" alt="La carta del lunes: lo que te ayudó, las pausas hechas y los cambios de la semana" width="540" height="960" loading="lazy"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="/premium/carta-en-oscuro.webp"><img lang="en" src="/premium/carta-en.webp" alt="The Monday letter: what helped you, the breaks you did and the week’s changes" width="540" height="960" loading="lazy"></picture></figure>
+          <figure><picture><source media="(prefers-color-scheme: dark)" srcset="/premium/mes-es-oscuro.webp"><img lang="es" src="/premium/mes-es.webp" alt="Tu mes en Estadísticas: cada día que practicaste" width="540" height="960" loading="lazy"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="/premium/mes-en-oscuro.webp"><img lang="en" src="/premium/mes-en.webp" alt="Your month in Stats: every day you practiced" width="540" height="960" loading="lazy"></picture></figure>
+        </div>
+      </section>
+      <section>
+        <h2><span lang="es">Tres cosas que no van a cambiar</span><span lang="en">Three things that will not change</span></h2>
+        <ul class="pl-promesas">
+          <li><span lang="es">Lo que hoy es gratis, sigue gratis.</span><span lang="en">What is free today stays free.</span></li>
+          <li><span lang="es">Lo que compras no se quita.</span><span lang="en">What you buy is not taken away.</span></li>
+          <li><span lang="es">Si un día sube el precio, el tuyo no.</span><span lang="en">If the price goes up one day, yours does not.</span></li>
+        </ul>
+      </section>
+      <section class="pl-preg">
+        <h2><span lang="es">Preguntas</span><span lang="en">Questions</span></h2>
+        <details><summary><span lang="es">¿Necesito una cuenta?</span><span lang="en">Do I need an account?</span></summary><p><span lang="es">No. PACE no tiene cuentas. Al comprar recibes un código que abre PACE completo en tu navegador.</span><span lang="en">No. PACE has no accounts. When you buy, you get a code that unlocks PACE Complete in your browser.</span></p></details>
+        <details><summary><span lang="es">¿Qué pasa con mis datos?</span><span lang="en">What happens to my data?</span></summary><p><span lang="es">Se quedan en tu equipo. Ni la compra ni el código mandan tu práctica a ningún sitio.</span><span lang="en">Your data stays on your device. Buying PACE Complete or activating a code doesn’t upload your activity history.</span></p></details>
+        <details><summary><span lang="es">¿Sirve en Android y en iPhone?</span><span lang="en">Does it work on Android and iPhone?</span></summary><p><span lang="es">Las apps están en prueba cerrada en Google Play y en TestFlight.</span><span lang="en">The apps are in closed testing on Google Play and TestFlight.</span> <a href="/beta/"><span lang="es">Cómo unirte</span><span lang="en">How to join</span></a>.</p></details>
+        <details><summary><span lang="es">¿Puedo devolverlo?</span><span lang="en">Can I get a refund?</span></summary><p><span lang="es">Sí, en los 14 días siguientes, sin preguntas. Escríbenos y lo devolvemos.</span><span lang="en">Yes. Contact us within 14 days of purchase for a refund. No reason needed.</span></p></details>
+      </section>
+      <section class="pl-dos">
+        <div>
+          <h2><span lang="es">Gratis, y lo seguirá siendo</span><span lang="en">Free, and it will stay free</span></h2>
+          <p><span lang="es">El Foco entero, «A tu ritmo» cada día, las rutinas de siempre, Hidrátate y los logros.</span><span lang="en">All of Focus, «At your pace» every day, the everyday routines, Hydrate and the achievements.</span></p>
+        </div>
+        <div>
+          <h2><span lang="es">PACE completo</span><span lang="en">PACE Complete</span></h2>
+          <p><span lang="es">Para cuando quieras más: las rutinas más profundas, pausas que cambian de un día a otro, tus propias rutinas y una semana a tu medida.</span><span lang="en">For when you want more: the deeper routines, breaks that change from day to day, your own routines and a week tailored to you.</span></p>
+          <a class="pl-boton hueco" href="/premium/"><span lang="es">Ver PACE completo</span><span lang="en">See PACE Complete</span></a>
+        </div>
+      </section>
+      <section class="pl-dos">
+        <div>
+          <h2><span lang="es">Tu calendario, si tú lo pides</span><span lang="en">Your calendar, if you ask</span></h2>
+          <p><span lang="es">Con «Al calendario», PACE añade tu día de «A tu ritmo» a tu calendario, como libre y privado. Si se lo pides, mira a qué horas estás ocupado hoy y coloca tus pausas alrededor; solo guarda esas horas, en tu dispositivo. Nada de tu calendario pasa por un servidor de PACE.</span><span lang="en">With «To calendar», PACE adds your «At your pace» day to your calendar, as free and private. If you ask, it checks when you are busy today and places your breaks around it; it only keeps those times, on your device. Nothing from your calendar goes through a PACE server.</span> <a href="/privacy"><span lang="es">Privacidad</span><span lang="en">Privacy</span></a>.</p>
+        </div>
+        <div>
+          <h2><span lang="es">Android e iPhone</span><span lang="en">Android and iPhone</span></h2>
+          <p><span lang="es">PACE está en prueba cerrada en Google Play y en TestFlight.</span><span lang="en">PACE is in closed testing on Google Play and TestFlight.</span> <a href="/beta/"><span lang="es">Cómo unirte</span><span lang="en">How to join</span></a>.</p>
+        </div>
+      </section>
+    </main>
+    <footer class="pl-pie">
+      <a class="pl-boton" href="/?go=inicio" data-pace-abrir><span lang="es">Abrir PACE</span><span lang="en">Open PACE</span></a>
+      <nav aria-label="PACE">
+        <a href="/privacy"><span lang="es">Privacidad</span><span lang="en">Privacy</span></a>
+        <a href="/safety"><span lang="es">Seguridad</span><span lang="en">Safety</span></a>
+        <a href="/premium/"><span lang="es">PACE completo</span><span lang="en">PACE Complete</span></a>
+        <a href="/beta/"><span lang="es">Android e iPhone</span><span lang="en">Android and iPhone</span></a>
+        <a href="mailto:hola.ezradesign@gmail.com"><span lang="es">Contacto</span><span lang="en">Contact</span></a>
+      </nav>
+    </footer>
+  </div>
+  </div>
+  <!--/email_off-->
+
+  <!--/pace-landing-->
   <!-- Logo oficial pre-cargado aquí para que super_inline_html lo inline
        como data URI en el bundle standalone. CowLogo.jsx lee el src
        resuelto de este elemento (id="pace-logo-src"). -->
@@ -7016,7 +7407,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.195.0';
+const PACE_VERSION = 'v0.197.0';
 
 
 
@@ -16728,6 +17119,9 @@ function paceEventsBoot() {
   } catch (e) {}
 }
 
+
+
+if (typeof window.paceCuandoAbra === 'function') window.paceCuandoAbra(paceEventsBoot);else
 paceEventsBoot();
 
 Object.assign(window, {
@@ -21768,6 +22162,12 @@ var SOUND_RECIPES = {
     if (dur === undefined) dur = 4.0;
     breathNoise(ctx, ctx.destination, 'in', t0, dur, 0.06);
   },
+
+
+  'breathe.inhale.more': function (ctx, t0, dur) {
+    if (dur === undefined) dur = 1.0;
+    breathNoise(ctx, ctx.destination, 'in', t0, dur, 0.06);
+  },
   'breathe.exhale': function (ctx, t0, dur) {
     if (dur === undefined) dur = 6.0;
     breathNoise(ctx, ctx.destination, 'out', t0, dur, 0.07);
@@ -22104,29 +22504,45 @@ var PACE_VOZ_MARGEN = 0.15;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 var PACE_VOZ_CLIPS = {
   es: {
     sulafat: {
       'breathe.inhale': { archivo: 'inhala', dur: 2.44, ini: 0.386, fin: 1.79 },
       'breathe.hold': { archivo: 'manten', dur: 2.56, ini: 0.021, fin: 1.341 },
-      'breathe.exhale': { archivo: 'exhala', dur: 4.96, ini: 0.644, fin: 2.122 }
+      'breathe.exhale': { archivo: 'exhala', dur: 4.96, ini: 0.644, fin: 2.122 },
+      'breathe.inhale.more': { archivo: 'mas', dur: 2.12, ini: 0.75, fin: 1.59, vol: 0.56, corta: true }
     },
     bradford: {
       'breathe.inhale': { archivo: 'inhala', dur: 2.64, ini: 0.001, fin: 0.912 },
       'breathe.hold': { archivo: 'manten', dur: 2.4, ini: 0.001, fin: 1.219 },
-      'breathe.exhale': { archivo: 'exhala', dur: 3.68, ini: 0.108, fin: 1.309 }
+      'breathe.exhale': { archivo: 'exhala', dur: 3.68, ini: 0.108, fin: 1.309 },
+      'breathe.inhale.more': { archivo: 'mas', dur: 0.8, ini: 0.05, fin: 0.63, vol: 0.47, corta: true }
     }
   },
   en: {
     sulafat: {
       'breathe.inhale': { archivo: 'inhale', dur: 6.88, ini: 0.29, fin: 2.26 },
       'breathe.hold': { archivo: 'hold', dur: 1.52, ini: 0.149, fin: 1.134 },
-      'breathe.exhale': { archivo: 'exhale', dur: 2.68, ini: 0.831, fin: 2.65 }
+      'breathe.exhale': { archivo: 'exhale', dur: 2.68, ini: 0.831, fin: 2.65 },
+      'breathe.inhale.more': { archivo: 'more', dur: 1.6, ini: 0.26, fin: 1.08, vol: 0.75, corta: true }
     },
     bradford: {
       'breathe.inhale': { archivo: 'inhale', dur: 0.96, ini: 0.056, fin: 0.799 },
       'breathe.hold': { archivo: 'hold', dur: 0.72, ini: 0.031, fin: 0.612 },
-      'breathe.exhale': { archivo: 'exhale', dur: 1.2, ini: 0.057, fin: 0.987 }
+      'breathe.exhale': { archivo: 'exhale', dur: 1.2, ini: 0.057, fin: 0.987 },
+      'breathe.inhale.more': { archivo: 'more', dur: 0.64, ini: 0.05, fin: 0.5, corta: true }
     }
   }
 };
@@ -22206,8 +22622,8 @@ function paceVozWebAudio(slot, desde) {
   var g = ctx.createGain();
   s.buffer = slot.buffer;
   g.gain.setValueAtTime(0, t0);
-  g.gain.linearRampToValueAtTime(1, t0 + f);
-  g.gain.setValueAtTime(1, t0 + resto - f);
+  g.gain.linearRampToValueAtTime(slot.vol, t0 + f);
+  g.gain.setValueAtTime(slot.vol, t0 + resto - f);
   g.gain.linearRampToValueAtTime(0, t0 + resto);
   s.connect(g);
   g.connect(ctx.destination);
@@ -22264,7 +22680,8 @@ function paceVozInit(voz) {
   var fichas = (PACE_VOZ_CLIPS[idioma] || {})[cual] || {};
   Object.keys(fichas).forEach(function (nombre) {
     var ficha = fichas[nombre];
-    var slot = { listo: false, ini: ficha.ini, fin: ficha.fin, palabra: ficha.fin - ficha.ini, audio: null, buffer: null, fuente: null, corte: null };
+    var slot = { listo: false, ini: ficha.ini, fin: ficha.fin, palabra: ficha.fin - ficha.ini, audio: null, buffer: null, fuente: null, corte: null,
+      vol: typeof ficha.vol === 'number' ? ficha.vol : 1, corta: !!ficha.corta };
     juego[nombre] = slot;
     var url = 'app/breathe/voz/' + cual + '-' + ficha.archivo + '.mp3';
     paceVozDescodifica(slot, url);
@@ -22304,7 +22721,8 @@ function paceVozCabe(nombre, faseSeg) {
   if (!paceVozEncendida()) return false;
   var slot = paceVozInit(paceVozActiva())[nombre];
   if (!slot || !slot.listo) return false;
-  if (typeof faseSeg !== 'number' || !isFinite(faseSeg) || faseSeg < PACE_VOZ_FASE_MIN) return false;
+
+  if (typeof faseSeg !== 'number' || !isFinite(faseSeg) || !slot.corta && faseSeg < PACE_VOZ_FASE_MIN) return false;
 
 
   return slot.palabra + PACE_VOZ_MARGEN <= faseSeg;
@@ -22331,6 +22749,7 @@ function paceVozIntenta(nombre, faseSeg, alFallar) {
     var desde = Math.max(0, slot.ini - PACE_VOZ_PREV);
     if (paceVozWebAudio(slot, desde)) return true;
     slot.audio.currentTime = desde;
+    slot.audio.volume = slot.vol;
     var pedida = Date.now();
     var p = slot.audio.play();
 
@@ -32486,7 +32905,11 @@ function playPhaseSound(phaseLabel, phaseDur) {
 
 
   const musica = (tipo) => {try {if (window.paceMusica) window.paceMusica.fase(tipo, phaseDur, phaseLabel);} catch (e) {}};
-  if (phaseLabel === 'Inhala' || phaseLabel === 'Inhala más' ||
+
+  if (phaseLabel === 'Inhala más') {
+    try {playSound('breathe.inhale.more', phaseDur);} catch (e) {}
+    musica('in');
+  } else if (phaseLabel === 'Inhala' ||
   phaseLabel === 'Inhala oceánica' || phaseLabel === 'Inhala izq.' ||
   phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira' ||
   phaseLabel === 'Inhala al vientre') {
@@ -46929,7 +47352,10 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
   .pace-rt-sel option:hover, .pace-rt-sel option:focus-visible { background: var(--paper-3); outline: none; }
   .pace-rt-sel option:checked { background: var(--focus-soft); color: var(--ink); }
 }
-.pace-rt-frase { margin-top: 3px; }
+/* La frase se reparte en líneas parecidas (Ez, 1A de la caza de los seis anchos, 9 nov. 2026): a 360 px
+   en castellano partía antes de la comida y dejaba «1 h» sola debajo. «balance» no añade líneas, así que
+   la tarjeta no crece. */
+.pace-rt-frase { margin-top: 3px; text-wrap: balance; }
 
 /* GLIFOS: los de Actividades, en el color de su módulo. SUSTITUYEN al punto. */
 .pace-rt-g { display: inline-grid; place-items: center; color: var(--c); line-height: 0; flex-shrink: 0; }
@@ -52644,12 +53070,18 @@ function mount(tries) {
     console.error('PACE - Componentes no cargaron en 5 s. Comprueba la red.');
   }
 }
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', function () {mount();});
-} else {
-  mount();
+function arrancar() {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {mount();});
+  } else {
+    mount();
+  }
 }
-;Object.assign(window, { mount });
+
+
+if (typeof window.paceCuandoAbra === 'function') window.paceCuandoAbra(arrancar);else
+arrancar();
+;Object.assign(window, { mount, arrancar });
 })();
 </script>
 

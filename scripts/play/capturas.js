@@ -7,6 +7,9 @@
  *   - docs/launch/google-play/capturas-sin-marco/<idioma>/N-nombre.png, la pantalla tal cual;
  *   - docs/launch/google-play/capturas/<idioma>/N-nombre.png, la misma con su título encima
  *     (la serif recta de los títulos, sin cursiva: Ez, 20 oct. 2026).
+ * Con `--beta-oscuro`, solo las tres de /beta (jornada, respira y logros) con la app y el marco en
+ * oscuro, en beta/<nombre>-<idioma>-oscuro.webp a 540 × 960: las enseña la web a quien la ve en
+ * oscuro (Ez, 10 nov. 2026). No toca las de Google Play.
  * Las pantallas se preparan como en scripts/audit/recorrido-app.js: estado sembrado en
  * localStorage y la hora fija. No pulsa nada que guarde fuera del navegador.
  */
@@ -23,6 +26,8 @@ const PUERTO = Number(process.argv.slice(2).find((a) => /^\d+$/.test(a)) || 8793
 /* `--ordenador`: las de Chromebook, la app de escritorio a 1280 × 720 por 1,5 (1920 × 1080, lo
    que Play acepta en apaisado), sin título, en capturas-ordenador/<idioma>/. */
 const ORDENADOR = process.argv.includes('--ordenador');
+const BETA_OSCURO = process.argv.includes('--beta-oscuro');
+const DE_BETA = ['jornada', 'respira', 'logros'];
 const BASE = 'http://localhost:' + PUERTO;
 const SALIDA = path.join(ROOT, 'docs', 'launch', 'google-play');
 const CLAVE = 'pace.state.v2';
@@ -115,22 +120,28 @@ async function sesion(page, modulo, pistas) {
 }
 
 /* El título encima de la pantalla: «PACE», el título en la serif recta y una línea. */
-function marco(lang, esc, img) {
+/* En oscuro, el mismo marco con los colores oscuros de la app (app/tokens.css). */
+const MARCO = {
+  claro: { fondo: '#F2EDE0', tinta: '#1F1C17', ceja: '#6F695B', texto: '#4A453C', filo: '#D6CDB6', sombra: 'rgba(31, 28, 23, 0.14)' },
+  oscuro: { fondo: '#1d1a14', tinta: '#EDE5D3', ceja: '#B2A995', texto: '#c0b49e', filo: '#4d4536', sombra: 'rgba(0, 0, 0, 0.35)' },
+};
+function marco(lang, esc, img, oscuro) {
+  const c = MARCO[oscuro ? 'oscuro' : 'claro'];
   return `<!doctype html><meta charset="utf-8"><style>
 @font-face { font-family: 'Cormorant Garamond'; font-weight: 500; src: url('${BASE}/fonts/cormorantgaramond-500-normal.woff2') format('woff2'); }
 @font-face { font-family: 'Inter Tight'; font-weight: 400; src: url('${BASE}/fonts/intertight-400-normal.woff2') format('woff2'); }
 @font-face { font-family: 'Inter Tight'; font-weight: 500; src: url('${BASE}/fonts/intertight-500-normal.woff2') format('woff2'); }
 html, body { margin: 0; }
-.lienzo { width: 1080px; height: 1920px; background: #F2EDE0; position: relative; overflow: hidden; font-family: 'Inter Tight', sans-serif; color: #1F1C17; }
+.lienzo { width: 1080px; height: 1920px; background: ${c.fondo}; position: relative; overflow: hidden; font-family: 'Inter Tight', sans-serif; color: ${c.tinta}; }
 /* «PACE» arriba; el título y su línea, centrados en el hueco entre «PACE» y el borde de la
    pantalla (Ez, 21 oct.), así no quedan pegados arriba con un vacío debajo. */
 .cab { position: absolute; left: 70px; right: 70px; top: 64px; height: 308px; display: flex; flex-direction: column; align-items: center; text-align: center; }
 .texto { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 14px; }
-.eyebrow { font-size: 26px; letter-spacing: 0.32em; color: #6F695B; font-weight: 500; }
+.eyebrow { font-size: 26px; letter-spacing: 0.32em; color: ${c.ceja}; font-weight: 500; }
 h1 { margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 84px; line-height: 1.02; letter-spacing: -0.005em; text-wrap: balance; }
-p { margin: 0; font-size: 34px; line-height: 1.3; color: #4A453C; max-width: 900px; }
+p { margin: 0; font-size: 34px; line-height: 1.3; color: ${c.texto}; max-width: 900px; }
 .pantalla { position: absolute; left: 50%; top: 372px; transform: translateX(-50%); width: 840px; height: 1493px; border-radius: 46px;
-  overflow: hidden; border: 3px solid #D6CDB6; box-shadow: 0 24px 60px rgba(31, 28, 23, 0.14); background: #F2EDE0; }
+  overflow: hidden; border: 3px solid ${c.filo}; box-shadow: 0 24px 60px ${c.sombra}; background: ${c.fondo}; }
 .pantalla img { width: 100%; height: 100%; display: block; }
 </style><div class="lienzo"><div class="cab"><div class="eyebrow">PACE</div><div class="texto"><h1>${esc.titulo[lang]}</h1><p>${esc.sub[lang]}</p></div></div>
 <div class="pantalla"><img src="${img}"></div></div>`;
@@ -165,7 +176,8 @@ async function main() {
       const dirs = ORDENADOR ? ['capturas-ordenador'] : ['capturas', 'capturas-sin-marco'];
       for (const dir of dirs) fs.mkdirSync(path.join(SALIDA, dir, lang), { recursive: true });
       for (const esc of ESCENAS) {
-        const semilla = esc.semilla(lang);
+        if (BETA_OSCURO && !DE_BETA.includes(esc.id)) continue;
+        const semilla = Object.assign(esc.semilla(lang), BETA_OSCURO ? { palette: 'oscuro' } : {});
         const ctx = await navegador.newContext({
           viewport: ORDENADOR ? { width: 1280, height: 720 } : { width: 360, height: 640 }, deviceScaleFactor: ORDENADOR ? 1.5 : 3,
           locale: lang === 'en' ? 'en-US' : 'es-ES', timezoneId: 'Europe/Madrid',
@@ -184,6 +196,20 @@ async function main() {
         await page.waitForTimeout(esc.espera || 2500);
         await page.evaluate(() => document.fonts.ready);
         const nombre = esc.n + '-' + esc.id + '.png';
+        if (BETA_OSCURO) {
+          const cruda = await page.screenshot();
+          await ctx.close();
+          const lienzo = await navegador.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
+          await lienzo.goto(BASE + '/safety.html');
+          await lienzo.setContent(marco(lang, esc, 'data:image/png;base64,' + cruda.toString('base64'), true));
+          await lienzo.evaluate(() => document.fonts.ready);
+          await lienzo.waitForLoadState('networkidle');
+          const webp = await require('sharp')(await lienzo.locator('.lienzo').screenshot()).resize(540, 960).webp({ quality: 82 }).toBuffer();
+          await lienzo.close();
+          await guardar(path.join(ROOT, 'beta', esc.id + '-' + lang + '-oscuro.webp'), webp);
+          console.log(lang, esc.id, 'oscuro', Math.round(webp.length / 1024) + ' KB', errores.length ? 'ERRORES: ' + errores.join(' | ') : 'ok');
+          continue;
+        }
         const cruda = path.join(SALIDA, dirs[dirs.length - 1], lang, nombre);
         await guardar(cruda, await page.screenshot());
         await ctx.close();

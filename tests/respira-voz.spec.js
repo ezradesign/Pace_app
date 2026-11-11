@@ -22,7 +22,7 @@ const { fasesPorRutina } = require('./respira-fases');
 
 test.beforeEach(async ({ context }) => { await sembrar(context); });
 
-test('los tres clips cargan, y lo que se mide es la PALABRA y no el archivo', async ({ page }) => {
+test('los cuatro clips cargan (con el «Más» del Suspiro), y lo que se mide es la PALABRA y no el archivo', async ({ page }) => {
   await irAlArtefacto(page);
   const r = await page.evaluate(async () => {
     if (typeof paceVozInit !== 'function') return { error: 'el módulo de voz no cargó' };
@@ -45,7 +45,7 @@ test('los tres clips cargan, y lo que se mide es la PALABRA y no el archivo', as
   });
   expect(r.error).toBeUndefined();
   /* GUARD DE CERO: sin clips, todo lo de abajo cruzaría conjuntos vacíos. */
-  expect(r.clips.length).toBe(3);
+  expect(r.clips.length).toBe(4);
   for (const c of r.clips) {
     expect(c.listo, c.senal + ' no llegó a listo').toBe(true);
     expect(c.palabra).toBeGreaterThan(0);
@@ -167,7 +167,7 @@ test('la voz elegida es la que se pide: el clip cambia de archivo', async ({ pag
   /* No basta con que el estado diga «bradford»: lo que importa es qué ARCHIVO
      se ha pedido. Sin esta línea, un `paceVozActiva` correcto con una precarga
      que ignora la voz pasaría el test. */
-  expect(r.fuentes.length).toBe(3);
+  expect(r.fuentes.length).toBe(4);   /* inhala, mantén, exhala y «Más» del Suspiro (9 nov. 2026) */
   for (const src of r.fuentes) {
     expect(src, 'se precargó un archivo que no es de la voz elegida').toContain('bradford-');
   }
