@@ -7571,7 +7571,7 @@ const defaultState = {
 
 
   dawnDates: [],
-  duskDates: [], ocasoDias: [], ocasoTarde: null,
+  duskDates: [], ocasoDias: [], ocasoTarde: null, ocasoSalida: {},
   planDates: [],
   respiraHoy: { fecha: null, n: 0 },
 
@@ -8488,7 +8488,7 @@ function focoContadosCon(lista, id) {
   var antes = Array.isArray(lista) ? lista.filter(function (x) {return x !== id;}) : [];
   return antes.concat([id]).slice(-FOCO_CONTADOS_MAX);
 }
-function completePomodoro(bloque) {
+function completePomodoro(bloque, cuando) {
   ensureDayFresh();
   const focusMinsAtCompletion = getState().focusMinutes;
   setState((prev) => ({ ...prev, cycle: prev.cycle + 1,
@@ -8504,7 +8504,9 @@ function completePomodoro(bloque) {
   if (focusMinsAtCompletion >= 45 && bumpCount('foco.largo') >= 5) {
     unlockAchievement('master.long.focus');
   }
-  if (typeof paceOcasoFoco === 'function') paceOcasoFoco(focusMinsAtCompletion);
+
+
+  if (typeof paceOcasoFoco === 'function') paceOcasoFoco(focusMinsAtCompletion, cuando && cuando.inicio, cuando && cuando.fin);
   checkTimeOfDayAchievements();
   checkSilentDayAchievement();
   updateStreak();
@@ -8530,7 +8532,7 @@ function completeFocusSession(context, opts) {
     addFocusMinutes(mins);
     if (typeof updateStreak === 'function') updateStreak();
   } else {
-    sumados = completePomodoro(opts && opts.bloque);
+    sumados = completePomodoro(opts && opts.bloque, opts);
   }
 
 
@@ -9174,12 +9176,30 @@ var PACE_OCASO_DIAS = 5;
 var PACE_BUHO_RESPUESTAS = 25;
 
 
-function paceOcasoFoco(minutos) {
+
+
+
+
+
+
+
+
+function paceOcasoFoco(minutos, inicioMs, finMs) {
   try {
-    var p = typeof ritmoPlan === 'function' ? ritmoPlan(getState()) : null;
-    if (!p || !p.m || typeof ritmoTrasElFin !== 'function') return;
-    var empezo = Date.now() - (Number(minutos) || 0) * 60000;
-    if (ritmoTrasElFin(p.m, empezo)) setState({ ocasoTarde: todayISO() });
+    if (typeof ritmoTrasElFin !== 'function') return;
+    var ahora = Date.now();
+    var fin = typeof finMs === 'number' && isFinite(finMs) && finMs <= ahora ? finMs : ahora;
+    var empezo = typeof inicioMs === 'number' && isFinite(inicioMs) && inicioMs <= fin ? inicioMs : fin - (Number(minutos) || 0) * 60000;
+    var dia = toISODate(empezo);
+    if (dia === todayISO()) {
+      var p = typeof ritmoPlan === 'function' ? ritmoPlan(getState()) : null;
+      if (p && p.m && ritmoTrasElFin(p.m, empezo)) setState({ ocasoTarde: dia });
+      return;
+    }
+    var s = getState(),sal = s.ocasoSalida;
+    if (!sal || sal.fecha !== dia || !ritmoTrasElFin(sal, empezo)) return;
+    var lista = Array.isArray(s.ocasoDias) ? s.ocasoDias.filter(function (d) {return d !== dia;}) : [];
+    setState({ ocasoTarde: dia, ocasoDias: lista });
   } catch (e) {}
 }
 
@@ -9195,7 +9215,8 @@ function paceOcasoMirar() {
     var cerrada = !!p && p.total > 0 && p.hechos >= p.total;
     if (cerrada && !tarde && !esta) {
       lista = lista.concat([hoy]).slice(-PACE_OCASO_DIAS * 3);
-      setState({ ocasoDias: lista });
+
+      setState({ ocasoDias: lista, ocasoSalida: { fecha: hoy, fin: p.m.fin, finDesde: p.m.finDesde != null ? p.m.finDesde : null } });
     } else if (tarde && esta) {
       lista = lista.filter(function (d) {return d !== hoy;});
       setState({ ocasoDias: lista });
@@ -10771,6 +10792,9 @@ function recordRoutineFeedback(routineId, response, opciones) {
     ...prev,
     routineFeedback: nextRoutineFeedback(prev.routineFeedback, id, resp)
   }));
+
+
+
 
 
 
@@ -14255,6 +14279,7 @@ function ritmoDesfase(ms, hasta) {
 
 
 function ritmoBloqueTerminado(inicioMs, finMs, minutos) {
+  inicioMs = ritmoDesdeHoy(inicioMs);
 
   var p = ritmoPlanBase(getState());
   if (!p || p.hechos < 1) return;
@@ -14419,15 +14444,26 @@ document.addEventListener('visibilitychange', ritmoMirarSalida);
 setInterval(ritmoMirarSalida, typeof PACE_DIA_CADA_MS === 'number' ? PACE_DIA_CADA_MS : 60 * 1000);
 
 
+
+function ritmoDesdeHoy(ms) {
+  if (typeof ms !== 'number' || !isFinite(ms)) return ms;
+  var cero = new Date();cero.setHours(0, 0, 0, 0);
+  return ms < cero.getTime() ? cero.getTime() : ms;
+}
+
+
+
 function ritmoFocoEmpezo() {
   try {
     var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
     if (!v) return null;
 
-    if (v.endsAt && v.endsAt > Date.now()) return typeof v.inicio === 'number' && v.inicio <= v.endsAt ? v.inicio : v.endsAt - (Number(v.minutes) || 0) * 60000;
+    if (v.endsAt && v.endsAt > Date.now()) return ritmoDesdeHoy(typeof v.inicio === 'number' && v.inicio <= v.endsAt ? v.inicio : v.endsAt - (Number(v.minutes) || 0) * 60000);
     return v.pausaMs > 0 && v.dia === new Date().toDateString() ? v.inicio || null : null;
   } catch (e) {return null;}
 }
+
+
 
 
 
@@ -14443,7 +14479,11 @@ function ritmoFocoDelDiaNuevo() {
     var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
     var min = Number(v && v.minutes) || 0;
     var inicio = typeof v.inicio === 'number' && isFinite(v.inicio) ? v.inicio : v.endsAt ? v.endsAt - min * 60000 : null;
-    if (!min || inicio == null || inicio > Date.now() || new Date(inicio).toDateString() !== new Date().toDateString()) return null;
+    if (!min || inicio == null || inicio > Date.now()) return null;
+    if (ritmoDesdeHoy(inicio) !== inicio) {
+      if (!(v.endsAt > Date.now())) return null;
+      return { desde: 0, min: Math.max(1, Math.round((v.endsAt - ritmoDesdeHoy(inicio)) / 60000)) };
+    }
     var d = new Date(inicio);
     return { desde: d.getHours() * 60 + d.getMinutes(), min: min };
   } catch (e) {return null;}
@@ -14492,9 +14532,9 @@ function ritmoFocoHecho(p) {
   return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) {return a + ritmoFocoMin(f);}, 0) : 0;
 }
 
-Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoDelDiaNuevo, ritmoFocoHecho, ritmoFocoMin, ritmoFijarLoHecho,
+Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoDesdeHoy, ritmoFocoEmpezo, ritmoFocoDelDiaNuevo, ritmoFocoHecho, ritmoFocoMin, ritmoFijarLoHecho,
   ritmoMinutosDelPlan, ritmoMinutosDevolver });
-;Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoFijarLoHecho, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, _ritmoCierrePintado, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoDelDiaNuevo, ritmoMinutosDelPlan, ritmoMinutosDevolver, ritmoMinutosSonTuyos, ritmoFocoMin, ritmoFocoHecho });
+;Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoFijarLoHecho, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, _ritmoCierrePintado, ritmoMirarSalida, ritmoDesdeHoy, ritmoFocoEmpezo, ritmoFocoDelDiaNuevo, ritmoMinutosDelPlan, ritmoMinutosDevolver, ritmoMinutosSonTuyos, ritmoFocoMin, ritmoFocoHecho });
 })();
 </script>
   <!-- El día elegido y sin empezar se lee desde ahora (Ez, E1 A del 7 nov. 2026). -->
@@ -14850,7 +14890,10 @@ function ritmoSigueCierre(routine, doneMeta, t) {
 
 
 
-function ritmoPausaHecha(routineId, runId) {
+
+
+
+function ritmoPausaHecha(routineId, runId, minutos) {
   var a = ritmoPausaAbierta();
   if (!a) return;
   var esPlato = !!routineId && a.platos.some(function (pl) {return pl.id === routineId;});
@@ -14867,10 +14910,17 @@ function ritmoPausaHecha(routineId, runId) {
       cambio.sesiones = Object.assign({}, r.dia.sesiones || {});
       var suyas = Array.isArray(cambio.sesiones[a.n]) ? cambio.sesiones[a.n] : [];
       if (suyas.indexOf(runId) === -1) cambio.sesiones[a.n] = suyas.concat([runId]);
+      var min = Number(minutos);
+      if (minutos != null && isFinite(min) && min >= 0) {
+        cambio.sesionesMin = Object.assign({}, r.dia.sesionesMin || {});
+        cambio.sesionesMin[runId] = min;
+      }
     }
     return { dia: Object.assign({}, r.dia, cambio) };
   });
 }
+
+
 
 
 
@@ -14892,17 +14942,20 @@ function ritmoSesionesHoy() {
 var RITMO_MODULO_SESION = { breathe: 'respira', move: 'mueve', stretch: 'estira' };
 
 function ritmoMinutosHechos(s) {
-  var por = (ritmoDe(s || getState()).dia || {}).sesiones || {};
+  var dia = ritmoDe(s || getState()).dia || {};
+  var por = dia.sesiones || {},guardados = dia.sesionesMin || {};
   var ns = Object.keys(por);
   if (!ns.length) return {};
-  var min = {},out = {};
-  ritmoSesionesHoy().forEach(function (e) {if (e.runId) min[e.runId] = sessionCreditedMinutes(e);});
+  var min = {},out = {},falta = false;
+  Object.keys(guardados).forEach(function (id) {var v = Number(guardados[id]);if (isFinite(v) && v >= 0) min[id] = v;});
+  ns.forEach(function (n) {(Array.isArray(por[n]) ? por[n] : []).forEach(function (id) {if (min[id] == null) falta = true;});});
+  if (falta) ritmoSesionesHoy().forEach(function (e) {if (e.runId && min[e.runId] == null) min[e.runId] = sessionCreditedMinutes(e);});
   ns.forEach(function (n) {
     (Array.isArray(por[n]) ? por[n] : []).forEach(function (id) {if (min[id] != null) out[n] = (out[n] || 0) + min[id];});
   });
   return out;
 }
-function ritmoMetaHecha(min, t) {return min != null ? t('ritmo.hecha') + ' · ' + min + ' min' : t('ritmo.hecha');}
+function ritmoMetaHecha(min, t) {return min > 0 ? t('ritmo.hecha') + ' · ' + min + ' min' : t('ritmo.hecha');}
 
 
 
@@ -17529,7 +17582,10 @@ function emitSessionCompleted(module, routineId, datos) {
 
 
 
-  if (typeof window.ritmoPausaHecha === 'function') {try {window.ritmoPausaHecha(routineId, runId);} catch (e) {}}
+
+  if (typeof window.ritmoPausaHecha === 'function') {
+    try {window.ritmoPausaHecha(routineId, runId, typeof sessionCreditedMinutes === 'function' ? sessionCreditedMinutes(evento) : null);} catch (e) {}
+  }
 
 
   if (typeof window.ritmoAnotarHecha === 'function') {try {window.ritmoAnotarHecha(routineId);} catch (e) {}}
@@ -31572,7 +31628,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
 
-      completeFocusSession('home', { minutes: minutos, bloque, fin: finBloque,
+      completeFocusSession('home', { minutes: minutos, bloque, fin: finBloque, inicio,
         elapsedSeconds: focoElapsedSec(inicio, durationSec, finBloque),
         activeSeconds: durationSec });
 
@@ -40431,8 +40487,13 @@ function statsHoySesiones() {
 }
 
 
+
+
+
 function statsHoySueltas(state) {
-  const por = (ritmoDe(state).dia || {}).sesiones || {};
+  const dia = ritmoDe(state).dia || {};
+  const por = dia.sesiones || {},estados = dia.estados || {};
+  if (Object.keys(estados).some((n) => estados[n] === 'hecha' && !(Array.isArray(por[n]) && por[n].length))) return [];
   const suyas = new Set();
   Object.keys(por).forEach((n) => (Array.isArray(por[n]) ? por[n] : []).forEach((id) => suyas.add(id)));
   return statsHoySesiones().filter((s) => !s.runId || !suyas.has(s.runId));
@@ -53006,7 +53067,10 @@ function paceAroCartaRecordado(clave) {
   return typeof d === 'number' && d > 0 ? d : null;
 }
 
+
+
 function paceAroCartaRecordar(clave, D) {
+  if (window.PACE_CARA === 'landing') return;
   var m = paceAroCartaLeer();
   if (m[clave] === D) return;
   delete m[clave];
