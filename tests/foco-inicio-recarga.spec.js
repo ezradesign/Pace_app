@@ -92,8 +92,9 @@ test('la otra pestaña recibe la hora de empezar con el aviso: si es ella la que
 
   /* Lo que guardaba la versión de antes (sin `inicio`): la cuenta de siempre. */
   const viejo = await otra.evaluate(() => {
-    localStorage.setItem('pace.timer.v1', JSON.stringify({ mode: 'foco', minutes: 25, id: 'x', endsAt: Date.now() + 10 * 60 * 1000 }));
-    return ritmoFocoEmpezo() === Date.now() - 15 * 60 * 1000;
+    const ahora = Date.now();   // una sola lectura: entre dos, el reloj puede dar un milisegundo más
+    localStorage.setItem('pace.timer.v1', JSON.stringify({ mode: 'foco', minutes: 25, id: 'x', endsAt: ahora + 10 * 60 * 1000 }));
+    return ritmoFocoEmpezo() === ahora - 15 * 60 * 1000;
   });
   expect(viejo).toBe(true);
 });

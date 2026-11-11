@@ -291,7 +291,7 @@ html[data-pace-landing-idioma="en"] #pace-landing [lang="es"] { display: none !i
 
   </style>
   <!--/pace-landing-->
-  <title>PACE · Foco · Cuerpo — v0.198.0</title>
+  <title>PACE · Foco · Cuerpo — v0.198.1</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -7426,7 +7426,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.198.0';
+const PACE_VERSION = 'v0.198.1';
 
 
 
@@ -31554,7 +31554,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
     const minutos = state.focusMinutes,inicio = inicioBloqueRef.current,avisoOn = state.notifyFocusEnd;
 
 
-    const finBloque = endsAt || (inicio ? inicio + durationSec * 1000 : Date.now());
+    const finBloque = endsAt || finGuardadoRef.current || (inicio ? inicio + durationSec * 1000 : Date.now());
 
 
 
@@ -31612,7 +31612,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
   const inicioBloqueRef = useRefFT(null);
 
-  const bloqueRef = useRefFT(null);
+  const bloqueRef = useRefFT(null),finGuardadoRef = useRefFT(null);
   const restoredRef = useRefFT(false);
   useEffectFT(() => {
     if (restoredRef.current) return;
@@ -31624,7 +31624,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
     if (g && g.endsAt) {
       inicioBloqueRef.current = g.inicio || g.endsAt - durationSec * 1000;
       bloqueRef.current = g.id || 'e' + g.endsAt;
-      restore(g.endsAt);
+      finGuardadoRef.current = g.endsAt;restore(g.endsAt);
     } else if (g && g.pausaMs) {
       inicioBloqueRef.current = g.inicio;
       bloqueRef.current = g.id || paceFocoNuevoId();
@@ -31759,7 +31759,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
   const startFocusVisual = () => {
     if (status !== 'paused') {
-      inicioBloqueRef.current = Date.now();
+      inicioBloqueRef.current = Date.now();finGuardadoRef.current = null;
       bloqueRef.current = paceFocoNuevoId();
 
 

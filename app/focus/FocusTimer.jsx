@@ -49,8 +49,8 @@ function FocusTimer({ onFinish }) {
     const bloque = bloqueRef.current || ('e' + Date.now());
     const minutos = state.focusMinutes, inicio = inicioBloqueRef.current, avisoOn = state.notifyFocusEnd;
     /* La hora a la que acabó el bloque, para contar su pausa desde ahí: el final del motor
-       o, si terminó con PACE cerrado, el que se guardó (el inicio se derivó de él). */
-    const finBloque = endsAt || (inicio ? inicio + durationSec * 1000 : Date.now());
+       o, si terminó con PACE cerrado, el que se guardó: el inicio trae sus pausas y no lo da. */
+    const finBloque = endsAt || finGuardadoRef.current || (inicio ? inicio + durationSec * 1000 : Date.now());
     /* Un bloque que acabó otro día y del que PACE se entera hoy (el equipo dormido a
        medianoche con la página abierta) no cuenta, y menos en el día de hoy: no se dan por
        hechas sesiones viejas sin confirmar. Es la A de Ez del 12 oct. («si terminó ayer no
@@ -108,7 +108,7 @@ function FocusTimer({ onFinish }) {
      un bloque, NUNCA al reanudar: eso borraria la pausa que esto va a contar. */
   const inicioBloqueRef = useRefFT(null);
   /* El bloque de foco que se ve, el mismo en todas las pestañas (FocusTimer.pestanas.jsx). */
-  const bloqueRef = useRefFT(null);
+  const bloqueRef = useRefFT(null), finGuardadoRef = useRefFT(null);
   const restoredRef = useRefFT(false);
   useEffectFT(() => {
     if (restoredRef.current) return;
@@ -120,7 +120,7 @@ function FocusTimer({ onFinish }) {
     if (g && g.endsAt) {
       inicioBloqueRef.current = g.inicio || g.endsAt - durationSec * 1000;
       bloqueRef.current = g.id || ('e' + g.endsAt);
-      restore(g.endsAt);
+      finGuardadoRef.current = g.endsAt; restore(g.endsAt);
     } else if (g && g.pausaMs) {
       inicioBloqueRef.current = g.inicio;
       bloqueRef.current = g.id || paceFocoNuevoId();
@@ -255,7 +255,7 @@ function FocusTimer({ onFinish }) {
      «Empezar otro ciclo», para idéntica semántica sin tocar el motor. */
   const startFocusVisual = () => {
     if (status !== 'paused') {
-      inicioBloqueRef.current = Date.now();   // s172: bloque nuevo, no reanudacion
+      inicioBloqueRef.current = Date.now(); finGuardadoRef.current = null;   // s172: bloque nuevo, no reanudacion
       bloqueRef.current = paceFocoNuevoId();
       /* s193 · empezar un bloque de foco CIERRA la pausa de «A tu ritmo» (state-ritmo.jsx):
          reanudar no es empezar, y Pausa/Larga no son bloques del menú. */
