@@ -218,6 +218,15 @@ function paceSanearEstado(parsed, defaults) {
     delete e.customDraft; reparados.push('customDraft');
   }
 
+  /* La semana de prueba del paso a v1 no pasa de siete días desde `at` (Ez, O1 A de la octava,
+     11 nov. 2026): `hasta` viaja en la copia de «Tus datos» y editándola se alargaba sin fin.
+     Siete = PACE_PASO_V1_DIAS (state-paso-v1.js, que carga después); un `at` del futuro cuenta
+     como ahora. Lo prueba tests/paso-v1-tope.spec.js. */
+  if (paceEsObjetoPlano(e.pasoV1) && typeof e.pasoV1.hasta === 'number' && typeof e.pasoV1.at === 'number' && isFinite(e.pasoV1.at)) {
+    var topeV1 = Math.min(e.pasoV1.at, Date.now()) + 7 * 86400000;
+    if (!(e.pasoV1.hasta <= topeV1)) reparar('pasoV1', Object.assign({}, e.pasoV1, { hasta: topeV1 }));
+  }
+
   Object.keys(FORMAS_AJENAS).forEach(function (k) {
     if (FORMAS_AJENAS[k] === 'objeto' && k in e && e[k] !== undefined && !paceEsObjetoPlano(e[k])) {
       e[k] = undefined; delete e[k]; reparados.push(k);

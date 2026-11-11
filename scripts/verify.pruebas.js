@@ -21,6 +21,42 @@ var ESPERA_ASINCRONA = /waitForFunction\(\s*async\b/;
 var RELOJ_A_LA_HORA_DE_VERDAD = /clock\.install\(\s*\)/;
 var HOY_DE_NODE = /new Date\(\)\.(getDay|getDate|toDateString)\(\)/;
 
+/* EL RELOJ DE LA PÁGINA, SIEMPRE A UNA HORA FIJA (la octava, nº 1, 11 nov. 2026). La regla de arriba
+   solo ve un caso de los que fallan de noche: una prueba que instala el reloj a la hora de verdad y
+   adelanta minutos cruza la medianoche si corre a las 23:56, lea o no «hoy» en Node (la de la
+   landing cayó así sin que esta tanda la viera). Ahora falla cualquier `clock.install()` sin hora
+   (`{ time: MEDIODIA }`, tests/helpers.js) fuera de esta lista, que solo puede encoger: un archivo
+   que ya no lo usa tiene que salir de ella. Los 26 de hoy son de antes de la regla. */
+var RELOJ_SIN_HORA = /clock\.install\(\s*\)/;
+var RELOJ_SIN_HORA_ANTIGUOS = [
+  'aro-de-golpe.spec.js',
+  'aro-paso.spec.js',
+  'aro-recorrido.spec.js',
+  'barras-transform.spec.js',
+  'caza-respira.spec.js',
+  'cierre-dibujo.spec.js',
+  'cierre-italica.spec.js',
+  'cierre-sin-pisar.spec.js',
+  'cuerpo-tiempo-activo.spec.js',
+  'espacio-mantenido.spec.js',
+  'eventos-emisor.spec.js',
+  'glifos-por-lado.spec.js',
+  'home-geometria.spec.js',
+  'home-luz-curva.spec.js',
+  'home-luz.spec.js',
+  'movimiento-reducido.spec.js',
+  'mueve-reloj.spec.js',
+  'respira-cierre.spec.js',
+  'respira-entrada-salida.spec.js',
+  'respira-espacio.spec.js',
+  'respira-progreso.spec.js',
+  'respira-reanudar.spec.js',
+  'runner-cabe.spec.js',
+  'runner-circulo.spec.js',
+  'runner-mando.spec.js',
+  'sello-espera.spec.js',
+];
+
 function recorrer(dir, out) {
   fs.readdirSync(dir, { withFileTypes: true }).forEach(function (d) {
     var p = path.join(dir, d.name);
@@ -54,6 +90,17 @@ function tandaPruebas(ctx) {
   });
   if (deNoche.length) ctx.falla('reloj de la página a la hora de verdad y «hoy» con el de Node, que falla de noche: ' + deNoche.join(', ') + '. Instala el reloj a MEDIODIA (tests/helpers.js).');
   else ctx.ok('Ninguna prueba adelanta el reloj desde la hora de verdad y lee «hoy» en Node');
+  var sinHora = [];
+  var yaNo = RELOJ_SIN_HORA_ANTIGUOS.slice();
+  recorrer(path.join(ctx.ROOT, 'tests'), []).forEach(function (p) {
+    var rel = path.relative(path.join(ctx.ROOT, 'tests'), p).split(path.sep).join('/');
+    if (!RELOJ_SIN_HORA.test(sinComentarios(fs.readFileSync(p, 'utf8')))) return;
+    var i = yaNo.indexOf(rel);
+    if (i === -1) sinHora.push(rel); else yaNo.splice(i, 1);
+  });
+  if (sinHora.length) ctx.falla('clock.install() sin hora, que de noche cruza la medianoche: ' + sinHora.join(', ') + '. Instálalo a una hora fija ({ time: MEDIODIA }, tests/helpers.js).');
+  else ctx.ok('Ninguna prueba nueva instala el reloj sin hora (' + RELOJ_SIN_HORA_ANTIGUOS.length + ' antiguas en la lista)');
+  if (yaNo.length) ctx.falla('Ya no instalan el reloj sin hora y siguen en RELOJ_SIN_HORA_ANTIGUOS (scripts/verify.pruebas.js): quítalas de la lista, que solo encoge: ' + yaNo.join(', '));
 }
 
 module.exports = { tandaPruebas: tandaPruebas };

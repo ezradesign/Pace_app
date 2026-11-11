@@ -17,11 +17,21 @@
 # encontrarse siempre. Es borrador porque el repo es publico: un borrador solo
 # lo ven quienes pueden escribir en el repo. Si llegan varios commits con la
 # misma version, el borrador se queda con el AAB del ultimo.
+#
+# SOLO TRAS UN CI EN VERDE (Ez, O4 A de la octava, 11 nov. 2026). Antes saltaba con
+# cada push a `main`, a la vez que el CI: un commit en rojo podia dejar su AAB firmado
+# en el borrador, listo para Play. Ahora arranca cuando el workflow CI acaba en `main`,
+# y solo si acabo en verde (`workflow_run`), y compila el commit que el CI probo
+# (`head_sha`), no el ultimo de `main`. A mano (`workflow_dispatch`) sigue funcionando
+# para probar una rama, pero desde una rama nunca toca el borrador. Lo vigila
+# `scripts/verify.ci.js`.
 
 name: Android
 
 on:
-  push:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
     branches: [main]
   workflow_dispatch:
 
@@ -38,11 +48,18 @@ jobs:
     name: apk
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    # Un CI rojo o cancelado no compila nada; a mano, siempre.
+    # Solo el CI de un push: las corridas a hora fija del CI no rehacen el AAB de una version ya subida.
+    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
     env:
       HAY_LLAVE: ${{ secrets.PACE_UPLOAD_KEYSTORE != '' }}
+      # El commit que el CI probo; a mano, el de la rama elegida.
+      SHA_PROBADO: ${{ github.event.workflow_run.head_sha || github.sha }}
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - uses: actions/setup-node@v4
         with:
@@ -109,11 +126,11 @@ jobs:
           AAB="$RUNNER_TEMP/PACE-$VERSION.aab"
           NOTAS=$(grep -F "| $TAG |" CHANGELOG.md | head -1 | awk -F' \\| ' '{print $3}' | sed 's/ |$//')
           [ -n "$NOTAS" ] || NOTAS="Sin linea en el CHANGELOG."
-          CUERPO=$(printf '%s\n\nCommit: %s\n\nBorrador: no se publica. Guarda el archivo que se sube a Google Play.' "$NOTAS" "$GITHUB_SHA")
+          CUERPO=$(printf '%s\n\nCommit: %s\n\nBorrador: no se publica. Guarda el archivo que se sube a Google Play.' "$NOTAS" "$SHA_PROBADO")
           # Los borradores no tienen etiqueta todavia, asi que se buscan en la lista.
           if gh release list --limit 200 --json tagName --jq '.[].tagName' | grep -qxF "$TAG"; then
             gh release upload "$TAG" "$AAB" --clobber
-            gh release edit "$TAG" --target "$GITHUB_SHA" --notes "$CUERPO"
+            gh release edit "$TAG" --target "$SHA_PROBADO" --notes "$CUERPO"
           else
-            gh release create "$TAG" "$AAB" --draft --target "$GITHUB_SHA" --title "PACE $VERSION" --notes "$CUERPO"
+            gh release create "$TAG" "$AAB" --draft --target "$SHA_PROBADO" --title "PACE $VERSION" --notes "$CUERPO"
           fi

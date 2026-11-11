@@ -54,6 +54,10 @@ var autoria = require('./verify.autoria.js');
 var dialogos = require('./verify.avisos.js');
 /* Que las esperas de las pruebas esperen: ni un waitForFunction(async …) (27 oct.). */
 var pruebas = require('./verify.pruebas.js');
+/* Los trozos del CI caben en su tiempo y el YAML dice lo mismo en sus tres sitios. */
+var ci = require('./verify.ci.js');
+/* La versión mínima de WebView y Safari, escrita y cumplida (Ez, O3 A de la octava). */
+var versiones = require('./verify.versiones.js');
 /* Que pacegrass.app publique solo la app (dist/) y que lleve todo lo que precarga sw.js. */
 var web = require('./verify.web.js');
 /* Que lo que privacy.html dice de /premium y de «Avísame» sea lo que pasa. */
@@ -443,6 +447,8 @@ function main() {
   licencia.tandaLicencia({ ROOT: ROOT, falla: falla, ok: ok, info: info, rel: rel });
   dialogos.tandaAvisos({ ROOT: ROOT, falla: falla, ok: ok, info: info });
   pruebas.tandaPruebas({ ROOT: ROOT, falla: falla, ok: ok, info: info });
+  ci.tandaCI({ ROOT: ROOT, falla: falla, ok: ok, info: info });
+  versiones.tandaVersiones({ ROOT: ROOT, falla: falla, ok: ok, info: info });
   autoria.tandaAutoria({ ROOT: ROOT, falla: falla, ok: ok, info: info });
   web.tandaWeb({ ROOT: ROOT, falla: falla, ok: ok, info: info });
   privacidad.tandaPrivacidad({ ROOT: ROOT, falla: falla, ok: ok, info: info });
