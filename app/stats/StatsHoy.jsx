@@ -28,8 +28,10 @@ function statsHoyParadas(plan) {
   m.items.forEach((it, i) => {
     if (it.tipo === 'comida') { out.push({ it, comida: true }); return; }
     if (!(it.tipo === 'pausa' || it.tipo === 'cierre') || !it.platos || !it.platos.length) return;
-    const marca = (plan.estados || {})[ritmoOrdinal(m, it)] || null;
-    out.push({ it, estado: i === iActual ? 'ahora' : i < iActual ? (marca || 'pasada') : null });
+    const n = ritmoOrdinal(m, it);
+    const marca = (plan.estados || {})[n] || null;
+    /* la de ahora sigue con su marco de «ahora» (`estado`), pero si ya la hiciste lo dice (`marca`, 7A) */
+    out.push({ it, n, marca, estado: i === iActual ? 'ahora' : i < iActual ? (marca || 'pasada') : null });
   });
   return out;
 }
@@ -82,10 +84,13 @@ function StatsHoyTarjeta({ modulos, nombre, hora, meta, estado, larga }) {
   );
 }
 
-function statsHoyMeta(p, t) {
-  const { it, estado } = p;
+/* Una pausa hecha dice los minutos que hiciste, no los del hueco (Ez, 7A del 11 nov. 2026;
+   `ritmoMinutosHechos`, state-ritmo.pausa.jsx); la de ahora, si ya la hiciste, también. */
+function statsHoyMeta(p, t, hechas) {
+  const { it } = p;
+  const estado = p.estado === 'ahora' && (p.marca === 'hecha' || p.marca === 'cuenta') ? p.marca : p.estado;
   if (p.comida) return ritmoDuracion(it.dur);
-  if (estado === 'hecha') return t('ritmo.hecha') + ' · ' + it.dur + ' min';
+  if (estado === 'hecha') return ritmoMetaHecha((hechas || {})[p.n], t);
   if (estado === 'saltada') return t('ritmo.saltada');
   if (estado === 'cuenta') return t('ritmo.cuenta');   /* sin minutos: no hubo sesión (4A del 8 nov.) */
   if (estado === 'ahora') return t('ritmo.ahora.min');
@@ -104,6 +109,7 @@ function StatsHoy({ state, onClose }) {
 
   if (plan) {
     const paradas = statsHoyParadas(plan);
+    const hechas = ritmoMinutosHechos(state);
     return (
       <div data-pace-hoy-view="menu">
         <StatsTotales items={statsHoyTotales(state, t)} />
@@ -115,7 +121,7 @@ function StatsHoy({ state, onClose }) {
             const modulos = p.comida ? ['comida'] : p.it.platos.map((x) => x.modulo);
             return <StatsHoyTarjeta key={k} modulos={modulos} larga={p.it.larga}
               nombre={p.comida ? t('ritmo.comida') : ritmoPlatos(p.it, t, lang)} hora={ritmoHora(p.it.desde)}
-              meta={statsHoyMeta(p, t)} estado={p.comida ? 'comida' : p.estado} />;
+              meta={statsHoyMeta(p, t, hechas)} estado={p.comida ? 'comida' : p.estado} />;
           })}
         </StatsHoyRejilla>
       </div>

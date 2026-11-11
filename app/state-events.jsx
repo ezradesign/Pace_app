@@ -211,7 +211,7 @@ function emitSessionCompleted(module, routineId, datos) {
   /* s195: una sesión terminada mientras la pausa de «A tu ritmo» está abierta la
      deja HECHA (de lo que sea: hiciste una pausa), y apunta su plato si es uno de
      los de la pausa. Sin pausa abierta, no hace nada. */
-  if (typeof window.ritmoPausaHecha === 'function') { try { window.ritmoPausaHecha(routineId); } catch (e) {} }
+  if (typeof window.ritmoPausaHecha === 'function') { try { window.ritmoPausaHecha(routineId, runId); } catch (e) {} }
   /* Y las series de «A tu ritmo» la apuntan como hecha hoy, del plan o por libre: su zona
      ya está movida y no se repite (state-ritmo.series.jsx). */
   if (typeof window.ritmoAnotarHecha === 'function') { try { window.ritmoAnotarHecha(routineId); } catch (e) {} }

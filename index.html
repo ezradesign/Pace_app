@@ -14742,7 +14742,10 @@ function ritmoSigueCierre(routine, doneMeta, t) {
 
 
 
-function ritmoPausaHecha(routineId) {
+
+
+
+function ritmoPausaHecha(routineId, runId) {
   var a = ritmoPausaAbierta();
   if (!a) return;
   var esPlato = !!routineId && a.platos.some(function (pl) {return pl.id === routineId;});
@@ -14755,9 +14758,46 @@ function ritmoPausaHecha(routineId) {
       var ya = Array.isArray(cambio.platos[a.n]) ? cambio.platos[a.n] : [];
       if (ya.indexOf(routineId) === -1) cambio.platos[a.n] = ya.concat([routineId]);
     }
+    if (runId) {
+      cambio.sesiones = Object.assign({}, r.dia.sesiones || {});
+      var suyas = Array.isArray(cambio.sesiones[a.n]) ? cambio.sesiones[a.n] : [];
+      if (suyas.indexOf(runId) === -1) cambio.sesiones[a.n] = suyas.concat([runId]);
+    }
     return { dia: Object.assign({}, r.dia, cambio) };
   });
 }
+
+
+
+
+
+
+
+function ritmoSesionesHoy() {
+  var ev = [];
+  try {
+    var snap = window.paceEventsSnapshot && window.paceEventsSnapshot();
+    ev = snap && Array.isArray(snap.events) ? snap.events : [];
+  } catch (e) {ev = [];}
+  var hoy = typeof todayISO === 'function' ? todayISO() : '';
+  return ev.filter(function (e) {
+    return e && e.type === 'session.completed' && e.localDay === hoy && e.payload && RITMO_MODULO_SESION[e.payload.module];
+  });
+}
+var RITMO_MODULO_SESION = { breathe: 'respira', move: 'mueve', stretch: 'estira' };
+
+function ritmoMinutosHechos(s) {
+  var por = (ritmoDe(s || getState()).dia || {}).sesiones || {};
+  var ns = Object.keys(por);
+  if (!ns.length) return {};
+  var min = {},out = {};
+  ritmoSesionesHoy().forEach(function (e) {if (e.runId) min[e.runId] = sessionCreditedMinutes(e);});
+  ns.forEach(function (n) {
+    (Array.isArray(por[n]) ? por[n] : []).forEach(function (id) {if (min[id] != null) out[n] = (out[n] || 0) + min[id];});
+  });
+  return out;
+}
+function ritmoMetaHecha(min, t) {return min != null ? t('ritmo.hecha') + ' · ' + min + ' min' : t('ritmo.hecha');}
 
 
 
@@ -14871,9 +14911,10 @@ function ritmoPausaCerrarConElDia() {
 
 Object.assign(window, {
   ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta,
+  ritmoSesionesHoy, ritmoMinutosHechos, ritmoMetaHecha, RITMO_MODULO_SESION,
   ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia, ritmoParadaHasta
 });
-;Object.assign(window, { ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, RITMO_METAS_DE_FIN, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta, ritmoSinPausa, ritmoPausaEmpieza, ritmoParadaHasta, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia });
+;Object.assign(window, { ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, RITMO_METAS_DE_FIN, ritmoSigueCierre, ritmoPausaHecha, ritmoSesionesHoy, RITMO_MODULO_SESION, ritmoMinutosHechos, ritmoMetaHecha, ritmoPausaPorTuCuenta, ritmoSinPausa, ritmoPausaEmpieza, ritmoParadaHasta, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia });
 })();
 </script>
   <!-- Las pausas con bloques cortos (22 oct. 2026): la invitación, «a mi ritmo» o tras cada bloque, y sin día. -->
@@ -17380,7 +17421,7 @@ function emitSessionCompleted(module, routineId, datos) {
 
 
 
-  if (typeof window.ritmoPausaHecha === 'function') {try {window.ritmoPausaHecha(routineId);} catch (e) {}}
+  if (typeof window.ritmoPausaHecha === 'function') {try {window.ritmoPausaHecha(routineId, runId);} catch (e) {}}
 
 
   if (typeof window.ritmoAnotarHecha === 'function') {try {window.ritmoAnotarHecha(routineId);} catch (e) {}}
@@ -40127,8 +40168,10 @@ function statsHoyParadas(plan) {
   m.items.forEach((it, i) => {
     if (it.tipo === 'comida') {out.push({ it, comida: true });return;}
     if (!(it.tipo === 'pausa' || it.tipo === 'cierre') || !it.platos || !it.platos.length) return;
-    const marca = (plan.estados || {})[ritmoOrdinal(m, it)] || null;
-    out.push({ it, estado: i === iActual ? 'ahora' : i < iActual ? marca || 'pasada' : null });
+    const n = ritmoOrdinal(m, it);
+    const marca = (plan.estados || {})[n] || null;
+
+    out.push({ it, n, marca, estado: i === iActual ? 'ahora' : i < iActual ? marca || 'pasada' : null });
   });
   return out;
 }
@@ -40181,10 +40224,13 @@ function StatsHoyTarjeta(_ref) {let { modulos, nombre, hora, meta, estado, larga
 
 }
 
-function statsHoyMeta(p, t) {
-  const { it, estado } = p;
+
+
+function statsHoyMeta(p, t, hechas) {
+  const { it } = p;
+  const estado = p.estado === 'ahora' && (p.marca === 'hecha' || p.marca === 'cuenta') ? p.marca : p.estado;
   if (p.comida) return ritmoDuracion(it.dur);
-  if (estado === 'hecha') return t('ritmo.hecha') + ' · ' + it.dur + ' min';
+  if (estado === 'hecha') return ritmoMetaHecha((hechas || {})[p.n], t);
   if (estado === 'saltada') return t('ritmo.saltada');
   if (estado === 'cuenta') return t('ritmo.cuenta');
   if (estado === 'ahora') return t('ritmo.ahora.min');
@@ -40203,6 +40249,7 @@ function StatsHoy(_ref3) {let { state, onClose } = _ref3;
 
   if (plan) {
     const paradas = statsHoyParadas(plan);
+    const hechas = ritmoMinutosHechos(state);
     return (
       React.createElement("div", { "data-pace-hoy-view": "menu" },
       React.createElement(StatsTotales, { items: statsHoyTotales(state, t) }),
@@ -40214,7 +40261,7 @@ function StatsHoy(_ref3) {let { state, onClose } = _ref3;
         const modulos = p.comida ? ['comida'] : p.it.platos.map((x) => x.modulo);
         return React.createElement(StatsHoyTarjeta, { key: k, modulos: modulos, larga: p.it.larga,
           nombre: p.comida ? t('ritmo.comida') : ritmoPlatos(p.it, t, lang), hora: ritmoHora(p.it.desde),
-          meta: statsHoyMeta(p, t), estado: p.comida ? 'comida' : p.estado });
+          meta: statsHoyMeta(p, t, hechas), estado: p.comida ? 'comida' : p.estado });
       })
       )
       ));
@@ -48079,7 +48126,7 @@ Object.assign(window, {
 
 const { useRef: useRefRL, useLayoutEffect: useLayoutEffectRL, useState: useStateRL, useEffect: useEffectRL, useCallback: useCallbackRL } = React;
 
-function RitmoEtiqueta(_ref) {let { it, final, t, tn, lang, estado } = _ref;
+function RitmoEtiqueta(_ref) {let { it, final, t, tn, lang, estado, min } = _ref;
   let nombre, meta;
   if (it.tipo === 'comida') {
     nombre = t('ritmo.comida');
@@ -48089,7 +48136,7 @@ function RitmoEtiqueta(_ref) {let { it, final, t, tn, lang, estado } = _ref;
     nombre = it.larga ? it.platos.map((p, i) =>
     React.createElement(React.Fragment, { key: p.id }, i ? React.createElement("br", null) : null, i ? '+ ' : '', ritmoNombre(p.rutina, t, lang))
     ) : ritmoPlatos(it, t, lang);
-    meta = estado === 'hecha' ? t('ritmo.hecha') + ' · ' + it.dur + ' min' : t('ritmo.' + (estado === 'cuenta' ? 'cuenta' : 'saltada'));
+    meta = estado === 'hecha' ? ritmoMetaHecha(min, t) : t('ritmo.' + (estado === 'cuenta' ? 'cuenta' : 'saltada'));
   } else if (it.larga) {
     nombre = it.platos.map((p, i) =>
     React.createElement(React.Fragment, { key: p.id }, i ? React.createElement("br", null) : null, i ? '+ ' : '', ritmoNombre(p.rutina, t, lang))
@@ -48237,6 +48284,7 @@ function RitmoLinea(_ref3) {let { plan } = _ref3;
   const m = plan.m;
   const iActual = ritmoIndiceAhora(plan);
   const ultimo = m.items.length - 1;
+  const hechas = ritmoMinutosHechos();
 
   const fichaVale = ficha && ficha.i > iActual && m.items[ficha.i] && m.items[ficha.i].platos && m.items[ficha.i].platos.length;
   const fichaRef = useRefRL(null);
@@ -48311,7 +48359,7 @@ function RitmoLinea(_ref3) {let { plan } = _ref3;
           onClick: () => abierta ? ritmoEmpezarParada(it) : setFicha((f) => f && f.i === i ? null : { i, antes: null }) },
         abierta ? React.createElement("span", { className: "pace-rt-ahora-tag" }, t('ritmo.ahora')) : null,
         it.platos.map((p) => React.createElement(RitmoGlifo, { key: p.id, modulo: p.modulo })),
-        React.createElement(RitmoEtiqueta, { it: it, final: i === ultimo, t: t, tn: tn, lang: lang, estado: estado })
+        React.createElement(RitmoEtiqueta, { it: it, final: i === ultimo, t: t, tn: tn, lang: lang, estado: estado, min: hechas[ritmoOrdinal(m, it)] })
         ));
 
     }),
@@ -48726,6 +48774,7 @@ function RitmoLista(_ref) {let { plan } = _ref;
   const { t, tn, lang } = useT();
   const m = plan.m;
   const iActual = ritmoIndiceAhora(plan);
+  const hechas = ritmoMinutosHechos();
   return (
     React.createElement("div", { className: "pace-rt-lista", "data-pace-ritmo-lista": true },
     m.items.map((it, i) => {
@@ -48756,7 +48805,7 @@ function RitmoLista(_ref) {let { plan } = _ref;
 
       const estado = !comida && pasado ? (plan.estados || {})[ritmoOrdinal(m, it)] || null : null;
       const meta = comida ? tn('ritmo.comida.lista', { d: ritmoDuracion(it.dur) }) :
-      estado ? estado === 'hecha' ? t('ritmo.hecha') + ' · ' + it.dur + ' min' : t('ritmo.' + (estado === 'cuenta' ? 'cuenta' : 'saltada')) :
+      estado ? estado === 'hecha' ? ritmoMetaHecha(hechas[ritmoOrdinal(m, it)], t) : t('ritmo.' + (estado === 'cuenta' ? 'cuenta' : 'saltada')) :
       ritmoMetaPlato(it, t, tn);
       return (
         React.createElement("div", { key: i, className: 'pace-rt-li pace-rt-plato' + (pasado && estado !== 'hecha' && estado !== 'cuenta' ? ' pace-rt-pasado' : '') + (estado ? ' pace-rt-' + estado : ''),
