@@ -2,9 +2,27 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 10 de noviembre de 2026, 23:50, v0.197.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 11 de noviembre de 2026, 09:45, v0.197.0.
 
-## AL RELEVO (10 nov., 23:50): Ez migra a la otra cuenta (5iWBf). Empieza aquí; el bloque de las 23:30, debajo, sigue valiendo entero
+## 11 nov., 09:45 (cuenta 5iWBf): lo de anoche está hecho en sus ramas y Ez dio ocho letras. Empieza aquí; manda sobre lo de abajo
+
+- **Nada juntado: `main` = 0.197.0.** Lo que pedía el relevo de las 23:50 está hecho, cada cosa en su rama y subida:
+
+| Rama | Qué lleva | Página (5iWBf) | Espera |
+|---|---|---|---|
+| `claude/caza-ci-landing-noche-5ea50b` (391b69db) | El CI de noche era un fallo de la app: el vigilante del día guardaba `pace.state.v2` al pasar la medianoche con la landing delante, y la vez siguiente salía la app. `persistState` ya no escribe mientras `PACE_CARA === 'landing'`; la prueba empieza en `MEDIODIA` y otra cruza la medianoche, con mutante. Sin bump ni documentos: sería la 0.197.1, con su fila técnica | no tiene | el «júntalo» de Ez |
+| `claude/caza-aro-fijo-10nov` (ef797608) | El aro fijo de 372 px, deshecho. Medidas de los tres estados y tres opciones para el horario abierto (A, el aro de «con actividades» y no se mueve al abrir el horario, recomendada; B, el de la rutina elegida con la tarjeta a dos líneas; C, el mayor que cabe). Nada montado; `docs/proposals/aro-horario-10nov/` | NgV2uX97ZxRZTXEePWvcGG | la letra de Ez |
+| `claude/montar-auditoria-10nov-3ef28c` (b25a6036) | 1A, 2A, 4A, D-5 B y D-4 C montados, con fotos y página «Montado». Toca `STATE.md` y este archivo: chocará al juntar | CpnFEkENADXDVU7K7u8k5M | el «júntalo» de Ez; se le suman la línea de los lunes y D-6 D |
+| `claude/auditoria-fable-9nov-8401fc` (671dd875) | La sexta pasada externa (nativo, compra en el móvil y Ajustes), comprobada y sumada a la cola: 15 ciertos, 4 a medias, 2 falsos (nº 3 y nº 15). Arreglos pequeños S3 y S4 listos para montar; D-8 a D-11 esperan letra (recomendadas A, A, B y A) | 2QnMBypqSRVJCmPeNJazZA | las letras de Ez |
+| `claude/hopeful-booth-ba049e` (a3e49290) | La página de decisiones, republicada | XbtnS5xak95y1iJ8iXhKdU | contestada, salvo lo de abajo |
+
+- **Ez, 11 nov. (literal): «Linea 2 en el sobre + 3 en la side bar / D adaptarlos / El bloque pasa a día nuevo B / A debajo aparte / A lo que hiciste / B el aro / B la app pregunta / B la pestaña».** Casado con la página de decisiones, por su orden: la línea de los lunes en el móvil va **en el sobre y además en el cajón** (opciones 2 y 3 a la vez; «en la side bar» es lectura de la coordinadora que sea la fila del cajón bajo «Tus rutinas»); **D-6 D** (Ocaso y Búho se adaptan con su dibujo: la página recomendaba «Ocaso 1», cinco jornadas cerradas a su hora, y «Búho 1», contestar «¿Te ayudó?» 25 veces); **4 B** («Cambiar» con un Foco en marcha: el bloque pasa al día nuevo); **6 A** (las sesiones por tu cuenta, debajo y aparte en Estadísticas › Hoy); **7 A** (los minutos de una pausa hecha son los que hiciste); **aro de rendimiento B** (se desliza solo si el paso se nota); **V1 B** (versión nueva con la web abierta: pregunta al volver y cada hora); **V2 B** (la pestaña en sesión espera a acabar).
+- **Dónde se monta cada letra** (sesiones en Opus, cada una en su rama, sin juntar): lunes y D-6 en `claude/montar-auditoria-10nov-3ef28c`; 4, 6 y 7 en `claude/chatgpt-jornada-9nov`; aro de rendimiento, V1 y V2 en `claude/caza-rendimiento-9nov`.
+- **Sin letra todavía:** el tamaño del aro con el horario abierto (A, B o C), D-8 a D-11, si se montan los arreglos pequeños S3 y S4, S3 «código portable» (sin opciones escritas), los «solo falta tu sí» de la página de decisiones y los dos «júntalos».
+- **La hoja de pasos** está al día en 5iWBfHE7kD3dUVocdskmb6. Las páginas del aro y de «Montado» no tienen par en EcLj6.
+- **Uso a las 09:35:** 5 h al 14 %, semana al 57 %, «Weekly · Fable» al 73 %: la coordinadora, pocas vueltas.
+
+## AL RELEVO (10 nov., 23:50): Ez migra a la otra cuenta (5iWBf). El bloque de las 23:30, debajo, sigue valiendo entero
 
 - **El aro: Ez aclaró qué quería decir, y NO es lo que se montó.** Literal: «El aro me refería a que cambia según la ventana en la
   que estés, es decir, adjunto capturas; me gusta el tamaño de cuando tienes seleccionada la rutina y el tamaño de cuando hay los
