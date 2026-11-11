@@ -21,6 +21,7 @@ const path = require('path');
 const { pathToFileURL } = require('url');
 const { test, expect } = require('@playwright/test');
 const { capturarErrores, RUTA_ARTEFACTO } = require('./helpers');
+const { quitarLanding } = require('../scripts/android-www');
 
 const RAIZ = path.join(__dirname, '..');
 const PAGINA = '/premium/';
@@ -146,7 +147,9 @@ test('la app no lleva analítica ni enlaza a /premium, y /premium no entra en el
   const fuentes = ['index.html', 'PACE.html'].map((f) => fs.readFileSync(path.join(RAIZ, f), 'utf8'));
   for (const html of fuentes) {
     expect(html).not.toMatch(/cloudflareinsights|data-cf-beacon/);
-    expect(html).not.toMatch(/["'(]\/premium\b/);
+    /* La landing de la raíz (solo web) enlaza a /premium, como /premium enlaza a la app: lo que se promete
+       es que la APP no lo haga, y a las apps el index.html llega sin ella (quitarLanding). */
+    expect(quitarLanding(html)).not.toMatch(/["'(]\/premium\b/);
   }
   const apk = fs.readFileSync(path.join(RAIZ, 'scripts', 'android-www.js'), 'utf8');
   expect(apk).not.toMatch(/premium/);

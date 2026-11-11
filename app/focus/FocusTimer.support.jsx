@@ -109,9 +109,11 @@ function maybeNotifyFocusEnd(opts) {
 /* Devuelve el bloque a recuperar o null (y limpia la clave si estaba corrupta,
    era de otro día o no casa). El caller pasa el modo y los minutos VIGENTES del
    state: si no coinciden con lo guardado, se descarta. Tres formas:
-     { endsAt, id }          en marcha (endsAt en el futuro)
-     { endsAt, id, vencido } terminó hoy con la página cerrada: se cuenta al montar
-     { pausaMs, id, inicio } en pausa, guardado hoy */
+     { endsAt, id, inicio }          en marcha (endsAt en el futuro)
+     { endsAt, id, inicio, vencido } terminó hoy con la página cerrada: se cuenta al montar
+     { pausaMs, id, inicio }         en pausa, guardado hoy
+   `inicio`, cuándo empezó el bloque (con sus pausas dentro), o null si lo guardó una versión de
+   antes: en marcha solo guardaba el final (revisión de ChatGPT, 9 nov. 2026, punto 2). */
 function loadPersistedFocusTimer(focusMode, focusMinutes) {
   try {
     const raw = localStorage.getItem(PACE_TIMER_KEY);
@@ -122,8 +124,9 @@ function loadPersistedFocusTimer(focusMode, focusMinutes) {
     const casa = saved && saved.mode === 'foco' && focusMode === 'foco' && saved.minutes === focusMinutes;
     const id = casa && typeof saved.id === 'string' ? saved.id : null;
     if (casa && typeof saved.endsAt === 'number' && saved.endsAt - ahora <= durMs) {   // blindaje contra relojes raros
-      if (saved.endsAt > ahora) return { endsAt: saved.endsAt, id };
-      if (new Date(saved.endsAt).toDateString() === hoy) return { endsAt: saved.endsAt, id, vencido: true };
+      const inicio = focoInicioGuardado(saved.inicio, saved.endsAt, durMs);
+      if (saved.endsAt > ahora) return { endsAt: saved.endsAt, id, inicio };
+      if (new Date(saved.endsAt).toDateString() === hoy) return { endsAt: saved.endsAt, id, inicio, vencido: true };
     }
     if (casa && typeof saved.pausaMs === 'number' && saved.pausaMs > 0 && saved.pausaMs <= durMs && saved.dia === hoy) {
       return { pausaMs: saved.pausaMs, id, inicio: typeof saved.inicio === 'number' ? saved.inicio : null };
@@ -136,15 +139,24 @@ function loadPersistedFocusTimer(focusMode, focusMinutes) {
   }
 }
 
+/* La hora de empezar guardada con un bloque en marcha, si tiene sentido: un número que no queda
+   después del final menos lo que dura el bloque (con pausas, solo puede ser antes). Si no, null, y
+   quien la usa vuelve a la cuenta de antes (el final menos la duración). */
+function focoInicioGuardado(inicio, endsAt, durMs) {
+  return typeof inicio === 'number' && isFinite(inicio) && inicio > 0 && inicio <= endsAt - durMs + 1000 ? inicio : null;
+}
+
 /* Escribe la clave mientras hay un foco en marcha o en pausa (`pausaMs`, con el
-   día y el inicio para el evento); cualquier otro estado la limpia (reinicio,
-   completado, modos pausa/larga). `id` es el del bloque, para que otra pestaña
-   que lo recoja lo cuente una sola vez (FocusTimer.pestanas). */
+   día); cualquier otro estado la limpia (reinicio, completado, modos pausa/larga).
+   El inicio va en las dos: en marcha también, porque al recargar tras reanudar el
+   final menos la duración ya no es la hora de empezar (la pausa no está). `id` es
+   el del bloque, para que otra pestaña que lo recoja lo cuente una sola vez. */
 function persistFocusTimer(runningFoco, endsAt, minutes, id, pausaMs, inicio) {
   try {
     const base = id ? { mode: 'foco', minutes, id } : { mode: 'foco', minutes };
     if (runningFoco && endsAt) {
-      localStorage.setItem(PACE_TIMER_KEY, JSON.stringify(Object.assign({ endsAt }, base)));
+      const desde = focoInicioGuardado(inicio, endsAt, (Number(minutes) || 0) * 60 * 1000);
+      localStorage.setItem(PACE_TIMER_KEY, JSON.stringify(Object.assign({ endsAt }, desde ? { inicio: desde } : {}, base)));
     } else if (typeof pausaMs === 'number' && pausaMs > 0) {
       localStorage.setItem(PACE_TIMER_KEY, JSON.stringify(Object.assign({ pausaMs, dia: new Date().toDateString(), inicio: inicio || null }, base)));
     } else {
@@ -384,5 +396,5 @@ Object.assign(window, {
   curvaSuave, curvaCaida, focusStyles,
   /* s102 · los helpers con los que nacio este archivo */
   getFocusDescriptorKey, maybeNotifyFocusEnd, maybeRequestNotifyPermission,
-  loadPersistedFocusTimer, persistFocusTimer, olvidarFocoGuardado,
+  loadPersistedFocusTimer, persistFocusTimer, focoInicioGuardado, olvidarFocoGuardado,
 });

@@ -76,6 +76,9 @@ module.exports = defineConfig({
     timezoneId: HUSO,
     colorScheme: 'light',
     trace: 'retain-on-failure',
+    /* La web enseña una landing a quien llega sin nada (landing/cara.js): la suite entra como
+       quien ya vio la app. Una sola marca, en tests/helpers.js. */
+    storageState: require('./tests/helpers.js').estadoYaAbrio(BASE),
   },
 
   /* Sin `devices[...]`: el descriptor puede traer un `channel` que exigiria un

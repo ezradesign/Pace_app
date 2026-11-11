@@ -444,7 +444,10 @@ function paceEventsBoot() {
   } catch (e) { /* la app no se entera */ }
 }
 
-paceEventsBoot();
+/* Con la landing delante (landing/cara.js), la base se abre al pulsar «Abrir PACE»: quien
+   solo mira la landing no se lleva un IndexedDB creado. Sin landing, ahora. */
+if (typeof window.paceCuandoAbra === 'function') window.paceCuandoAbra(paceEventsBoot);
+else paceEventsBoot();
 
 Object.assign(window, {
   detectEventsRuntime, selectEventsAdapter, paceEventsRuntime, paceEventsAdapter,

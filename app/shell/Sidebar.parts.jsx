@@ -303,8 +303,11 @@ function SidebarLatestAchievement({ ultimo, onOpen }) {
    Antes eran dos píldoras y lo que más llamaba la atención de la barra era algo
    cerrado. En la app de Android no hay apoyo (`paceApoyoVisible`).
    ============================================================ */
-function SidebarFooter({ onSupport, onMisRutinas }) {
+function SidebarFooter({ onSupport, onMisRutinas, onLunes }) {
   const { t } = useT();
+  const [stPie] = usePace();
+  /* La línea de los lunes, en el cajón del móvil (ritmo/ritmo.lunes.jsx). */
+  const lunes = typeof paceLunesToca === 'function' && paceLunesToca(stPie) && esCajon();
   const apoyo = typeof paceApoyoVisible !== 'function' || paceApoyoVisible();
   return (
     <div style={sidebarStyles.footer} data-pace-sidebar-pie>
@@ -313,6 +316,13 @@ function SidebarFooter({ onSupport, onMisRutinas }) {
         {typeof PremiumSeal === 'function' ? <PremiumSeal style={sidebarStyles.pieSello} /> : null}
         <span aria-hidden="true" style={sidebarStyles.pieChev}>›</span>
       </button>
+      {lunes ? (
+        <button style={sidebarStyles.pieFila} onClick={onLunes} data-pace-lunes-fila>
+          <span>{t('lunes.titulo')}</span>
+          {typeof PremiumSeal === 'function' ? <PremiumSeal style={sidebarStyles.pieSello} /> : null}
+          <span aria-hidden="true" style={sidebarStyles.pieChev}>›</span>
+        </button>
+      ) : null}
       {apoyo ? (
         <button style={{ ...sidebarStyles.pieFila, ...sidebarStyles.pieApoyo }} onClick={onSupport} title={t('support.sidebar.title')}>
           <span>{t('support.sidebar.label')}</span>

@@ -42,13 +42,13 @@ function checkPlanAchievements() {
   }
 }
 
-/* master.dawn / master.dusk / morning.5 + secretos de hora.
+/* master.dawn / morning.5 + secretos de hora; Ocaso y Búho ya no son de hora (Ez, D-6 D del 11 nov.):
+   los mira state-achievements.ocaso.js desde aquí.
    s146: `dawn` y `dusk` estaban en «maestria» pidiendo UNA sesion — una sola
    sesion no es maestria de nada. Pasan a 5 dias distintos, el mismo criterio
    que ya usaba `morning.5` a su lado. Se cuentan DIAS, no sesiones: tres
    respiraciones seguidas a las 6:50 son una madrugada, no tres. */
 const DAWN_DIAS = 5;
-const DUSK_DIAS = 5;
 
 function marcaDia(campo, limite) {
   const hoy = new Date().toDateString();
@@ -64,7 +64,9 @@ function checkTimeOfDayAchievements() {
   const now = new Date();
   const h = now.getHours();
   if (h < 7 && marcaDia('dawnDates', DAWN_DIAS) >= DAWN_DIAS) unlockAchievement('master.dawn');
-  if (h >= 21 && marcaDia('duskDates', DUSK_DIAS) >= DUSK_DIAS) unlockAchievement('master.dusk');
+  /* Ocaso ya no premia las 21 h, sino cinco jornadas cerradas a su hora (Ez, D-6 D del 11 nov.). */
+  if (typeof paceOcasoMirar === 'function') paceOcasoMirar();
+  if (typeof paceBuhoMirar === 'function') paceBuhoMirar();
   if (h < 9) {
     const today = now.toDateString();
     const s = getState();
@@ -486,4 +488,5 @@ Object.assign(window, {
   updateStreak,
   checkStatsAchievements,
   checkAllPathsCompleted,
+  checkTimeOfDayAchievements,
 });

@@ -6,7 +6,7 @@ Ez la trajo «por si aporta algo». Lo comprobado va primero; debajo, la revisi�
 
 | Punto | Veredicto | Qué se hace |
 |---|---|---|
-| `guardar()` no es atómico (`functions/api/stripe.js`) | **Cierto.** El comentario dice que «dos a la vez escriben lo mismo», y eso solo vale para el mismo aviso repetido. Dos renovaciones distintas solapadas pueden dejar el código más corto. Solo afecta a la mensual, es raro y la siguiente renovación lo corrige | No bloquea vender solo el de por vida. Va antes de encender la mensual (la cola) |
+| Un punto del cobro mensual | **Cierto.** El detalle se ha quitado de esta copia pública (Ez, D-4 C del 10 nov.) | No bloquea vender solo el de por vida. Va antes de encender la mensual (la cola) |
 | `paceTiendaWebLista()` exige los dos enlaces (`app/state-compra.js`) | **Cierto** (`every`). Además `planes()` filtra por precio, no por enlace | Se arregla si Ez elige un solo plan |
 | Play Billing vacío, iOS sin tienda, `PACE_TIENDA_WEB` sin enlaces | Cierto y conocido | Esperan las altas y encender la venta |
 | Testers en 0.174.0 y 0.175.0 frente a 0.189.1 | Cierto (`STATE.md`) | Espera a «Palmas en la mesa» |
@@ -137,22 +137,10 @@ Además, el reparto actual sigue diciendo: **llevar el día y esquivar reuniones
 
 # 3. Antes de cobrar, hay dos puntos de código que devolvería a Claude
 
-## 🔴 El problema de concurrencia de Stripe no está completamente cerrado
+## 🔴 Un punto del cobro mensual
 
-Hay mejoras claras: se compara la caducidad guardada y se consulta una marca de baja. Pero `guardar()` sigue haciendo **lecturas y escrituras separadas en KV**, sin una operación atómica o serialización entre peticiones. [Fuente](https://raw.githubusercontent.com/ezradesign/Pace_app/9fe51aeebac79509102cdab4623c169f94a89452/functions/api/stripe.js)
-
-**Caso concreto deducido del código:**
-
-1. Llegan simultáneamente dos avisos con vencimientos distintos.
-2. Ambos leen el mismo estado antiguo.
-3. Ambos deciden actualizar.
-4. El aviso con el vencimiento más corto escribe el último.
-
-La comparación por sí sola no impide que el resultado retroceda.
-
-Las pruebas inspeccionadas comprueban repeticiones y diferentes órdenes, pero esos envíos se ejecutan **secuencialmente con `await`**; no reproducen ese solapamiento. [Fuente](https://raw.githubusercontent.com/ezradesign/Pace_app/9fe51aeebac79509102cdab4623c169f94a89452/tests/cobro-avisos.spec.js)
-
-**Qué pediría:** una prueba de intercalado concurrente y una solución que garantice el orden de actualización por suscripción. **No lo marcaría todavía como resuelto por completo.**
+El detalle de este punto se ha quitado de la copia pública del repositorio (Ez, D-4 C del 10 nov.): va antes de encender la
+mensual y su arreglo espera revisión en su rama.
 
 ## 🟠 Si quieres vender solo “de por vida”, la tienda interna aún exige los dos planes
 

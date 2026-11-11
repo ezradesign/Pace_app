@@ -41,8 +41,19 @@ function paceFocoNuevoId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 }
 
+/* ¿Ya está contado el bloque `id`? Se mira la lista de los últimos (`focoContados`, state-timer.jsx)
+   en la copia de esta pestaña y en lo guardado: una pestaña que despierta puede ver su reloj acabado
+   antes de enterarse de lo que otra guardó mientras dormía, y el candado del bloque ya se soltó. */
+function paceFocoYaContado(id) {
+  var en = function (s) {
+    return !!s && (s.focoContado === id || (Array.isArray(s.focoContados) && s.focoContados.indexOf(id) !== -1));
+  };
+  if (en(getState())) return true;
+  try { return en(JSON.parse(localStorage.getItem('pace.state.v2') || 'null')); } catch (e) { return false; }
+}
+
 function paceFocoContar(id, contar) {
-  var ya = function () { var s = getState(); return !!(s && s.focoContado === id); };
+  var ya = function () { return paceFocoYaContado(id); };
   if (ya()) return;
   var locks = typeof navigator !== 'undefined' ? navigator.locks : null;
   if (!locks || typeof locks.request !== 'function') { contar(); return; }
@@ -129,7 +140,8 @@ function useFocoPestanas(o) {
       if (m.minutos !== u.minutos) { pendienteRef.current = m; return; }
       pendienteRef.current = null;
       u.bloqueRef.current = m.id;
-      u.inicioRef.current = m.endsAt - u.minutos * 60 * 1000;
+      /* La hora de empezar viaja con el aviso; de una pestaña con la versión de antes, el final menos la duración. */
+      u.inicioRef.current = focoInicioGuardado(m.inicio, m.endsAt, u.minutos * 60 * 1000) || m.endsAt - u.minutos * 60 * 1000;
       u.seguir(m.endsAt);
     } else if (m.id && m.id === u.bloqueRef.current) {
       if (m.tipo === 'pausa') u.congelar(m.restanteMs);
@@ -157,5 +169,5 @@ function useFocoPestanas(o) {
   };
 }
 
-Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoContar, useFocoPestanas,
+Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoYaContado, paceFocoContar, useFocoPestanas,
   paceFocoPausaPendiente, usePausaALaVista });

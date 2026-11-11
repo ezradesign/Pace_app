@@ -23,14 +23,9 @@
      --pace-timer-d            → tamaño del aro y escalas interiores (calc)
      --pace-activities-overlap → cuánto suben las Actividades sobre el círculo
 
-   UN MOTOR, DOS PIELES (corregido en s149; hasta aquí esta cabecera seguía
-   diciendo «encapsulado en Desktop, en mobile/tablet borra las dos variables y
-   sale», y **eso dejó de ser cierto en s128**). El motor corre en TODO viewport
-   y publica las dos variables siempre; lo que cambia por debajo de 769px son las
-   CONSTANTES de la piel —el aro arranca por ANCHO en vez de por altura, y su
-   suelo es mayor por legibilidad—, no el algoritmo. `DESKTOP_MQ` sigue
-   existiendo para elegir piel y para reaccionar al cruce del breakpoint, no para
-   apagarse. Ver la nota de s128 junto a `WIDTH_CAP_MOBILE`, más abajo.
+   UN MOTOR, DOS PIELES. Corre en TODO viewport y publica las variables siempre;
+   por debajo de 769px cambian las CONSTANTES de la piel (el aro arranca por ANCHO
+   y su suelo es mayor), no el algoritmo. `DESKTOP_MQ` elige piel y vigila el cruce.
 
    QUÉ NODOS SON OBLIGATORIOS Y CUÁLES NO (s156). Obligatorios: la región de la
    home y el aro. **Actividades y la tarjeta de Camino son OPCIONALES**: se miden
@@ -157,10 +152,6 @@
   var reintentos = 0;   // ver «NUNCA ENCOGER A CIEGAS» en compute()
   var rootStyle = document.documentElement.style;
 
-  /* s128: `clearVars()` (borraba las 3 vars fuera de Desktop) se retiró junto con
-     el guard: el motor publica geometría en TODO viewport, así que ya no hay
-     estado en el que haya que devolver el CSS a sus fallbacks. */
-
   function setVar(name, val) {
     if (rootStyle.getPropertyValue(name) !== val) rootStyle.setProperty(name, val);
   }
@@ -209,7 +200,7 @@
   // Fija D y, con D ya aplicado (getBoundingClientRect fuerza layout), ancla las
   // Actividades JUSTO bajo el CICLO real → solapamiento seguro y constante,
   // independientemente de la altura del botón (a11y 44px) o del interior.
-  function applyD(D, dial) {
+  function applyD(D, dial, horario) {
     setVar('--pace-timer-d', D + 'px');
     var dialBottom = paceCaja(dial).bottom;
     var cicloBottom = cicloBottomWithin(dial);
@@ -228,7 +219,6 @@
       ? Math.max(0, Math.round(dialBottom - cicloBottom - CICLO_GAP))
       : Math.round(D * OVERLAP_TARGET); // fallback si no se encuentra el CICLO
     var overlap = Math.min(Math.round(D * OVERLAP_TARGET), maxOverlap);
-    setVar('--pace-activities-overlap', overlap + 'px');
 
     /* LA BANDA DE LA ETIQUETA (s184). El aro deja de cortarse en el borde
        superior de Actividades y baja hasta el canto de las TARJETAS, para que
@@ -253,6 +243,10 @@
     var banda = (chip && barra)
       ? Math.max(0, Math.round(paceCaja(chip).top - paceCaja(barra).top))
       : 0;
+    /* Con el horario abierto el panel no tiene rótulo encima: su canto corta donde lo
+       cortan las actividades (home-geometry.horario.js). */
+    if (horario) overlap = Math.min(maxOverlap, Math.round(D * PACE_ARO_CANTO_HORARIO) + banda);
+    setVar('--pace-activities-overlap', overlap + 'px');
     /* SE PUBLICA EL CORTE YA RESUELTO, no la banda, y eso NO es comodidad: un
        custom property SIN REGISTRAR no se computa -- `getPropertyValue` devuelve
        el TEXTO. Dejando la resta en CSS, el token valia literalmente
@@ -284,6 +278,7 @@
 
     var widthCap = isDesktop ? WIDTH_CAP : WIDTH_CAP_MOBILE;
     var dFloor = isDesktop ? D_FLOOR : D_FLOOR_MOBILE;
+    var horario = isDesktop && paceAroHorarioAbierto();
 
     /* La compactación va ANTES de medir: cambia el presupuesto exterior y, por
        tanto, la altura útil que le queda al aro. Depende solo de innerHeight
@@ -311,9 +306,12 @@
     // Camino más alta con el eyebrow s122…), así que se mide el desbordamiento
     // real y se corrige — robusto ante idioma/contenido.
     var D = Math.min(widthCap * w, D_MAX);
+    /* Con el horario abierto, el tamaño que tenía con las actividades: abrirlo no mueve el aro. */
+    var clave = paceAroCartaClave(body);
+    if (horario && paceAroCartaRecordado(clave)) D = Math.min(D, paceAroCartaRecordado(clave));
     if (D < dFloor) D = dFloor;
     D = Math.round(D);
-    applyD(D, dial);
+    applyD(D, dial, horario);
     /* El suelo de movil sube hasta lo que pide el interior, medido con este
        primer D, que es el mayor (ver RADIO_INTERIOR). Nunca por encima de el:
        el techo por ancho manda, y en un telefono de 320 el aro se queda en su
@@ -366,7 +364,7 @@
          unos píxeles de scroll, que la región ya admite por diseño. */
       if (overPrevio !== null && over >= overPrevio) {
         D = dPrevio;
-        applyD(D, dial);
+        applyD(D, dial, horario);
         /* UN reintento, no más: en el siguiente frame el layout ya está
            asentado y la medida vuelve a responder, así que la pasada de después
            sí converge. El contador se reinicia solo cuando una pasada converge
@@ -379,7 +377,7 @@
       // reducir D: la huella vertical del aro tras solapar es ~0.84·D, así que
       // ΔD ≈ over/0.84 acerca el ajuste en una pasada (converge en 1-2).
       D = Math.max(piso, D - Math.ceil(over / 0.84));
-      applyD(D, dial);
+      applyD(D, dial, horario);
     }
 
     /* A UN PASO DE CABER, CABE (regla de Ez: la home del movil sin scroll). Con el bloque terminado,
@@ -391,12 +389,13 @@
       var dAntes = D, sobra = medirOver();
       for (var k = 0; k < 2 && sobra > 1 && D - Math.ceil(sobra / 0.84) >= duro; k++) {
         D -= Math.ceil(sobra / 0.84);
-        applyD(D, dial);
+        applyD(D, dial, horario);
         sobra = medirOver();
       }
-      if (sobra > 1 && D !== dAntes) { D = dAntes; applyD(D, dial); }
+      if (sobra > 1 && D !== dAntes) { D = dAntes; applyD(D, dial, horario); }
     }
 
+    if (isDesktop && paceAroCartaVisible()) paceAroCartaRecordar(clave, D);   // el tamaño que pedirá el horario
     /* SOBRANTE VERTICAL (s156). Con el aro ya fijado, lo que queda libre en la
        región de la home. El CSS lo reparte en móvil dando MENOS aire arriba que
        abajo: la composición deja de flotar centrada y se asienta como un

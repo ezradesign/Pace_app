@@ -3,7 +3,295 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.195.0</title>
+  <!--pace-landing-->
+  <script>
+/* PACE · LA RAÍZ CON DOS CARAS (opción C, Ez, 9 nov. 2026)
+   ==========================================================
+   La misma dirección enseña la app a quien ya la usa y la landing a quien llega nuevo. Se
+   decide aquí, en el <head> de index.html y antes de pintar nada: sin redirigir, sin saltos.
+   El build (paso 9 de build-standalone.js) lo mete solo en index.html, entre las marcas
+   `pace-landing`; `android-www.js` lo quita al copiar a www/, así que en Android y en iPhone
+   no existe y la app monta como siempre.
+
+   VE LA APP: Android e iPhone; quien llega con `#codigo=` o `?go=`; quien abre desde el icono
+   instalado; quien ya la vio alguna vez (la marca `pace-cara`); quien tiene algo guardado de la
+   app (cualquier clave `pace.*` que no sea de las páginas sueltas). ANTE CUALQUIER ERROR, LA APP:
+   nunca se le esconde a quien ya la usa.
+
+   LA MARCA LLEVA GUION Y NO PUNTO a propósito: «Borrar todo» barre las claves `pace.*`
+   (wipeLocalState, state-core.jsx) y quien borra sus datos sigue usando PACE.
+
+   Con la landing delante, la app no monta ni abre su base de eventos hasta «Abrir PACE»:
+   quien solo mira la landing no se lleva nada guardado. Lo aplazado pasa por `paceCuandoAbra`. */
+(function () {
+  var raiz = document.documentElement;
+  var MARCA = 'pace-cara';
+  /* Las páginas sueltas guardan su idioma con `pace.`: no son de la app. */
+  var AJENAS = { 'pace.premium.lang': 1, 'pace.beta.lang': 1, 'pace.landing.lang': 1 };
+
+  function decidir() {
+    if (window.Capacitor || location.protocol === 'capacitor:') return 'app';
+    if (/(^#|[#&])codigo=/.test(location.hash)) return 'app';
+    if (/[?&]go=/.test(location.search)) return 'app';
+    /* Sin soporte de display-mode, `browser` no casa y sale la app: se yerra hacia la app. */
+    if (!window.matchMedia || !window.matchMedia('(display-mode: browser)').matches) return 'app';
+    if (navigator.standalone === true) return 'app';
+    var ls = window.localStorage;
+    if (ls.getItem(MARCA)) return 'app';
+    for (var i = 0; i < ls.length; i++) {
+      var k = ls.key(i);
+      if (k && k.indexOf('pace.') === 0 && !AJENAS[k]) return 'app';
+    }
+    return 'landing';
+  }
+
+  var cara = 'app';
+  try { cara = decidir(); } catch (e) { cara = 'app'; }
+
+  function idiomaLanding() {
+    try {
+      var m = location.search.match(/[?&]lang=(es|en)\b/);
+      if (m) return m[1];
+      var g = localStorage.getItem('pace.landing.lang');
+      if (g === 'es' || g === 'en') return g;
+    } catch (e) {}
+    return /^es\b/i.test(navigator.language || '') ? 'es' : 'en';
+  }
+
+  function ponerIdioma(idioma) {
+    raiz.setAttribute('data-pace-landing-idioma', idioma);
+    raiz.lang = idioma;
+    document.title = idioma === 'en'
+      ? 'PACE · Active breaks for people who work at a desk'
+      : 'PACE · Pausas activas para quien trabaja sentado';
+  }
+
+  var pendientes = [];
+  var tituloApp = document.title;
+  window.PACE_CARA = cara;
+  raiz.setAttribute('data-pace-cara', cara);
+  if (cara === 'app') {
+    try { localStorage.setItem(MARCA, 'app'); } catch (e) {}
+  } else {
+    var idioma = idiomaLanding();
+    ponerIdioma(idiomaLanding());
+    /* La app pone su título al cargar sus módulos (applyTheme, state-core.palette.jsx). */
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.PACE_CARA === 'landing') ponerIdioma(raiz.getAttribute('data-pace-landing-idioma'));
+    });
+  }
+
+  /* Lo que la app hace al arrancar (montar, abrir la base de eventos) pasa por aquí. */
+  function paceCuandoAbra(fn) {
+    if (window.PACE_CARA !== 'landing') fn(); else pendientes.push(fn);
+  }
+
+  /* «Abrir PACE»: la app en el sitio, sin recargar. */
+  function paceAbrirApp() {
+    if (window.PACE_CARA !== 'landing') return;
+    try { localStorage.setItem(MARCA, 'app'); } catch (e) {}
+    window.PACE_CARA = 'app';
+    raiz.setAttribute('data-pace-cara', 'app');
+    raiz.removeAttribute('data-pace-landing-idioma');
+    raiz.lang = 'es';
+    document.title = tituloApp;
+    try { window.scrollTo(0, 0); } catch (e) {}
+    var cola = pendientes; pendientes = [];
+    for (var i = 0; i < cola.length; i++) { try { cola[i](); } catch (e) { setTimeout(function () { throw e; }); } }
+  }
+
+  window.paceCuandoAbra = paceCuandoAbra;
+  window.paceAbrirApp = paceAbrirApp;
+  if (cara !== 'landing') return;
+
+  /* Clics de la landing por delegación: el marcado llega después de este script. */
+  document.addEventListener('click', function (ev) {
+    var t = ev.target && ev.target.closest ? ev.target.closest('[data-pace-abrir], [data-pace-landing-idioma-boton]') : null;
+    if (!t || window.PACE_CARA !== 'landing') return;
+    if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button > 0) return;
+    ev.preventDefault();
+    if (t.hasAttribute('data-pace-abrir')) { paceAbrirApp(); return; }
+    var otro = raiz.getAttribute('data-pace-landing-idioma') === 'en' ? 'es' : 'en';
+    try { localStorage.setItem('pace.landing.lang', otro); } catch (e) {}
+    ponerIdioma(otro);
+  });
+
+  /* LA RED DE LOS EVENTOS: quien tiene eventos y no `localStorage` (caso raro) ve la app.
+     Es asíncrono, así que va después de pintar; no crea la base si no existe. */
+  try {
+    if (!window.indexedDB || typeof indexedDB.databases !== 'function') return;
+    indexedDB.databases().then(function (lista) {
+      var hay = false;
+      for (var i = 0; i < lista.length; i++) if (lista[i] && lista[i].name === 'pace.events') hay = true;
+      if (!hay) return;
+      var pet = indexedDB.open('pace.events');
+      pet.onsuccess = function () {
+        var db = pet.result;
+        try {
+          if (!db.objectStoreNames.contains('contenedor')) { db.close(); return; }
+          var get = db.transaction('contenedor', 'readonly').objectStore('contenedor').get('pace.events.v1');
+          get.onsuccess = function () {
+            db.close();
+            var c = null;
+            try { c = typeof get.result === 'string' ? JSON.parse(get.result) : get.result; } catch (e) { c = { events: [1] }; }
+            if (c && c.events && c.events.length) paceAbrirApp();
+          };
+          get.onerror = function () { db.close(); };
+        } catch (e) { try { db.close(); } catch (e2) {} }
+      };
+    }, function () {});
+  } catch (e) {}
+})();
+
+  </script>
+  <style>
+/* PACE · la landing de la raíz (opción C de la estructura, Ez, 9 nov. 2026). La letra y los
+   botones son los de /premium y /beta, que son los de la app. Todo va bajo #pace-landing: la hoja
+   de la app está en la misma página. Las fuentes ya las declara app/tokens.css.
+   LA ESTÉTICA ES LA B, «UNA JORNADA» (Ez, 10 nov. 2026; https://claude.ai/artifact/6DsS35xJXsmcZrdtZiXhoL):
+   la página se lee como un día con PACE. En la portada, el aro del Foco detrás de la captura y, bajo
+   el botón, la línea del día con sus paradas; de ahí baja una línea por el margen y cada título es
+   una parada. /premium y /beta llevan lo mismo: si cambia algo aquí, cambia en las tres. */
+html[data-pace-cara="app"] #pace-landing { display: none !important; }
+html[data-pace-cara="landing"] #root { display: none !important; }
+/* El lienzo de la app (_lienzo.js) pone `zoom` en la raíz en ventanas grandes: no a la landing. */
+html[data-pace-cara="landing"] { zoom: 1 !important; background: #F2EDE0; }
+html[data-pace-cara="landing"] body { background: #F2EDE0; }
+#pace-landing {
+  --l-paper: #F2EDE0; --l-paper-2: #EAE4D4; --l-ink: #1F1C17; --l-ink-2: #4A453C; --l-ink-3: #6F6858;
+  --l-line: #C9C0A8; --l-line-2: #B8AD8E; --l-focus: #3E5A3A; --l-cta: #50624D;
+  --l-breathe: #C97A5D; --l-move: #9A7B4F; --l-extra: #6B7A8F; --l-water: #5D8AA8;
+  --l-display: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  --l-ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  /* Los dibujos de los módulos, los de la app (ActivityBar.jsx), como máscaras. */
+  --glifo-foco: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2028%2028%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.35%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2214%22%20cy%3D%2214%22%20r%3D%229.5%22%20opacity%3D%220.3%22%2F%3E%3Cpath%20d%3D%22M14%204.5a9.5%209.5%200%200%201%208.23%204.75%22%2F%3E%3Ccircle%20cx%3D%2222.23%22%20cy%3D%229.25%22%20r%3D%221.5%22%20fill%3D%22black%22%20stroke%3D%22none%22%2F%3E%3C%2Fsvg%3E");
+  --glifo-respira: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2028%2028%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.35%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M14%204.5v9%22%2F%3E%3Cpath%20d%3D%22M14%2010.5c-1.2%200-2.2-.4-3-1.2%20M14%2010.5c1.2%200%202.2-.4%203-1.2%22%2F%3E%3Cpath%20d%3D%22M11%2010.2c-2.2.3-4.2%201.4-5.3%203.3-1.3%202.2-1.4%205-.6%207.6.5%201.6%201.6%202.7%203.1%202.8%201.4.1%202.4-.8%202.8-2.2.6-2.1.8-4.6.8-7.1%200-1.7-.1-3.2-.8-4.4z%22%2F%3E%3Cpath%20d%3D%22M17%2010.2c2.2.3%204.2%201.4%205.3%203.3%201.3%202.2%201.4%205%20.6%207.6-.5%201.6-1.6%202.7-3.1%202.8-1.4.1-2.4-.8-2.8-2.2-.6-2.1-.8-4.6-.8-7.1%200-1.7.1-3.2.8-4.4z%22%2F%3E%3C%2Fsvg%3E");
+  --glifo-mueve: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2028%2028%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.35%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223%22%20y%3D%2210%22%20width%3D%222.2%22%20height%3D%228%22%20rx%3D%220.6%22%2F%3E%3Crect%20x%3D%225.6%22%20y%3D%228%22%20width%3D%222.4%22%20height%3D%2212%22%20rx%3D%220.6%22%2F%3E%3Cpath%20d%3D%22M8%2014h12%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%228%22%20width%3D%222.4%22%20height%3D%2212%22%20rx%3D%220.6%22%2F%3E%3Crect%20x%3D%2222.8%22%20y%3D%2210%22%20width%3D%222.2%22%20height%3D%228%22%20rx%3D%220.6%22%2F%3E%3C%2Fsvg%3E");
+  --glifo-estira: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2028%2028%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.35%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%2021c3-8%207-12%2010-12s7%204%2010%2012%22%2F%3E%3Ccircle%20cx%3D%2214%22%20cy%3D%227.5%22%20r%3D%221.6%22%2F%3E%3Cpath%20d%3D%22M4%2022h20%22%20opacity%3D%220.35%22%20stroke-dasharray%3D%221.5%202.5%22%2F%3E%3C%2Fsvg%3E");
+  --glifo-agua: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2028%2028%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.35%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M14%203.5c-3.6%205.2-7%208.6-7%2012.6a7%207%200%200%200%2014%200c0-4-3.4-7.4-7-12.6z%22%2F%3E%3Cpath%20d%3D%22M10.5%2015.5c0%202%201.3%203.6%203%203.9%22%20opacity%3D%220.55%22%2F%3E%3C%2Fsvg%3E");
+  background: var(--l-paper); color: var(--l-ink); font: 16px/1.6 var(--l-ui); min-height: 100vh;
+  -webkit-text-size-adjust: 100%;
+  /* El aro de la portada sale del ancho: se corta en el borde de la pantalla, sin scroll lateral. */
+  overflow-x: clip;
+}
+@media (prefers-color-scheme: dark) {
+  html[data-pace-cara="landing"], html[data-pace-cara="landing"] body { background: #1d1a14; }
+  #pace-landing { --l-paper: #1d1a14; --l-paper-2: #26211a; --l-ink: #EDE5D3; --l-ink-2: #c0b49e; --l-ink-3: #B2A995;
+    --l-line: #4d4536; --l-line-2: #5f5544; --l-focus: #7A9A6D; --l-cta: #8E9D88; --l-breathe: #D99477; }
+  /* El logo en oscuro es el mismo PNG invertido, como en la app. */
+  #pace-landing .pl-vaca img, #pace-landing .pl-pie::before { filter: invert(1); }
+}
+/* Los dos idiomas están en el HTML; se ve el que pone landing/cara.js (sin JS, castellano). Solo
+   se esconde el otro, con !important: un `display` de clase (.pl-foto img) no puede sacarlo. */
+html:not([data-pace-landing-idioma="en"]) #pace-landing [lang="en"],
+html[data-pace-landing-idioma="en"] #pace-landing [lang="es"] { display: none !important; }
+#pace-landing a { color: var(--l-focus); }
+#pace-landing .pl-marco { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+#pace-landing .pl-cab { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; }
+#pace-landing .pl-vaca img { height: 72px; width: auto; display: block; }
+#pace-landing .pl-cab-der { display: flex; align-items: center; gap: 12px; }
+#pace-landing .pl-ya { font-size: 14px; color: var(--l-ink-2); text-decoration: none; text-align: right; line-height: 1.3; max-width: 7.4em; }
+#pace-landing .pl-ya b { color: var(--l-focus); font-weight: 500; border-bottom: 1px solid var(--l-line-2); }
+#pace-landing .pl-idioma { font: 500 11px/1 var(--l-ui); letter-spacing: .1em; color: var(--l-ink-3); background: none; border: 1px solid var(--l-line-2); border-radius: 999px; padding: 7px 11px; cursor: pointer; white-space: nowrap; }
+#pace-landing .pl-idioma b { color: var(--l-ink); font-weight: 500; }
+#pace-landing h1, #pace-landing h2 { font-family: var(--l-display); font-style: italic; font-weight: 500; color: var(--l-ink); text-wrap: balance; }
+#pace-landing h1 { font-size: clamp(42px, 11vw, 72px); line-height: 1.02; letter-spacing: -.01em; margin: 0 0 20px; }
+#pace-landing h2 { font-size: clamp(32px, 7.6vw, 46px); line-height: 1.08; margin: 0 0 12px; }
+#pace-landing p { color: var(--l-ink-2); margin: 0 0 14px; }
+#pace-landing main p { max-width: 36em; }
+#pace-landing .pl-lede { font-size: 18px; line-height: 1.55; max-width: 30em; margin-bottom: 24px; }
+#pace-landing .pl-boton { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 9px 26px; border-radius: 999px; font: italic 500 18px/1.2 var(--l-display); text-decoration: none; background: var(--l-cta); color: var(--l-paper); border: 1px solid var(--l-cta); }
+#pace-landing .pl-boton.hueco { background: transparent; color: var(--l-cta); }
+#pace-landing a:focus-visible, #pace-landing button:focus-visible { outline: 2px solid var(--l-focus); outline-offset: 2px; }
+/* Cada captura va en su <picture>, con la oscura para quien ve la página en oscuro. */
+#pace-landing .pl-foto picture, #pace-landing .pl-par picture { display: contents; }
+#pace-landing picture source { display: none; }
+#pace-landing .pl-foto img, #pace-landing .pl-par img { width: 100%; height: auto; display: block; border: 1px solid var(--l-line); border-radius: 12px; background: var(--l-paper-2); }
+
+/* La portada acaba en la línea del día: la primera parada, llena («ahora»); las demás, huecas,
+   cada una en el color de su módulo, como en la app. */
+#pace-landing .pl-portada { padding: 32px 0 56px; }
+#pace-landing .pl-portada > div:first-child { position: relative; padding-bottom: 60px; }
+#pace-landing .pl-portada > div:first-child::before { content: ''; position: absolute; left: 5px; bottom: 26px; width: 286px; border-top: 1px solid var(--l-line-2); }
+#pace-landing .pl-portada > div:first-child::after { content: ''; position: absolute; left: 0; bottom: 21px; width: 11px; height: 11px; border-radius: 50%; background: var(--l-focus);
+  box-shadow: 40px 0 0 -1.5px var(--l-paper), 40px 0 0 0 var(--l-breathe), 80px 0 0 -1.5px var(--l-paper), 80px 0 0 0 var(--l-move),
+    120px 0 0 -1.5px var(--l-paper), 120px 0 0 0 var(--l-extra), 160px 0 0 -1.5px var(--l-paper), 160px 0 0 0 var(--l-water),
+    200px 0 0 -1.5px var(--l-paper), 200px 0 0 0 var(--l-focus), 240px 0 0 -1.5px var(--l-paper), 240px 0 0 0 var(--l-breathe),
+    280px 0 0 -1.5px var(--l-paper), 280px 0 0 0 var(--l-move); }
+/* El aro detrás de la captura: un círculo fino con su arco en verde y el punto al final, como el
+   dibujo de Foco. Detrás de una captura alta, el arco va a la derecha, donde se ve. */
+#pace-landing .pl-foto { position: relative; isolation: isolate; max-width: 280px; margin: 56px auto 40px; }
+#pace-landing .pl-foto::before { content: ''; position: absolute; z-index: -1; left: 50%; top: 50%; width: 136%; aspect-ratio: 1; border-radius: 50%;
+  border: 1.5px solid var(--l-line); border-right-color: var(--l-focus); transform: translate(-50%, -50%) rotate(-10deg); }
+#pace-landing .pl-foto::after { content: ''; position: absolute; z-index: -1; left: 50%; top: 50%; width: 11px; height: 11px; border-radius: 50%;
+  background: var(--l-focus); margin-left: 55.7%; margin-top: 39%; transform: translate(-50%, -50%); }
+
+/* La línea que baja por el margen y une las secciones; cada título es una parada, en el color de un módulo. */
+#pace-landing main section { position: relative; padding: 44px 0 40px 38px; }
+#pace-landing main section::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; border-left: 1px solid var(--l-line-2); }
+#pace-landing main section::after { content: ''; position: absolute; left: 4px; top: 55px; width: 13px; height: 13px; border-radius: 50%; box-sizing: border-box;
+  background: var(--l-paper); border: 1.5px solid var(--parada, var(--l-focus)); }
+#pace-landing main section:nth-of-type(5n+2) { --parada: var(--l-breathe); }
+#pace-landing main section:nth-of-type(5n+3) { --parada: var(--l-move); }
+#pace-landing main section:nth-of-type(5n+4) { --parada: var(--l-extra); }
+#pace-landing main section:nth-of-type(5n+5) { --parada: var(--l-water); }
+
+/* Los cinco módulos, como paradas: su dibujo de la app dentro de un círculo de su color. */
+#pace-landing .pl-mods { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; position: relative; }
+#pace-landing .pl-mods::before { content: ''; position: absolute; left: 18px; top: 24px; bottom: 24px; border-left: 1px dashed var(--l-line-2); }
+#pace-landing .pl-mods li { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; min-height: 50px; padding: 7px 0 7px 52px; }
+#pace-landing .pl-mods li::before { content: ''; position: absolute; left: 0; top: 50%; width: 37px; height: 37px; margin-top: -18.5px; border-radius: 50%; box-sizing: border-box;
+  background: var(--l-paper); border: 1.5px solid var(--parada); }
+#pace-landing .pl-mods b { font: italic 500 23px/1.2 var(--l-display); color: var(--l-ink); white-space: nowrap; }
+#pace-landing .pl-mods i { position: absolute; left: 7.5px; top: 50%; width: 22px; height: 22px; margin-top: -11px;
+  -webkit-mask: var(--glifo) center / contain no-repeat; mask: var(--glifo) center / contain no-repeat; }
+#pace-landing .pl-mods li > span { font-size: 14px; color: var(--l-ink-3); }
+#pace-landing .pl-mods li:nth-child(1) { --parada: var(--l-focus); --glifo: var(--glifo-foco); }
+#pace-landing .pl-mods li:nth-child(2) { --parada: var(--l-breathe); --glifo: var(--glifo-respira); }
+#pace-landing .pl-mods li:nth-child(3) { --parada: var(--l-move); --glifo: var(--glifo-mueve); }
+#pace-landing .pl-mods li:nth-child(4) { --parada: var(--l-extra); --glifo: var(--glifo-estira); }
+#pace-landing .pl-mods li:nth-child(5) { --parada: var(--l-water); --glifo: var(--glifo-agua); }
+
+/* Las parejas de capturas: en el móvil, una tira que se desliza, como en /beta. */
+#pace-landing .pl-par { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 24px -16px 0 -54px; padding: 0 16px 6px 54px; scrollbar-width: none; }
+#pace-landing .pl-par::-webkit-scrollbar { display: none; }
+#pace-landing .pl-par figure { flex: 0 0 78%; margin: 0; scroll-snap-align: center; }
+#pace-landing .pl-dos > div + div { margin-top: 32px; }
+/* Las tres promesas y las preguntas, como en /premium. */
+#pace-landing .pl-promesas { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+#pace-landing .pl-promesas li { font: italic 500 clamp(24px, 5.8vw, 30px)/1.25 var(--l-display); color: var(--l-ink); padding-left: 22px; position: relative; }
+#pace-landing .pl-promesas li::before { content: ''; position: absolute; left: 2px; top: .55em; width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--l-cta); }
+#pace-landing .pl-preg details { border-bottom: 1px dashed var(--l-line); padding: 12px 0; }
+#pace-landing .pl-preg details:last-of-type { border-bottom: 0; }
+#pace-landing .pl-preg summary { cursor: pointer; font: italic 500 22px/1.3 var(--l-display); color: var(--l-ink); list-style: none; display: flex; align-items: baseline; gap: 12px; }
+#pace-landing .pl-preg summary::-webkit-details-marker { display: none; }
+#pace-landing .pl-preg summary::before { content: '+'; flex: 0 0 14px; font: 400 21px/1 var(--l-ui); color: var(--l-cta); }
+#pace-landing .pl-preg details[open] > summary::before { content: '–'; }
+#pace-landing .pl-preg details p { margin: 8px 0 4px; }
+/* El pie, como en /premium y /beta: la vaca, «Abrir PACE» y los enlaces. */
+#pace-landing .pl-pie { padding: 26px 0 48px; border-top: 1px solid var(--l-line); display: flex; flex-wrap: wrap; align-items: center; gap: 16px 12px; }
+#pace-landing .pl-pie::before { content: ''; width: 61px; height: 40px; flex: 0 0 auto; background: url(/premium/vaca.webp) center / contain no-repeat; }
+#pace-landing .pl-pie nav { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+#pace-landing .pl-pie nav a { font: italic 400 18px/1.3 var(--l-display); color: var(--l-ink-2); text-decoration: none; border-bottom: 1px solid var(--l-line-2); }
+@media (min-width: 600px) { #pace-landing .pl-pie nav { margin-left: auto; } }
+@media (min-width: 900px) {
+  #pace-landing .pl-vaca img { height: 100px; }
+  #pace-landing .pl-ya { max-width: none; }
+  #pace-landing .pl-portada { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 72px; align-items: center; padding: 40px 0 80px; }
+  #pace-landing .pl-foto { max-width: 320px; margin: 40px auto; }
+  #pace-landing main section { padding: 64px 0 60px 88px; }
+  #pace-landing main section::before { left: 31px; }
+  #pace-landing main section::after { left: 23px; top: 79px; width: 17px; height: 17px; }
+  #pace-landing .pl-mods { max-width: 640px; }
+  #pace-landing .pl-mods li { min-height: 54px; }
+  #pace-landing .pl-par { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; max-width: 780px; overflow: visible; margin: 40px 0 0; padding: 0; }
+  #pace-landing .pl-dos { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; }
+  #pace-landing .pl-dos > div + div { margin-top: 0; }
+}
+
+  </style>
+  <!--/pace-landing-->
+  <title>PACE · Foco · Cuerpo — v0.198.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1148,6 +1436,109 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
   </style>
 </head>
 <body>
+  <!--pace-landing-->
+  <!-- LA LANDING DE LA RAÍZ (estructura C y landing B, larga, Ez, 9 nov. 2026). La ve quien llega por primera vez sin
+       nada guardado (landing/cara.js decide). Los textos son los de /premium, /beta y privacy.html:
+       sin cifras inventadas. Cada texto va en los dos idiomas; el CSS enseña uno. «Abrir PACE»
+       lleva `data-pace-abrir`: abre la app en el sitio, y si el JS fallara, `/?go=inicio` cae en
+       la regla de `?go=` y también abre la app. -->
+  <!--email_off-->
+  <div id="pace-landing">
+  <div class="pl-marco">
+    <header class="pl-cab">
+      <a class="pl-vaca" href="/?go=inicio" data-pace-abrir><img src="/premium/vaca.webp" alt="PACE" width="91" height="60"></a>
+      <div class="pl-cab-der">
+        <a class="pl-ya" href="/?go=inicio" data-pace-abrir><span lang="es">¿Ya usas PACE? <b>Ábrelo</b></span><span lang="en">Already use PACE? <b>Open it</b></span></a>
+        <button class="pl-idioma" type="button" data-pace-landing-idioma-boton><span lang="es"><b>ES</b> · EN</span><span lang="en">ES · <b>EN</b></span></button>
+      </div>
+    </header>
+    <main>
+      <div class="pl-portada">
+        <div>
+          <h1><span lang="es">Pausas activas para quien trabaja sentado.</span><span lang="en">Active breaks for people who work at a desk.</span></h1>
+          <p class="pl-lede"><span lang="es">Foco, respiración, movilidad y agua, a tu ritmo. Sin cuenta, sin anuncios, sin rastreo: lo tuyo se queda en tu equipo.</span><span lang="en">Focus, breathing, mobility and water. At your pace. No account, ads or tracking. Your data stays on your device.</span></p>
+          <a class="pl-boton" href="/?go=inicio" data-pace-abrir><span lang="es">Abrir PACE, es gratis</span><span lang="en">Open PACE, it is free</span></a>
+        </div>
+        <div class="pl-foto">
+          <picture><source media="(prefers-color-scheme: dark)" srcset="/beta/jornada-es-oscuro.webp"><img lang="es" src="/beta/jornada-es.webp" alt="Tu jornada en PACE: el aro del Foco y las pausas del día" width="540" height="960" loading="lazy"></picture>
+          <picture><source media="(prefers-color-scheme: dark)" srcset="/beta/jornada-en-oscuro.webp"><img lang="en" src="/beta/jornada-en.webp" alt="Your workday in PACE: the Focus ring and the breaks of the day" width="540" height="960" loading="lazy"></picture>
+        </div>
+      </div>
+      <section>
+        <h2><span lang="es">Cinco maneras de parar</span><span lang="en">Five ways to take a break</span></h2>
+        <ul class="pl-mods">
+          <li><b><i style="background:var(--l-focus)"></i><span lang="es">Foco</span><span lang="en">Focus</span></b><span><span lang="es">Pomodoro, pausas y aviso</span><span lang="en">Pomodoro, breaks and reminders</span></span></li>
+          <li><b><i style="background:var(--l-breathe)"></i><span lang="es">Respira</span><span lang="en">Breathe</span></b><span><span lang="es">técnicas guiadas, con voz</span><span lang="en">guided techniques, with voice</span></span></li>
+          <li><b><i style="background:var(--l-move)"></i><span lang="es">Mueve</span><span lang="en">Move</span></b><span><span lang="es">rutinas de pie</span><span lang="en">standing routines</span></span></li>
+          <li><b><i style="background:var(--l-extra)"></i><span lang="es">Estira</span><span lang="en">Stretch</span></b><span><span lang="es">movilidad</span><span lang="en">mobility</span></span></li>
+          <li><b><i style="background:var(--l-water)"></i><span lang="es">Hidrátate</span><span lang="en">Hydrate</span></b><span><span lang="es">tus vasos del día</span><span lang="en">your daily water log</span></span></li>
+        </ul>
+        <div class="pl-par">
+          <figure><picture><source media="(prefers-color-scheme: dark)" srcset="/beta/respira-es-oscuro.webp"><img lang="es" src="/beta/respira-es.webp" alt="Respira: una técnica guiada, con voz" width="540" height="960" loading="lazy"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="/beta/respira-en-oscuro.webp"><img lang="en" src="/beta/respira-en.webp" alt="Breathe: a guided technique with voice cues" width="540" height="960" loading="lazy"></picture></figure>
+          <figure><picture><source media="(prefers-color-scheme: dark)" srcset="/beta/logros-es-oscuro.webp"><img lang="es" src="/beta/logros-es.webp" alt="Los logros: sellos de cuaderno de campo, sin rachas" width="540" height="960" loading="lazy"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="/beta/logros-en-oscuro.webp"><img lang="en" src="/beta/logros-en.webp" alt="Achievements: field-notebook stamps, no streaks" width="540" height="960" loading="lazy"></picture></figure>
+        </div>
+      </section>
+      <!-- LA LANDING LARGA, «como /premium» (B, Ez, 9 nov. 2026): las capturas de PACE completo, las
+           tres cosas que no van a cambiar y las preguntas, con los textos de /premium. -->
+      <section>
+        <h2><span lang="es">Así se ve PACE completo</span><span lang="en">A look at PACE Complete</span></h2>
+        <div class="pl-par">
+          <figure><picture><source media="(prefers-color-scheme: dark)" srcset="/premium/carta-es-oscuro.webp"><img lang="es" src="/premium/carta-es.webp" alt="La carta del lunes: lo que te ayudó, las pausas hechas y los cambios de la semana" width="540" height="960" loading="lazy"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="/premium/carta-en-oscuro.webp"><img lang="en" src="/premium/carta-en.webp" alt="The Monday letter: what helped you, the breaks you did and the week’s changes" width="540" height="960" loading="lazy"></picture></figure>
+          <figure><picture><source media="(prefers-color-scheme: dark)" srcset="/premium/mes-es-oscuro.webp"><img lang="es" src="/premium/mes-es.webp" alt="Tu mes en Estadísticas: cada día que practicaste" width="540" height="960" loading="lazy"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="/premium/mes-en-oscuro.webp"><img lang="en" src="/premium/mes-en.webp" alt="Your month in Stats: every day you practiced" width="540" height="960" loading="lazy"></picture></figure>
+        </div>
+      </section>
+      <section>
+        <h2><span lang="es">Tres cosas que no van a cambiar</span><span lang="en">Three things that will not change</span></h2>
+        <ul class="pl-promesas">
+          <li><span lang="es">Lo que hoy es gratis, sigue gratis.</span><span lang="en">What is free today stays free.</span></li>
+          <li><span lang="es">Lo que compras no se quita.</span><span lang="en">What you buy is not taken away.</span></li>
+          <li><span lang="es">Si un día sube el precio, el tuyo no.</span><span lang="en">If the price goes up one day, yours does not.</span></li>
+        </ul>
+      </section>
+      <section class="pl-preg">
+        <h2><span lang="es">Preguntas</span><span lang="en">Questions</span></h2>
+        <details><summary><span lang="es">¿Necesito una cuenta?</span><span lang="en">Do I need an account?</span></summary><p><span lang="es">No. PACE no tiene cuentas. Al comprar recibes un código que abre PACE completo en tu navegador.</span><span lang="en">No. PACE has no accounts. When you buy, you get a code that unlocks PACE Complete in your browser.</span></p></details>
+        <details><summary><span lang="es">¿Qué pasa con mis datos?</span><span lang="en">What happens to my data?</span></summary><p><span lang="es">Se quedan en tu equipo. Ni la compra ni el código mandan tu práctica a ningún sitio.</span><span lang="en">Your data stays on your device. Buying PACE Complete or activating a code doesn’t upload your activity history.</span></p></details>
+        <details><summary><span lang="es">¿Sirve en Android y en iPhone?</span><span lang="en">Does it work on Android and iPhone?</span></summary><p><span lang="es">Las apps están en prueba cerrada en Google Play y en TestFlight.</span><span lang="en">The apps are in closed testing on Google Play and TestFlight.</span> <a href="/beta/"><span lang="es">Cómo unirte</span><span lang="en">How to join</span></a>.</p></details>
+        <details><summary><span lang="es">¿Puedo devolverlo?</span><span lang="en">Can I get a refund?</span></summary><p><span lang="es">Sí, en los 14 días siguientes, sin preguntas. Escríbenos y lo devolvemos.</span><span lang="en">Yes. Contact us within 14 days of purchase for a refund. No reason needed.</span></p></details>
+      </section>
+      <section class="pl-dos">
+        <div>
+          <h2><span lang="es">Gratis, y lo seguirá siendo</span><span lang="en">Free, and it will stay free</span></h2>
+          <p><span lang="es">El Foco entero, «A tu ritmo» cada día, las rutinas de siempre, Hidrátate y los logros.</span><span lang="en">All of Focus, «At your pace» every day, the everyday routines, Hydrate and the achievements.</span></p>
+        </div>
+        <div>
+          <h2><span lang="es">PACE completo</span><span lang="en">PACE Complete</span></h2>
+          <p><span lang="es">Para cuando quieras más: las rutinas más profundas, pausas que cambian de un día a otro, tus propias rutinas y una semana a tu medida.</span><span lang="en">For when you want more: the deeper routines, breaks that change from day to day, your own routines and a week tailored to you.</span></p>
+          <a class="pl-boton hueco" href="/premium/"><span lang="es">Ver PACE completo</span><span lang="en">See PACE Complete</span></a>
+        </div>
+      </section>
+      <section class="pl-dos">
+        <div>
+          <h2><span lang="es">Tu calendario, si tú lo pides</span><span lang="en">Your calendar, if you ask</span></h2>
+          <p><span lang="es">Con «Al calendario», PACE añade tu día de «A tu ritmo» a tu calendario, como libre y privado. Si se lo pides, mira a qué horas estás ocupado hoy y coloca tus pausas alrededor; solo guarda esas horas, en tu dispositivo. Nada de tu calendario pasa por un servidor de PACE.</span><span lang="en">With «To calendar», PACE adds your «At your pace» day to your calendar, as free and private. If you ask, it checks when you are busy today and places your breaks around it; it only keeps those times, on your device. Nothing from your calendar goes through a PACE server.</span> <a href="/privacy"><span lang="es">Privacidad</span><span lang="en">Privacy</span></a>.</p>
+        </div>
+        <div>
+          <h2><span lang="es">Android e iPhone</span><span lang="en">Android and iPhone</span></h2>
+          <p><span lang="es">PACE está en prueba cerrada en Google Play y en TestFlight.</span><span lang="en">PACE is in closed testing on Google Play and TestFlight.</span> <a href="/beta/"><span lang="es">Cómo unirte</span><span lang="en">How to join</span></a>.</p>
+        </div>
+      </section>
+    </main>
+    <footer class="pl-pie">
+      <a class="pl-boton" href="/?go=inicio" data-pace-abrir><span lang="es">Abrir PACE</span><span lang="en">Open PACE</span></a>
+      <nav aria-label="PACE">
+        <a href="/privacy"><span lang="es">Privacidad</span><span lang="en">Privacy</span></a>
+        <a href="/safety"><span lang="es">Seguridad</span><span lang="en">Safety</span></a>
+        <a href="/premium/"><span lang="es">PACE completo</span><span lang="en">PACE Complete</span></a>
+        <a href="/beta/"><span lang="es">Android e iPhone</span><span lang="en">Android and iPhone</span></a>
+        <a href="mailto:hola.ezradesign@gmail.com"><span lang="es">Contacto</span><span lang="en">Contact</span></a>
+      </nav>
+    </footer>
+  </div>
+  </div>
+  <!--/email_off-->
+
+  <!--/pace-landing-->
   <!-- Logo oficial pre-cargado aquí para que super_inline_html lo inline
        como data URI en el bundle standalone. CowLogo.jsx lee el src
        resuelto de este elemento (id="pace-logo-src"). -->
@@ -2111,6 +2502,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'session.prep': 'Prepárate',
   'session.startNow': 'Empezar ahora',
   'session.backToHome': 'Volver al inicio',
+  'session.sigue.ciclo': 'Empezar el ciclo {n}',
+  'session.sigue.pausa': 'Volver · te quedan {min} min de pausa',
+  'session.sigue.pausa.uno': 'Volver · te queda 1 min de pausa',
   'session.next': 'Siguiente',
   'session.focusDoneMeta': 'Foco completado',
   'session.focusDoneCopy': 'Un tramo de atención sostenida.',
@@ -2318,6 +2712,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'session.prep': 'Get ready',
   'session.startNow': 'Start now',
   'session.backToHome': 'Back to Home',
+  'session.sigue.ciclo': 'Start cycle {n}',
+  'session.sigue.pausa': 'Back · {min} min of break left',
+  'session.sigue.pausa.uno': 'Back · 1 min of break left',
   'session.next': 'Next',
   'session.focusDoneMeta': 'Focus complete',
   'session.focusDoneCopy': 'A stretch of sustained attention.',
@@ -3086,6 +3483,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'stats.hoy.vasos.de': 'de {m} vasos',
   'stats.hoy.libre': 'Por libre',
   'stats.hoy.vacio': 'Hoy aún no hay pausas en PACE.',
+  'stats.hoy.suelta': 'Además, por tu cuenta',
   'stats.cerrado': 'Es parte de PACE completo',
   'stats.tab.week': 'Semana',
   'stats.tab.month': 'Mes',
@@ -3185,6 +3583,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'stats.hoy.vasos.de': 'of {m} glasses',
   'stats.hoy.libre': 'Unplanned',
   'stats.hoy.vacio': 'No PACE breaks yet today.',
+  'stats.hoy.suelta': 'Also, on your own',
   'stats.cerrado': 'Part of PACE Complete',
   'stats.tab.week': 'Week',
   'stats.tab.month': 'Month',
@@ -3641,6 +4040,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
 
+
 Object.assign(window.PACE_STRINGS.es, {
   'premium.name': 'PACE completo',
   'premium.part': 'Es parte de PACE completo.',
@@ -3653,7 +4053,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'premium.inc.letter.d': 'la carta del lunes',
   'premium.inc.stats': 'Tu mes, tu año y qué te ayuda',
   'premium.inc.stats.d': 'estadísticas',
-  'premium.v1': 'Llega con la versión 1.',
+  'premium.v1': 'Llega cuando salga a la venta.',
   'premium.later': 'Ahora no',
   'premium.code.have': 'Tengo un código',
   'premium.code.label': 'Tu código o tu enlace',
@@ -3673,6 +4073,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'premium.settings.forever': 'Para siempre',
   'premium.settings.until': 'Hasta el {fecha}',
   'premium.settings.enter': 'Introducir código',
+  'premium.settings.vida': 'Tenerlo para siempre',
   'premium.settings.code': 'Código',
   'premium.settings.tester': 'Tester n.º {n}',
   'premium.settings.manage': 'Gestionar la suscripción',
@@ -3695,9 +4096,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'premium.onb.vida.sola': 'Un solo pago de {vida}, para siempre.',
   'premium.onb.comprar': 'Comprar, {vida}',
   'premium.onb.aviso': 'Te avisamos dos días antes de que acabe la prueba.',
-  'premium.onb.abierto.lede': 'Y hasta v1, PACE completo también está abierto para todos:',
+  'premium.onb.abierto.lede': 'Y mientras está en pruebas, PACE completo también está abierto para todos:',
   'premium.onb.abierto.precios': 'Después, {mes} al mes con {dias} días gratis, o {vida} una vez.',
-  'premium.onb.abierto.aviso': 'Al llegar v1 tendrás tu semana de prueba, y las rutinas que ya hayas hecho se te quedan.',
+  'premium.onb.abierto.aviso': 'Cuando salga a la venta tendrás tu semana de prueba, y las rutinas que ya hayas hecho se te quedan.',
   'premium.code.lost': '¿Lo has perdido? Recupéralo con tu correo',
   'premium.compra.error': 'No se ha podido abrir la compra. Prueba otra vez.',
   'premium.settings.prueba': 'Prueba hasta el {fecha}',
@@ -3726,7 +4127,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'premium.inc.letter.d': 'the Monday letter',
   'premium.inc.stats': 'Your month, your year and what helps',
   'premium.inc.stats.d': 'stats',
-  'premium.v1': 'Coming with version 1.',
+  'premium.v1': 'Coming when it goes on sale.',
   'premium.later': 'Not now',
   'premium.code.have': 'I have a code',
   'premium.code.label': 'Your code or link',
@@ -3746,6 +4147,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'premium.settings.forever': 'Lifetime access',
   'premium.settings.until': 'Until {fecha}',
   'premium.settings.enter': 'Enter code',
+  'premium.settings.vida': 'Get it for life',
   'premium.settings.code': 'Code',
   'premium.settings.tester': 'Tester no. {n}',
   'premium.settings.manage': 'Manage subscription',
@@ -3768,9 +4170,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'premium.onb.vida.sola': 'One payment of {vida} for lifetime access.',
   'premium.onb.comprar': 'Buy for {vida}',
   'premium.onb.aviso': 'We will remind you two days before the trial ends.',
-  'premium.onb.abierto.lede': 'And until v1, PACE Complete is open to everyone too:',
+  'premium.onb.abierto.lede': 'And while it’s in testing, PACE Complete is open to everyone too:',
   'premium.onb.abierto.precios': 'Then, {mes} a month with {dias} days free, or {vida} once.',
-  'premium.onb.abierto.aviso': 'When v1 arrives you get your trial week, and the routines you have already done stay yours.',
+  'premium.onb.abierto.aviso': 'When it goes on sale you get your trial week, and the routines you have already done stay yours.',
   'premium.code.lost': 'Lost it? Get it back with your email',
   'premium.compra.error': 'Checkout couldn’t open. Try again.',
   'premium.settings.prueba': 'Trial until {fecha}',
@@ -4440,7 +4842,11 @@ Object.assign(window.PACE_STRINGS.es, {
   'sobre.novedades.tipo': 'Novedades',
   'sobre.novedades.titulo': 'Qué hay de nuevo',
   'sobre.carta.tipo': 'Carta',
-  'sobre.carta.abrir': 'Abrir la carta'
+  'sobre.carta.abrir': 'Abrir la carta',
+  'lunes.titulo': 'La carta del lunes',
+  'lunes.sobre': 'Los lunes, PACE completo te escribe tu semana: lo que te ayudó, lo que se mueve y por qué.',
+  'lunes.ver': 'Ver PACE completo',
+  'lunes.linea': 'Los lunes, PACE completo te escribe tu semana'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -4452,7 +4858,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'sobre.novedades.tipo': 'What’s new',
   'sobre.novedades.titulo': 'What’s new',
   'sobre.carta.tipo': 'Letter',
-  'sobre.carta.abrir': 'Open the letter'
+  'sobre.carta.abrir': 'Open the letter',
+  'lunes.titulo': 'The Monday letter',
+  'lunes.sobre': 'On Mondays, PACE Complete writes you your week: what helped, what changes and why.',
+  'lunes.ver': 'See PACE Complete',
+  'lunes.linea': 'On Mondays, PACE Complete writes you your week'
 });
 })();
 </script>
@@ -5934,7 +6344,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.stats.streak.30.title': 'Thirty dawns',
   'ach.item.stats.streak.30.desc': 'Thirty days with a session before 9:00',
   'ach.item.master.dusk.title': 'Nightfall',
-  'ach.item.master.dusk.desc': 'Five days with a session after 21:00',
+  'ach.item.master.dusk.desc': 'Five workdays closed on time',
   'ach.item.master.midnight.never.title': 'Before midnight',
   'ach.item.master.midnight.never.desc': '30 days with no use after 23:00',
   'ach.item.master.pomodoro.8.title': 'A day of eight',
@@ -5950,7 +6360,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.secret.cow.click.title': 'Happy cow',
   'ach.item.secret.cow.click.desc': 'Did you tickle her?',
   'ach.item.secret.night.owl.title': 'Night owl',
-  'ach.item.secret.night.owl.desc': 'Use the app between 2:00 and 4:00',
+  'ach.item.secret.night.owl.desc': 'You answered “Did it help?” 25 times',
   'ach.item.secret.lunch.title': 'Midday pause',
   'ach.item.secret.lunch.desc': 'A session at 14:00',
   'ach.item.secret.rain.title': 'Mental rain',
@@ -7012,7 +7422,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.195.0';
+const PACE_VERSION = 'v0.198.0';
 
 
 
@@ -7099,6 +7509,7 @@ const defaultState = {
   licencia: null,
 
   premiumAvisoPrueba: null, novedadesVistas: null,
+  lunesVisto: null,
 
 
   focusMode: 'foco',
@@ -7156,7 +7567,7 @@ const defaultState = {
 
 
   dawnDates: [],
-  duskDates: [],
+  duskDates: [], ocasoDias: [], ocasoTarde: null,
   planDates: [],
   respiraHoy: { fecha: null, n: 0 },
 
@@ -7380,7 +7791,7 @@ let _paceSinGuardar = false;
 
 let _paceGuardadoAtrasado = false;
 function persistState() {
-  if (_paceSinGuardar) return;
+  if (_paceSinGuardar || window.PACE_CARA === 'landing') return;
   try {localStorage.setItem(LS_KEY, JSON.stringify(_state));_paceGuardadoAtrasado = false;} catch (e) {
     _paceGuardadoAtrasado = true;try {window.__paceNoGuarda = true;window.dispatchEvent(new CustomEvent('pace:no-guarda'));} catch (e2) {}
   }
@@ -7965,7 +8376,6 @@ function checkFechasSenaladas() {
 
 function checkSecretosDeHora() {
   const h = new Date().getHours();
-  if (h >= 2 && h < 4) unlockAchievement('secret.night.owl');
   if (h === 14) unlockAchievement('secret.lunch');
 }
 
@@ -8066,10 +8476,19 @@ function addFocusMinutes(mins) {
 
 
 
+
+
+
+var FOCO_CONTADOS_MAX = 20;
+function focoContadosCon(lista, id) {
+  var antes = Array.isArray(lista) ? lista.filter(function (x) {return x !== id;}) : [];
+  return antes.concat([id]).slice(-FOCO_CONTADOS_MAX);
+}
 function completePomodoro(bloque) {
   ensureDayFresh();
   const focusMinsAtCompletion = getState().focusMinutes;
-  setState((prev) => ({ ...prev, cycle: prev.cycle + 1, ...(bloque ? { focoContado: bloque } : {}) }));
+  setState((prev) => ({ ...prev, cycle: prev.cycle + 1,
+    ...(bloque ? { focoContado: bloque, focoContados: focoContadosCon(prev.focoContados, bloque) } : {}) }));
   addFocusMinutes(focusMinsAtCompletion);
   unlockAchievement('first.step');
   if (getState().cycle >= 8) unlockAchievement('master.pomodoro.8');
@@ -8081,6 +8500,7 @@ function completePomodoro(bloque) {
   if (focusMinsAtCompletion >= 45 && bumpCount('foco.largo') >= 5) {
     unlockAchievement('master.long.focus');
   }
+  if (typeof paceOcasoFoco === 'function') paceOcasoFoco(focusMinsAtCompletion);
   checkTimeOfDayAchievements();
   checkSilentDayAchievement();
   updateStreak();
@@ -8130,10 +8550,12 @@ function completeFocusSession(context, opts) {
 
 Object.assign(window, {
   addFocusMinutes,
+  FOCO_CONTADOS_MAX,
+  focoContadosCon,
   completePomodoro,
   completeFocusSession
 });
-;Object.assign(window, { checkFocusDayAchievement, addFocusMinutes, completePomodoro, completeFocusSession });
+;Object.assign(window, { checkFocusDayAchievement, addFocusMinutes, FOCO_CONTADOS_MAX, focoContadosCon, completePomodoro, completeFocusSession });
 })();
 </script>
   <script>
@@ -8272,8 +8694,8 @@ function checkPlanAchievements() {
 
 
 
+
 const DAWN_DIAS = 5;
-const DUSK_DIAS = 5;
 
 function marcaDia(campo, limite) {
   const hoy = new Date().toDateString();
@@ -8289,7 +8711,9 @@ function checkTimeOfDayAchievements() {
   const now = new Date();
   const h = now.getHours();
   if (h < 7 && marcaDia('dawnDates', DAWN_DIAS) >= DAWN_DIAS) unlockAchievement('master.dawn');
-  if (h >= 21 && marcaDia('duskDates', DUSK_DIAS) >= DUSK_DIAS) unlockAchievement('master.dusk');
+
+  if (typeof paceOcasoMirar === 'function') paceOcasoMirar();
+  if (typeof paceBuhoMirar === 'function') paceBuhoMirar();
   if (h < 9) {
     const today = now.toDateString();
     const s = getState();
@@ -8710,16 +9134,97 @@ Object.assign(window, {
   conMinutosQueCuentan,
   updateStreak,
   checkStatsAchievements,
-  checkAllPathsCompleted
+  checkAllPathsCompleted,
+  checkTimeOfDayAchievements
 });
 ;Object.assign(window, { checkPlanAchievements, marcaDia, checkTimeOfDayAchievements, checkCollectorAchievements, checkSilentDayAchievement, checkRoutineCountAchievements, checkStatsAchievements, checkAllPathsCompleted, checkPrimerDiaDeVerdad, checkRetreatAchievement, unlockAchievement, flushAchievementToast, updateStreak, conMinutosQueCuentan, completeBreathSession, logrosDeRespira, completeMoveSession, logrosDeMueve, completeExtraSession, logrosDeEstira });
+})();
+</script>
+  <!-- Ocaso y Búho con lo que premian ahora (Ez, D-6 D del 11 nov.). DESPUÉS de state-achievements. -->
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   OCASO Y BÚHO, CON LO QUE PREMIAN AHORA (Ez, D-6 D del 11 nov. 2026: «D adaptarlos»)
+   ============================================================
+   Premiaban trasnochar: Ocaso, cinco días con sesión después de las 21 h, y Búho, usar PACE entre
+   las 2 y las 4. Es lo contrario de una jornada que acaba a su hora. Conservan su dibujo, su id y su
+   nombre, así que quien ya los tenía los conserva; cambia lo que premian:
+
+     · OCASO (`master.dusk`): cinco jornadas cerradas a su hora. Cuenta el día en que la jornada
+       llega a «Jornada cerrada» con todos sus bloques hechos (no la que se cierra sola por la hora
+       con bloques sin hacer), y no lo cuenta si ese día se empezó un Foco después de la hora de
+       salida (`ocasoTarde`). Si el Foco tardío llega después de cerrar, el día sale de la cuenta,
+       salvo que ese día ya diera el logro: un logro no se quita.
+     · BÚHO (`secret.night.owl`, sigue secreto): contestar «¿Te ayudó?» 25 veces (Sí, Un poco o
+       No; «Ahora no» no cuenta). Sale de los contadores de `routineFeedback`, que ya se guardaban:
+       quien ya llevaba 25 lo recibe en su próxima sesión.
+
+   Se miran desde `checkTimeOfDayAchievements` (al acabar cualquier sesión), desde el final de un
+   Foco (`paceOcasoFoco`) y al contestar (`recordRoutineFeedback`). Nunca lanzan.
+   ============================================================ */
+
+var PACE_OCASO_DIAS = 5;
+var PACE_BUHO_RESPUESTAS = 25;
+
+
+function paceOcasoFoco(minutos) {
+  try {
+    var p = typeof ritmoPlan === 'function' ? ritmoPlan(getState()) : null;
+    if (!p || !p.m || typeof ritmoTrasElFin !== 'function') return;
+    var empezo = Date.now() - (Number(minutos) || 0) * 60000;
+    if (ritmoTrasElFin(p.m, empezo)) setState({ ocasoTarde: todayISO() });
+  } catch (e) {}
+}
+
+
+function paceOcasoMirar() {
+  try {
+    var s = getState();
+    var hoy = todayISO();
+    var lista = Array.isArray(s.ocasoDias) ? s.ocasoDias.slice() : [];
+    var esta = lista.indexOf(hoy) >= 0;
+    var tarde = s.ocasoTarde === hoy;
+    var p = typeof ritmoPlan === 'function' ? ritmoPlan(s) : null;
+    var cerrada = !!p && p.total > 0 && p.hechos >= p.total;
+    if (cerrada && !tarde && !esta) {
+      lista = lista.concat([hoy]).slice(-PACE_OCASO_DIAS * 3);
+      setState({ ocasoDias: lista });
+    } else if (tarde && esta) {
+      lista = lista.filter(function (d) {return d !== hoy;});
+      setState({ ocasoDias: lista });
+    }
+    if (lista.length >= PACE_OCASO_DIAS) unlockAchievement('master.dusk');
+  } catch (e) {}
+}
+
+
+function paceBuhoRespuestas(s) {
+  var fb = s && s.routineFeedback && typeof s.routineFeedback === 'object' ? s.routineFeedback : {};
+  var n = 0;
+  Object.keys(fb).forEach(function (id) {
+    var r = fb[id] || {};
+    ['yes', 'some', 'no'].forEach(function (k) {var v = Number(r[k]);if (isFinite(v) && v > 0) n += v;});
+  });
+  return n;
+}
+
+function paceBuhoMirar() {
+  try {
+    if (paceBuhoRespuestas(getState()) >= PACE_BUHO_RESPUESTAS) unlockAchievement('secret.night.owl');
+  } catch (e) {}
+}
+
+Object.assign(window, { PACE_OCASO_DIAS, PACE_BUHO_RESPUESTAS, paceOcasoFoco, paceOcasoMirar, paceBuhoRespuestas, paceBuhoMirar });
+;Object.assign(window, { PACE_OCASO_DIAS, PACE_BUHO_RESPUESTAS, paceOcasoFoco, paceOcasoMirar, paceBuhoRespuestas, paceBuhoMirar });
 })();
 </script>
   <!-- El código de PACE completo: las llaves PÚBLICAS que lo comprueban y la
        comprobación sin servidor. Antes del guard, que pregunta por el código. -->
   <script>
 ;(function () {
-
 
 
 
@@ -10270,6 +10775,8 @@ function recordRoutineFeedback(routineId, response, opciones) {
 
   if (opciones && opciones.sinEvento) return;
   if (typeof emitFeedbackAnswered === 'function') emitFeedbackAnswered(id, resp);
+
+  if (resp !== 'later' && typeof paceBuhoMirar === 'function') paceBuhoMirar();
 }
 
 
@@ -12459,6 +12966,8 @@ function calendarioGuardarOcupado(tramos, fuente, iso) {
   if (!iso || iso !== ritmoHoy()) return false;
   var antes = (getState().ritmo || {}).ocupado;
   if (antes && antes.fecha === iso && JSON.stringify(antes.tramos) === JSON.stringify(tramos)) return false;
+
+  if (typeof ritmoFijarLoHecho === 'function') ritmoFijarLoHecho();
   ritmoGuardar(function () {return { ocupado: { fecha: iso, tramos: tramos, fuente: fuente } };});
   return true;
 }
@@ -13396,7 +13905,8 @@ function ritmoPrevios(pasado, primerBloque, pausaPendiente, bloque) {
 
   p.pausasLarga = 0;p.focoLarga = 0;p.largaEn = 3;p.largasManana = 0;p.seguidos = 0;
   (pasado || []).forEach(function (it) {
-    if (it.tipo === 'foco') {p.bloques++;p.foco += it.dur;p.focoLarga += it.dur;p.seguidos += it.dur;}
+
+    if (it.tipo === 'foco') {var cuenta = ritmoFocoMin(it);p.bloques++;p.foco += cuenta;p.focoLarga += cuenta;p.seguidos += cuenta;}
     if (it.tipo === 'pausa') {p.pausas++;p.claves++;p.pausasLarga++;p.seguidos = 0;}
     if (it.tipo === 'pausa' && it.larga) {
       p.largaEn = p.pausasLarga;p.pausasLarga = 0;p.focoLarga = 0;
@@ -13631,6 +14141,9 @@ function ritmoElegir(opcion) {
   var R = ritmoDe(s);
   var dia = { fecha: ritmoHoy(), opcion: opcion, desde: Math.max(R.horario.inicio, ritmoAhora()),
     cicloBase: Number(s.cycle) || 0, cambios: {}, pausa: null };
+
+  var corre = typeof ritmoFocoDelDiaNuevo === 'function' ? ritmoFocoDelDiaNuevo() : null;
+  if (corre) Object.assign(dia, { desde: corre.desde, primerBloque: corre.min, pasado: [] });
   ritmoGuardar(function () {return { libre: null, dia: dia };});
   ritmoSincronizar();
 }
@@ -13681,6 +14194,7 @@ function ritmoHorario(campo, valor) {
       Object.keys(cambios).forEach(function (c) {horario.media[c.slice(6)] = cambios[c];});
     } else Object.assign(horario, cambios);
   }
+  if (typeof ritmoFijarLoHecho === 'function') ritmoFijarLoHecho();
   ritmoGuardar(function (r) {
     return { horario: horario, dia: r.dia ? Object.assign({}, r.dia, { cambios: {} }) : r.dia };
   });
@@ -13735,7 +14249,8 @@ function ritmoDesfase(ms, hasta) {
 
 
 
-function ritmoBloqueTerminado(inicioMs, finMs) {
+
+function ritmoBloqueTerminado(inicioMs, finMs, minutos) {
 
   var p = ritmoPlanBase(getState());
   if (!p || p.hechos < 1) return;
@@ -13762,12 +14277,44 @@ function ritmoBloqueTerminado(inicioMs, finMs) {
   var desde = Math.max(t, fin);
   if (ultimo && desde !== ultimo.desde + ultimo.dur) {
     var pasado = ritmoCongelar(p.m.items.slice(0, p.m.items.indexOf(ultimo) + 1));
-    pasado[pasado.length - 1].dur = fin - ultimo.desde;
+    var hecho = pasado[pasado.length - 1];
+    hecho.dur = fin - ultimo.desde;
+    hecho.foco = Number(minutos) > 0 ? Number(minutos) : ultimo.dur;
     cambios.pasado = pasado;cambios.desde = desde;cambios.primerBloque = null;cambios.pausaPendiente = true;
   }
   ritmoGuardar(function (r) {return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {};});
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+function ritmoFijarLoHecho() {
+  var s = getState(),R = ritmoDe(s);
+  if (!R.dia || R.libre) return;
+  var p = ritmoPlanBase(s);
+  if (!p || p.hechos < 1 || !p.actual || ritmoPasadaLaSalida(p)) return;
+  var corre = typeof ritmoFocoCorriendo === 'function' && ritmoFocoCorriendo();
+  var hasta = corre ? p.actual : p.pausa || p.m.focos[p.hechos - 1];
+  var corte = p.m.items.indexOf(hasta) + (corre ? 0 : 1);
+  var ya = (R.dia.pasado || []).length;
+  if (!p.m.items.slice(ya, corte).some(function (it) {return it.tipo !== 'libre';})) return;
+  var antes = p.m.items.slice(0, corte);
+  while (antes.length && antes[antes.length - 1].tipo === 'libre') antes.pop();
+  var fin = antes[antes.length - 1];
+  var cambios = { pasado: ritmoCongelar(antes), pausaPendiente: false,
+    desde: corre ? p.actual.desde : Math.max(ritmoAhoraExacto(), fin.desde + fin.dur),
+    primerBloque: corre ? p.actual.dur : null };
+  ritmoGuardar(function (r) {return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {};});
+}
 
 
 
@@ -13872,8 +14419,29 @@ function ritmoFocoEmpezo() {
   try {
     var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
     if (!v) return null;
-    if (v.endsAt && v.endsAt > Date.now()) return v.endsAt - (Number(v.minutes) || 0) * 60000;
+
+    if (v.endsAt && v.endsAt > Date.now()) return typeof v.inicio === 'number' && v.inicio <= v.endsAt ? v.inicio : v.endsAt - (Number(v.minutes) || 0) * 60000;
     return v.pausaMs > 0 && v.dia === new Date().toDateString() ? v.inicio || null : null;
+  } catch (e) {return null;}
+}
+
+
+
+
+
+
+
+
+
+function ritmoFocoDelDiaNuevo() {
+  if (typeof ritmoFocoCorriendo !== 'function' || !ritmoFocoCorriendo()) return null;
+  try {
+    var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
+    var min = Number(v && v.minutes) || 0;
+    var inicio = typeof v.inicio === 'number' && isFinite(v.inicio) ? v.inicio : v.endsAt ? v.endsAt - min * 60000 : null;
+    if (!min || inicio == null || inicio > Date.now() || new Date(inicio).toDateString() !== new Date().toDateString()) return null;
+    var d = new Date(inicio);
+    return { desde: d.getHours() * 60 + d.getMinutes(), min: min };
   } catch (e) {return null;}
 }
 
@@ -13908,13 +14476,21 @@ function ritmoMinutosSonTuyos(s, r) {
 }
 
 
-function ritmoFocoHecho(p) {
-  return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) {return a + (f.dur || 0);}, 0) : 0;
+
+
+
+
+function ritmoFocoMin(f) {
+  return f ? typeof f.foco === 'number' && f.foco >= 0 ? f.foco : f.dur || 0 : 0;
 }
 
-Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho,
+function ritmoFocoHecho(p) {
+  return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) {return a + ritmoFocoMin(f);}, 0) : 0;
+}
+
+Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoDelDiaNuevo, ritmoFocoHecho, ritmoFocoMin, ritmoFijarLoHecho,
   ritmoMinutosDelPlan, ritmoMinutosDevolver });
-;Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, _ritmoCierrePintado, ritmoMirarSalida, ritmoFocoEmpezo, ritmoMinutosDelPlan, ritmoMinutosDevolver, ritmoMinutosSonTuyos, ritmoFocoHecho });
+;Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoFijarLoHecho, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, _ritmoCierrePintado, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoDelDiaNuevo, ritmoMinutosDelPlan, ritmoMinutosDevolver, ritmoMinutosSonTuyos, ritmoFocoMin, ritmoFocoHecho });
 })();
 </script>
   <!-- El día elegido y sin empezar se lee desde ahora (Ez, E1 A del 7 nov. 2026). -->
@@ -14121,6 +14697,7 @@ function ritmoOcupadoDe(r, fecha) {
 
 function ritmoGuardarSemana(tipo, cambios) {
   var tocadas = Object.keys(cambios || {});
+  if (typeof ritmoFijarLoHecho === 'function') ritmoFijarLoHecho();
   ritmoGuardar(function (r) {
     var c = { semanaTipo: Array.isArray(tipo) ? tipo.slice(0, 7) : null };
     if (tocadas.length) {
@@ -14266,7 +14843,10 @@ function ritmoSigueCierre(routine, doneMeta, t) {
 
 
 
-function ritmoPausaHecha(routineId) {
+
+
+
+function ritmoPausaHecha(routineId, runId) {
   var a = ritmoPausaAbierta();
   if (!a) return;
   var esPlato = !!routineId && a.platos.some(function (pl) {return pl.id === routineId;});
@@ -14279,9 +14859,46 @@ function ritmoPausaHecha(routineId) {
       var ya = Array.isArray(cambio.platos[a.n]) ? cambio.platos[a.n] : [];
       if (ya.indexOf(routineId) === -1) cambio.platos[a.n] = ya.concat([routineId]);
     }
+    if (runId) {
+      cambio.sesiones = Object.assign({}, r.dia.sesiones || {});
+      var suyas = Array.isArray(cambio.sesiones[a.n]) ? cambio.sesiones[a.n] : [];
+      if (suyas.indexOf(runId) === -1) cambio.sesiones[a.n] = suyas.concat([runId]);
+    }
     return { dia: Object.assign({}, r.dia, cambio) };
   });
 }
+
+
+
+
+
+
+
+function ritmoSesionesHoy() {
+  var ev = [];
+  try {
+    var snap = window.paceEventsSnapshot && window.paceEventsSnapshot();
+    ev = snap && Array.isArray(snap.events) ? snap.events : [];
+  } catch (e) {ev = [];}
+  var hoy = typeof todayISO === 'function' ? todayISO() : '';
+  return ev.filter(function (e) {
+    return e && e.type === 'session.completed' && e.localDay === hoy && e.payload && RITMO_MODULO_SESION[e.payload.module];
+  });
+}
+var RITMO_MODULO_SESION = { breathe: 'respira', move: 'mueve', stretch: 'estira' };
+
+function ritmoMinutosHechos(s) {
+  var por = (ritmoDe(s || getState()).dia || {}).sesiones || {};
+  var ns = Object.keys(por);
+  if (!ns.length) return {};
+  var min = {},out = {};
+  ritmoSesionesHoy().forEach(function (e) {if (e.runId) min[e.runId] = sessionCreditedMinutes(e);});
+  ns.forEach(function (n) {
+    (Array.isArray(por[n]) ? por[n] : []).forEach(function (id) {if (min[id] != null) out[n] = (out[n] || 0) + min[id];});
+  });
+  return out;
+}
+function ritmoMetaHecha(min, t) {return min != null ? t('ritmo.hecha') + ' · ' + min + ' min' : t('ritmo.hecha');}
 
 
 
@@ -14395,9 +15012,10 @@ function ritmoPausaCerrarConElDia() {
 
 Object.assign(window, {
   ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta,
+  ritmoSesionesHoy, ritmoMinutosHechos, ritmoMetaHecha, RITMO_MODULO_SESION,
   ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia, ritmoParadaHasta
 });
-;Object.assign(window, { ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, RITMO_METAS_DE_FIN, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta, ritmoSinPausa, ritmoPausaEmpieza, ritmoParadaHasta, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia });
+;Object.assign(window, { ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, RITMO_METAS_DE_FIN, ritmoSigueCierre, ritmoPausaHecha, ritmoSesionesHoy, RITMO_MODULO_SESION, ritmoMinutosHechos, ritmoMetaHecha, ritmoPausaPorTuCuenta, ritmoSinPausa, ritmoPausaEmpieza, ritmoParadaHasta, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia });
 })();
 </script>
   <!-- Las pausas con bloques cortos (22 oct. 2026): la invitación, «a mi ritmo» o tras cada bloque, y sin día. -->
@@ -14445,12 +15063,13 @@ function bloquesInvita(antes, bloque, pausa) {
 
 
 
+
 function bloquesSeguidoAntes(m, tramo) {
   var i = m.items.indexOf(tramo),suma = 0;
   while (--i >= 0) {
     var it = m.items[i];
     if (it.tipo === 'pausa' || it.tipo === 'comida') break;
-    if (it.tipo === 'foco') suma += it.dur;
+    if (it.tipo === 'foco') suma += ritmoFocoMin(it);
   }
   return suma;
 }
@@ -14465,7 +15084,7 @@ function bloquesTerminado(minutos) {
     if (p.hechos < 1 || cada) return false;
     var ultimo = p.m.focos[p.hechos - 1];
     var detras = ritmoDetras(p.m, ultimo);
-    return bloquesInvita(bloquesSeguidoAntes(p.m, ultimo), ultimo.dur, !(detras && detras.tipo === 'foco'));
+    return bloquesInvita(bloquesSeguidoAntes(p.m, ultimo), ritmoFocoMin(ultimo), !(detras && detras.tipo === 'foco'));
   }
   var m = Number(minutos) || 0;
   var hoy = ritmoHoy();
@@ -14484,7 +15103,7 @@ function bloquesSeguidos() {
   if (p) {
     if (p.hechos < 1) return 0;
     var ultimo = p.m.focos[p.hechos - 1];
-    return bloquesSeguidoAntes(p.m, ultimo) + ultimo.dur;
+    return bloquesSeguidoAntes(p.m, ultimo) + ritmoFocoMin(ultimo);
   }
   var c = s.bloquesSinDia;
   return c && c.fecha === ritmoHoy() && !c.pausa && typeof c.seguidos === 'number' ? c.seguidos : 0;
@@ -14497,8 +15116,11 @@ function bloquesSinDiaJunta(s) {
 }
 
 
+
 function bloquesElegir(valor) {
-  setState({ ejercicioBloques: valor === 'cada' ? 'cada' : 'ritmo' });
+  var nuevo = valor === 'cada' ? 'cada' : 'ritmo';
+  if (nuevo !== (bloquesCadaUno(getState()) ? 'cada' : 'ritmo') && typeof ritmoFijarLoHecho === 'function') ritmoFijarLoHecho();
+  setState({ ejercicioBloques: nuevo });
   if (typeof ritmoSincronizar === 'function') ritmoSincronizar();
 }
 
@@ -16662,6 +17284,9 @@ function paceEventsBoot() {
   } catch (e) {}
 }
 
+
+
+if (typeof window.paceCuandoAbra === 'function') window.paceCuandoAbra(paceEventsBoot);else
 paceEventsBoot();
 
 Object.assign(window, {
@@ -16771,6 +17396,9 @@ function paceOrigenPendienteLeer() {return paceOrigenPendiente;}
 
 let paceUltimaPuerta = null;
 function paceOrigenRepetir() {if (!paceOrigenPendiente) paceOrigenPendiente = paceUltimaPuerta;}
+
+
+function paceUltimaPuertaLeer() {return paceUltimaPuerta;}
 
 
 
@@ -16897,7 +17525,7 @@ function emitSessionCompleted(module, routineId, datos) {
 
 
 
-  if (typeof window.ritmoPausaHecha === 'function') {try {window.ritmoPausaHecha(routineId);} catch (e) {}}
+  if (typeof window.ritmoPausaHecha === 'function') {try {window.ritmoPausaHecha(routineId, runId);} catch (e) {}}
 
 
   if (typeof window.ritmoAnotarHecha === 'function') {try {window.ritmoAnotarHecha(routineId);} catch (e) {}}
@@ -16990,9 +17618,9 @@ Object.assign(window, {
   paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered,
   emitPathStepCompleted, emitPathCompleted, emitRitmoDia,
   paceUltimaSesionEmitida, paceOlvidarUltimaSesion,
-  paceOrigenSesion, paceOrigenPendienteLeer, paceOrigenRepetir
+  paceOrigenSesion, paceOrigenPendienteLeer, paceOrigenRepetir, paceUltimaPuertaLeer
 });
-;Object.assign(window, { paceOrigenSesion, paceOrigenPendienteLeer, paceOrigenRepetir, paceEmitirEvento, paceModuloDeCuerpo, paceStepKindEvento, paceFocusRoutineId, paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered, emitPathStepCompleted, emitPathCompleted, emitRitmoDia, paceUltimaSesionEmitida, paceOlvidarUltimaSesion });
+;Object.assign(window, { paceOrigenSesion, paceOrigenPendienteLeer, paceOrigenRepetir, paceUltimaPuertaLeer, paceEmitirEvento, paceModuloDeCuerpo, paceStepKindEvento, paceFocusRoutineId, paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered, emitPathStepCompleted, emitPathCompleted, emitRitmoDia, paceUltimaSesionEmitida, paceOlvidarUltimaSesion });
 })();
 </script>
   <!-- El paso a v1 (Ez, 15 oct.): la semana de prueba de quien ya usaba PACE y las rutinas de pago
@@ -17022,9 +17650,12 @@ Object.assign(window, {
    hecho. En el primer arranque de quien instala ya en v1 no hay nada de eso: la bienvenida
    todavía no ha salido.
 
-   LA LISTA: las rutinas de pago de Respira, Mueve y Estira con alguna sesión en el registro
-   de eventos (terminada o no), con alguna vez entera en los contadores del estado
-   (`rutina.<id>`) o con una respuesta a «¿Te ayudó?», que solo sale al acabar una. En el
+   LA LISTA: las rutinas de pago de Respira, Mueve y Estira que la persona ACABÓ alguna vez
+   (Ez, D-5 B del 10 nov.): en el registro de eventos, solo las sesiones con
+   `completionReason: 'natural'` (terminar antes no cuenta); en los contadores del estado,
+   `rutina.<id>`, que ya solo suben con una entera; y las que tienen una respuesta a «¿Te
+   ayudó?», que solo sale al acabar una. Lo ya podado del registro (`baseline`) no guarda el
+   motivo y se suma tal cual: ante la duda se conserva, nadie que la acabó la pierde. En el
    iPhone el registro no escribe, y la lista sale de lo demás. Las propias del constructor no
    entran: el constructor es una superficie de pago, y quedan guardadas y cerradas.
 
@@ -17081,10 +17712,24 @@ function pacePasoV1Rutinas(s, sesiones) {
 }
 
 
+
+function pacePasoV1Acabadas(snap) {
+  var out = {};
+  var base = snap && snap.baseline && snap.baseline.sessionsByRoutine;
+  Object.keys(base || {}).forEach(function (id) {if (base[id] > 0) out[id] = base[id];});
+  var despues = typeof window.isAfterPruneCursor === 'function' ? window.isAfterPruneCursor : function () {return true;};
+  (snap && snap.events || []).forEach(function (e) {
+    var p = e && e.payload;
+    if (!e || e.type !== 'session.completed' || !p || !p.routineId || p.completionReason !== 'natural') return;
+    if (!despues(e, snap.pruneCursor)) return;
+    out[p.routineId] = (out[p.routineId] || 0) + 1;
+  });
+  return out;
+}
+
 function pacePasoV1Sesiones() {
   var leer = function () {
-    var agg = window.paceEventsAggregates ? window.paceEventsAggregates() : null;
-    return agg && agg.sessionsByRoutine || {};
+    try {return pacePasoV1Acabadas(window.paceEventsSnapshot ? window.paceEventsSnapshot() : null);} catch (e) {return {};}
   };
   var abre = window.paceEventsInitialize ? window.paceEventsInitialize() : null;
   if (!abre || typeof abre.then !== 'function') return Promise.resolve(leer());
@@ -17192,7 +17837,7 @@ Object.assign(window, {
   PACE_PASO_V1_DIAS, pacePasoV1, pacePasoV1Leer, pacePasoV1Rutinas, pacePruebaV1Vigente, pacePruebaV1Hasta, pacePasoV1Conserva,
   pacePasoV1PorAvisar, pacePasoV1Avisado, pacePasoV1Conservar
 });
-;Object.assign(window, { PACE_PASO_V1_DIAS, _pacePasoV1, pacePasoV1Leer, pacePasoV1UsabaPace, pacePasoV1EsDePago, pacePasoV1Rutinas, pacePasoV1Sesiones, pacePasoV1Catalogo, pacePasoV1, pacePruebaV1Vigente, pacePruebaV1Hasta, pacePasoV1Conserva, pacePasoV1PorAvisar, pacePasoV1Avisado, pacePasoV1Conservar });
+;Object.assign(window, { PACE_PASO_V1_DIAS, _pacePasoV1, pacePasoV1Leer, pacePasoV1UsabaPace, pacePasoV1EsDePago, pacePasoV1Rutinas, pacePasoV1Acabadas, pacePasoV1Sesiones, pacePasoV1Catalogo, pacePasoV1, pacePruebaV1Vigente, pacePruebaV1Hasta, pacePasoV1Conserva, pacePasoV1PorAvisar, pacePasoV1Avisado, pacePasoV1Conservar });
 })();
 </script>
   <!-- El resumen del día de «A tu ritmo» (ritmo.day.closed): el primer paso del motor de
@@ -20363,6 +21008,8 @@ function SessionDone(_ref4)
   if (sigue) doneMeta = sigue.meta;
   const label = doneButtonLabel || (sigue ? sigue.cta : t('session.backToHome'));
 
+  const despues = usePaceCierreSigue(!doneButtonLabel && !sigue && !sinContar);
+
 
 
 
@@ -20370,7 +21017,8 @@ function SessionDone(_ref4)
 
   const ctaCierre = { ...displayItalic, fontWeight: 500, fontSize: 19, letterSpacing: 0,
     borderRadius: 'var(--r-pill)', padding: '0 34px', height: 50 };
-  const btn = React.createElement(Button, { variant: "secondary", onClick: () => onExit('done'), style: ctaCierre }, label);
+  const btn = despues ? React.createElement(SessionDoneSigue, { sigue: despues, onExit: onExit, estilo: ctaCierre }) :
+  React.createElement(Button, { variant: "secondary", onClick: () => onExit('done'), style: ctaCierre }, label);
   const glifo = sessionDoneGlifo(routine);
 
   return (
@@ -20905,11 +21553,12 @@ Object.assign(window, { SessionPrep, sessionPrepCopy });
     [data-pace-session-done-hero][data-pace-session-done-glifo] svg {
       width: 100% !important; height: 100% !important;
     }
-    /* La salida del cierre es tonal, como «Pausar» (Ez, 12 oct.). */
-    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button {
+    /* La salida del cierre es tonal, como «Pausar» (Ez, 12 oct.). El enlace de debajo cuando el
+       cierre dice lo que sigue (SessionDone.sigue.jsx) no: es como «Ahora no». */
+    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button:not([data-pace-cierre-otra]) {
       background: var(--paper-2) !important; color: var(--ink) !important; border: 1px solid var(--line-2) !important;
     }
-    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button:hover {
+    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button:not([data-pace-cierre-otra]):hover {
       border-color: var(--ink-3) !important;
     }
     /* En el cierre, «Salir» va también en la serif itálica, como el resto de la pantalla
@@ -21169,6 +21818,95 @@ Object.assign(window, {
   SessionFeedback, sessionFeedbackStyles
 });
 ;Object.assign(window, { SessionFeedback });
+})();
+</script>
+  <!-- El cierre dice lo que sigue cuando venía de una pausa (Ez, 2A del 10 nov.): lo pinta SessionDone. -->
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const { useState: useStateSDS, useEffect: useEffectSDS } = React;
+
+
+function paceCierreSigue() {
+  try {
+    const s = getState();
+    const p = typeof ritmoPausaCuenta === 'function' ? ritmoPausaCuenta(s) : null;
+    if (p) {
+      const ms = p.hasta - Date.now();
+      return ms > 0 ? { tipo: 'jornada', min: Math.max(1, Math.ceil(ms / 60000)), n: p.n } : null;
+    }
+    const puerta = typeof paceUltimaPuertaLeer === 'function' ? paceUltimaPuertaLeer() : null;
+    if (!puerta || puerta.origin !== 'pausa') return null;
+    if (typeof ritmoPlan === 'function' && ritmoPlan(s)) return null;
+    if (s.focusMode !== 'foco' || localStorage.getItem('pace.timer.v1')) return null;
+    return { tipo: 'libre', n: (Number(s.cycle) || 0) % 4 + 1 };
+  } catch (e) {
+    return null;
+  }
+}
+
+
+function usePaceCierreSigue(activo) {
+  const [, setVuelta] = useStateSDS(0);
+  const sigue = activo ? paceCierreSigue() : null;
+  const jornada = !!(sigue && sigue.tipo === 'jornada');
+  useEffectSDS(() => {
+    if (!jornada) return undefined;
+    const id = setInterval(() => setVuelta((x) => x + 1), 15000);
+    return () => clearInterval(id);
+  }, [jornada]);
+  return sigue;
+}
+
+
+
+function SessionDoneSigue(_ref) {let { sigue, onExit, estilo } = _ref;
+  const { t, tn } = useT();
+  const arrancar = () => {onExit('done');try {window.dispatchEvent(new CustomEvent('pace:ritmo-seguir'));} catch (e) {}};
+  const volver = () => onExit('done');
+  const libre = sigue.tipo === 'libre';
+  const cta = libre ? tn('session.sigue.ciclo', { n: sigue.n }) :
+  tn(sigue.min === 1 ? 'session.sigue.pausa.uno' : 'session.sigue.pausa', { min: sigue.min });
+  const otra = libre ? t('session.backToHome') : tn('ritmo.pausa.ya', { n: sigue.n });
+  return (
+    React.createElement("div", { "data-pace-cierre-sigue": sigue.tipo, style: sessionDoneSigueStyles.caja },
+    React.createElement(Button, { variant: "secondary", onClick: libre ? arrancar : volver, style: estilo }, cta),
+    React.createElement("button", { type: "button", "data-pace-cierre-otra": true, onClick: libre ? volver : arrancar, style: sessionDoneSigueStyles.otra }, otra)
+    ));
+
+}
+
+const sessionDoneSigueStyles = {
+  caja: { display: 'flex', flexDirection: 'column', alignItems: 'center' },
+
+  otra: {
+    ...displayItalic,
+    fontSize: 15, color: 'var(--ink-3)',
+    background: 'none', border: 'none', padding: '4px 10px', marginTop: 8,
+    textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer'
+  }
+};
+
+Object.assign(window, { paceCierreSigue, usePaceCierreSigue, SessionDoneSigue });
+;Object.assign(window, { paceCierreSigue, usePaceCierreSigue, SessionDoneSigue });
 })();
 </script>
   <script>
@@ -21716,6 +22454,12 @@ var SOUND_RECIPES = {
     if (dur === undefined) dur = 4.0;
     breathNoise(ctx, ctx.destination, 'in', t0, dur, 0.06);
   },
+
+
+  'breathe.inhale.more': function (ctx, t0, dur) {
+    if (dur === undefined) dur = 1.0;
+    breathNoise(ctx, ctx.destination, 'in', t0, dur, 0.06);
+  },
   'breathe.exhale': function (ctx, t0, dur) {
     if (dur === undefined) dur = 6.0;
     breathNoise(ctx, ctx.destination, 'out', t0, dur, 0.07);
@@ -22052,29 +22796,45 @@ var PACE_VOZ_MARGEN = 0.15;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 var PACE_VOZ_CLIPS = {
   es: {
     sulafat: {
       'breathe.inhale': { archivo: 'inhala', dur: 2.44, ini: 0.386, fin: 1.79 },
       'breathe.hold': { archivo: 'manten', dur: 2.56, ini: 0.021, fin: 1.341 },
-      'breathe.exhale': { archivo: 'exhala', dur: 4.96, ini: 0.644, fin: 2.122 }
+      'breathe.exhale': { archivo: 'exhala', dur: 4.96, ini: 0.644, fin: 2.122 },
+      'breathe.inhale.more': { archivo: 'mas', dur: 2.12, ini: 0.75, fin: 1.59, vol: 0.56, corta: true }
     },
     bradford: {
       'breathe.inhale': { archivo: 'inhala', dur: 2.64, ini: 0.001, fin: 0.912 },
       'breathe.hold': { archivo: 'manten', dur: 2.4, ini: 0.001, fin: 1.219 },
-      'breathe.exhale': { archivo: 'exhala', dur: 3.68, ini: 0.108, fin: 1.309 }
+      'breathe.exhale': { archivo: 'exhala', dur: 3.68, ini: 0.108, fin: 1.309 },
+      'breathe.inhale.more': { archivo: 'mas', dur: 0.8, ini: 0.05, fin: 0.63, vol: 0.47, corta: true }
     }
   },
   en: {
     sulafat: {
       'breathe.inhale': { archivo: 'inhale', dur: 6.88, ini: 0.29, fin: 2.26 },
       'breathe.hold': { archivo: 'hold', dur: 1.52, ini: 0.149, fin: 1.134 },
-      'breathe.exhale': { archivo: 'exhale', dur: 2.68, ini: 0.831, fin: 2.65 }
+      'breathe.exhale': { archivo: 'exhale', dur: 2.68, ini: 0.831, fin: 2.65 },
+      'breathe.inhale.more': { archivo: 'more', dur: 1.6, ini: 0.26, fin: 1.08, vol: 0.75, corta: true }
     },
     bradford: {
       'breathe.inhale': { archivo: 'inhale', dur: 0.96, ini: 0.056, fin: 0.799 },
       'breathe.hold': { archivo: 'hold', dur: 0.72, ini: 0.031, fin: 0.612 },
-      'breathe.exhale': { archivo: 'exhale', dur: 1.2, ini: 0.057, fin: 0.987 }
+      'breathe.exhale': { archivo: 'exhale', dur: 1.2, ini: 0.057, fin: 0.987 },
+      'breathe.inhale.more': { archivo: 'more', dur: 0.64, ini: 0.05, fin: 0.5, corta: true }
     }
   }
 };
@@ -22154,8 +22914,8 @@ function paceVozWebAudio(slot, desde) {
   var g = ctx.createGain();
   s.buffer = slot.buffer;
   g.gain.setValueAtTime(0, t0);
-  g.gain.linearRampToValueAtTime(1, t0 + f);
-  g.gain.setValueAtTime(1, t0 + resto - f);
+  g.gain.linearRampToValueAtTime(slot.vol, t0 + f);
+  g.gain.setValueAtTime(slot.vol, t0 + resto - f);
   g.gain.linearRampToValueAtTime(0, t0 + resto);
   s.connect(g);
   g.connect(ctx.destination);
@@ -22212,7 +22972,8 @@ function paceVozInit(voz) {
   var fichas = (PACE_VOZ_CLIPS[idioma] || {})[cual] || {};
   Object.keys(fichas).forEach(function (nombre) {
     var ficha = fichas[nombre];
-    var slot = { listo: false, ini: ficha.ini, fin: ficha.fin, palabra: ficha.fin - ficha.ini, audio: null, buffer: null, fuente: null, corte: null };
+    var slot = { listo: false, ini: ficha.ini, fin: ficha.fin, palabra: ficha.fin - ficha.ini, audio: null, buffer: null, fuente: null, corte: null,
+      vol: typeof ficha.vol === 'number' ? ficha.vol : 1, corta: !!ficha.corta };
     juego[nombre] = slot;
     var url = 'app/breathe/voz/' + cual + '-' + ficha.archivo + '.mp3';
     paceVozDescodifica(slot, url);
@@ -22252,7 +23013,8 @@ function paceVozCabe(nombre, faseSeg) {
   if (!paceVozEncendida()) return false;
   var slot = paceVozInit(paceVozActiva())[nombre];
   if (!slot || !slot.listo) return false;
-  if (typeof faseSeg !== 'number' || !isFinite(faseSeg) || faseSeg < PACE_VOZ_FASE_MIN) return false;
+
+  if (typeof faseSeg !== 'number' || !isFinite(faseSeg) || !slot.corta && faseSeg < PACE_VOZ_FASE_MIN) return false;
 
 
   return slot.palabra + PACE_VOZ_MARGEN <= faseSeg;
@@ -22279,6 +23041,7 @@ function paceVozIntenta(nombre, faseSeg, alFallar) {
     var desde = Math.max(0, slot.ini - PACE_VOZ_PREV);
     if (paceVozWebAudio(slot, desde)) return true;
     slot.audio.currentTime = desde;
+    slot.audio.volume = slot.vol;
     var pedida = Date.now();
     var p = slot.audio.play();
 
@@ -24437,6 +25200,8 @@ function maybeNotifyFocusEnd(opts) {
 
 
 
+
+
 function loadPersistedFocusTimer(focusMode, focusMinutes) {
   try {
     const raw = localStorage.getItem(PACE_TIMER_KEY);
@@ -24447,8 +25212,9 @@ function loadPersistedFocusTimer(focusMode, focusMinutes) {
     const casa = saved && saved.mode === 'foco' && focusMode === 'foco' && saved.minutes === focusMinutes;
     const id = casa && typeof saved.id === 'string' ? saved.id : null;
     if (casa && typeof saved.endsAt === 'number' && saved.endsAt - ahora <= durMs) {
-      if (saved.endsAt > ahora) return { endsAt: saved.endsAt, id };
-      if (new Date(saved.endsAt).toDateString() === hoy) return { endsAt: saved.endsAt, id, vencido: true };
+      const inicio = focoInicioGuardado(saved.inicio, saved.endsAt, durMs);
+      if (saved.endsAt > ahora) return { endsAt: saved.endsAt, id, inicio };
+      if (new Date(saved.endsAt).toDateString() === hoy) return { endsAt: saved.endsAt, id, inicio, vencido: true };
     }
     if (casa && typeof saved.pausaMs === 'number' && saved.pausaMs > 0 && saved.pausaMs <= durMs && saved.dia === hoy) {
       return { pausaMs: saved.pausaMs, id, inicio: typeof saved.inicio === 'number' ? saved.inicio : null };
@@ -24464,12 +25230,21 @@ function loadPersistedFocusTimer(focusMode, focusMinutes) {
 
 
 
+function focoInicioGuardado(inicio, endsAt, durMs) {
+  return typeof inicio === 'number' && isFinite(inicio) && inicio > 0 && inicio <= endsAt - durMs + 1000 ? inicio : null;
+}
+
+
+
+
+
 
 function persistFocusTimer(runningFoco, endsAt, minutes, id, pausaMs, inicio) {
   try {
     const base = id ? { mode: 'foco', minutes, id } : { mode: 'foco', minutes };
     if (runningFoco && endsAt) {
-      localStorage.setItem(PACE_TIMER_KEY, JSON.stringify(Object.assign({ endsAt }, base)));
+      const desde = focoInicioGuardado(inicio, endsAt, (Number(minutes) || 0) * 60 * 1000);
+      localStorage.setItem(PACE_TIMER_KEY, JSON.stringify(Object.assign({ endsAt }, desde ? { inicio: desde } : {}, base)));
     } else if (typeof pausaMs === 'number' && pausaMs > 0) {
       localStorage.setItem(PACE_TIMER_KEY, JSON.stringify(Object.assign({ pausaMs, dia: new Date().toDateString(), inicio: inicio || null }, base)));
     } else {
@@ -24709,9 +25484,9 @@ Object.assign(window, {
   curvaSuave, curvaCaida, focusStyles,
 
   getFocusDescriptorKey, maybeNotifyFocusEnd, maybeRequestNotifyPermission,
-  loadPersistedFocusTimer, persistFocusTimer, olvidarFocoGuardado
+  loadPersistedFocusTimer, persistFocusTimer, focoInicioGuardado, olvidarFocoGuardado
 });
-;Object.assign(window, { getFocusDescriptorKey, maybeRequestNotifyPermission, maybeNotifyFocusEnd, loadPersistedFocusTimer, persistFocusTimer, olvidarFocoGuardado, curvaSuave, curvaCaida, focoElapsedSec, _paceFocoEmpezado, paceFocoEmpezadoPon, paceFocoEmpezado, usePaceFocoEmpezado, _pacePausaLleva, pacePausaEmpezadaPon, pacePausaLleva });
+;Object.assign(window, { getFocusDescriptorKey, maybeRequestNotifyPermission, maybeNotifyFocusEnd, loadPersistedFocusTimer, focoInicioGuardado, persistFocusTimer, olvidarFocoGuardado, curvaSuave, curvaCaida, focoElapsedSec, _paceFocoEmpezado, paceFocoEmpezadoPon, paceFocoEmpezado, usePaceFocoEmpezado, _pacePausaLleva, pacePausaEmpezadaPon, pacePausaLleva });
 })();
 </script>
   <!-- Piezas de UI del Pomodoro (s124): MinutesPicker extraído. Declara sus
@@ -25248,8 +26023,19 @@ function paceFocoNuevoId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 }
 
+
+
+
+function paceFocoYaContado(id) {
+  var en = function (s) {
+    return !!s && (s.focoContado === id || Array.isArray(s.focoContados) && s.focoContados.indexOf(id) !== -1);
+  };
+  if (en(getState())) return true;
+  try {return en(JSON.parse(localStorage.getItem('pace.state.v2') || 'null'));} catch (e) {return false;}
+}
+
 function paceFocoContar(id, contar) {
-  var ya = function () {var s = getState();return !!(s && s.focoContado === id);};
+  var ya = function () {return paceFocoYaContado(id);};
   if (ya()) return;
   var locks = typeof navigator !== 'undefined' ? navigator.locks : null;
   if (!locks || typeof locks.request !== 'function') {contar();return;}
@@ -25336,7 +26122,8 @@ function useFocoPestanas(o) {
       if (m.minutos !== u.minutos) {pendienteRef.current = m;return;}
       pendienteRef.current = null;
       u.bloqueRef.current = m.id;
-      u.inicioRef.current = m.endsAt - u.minutos * 60 * 1000;
+
+      u.inicioRef.current = focoInicioGuardado(m.inicio, m.endsAt, u.minutos * 60 * 1000) || m.endsAt - u.minutos * 60 * 1000;
       u.seguir(m.endsAt);
     } else if (m.id && m.id === u.bloqueRef.current) {
       if (m.tipo === 'pausa') u.congelar(m.restanteMs);else
@@ -25364,9 +26151,9 @@ function useFocoPestanas(o) {
   };
 }
 
-Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoContar, useFocoPestanas,
+Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoYaContado, paceFocoContar, useFocoPestanas,
   paceFocoPausaPendiente, usePausaALaVista });
-;Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoContar, paceFocoPausaPendiente, usePausaALaVista, useFocoPestanas });
+;Object.assign(window, { PACE_FOCO_CANAL, PACE_FOCO_CANDADO_MS, paceFocoNuevoId, paceFocoYaContado, paceFocoContar, paceFocoPausaPendiente, usePausaALaVista, useFocoPestanas });
 })();
 </script>
 
@@ -27248,8 +28035,11 @@ function SidebarLatestAchievement(_ref7) {let { ultimo, onOpen } = _ref7;
 
 
 
-function SidebarFooter(_ref8) {let { onSupport, onMisRutinas } = _ref8;
+function SidebarFooter(_ref8) {let { onSupport, onMisRutinas, onLunes } = _ref8;
   const { t } = useT();
+  const [stPie] = usePace();
+
+  const lunes = typeof paceLunesToca === 'function' && paceLunesToca(stPie) && esCajon();
   const apoyo = typeof paceApoyoVisible !== 'function' || paceApoyoVisible();
   return (
     React.createElement("div", { style: sidebarStyles.footer, "data-pace-sidebar-pie": true },
@@ -27258,6 +28048,13 @@ function SidebarFooter(_ref8) {let { onSupport, onMisRutinas } = _ref8;
     typeof PremiumSeal === 'function' ? React.createElement(PremiumSeal, { style: sidebarStyles.pieSello }) : null,
     React.createElement("span", { "aria-hidden": "true", style: sidebarStyles.pieChev }, "\u203A")
     ),
+    lunes ?
+    React.createElement("button", { style: sidebarStyles.pieFila, onClick: onLunes, "data-pace-lunes-fila": true },
+    React.createElement("span", null, t('lunes.titulo')),
+    typeof PremiumSeal === 'function' ? React.createElement(PremiumSeal, { style: sidebarStyles.pieSello }) : null,
+    React.createElement("span", { "aria-hidden": "true", style: sidebarStyles.pieChev }, "\u203A")
+    ) :
+    null,
     apoyo ?
     React.createElement("button", { style: { ...sidebarStyles.pieFila, ...sidebarStyles.pieApoyo }, onClick: onSupport, title: t('support.sidebar.title') },
     React.createElement("span", null, t('support.sidebar.label')),
@@ -27570,6 +28367,7 @@ function Sidebar() {
 
     React.createElement(SidebarFooter, {
       onMisRutinas: () => emitir('custom'),
+      onLunes: () => {if (esCajon()) set({ sidebarCollapsed: true });paceLunesAbrir(t);},
       onSupport: () => window.dispatchEvent(new CustomEvent('pace:open-support')) }
     )
     )
@@ -30790,7 +31588,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
       try {
-        onFinish && onFinish(inicio, finBloque);
+        onFinish && onFinish(inicio, finBloque, minutos);
       } finally {
 
         try {bloques.marcar(typeof bloquesTerminado === 'function' && bloquesTerminado(minutos));} catch (e) {}
@@ -30828,9 +31626,8 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
 
-
     if (g && g.endsAt) {
-      inicioBloqueRef.current = g.endsAt - durationSec * 1000;
+      inicioBloqueRef.current = g.inicio || g.endsAt - durationSec * 1000;
       bloqueRef.current = g.id || 'e' + g.endsAt;
       restore(g.endsAt);
     } else if (g && g.pausaMs) {
@@ -30855,7 +31652,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   useEffectFT(() => {
     if (!avisarCorreRef.current || !running || !endsAt) return;
     avisarCorreRef.current = false;
-    if (state.focusMode === 'foco') avisarPestanas({ tipo: 'corre', id: bloqueRef.current, endsAt });
+    if (state.focusMode === 'foco') avisarPestanas({ tipo: 'corre', id: bloqueRef.current, endsAt, inicio: inicioBloqueRef.current });
   }, [running, endsAt]);
 
   const completadoRef = useRefFT(null);
@@ -32406,7 +33203,11 @@ function playPhaseSound(phaseLabel, phaseDur) {
 
 
   const musica = (tipo) => {try {if (window.paceMusica) window.paceMusica.fase(tipo, phaseDur, phaseLabel);} catch (e) {}};
-  if (phaseLabel === 'Inhala' || phaseLabel === 'Inhala más' ||
+
+  if (phaseLabel === 'Inhala más') {
+    try {playSound('breathe.inhale.more', phaseDur);} catch (e) {}
+    musica('in');
+  } else if (phaseLabel === 'Inhala' ||
   phaseLabel === 'Inhala oceánica' || phaseLabel === 'Inhala izq.' ||
   phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira' ||
   phaseLabel === 'Inhala al vientre') {
@@ -38888,6 +39689,7 @@ const ACHIEVEMENT_CATALOG = [
 
 
 
+
 { id: 'master.dawn', cat: 'jornada', title: 'Amanecer', desc: 'Cinco días con sesión antes de las 7am', glyph: '↑', glyphSvg: GLYPH_SVG['master.dawn'] },
 { id: 'morning.5', cat: 'jornada', title: 'Madrugadora', desc: '5 sesiones antes de las 9am', glyph: '☀' },
 
@@ -38896,7 +39698,7 @@ const ACHIEVEMENT_CATALOG = [
 
 
 { id: 'stats.streak.30', cat: 'jornada', title: 'Treinta amaneceres', desc: 'Treinta días con sesión antes de las 9', glyph: '✦' },
-{ id: 'master.dusk', cat: 'jornada', title: 'Ocaso', desc: 'Cinco días con sesión después de las 21h', glyph: '↓', glyphSvg: GLYPH_SVG['master.dusk'] },
+{ id: 'master.dusk', cat: 'jornada', title: 'Ocaso', desc: 'Cinco jornadas cerradas a su hora', glyph: '↓', glyphSvg: GLYPH_SVG['master.dusk'] },
 { id: 'master.midnight.never', cat: 'jornada', title: 'Nunca a medianoche', desc: '30 días sin uso tras 23h', glyph: '○' },
 { id: 'master.pomodoro.8', cat: 'jornada', title: 'Jornada de ocho', desc: '8 Pomodoros en un día', glyph: 'VIII', glyphSvg: GLYPH_SVG['master.pomodoro.8'] },
 { id: 'master.focus.day', cat: 'jornada', title: 'Día de foco', desc: '4h de foco en un día', glyph: 'IV', glyphSvg: GLYPH_SVG['master.focus.day'] },
@@ -38905,7 +39707,7 @@ const ACHIEVEMENT_CATALOG = [
 
 
 { id: 'secret.cow.click', cat: 'secretos', title: 'Vaca feliz', desc: '¿Le hiciste cosquillas?', glyph: '?', glyphSvg: GLYPH_SVG['secret.cow.click'], secret: true },
-{ id: 'secret.night.owl', cat: 'secretos', title: 'Búho', desc: 'Usa la app entre 2 y 4am', glyph: '?', secret: true },
+{ id: 'secret.night.owl', cat: 'secretos', title: 'Búho', desc: 'Contestaste «¿Te ayudó?» 25 veces', glyph: '?', secret: true },
 { id: 'secret.lunch', cat: 'secretos', title: 'Pausa de mediodía', desc: 'Sesión a las 14:00', glyph: '?', secret: true },
 { id: 'secret.rain', cat: 'secretos', title: 'Lluvia mental', desc: '3 respiraciones seguidas', glyph: '?', secret: true },
 { id: 'secret.first.monday', cat: 'secretos', title: 'Primer lunes', desc: 'Primer lunes del mes', glyph: '?', secret: true },
@@ -39584,6 +40386,13 @@ Object.assign(window, { statsNumero, fmtTime, StatsLineaTotales, StatsTotales, s
 
 
 
+
+
+
+
+
+
+
 const STATS_HOY_MODULO = { breathe: 'respira', move: 'mueve', stretch: 'estira' };
 
 
@@ -39594,8 +40403,10 @@ function statsHoyParadas(plan) {
   m.items.forEach((it, i) => {
     if (it.tipo === 'comida') {out.push({ it, comida: true });return;}
     if (!(it.tipo === 'pausa' || it.tipo === 'cierre') || !it.platos || !it.platos.length) return;
-    const marca = (plan.estados || {})[ritmoOrdinal(m, it)] || null;
-    out.push({ it, estado: i === iActual ? 'ahora' : i < iActual ? marca || 'pasada' : null });
+    const n = ritmoOrdinal(m, it);
+    const marca = (plan.estados || {})[n] || null;
+
+    out.push({ it, n, marca, estado: i === iActual ? 'ahora' : i < iActual ? marca || 'pasada' : null });
   });
   return out;
 }
@@ -39605,22 +40416,36 @@ function statsHoyParadas(plan) {
 
 
 function statsHoySesiones() {
-  let ev = [];
-  try {
-    const snap = window.paceEventsSnapshot && window.paceEventsSnapshot();
-    ev = snap && Array.isArray(snap.events) ? snap.events : [];
-  } catch (e) {ev = [];}
-  const hoy = typeof todayISO === 'function' ? todayISO() : '';
-  return ev.filter((e) => e && e.type === 'session.completed' && e.localDay === hoy && e.payload && STATS_HOY_MODULO[e.payload.module]).
+  return ritmoSesionesHoy().
   map((e) => {
     const f = new Date(e.occurredAt);
     const rutina = window.resolveAnyRoutine && window.resolveAnyRoutine(e.payload.routineId) || { id: e.payload.routineId, name: e.payload.routineId };
     return { modulo: STATS_HOY_MODULO[e.payload.module], rutina, desde: f.getHours() * 60 + f.getMinutes(),
-      min: sessionCreditedMinutes(e), cuando: f.getTime() };
+      min: sessionCreditedMinutes(e), cuando: f.getTime(), runId: e.runId || null };
   }).
 
 
   sort((a, b) => a.cuando - b.cuando);
+}
+
+
+function statsHoySueltas(state) {
+  const por = (ritmoDe(state).dia || {}).sesiones || {};
+  const suyas = new Set();
+  Object.keys(por).forEach((n) => (Array.isArray(por[n]) ? por[n] : []).forEach((id) => suyas.add(id)));
+  return statsHoySesiones().filter((s) => !s.runId || !suyas.has(s.runId));
+}
+
+
+function StatsHoySesiones(_ref) {let { sesiones, t, lang } = _ref;
+  return (
+    React.createElement(StatsHoyRejilla, { n: sesiones.length },
+    sesiones.map((s, k) =>
+    React.createElement(StatsHoyTarjeta, { key: k, modulos: [s.modulo], nombre: ritmoNombre(s.rutina, t, lang),
+      hora: ritmoHora(s.desde), meta: s.min + ' min', estado: "hecha" })
+    )
+    ));
+
 }
 
 
@@ -39633,7 +40458,7 @@ function statsHoyTotales(state, t) {
 
 
 
-function StatsHoyTarjeta(_ref) {let { modulos, nombre, hora, meta, estado, larga } = _ref;
+function StatsHoyTarjeta(_ref2) {let { modulos, nombre, hora, meta, estado, larga } = _ref2;
   return (
     React.createElement("div", { className: 'pace-sh-t' + (estado ? ' pace-sh-' + estado : ''), "data-pace-hoy-parada": estado || 'luego',
       style: { '--c': RITMO_COLOR[modulos[0]], '--cd': letraDe(RITMO_COLOR[modulos[0]]) } },
@@ -39648,28 +40473,33 @@ function StatsHoyTarjeta(_ref) {let { modulos, nombre, hora, meta, estado, larga
 
 }
 
-function statsHoyMeta(p, t) {
-  const { it, estado } = p;
+
+
+function statsHoyMeta(p, t, hechas) {
+  const { it } = p;
+  const estado = p.estado === 'ahora' && (p.marca === 'hecha' || p.marca === 'cuenta') ? p.marca : p.estado;
   if (p.comida) return ritmoDuracion(it.dur);
-  if (estado === 'hecha') return t('ritmo.hecha') + ' · ' + it.dur + ' min';
+  if (estado === 'hecha') return ritmoMetaHecha((hechas || {})[p.n], t);
   if (estado === 'saltada') return t('ritmo.saltada');
   if (estado === 'cuenta') return t('ritmo.cuenta');
   if (estado === 'ahora') return t('ritmo.ahora.min');
   return it.dur + ' min';
 }
 
-function StatsHoyRejilla(_ref2) {let { n, children } = _ref2;
+function StatsHoyRejilla(_ref3) {let { n, children } = _ref3;
   const clase = 'pace-sh-rejilla' + (n > 10 ? ' pace-sh-mucho' : '') + (n > 15 ? ' pace-sh-muchisimo' : '');
   return React.createElement("div", { className: clase, "data-pace-hoy-rejilla": n }, children);
 }
 
-function StatsHoy(_ref3) {let { state, onClose } = _ref3;
+function StatsHoy(_ref4) {let { state, onClose } = _ref4;
   const { t, lang } = useT();
   const R = ritmoDe(state);
   const plan = R.libre ? null : ritmoPlan(state);
 
   if (plan) {
     const paradas = statsHoyParadas(plan);
+    const hechas = ritmoMinutosHechos(state);
+    const sueltas = statsHoySueltas(state);
     return (
       React.createElement("div", { "data-pace-hoy-view": "menu" },
       React.createElement(StatsTotales, { items: statsHoyTotales(state, t) }),
@@ -39681,9 +40511,15 @@ function StatsHoy(_ref3) {let { state, onClose } = _ref3;
         const modulos = p.comida ? ['comida'] : p.it.platos.map((x) => x.modulo);
         return React.createElement(StatsHoyTarjeta, { key: k, modulos: modulos, larga: p.it.larga,
           nombre: p.comida ? t('ritmo.comida') : ritmoPlatos(p.it, t, lang), hora: ritmoHora(p.it.desde),
-          meta: statsHoyMeta(p, t), estado: p.comida ? 'comida' : p.estado });
+          meta: statsHoyMeta(p, t, hechas), estado: p.comida ? 'comida' : p.estado });
       })
-      )
+      ),
+      sueltas.length ?
+      React.createElement("div", { "data-pace-hoy-sueltas": sueltas.length },
+      React.createElement("div", { className: "pace-sh-cab pace-sh-suelta" }, React.createElement(Meta, null, t('stats.hoy.suelta'))),
+      React.createElement(StatsHoySesiones, { sesiones: sueltas, t: t, lang: lang })
+      ) :
+      null
       ));
 
   }
@@ -39699,20 +40535,13 @@ function StatsHoy(_ref3) {let { state, onClose } = _ref3;
     React.createElement(Meta, null, t('stats.hoy.libre')),
     React.createElement("button", { type: "button", className: "pace-rt-enlace pace-rt-fuerte", "data-pace-hoy-volver": true, onClick: volver }, t('ritmo.volver'))
     ),
-    sesiones.length ?
-    React.createElement(StatsHoyRejilla, { n: sesiones.length },
-    sesiones.map((s, k) =>
-    React.createElement(StatsHoyTarjeta, { key: k, modulos: [s.modulo], nombre: ritmoNombre(s.rutina, t, lang),
-      hora: ritmoHora(s.desde), meta: s.min + ' min', estado: "hecha" })
-    )
-    ) :
-    React.createElement("p", { className: "pace-sh-vacio", "data-pace-hoy-vacio": true }, t('stats.hoy.vacio'))
+    sesiones.length ? React.createElement(StatsHoySesiones, { sesiones: sesiones, t: t, lang: lang }) : React.createElement("p", { className: "pace-sh-vacio", "data-pace-hoy-vacio": true }, t('stats.hoy.vacio'))
     ));
 
 }
 
-Object.assign(window, { StatsHoy, statsHoyParadas, statsHoySesiones, statsHoyTotales });
-;Object.assign(window, { statsHoyParadas, statsHoySesiones, statsHoyTotales, StatsHoyTarjeta, statsHoyMeta, StatsHoyRejilla, StatsHoy });
+Object.assign(window, { StatsHoy, statsHoyParadas, statsHoySesiones, statsHoySueltas, statsHoyTotales });
+;Object.assign(window, { statsHoyParadas, statsHoySesiones, statsHoySueltas, StatsHoySesiones, statsHoyTotales, StatsHoyTarjeta, statsHoyMeta, StatsHoyRejilla, StatsHoy });
 })();
 </script>
   <script>
@@ -40889,6 +41718,7 @@ Object.assign(window, { PathStats });
        pasa a dos columnas y el escritorio a una línea por nombre; con más de quince, a seis
        por fila: una jornada de 5:00 a 23:30 cabe sin scroll en el escritorio. */
     .pace-sh-cab { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 0 2px 8px; }
+    .pace-sh-cab.pace-sh-suelta { margin-top: 18px; }   /* «Además, por tu cuenta» (6A), aparte del plan */
     .pace-sh-rejilla { display: grid; grid-template-columns: minmax(0, 1fr); }
     .pace-sh-t { display: flex; gap: 10px; align-items: center; padding: 3px 2px; min-width: 0; min-height: 28px;
       border-bottom: 1px solid var(--paper-3); }
@@ -41864,6 +42694,7 @@ Object.assign(window, { TweaksDataSection, paceDescargarCopia, paceDescargarResc
 
 
 
+
 function premiumFechaTexto(datos, lang) {
   const fin = typeof datos.expiresAt === 'number' ? new Date(datos.expiresAt) :
   typeof datos.expiresAt === 'string' && typeof parseLocalDateKey === 'function' ? parseLocalDateKey(datos.expiresAt) : null;
@@ -41873,6 +42704,21 @@ function premiumFechaTexto(datos, lang) {
 
 
 
+
+
+
+
+
+
+
+function premiumPlanEnAjustes(lang) {
+  if (!(window.paceLicenciaPermitida && window.paceLicenciaPermitida())) return null;
+  const est = window.paceLicenciaEstado ? window.paceLicenciaEstado() : { estado: 'ninguno' };
+  if (est.estado === 'vigente' || est.estado === 'caducado') return null;
+  if (window.pacePruebaV1Hasta && window.pacePruebaV1Hasta()) return null;
+  if (!(window.paceTiendaAbierta && window.paceTiendaAbierta())) return null;
+  return (window.paceTiendaPlanes(lang) || []).find((p) => p.plan === 'vida') || null;
+}
 
 function PremiumSection() {
   const { t, tn, lang } = useT();
@@ -41942,6 +42788,20 @@ function PremiumSection() {
       ));
 
   }
+  const vida = premiumPlanEnAjustes(lang);
+  if (vida) {
+    return (
+      React.createElement(React.Fragment, null,
+      React.createElement(AjustesAccion, { suave: true, onClick: () => paceAbrirPremium({}),
+        derecha: React.createElement("span", { "data-pace-aj-comprar": vida.plan }, vida.precio) },
+      t('premium.settings.vida')
+      ),
+      React.createElement(AjustesAccion, { suave: true, onClick: () => paceAbrirPremium({ modo: 'codigo' }), derecha: t('premium.settings.enter') },
+      t('premium.code.have')
+      )
+      ));
+
+  }
   if (permitida) {
     return (
       React.createElement(AjustesAccion, { suave: true, onClick: () => paceAbrirPremium({ modo: 'codigo' }), derecha: t('premium.settings.enter') },
@@ -41956,8 +42816,8 @@ function PremiumSection() {
 
 }
 
-Object.assign(window, { PremiumSection });
-;Object.assign(window, { premiumFechaTexto, PremiumSection });
+Object.assign(window, { PremiumSection, premiumPlanEnAjustes });
+;Object.assign(window, { premiumFechaTexto, premiumPlanEnAjustes, PremiumSection });
 })();
 </script>
   <!-- TweaksPanel.support (s163): estilo SIN UI del panel -- `tweaksStyles`, la
@@ -42655,10 +43515,13 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
   useEffectTW(() => {if (!open) {setVistaDatos(false);setPidiendoBorrar(null);}}, [open]);
 
 
-  const [bajo, setBajo] = useStateTW(() => paceLienzoAlto() < 860);
+
+
+  const umbralBajo = () => 860 + (typeof premiumPlanEnAjustes === 'function' && premiumPlanEnAjustes() ? 34 : 0);
+  const [bajo, setBajo] = useStateTW(() => paceLienzoAlto() < umbralBajo());
   useEffectTW(() => {
     if (!open) return undefined;
-    const mirar = () => setBajo(paceLienzoAlto() < 860);
+    const mirar = () => setBajo(paceLienzoAlto() < umbralBajo());
     mirar();
     window.addEventListener('resize', mirar);
     return () => window.removeEventListener('resize', mirar);
@@ -46790,6 +47653,9 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
 .pace-rt-der-col .pace-rt-sobre { order: 2; }
 .pace-rt-sobre { display: flex; align-items: center; justify-content: flex-end; gap: 14px; }
 .pace-rt-sobre .pace-rt-meta { font-size: 9px; letter-spacing: 0.14em; }
+/* La línea de los lunes (ritmo.lunes.jsx): bajo el resumen y sin ancho propio, o el título se encoge (DECISIONES, 11 nov.). */
+.pace-rt-sobre:has(.pace-rt-lunes) { flex-wrap: wrap; row-gap: 2px; }
+.pace-rt-lunes { flex-basis: 100%; contain: inline-size; text-align: right; background: none; border: 0; padding: 0; margin: 0 0 0 -14px; font-family: var(--font-display); font-style: italic; font-size: 15px; color: var(--ink-2); cursor: pointer; white-space: nowrap; } .pace-rt-lunes:hover { color: var(--ink); }
 @container (min-width: 1000px) {
   .pace-rt-der-col { flex-direction: row; align-items: center; gap: 14px; }
   .pace-rt-der-col .pace-rt-sobre { order: 0; }
@@ -46842,7 +47708,10 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
   .pace-rt-sel option:hover, .pace-rt-sel option:focus-visible { background: var(--paper-3); outline: none; }
   .pace-rt-sel option:checked { background: var(--focus-soft); color: var(--ink); }
 }
-.pace-rt-frase { margin-top: 3px; }
+/* La frase se reparte en líneas parecidas (Ez, 1A de la caza de los seis anchos, 9 nov. 2026): a 360 px
+   en castellano partía antes de la comida y dejaba «1 h» sola debajo. «balance» no añade líneas, así que
+   la tarjeta no crece. */
+.pace-rt-frase { margin-top: 3px; text-wrap: balance; }
 
 /* GLIFOS: los de Actividades, en el color de su módulo. SUSTITUYEN al punto. */
 .pace-rt-g { display: inline-grid; place-items: center; color: var(--c); line-height: 0; flex-shrink: 0; }
@@ -47543,7 +48412,7 @@ Object.assign(window, {
 
 const { useRef: useRefRL, useLayoutEffect: useLayoutEffectRL, useState: useStateRL, useEffect: useEffectRL, useCallback: useCallbackRL } = React;
 
-function RitmoEtiqueta(_ref) {let { it, final, t, tn, lang, estado } = _ref;
+function RitmoEtiqueta(_ref) {let { it, final, t, tn, lang, estado, min } = _ref;
   let nombre, meta;
   if (it.tipo === 'comida') {
     nombre = t('ritmo.comida');
@@ -47553,7 +48422,7 @@ function RitmoEtiqueta(_ref) {let { it, final, t, tn, lang, estado } = _ref;
     nombre = it.larga ? it.platos.map((p, i) =>
     React.createElement(React.Fragment, { key: p.id }, i ? React.createElement("br", null) : null, i ? '+ ' : '', ritmoNombre(p.rutina, t, lang))
     ) : ritmoPlatos(it, t, lang);
-    meta = estado === 'hecha' ? t('ritmo.hecha') + ' · ' + it.dur + ' min' : t('ritmo.' + (estado === 'cuenta' ? 'cuenta' : 'saltada'));
+    meta = estado === 'hecha' ? ritmoMetaHecha(min, t) : t('ritmo.' + (estado === 'cuenta' ? 'cuenta' : 'saltada'));
   } else if (it.larga) {
     nombre = it.platos.map((p, i) =>
     React.createElement(React.Fragment, { key: p.id }, i ? React.createElement("br", null) : null, i ? '+ ' : '', ritmoNombre(p.rutina, t, lang))
@@ -47701,6 +48570,7 @@ function RitmoLinea(_ref3) {let { plan } = _ref3;
   const m = plan.m;
   const iActual = ritmoIndiceAhora(plan);
   const ultimo = m.items.length - 1;
+  const hechas = ritmoMinutosHechos();
 
   const fichaVale = ficha && ficha.i > iActual && m.items[ficha.i] && m.items[ficha.i].platos && m.items[ficha.i].platos.length;
   const fichaRef = useRefRL(null);
@@ -47775,7 +48645,7 @@ function RitmoLinea(_ref3) {let { plan } = _ref3;
           onClick: () => abierta ? ritmoEmpezarParada(it) : setFicha((f) => f && f.i === i ? null : { i, antes: null }) },
         abierta ? React.createElement("span", { className: "pace-rt-ahora-tag" }, t('ritmo.ahora')) : null,
         it.platos.map((p) => React.createElement(RitmoGlifo, { key: p.id, modulo: p.modulo })),
-        React.createElement(RitmoEtiqueta, { it: it, final: i === ultimo, t: t, tn: tn, lang: lang, estado: estado })
+        React.createElement(RitmoEtiqueta, { it: it, final: i === ultimo, t: t, tn: tn, lang: lang, estado: estado, min: hechas[ritmoOrdinal(m, it)] })
         ));
 
     }),
@@ -47867,7 +48737,8 @@ function RitmoSobre(_ref2) {let { m } = _ref2;
     React.createElement("div", { className: "pace-rt-sobre", "data-pace-ritmo-resumen": true },
     React.createElement("span", { className: "pace-rt-meta" }, ritmoResumen(m, tn, ritmoMetaVasos(st))),
     React.createElement("button", { className: "pace-rt-enlace", onClick: ritmoPreguntar }, t('ritmo.cambiar')),
-    React.createElement(RitmoAlCalendario, null)
+    React.createElement(RitmoAlCalendario, null),
+    typeof RitmoLunes === 'function' ? React.createElement(RitmoLunes, null) : null
     ));
 
 }
@@ -48190,6 +49061,7 @@ function RitmoLista(_ref) {let { plan } = _ref;
   const { t, tn, lang } = useT();
   const m = plan.m;
   const iActual = ritmoIndiceAhora(plan);
+  const hechas = ritmoMinutosHechos();
   return (
     React.createElement("div", { className: "pace-rt-lista", "data-pace-ritmo-lista": true },
     m.items.map((it, i) => {
@@ -48220,7 +49092,7 @@ function RitmoLista(_ref) {let { plan } = _ref;
 
       const estado = !comida && pasado ? (plan.estados || {})[ritmoOrdinal(m, it)] || null : null;
       const meta = comida ? tn('ritmo.comida.lista', { d: ritmoDuracion(it.dur) }) :
-      estado ? estado === 'hecha' ? t('ritmo.hecha') + ' · ' + it.dur + ' min' : t('ritmo.' + (estado === 'cuenta' ? 'cuenta' : 'saltada')) :
+      estado ? estado === 'hecha' ? ritmoMetaHecha(hechas[ritmoOrdinal(m, it)], t) : t('ritmo.' + (estado === 'cuenta' ? 'cuenta' : 'saltada')) :
       ritmoMetaPlato(it, t, tn);
       return (
         React.createElement("div", { key: i, className: 'pace-rt-li pace-rt-plato' + (pasado && estado !== 'hecha' && estado !== 'cuenta' ? ' pace-rt-pasado' : '') + (estado ? ' pace-rt-' + estado : ''),
@@ -49196,6 +50068,75 @@ function RitmoAprendido(_ref5) {let { state } = _ref5;
 
 Object.assign(window, { ritmoCartaStyles, RitmoCartaLeida, RitmoCartaVentana, ritmoCartaAbrir, RitmoCartaRaiz, RitmoAprendido });
 ;Object.assign(window, { ritmoCartaNumero, ritmoCartaRutina, ritmoCartaDiasPlural, ritmoCartaFecha, ritmoCartaFechas, RitmoCartaCambio, ritmoCartaPreguntaTexto, RitmoCartaPie, RitmoCartaLeida, RitmoCartaVentana, ritmoCartaAbrir, RitmoCartaRaiz, ritmoAprendidoTexto, RitmoAprendido });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   LA LÍNEA DE LOS LUNES (Ez: 3A de la auditoría del 10 nov.; el móvil, el 11 nov.: «Linea 2 en el
+   sobre + 3 en la side bar»)
+   ============================================================
+   Los lunes, que es cuando llegaría la carta, quien no tiene PACE completo ve dónde estaría:
+   «Los lunes, PACE completo te escribe tu semana ›», y tocarla abre la invitación. Solo los lunes:
+   todos los días sería pedir la compra cada vez que se abre la app.
+
+   DÓNDE: en el ordenador, en la fila del resumen del día (`RitmoSobre`, RitmoPanel.jsx). En el
+   móvil la home no tiene sitio (se pasaba 2 px a 360×740), y va en DOS sitios a la vez: en el
+   sobre de arriba, donde llegaría la carta (cerrado hasta que se abre ese lunes), y en una fila
+   del cajón bajo «Tus rutinas» (`SidebarFooter`). El sobre y la fila no salen en el ordenador.
+
+   QUIÉN: desde v1, sin PACE completo y sin la semana de prueba (`puedeAprender()`, la misma
+   puerta que la carta), y con la bienvenida acabada. Antes de v1 todo está abierto y no sale.
+   ============================================================ */
+
+
+function paceLunesToca(s) {
+  try {
+    if (window.PREMIUM_ABIERTO_HASTA_V1 === true) return false;
+    if (typeof puedeAprender !== 'function' || puedeAprender()) return false;
+    if (!s || s.firstSeen == null) return false;
+    return new Date().getDay() === 1;
+  } catch (e) {
+    return false;
+  }
+}
+
+function paceLunesAbrir(t) {
+  try {paceAbrirPremium({ nombre: t('lunes.titulo') });} catch (e) {}
+}
+
+
+if (typeof paceSobreApuntar === 'function') {
+  paceSobreApuntar({ clave: 'lunes', de: (s, t, tn, lang) => {
+      if (!paceLunesToca(s) || !(typeof paceEsMovil === 'function' && paceEsMovil())) return null;
+      const hoy = typeof todayISO === 'function' ? todayISO() : '';
+      return {
+        sinLeer: s.lunesVisto !== hoy, titulo: t('lunes.titulo'), fecha: hoy, tipo: t('premium.name'),
+        cuando: paceFechaCorta(hoy, lang, { weekday: 'long', day: 'numeric', month: 'short' }),
+        tituloHoja: t('lunes.titulo'), lineas: [t('lunes.sobre')],
+        leer: () => {if (getState().lunesVisto !== hoy) setState({ lunesVisto: hoy });},
+        abrir: () => paceLunesAbrir(t), enlace: t('lunes.ver')
+      };
+    } });
+}
+
+
+function RitmoLunes() {
+  const { t } = useT();
+  const [st] = usePace();
+  if (!paceLunesToca(st)) return null;
+  return (
+    React.createElement("button", { type: "button", className: "pace-rt-lunes", "data-pace-lunes-linea": true, onClick: () => paceLunesAbrir(t) },
+    t('lunes.linea'), " ", React.createElement("span", { "aria-hidden": "true" }, "\u203A")
+    ));
+
+}
+
+Object.assign(window, { paceLunesToca, paceLunesAbrir, RitmoLunes });
+;Object.assign(window, { paceLunesToca, paceLunesAbrir, RitmoLunes });
 })();
 </script>
   <script>
@@ -51714,14 +52655,15 @@ function PaceApp() {
     setPreviewRoutine({ routine, kind: esPropia ? 'move' : 'extra' });
   };
 
-  const handleFocusFinish = (inicio, fin) => {
+  const handleFocusFinish = (inicio, fin, minutos) => {
 
 
 
 
 
 
-    if (typeof ritmoBloqueTerminado === 'function') ritmoBloqueTerminado(inicio, fin);
+
+    if (typeof ritmoBloqueTerminado === 'function') ritmoBloqueTerminado(inicio, fin, minutos);
   };
 
 
@@ -52012,6 +52954,79 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
+   EL ARO CON EL HORARIO ABIERTO (Ez, 11 nov. 2026: la A de docs/proposals/aro-horario-10nov).
+
+   Con «¿Cuánto trabajas hoy?» abierto en escritorio, el panel del horario hace de horizonte y
+   no lleva rótulo encima: con el solape de las actividades (16 % de D) su canto subía hasta
+   dejar ver el 82 % del aro, y el aro crecía al abrirlo (447 → 487 px a 1920×860). Ez: «queda
+   raro». Con las actividades y con la rutina elegida se ve el 89-90 %, y esos dos le gustan.
+
+   Lo que pide la A, y lo que este archivo le da al motor (home-geometry.js):
+     · el canto del panel corta el aro donde lo cortan las actividades, a 0,925 D desde
+       arriba: solape = 7,5 % de D más la banda de padding que hay encima del canto;
+     · el aro tiene el tamaño que tenía con las actividades, así que abrir el horario no lo
+       mueve. Ese tamaño solo se puede MEDIR con las actividades en pantalla, y la pregunta
+       abierta se guarda para todo el día: al recargar, la app abre ya con el horario. Por
+       eso se recuerda por ventana e idioma, en `pace.aro.carta.v1` (prefijo `pace.`, así
+       que «Borrar todo» se lo lleva). Sin recuerdo (una ventana que nunca vio las
+       actividades), el motor toma el mayor aro que cabe con ese mismo corte: unos píxeles
+       más pequeño, nunca cortado ni con scroll.
+   Solo lee y guarda números: no sabe de React ni del estado de la app. */
+
+var PACE_ARO_CANTO_HORARIO = 0.075;
+var PACE_ARO_CARTA_CLAVE = 'pace.aro.carta.v1';
+var PACE_ARO_CARTA_MAX = 24;
+var paceAroCartaMemo = null;
+
+
+
+function paceAroHorarioAbierto() {
+  var p = document.querySelector('.pace-rt-esc[data-pace-ritmo-estado="pregunta"]');
+  return !!(p && p.getClientRects().length);
+}
+
+function paceAroCartaVisible() {
+  var t = document.querySelector('[data-pace-ritmo-tarjeta]');
+  return !!(t && t.getClientRects().length && document.querySelector('[data-pace-activitybar-chip]'));
+}
+
+function paceAroCartaClave(body) {
+  return body.clientWidth + 'x' + body.clientHeight + '|' + (document.documentElement.lang || '');
+}
+function paceAroCartaLeer() {
+  if (paceAroCartaMemo) return paceAroCartaMemo;
+  try {paceAroCartaMemo = JSON.parse(localStorage.getItem(PACE_ARO_CARTA_CLAVE) || '{}') || {};} catch (e) {paceAroCartaMemo = {};}
+  if (typeof paceAroCartaMemo !== 'object' || Array.isArray(paceAroCartaMemo)) paceAroCartaMemo = {};
+  return paceAroCartaMemo;
+}
+function paceAroCartaRecordado(clave) {
+  var d = paceAroCartaLeer()[clave];
+  return typeof d === 'number' && d > 0 ? d : null;
+}
+
+function paceAroCartaRecordar(clave, D) {
+  var m = paceAroCartaLeer();
+  if (m[clave] === D) return;
+  delete m[clave];
+  m[clave] = D;
+  var claves = Object.keys(m);
+  for (var i = 0; i < claves.length - PACE_ARO_CARTA_MAX; i++) delete m[claves[i]];
+  try {localStorage.setItem(PACE_ARO_CARTA_CLAVE, JSON.stringify(m));} catch (e) {}
+}
+
+Object.assign(window, {
+  PACE_ARO_CANTO_HORARIO, paceAroHorarioAbierto, paceAroCartaVisible, paceAroCartaClave,
+  paceAroCartaRecordado, paceAroCartaRecordar
+});
+;Object.assign(window, { PACE_ARO_CANTO_HORARIO, PACE_ARO_CARTA_CLAVE, PACE_ARO_CARTA_MAX, paceAroCartaMemo, paceAroHorarioAbierto, paceAroCartaVisible, paceAroCartaClave, paceAroCartaLeer, paceAroCartaRecordado, paceAroCartaRecordar });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
    Ayudante de geometría de la HOME DESKTOP (s126).
 
    OBJETIVO. Reproducir la composición de la captura de referencia (v0.64 a
@@ -52033,14 +53048,9 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
      --pace-timer-d            → tamaño del aro y escalas interiores (calc)
      --pace-activities-overlap → cuánto suben las Actividades sobre el círculo
 
-   UN MOTOR, DOS PIELES (corregido en s149; hasta aquí esta cabecera seguía
-   diciendo «encapsulado en Desktop, en mobile/tablet borra las dos variables y
-   sale», y **eso dejó de ser cierto en s128**). El motor corre en TODO viewport
-   y publica las dos variables siempre; lo que cambia por debajo de 769px son las
-   CONSTANTES de la piel —el aro arranca por ANCHO en vez de por altura, y su
-   suelo es mayor por legibilidad—, no el algoritmo. `DESKTOP_MQ` sigue
-   existiendo para elegir piel y para reaccionar al cruce del breakpoint, no para
-   apagarse. Ver la nota de s128 junto a `WIDTH_CAP_MOBILE`, más abajo.
+   UN MOTOR, DOS PIELES. Corre en TODO viewport y publica las variables siempre;
+   por debajo de 769px cambian las CONSTANTES de la piel (el aro arranca por ANCHO
+   y su suelo es mayor), no el algoritmo. `DESKTOP_MQ` elige piel y vigila el cruce.
 
    QUÉ NODOS SON OBLIGATORIOS Y CUÁLES NO (s156). Obligatorios: la región de la
    home y el aro. **Actividades y la tarjeta de Camino son OPCIONALES**: se miden
@@ -52167,10 +53177,6 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
   var reintentos = 0;
   var rootStyle = document.documentElement.style;
 
-
-
-
-
   function setVar(name, val) {
     if (rootStyle.getPropertyValue(name) !== val) rootStyle.setProperty(name, val);
   }
@@ -52219,7 +53225,7 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
 
 
-  function applyD(D, dial) {
+  function applyD(D, dial, horario) {
     setVar('--pace-timer-d', D + 'px');
     var dialBottom = paceCaja(dial).bottom;
     var cicloBottom = cicloBottomWithin(dial);
@@ -52238,7 +53244,6 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
     Math.max(0, Math.round(dialBottom - cicloBottom - CICLO_GAP)) :
     Math.round(D * OVERLAP_TARGET);
     var overlap = Math.min(Math.round(D * OVERLAP_TARGET), maxOverlap);
-    setVar('--pace-activities-overlap', overlap + 'px');
 
 
 
@@ -52263,6 +53268,10 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
     var banda = chip && barra ?
     Math.max(0, Math.round(paceCaja(chip).top - paceCaja(barra).top)) :
     0;
+
+
+    if (horario) overlap = Math.min(maxOverlap, Math.round(D * PACE_ARO_CANTO_HORARIO) + banda);
+    setVar('--pace-activities-overlap', overlap + 'px');
 
 
 
@@ -52294,6 +53303,7 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
     var widthCap = isDesktop ? WIDTH_CAP : WIDTH_CAP_MOBILE;
     var dFloor = isDesktop ? D_FLOOR : D_FLOOR_MOBILE;
+    var horario = isDesktop && paceAroHorarioAbierto();
 
 
 
@@ -52321,9 +53331,12 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
 
     var D = Math.min(widthCap * w, D_MAX);
+
+    var clave = paceAroCartaClave(body);
+    if (horario && paceAroCartaRecordado(clave)) D = Math.min(D, paceAroCartaRecordado(clave));
     if (D < dFloor) D = dFloor;
     D = Math.round(D);
-    applyD(D, dial);
+    applyD(D, dial, horario);
 
 
 
@@ -52376,7 +53389,7 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
       if (overPrevio !== null && over >= overPrevio) {
         D = dPrevio;
-        applyD(D, dial);
+        applyD(D, dial, horario);
 
 
 
@@ -52389,7 +53402,7 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
 
       D = Math.max(piso, D - Math.ceil(over / 0.84));
-      applyD(D, dial);
+      applyD(D, dial, horario);
     }
 
 
@@ -52401,12 +53414,13 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
       var dAntes = D,sobra = medirOver();
       for (var k = 0; k < 2 && sobra > 1 && D - Math.ceil(sobra / 0.84) >= duro; k++) {
         D -= Math.ceil(sobra / 0.84);
-        applyD(D, dial);
+        applyD(D, dial, horario);
         sobra = medirOver();
       }
-      if (sobra > 1 && D !== dAntes) {D = dAntes;applyD(D, dial);}
+      if (sobra > 1 && D !== dAntes) {D = dAntes;applyD(D, dial, horario);}
     }
 
+    if (isDesktop && paceAroCartaVisible()) paceAroCartaRecordar(clave, D);
 
 
 
@@ -52556,12 +53570,18 @@ function mount(tries) {
     console.error('PACE - Componentes no cargaron en 5 s. Comprueba la red.');
   }
 }
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', function () {mount();});
-} else {
-  mount();
+function arrancar() {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {mount();});
+  } else {
+    mount();
+  }
 }
-;Object.assign(window, { mount });
+
+
+if (typeof window.paceCuandoAbra === 'function') window.paceCuandoAbra(arrancar);else
+arrancar();
+;Object.assign(window, { mount, arrancar });
 })();
 </script>
 

@@ -150,6 +150,7 @@
        pasa a dos columnas y el escritorio a una línea por nombre; con más de quince, a seis
        por fila: una jornada de 5:00 a 23:30 cabe sin scroll en el escritorio. */
     .pace-sh-cab { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 0 2px 8px; }
+    .pace-sh-cab.pace-sh-suelta { margin-top: 18px; }   /* «Además, por tu cuenta» (6A), aparte del plan */
     .pace-sh-rejilla { display: grid; grid-template-columns: minmax(0, 1fr); }
     .pace-sh-t { display: flex; gap: 10px; align-items: center; padding: 3px 2px; min-width: 0; min-height: 28px;
       border-bottom: 1px solid var(--paper-3); }

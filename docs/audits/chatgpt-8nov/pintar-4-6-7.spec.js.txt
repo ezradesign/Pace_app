@@ -1,0 +1,201 @@
+/* Fotos para la página de 4, 6 y 7 (no es una prueba: se copia a tests/, se corre y se borra). */
+'use strict';
+const { test } = require('@playwright/test');
+const { sembrar, irAlArtefacto, esperarModalAsentado } = require('./helpers');
+const fs = require('fs'), path = require('path');
+const OUT = process.env.PINTAR_OUT;
+const CALIDAD = Number(process.env.PINTAR_Q || 50);
+
+const JUEVES = new Date('2026-10-15T13:16:00+02:00');
+const BASE = {
+  cycle: 5, lastActiveDay: 'Thu Oct 15 2026', soundOn: false,
+  _historyMigrated: true, _weeklyStatsReindexed_v0_28_8: true, _historyRecalculated_v0_28_8: true,
+  water: { goal: 8, today: 5, lastReset: null },
+  achievements: { 'first.step': { unlockedAt: 1 } },
+  weeklyStats: {
+    focusMinutes: [210, 165, 240, 225, 0, 0, 0], breathMinutes: [9, 6, 12, 6, 0, 0, 0],
+    moveMinutes: [14, 10, 8, 11, 0, 0, 0], waterGlasses: [7, 6, 8, 5, 0, 0, 0], holdSeconds: [0, 0, 0, 0, 0, 0, 0],
+  },
+};
+const DIA = { fecha: '2026-10-15', opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {}, pausa: 5,
+  estados: { 1: 'hecha', 2: 'hecha', 3: 'hecha', 4: 'saltada' } };
+const ANCHOS = { m: { width: 360, height: 740 }, d: { width: 1280, height: 720 } };
+
+async function foto(page, nombre, clip) {
+  const o = { type: 'jpeg', quality: CALIDAD };
+  if (clip) o.clip = clip;
+  fs.writeFileSync(path.join(OUT, nombre + '.jpg'), await page.screenshot(o));
+}
+/* A 1280 la ventana de Estadísticas ocupa el centro: se recorta a ella (el ancho sigue siendo 1280). */
+async function recorteStats(page) {
+  const b = await page.locator('[data-pace-modal-card]').last().boundingBox();
+  const fin = await page.evaluate(() => Math.max(...[...document.querySelectorAll('[data-pace-hoy-rejilla]')].map((r) => r.getBoundingClientRect().bottom)));
+  const y = Math.max(0, Math.floor(b.y) - 12);
+  return { x: 0, y, width: 1280, height: Math.min(720 - y, Math.ceil(fin - y) + 28) };
+}
+
+async function hoy(page, context, ancho, dia) {
+  await page.setViewportSize(ANCHOS[ancho]);
+  await sembrar(context, Object.assign({}, BASE, { ritmo: { dia: dia || DIA } }));
+  await page.clock.install({ time: JUEVES });
+  await irAlArtefacto(page);
+  await page.evaluate(() => document.fonts && document.fonts.ready);
+  await page.getByRole('button', { name: 'Ver estadísticas' }).click();
+  await page.locator('[data-pace-stats-vistas]').waitFor({ state: 'visible' });
+  await esperarModalAsentado(page);
+  await page.waitForTimeout(300);
+}
+
+/* 7 · lo que dice una pausa hecha. La de las 13:15 (la abierta) también está hecha: la app hoy dice «ahora». */
+const DIA7 = Object.assign({}, DIA, { estados: Object.assign({}, DIA.estados, { 5: 'hecha' }) });
+const SIETE = {
+  hoy: null,
+  A: ['hecha · 2 min', 'hecha · 4 min', 'hecha · 3 min', 'hecha · 2 min'],
+  B: ['hecha', 'hecha', 'hecha', 'hecha'],
+  C: ['hecha · 2 de 5 min', 'hecha · 4 de 5 min', 'hecha · 3 de 15 min', 'hecha · 2 de 5 min'],
+};
+for (const [op, textos] of Object.entries(SIETE)) {
+  for (const ancho of (op === 'A' ? ['m', 'd'] : ['m'])) {
+    test('7' + op + ancho, async ({ page, context }) => {
+      await hoy(page, context, ancho, DIA7);
+      fs.writeFileSync(path.join(OUT, '7' + op + '-' + ancho + '.txt'), await page.evaluate(() =>
+        [...document.querySelectorAll('[data-pace-hoy-parada]')].map((c) => c.dataset.paceHoyParada + ' | ' + c.textContent).join('\n')));
+      await page.evaluate((tx) => {
+        if (tx) {
+          const cards = [...document.querySelectorAll('[data-pace-hoy-parada="hecha"], [data-pace-hoy-parada="ahora"]')];
+          cards.forEach((c, i) => {
+            const m = c.querySelector('.pace-sh-m'); const h = m.querySelector('.pace-sh-h');
+            m.textContent = ''; m.appendChild(h); m.append(' · ' + tx[Math.min(i, tx.length - 1)]);
+          });
+        }
+        document.querySelector('[data-pace-hoy-rejilla]').scrollIntoView({ block: 'end' });
+      }, textos);
+      await page.waitForTimeout(150);
+      await foto(page, '7' + op + '-' + ancho, ancho === 'd' ? await recorteStats(page) : null);
+    });
+  }
+}
+
+/* 6 · lo hecho por tu cuenta con el día elegido: Box 4·4·4·4 a las 8:50 (2 min, antes de elegir el día) y
+   Cuello suave a las 11:20 (4 min, fuera de una pausa). Ninguna de las dos está en el plan de hoy. */
+for (const op of ['A', 'B', 'C']) {
+  for (const ancho of (op === 'A' ? ['m', 'd'] : ['m'])) {
+    test('6' + op + ancho, async ({ page, context }) => {
+      await hoy(page, context, ancho);
+      await page.evaluate((op) => {
+        const rej = document.querySelector('[data-pace-hoy-rejilla]');
+        const cards = [...rej.querySelectorAll('[data-pace-hoy-parada]')];
+        const porNombre = (n) => cards.find((c) => c.querySelector('.pace-sh-n').textContent.trim() === n);
+        const respira = porNombre('Suspiro fisiológico') || porNombre('Coherente 5·5') || cards[0];
+        const estira = porNombre('Hombros') || porNombre('Escritorio express') || cards[1];
+        const suelta = (fuente, nombre, hora, meta) => {
+          const c = fuente.cloneNode(true);
+          c.className = 'pace-sh-t pace-sh-hecha';
+          c.dataset.paceHoyParada = 'hecha';
+          c.querySelector('.pace-sh-n').textContent = nombre;
+          const m = c.querySelector('.pace-sh-m'); const h = m.querySelector('.pace-sh-h');
+          h.textContent = hora; m.textContent = ''; m.appendChild(h); m.append(' · ' + meta);
+          return c;
+        };
+        const minutos = (c) => { const [hh, mm] = c.querySelector('.pace-sh-h').textContent.split(':').map(Number); return hh * 60 + mm; };
+        const cab = document.querySelector('.pace-sh-cab');
+        if (op === 'A') {
+          const cab2 = cab.cloneNode(true);
+          cab2.style.marginTop = '18px';
+          const meta = cab2.querySelector('*'); meta.textContent = 'Además, por tu cuenta';
+          [...cab2.children].slice(1).forEach((x) => x.remove());
+          const rej2 = rej.cloneNode(false);
+          rej2.appendChild(suelta(respira, 'Box 4·4·4·4', '8:50', '2 min'));
+          rej2.appendChild(suelta(estira, 'Cuello suave', '11:20', '4 min'));
+          rej.after(cab2); cab2.after(rej2);
+          rej2.scrollIntoView({ block: 'end' });
+        } else if (op === 'B') {
+          const meter = (c) => { const t = minutos(c); rej.insertBefore(c, [...rej.children].find((x) => minutos(x) > t) || null); };
+          meter(suelta(respira, 'Box 4·4·4·4', '8:50', 'por tu cuenta · 2 min'));
+          meter(suelta(estira, 'Cuello suave', '11:20', 'por tu cuenta · 4 min'));
+          rej.scrollIntoView({ block: 'end' });
+        } else {
+          const linea = document.createElement('button');
+          linea.type = 'button'; linea.className = 'pace-rt-enlace';
+          linea.style.cssText = 'display:block;margin:6px 0 10px;';
+          linea.textContent = 'Y 2 sesiones por tu cuenta · 6 min ›';
+          cab.after(linea);
+          rej.scrollIntoView({ block: 'end' });
+        }
+      }, op);
+      await page.waitForTimeout(150);
+      await foto(page, '6' + op + '-' + ancho, ancho === 'd' ? await recorteStats(page) : null);
+    });
+  }
+}
+
+/* 4 · «Cambiar» con un Foco en marcha. Jornada a las 9:00, bloque de 45; a las 9:10 se cambia a «Una hora». */
+const HOY4 = '2026-10-14';
+const JORNADA = { fecha: HOY4, opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} };
+async function enMarcha(page, context, ancho) {
+  await page.setViewportSize(ANCHOS[ancho]);
+  await sembrar(context, { ritmo: { dia: JORNADA }, soundOn: false, achievements: { 'first.step': { unlockedAt: 1 } } });
+  await page.clock.install({ time: new Date(HOY4 + 'T09:00:00+02:00') });
+  await irAlArtefacto(page);
+  await page.evaluate(() => document.fonts && document.fonts.ready);
+  await page.waitForTimeout(300);
+  await page.getByRole('button', { name: 'Empezar jornada', exact: true }).filter({ visible: true }).first().click();
+  await page.waitForTimeout(250);
+  await page.clock.fastForward(10 * 60 * 1000);
+  await page.waitForTimeout(300);
+}
+const CUATRO = [['hoy', 'm'], ['A', 'm'], ['B', 'm'], ['B', 'd'], ['C', 'm']];
+for (const [op, ancho] of CUATRO) {
+  test('4' + op + ancho, async ({ page, context }) => {
+    await enMarcha(page, context, ancho);
+    if (op === 'hoy') {
+      /* Lo que pasa hoy: el día nuevo no sabe del bloque que corre. */
+      await page.evaluate(() => { ritmoPreguntar(); ritmoElegir('1h'); });
+      await page.waitForTimeout(500);
+    } else if (op === 'A') {
+      /* La misma ventana que la barra de arriba (Modal y Button de la app), con los textos de esta pregunta. */
+      await page.evaluate(() => {
+        const e = React.createElement, div = document.createElement('div');
+        document.body.appendChild(div);
+        ReactDOM.createRoot(div).render(e(Modal, { open: true, onClose: () => {}, maxWidth: 440, title: '¿Cambiar el día?' },
+          e('p', { style: { margin: '0 0 22px', color: 'var(--ink-2)', fontSize: 15, lineHeight: 1.55 } },
+            'Llevas 10 min de este bloque. Si cambias ahora, se pierde y no cuenta.'),
+          e('div', { style: { display: 'flex', gap: 10, justifyContent: 'flex-end', flexWrap: 'wrap' } },
+            e(Button, { variant: 'secondary' }, 'Cambiar y dejarlo'),
+            e(Button, { variant: 'primary' }, 'Seguir con el bloque'))));
+      });
+      await page.waitForTimeout(500);
+    } else if (op === 'B') {
+      /* El día nuevo empieza con el bloque que corre: a su hora (9:00) y con su duración (45). */
+      await page.evaluate(() => {
+        ritmoPreguntar(); ritmoElegir('1h');
+        ritmoGuardar((r) => (r.dia ? { dia: Object.assign({}, r.dia, { desde: 540, primerBloque: 45, pasado: [] }) } : {}));
+      });
+      await page.waitForTimeout(500);
+    } else {
+      await page.evaluate(() => {
+        [...document.querySelectorAll('.pace-rt-enlace')].filter((b) => b.textContent.trim() === 'Cambiar').forEach((b) => {
+          b.textContent = 'Cambiar, al acabar el bloque'; b.style.opacity = '0.45'; b.style.cursor = 'default'; b.disabled = true;
+        });
+      });
+    }
+    await page.waitForTimeout(150);
+    /* Qué pisa cada cosa: cajas de los textos y botones visibles que se cruzan. */
+    fs.writeFileSync(path.join(OUT, '4' + op + '-' + ancho + '.txt'), await page.evaluate(() => {
+      const vis = (el) => { const r = el.getBoundingClientRect(); const s = getComputedStyle(el); return r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && r.bottom > 0 && r.top < innerHeight; };
+      const panel = document.querySelector('.pace-rt-enlace') ? document.querySelector('.pace-rt-enlace').closest('section, div') : null;
+      const lineas = [];
+      const caja = [...document.querySelectorAll('.pace-rt-enlace')].filter(vis);
+      caja.forEach((b) => { const r = b.getBoundingClientRect(); lineas.push('enlace «' + b.textContent.trim() + '» ' + [r.left, r.top, r.right, r.bottom].map(Math.round).join(',')); });
+      const hojas = [...document.querySelectorAll('button, a, h1, h2, h3, p, span, div')].filter((el) => vis(el) && el.children.length === 0 && el.textContent.trim());
+      for (let i = 0; i < hojas.length; i++) for (let j = i + 1; j < hojas.length; j++) {
+        const a = hojas[i].getBoundingClientRect(), b = hojas[j].getBoundingClientRect();
+        const x = Math.min(a.right, b.right) - Math.max(a.left, b.left), y = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+        if (x > 1 && y > 1 && !hojas[i].contains(hojas[j]) && !hojas[j].contains(hojas[i])) lineas.push('SE CRUZAN «' + hojas[i].textContent.trim().slice(0, 30) + '» y «' + hojas[j].textContent.trim().slice(0, 30) + '»');
+      }
+      lineas.push('PANEL: ' + (document.querySelector('[data-pace-ritmo-panel]') || document.body).innerText.slice(0, 600));
+      return lineas.join('\n');
+    }));
+    await foto(page, '4' + op + '-' + ancho);
+  });
+}

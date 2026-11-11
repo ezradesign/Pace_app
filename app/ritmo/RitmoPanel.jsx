@@ -55,6 +55,7 @@ function RitmoSobre({ m }) {
       <span className="pace-rt-meta">{ritmoResumen(m, tn, ritmoMetaVasos(st))}</span>
       <button className="pace-rt-enlace" onClick={ritmoPreguntar}>{t('ritmo.cambiar')}</button>
       <RitmoAlCalendario />
+      {typeof RitmoLunes === 'function' ? <RitmoLunes /> : null}
     </div>
   );
 }

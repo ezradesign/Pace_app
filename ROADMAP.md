@@ -70,6 +70,34 @@ gateable es la sesión, no el ejercicio suelto (ver `CONTENT.md`).
 > [`STATE.md`](./STATE.md) fija el presente y la sesión siguiente. La base del giro es la
 > auditoría externa [`audit-externa-v0.133.1.md`](./docs/audits/audit-externa-v0.133.1.md).
 
+### Lo que queda hasta v1.0 (11 nov. 2026, `main` en la 0.197.0)
+
+**La dirección.** v1.0 es la primera versión de pago, a la vez en la web, en Android y en iPhone: 2,99 € al mes con siete días
+de prueba o 19,99 € de por vida, sin cuentas y con los datos en el aparato. Lo ya hecho sigue abierto para quien lo usaba. Antes
+de v1 solo entra lo que hace falta para lanzar y que PACE sea útil el primer día; lo demás llega después como actualizaciones.
+**El código ya no marca la fecha:** la marcan los testers (12 personas, 14 días seguidos) y las altas de Ez para cobrar. Desde
+que la prueba cerrada empiece a contar, v1 puede salir en unas tres semanas.
+
+Quedan cuatro tramos. El 1 y el 2 se pueden hacer ya; el 3 espera a las altas y cabe dentro de los 14 días del 2.
+
+| Tramo | Paso | Quién | Estado (11 nov.) |
+|---|---|---|---|
+| **1 · Cerrar la versión de prueba** | 1. Juntar la 0.198.0: el arreglo de la landing que guardaba de noche, la fila de compra en Ajustes, el cierre del ejercicio, la línea de los lunes, Ocaso y Búho, el día de v1, las letras 4 B, 6 A y 7 A y el aro con el horario abierto | Claude | Montado en cuatro ramas, con el «Sí, todo junto» de Ez |
+| | 2. Montar lo ya contestado: el aro de rendimiento, la versión nueva con la web abierta (V1 B, V2 B), que el fin del Foco suene en el iPhone (D-10 B) y que un Android restaurado no pueda borrar una reunión (D-8 A) | Claude | En cola |
+| | 3. Lo que las auditorías marcan «antes de v1» y sigue sin montar (`docs/audits/fable-9nov/cola.md`, rama `claude/auditoria-fable-9nov-8401fc`): que la quinta pausa de un tester no gaste la única petición de valoración, el aviso de fin de pausa en el móvil con su sonido, la nota al acabar la semana de prueba, `robots.txt`, `sitemap.xml` y el título sin la versión, el tope de 3 s a la red al abrir, los cambios de lado avisados dentro de un paso y unas diez filas pequeñas más | Claude, cada una valorada con Ez | Sin empezar |
+| | 4. Dos pasadas más de auditoría con Fable (lo montado el 11 nov. y las pruebas; textos en `docs/audits/textos-externa-11nov.md`) y sus arreglos | Ez las lanza, Claude comprueba | Textos listos |
+| | 5. Lo que solo espera un sí: `guardar()` de una pieza en el cobro (`claude/guardar-atomico-166e3f`) y los cuatro arreglos pequeños de la sexta pasada | Ez | Espera a Ez |
+| | 6. La revisión de un fisioterapeuta que `CONTENT.md` pide antes de v1 (Fondos en silla y los ejercicios aparcados) | Ez | Sin empezar |
+| **2 · La prueba con testers** | 7. Subir la versión de prueba a la prueba cerrada de Play y a TestFlight. La que está preparada es la 0.191.1; si aún no se ha subido, conviene subir ya la que salga del tramo 1 | Ez, con el archivo que le prepara Claude | Espera a Ez |
+| | 8. Reunir 12 testers durante 14 días seguidos (hay 5 o 6) y pedir el acceso a producción | Ez | La cuenta no ha empezado |
+| **3 · Cobrar: las altas de Ez y el código que espera a cada una** | 9. Perfil de pagos de Play → cobrar en Android, restaurar la compra, los códigos de los testers y los textos de compra de las apps, escritos hoy para la web (D-9 A: directo con las tiendas; D-11 A) | Ez el alta, Claude el código | Espera el alta |
+| | 10. Acuerdo de apps de pago de Apple → la compra de Apple, «Restaurar compras», la ficha y la revisión | Ez el alta, Claude el código | Espera el alta |
+| | 11. Los datos de Ez (nombre, NIF y un contacto), la revisión de un profesional y el alta en Resend → lo legal de /premium y `/desistir`; con eso se puede encender ya la venta de por vida en la web, antes de v1 | Ez | Borradores en `main` (0.189.0) |
+| | 12. Altas en Google y Microsoft → el llavero del calendario. Google tarda semanas en verificar: falta decidir si v1 lo espera o sale con el calendario «en pruebas» | Ez | Espera el alta y esa decisión |
+| **4 · El día de v1.0** | 13. Apagar `PREMIUM_ABIERTO_HASTA_V1`, quitar «Da de pastar a la vaca» de la web y probar comprar, restaurar y cancelar en las tres tiendas | Claude y Ez | Al final |
+
+La tabla de abajo es el detalle de cada pieza, con su historia; esta manda sobre ella en lo que queda por hacer.
+
 **Orden vigente** (Ez, 25 oct. 2026: «ordena el roadmap de la manera más lógica»), puesto al día con la auditoría del
 28 oct. (`docs/audits/auditoria-v0.181.1.md`). Es el mismo orden del camino de la hoja de Ez y de la cola del relevo
 (`docs/traspaso/relevo-coordinadora-22oct.md`, «El orden lógico hasta v1»). Las fases de abajo quedan como detalle de
@@ -86,7 +114,7 @@ cada pieza.
 | 14 | Cobrar en Android: Play Billing, restaurar la compra y los códigos de los testers | Espera el perfil de pagos de Play, que pide el alta de Ez. Se prueba dentro de la prueba cerrada |
 | 15 | Cobrar en el iPhone: la compra de Apple, «Restaurar compras», la ficha y la revisión | Espera el acuerdo de apps de pago de Apple, que pide el alta de Ez |
 | 16 | Lo legal de /premium: condiciones, devoluciones, aviso legal y la función de desistimiento en línea (UE, desde el 19 jun. 2026) | Los borradores con las letras de Ez (1A-5A) y `/desistir` cerrada, en `main` (0.189.0). Ez (5 nov.): sus datos, al registrar la primera venta real, y la revisión profesional, en un mes, hablado con el gestor. Para `/desistir` falta su alta en Resend |
-| 16 bis | Vender antes de v1: solo el de por vida, solo en la web (Ez, 5 nov.) | La tienda con un plan y /premium 1C, en `premium-solo-vida`. Para encender: los arreglos 1 y 2, la parte legal de la revisión de ChatGPT, Resend y la dirección del enlace real. El mensual llega con v1, y antes hay que cerrar `guardar()` en `functions/api/stripe.js` |
+| 16 bis | Vender antes de v1: solo el de por vida, solo en la web (Ez, 5 nov.) | La tienda con un plan y /premium 1C, en `premium-solo-vida`. Para encender: los arreglos 1 y 2, la parte legal de la revisión de ChatGPT, Resend y la dirección del enlace real. El mensual llega con v1, y antes hay que juntar un arreglo del cobro mensual |
 | 17 | v1.0: apagar `PREMIUM_ABIERTO_HASTA_V1`, quitar «Da de pastar a la vaca» de la web y probar comprar, restaurar y cancelar en las tres tiendas | Al final |
 
 **Lo que salió de las ocho revisiones de ChatGPT del 28 oct.** Están enteras en `docs/audits/chatgpt-28oct/`, y su
@@ -106,7 +134,7 @@ con Ez antes de empezar (Ez: «se valora juntos los dos y vamos implementando lo
 
 | Tanda | Estado (5 nov.) |
 |---|---|
-| Cobro y estado general (`revision-5nov.md`) | La tienda con un plan, en `main` (0.191.0). `guardar()`, arreglado en `claude/guardar-atomico-166e3f` (un periodo por llave): espera la revisión de ChatGPT y el «júntalo» de Ez |
+| Cobro y estado general (`revision-5nov.md`) | La tienda con un plan, en `main` (0.191.0). Un arreglo del cobro mensual, en `claude/guardar-atomico-166e3f`: espera la revisión de ChatGPT y el «júntalo» de Ez |
 | Datos y compra (`revision-5nov-datos-y-compra.md`) | Los cuatro arreglos, en `main` (0.191.0). «Dónde funciona tu compra», en /premium |
 | Cuando una sesión coincide con otra cosa (`revision-5nov-capas.md`) | En `main` (0.191.0). Dos pestañas, riesgo ya aceptado |
 | Cambiar de idea a mitad (`revision-5nov-sesiones.md`) | «Auto» (0.191.0), y el catálogo vacío, las cifras y qué explica «Auto» (0.192.0), en `main` |

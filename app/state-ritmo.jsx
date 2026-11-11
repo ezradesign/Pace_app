@@ -192,7 +192,8 @@ function ritmoPrevios(pasado, primerBloque, pausaPendiente, bloque) {
   /* la cuenta de la larga (ritmo.regla.js, `pausaDe`): pausas y foco desde la última */
   p.pausasLarga = 0; p.focoLarga = 0; p.largaEn = 3; p.largasManana = 0; p.seguidos = 0;
   (pasado || []).forEach(function (it) {
-    if (it.tipo === 'foco') { p.bloques++; p.foco += it.dur; p.focoLarga += it.dur; p.seguidos += it.dur; }
+    /* de foco, lo que contó el aro: un bloque pausado ocupa más en la línea (ritmoFocoMin) */
+    if (it.tipo === 'foco') { var cuenta = ritmoFocoMin(it); p.bloques++; p.foco += cuenta; p.focoLarga += cuenta; p.seguidos += cuenta; }
     if (it.tipo === 'pausa') { p.pausas++; p.claves++; p.pausasLarga++; p.seguidos = 0; }
     if (it.tipo === 'pausa' && it.larga) {
       p.largaEn = p.pausasLarga; p.pausasLarga = 0; p.focoLarga = 0;
@@ -427,6 +428,9 @@ function ritmoElegir(opcion) {
   var R = ritmoDe(s);
   var dia = { fecha: ritmoHoy(), opcion: opcion, desde: Math.max(R.horario.inicio, ritmoAhora()),
               cicloBase: Number(s.cycle) || 0, cambios: {}, pausa: null };
+  /* Con un Foco empezado, ese bloque es el primero del día nuevo (4B; state-ritmo.recolocar.jsx). */
+  var corre = typeof ritmoFocoDelDiaNuevo === 'function' ? ritmoFocoDelDiaNuevo() : null;
+  if (corre) Object.assign(dia, { desde: corre.desde, primerBloque: corre.min, pasado: [] });
   ritmoGuardar(function () { return { libre: null, dia: dia }; });
   ritmoSincronizar();
 }
@@ -477,6 +481,7 @@ function ritmoHorario(campo, valor) {
       Object.keys(cambios).forEach(function (c) { horario.media[c.slice(6)] = cambios[c]; });
     } else Object.assign(horario, cambios);
   }
+  if (typeof ritmoFijarLoHecho === 'function') ritmoFijarLoHecho();   /* lo hecho no se recompone */
   ritmoGuardar(function (r) {
     return { horario: horario, dia: r.dia ? Object.assign({}, r.dia, { cambios: {} }) : r.dia };
   });

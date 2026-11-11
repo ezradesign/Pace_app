@@ -115,7 +115,8 @@ test('«Hacer la pausa» entra en el plato, y al terminarlo la parada queda hech
   for (let s = 0; s < 400 && (await done.count()) === 0; s++) await segundos(page, 1);
   expect(await done.count(), 'GUARD: la sesión no llegó al cierre').toBeGreaterThan(0);
   await expect.poll(() => page.evaluate(() => (getState().ritmo.dia.estados || {})[1]), { timeout: 5000 }).toBe('hecha');
-  await page.locator('[data-pace-session-root]').getByRole('button', { name: 'Volver al inicio', exact: true }).click();
+  /* con la pausa aún corriendo, el cierre no dice «Volver al inicio»: dice cuánta pausa queda (Ez, 2A del 10 nov.) */
+  await page.locator('[data-pace-session-footer] [data-pace-cierre-sigue="jornada"] button').first().click();
   /* la pausa sigue ABIERTA (se cierra al empezar el bloque 2) y su parada ya dice hecha */
   expect(await page.evaluate(() => getState().ritmo.dia.pausa)).toBe(1);
   const parada = vis(page, '[data-pace-ritmo-linea]').locator('[data-pace-ritmo-parada]').first();

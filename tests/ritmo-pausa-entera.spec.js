@@ -104,7 +104,8 @@ test('la pausa larga nombra sus dos platos y los hace seguidos: Respira, «Segui
   await expect(page.locator('[data-pace-modal-backdrop]')).toHaveCount(0);
   await hastaElCierre(page);
   await expect(sesion(page)).not.toContainText('Pausa larga');
-  await sesion(page).getByRole('button', { name: 'Volver al inicio', exact: true }).click();
+  /* con la pausa aún corriendo, el cierre dice cuánta queda en vez de «Volver al inicio» (Ez, 2A del 10 nov.) */
+  await sesion(page).locator('[data-pace-cierre-sigue="jornada"] button').first().click();
   await expect(sesion(page)).toHaveCount(0);
 
   const dia = await page.evaluate(() => getState().ritmo.dia);

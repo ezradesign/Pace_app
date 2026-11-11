@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.195.0';
+const PACE_VERSION = 'v0.198.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -105,6 +105,7 @@ const defaultState = {
   licencia: null,
   // La suscripción (`order`) cuyo aviso del fin de la prueba ya salió (PremiumInvitacion.jsx).
   premiumAvisoPrueba: null, novedadesVistas: null, /* el id de las novedades del sobre ya leídas; '*' las apaga (shell/Sobre.novedades.js) */
+  lunesVisto: null, /* el lunes (YYYY-MM-DD) en que se abrió la línea de los lunes del sobre (ritmo/ritmo.lunes.jsx) */
 
   // Foco
   focusMode: 'foco',
@@ -162,7 +163,7 @@ const defaultState = {
      cambiar el dia, asi no crece. Van en defaultState porque una clave que solo
      nace al dispararse el detector no sale en un export. */
   dawnDates: [],
-  duskDates: [],
+  duskDates: [], ocasoDias: [], ocasoTarde: null, /* Ocaso, desde el 11 nov.: jornadas cerradas a su hora (state-achievements.ocaso.js) */
   planDates: [],
   respiraHoy: { fecha: null, n: 0 },
 
@@ -382,11 +383,11 @@ let _state = loadState();
 const _listeners = new Set();
 let _paceSinGuardar = false; // una copia importada ya escrita: nada se guarda hasta recargar (paceAdoptarEstado)
 
-/* Si el navegador no deja guardar (lleno o bloqueado), lo dice ui/UpdatePrompt.jsx (AvisoNoGuarda), y
-   `_paceGuardadoAtrasado` dice que lo guardado es más viejo que la memoria (ensureDayFresh). */
+/* CON LA LANDING DELANTE NO SE GUARDA (landing/cara.js): los vigilantes de cada minuto relevan el día en memoria a medianoche y, si escribieran, la próxima visita vería la app. Lo relevado se guarda con el primer gesto en la app.
+   Si el navegador no deja guardar, lo dice AvisoNoGuarda (ui/UpdatePrompt.jsx); `_paceGuardadoAtrasado` dice que lo guardado es más viejo que la memoria (ensureDayFresh). */
 let _paceGuardadoAtrasado = false;
 function persistState() {
-  if (_paceSinGuardar) return;
+  if (_paceSinGuardar || window.PACE_CARA === 'landing') return;
   try { localStorage.setItem(LS_KEY, JSON.stringify(_state)); _paceGuardadoAtrasado = false; } catch (e) {
     _paceGuardadoAtrasado = true; try { window.__paceNoGuarda = true; window.dispatchEvent(new CustomEvent('pace:no-guarda')); } catch (e2) {}
   }

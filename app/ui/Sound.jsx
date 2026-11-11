@@ -244,6 +244,12 @@ var SOUND_RECIPES = {
     if (dur === undefined) dur = 4.0;
     breathNoise(ctx, ctx.destination, 'in', t0, dur, 0.06);
   },
+  /* «Inhala más» del Suspiro (9 nov. 2026): su propia señal para que tenga su palabra; sin
+     voz, o si no cabe, suena el mismo soplo que la inhalación, como antes. */
+  'breathe.inhale.more': function(ctx, t0, dur) {
+    if (dur === undefined) dur = 1.0;
+    breathNoise(ctx, ctx.destination, 'in', t0, dur, 0.06);
+  },
   'breathe.exhale': function(ctx, t0, dur) {
     if (dur === undefined) dur = 6.0;
     breathNoise(ctx, ctx.destination, 'out', t0, dur, 0.07);

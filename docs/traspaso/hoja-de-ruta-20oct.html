@@ -95,7 +95,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.195.0 · actualizada el 9 de noviembre a las 16:48 · en esta cuenta, con la 0.195.0 en la web y la landing para elegir</div>
+    <div class="eyebrow">PACE · versión 0.198.0, juntándose · actualizada el 11 de noviembre a mediodía · tus letras de ayer y de hoy, en una sola versión</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -107,8 +107,8 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <p class="nota">Lo que salió de mirarlo todo a fondo el 28 de octubre. El detalle, en
       <code>docs/audits/auditoria-v0.181.1.md</code>.</p>
     <ul class="lista">
-      <li><b>La app está casi entera y sana.</b> La web va por la 0.194.0, con todo lo del 5 al 8 de noviembre
-        dentro. Las últimas pruebas enteras, las de la 0.194.0 el 8 de noviembre: 1390 en verde, y GitHub en verde entero, también Safari, Android y el iPhone. Lo que ChatGPT marcó para antes de lanzar ya está, salvo cobrar y
+      <li><b>La app está casi entera y sana.</b> La web va por la 0.197.0, con todo lo del 5 al 10 de noviembre
+        dentro. Las últimas pruebas enteras, las de la 0.197.0 el 10 de noviembre: 1467 en verde, y GitHub en verde entero, también Safari, Android y el iPhone. Lo que ChatGPT marcó para antes de lanzar ya está, salvo cobrar y
         lo legal, que esperan tus altas y tus datos.</li>
       <li><b>Ocho revisiones de ChatGPT, comprobadas y guardadas enteras.</b> Acierta en todo lo que se puede mirar en el
         código. Los arreglos del cobro, de las rutinas sin «Auto» y de «Tus rutinas» ya están dentro de la app. Y
@@ -131,17 +131,66 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <h2>Paso a paso</h2>
     <p class="nota">La pongo al día en cada paso. Si tienes la página abierta, se actualiza sola. Si un enlace no abre, es que está en tu otra cuenta.</p>
     <ol class="pasos">
-      <li class="paso ahora"><span class="estado">Ahora · lo tuyo, 5 minutos</span>
-        <span class="t">Elegir las letras de la landing</span>
-        <span class="c"><span class="quien">Tú eliges; yo la junto.</span> <a href="https://claude.ai/artifact/WXqNcQ9XeojuhvSBgWoR76">La
-          página</a> tiene tres landings pintadas con el código de verdad, a 360 y a 1280, y botones para cambiar el idioma, el tema y
-          dónde va el «¿Ya usas PACE?». <b>Recomendada, la C</b>: corta y con capturas, con «¿Ya usas PACE? Ábrelo» en la cabecera.
-          Ya funciona en su rama con 17 pruebas: quien ya usa PACE ve la app y quien llega nuevo, la landing.</span></li>
-      <li class="paso marcha"><span class="estado">En marcha · GitHub</span>
-        <span class="t">Las pruebas de GitHub de la 0.195.0</span>
-        <span class="c"><span class="quien">Yo.</span> Ya está en la web, con 1432 pruebas en verde en el ordenador. Tu 1A de la caza («1 h» ya no
-          se queda sola en la frase del día) está montada y entra en la siguiente; la 2A deja los 320 px como están.</span></li>
-      <li class="paso luego"><span class="estado">Lo siguiente tuyo · hoy, lunes 9 de noviembre · conmigo pantalla a pantalla</span>
+      <li class="paso ahora"><span class="estado">Ahora · lo hago yo · no tienes que hacer nada</span>
+        <span class="t">Juntar la versión 0.198.0</span>
+        <span class="c"><span class="quien">Yo.</span> Con tu «Sí, todo junto». Las cuatro ramas ya están juntas y pasan la comprobación rápida.
+          Ahora corren las 1522 pruebas sobre la app tal como se publica; después sube a la web y GitHub la prueba otra vez,
+          también en Safari, Android y el iPhone. Lleva dentro:
+          <ol>
+            <li><b>El aro con el horario abierto</b>, la A que elegiste: no se mueve al abrir el horario
+              (<a href="https://claude.ai/artifact/BN1QuXDBSAnqjqAvvSMSny">su página</a>).</li>
+            <li><b>Lo de la revisión de la app</b> (<a href="https://claude.ai/artifact/1WwJbuD5qTtXJWNzVg7B7Q">con fotos</a>): la fila para comprar en Ajustes, el cierre del ejercicio
+              que dice lo que sigue, la bienvenida sin «v1», la línea de los lunes en el sobre y en el cajón, Ocaso y Búho con
+              otra cosa que premiar, y que el día de v1 se queden las rutinas de pago que acabaste.</li>
+            <li><b>Las letras 4 B, 6 A y 7 A</b> (<a href="https://claude.ai/artifact/LaTcRknTpPcJAa6joPncjX">con fotos</a>): «Cambiar» con un Foco en marcha, lo hecho por tu cuenta
+              aparte en Estadísticas › Hoy, y una pausa hecha que dice los minutos que hiciste.</li>
+            <li><b>El fallo de noche:</b> con la portada delante, la app guardaba algo al pasar la medianoche, y la visita
+              siguiente veía la app en vez de la portada. Arreglado.</li>
+          </ol></span></li>
+      <li class="paso luego"><span class="estado">Después · lo hago yo · de una en una</span>
+        <span class="t">Montar lo que ya contestaste</span>
+        <span class="c"><span class="quien">Yo, con sesiones.</span> Cada una en su rama; te lo enseño con fotos antes de juntarlo.
+          <ol>
+            <li><b>El aro durante un Foco largo</b> (la B: se desliza solo si el paso se nota) y <b>qué pasa cuando sale una
+              versión nueva con la web abierta</b> (V1 B: pregunta al volver y cada hora; V2 B: la pestaña con una sesión en
+              marcha espera a que acabe). Su página, <a href="https://claude.ai/artifact/4Fohyqi7Cth9iKGxE2FSSD">la de rendimiento</a>.</li>
+            <li><b>D-8 A:</b> un Android restaurado desde la copia de Google no puede borrar una reunión tuya.
+              <b>D-10 B:</b> en el iPhone, el fin del Foco suena con la campana de PACE.</li>
+          </ol></span></li>
+      <li class="paso luego"><span class="estado">Lo siguiente tuyo · una respuesta</span>
+        <span class="t">¿Subiste ya la 0.191.1 a Play y a TestFlight?</span>
+        <span class="c"><span class="quien">Tú.</span> Si ya está subida, la 0.198.0 llega a tus testers como actualización. Si no, conviene
+          subir directamente la 0.198.0 en cuanto esté en verde: te preparo el archivo y te guío pantalla a pantalla, como en
+          el paso de más abajo.</span></li>
+      <li class="paso luego"><span class="estado">Lo tuyo · hasta el 12 de noviembre, mientras tengas Fable</span>
+        <span class="t">Dos pasadas más de revisión, en la app de fuera</span>
+        <span class="c"><span class="quien">Tú las lanzas; yo compruebo.</span> Los dos textos están listos para copiar en
+          <code>docs/audits/textos-externa-11nov.md</code>: uno revisa lo montado hoy y el otro, las pruebas. Tráeme lo que
+          conteste y lo compruebo punto a punto en el código, como las otras seis.</span></li>
+      <li class="paso luego"><span class="estado">Lo tuyo · un sí</span>
+        <span class="t">Cuatro arreglos pequeños de la sexta revisión</span>
+        <span class="c"><span class="quien">Tú dices «sí»; yo los monto.</span> Que importar una copia diga de qué día es y avise si es de
+          una versión más nueva; que la copia se pueda elegir desde Drive o WhatsApp; que el lector de pantalla lea el precio
+          en Ajustes; y «Audio» en la parte inglesa. Están en <a href="https://claude.ai/artifact/C2uFSMM8eWhcRxpXLGWkAx">la página de la auditoría</a>, filas S3 y S4.</span></li>
+      <li class="paso luego"><span class="estado">Después · lo tuyo, 2 minutos · es lo que más ayuda de ChatGPT ahora</span>
+        <span class="t">Pasar a ChatGPT la revisión del cobro y de lo legal</span>
+        <span class="c"><span class="quien">Tú.</span> Lo que me trajiste el 5 de noviembre cubre datos y compra, pero no lo legal. Copia esto en
+          ChatGPT y tráeme su respuesta: compruebo cada cosa en el código antes de montar nada.
+          <pre class="prompt">Revisa en el repositorio público ezradesign/Pace_app, rama main, el cobro y lo legal de la web de PACE antes de la primera venta. Solo lectura. No repitas lo que ya está bien: quiero lo que puede salir mal.
+
+Contexto:
+- Vendo desde España como autónomo a consumidores de la UE y de fuera, con Stripe Managed Payments: Link cobra, pero el vendedor del producto sigo siendo yo.
+- Plan propuesto: empezar vendiendo solo el pago único de 19,99 € «de por vida» en la web. El mensual (2,99 € con 7 días de prueba) llegaría con v1. Hasta v1, PACE completo está abierto gratis para todos. Si ves motivo para hacerlo de otra forma, dímelo.
+- Lo legal está en borrador y sin publicar. Quiero dejar la revisión de un profesional para dentro de un mes.
+
+Lee: cobro/, functions/api/, app/state-compra.js, app/state-entitlement.jsx, premium/, gracias/, recuperar/, desistir/, legal/, privacy.html, docs/launch/cobro-web.md, docs/launch/desistir.md y docs/launch/legal-web.md.
+
+Cobro: busca casos concretos en los que alguien pague y no reciba su código, lo pierda o no pueda recuperarlo; otra persona lo consiga; o salga un código sin pagar. Incluye devoluciones, contracargos, pagar dos veces y qué pasa con un código de por vida si devuelvo el dinero. Una cosa ya la sé y está arreglada en la rama claude/guardar-atomico-166e3f, aún sin juntar a main: guardar() en functions/api/stripe.js no era atómico y dos renovaciones de la mensual a la vez podían dejar el código más corto. Revisa ese arreglo en esa rama (cobro/mensual.js, functions/api/stripe.js, renovar.js y recuperar.js, y tests/cobro-a-la-vez.spec.js) y dime si se le escapa algún caso.
+
+Legal: dime qué es obligatorio tener publicado ANTES de la primera venta y qué puede esperar un mes; en concreto, si mis datos del aviso legal pueden esperar. Revisa también si están bien resueltos el desistimiento, su pérdida en contenido digital y el botón para desistir; si «de por vida» está bien definido; si /premium promete algo que el código o las condiciones no cumplen; y cualquier contradicción entre condiciones, privacidad y /premium.
+
+Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien compra, y si bloquea la primera venta, va antes del mensual o puede esperar. Separa lo que has comprobado en el código de lo que deduces. En lo legal cita la norma y di con qué seguridad lo afirmas: no es asesoría y lo revisará un profesional.</pre></span></li>
+      <li class="paso luego"><span class="estado">Cuando me digas cuál subimos · conmigo pantalla a pantalla</span>
         <span class="t">Subir la 0.191.1 a Google Play</span>
         <span class="c"><span class="quien">Tú la subes; yo te guío.</span> El archivo ya está bajado y firmado:
           <code>subidas-play\PACE-0.191.1.aab</code> (15,2 MB). Te paso una pantalla por mensaje:
@@ -152,26 +201,12 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           </ol>
           Las capturas de la ficha no se tocan ahora: dos se han quedado viejas (los logros y Respira), y las seis se rehacen
           una sola vez, al final, con la jornada dentro. Los 14 días de los testers empiezan cuando tengas 12 dentro.</span></li>
-      <li class="paso luego"><span class="estado">El lunes 9, a la vez que Play · lo tuyo, unos 5 minutos</span>
+      <li class="paso luego"><span class="estado">A la vez que Play · lo tuyo, unos 5 minutos</span>
         <span class="t">Dar la del iPhone a tus testers en TestFlight</span>
         <span class="c"><span class="quien">Tú; yo te paso el texto.</span> La 0.191.1 (compilación 191001) ya está en Apple: GitHub la firmó
           y la subió a las 21:43, y Apple la está procesando. Cuando salga en App Store Connect › TestFlight, se añade al grupo
           «Testers iPhone» con el «Qué probar» que te paso, y Apple la revisa antes de que les llegue. Dime qué estado ves: si
           está lista, el enlace público del grupo va también a /beta.</span></li>
-      <li class="paso luego"><span class="estado">Después de la 0.195.0 · yo · dijiste «Sí, así» el 9 de noviembre</span>
-        <span class="t">Montar lo que encontró ChatGPT en tu día</span>
-        <span class="c"><span class="quien">Yo, en una sesión.</span> Primero, probar si una pestaña dormida puede contar un bloque dos
-          veces. Después, sin cambiar cómo se ve nada: que la pausa de un Foco no cuente como foco, que la hora de empezar no cambie
-          al recargar, y que cambiar cómo van las pausas en mitad del día no rehaga lo que ya hiciste. Y te pinto, para que elijas,
-          qué hace «Cambiar» con un Foco en marcha, lo que haces por tu cuenta en Estadísticas › Hoy y el «Hecha · 5 min».</span></li>
-      <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo, unos 15 minutos</span>
-        <span class="t">Grabar las cuatro voces que faltan en Respira</span>
-        <span class="c"><span class="quien">Tú; yo las mido y las pongo.</span> Lo recordabas bien: en el Suspiro fisiológico, el segundo
-          tramo, «Inhala más», dura un segundo y suena un tono porque no tiene voz. Faltan cuatro archivos, una sola palabra cada
-          uno: <code>sulafat-mas.mp3</code> y <code>bradford-mas.mp3</code> («Más») y <code>sulafat-more.mp3</code> y
-          <code>bradford-more.mp3</code> («More»), de 0,85 s como mucho. Opcional, un «Inhale» de sulafat más corto, de 1,85 s
-          como mucho, porque el de ahora no cabe en la primera inhalación. Los prompts, en
-          <code>docs/traspaso/archivos/encargos-16oct/PROMPTS_AUDIO_SUSPIRO.md</code>. Las demás voces y la música ya están.</span></li>
       <li class="paso luego"><span class="estado">Hecho en su rama · espera tu «júntalo»</span>
         <span class="t">Que dos cobros de la mensual a la vez no acorten el código</span>
         <span class="c"><span class="quien">Tú dices «júntalo»; yo lo subo.</span> Lo que encontró ChatGPT: si dos renovaciones de la
@@ -194,24 +229,6 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
           <b>Con la primera venta real</b>, me das tu nombre, NIF, dirección, correo y teléfono, y publico el aviso legal y las
           condiciones. Lo decidiste sabiendo que lo apuntado los pide antes de cobrar. La revisión del profesional, en un
           mes. «Configura Tax» se deja hasta que lo confirme el gestor.</span></li>
-      <li class="paso luego"><span class="estado">Cuando puedas · lo tuyo, 2 minutos · es lo que más ayuda de ChatGPT ahora</span>
-        <span class="t">Pasar a ChatGPT la revisión del cobro y de lo legal</span>
-        <span class="c"><span class="quien">Tú.</span> Lo que me trajiste el 5 de noviembre cubre datos y compra, pero no lo legal. Copia esto en
-          ChatGPT y tráeme su respuesta: compruebo cada cosa en el código antes de montar nada.
-          <pre class="prompt">Revisa en el repositorio público ezradesign/Pace_app, rama main, el cobro y lo legal de la web de PACE antes de la primera venta. Solo lectura. No repitas lo que ya está bien: quiero lo que puede salir mal.
-
-Contexto:
-- Vendo desde España como autónomo a consumidores de la UE y de fuera, con Stripe Managed Payments: Link cobra, pero el vendedor del producto sigo siendo yo.
-- Plan propuesto: empezar vendiendo solo el pago único de 19,99 € «de por vida» en la web. El mensual (2,99 € con 7 días de prueba) llegaría con v1. Hasta v1, PACE completo está abierto gratis para todos. Si ves motivo para hacerlo de otra forma, dímelo.
-- Lo legal está en borrador y sin publicar. Quiero dejar la revisión de un profesional para dentro de un mes.
-
-Lee: cobro/, functions/api/, app/state-compra.js, app/state-entitlement.jsx, premium/, gracias/, recuperar/, desistir/, legal/, privacy.html, docs/launch/cobro-web.md, docs/launch/desistir.md y docs/launch/legal-web.md.
-
-Cobro: busca casos concretos en los que alguien pague y no reciba su código, lo pierda o no pueda recuperarlo; otra persona lo consiga; o salga un código sin pagar. Incluye devoluciones, contracargos, pagar dos veces y qué pasa con un código de por vida si devuelvo el dinero. Una cosa ya la sé y está arreglada en la rama claude/guardar-atomico-166e3f, aún sin juntar a main: guardar() en functions/api/stripe.js no era atómico y dos renovaciones de la mensual a la vez podían dejar el código más corto. Revisa ese arreglo en esa rama (cobro/mensual.js, functions/api/stripe.js, renovar.js y recuperar.js, y tests/cobro-a-la-vez.spec.js) y dime si se le escapa algún caso.
-
-Legal: dime qué es obligatorio tener publicado ANTES de la primera venta y qué puede esperar un mes; en concreto, si mis datos del aviso legal pueden esperar. Revisa también si están bien resueltos el desistimiento, su pérdida en contenido digital y el botón para desistir; si «de por vida» está bien definido; si /premium promete algo que el código o las condiciones no cumplen; y cualquier contradicción entre condiciones, privacidad y /premium.
-
-Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien compra, y si bloquea la primera venta, va antes del mensual o puede esperar. Separa lo que has comprobado en el código de lo que deduces. En lo legal cita la norma y di con qué seguridad lo afirmas: no es asesoría y lo revisará un profesional.</pre></span></li>
       <li class="paso luego"><span class="estado">Con el gestor y el jurista · lo tuyo</span>
         <span class="t">Lo legal: tus datos y una revisión profesional</span>
         <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/GT6ZwHQHY6bKk7vBuYrUw2">la página</a>, en tu
@@ -233,8 +250,71 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
 
     </ol>
     <details class="plegado">
-      <summary>Lo hecho hasta hoy · 105 pasos</summary>
+      <summary>Lo hecho hasta hoy · 119 pasos</summary>
       <ol class="pasos">
+      <li class="paso hecho"><span class="estado">Hecho · 11 de noviembre</span>
+        <span class="t">Dijiste «Sí, todo junto»</span>
+        <span class="c"><span class="quien">Tú.</span> Todo lo montado del 10 y del 11 de noviembre va en una sola versión, la 0.198.0.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · 11 de noviembre</span>
+        <span class="t">Elegiste la A para el aro, y está montada</span>
+        <span class="c"><span class="quien">Tú elegiste; yo, con una sesión.</span> Con el horario abierto el aro tiene el tamaño de cuando
+          hay actividades y no se mueve al abrirlo: 447 px en tu ventana grande y 372 en la otra. Los otros dos estados y el
+          móvil, como estaban. <a href="https://claude.ai/artifact/BN1QuXDBSAnqjqAvvSMSny">Su página</a>.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · 11 de noviembre</span>
+        <span class="t">Tus ocho letras de la página de decisiones</span>
+        <span class="c"><span class="quien">Tú elegiste; yo, con dos sesiones.</span> La línea de los lunes en el sobre y en el cajón, Ocaso y
+          Búho adaptados (D-6 D), 4 B, 6 A y 7 A, montadas (<a href="https://claude.ai/artifact/1WwJbuD5qTtXJWNzVg7B7Q">lo de la revisión</a> y
+          <a href="https://claude.ai/artifact/LaTcRknTpPcJAa6joPncjX">4, 6 y 7</a>). El aro de rendimiento B, V1 B y V2 B, en cola.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · 11 de noviembre</span>
+        <span class="t">Contestaste la sexta revisión</span>
+        <span class="c"><span class="quien">Tú.</span> D-8 A (la copia de Google se queda, y PACE olvida la lista de eventos en un móvil
+          restaurado), D-9 A (en las apps se cobra directo con las tiendas), D-10 B (el iPhone suena con la campana de PACE) y
+          D-11 A (se quita «te avisamos dos días antes» en las apps). D-9 y D-11 van con el paquete de las tiendas.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · noche del 10 al 11 de noviembre</span>
+        <span class="t">Lo de anoche: la prueba que caía de noche, D-5 B, D-4 C y la sexta revisión comprobada</span>
+        <span class="c"><span class="quien">Yo, con cuatro sesiones.</span> La prueba de la portada caía de noche por un fallo de la app, no
+          de la prueba: arreglado. D-5 B y D-4 C, montados. Y la sexta revisión de fuera, comprobada en el código: 15 cosas
+          ciertas, 4 a medias y 2 falsas (<a href="https://claude.ai/artifact/C2uFSMM8eWhcRxpXLGWkAx">la auditoría</a>, al día).</span></li>
+      <li class="paso hecho"><span class="estado">Hecho en su rama · 10 de noviembre, noche · espera tu «júntalo»</span>
+        <span class="t">Tres de tus letras, montadas</span>
+        <span class="c"><span class="quien">Yo, con una sesión.</span> 1A, la fila para comprar PACE completo en Ajustes; 2A, al acabar el
+          ejercicio de una pausa el botón dice lo que sigue; y 4A, la bienvenida y la invitación sin «v1». Cada una con sus pruebas, en
+          verde. Aún no están en la web: faltan D-5 B y D-4 C, y te lo enseño todo junto en una página «Montado».</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · 10 de noviembre, noche</span>
+        <span class="t">Contestaste la revisión de la app</span>
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/C2uFSMM8eWhcRxpXLGWkAx">la página</a>, en esta cuenta).
+          1A, 2A, 3A (la línea de los lunes), 4A, D-1 A, D-2 A, D-4 C, D-5 B y D-7 A. Sin letra todavía: D-6, para la que
+          pediste una opción nueva.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · tú dijiste «Júntalo» · 10 de noviembre · en la web, 0.197.0 · GitHub, en verde entero</span>
+        <span class="t">La landing con la B, en la web</span>
+        <span class="c"><span class="quien">Yo.</span> La raíz de pacegrass.app con dos caras y la B, «Una jornada», en la landing, PACE completo
+          y /beta: quien llega nuevo ya ve la landing. Las 1467 pruebas de la app, en verde (dos se saltan a propósito), y GitHub en
+          verde entero: la web, Safari, Android y el iPhone.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · me la trajiste · 10 de noviembre, 15:00</span>
+        <span class="t">La revisión de la app hecha fuera, con el modelo nuevo</span>
+        <span class="c"><span class="quien">Tú.</span> Guardada entera en <code>docs/audits/fable-9nov/</code>. Leyó la app publicada, donde
+          aún no están varios arreglos que esperan tu «júntalo», así que algunos de sus fallos ya están resueltos en sus ramas.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · 9 de noviembre, 23:30</span>
+        <span class="t">Volver a esta cuenta, con las páginas a mano</span>
+        <span class="c"><span class="quien">Yo.</span> GitHub, en verde entero con la 0.196.0. Las tres ramas a medias, en orden y sin
+          nada perdido. La página de la landing y la del aro, publicadas aquí. Y dos sesiones en marcha desde sus ramas.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · 9 de noviembre, 21:25 · tú dijiste «me valen todos» · en la web, 0.196.0 · GitHub, en verde entero</span>
+        <span class="t">Tus voces del Suspiro y tu 1A, en la web</span>
+        <span class="c"><span class="quien">Yo.</span> En el Suspiro fisiológico, el segundo tramo dice «Más» o «More» con tu voz, en las dos
+          voces y en los dos idiomas; y la frase del día ya no deja «1 h» sola. De las 1450 pruebas, una cayó porque el ordenador
+          iba cargado y sola pasa. Es una actualización más para tus testers.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · 9 de noviembre, 19:50</span>
+        <span class="t">Volver a esta cuenta y retomar las sesiones</span>
+        <span class="c"><span class="quien">Yo.</span> Las cinco ramas, en orden y sin nada perdido. Las tres sesiones a medias, otra vez
+          en marcha desde donde pararon.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · 9 de noviembre, 20:20 · tú dijiste «me valen todos» · en su rama</span>
+        <span class="t">Tus voces del Suspiro, oídas y listas</span>
+        <span class="c"><span class="quien">Tú las grabaste y las oíste; yo las medí y las puse.</span> Las cuatro, con el volumen igualado
+          al de sus otras palabras. El «More» de sulafat no cabía en su segundo: ahora se corta donde solo queda la cola de la
+          «r», que sigue sonando suave detrás, y suena con tu voz. Entran en la próxima versión.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · 9 de noviembre, 19:00</span>
+        <span class="t">Elegiste la landing: la B, larga como /premium</span>
+        <span class="c"><span class="quien">Tú.</span> Y la C de la estructura: quien ya usa PACE ve la app, y quien llega nuevo, la landing.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · 9 de noviembre, 16:47 · tú dijiste «Júntalo con la A2»</span>
         <span class="t">La 0.195.0, en la web</span>
         <span class="c"><span class="quien">Yo.</span> Tus letras de la jornada y de lo nuevo, los dos arreglos de la primera parte de ChatGPT,
@@ -292,7 +372,7 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
               el día elegido y sin empezar se lee desde ahora; la ventana de una pausa que ya pasó entera no sale al volver; y el
               último bloque cierra el día también en el aro, «Jornada cerrada». Todas las pruebas de la app, una detrás de otra:
               1334 en verde.</li>
-            <li><a href="https://claude.ai/artifact/6stHAifXWoCnzX58mhL8Pz">El día de v1</a>, sección «Montado»: «Borrar todo» no quita
+            <li><a href="https://claude.ai/artifact/1AzBCEn8XpnhWVKbMJRSdg">El día de v1</a>, sección «Montado»: «Borrar todo» no quita
               tu compra; el aviso del día de v1 dice que tus rutinas propias se quedan; sin tienda, «Pronto podrás tenerlo aquí»; y
               una sola lista cambia a la vez todos los textos «hasta v1». Sus 268 pruebas, en verde. Una cosa: el aviso de «Borrar
               todo» empieza «Se borra todo lo que PACE guarda…», y ya no es verdad del todo. Al juntarlo quito ese «todo» y añado
@@ -324,8 +404,8 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
           mirados para que todo quepa. El día de v1: cinco personas, un fallo serio arreglado y todas las pruebas en verde.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · elegiste las recomendadas · 7 de noviembre, 16:22</span>
         <span class="t">Elegir las letras de dos páginas</span>
-        <span class="c"><span class="quien">Tú.</span> <a href="https://claude.ai/artifact/LsDSi3X7Gbd4kBWdpPcpPj">Lo que ves al volver</a>:
-          E1 A · V1 A · V2 A. <a href="https://claude.ai/artifact/2Fv1mCERFo1zLQ8XJyDvoV">Contraste de PACE</a>: 1B · 2B · 3B.</span></li>
+        <span class="c"><span class="quien">Tú.</span> <a href="https://claude.ai/artifact/Uv6u27mKhGnhZyQUXuk9MV">Lo que ves al volver</a>:
+          E1 A · V1 A · V2 A. <a href="https://claude.ai/artifact/Mwq1wanupBNsxj1DZzJdjF">Contraste de PACE</a>: 1B · 2B · 3B.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · 7 de noviembre, tarde</span>
         <span class="t">Volver a esta cuenta, con las páginas a mano</span>
         <span class="c"><span class="quien">Yo.</span> Las cinco ramas, en orden y sin nada perdido. Las cuatro páginas que solo se abrían
@@ -333,7 +413,7 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
           repositorio, para que no se vuelvan a perder al cambiar de cuenta.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · tú elegiste 1A 2A 3A 4A 5A · 7 de noviembre</span>
         <span class="t">Elegir cómo queda el inglés de PACE</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/EEBgoRtHUytnXGzeTXXftD">la página</a>). Las cinco
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/5Pbk8cpueqEVwu3Nn6VyJJ">la página</a>). Las cinco
           recomendadas: inglés de Estados Unidos, «The antidote to sitting», quitar las promesas de efecto de Respira y lo que no es
           del todo verdad en los dos idiomas, y las promesas de lo gratis se quedan.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · me la trajiste · 7 de noviembre</span>
@@ -349,7 +429,7 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
       <li class="paso hecho"><span class="estado">Hecho · tú dijiste «júntalo» · 6 de noviembre · en la app, 0.192.0</span>
         <span class="t">Juntar la jornada y el catálogo, y publicarlo</span>
         <span class="c"><span class="quien">Yo.</span> La jornada como paso actual, con tu 1A 2B y la X
-          (<a href="https://claude.ai/artifact/5P7oysx4zRBMe7qvhRjFgZ">las fotos</a>), y el catálogo, las cifras del cierre y «Auto»
+          (<a href="https://claude.ai/artifact/G4kprWWqpUfjEbGnvhVh1c">las fotos</a>), y el catálogo, las cifras del cierre y «Auto»
           con la B. Las 1315 pruebas en verde con todo junto; dos de los avisos esperaban «Pausar» y dentro de la jornada el
           botón dice «Pausar foco», como elegiste. Es la primera actualización para tus testers.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · 6 de noviembre, con tu sí de hace tiempo</span>
@@ -677,17 +757,17 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
           la buena desde el primer día.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · tú elegiste 1A 2A 3A 4A</span>
         <span class="t">Elegir en la maqueta de lo que falta para vender</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/9MnNL8b5BYWcX9Fsa7vnAa">la maqueta</a>). La hoja
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/VDdAWeb8msGvckeGXxFjWV">la maqueta</a>). La hoja
           del día de v1 con las rutinas que se quedan; la página para recuperar el código y «¿Lo has perdido?» en PACE; los
           botones de compra como en la bienvenida; y la ventana de valorar también en el iPhone.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · tú dijiste «júntalo»</span>
         <span class="t">Mirar las fotos de lo que falta para vender y decir si se junta</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/56cDi1KJYKS4gKqnFKouJP">las fotos</a>). La hoja
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/Mk11GDb9JBDGXyTrynbaYY">las fotos</a>). La hoja
           del día de v1, la página para recuperar el código, los botones de compra y la valoración en el iPhone, con «Las
           rutinas más profundas» y los dos arreglos de seguridad.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · tú elegiste la A</span>
         <span class="t">Elegir lo que dice el aviso del móvil al acabar un Foco</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/9BKgTENwuTjts4Wa1N7ZYd">los textos</a>). Con
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/7Hj5sHmFuuzVP5QFntqdN7">los textos</a>). Con
           «A tu ritmo», el móvil dice la pausa que toca y a qué hora vuelves, como la web.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · 28 de octubre · en la app, 0.185.0</span>
         <span class="t">Juntar lo que faltaba para vender y los avisos del iPhone, y publicarlo</span>
@@ -706,8 +786,8 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
           privacidad: de una mensual que terminó quedan solo su número y el día en que terminó. No cambia nada que se vea.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · tú elegiste · 29 de octubre</span>
         <span class="t">Elegir en las dos maquetas</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/Mtv9tKsUy9qWgJgKwfD788">el runner</a> y
-          <a href="https://claude.ai/artifact/LD2aRGw2gsrK2XM2DrovkB">«Tus rutinas»</a>). B3 A, P5 A, P6 A con «Con una basta»
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/MVctqCpaCguGyZjmQgErx1">el runner</a> y
+          <a href="https://claude.ai/artifact/U1mVU44sM6ggqnW3bwfhv3">«Tus rutinas»</a>). B3 A, P5 A, P6 A con «Con una basta»
           debajo de «segundos», y P8 B dejando el dibujo a la vista; U1 B · C6 A.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · tú elegiste la recomendada · 29 de octubre</span>
         <span class="t">El calendario en v1</span>
@@ -716,7 +796,7 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
           recuerda la conexión. /premium y los textos lo contarán así.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · tú dijiste «móntalo» · 29 de octubre</span>
         <span class="t">Tu reparto del runner</span>
-        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/REAWxKaAqcVxU72mSeLZsp">la maqueta</a>).
+        <span class="c"><span class="quien">Tú</span> (<a href="https://claude.ai/artifact/R4hc4PDHjn4o94Zirz6scg">la maqueta</a>).
           Cada pastilla bajo su etiqueta, «Auto» bajo los botones, el círculo mayor donde sobra aire y «pulsa «Empezar ya»».
           Y de los cinco dibujos: menos sombreado, y que todos se vean homogéneos.</span></li>
       <li class="paso hecho"><span class="estado">Hecho en su rama · 29 de octubre</span>
@@ -1018,6 +1098,52 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
 
   <section>
     <h2>El camino hasta v1</h2>
+    <p>Quedan cuatro tramos. El 1 y el 2 se pueden hacer ya; el 3 espera tus altas y cabe dentro de los 14 días del 2. El
+      código ya no marca la fecha: desde que la prueba con testers empiece a contar, v1 puede salir en unas tres semanas.</p>
+    <div class="leyenda" aria-hidden="true">
+      <span><i class="pt espera"></i>Espera algo tuyo</span>
+      <span><i class="pt yo"></i>Lo hago yo</span>
+    </div>
+    <div class="grupo"><h3>1 · Cerrar la versión de prueba</h3>
+      <ol class="camino">
+        <li><i class="pt yo"></i><div class="que"><span class="estado yo">1 · Ahora</span>
+          <b>Juntar la 0.198.0</b><span>Todo lo montado el 10 y el 11 de noviembre, en una sola versión, con tu «Sí, todo junto».</span></div></li>
+        <li><i class="pt yo"></i><div class="que"><span class="estado yo">2 · En cola</span>
+          <b>Montar lo que ya contestaste</b><span>El aro durante un Foco largo, la versión nueva con la web abierta, que el fin del Foco suene en el iPhone y que un Android restaurado no pueda borrar una reunión.</span></div></li>
+        <li><i class="pt yo"></i><div class="que"><span class="estado yo">3 · Sin empezar · cada una la valoramos antes</span>
+          <b>Lo que las revisiones marcan «antes de v1»</b><span>Que la quinta pausa de un tester no gaste la única petición de valoración; que el fin de la pausa avise en el móvil, con su sonido; una nota al acabar la semana de prueba; que los buscadores encuentren PACE con un nombre limpio; que con mala conexión no se quede en blanco al abrir; avisar de los cambios de lado dentro de un ejercicio; y unas diez cosas pequeñas más.</span></div></li>
+        <li><i class="pt espera"></i><div class="que"><span class="estado espera">4 · Los textos están listos · tú las lanzas</span>
+          <b>Dos pasadas más de revisión con Fable</b><span>Una sobre lo montado el 11 de noviembre y otra sobre las pruebas. Lo que traigas lo compruebo y lo arreglo.</span></div></li>
+        <li><i class="pt espera"></i><div class="que"><span class="estado espera">5 · Espera tu sí</span>
+          <b>Lo que solo espera un sí</b><span>Que dos cobros de la mensual a la vez no acorten el código, y los cuatro arreglos pequeños de la sexta revisión.</span></div></li>
+        <li><i class="pt espera"></i><div class="que"><span class="estado espera">6 · Lo tuyo · sin empezar</span>
+          <b>Que lo mire un fisioterapeuta</b><span>Fondos en silla y los ejercicios aparcados: es la revisión que el contenido pide antes de v1.</span></div></li>
+      </ol></div>
+    <div class="grupo"><h3>2 · La prueba con testers</h3>
+      <ol class="camino">
+        <li><i class="pt espera"></i><div class="que"><span class="estado espera">7 · Espera a que la subas</span>
+          <b>Subir la versión de prueba a Play y a TestFlight</b><span>La preparada es la 0.191.1. Si aún no la has subido, conviene subir ya la que salga del tramo 1.</span></div></li>
+        <li><i class="pt espera"></i><div class="que"><span class="estado espera">8 · La cuenta no ha empezado</span>
+          <b>Doce testers durante 14 días seguidos</b><span>Tienes 5 o 6. Cuando se cumplan los 14 días, se pide a Google el acceso a producción.</span></div></li>
+      </ol></div>
+    <div class="grupo"><h3>3 · Cobrar: tus altas y el código que espera a cada una</h3>
+      <ol class="camino">
+        <li><i class="pt espera"></i><div class="que"><span class="estado espera">9 · Espera tu alta</span>
+          <b>El perfil de pagos de Play</b><span>Con él monto la compra en Android, restaurarla al cambiar de móvil, los códigos de tus testers y los textos de compra de las apps.</span></div></li>
+        <li><i class="pt espera"></i><div class="que"><span class="estado espera">10 · Espera tu alta</span>
+          <b>El acuerdo de apps de pago de Apple</b><span>Con él monto la compra de Apple, «Restaurar compras», la ficha y la revisión de la App Store.</span></div></li>
+        <li><i class="pt espera"></i><div class="que"><span class="estado espera">11 · Espera tus datos</span>
+          <b>Tus datos, un profesional y el correo para desistir</b><span>Tu nombre, tu NIF y un contacto, la revisión de un profesional y el alta en Resend. Con eso salen lo legal de /premium y el botón para desistir, y se puede encender ya la venta de por vida en la web, antes de v1.</span></div></li>
+        <li><i class="pt espera"></i><div class="que"><span class="estado espera">12 · Espera tus altas y una decisión</span>
+          <b>Las altas en Google y Microsoft</b><span>Con ellas hago el calendario que se mantiene solo. Google tarda semanas en revisar la app: falta decidir si v1 lo espera o sale con el calendario «en pruebas».</span></div></li>
+      </ol></div>
+    <div class="grupo"><h3>4 · El día de v1.0</h3>
+      <ol class="camino">
+        <li><i class="pt meta"></i><div class="que"><span class="estado meta">13 · La meta</span>
+          <b>v1.0: PACE se puede comprar</b><span>Se cierra lo abierto hasta v1 sin quitar nada a quien ya lo usaba, «Da de pastar a la vaca» sale de la web y se prueba comprar, restaurar y cancelar en la web, en Android y en el iPhone.</span></div></li>
+      </ol></div>
+    <details class="plegado">
+      <summary>Lo ya hecho, y el detalle de cada pieza</summary>
     <div class="leyenda" aria-hidden="true">
       <span><i class="pt hecho"></i>Hecho</span>
       <span><i class="pt espera"></i>Espera algo tuyo</span>
@@ -1123,6 +1249,7 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
     </ol>
     <p class="nota">Las letras (A, B, C, T, M, L y V) son los paquetes de las ocho revisiones de ChatGPT del 28 de octubre. Están
       enteras, con lo que comprobé de cada una, en <code>docs/audits/chatgpt-28oct/</code>, y el orden, en el ROADMAP.</p>
+    </details>
   </section>
 
   <section>
@@ -1151,7 +1278,7 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
       cuentas a tu nombre y el gestor.</p>
     <div class="grupo"><h3>1 · Lo que más adelanta v1</h3>
       <ul class="lista">
-        <li><b>La versión de prueba 0.191.1, el lunes 9</b>: subirla a Play (el archivo ya está en <code>subidas-play\</code>) y darla a tus
+        <li><b>La versión de prueba</b>: dime si ya subiste la 0.191.1; si no, mejor la 0.198.0 en cuanto esté. Subirla a Play (el archivo ya está en <code>subidas-play\</code>) y darla a tus
           testers de iPhone en TestFlight. Así prueban la buena desde el primer día.</li>
         <li><b>Testers de Android</b>: avisar a los tuyos y publicar en LinkedIn, todos a pacegrass.app/beta.
           Hacen falta 12 durante 14 días seguidos (mejor 15, por si alguien se cae); tienes 5 o 6. A cada uno, su enlace de
@@ -1189,7 +1316,7 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
     <div class="grupo"><h3>4 · Cuando puedas, no frenan v1</h3>
       <ul class="lista">
         <li>Probar en tu Android el calendario que se mantiene solo, y leer <code>privacy.html</code>, que es pública.</li>
-        <li>Oír la voz de Respira y los cuencos en pacegrass.app, y grabar «Más» y «More» para el suspiro.</li>
+        <li>Oír la voz de Respira y los cuencos en pacegrass.app.</li>
         <li>Los 22 dibujos de los logros, cuando acabes los de ejercicios (<code>docs/product/GLIFOS_A_DIBUJAR.md</code>).</li>
         <li>Apagar en GitHub las propuestas automáticas de Dependabot, dejando las alertas.</li>
         <li>Decirme si ChatGPT contestó a dos consultas: «qué pasa cuando sale una versión nueva» y «volver a la app».

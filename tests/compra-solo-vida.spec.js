@@ -120,15 +120,15 @@ test.describe('la bienvenida con solo el de por vida', () => {
 
     const tarjeta = page.locator('[role=dialog][data-pace-scene-card]');
     /* Hasta v1 todo sigue abierto para todos, y la bienvenida lo dice antes de pedir nada. */
-    await expect(tarjeta).toContainText('Y hasta v1, PACE completo también está abierto para todos:');
+    await expect(tarjeta).toContainText('Y mientras está en pruebas, PACE completo también está abierto para todos:');
     await expect(page.locator('[data-pace-onb-precios]')).toHaveText('Un solo pago de 19,99 €, para siempre.');
     const comprar = page.locator('[data-pace-onb-vida]');
     const ahora = page.locator('[data-pace-onb-ahora]');
     await expect(comprar).toHaveText('Comprar, 19,99 €');
     await expect(ahora).toHaveText('Ahora no');
     await expect(page.locator('[data-pace-onb-probar], [data-pace-onb-comenzar]')).toHaveCount(0);
-    /* Nada del mensual: ni la prueba, ni el aviso de dos días, ni «al mes». */
-    await expect(tarjeta).not.toContainText(/días gratis|al mes|prueba|Te avisamos|Prefiero/i);
+    /* Nada del mensual: ni la prueba, ni el aviso de dos días, ni «al mes». «de prueba» y no «prueba»: la línea de arriba dice «mientras está en pruebas» (Ez, 4A del 10 nov.). */
+    await expect(tarjeta).not.toContainText(/días gratis|al mes|de prueba|probar|Te avisamos|Prefiero/i);
 
     const [a, b] = [await comprar.boundingBox(), await ahora.boundingBox()];
     expect(Math.abs(a.width - b.width)).toBeLessThan(1);
@@ -210,7 +210,7 @@ test.describe('la invitación con solo el de por vida', () => {
     const hoja = page.locator(HOJA);
     await expect(hoja).toHaveAttribute('data-pace-premium-hoja', 'invita');
     await expect(hoja.locator('[data-pace-premium-precios]')).toHaveText('Un solo pago de 19,99 €, para siempre.');
-    await expect(hoja).not.toContainText('Llega con la versión 1.');
+    await expect(hoja).not.toContainText('Llega cuando salga a la venta.');
     await expect(hoja).not.toContainText(/días gratis|al mes|prueba|Te avisamos|Prefiero/i);
     await expect(hoja.locator('[data-pace-premium-vida]')).toHaveCount(1);
     await expect(hoja.locator('[data-pace-premium-vida]')).toHaveText('Comprar, 19,99 €');
@@ -318,10 +318,16 @@ for (const plataforma of ['android', 'ios']) {
       await hoja.getByRole('button', { name: 'Ahora no' }).click();
       await expect(page.locator(HOJA)).toHaveCount(0);
 
-      /* En toda la app, ningún enlace lleva a pagar ni a /premium. */
-      const enlaces = await page.evaluate(() => [...document.querySelectorAll('a[href]')].map((a) => a.getAttribute('href'))
-        .filter((h) => /premium|stripe|buy\./i.test(h)));
+      /* En toda la app, ningún enlace lleva a pagar ni a /premium. La landing de la raíz (solo web) sí
+         enlaza a /premium: aquí, con la cara «app», está escondida y no se ve ninguno de sus enlaces; en
+         las apps de verdad ni existe, porque a su index.html le llega sin ella (landing-cara.spec.js). */
+      const { enlaces, landingVisible } = await page.evaluate(() => ({
+        enlaces: [...document.querySelectorAll('a[href]')].filter((a) => !a.closest('#pace-landing')).map((a) => a.getAttribute('href'))
+          .filter((h) => /premium|stripe|buy\./i.test(h)),
+        landingVisible: [...document.querySelectorAll('#pace-landing a[href]')].some((a) => a.checkVisibility()),
+      }));
       expect(enlaces).toEqual([]);
+      expect(landingVisible).toBe(false);
     });
 
     test('la bienvenida acaba en «Comenzar», sin ningún botón de compra', async ({ page, context }) => {

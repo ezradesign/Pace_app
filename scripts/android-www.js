@@ -44,9 +44,31 @@ function listaWww() {
   return lista;
 }
 
+/* LA LANDING NO VA EN LAS APPS (opcion C, Ez, 9 nov. 2026): el index.html de la web lleva
+   la raiz con dos caras entre las marcas `pace-landing` (build-standalone.js), y en Android y en
+   iPhone se abre siempre la app. Se quita el bloque entero: sin la decision, la app monta como
+   siempre. Lanza si las marcas no casan, para no copiar media landing. */
+function quitarLanding(html) {
+  const partes = html.split('<!--pace-landing-->');
+  let limpio = partes[0];
+  for (let i = 1; i < partes.length; i++) {
+    const fin = partes[i].indexOf('<!--/pace-landing-->');
+    if (fin < 0) throw new Error('quitarLanding: una marca de inicio sin su fin');
+    limpio += partes[i].slice(fin + '<!--/pace-landing-->'.length);
+  }
+  if (limpio.indexOf('<!--/pace-landing-->') >= 0) throw new Error('quitarLanding: una marca de fin sin su inicio');
+  return limpio;
+}
+
+/* Lo que cambia al copiar a las apps: solo index.html, sin la landing. */
+function paraApps(rel, bytes) {
+  return rel === 'index.html' ? Buffer.from(quitarLanding(bytes.toString('utf8')), 'utf8') : bytes;
+}
+
 /* Vacia `out` y copia ahi la lista: { archivos, bytes }. Nunca sobre la raiz
-   ni una carpeta que la contenga, que el vaciado se llevaria el repo. */
-function copiarTodo(lista, out) {
+   ni una carpeta que la contenga, que el vaciado se llevaria el repo. `transformar(rel, bytes)`,
+   si lo hay, cambia lo que se escribe (las apps quitan la landing; la web copia tal cual). */
+function copiarTodo(lista, out, transformar) {
   const destino = path.resolve(out);
   if ((path.resolve(ROOT) + path.sep).startsWith(destino + path.sep)) throw new Error('copiarTodo: ' + destino + ' contiene el repo');
   fs.rmSync(destino, { recursive: true, force: true });
@@ -54,15 +76,16 @@ function copiarTodo(lista, out) {
   for (const rel of lista) {
     const dst = path.join(destino, rel);
     fs.mkdirSync(path.dirname(dst), { recursive: true });
-    fs.copyFileSync(path.join(ROOT, rel), dst);
+    if (transformar) fs.writeFileSync(dst, transformar(rel, fs.readFileSync(path.join(ROOT, rel))));
+    else fs.copyFileSync(path.join(ROOT, rel), dst);
     bytes += fs.statSync(dst).size;
   }
   return { archivos: lista.length, bytes };
 }
 
 if (require.main === module) {
-  const r = copiarTodo(listaWww(), OUT);
+  const r = copiarTodo(listaWww(), OUT, paraApps);
   console.log('www/: ' + r.archivos + ' archivos, ' + (r.bytes / 1048576).toFixed(1) + ' MB');
 }
 
-module.exports = { listaWww, recorrer, copiarTodo };
+module.exports = { listaWww, recorrer, copiarTodo, quitarLanding, paraApps };

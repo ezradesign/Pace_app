@@ -1,7 +1,7 @@
 /**
  * npm run licencia:llaves  — CREA LA PAREJA DE LLAVES DE LOS CÓDIGOS (una vez)
  *
- * Se ejecuta en el PC de Ez, no en la nube ni en GitHub:
+ * Se ejecuta en local, no en la nube ni en GitHub:
  *   · la llave PRIVADA (la que firma) se guarda en `PACE-llave-licencias`, en la
  *     carpeta de usuario, fuera del repositorio. Haz una copia fuera del
  *     ordenador, como con la de Play: sin ella no se pueden hacer más códigos.

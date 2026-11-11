@@ -1,13 +1,15 @@
 # PACE · Estado
 
-**Versión:** v0.195.0 · 9 de noviembre de 2026 (la versión de prueba de Play y TestFlight es la 0.191.1). Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.198.0 · 11 de noviembre de 2026 (la versión de prueba de Play y TestFlight es la 0.191.1). Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
 
 - **Web** en https://pacegrass.app (y `paceweb.pages.dev`, sin redirigir), publicada desde `dist/`
   (`node scripts/web-dist.js`): `/premium` con «Avísame» (se enciende al conectar el KV: `docs/launch/avisame.md`),
-  `/beta` para que los testers de Android se apunten solos, y `/gracias` y `/recuperar` para quien compre.
+  `/beta` para que los testers de Android se apunten solos, y `/gracias` y `/recuperar` para quien compre. **La raíz tiene
+  dos caras** (`landing/cara.js`): quien ya usa PACE ve la app; quien llega nuevo, una landing larga. La landing, /premium y
+  /beta llevan la estética B, «Una jornada» (Ez, 10 nov.), con las capturas también en oscuro.
 - **Android**: cada push a `main` compila el APK de prueba y el AAB firmado (`pace-play-vX.Y.Z`). La prueba cerrada,
   aprobada el 21 oct., tiene la 0.174.0. **iPhone**, dentro de v1 (Ez, 22 oct.): TestFlight tiene la 0.175.0, firmada y
   subida desde GitHub sin Mac, y la App Store sale el mismo día que Android.
@@ -63,9 +65,13 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 - **ChatGPT, segunda parte** (`docs/audits/chatgpt-8nov/respuesta-2-dia-tiempo-cuenta.md`): siete puntos ciertos; Ez dijo
   «Sí, así»: después de la 0.195.0, probar el doble cómputo, arreglar la cuenta (1, 3, 2) y pintar 4, 6 y 7. La del cobro y lo
   legal sigue en su hoja.
-- **Landing C** (9 nov., `claude/landing-c-9nov`, a medias): la raíz con dos caras; ante la duda, la app. Se pinta para Ez.
-- **La 1A de la caza** («1 h» no se queda sola en la frase del día), montada en `claude/caza-anchos-9nov-6a280f` (43655d1b): entra en la siguiente. La 2A deja 320 px como está.
-- **Esperan a Ez**: las letras de la landing (WXqNcQ9X…, 5iWBf), Play y TestFlight con la 0.191.1 (lunes 9) y los audios del suspiro.
+- **La 0.197.0, en `main` con el «Júntalo» de Ez (10 nov.)**: la raíz con dos caras y la estética B en la landing, /premium y /beta
+  (página 6DsS35xJXsmcZrdtZiXhoL, `docs/proposals/web-estetica-9nov/`). Suite entera en verde: 1467 pasadas, 2 saltadas (el audio del iPhone, saltadas a propósito) y ninguna roja, en 43,2 min.
+- **La 0.196.0, en `main` con el «Me valen todos los audios» de Ez (9 nov.), CI en verde entero (42693245511)**: «Más» y «More» en el segundo tramo del Suspiro con
+  las cuatro tomas de Ez (el «More» de sulafat, cortado en 1,08 s, ya cabe) y la 1A de la caza en seis anchos. 1449 pruebas en verde; la única roja (eventos-origen, «el navegador se cerró» con la máquina cargada) pasa sola, 4 de 4.
+- **La 0.198.0, en `main` con el «Sí, todo junto» de Ez (11 nov.)**: el arreglo del CI de noche (con la landing delante no se guarda nada), lo montado de la auditoría (1A, 2A, 4A, la línea de los lunes en el sobre y en el cajón, D-6 D, D-5 B y D-4 C), las letras 4 B, 6 A y 7 A con la cuenta de la jornada (ChatGPT 1, 2, 3 y 5, que venían en la misma rama) y la A del aro con el horario abierto. Suite entera sobre el `index.html` que se sube: 1515 en verde, 2 saltadas a propósito y 5 rojas, las cinco resueltas: tres pruebas puestas al día (dos de la pausa esperaban «Volver al inicio», que la 2A cambia con la pausa corriendo, y la de «Borrar todo» no conocía la clave del aro) y dos que caen con la máquina cargada y pasan solas (`foco-inicio-recarga` y `ios-avisos`). Sus páginas, una por cuenta (EcLj6 / 5iWBf): el aro, BN1QuXDBSAnqjqAvvSMSny / NgV2uX97ZxRZTXEePWvcGG; «Montado» de la auditoría, 1WwJbuD5qTtXJWNzVg7B7Q / CpnFEkENADXDVU7K7u8k5M; «Montado» de 4, 6 y 7, LaTcRknTpPcJAa6joPncjX / RifLYxtf23zjW51atRD4U3.
+- **En cola, sesiones en Opus de una en una** (11 nov.): el aro de rendimiento B con V1 B y V2 B (`claude/caza-rendimiento-9nov`, que además lleva las barras y las fuentes más ligeras, a la espera de su «júntalo»); después, D-8 A y D-10 B (filas S2 y S1 de `docs/audits/fable-9nov/cola.md`, rama `claude/auditoria-fable-9nov-8401fc`). D-9 A y D-11 A van con las tiendas. Detalle, en el relevo de `docs/traspaso/LEEME.md`.
+- **Esperan a Ez**: decir si subió ya la 0.191.1 a Play y a TestFlight (si no, mejor subir la 0.198.0); dos pasadas más con Fable hasta el 12 nov. (`docs/audits/textos-externa-11nov.md`); el sí a los arreglos pequeños S3 y S4 de la sexta pasada (página de la auditoría: C2uFSMM8eWhcRxpXLGWkAx / 2QnMBypqSRVJCmPeNJazZA); y la revisión de ChatGPT del cobro y lo legal.
 - **Lo legal para vender en la web**, en `main` con la 0.189.0 y las letras de Ez (1A 2A 3A 4A 5A): los borradores, sin
   publicar hasta sus datos (nombre, NIF y un contacto) y la revisión de un profesional (las preguntas para el gestor y el
   jurista, en `docs/launch/legal-web-para-ez.html`); y `/desistir`, cerrada hasta que Ez dé de alta Resend y ponga
@@ -75,15 +81,14 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 - **Stripe** (`docs/launch/cobro-web.md`): el modo de prueba, entero y comprobado el 5 nov.: el aviso, la llave de lectura
   (`STRIPE_LECTURA`, del modo de prueba de la cuenta y no del sandbox), dos compras con 4242 y /recuperar con el recibo de Link;
   y los cuatro `plink_` en `PACE_ENLACES_STRIPE`. **Modo real (5 nov.)**: cuenta activada tras el alta con el gestor, y el
-  aviso (`whsec_` real) y la llave de lectura (`rk_live_`) ya en Cloudflare. Faltan lo legal, Resend y encender los enlaces. **Ez (5 nov.): solo el de por vida, solo en la web, hasta v1. Sus datos, al registrar la primera venta real, y la revisión profesional, en un mes, hablado con el gestor**: sabe que `docs/launch/legal-web.md` los pide antes de cobrar. Para encender: Resend y la dirección del enlace real (`PACE_TIENDA_WEB.enlaces.vida`); la tienda de un plan ya está en `main`.
+  aviso y la llave de lectura del modo real, ya puestos. Faltan lo legal, Resend y encender los enlaces. **Ez (5 nov.): solo el de por vida, solo en la web, hasta v1. Sus datos, al registrar la primera venta real, y la revisión profesional, en un mes, hablado con el gestor**: sabe que `docs/launch/legal-web.md` los pide antes de cobrar. Para encender: Resend y la dirección del enlace real (`PACE_TIENDA_WEB.enlaces.vida`); la tienda de un plan ya está en `main`.
   Hecho: la cuenta (autónomo), «vende por ti» con Stripe Tax, los productos y sus enlaces en real y APAGADOS, el portal,
-  k2 y Cloudflare (`PACE_K2_PRIVADA` y el KV `VENTAS`). En la web, antes de v1, solo el de por vida (Ez, 5 nov.).
+  k2 y lo que necesita el servidor. En la web, antes de v1, solo el de por vida (Ez, 5 nov.).
 - **Lo que fija la fecha de v1**: unos 15 testers de Android (tiene 5 o 6; `/beta` y el grupo, listos: `testers.md`), el
   gestor y el alta para cobrar, y los datos del aviso legal.
-- **Espera su «júntalo» y la revisión de ChatGPT:** `guardar()` a prueba de dos renovaciones a la vez
-  (`claude/guardar-atomico-166e3f`: un periodo por llave en `cobro/mensual.js`; 89 pruebas del cobro en verde). Ez le pasa a
-  ChatGPT el texto de la hoja, que también pide revisar ese arreglo. La landing (`claude/landing-web-5ec1e5`) espera sus
-  letras; y faltan dos dibujos de logros: Año
+- **Espera su «júntalo» y la revisión de ChatGPT:** un arreglo del cobro mensual, en su rama (`claude/guardar-atomico-166e3f`,
+  con sus pruebas en verde). Ez le pasa a ChatGPT el texto de la hoja, que también pide revisar ese arreglo. Y faltan
+  dos dibujos de logros: Año
   nuevo, que se repite, y Vaca feliz.
 - **iPhone**: qué estado ve Ez en TestFlight (la prueba beta se envió el 23 oct.) e invitar a sus testers con el
   enlace público del grupo «Testers iPhone», que va también a /beta. Para vender: el acuerdo de apps de pago con banco
@@ -91,9 +96,8 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 - Las altas de Google Cloud y Microsoft Entra (`docs/CALENDARIO_ALTAS.md`): sin ellas el calendario automático de la
   web no funciona para nadie, y abrirlo a todos pide que Google verifique la app, que tarda semanas.
 - La verificación en dos pasos en GitHub, Cloudflare, Stripe, Google y Apple; mandar a cada tester su enlace de
-  `codigos-tester.csv`. **Las llaves ya no están en el PC** (Ez, 31 oct.): `PACE-llave-play`, `-licencias` y `-apple`
-  viven solo en su disco, en `F:\Pace-llaves\` (comprobadas por md5 antes de borrarlas), y en los secretos de GitHub y
-  Cloudflare. Para hacer códigos de tester o de venta a mano, se enchufa el disco. Falta una segunda copia fuera de casa.
+  `codigos-tester.csv`. **Las llaves privadas** viven fuera del repo y
+  fuera del ordenador de trabajo (Ez, 31 oct.); dónde, lo sabe Ez y no se escribe aquí. Falta una segunda copia fuera de casa.
 - «Avísame»: el nombre que firma su privacidad, el KV `pace-avisame` como `AVISAME` y el token de Web Analytics solo
   para /premium (con él, `verify` pide que `privacy.html` lo diga); mirar el registro previo de Play.
 - S3, el código portable (un código que se puede pasar a otra persona): es decisión de Ez, sin tomar.

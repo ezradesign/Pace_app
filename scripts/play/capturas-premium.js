@@ -9,6 +9,9 @@
  * como la tira de /beta. Con `--sin-marco=carpeta`, guarda también ahí la pantalla tal cual, en PNG.
  * Con nombres de escena (`carta mes`), solo esas.
  *
+ * Con `--oscuro`, la app y el marco en oscuro: premium/<nombre>-<idioma>-oscuro.webp, que la web enseña a
+ * quien la ve en oscuro (Ez, 10 nov. 2026).
+ *
  * Nada de Mueve ni de Estira por su nombre (se rehacen; Ez, 23 oct. 2026): la rutina propia
  * lleva ejercicios cuyo nombre y dibujo se quedan, la carta habla de Respira y de una pausa
  * por su hora, y la rutina profunda es de Respira. Por lo mismo, «Tus rutinas» no se fotografía
@@ -24,6 +27,7 @@ const sharp = require('sharp');
 const { ROOT, PUERTO, BASE, CLAVE, clic, sesion, marco, guardar, esperarServidor } = require('./capturas');
 
 const SALIDA = path.join(ROOT, 'premium');
+const OSCURO = process.argv.includes('--oscuro');
 const SIN_MARCO = (process.argv.find((a) => a.startsWith('--sin-marco=')) || '').slice('--sin-marco='.length);
 
 /* La fecha de cada escena: la carta sale el lunes; el mes y el año, casi a final de mes. */
@@ -144,8 +148,9 @@ async function main() {
       for (const esc of ESCENAS) {
         if (solo.length && !solo.includes(esc.id)) continue;
         const ctx = await navegador.newContext({ viewport: { width: 360, height: 640 }, deviceScaleFactor: 3,
-          locale: lang === 'en' ? 'en-US' : 'es-ES', timezoneId: 'Europe/Madrid', colorScheme: 'light', serviceWorkers: 'block' });
-        await ctx.addInitScript(([k, v]) => { if (!localStorage.getItem(k)) localStorage.setItem(k, JSON.stringify(v)); }, [CLAVE, esc.semilla(lang)]);
+          locale: lang === 'en' ? 'en-US' : 'es-ES', timezoneId: 'Europe/Madrid', colorScheme: OSCURO ? 'dark' : 'light', serviceWorkers: 'block' });
+        const semilla = Object.assign(esc.semilla(lang), OSCURO ? { palette: 'oscuro' } : {});
+        await ctx.addInitScript(([k, v]) => { if (!localStorage.getItem(k)) localStorage.setItem(k, JSON.stringify(v)); }, [CLAVE, semilla]);
         const page = await ctx.newPage();
         page.setDefaultTimeout(8000);
         const errores = [];
@@ -162,13 +167,13 @@ async function main() {
         const lienzo = await navegador.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
         /* Desde una página del mismo servidor, para que carguen sus fuentes (capturas.js). */
         await lienzo.goto(BASE + '/safety.html');
-        await lienzo.setContent(marco(lang, esc, 'data:image/png;base64,' + cruda.toString('base64')));
+        await lienzo.setContent(marco(lang, esc, 'data:image/png;base64,' + cruda.toString('base64'), OSCURO));
         await lienzo.evaluate(() => document.fonts.ready);
         await lienzo.waitForLoadState('networkidle');
         const png = await lienzo.locator('.lienzo').screenshot();
         await lienzo.close();
         const webp = await sharp(png).resize(540, 960).webp({ quality: 82 }).toBuffer();
-        await guardar(path.join(SALIDA, esc.id + '-' + lang + '.webp'), webp);
+        await guardar(path.join(SALIDA, esc.id + '-' + lang + (OSCURO ? '-oscuro' : '') + '.webp'), webp);
         console.log(lang, esc.id, Math.round(webp.length / 1024) + ' KB', errores.length ? 'ERRORES: ' + errores.join(' | ') : 'ok');
       }
     }

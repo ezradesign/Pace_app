@@ -1,0 +1,117 @@
+/* A · CUADERNO DE CAMPO
+   Un solo papel, sin bandas. Filetes finos entre secciones; donde hay texto, el título va al margen
+   y el texto a su derecha; las capturas, montadas como láminas (papel, filete y un segundo filete
+   fuera). Los cinco módulos llevan su dibujo de la app en las tres páginas. Cabecera y pie iguales
+   en las tres. Ningún color nuevo: todo sale de los tokens que ya usan. */
+
+/* La landing nombra sus colores con --l-*; aquí se llaman como en /premium y /beta. */
+html #pace-landing { --paper: var(--l-paper); --paper-2: var(--l-paper-2); --ink: var(--l-ink); --ink-2: var(--l-ink-2); --ink-3: var(--l-ink-3);
+  --line: var(--l-line); --line-2: var(--l-line-2); --focus: var(--l-focus); --cta: var(--l-cta); --breathe: var(--l-breathe);
+  --move: var(--l-move); --extra: var(--l-extra); --hydrate: var(--l-water); --display: var(--l-display); --ui: var(--l-ui); }
+
+/* La cabecera: el mismo logo y el mismo filete en las tres. */
+html #pace-landing .pl-cab, html body main.marco > header { padding: 14px 0; border-bottom: 1px solid var(--line); }
+html #pace-landing .pl-vaca img, html body main.marco > header img { height: 72px; width: auto; }
+html #pace-landing .pl-ya { max-width: 7.4em; }
+
+/* La portada. */
+html #pace-landing h1, html body main.marco h1 { font-size: clamp(44px, 11.6vw, 78px); line-height: 1.0; letter-spacing: -.012em; margin: 0 0 22px; }
+html #pace-landing h2, html body main.marco h2 { font-size: clamp(32px, 7.6vw, 44px); line-height: 1.08; }
+html body main.marco .avisame h2, html body main.marco .regalo h2 { font-size: clamp(28px, 6.4vw, 32px); }
+html #pace-landing .pl-lede, html body main.marco .lede { font-size: 18px; line-height: 1.55; max-width: 30em; margin-bottom: 26px; }
+html #pace-landing .pl-portada, html body main.marco .portada { padding: 36px 0 52px; }
+html #pace-landing .pl-boton, html body main.marco .boton { min-height: 46px; padding: 9px 26px; font-size: 18px; }
+
+/* Las capturas, como láminas. */
+html #pace-landing .pl-foto img, html #pace-landing .pl-par img, html body main.marco .tira img, html body main.marco .mosaico img {
+  padding: 6px; background: var(--paper-2); border: 1px solid var(--line); border-radius: 8px; }
+html body main.marco .foto { padding: 6px; border-radius: 8px; overflow: visible; }
+html body main.marco .foto img { border-radius: 3px; }
+html #pace-landing .pl-foto { max-width: 300px; }
+
+/* Las secciones: un filete arriba y nada más. */
+html #pace-landing main section:nth-of-type(n), html body main.marco > section:nth-of-type(n) {
+  background: none; border-radius: 0; margin: 0; padding: 44px 0 40px; border-top: 1px solid var(--line); }
+html #pace-landing main p, html body main.marco > section p { max-width: 36em; }
+
+/* La lista de los módulos y las de /premium: nombre, puntos de guía y lo que es. */
+html #pace-landing .pl-mods li, html body main.marco .lista li { display: flex; align-items: baseline; gap: 0; border-bottom: 0; padding: 8px 0; }
+html #pace-landing .pl-mods li::after, html body main.marco .lista li::after { content: ''; order: 1; flex: 1 1 18px; min-width: 18px; border-bottom: 1px dotted var(--line-2); margin: 0 10px; }
+html #pace-landing .pl-mods li > span, html body main.marco .lista li > .d { order: 2; }
+html #pace-landing .pl-mods b { font-size: 23px; }
+html #pace-landing .pl-mods i { width: 22px; height: 22px; border-radius: 0; margin-right: 10px; vertical-align: -0.26em;
+  -webkit-mask: var(--g) center / contain no-repeat; mask: var(--g) center / contain no-repeat; }
+html #pace-landing .pl-mods li:nth-child(1) i { --g: var(--g-foco); }
+html #pace-landing .pl-mods li:nth-child(2) i { --g: var(--g-respira); }
+html #pace-landing .pl-mods li:nth-child(3) i { --g: var(--g-mueve); }
+html #pace-landing .pl-mods li:nth-child(4) i { --g: var(--g-estira); }
+html #pace-landing .pl-mods li:nth-child(5) i { --g: var(--g-agua); }
+
+/* En el móvil, las parejas de capturas se deslizan, como la tira de /beta: más grandes. */
+html #pace-landing .pl-par { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 22px -16px 0; padding: 0 16px 6px; scrollbar-width: none; }
+html #pace-landing .pl-par figure { flex: 0 0 72%; scroll-snap-align: center; }
+
+/* Las promesas, más grandes; las preguntas, en renglones. */
+html #pace-landing .pl-promesas li, html body main.marco .promesas li { font-size: clamp(24px, 5.8vw, 30px); line-height: 1.25; }
+html #pace-landing .pl-promesas, html body main.marco .promesas { gap: 14px; }
+html #pace-landing .pl-preg details, html body main.marco details { border-bottom: 1px solid var(--line); padding: 14px 0; }
+html #pace-landing .pl-preg summary, html body main.marco summary { font-size: 22px; }
+
+/* Lo que se elige (el plato de por vida, «Lo que te llevas»): un segundo filete fuera, como un sello. */
+html body main.marco .plato { border-radius: 6px; }
+html body main.marco .plato.delante, html body main.marco .regalo { outline: 1px solid var(--cta); outline-offset: 4px; border-radius: 6px; }
+html body main.marco .regalo { background: none; margin-left: 5px; margin-right: 5px; }
+html body main.marco .avisame { background: none; border-radius: 6px; }
+html body main.marco .nota, html body main.marco .donde p { max-width: 38em; }
+
+/* Los pasos de /beta, unidos por un hilo. */
+html body main.marco .pasos li { position: relative; }
+html body main.marco .pasos li:not(:last-child)::after { content: ''; position: absolute; left: 18px; top: 44px; bottom: -16px; border-left: 1px solid var(--line-2); }
+
+/* El pie: la vaca y «Abrir PACE» como botón, y los enlaces, igual en las tres. */
+html #pace-landing .pl-pie, html body main.marco > footer { margin: 0; padding: 26px 0 48px; border-top: 1px solid var(--line); justify-content: flex-start; column-gap: 12px; }
+html #pace-landing .pl-pie::before { content: ''; width: 61px; height: 40px; flex: 0 0 auto; background: url(/premium/vaca.webp) center / contain no-repeat; }
+html body main.marco .pie-marca img { height: 40px; }
+html body main.marco .pie-marca span { display: inline-flex; align-items: center; min-height: 46px; padding: 9px 26px; border-radius: 999px; background: var(--cta); color: var(--paper); font: italic 500 18px/1.2 var(--display); }
+html body main.marco > footer > .pie-enlaces { margin-left: 0; }
+@media (prefers-color-scheme: dark) { html #pace-landing .pl-pie::before { filter: invert(1); } }
+
+@media (min-width: 600px) {
+  html #pace-landing .pl-foto img, html #pace-landing .pl-par img, html body main.marco .tira img, html body main.marco .mosaico img, html body main.marco .foto {
+    outline: 1px solid var(--line); outline-offset: 5px; }
+  html body main.marco .mosaico { gap: 22px; }
+  html #pace-landing .pl-pie nav, html body main.marco > footer > .pie-enlaces { margin-left: auto; }
+}
+
+@media (min-width: 900px) {
+  html #pace-landing .pl-vaca img, html body main.marco > header img { height: 100px; }
+  html #pace-landing .pl-ya { max-width: none; }
+  html #pace-landing .pl-portada { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: 72px; padding: 48px 0 72px; }
+  html #pace-landing .pl-foto { max-width: 340px; }
+  html body main.marco .portada { gap: 72px; padding: 48px 0 72px; }
+  html #pace-landing main section:nth-of-type(n), html body main.marco > section:nth-of-type(n) { padding: 64px 0 60px; margin: 0; }
+
+  /* Donde hay texto, el título al margen. */
+  html #pace-landing main > section:not(.pl-dos), html body main.marco > section:not(.dos):not(#capturas):not(#pasos) {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); column-gap: 64px; align-items: start; }
+  html #pace-landing main > section:not(.pl-dos) > h2, html body main.marco > section:not(.dos):not(#capturas):not(#pasos) > h2 {
+    grid-column: 1; grid-row: 1 / span 30; margin: 0; position: sticky; top: 24px; }
+  html #pace-landing main > section:not(.pl-dos) > :not(h2), html body main.marco > section:not(.dos):not(#capturas):not(#pasos) > :not(h2) { grid-column: 2; }
+  html #pace-landing .pl-mods { max-width: 560px; }
+  html #pace-landing .pl-par { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 640px; overflow: visible; margin: 32px 0 0; padding: 0; }
+
+  /* Lo que se compara, en dos columnas con un filete entre las dos. */
+  html #pace-landing .pl-dos, html body main.marco .dos { gap: 0; }
+  html #pace-landing .pl-dos > div:first-child, html body main.marco .dos > div:first-child { padding-right: 56px; }
+  html #pace-landing .pl-dos > div + div, html body main.marco .dos > div + div { border-left: 1px solid var(--line); padding-left: 56px; }
+
+  /* /premium: las capturas, a todo lo ancho. */
+  html body main.marco .mosaico { max-width: none; gap: 26px; }
+
+  /* /beta: el título arriba y las tres capturas, grandes, en fila debajo. */
+  html body main.marco .portada.maq-beta { display: block; padding-bottom: 64px; }
+  html body main.marco .maq-beta .maq-titulo { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); column-gap: 72px; align-items: end; }
+  html body main.marco .maq-beta .maq-titulo h1 { margin: 0; }
+  html body main.marco .maq-beta .maq-resto > :last-child { margin-bottom: 0; }
+  html body main.marco .maq-beta .tira { margin-top: 56px; gap: 36px; }
+}

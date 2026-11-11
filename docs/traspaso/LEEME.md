@@ -2,7 +2,391 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 9 de noviembre de 2026, ~11:10, v0.194.0 (la 0.195.0, juntándose).
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 11 de noviembre de 2026, 12:08, v0.198.0.
+
+## 11 nov., 12:08 (cuenta EcLj6): la 0.198.0, juntada y en `main`. Manda sobre lo de abajo
+
+- **Hecho, los puntos 2 y 3 del bloque de las 10:54.** Las cuatro ramas, por su orden, con dos choques: el censo de textos (queda en 1179) y la tabla de decisiones (las filas de las dos ramas). `app/state-core.jsx` queda en 500 líneas justas: lo próximo que lo toque, lo trocea. Filas técnicas nuevas: la del CI de noche y la de la A del aro. `pace.aro.carta.v1` no se escribe con la landing delante: solo se guarda con la tarjeta pintada, y `#root` va en `display: none`; lo vigila `tests/landing-cara.spec.js`, que compara todas las claves. Suite entera sobre el `index.html` que se sube: 1515 en verde, 2 saltadas a propósito y 5 rojas, las cinco resueltas: tres pruebas puestas al día (dos de la pausa esperaban «Volver al inicio», que la 2A cambia con la pausa corriendo, y la de «Borrar todo» no conocía la clave del aro) y dos que caen con la máquina cargada y pasan solas (`foco-inicio-recarga` y `ios-avisos`).
+- **La rama de la jornada traía también la cuenta del día (ChatGPT 1, 2, 3 y 5)**, hecha el 9 nov. y a la espera de su «júntalo»: entró con el «Sí, todo junto», y está dicho a Ez.
+- **Páginas en EcLj6:** la hoja (EcLj6io4wM9pGjtQ5wd1CT), con los pasos de hoy y el roadmap en cuatro tramos; la auditoría (C2uFSMM8eWhcRxpXLGWkAx), con la sexta pasada; el aro con la A montada (BN1QuXDBSAnqjqAvvSMSny); y las dos «Montado» (1WwJbuD5qTtXJWNzVg7B7Q la de la auditoría, LaTcRknTpPcJAa6joPncjX la de 4, 6 y 7). Los tres pares nuevos están en `docs/traspaso/archivos/hoja-ids-cuentas.js`. **La hoja del repo lleva ahora los ids de EcLj6**: para publicarla en 5iWBf, pasarla antes por ese guion con `--a=5iWBf`. La de decisiones (H5UgBuqz5VeGnETpixxi96) no se republicó: solo cambian dos frases y Ez ya la contestó entera.
+- **Cola de montaje, sesiones en Opus de una en una** (el punto 4): primero el aro de rendimiento B con V1 B y V2 B, en `claude/caza-rendimiento-9nov` (worktree `.claude/worktrees/caza-rendimiento-9nov`; antes, traer `main`); después D-8 A y D-10 B (filas S2 y S1 de la cola), en `claude/auditoria-fable-9nov-8401fc`. Cada una acaba con su página «Montado» y espera el «júntalo» de Ez.
+- **Esperan a Ez:** si subió ya la 0.191.1 a Play y a TestFlight (si no, mejor la 0.198.0); las dos pasadas con Fable, hasta el 12 nov. (`docs/audits/textos-externa-11nov.md`); el sí a S3 y S4; el «júntalo» de las barras y las fuentes ligeras (rama de rendimiento) y el de `guardar()`; y la revisión de ChatGPT del cobro y lo legal.
+- **Para gastar menos al republicar:** actualizar una página en su sitio obliga a leer entera la versión publicada (la hoja son unos 55 000 tokens). Antes, `Artifact read` con `path: "index.html"` la guarda en disco: se compara con la copia de la rama y solo se republica lo que cambió.
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «11 nov., 12:08» de docs/traspaso/LEEME.md, y sigue como coordinadora. main está en la 0.198.0. Por este orden: mira cómo van las sesiones de la cola (el aro de rendimiento con V1 y V2; D-8 y D-10) y enséñame lo que acabe antes de juntarlo; publica mi hoja de pasos en esta cuenta pasándola antes por hoja-ids-cuentas.js; y dime qué espera mi respuesta. Haz pocas vueltas y usa sesiones en Opus: el modelo nuevo gasta mucho.
+```
+
+## AL RELEVO (11 nov., 10:54): 5iWBf llega al 90 % de las 5 h (se reponen a las 14:30). Empieza aquí; el detalle, en el bloque de las 09:45, debajo
+
+**11:15: la A del aro YA ESTÁ subida (7443d12b en `claude/caza-aro-fijo-10nov`) y 5iWBf está al 94 % de las 5 h: aquí se para; el punto 1 de abajo está hecho, se sigue por el 2.** Verify verde, `tests/aro-horario.spec.js` (5, con tres mutantes) y 117 de e2e de aro, home, jornada, lienzo y ritmo. Con actividades / horario abierto / rutina elegida: 447 / 447 / 515 px a 1920×860 y 372 / 372 / 426 a 1536×710; el móvil, igual (331). Toca `app/main/home-geometry.js` (498 líneas), `app/main/home-geometry.horario.js` (nuevo) y `PACE.html`. Guarda una clave nueva, `pace.aro.carta.v1` (el tamaño por ventana e idioma): al juntar, comprobar que nunca se escribe con la landing delante, porque `landing/cara.js` enseña la app si ve una clave `pace.*`. Falta su fila en `DECISIONES_TECNICAS_VIGENTES.md`. Página NgV2uX97ZxRZTXEePWvcGG con «Montada la A». También hoy: `ROADMAP.md` abre «Camino a v1.0» con lo que queda en cuatro tramos (la rama de la auditoría toca dos líneas de más abajo), y falta llevarlo a la hoja de pasos. Ez tiene una pregunta sin contestar: si subió ya la 0.191.1 a Play y a TestFlight.
+
+Ez (10:54): «Podemos llevar el uso de esta sesión hasta el 90 % antes de migrar», y quiere aprovechar que tiene Fable hasta el 12 nov.,
+aquí y en una app externa que no gasta. Por orden:
+
+1. **La A del aro.** La monta la sesión que lo pintó, en `claude/caza-aro-fijo-10nov` (worktree `.claude/worktrees/caza-aro-fijo-10nov-8fa0c6`).
+   Está subida si la rama tiene un commit posterior a ef797608. Si el tope la cortó a medias: `git status` en su worktree y una
+   sesión nueva en Opus con `cwd` ahí que la termine (el encargo entero, en el bloque de las 09:45).
+2. **Juntarlo todo como 0.198.0: el «Sí, todo junto» de Ez ya está dado**, no se vuelve a preguntar. Las cuatro ramas, por este
+   orden: `claude/caza-ci-landing-noche-5ea50b`, `claude/montar-auditoria-10nov-3ef28c`, `claude/chatgpt-jornada-9nov` y
+   `claude/caza-aro-fijo-10nov`. Choques que ya se ven: `app/state-core.jsx` (el arreglo del CI lo deja en 499 líneas y la línea de
+   los lunes también lo toca: puede pasar de 500 y hay que trocear), `app/state-ritmo.jsx` (497), el censo de textos de
+   `scripts/verify.integridad.js` (dos ramas lo suben), `DECISIONES_TECNICAS_VIGENTES.md` (filas de las tres, más la del CI, que
+   está propuesta en el informe y sin escribir: «Con la landing delante, `persistState` no escribe…»), y `STATE.md` y este archivo
+   (la rama de la auditoría los recortó por D-4 C: se conservan los relevos de `main` y se aplican sus recortes). Después: bump,
+   build, suite entera, `STATE.md`, `CHANGELOG.md`, push y CI en verde, de día (antes de las 23:00).
+3. **Republicar en la cuenta que siga** las páginas que Ez tiene que poder abrir: decisiones, aro (con la A montada), las dos
+   «Montado» (`docs/proposals/montado-auditoria-10nov/` y `docs/proposals/montado-4-6-7-11nov/`), la auditoría y la hoja de pasos,
+   que además necesita los pasos de hoy.
+4. **Cola de montaje, sesiones en Opus de una en una:** el aro de rendimiento B con V1 B y V2 B (`claude/caza-rendimiento-9nov`);
+   D-8 A y D-10 B (filas S2 y S1 de la cola de la auditoría). Sin el sí de Ez: los arreglos pequeños S3 y S4.
+5. **Fable hasta el 12 nov.:** dos textos listos para la app externa en `docs/audits/textos-externa-11nov.md` (séptima pasada, lo
+   montado hoy; octava, las pruebas). Lo que traiga Ez se guarda y se comprueba como las otras seis. Dentro de Claude, lo que más
+   rinde con Fable es la coordinadora que junta (el punto 2), no las sesiones.
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (11 nov., 10:54)» de docs/traspaso/LEEME.md (y el de las 09:45, debajo, para el detalle), y sigue como coordinadora. Por este orden: comprueba que la A del aro está subida en su rama; junta las cuatro ramas como 0.198.0 (mi «Sí, todo junto» ya está dado) con la suite entera y el CI en verde; republica mis páginas en esta cuenta; y encarga en Opus, de una en una, el aro de rendimiento con V1 y V2, y D-8 y D-10. Haz pocas vueltas: el modelo nuevo gasta mucho.
+```
+
+## 11 nov., 09:45 (cuenta 5iWBf): lo de anoche está hecho en sus ramas y Ez dio ocho letras. Manda sobre lo de abajo
+
+- **Nada juntado: `main` = 0.197.0.** Lo que pedía el relevo de las 23:50 está hecho, cada cosa en su rama y subida:
+
+| Rama | Qué lleva | Página (5iWBf) | Espera |
+|---|---|---|---|
+| `claude/caza-ci-landing-noche-5ea50b` (391b69db) | El CI de noche era un fallo de la app: el vigilante del día guardaba `pace.state.v2` al pasar la medianoche con la landing delante, y la vez siguiente salía la app. `persistState` ya no escribe mientras `PACE_CARA === 'landing'`; la prueba empieza en `MEDIODIA` y otra cruza la medianoche, con mutante. Sin bump ni documentos: sería la 0.197.1, con su fila técnica | no tiene | el «júntalo» de Ez |
+| `claude/caza-aro-fijo-10nov` (ef797608) | El aro fijo de 372 px, deshecho. Medidas de los tres estados y tres opciones para el horario abierto (A, el aro de «con actividades» y no se mueve al abrir el horario, recomendada; B, el de la rutina elegida con la tarjeta a dos líneas; C, el mayor que cabe). Nada montado; `docs/proposals/aro-horario-10nov/` | NgV2uX97ZxRZTXEePWvcGG | la letra de Ez |
+| `claude/montar-auditoria-10nov-3ef28c` (b25a6036) | 1A, 2A, 4A, D-5 B y D-4 C montados, con fotos y página «Montado». Toca `STATE.md` y este archivo: chocará al juntar | CpnFEkENADXDVU7K7u8k5M | el «júntalo» de Ez; se le suman la línea de los lunes y D-6 D |
+| `claude/auditoria-fable-9nov-8401fc` (671dd875) | La sexta pasada externa (nativo, compra en el móvil y Ajustes), comprobada y sumada a la cola: 15 ciertos, 4 a medias, 2 falsos (nº 3 y nº 15). Arreglos pequeños S3 y S4 listos para montar; D-8 a D-11 esperan letra (recomendadas A, A, B y A) | 2QnMBypqSRVJCmPeNJazZA | las letras de Ez |
+| `claude/hopeful-booth-ba049e` (a3e49290) | La página de decisiones, republicada | XbtnS5xak95y1iJ8iXhKdU | contestada, salvo lo de abajo |
+
+- **Ez, 11 nov. (literal): «Linea 2 en el sobre + 3 en la side bar / D adaptarlos / El bloque pasa a día nuevo B / A debajo aparte / A lo que hiciste / B el aro / B la app pregunta / B la pestaña».** Casado con la página de decisiones, por su orden: la línea de los lunes en el móvil va **en el sobre y además en el cajón** (opciones 2 y 3 a la vez; «en la side bar» es lectura de la coordinadora que sea la fila del cajón bajo «Tus rutinas»); **D-6 D** (Ocaso y Búho se adaptan con su dibujo: la página recomendaba «Ocaso 1», cinco jornadas cerradas a su hora, y «Búho 1», contestar «¿Te ayudó?» 25 veces); **4 B** («Cambiar» con un Foco en marcha: el bloque pasa al día nuevo); **6 A** (las sesiones por tu cuenta, debajo y aparte en Estadísticas › Hoy); **7 A** (los minutos de una pausa hecha son los que hiciste); **aro de rendimiento B** (se desliza solo si el paso se nota); **V1 B** (versión nueva con la web abierta: pregunta al volver y cada hora); **V2 B** (la pestaña en sesión espera a acabar).
+- **Dónde se monta cada letra** (sesiones en Opus, cada una en su rama, sin juntar): lunes y D-6 en `claude/montar-auditoria-10nov-3ef28c`; 4, 6 y 7 en `claude/chatgpt-jornada-9nov`; aro de rendimiento, V1 y V2 en `claude/caza-rendimiento-9nov`.
+- **Ez, 11 nov., 10:10 (literal): «D8 A + D9A + D1B + D11A y enseñame la letra del aro abierto para valorar primero».** Son las cuatro de la sexta pasada, por su orden: **D-8 A** (la copia de Google se mantiene y PACE olvida la lista de eventos del calendario en un móvil restaurado), **D-9 A** (en las apps se cobra directo con las tiendas), **D-10 B** (el aviso del iPhone suena con la campana de PACE; escribió «D1B», y la D-1 ya estaba contestada: lectura de la coordinadora, dicha a Ez) y **D-11 A** (se quita «te avisamos dos días antes» en las apps). Se montan ya D-8 (fila S2) y D-10 (fila S1); D-9 y D-11 van con el paquete de las tiendas (S5). Miró la página del aro (NgV2uX97ZxRZTXEePWvcGG) y a las 10:20 dijo **«La A»**: con el horario abierto el aro toma el tamaño de «con actividades» (447 px a 1920×860, 372 a 1536×710), la tarjeta lo corta a la misma altura y no se mueve al abrir el horario. Se monta en `claude/caza-aro-fijo-10nov` (la sesión que lo pintó avisó: el motor tiene que recordar ese tamaño si la app se abre con el horario ya abierto).
+- **Montado a las 10:50, en sus ramas, subido y sin juntar** (informes leídos por la coordinadora; el código, no):
+  - `claude/chatgpt-jornada-9nov`: **4 B** (bb7fe9d3), **7 A** (c1edb818) y **6 A** (80465a5b), con `origin/main` 0.197.0 ya dentro; página RifLYxtf23zjW51atRD4U3 (copia en `docs/proposals/montado-4-6-7-11nov/`). Verify verde, 9 pruebas nuevas con mutante, 348 vecinas en verde y 2 rojas por carga que pasan solas. Toca `state-ritmo.jsx` (497 líneas de 500), `state-ritmo.recolocar.jsx`, `state-ritmo.pausa.jsx`, `state-events.jsx`, `ritmo/RitmoLinea.jsx`, `ritmo/RitmoHoja.jsx`, `stats/StatsHoy.jsx`, `stats/StatsPanel.css.jsx`, `i18n/strings/stats.js` y `scripts/verify.integridad.js` (el censo de textos pasa a 1171). El día guarda un dato nuevo, `dia.sesiones`. Para Ez: la 7 A cambia también la línea del día y la lista de la jornada; el día que se junte, lo hecho esa mañana dentro de una pausa puede salir además en «Además, por tu cuenta».
+  - `claude/montar-auditoria-10nov-3ef28c`: **la línea de los lunes** (ce7da785: sobre y fila del cajón en el móvil; en el ordenador va DEBAJO del resumen del día y no al lado como en la foto, porque al lado el nombre de la jornada se quedaba en 50-85 px) y **D-6 D** (59f56bbc: Ocaso 1 y Búho 1; un logro ganado no se quita); página CpnFEkENADXDVU7K7u8k5M, versión 2. Verify verde, `tests/lunes.spec.js` (5) y `tests/logros-ocaso-buho.spec.js` (6) con mutante. Toca `scripts/verify.integridad.js` (4 textos nuevos) y `DECISIONES_TECNICAS_VIGENTES.md`: **las dos ramas chocan en el censo de textos y en la tabla de decisiones** al juntarlas.
+- **EL «JÚNTALO» DE EZ YA ESTÁ DADO (11 nov., ~10:55).** A la pregunta «¿Lo junto todo en una sola versión cuando acabe el aro?» contestó **«Sí, todo junto»**. Cuando la A del aro esté subida, la coordinadora junta en una sola versión (0.198.0): `claude/caza-ci-landing-noche-5ea50b` (con su fila técnica), `claude/montar-auditoria-10nov-3ef28c`, `claude/chatgpt-jornada-9nov` y `claude/caza-aro-fijo-10nov`; con bump, build, suite entera, `STATE.md`, `CHANGELOG.md`, push y CI en verde. No cubre lo que aún no está montado (aro de rendimiento, V1, V2, D-8, D-10).
+- **En marcha desde las 10:55:** la A del aro, en la sesión que lo pintó (`claude/caza-aro-fijo-10nov`). **En cola, una a una** (las 5 h iban al 67 % a las 10:50 y se reponen a las 14:30): el aro de rendimiento B con V1 B y V2 B (`claude/caza-rendimiento-9nov`); D-8 A y D-10 B (filas S2 y S1 de `docs/audits/fable-9nov/cola.md`, rama de la auditoría).
+- **Sin letra todavía:** si se montan los arreglos pequeños S3 y S4, S3 «código portable» (sin opciones escritas), los «solo falta tu sí» de la página de decisiones y los dos «júntalos».
+- **La hoja de pasos** está al día en 5iWBfHE7kD3dUVocdskmb6. Las páginas del aro y de «Montado» no tienen par en EcLj6.
+- **Uso a las 09:35:** 5 h al 14 %, semana al 57 %, «Weekly · Fable» al 73 %: la coordinadora, pocas vueltas.
+
+## AL RELEVO (10 nov., 23:50): Ez migra a la otra cuenta (5iWBf). El bloque de las 23:30, debajo, sigue valiendo entero
+
+- **El aro: Ez aclaró qué quería decir, y NO es lo que se montó.** Literal: «El aro me refería a que cambia según la ventana en la
+  que estés, es decir, adjunto capturas; me gusta el tamaño de cuando tienes seleccionada la rutina y el tamaño de cuando hay los
+  bloques de mueve y estira». «Ventana» es el estado de la home, no el tamaño de la ventana del navegador. Sus tres capturas (en
+  `docs/traspaso/archivos/aro-10nov/`, a 1917 px de ancho y ~860 de alto, v0.197.0, medidas a ojo sobre la imagen):
+  1. `1-horario-abierto.png`: «¿Cuánto trabajas hoy?» con el horario desplegado: aro de ~474 px, y la tarjeta lo corta por abajo.
+  2. `2-rutina-elegida.png`: con «Una hora» elegida («Bloque 1 de 1»): ~503 px. **Le gusta.**
+  3. `3-con-actividades.png`: con las tarjetas de Respira, Estira, Mueve e Hidrátate: ~434 px. **Le gusta.**
+  **Ez lo precisó después: «es decir, queda raro el aro de cuánto trabajas hoy».** Lo que hay que arreglar es el estado 1 (el aro cortado por la tarjeta con el horario abierto); los estados 2 y 3 le gustan como están y no pide igualarlos. Que el aro mida lo mismo en los tres estados era lectura de la coordinadora, no suya: pintarle el estado 1 arreglado de dos o tres maneras (el aro de la 3, el de la 2, o la tarjeta más baja) y que elija.
+  La rama `claude/caza-aro-fijo-10nov` montó otra cosa (372 px fijos según la ventana del navegador, pensando en 1536×710): sus
+  medidas y sus pruebas sirven, el número no. **Siguiente paso:** sesión nueva en Opus con `cwd` en su worktree
+  (`.claude/worktrees/caza-aro-fijo-10nov-8fa0c6`): medir el aro en los tres estados (y con el día en marcha) a 1920×860 y a
+  1536×710, pintar los tres estados con el aro a 434 y a 503 (o el mayor que quepa en los tres sin tapar ni scroll), recomendar uno,
+  y rehacer la página Xf1MUQNoyiBNjXPcgUc3Bj (de EcLj6) en la cuenta nueva. La ventana de Ez hoy es ~1920×860, no 1536×710.
+- **Páginas de EcLj6 que dan 404 en 5iWBf** y hay que republicar desde la copia de su rama: decisiones (H5UgBuqz5VeGnETpixxi96,
+  `claude/hopeful-booth-ba049e:docs/proposals/decisiones-10nov/`) y el aro (`claude/caza-aro-fijo-10nov:docs/proposals/aro-fijo-10nov/`,
+  mejor tras rehacerla). La auditoría en 5iWBf (2QnMBypqSRVJCmPeNJazZA) se quedó en la primera cola: republicarla desde
+  `claude/auditoria-fable-9nov-8401fc:docs/audits/fable-9nov/pagina.html`. La hoja del repo lleva ids de 5iWBf y se publica tal cual
+  en 5iWBfHE7kD3dUVocdskmb6; antes, añadirle los pasos de hoy y los pares nuevos a `docs/traspaso/archivos/hoja-ids-cuentas.js`.
+- **Orden al llegar:** (1) el CI rojo de noche de la landing (bloque de las 23:30); (2) el aro, como arriba; (3) retomar
+  `claude/montar-auditoria-10nov-3ef28c` (D-5 B, D-4 C, fotos y página «Montado»); (4) republicar las páginas y la hoja;
+  (5) preguntarle a Ez lo abierto con la página de decisiones delante (la línea de los lunes en el móvil, D-6, 4, 6 y 7, el aro,
+  V1 y V2). Nada de esto está juntado: `main` = 0.197.0.
+- **Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y los bloques «AL RELEVO (10 nov., 23:50)» y «AL RELEVO (10 nov., 23:30)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Por este orden: caza el CI que cae de noche en la prueba de la landing; rehaz lo del aro con mis tres capturas (el mismo tamaño en los tres estados de la home); termina de montar D-5 B y D-4 C; y republica mi hoja de pasos y las páginas de decisiones, del aro y de la auditoría desde las copias de sus ramas. Después hazme las preguntas que sigan abiertas con su página delante. Haz pocas vueltas y usa sesiones en Opus: el modelo nuevo gasta mucho.
+```
+
+## AL RELEVO (10 nov., 23:30): EcLj6 con las 5 h al 86 % (se reponen a las 03:30). `main` tiene el CI en rojo por la hora. Empieza aquí
+
+- **CI de `main` en rojo (600fc0b5, run 42908610659), y no es por el commit, que solo toca este archivo:** cae
+  `tests/landing-cara.spec.js:106` («con la landing delante no se guarda nada, ni pasadas dos horas ni al irse»): aparece
+  `pace.state.v2` en `localStorage`. La prueba instala el reloj a la hora de verdad y avanza 2 h: **falla siempre que se pasa entre
+  las 22:00 y las 24:00** (en GitHub, hora UTC; aquí, la del PC). Reproducido aquí a las 23:22 con esa sola prueba; los CI de las
+  17:16 y las 17:46 la pasaron. Hipótesis sin comprobar en el código: al cruzar la medianoche algo guarda el estado aunque la landing
+  esté delante. **Lo primero al volver:** una caza corta: si es la app la que guarda (un fallo de verdad contra «no se guarda nada»),
+  arreglarlo con su prueba; y en todo caso fijar la hora de la prueba (el `MEDIODIA` de las demás) y añadir otra que cruce la
+  medianoche a propósito. Hasta entonces cualquier push hecho de noche saldrá en rojo en `e2e (1/2)`.
+- **Tres ramas nuevas, subidas, sin juntar** (las tres en Opus; informes leídos por la coordinadora, el código no):
+
+| Rama | Qué lleva | Página (EcLj6) | Espera |
+|---|---|---|---|
+| `claude/montar-auditoria-10nov-3ef28c` | 1A (c70dd11d), 2A (6093709b) y 4A (5c340017), con verify y sus pruebas en verde (28, 70 y 65). Paró al 82 %. **Falta:** D-5 B, D-4 C, las fotos de después de Ajustes, bienvenida e invitación, y la página «Montado»: el plan, en `docs/proposals/montado-auditoria-10nov/DONDE-ME-QUEDO.md` | sin publicar | retomarla (sesión nueva con `cwd` en su worktree) y luego el «júntalo» de Ez |
+| `claude/caza-aro-fijo-10nov` | Ez: «en el escritorio el tamaño del aro cambia según la ventana y siempre debería ser fijo». Medido: 372 px en su ventana, 650 en 1920×1080, 866 en 2560×1440 (el tope de 520 no frenaba) y encogía al ensanchar. Montada la A: 372 px fijos, solo encoge si no cabe; el móvil no cambia (0d80277b, 311dec0e); verify y 132 pruebas en verde. Tocó cuatro pruebas viejas y dos de `aro-jornada` pierden mordida; Firefox y Safari, sin probar | Xf1MUQNoyiBNjXPcgUc3Bj | que Ez la mire y diga «júntalo» u otra letra |
+| `claude/hopeful-booth-ba049e` | La página única de decisiones (af591732): «Ya decidido» arriba, la línea de los lunes en tres sitios del móvil (recomienda el sobre), D-6 con la opción D (recomienda «Ocaso 1» y «Búho 1»), 4, 6 y 7, el aro, V1 y V2, y las dos listas; copia en `docs/proposals/decisiones-10nov/` | H5UgBuqz5VeGnETpixxi96 | las letras de Ez |
+
+- **De 1A, para Ez:** con la fila nueva, «Tus datos» se pliega 34 px antes en el ordenador; y un defecto que ya existía: el panel de
+  Ajustes pide hasta 15 px de scroll entre 860 y 875 de alto. De 4A: /premium sigue diciendo «Llega con la versión 1».
+- **Ez tiene un texto para auditar fuera con Fable** el código nativo, la compra en el móvil y Ajustes (sexta pasada): cuando la
+  traiga, guardarla en `docs/audits/fable-9nov/` de la rama de la auditoría y comprobarla como las otras.
+- **Uso a las 23:25:** 5 h al 84-86 % con tres sesiones en Opus en 45 minutos; semana al 22 %, «Weekly · Fable» al 18 %.
+
+## 10 nov., ~23:15: Ez contestó la auditoría y hay dos sesiones en marcha. Empieza aquí; manda sobre lo de abajo
+
+- **Ez (literal): «1A + 2A + 3A + 4A + D1A + D2A + d3A + D4C + D5B + D7A».** Los números son las cuatro propuestas pintadas de la
+  página de la auditoría (C2uFSMM8eWhcRxpXLGWkAx en EcLj6): 1A, fila de compra en Ajustes; 2A, el cierre del ejercicio nombra lo que
+  sigue; 3A, la línea de los lunes; 4A, la bienvenida y la invitación sin «v1». D-1 A, D-2 A y D-7 A son «como está». D-4 C: el repo
+  sigue público, sin decir dónde viven las llaves ni las notas de fallos de cobro abiertos. D-5 B: el día de v1 se quedan solo las
+  rutinas de pago que acabó alguna vez.
+- **3A y D-3 A se contradecían:** preguntado, Ez eligió **la línea de los lunes** (3A, que es D-3 B). Falta la maqueta del móvil antes
+  de montarla (en la home no cabe: se pasa 2 px a 360×740).
+- **D-6 (los logros «Búho» y «Ocaso»), sin letra:** Ez preguntó «¿No podemos adaptarlos para que sean útiles sin cambiar el glifo?».
+  Es una opción nueva (D): mismo dibujo y mismo id, cambia lo que premian. Se le pinta con ideas y una recomendada; aún no ha elegido.
+- **Sin contestar todavía:** las letras 4, 6 y 7 de ChatGPT, el aro, V1 y V2 de la caza de rendimiento, y los «júntalos» (ChatGPT 5,
+  1, 3 y 2; los dos arreglos invisibles de rendimiento; el arreglo del cobro mensual).
+- **Sesiones en marcha (Opus, cuenta EcLj6):** `montar-auditoria` (`local_a47804a5…`, worktree y rama propios cortados de `main`,
+  puertos 8950-8959) monta 1A, 2A, 4A, D-5 B y D-4 C con pruebas y una página «Montado»; espera el «júntalo» de Ez.
+  `p-gina-nica-con-todas-la` (`local_6db86888…`, worktree propio, puertos 8940-8949) hace UNA página con todo lo que sigue abierto:
+  la línea de los lunes en el móvil, D-6 con la opción D, 4, 6 y 7, el aro, V1 y V2, y las listas «Solo falta tu sí» y «Solo puedes
+  hacerlo tú»; copia en `docs/proposals/decisiones-10nov/` de su rama. Queda un worktree vacío de un arranque fallido:
+  `decisiones-10nov-227083`, sin cambios, se puede quitar.
+- **La primera pasada externa** (la de la v0.196.0, que Ez volvió a pegar a las ~19:20) ya estaba guardada y comprobada:
+  `externa-10nov.md` en la rama de la auditoría. Antes de comprobar una auditoría pegada, grep de una frase suya en esa carpeta.
+- **Ez ofrece auditar fuera con Fable** lo que haga falta (en claude.ai, sin gastar estas cuentas): pedírselo con un texto para pegar.
+- **Uso a las 22:40:** 5 h al 10 % (se reponen a las 03:30), semana al 12 %, «Weekly · Fable» al 13 %.
+
+## AL RELEVO (10 nov., 17:15): la 0.197.0, juntada y en `main`. Manda sobre todo lo de abajo
+
+- **La web, en `main` con el «Júntalo» de Ez:** la raíz con dos caras y la estética B, «Una jornada», en la landing, /premium
+  y /beta, con las letras 2-5 recomendadas (pie con enlaces cruzados, capturas en oscuro y en su idioma, idioma de entrada como
+  la landing). `claude/landing-c-9nov` queda juntada: no tiene nada más.
+- Suite entera en verde: 1467 pasadas, 2 saltadas (el audio del iPhone, saltadas a propósito) y ninguna roja, en 43,2 min. El CI de `main` y lo visto en pacegrass.app, en el informe de la sesión que juntó (y en `gh run list`).
+- Las capturas en oscuro se rehacen con `node scripts/play/capturas.js <puerto> --beta-oscuro` y `capturas-premium.js <puerto> --oscuro`;
+  la pantalla de la app de /premium, con `docs/proposals/web-estetica-9nov/capturas-app.js`.
+- **Siguen esperando a Ez**, como en el relevo de las 16:27: la auditoría (`claude/auditoria-fable-9nov-8401fc`, 2QnMBypqSRVJCmPeNJazZA:
+  D-1, D-2, D-3…), las tres letras de ChatGPT 4, 6 y 7 (`claude/chatgpt-jornada-9nov`, KZFDp3zNhk4JAFHr13ysxq) y la caza de
+  rendimiento (R3vZVCMdEvKxWhyLHRmwvE). De la tabla de las 16:27, la fila de `claude/landing-c-9nov` ya no vale.
+
+- **Comprobado por la coordinadora (17:45, cuenta EcLj6):** `main` = 6a78f010; CI 42852875437 en verde entero (verify, e2e 1/2 y 2/2,
+  Safari; Android 42852875164 e iOS 42852875428); pacegrass.app sirve la 0.197.0 y alguien nuevo ve la landing B en la raíz.
+- **Páginas en EcLj6** (republicadas el 10 nov.; los pares con 5iWBf, en `docs/traspaso/archivos/hoja-ids-cuentas.js`, que da la
+  vuelta en los dos sentidos con `--a=EcLj6|5iWBf`): la hoja, EcLj6io4wM9pGjtQ5wd1CT; la web más bonita, LzG1sfc4e9ygARg9MpC7Tz;
+  la auditoría, C2uFSMM8eWhcRxpXLGWkAx; ChatGPT 4, 6 y 7, RQxiSzrKLUSAUYkDxcBZhU; la caza de rendimiento, 4Fohyqi7Cth9iKGxE2FSSD.
+- **La auditoría externa, pasadas 2 a 5** (Ez las trajo a las ~16:50; `claude/auditoria-fable-9nov-8401fc`, 023fea30): 38
+  afirmaciones, 31 ciertas, 4 a medias y 3 falsas; 23 nuevas, 7 ya en la cola y 5 ya decididas, según la sesión (la coordinadora
+  leyó el recuento y la cola, no cada prueba). Lo nuevo está en la misma cola (`docs/audits/fable-9nov/cola.md`) y en la página
+  de EcLj6; la de 5iWBf (2QnMBypqSRVJCmPeNJazZA) se queda en la primera cola: al volver allí, republicarla desde `pagina.html`.
+  Pregunta nueva, D-7: ofrecer PACE completo tras un «Sí» o al cerrar la jornada (recomendada A, como está). La fila 2 de la
+  cola aún dice que la landing espera el júntalo: ya está juntada. **Espera a Ez:** D-1 a D-7.
+- **Un texto pegado por Ez se saca del `.jsonl` de la sesión** con un guion de diez líneas (busca la frase, se queda con el
+  mensaje `user` más largo) y se le pasa a la sesión por ruta: así llega entero sin reescribirlo.
+- **Uso a las 17:45:** 5 h al 53 % (se reponen a las 21:20), semana al 7 %, «Weekly · Fable» al 5 %. Cuatro sesiones en Opus
+  (la unión con su suite, las páginas, la auditoría) y una coordinadora de pocas vueltas: 48 puntos de las 5 h en 1 h 15.
+## 10 nov., ~15:35: Ez eligió la B para la web y ya está montada en su rama
+
+- **Ez: «Me gusta la B la verdad».** Montada en `claude/landing-c-9nov` (769ea1b8, con `main` 0.196.0 ya dentro: 3c6f39db): la B, «Una jornada», en `landing/`, `premium/` y `beta/`; verify y las 59 pruebas de las tres páginas en verde, según la sesión. Las letras 3, 4 y 5, las recomendadas; la 2 (capturas en oscuro) se está rehaciendo. La página 6DsS35xJXsmcZrdtZiXhoL lleva arriba «Montada: la B».
+- **Falta el «júntalo» de Ez.** Al juntar: la suite entera con la landing y la B dentro, bump, CHANGELOG y fila en DECISIONES si no la lleva.
+- Uso a las 15:35: 5 h al 72 % (se reponen a las 20:00), «Weekly · Fable» al 60 %: la coordinadora, lo mínimo.
+
+## AL RELEVO (10 nov., 16:27): la unión 0.197.0 de la web, a medias y SIN subir a `main`. Empieza aquí; manda sobre todo lo de abajo
+
+Ez dijo «Júntalo» (~15:45) a la landing con la B; la coordinadora le encargó la unión entera a la sesión de `claude/landing-c-9nov`, que paró
+al 92 % de las 5 h (se reponen a las 20:00). `main` sigue en 0.196.0 y nadie la está tocando.
+
+| Rama | Dónde quedó | Página (5iWBf) | Espera |
+|---|---|---|---|
+| `claude/landing-c-9nov` | e6bf90d4 (y la nota de este relevo): la B, «Una jornada», elegida por Ez y montada en la landing, /premium y /beta, con las letras 2-5 recomendadas (capturas en oscuro y en su idioma, pie con enlaces cruzados, idioma de entrada como la landing); `main` traído (limpio), **bump a 0.197.0, build y verify en verde**; las 59 pruebas de las tres páginas en verde. **La suite entera NO se pasó**: el segundo plano la cortó a los 10 min (iba por la 57, sin rojas). **Falta, en orden:** la suite entera (`npm run test:e2e` con `PACE_E2E_PORT`, en un segundo plano que dure una hora), STATE, CHANGELOG y LEEME (el guion está hecho: `docs-0197.js` en el scratchpad de la sesión, se rehace en cinco minutos), push de la rama, `git push origin HEAD:main` (avance limpio) y el CI; la web, sin comprobar | 6DsS35xJXsmcZrdtZiXhoL | nada de Ez: terminar la unión |
+| `claude/auditoria-fable-9nov-8401fc` | 3f29f391: las dos auditorías de Fable en una cola (`docs/audits/fable-9nov/cola.md`); la externa, entera en `externa-10nov.md` y comprobada en `externa-10nov-comprobado.md` (40 puntos: 18 nuevos, 4 hechos en ramas, 8 en la lista de Ez, 10 decididos, 0 falsos, según la sesión; la coordinadora solo leyó la cola) | 2QnMBypqSRVJCmPeNJazZA | que Ez la lea y conteste D-1, D-2, D-3…; lo primero de la cola: una fila para comprar en Ajustes |
+| `claude/chatgpt-jornada-9nov` | b7bbf20e | KZFDp3zNhk4JAFHr13ysxq | tres letras (recomendadas 4B 6A 7A) y el «júntalo» de 5, 1, 3 y 2 |
+
+Sin sesión, en cola: las propuestas de build de la caza de rendimiento y sus letras (R3vZVCMdEvKxWhyLHRmwvE). Nada de la cola
+de la auditoría se monta sin las letras de Ez. Para abrir otra cuenta o una sesión nueva, Ez pega esto:
+
+```
+Retomamos PACE. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (10 nov., 16:27)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Si es otra cuenta, republica mi hoja de pasos y las páginas de la web más bonita, la auditoría y ChatGPT 4, 6 y 7 desde las copias de sus ramas. Haz pocas vueltas y usa sesiones en Opus: el modelo nuevo gasta mucho.
+```
+
+## Relevo de la mañana (10 nov., ~9:15): 5iWBf con las 5 h al 100 % (se reponen a las 13:50; semana 34 %, «Weekly · Fable» 48 %). Empieza aquí; manda sobre todo lo de abajo
+
+`main` = 0.196.0, sin nada por subir. Ninguna sesión trabajando y ningún CronCreate vivo. Las tres ramas, con todo subido:
+
+| Rama | Dónde quedó | Página (5iWBf) | Falta |
+|---|---|---|---|
+| `claude/auditoria-fable-9nov-8401fc` | fe6f66e9: **la auditoría acabó aquí**, antes de leer el aviso de pausa: la venta y el Foco con los ejercicios, vividos en la app; informe en `docs/audits/fable-9nov/` | 2QnMBypqSRVJCmPeNJazZA | la coordinadora no la ha leído: leer el informe, comprobar que la página abre, ponerla en la hoja y quitar de la hoja el paso «Ahora» de pegarla en claude.ai (ya no hace falta, salvo que Ez quiera una segunda opinión) |
+| `claude/landing-c-9nov` | 9c24336a: la estética de la web, con los defectos de hoy y las direcciones A y C pintadas (dos idiomas, dos temas, móvil y ordenador) | 6DsS35xJXsmcZrdtZiXhoL | la dirección B (`docs/proposals/web-estetica-9nov/DONDE-ME-QUEDO.md`); que Ez elija. Ez: «Espero a la bonita» para juntar la landing B |
+| `claude/chatgpt-jornada-9nov` | b7bbf20e: la página de 4, 6 y 7 | KZFDp3zNhk4JAFHr13ysxq | tres letras de Ez y su «júntalo» de 5, 1, 3 y 2 |
+
+- Las páginas de 5iWBf dan 404 en EcLj6: se republican desde la copia de cada rama. La hoja del repo lleva ids de 5iWBf; en EcLj6
+  se da la vuelta con `docs/traspaso/archivos/hoja-ids-cuentas.js`. La hoja aún no enlaza la auditoría ni la web: es lo primero.
+- **Esperan a Ez:** mirar la auditoría, la web más bonita y la página de 4, 6 y 7; el aro, V1 y V2 (R3vZVCMdEvKxWhyLHRmwvE); subir
+  la 0.191.1 a Play y darla en TestFlight; la revisión del cobro y lo legal para ChatGPT.
+- **Con Fable 5.2:** una ventana de 5 h dura 20-25 minutos con dos sesiones en Fable. Coordinadora de pocas vueltas y contexto
+  pequeño; las sesiones, en Opus salvo donde pese el criterio. EcLj6 tenía la semana al 94-98 % el 9 nov. por la noche.
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (10 nov., ~9:15)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Republica mi hoja de pasos y las tres páginas nuevas (la auditoría, la web más bonita y la de ChatGPT 4, 6 y 7) en esta cuenta, lee la auditoría y dime qué es lo primero. Haz pocas vueltas: el modelo nuevo gasta mucho.
+```
+
+## 10 nov., ~9:11: la auditoría se pausa aquí y sigue fuera; listo para migrar. Empieza aquí
+
+- **Ez (9:10): «al 85 %-90 % dejamos toda la sesión lista para migrar; la auditoría la podemos pausar aquí y hacerla externa con
+  el mismo modelo para no gastar tokens en las cuentas de Claude Code».** Hecho así: a `auditoria-fable` (`local_ce2d2349…`) se
+  le pidió WIP con push y parar; su rama, `claude/auditoria-fable-9nov-8401fc`, con el informe a medias en `docs/audits/fable-9nov/`.
+  El texto para pegar en claude.ai está en la hoja, en el paso «Ahora». Cuando Ez traiga la respuesta: guardarla entera en
+  `docs/audits/fable-9nov/`, comprobar cada punto en el código (como con las de ChatGPT) y darle una página con una sola cola.
+- **La página de 4, 6 y 7, publicada: KZFDp3zNhk4JAFHr13ysxq** (5iWBf; `claude/chatgpt-jornada-9nov`, b7bbf20e). Espera tres letras de Ez
+  y el «júntalo» de 5, 1, 3 y 2. Esa sesión ya acabó.
+- **Sigue en marcha solo `web-bonita`** (`local_8a20426c…`, Opus, `claude/landing-c-9nov`): pinta primero su dirección recomendada y
+  publica pronto. Para con WIP al 85-90 % de las 5 h.
+- **Uso a las 9:10:** 5 h al 76 % (se reponen a las 13:50), semana al 31 %, «Weekly · Fable» al 42 %. Veinte minutos de dos
+  sesiones en Fable y una en Opus gastaron 57 puntos de las 5 h. EcLj6 tenía la semana al 94-98 % anoche.
+- **Para migrar o seguir en una sesión nueva**, el texto del bloque de abajo sirve tal cual, cambiando «10 nov., ~9:00» por
+  «10 nov., ~9:11».
+
+## 10 nov., ~9:00: las tres sesiones pararon anoche por el uso y siguen esta mañana. Empieza aquí
+
+- **Ez (10 nov.): «Espero a la bonita».** La landing B no se junta todavía: espera a que elija la estética de la web, y se juntan a la vez.
+- **Anoche, a las ~23:45, las 5 h llegaron al 100 %** con tres sesiones y la coordinadora (unos 25 minutos de trabajo). Lo guardado:
+
+| Sesión | Rama | Dónde quedó | Falta |
+|---|---|---|---|
+| `chatgpt-pagina` (`local_a381fb3d…`, Opus) | `claude/chatgpt-jornada-9nov` | b5a851b3: la página de 4, 6 y 7, hecha y sin publicar | publicarla en 5iWBf y apuntar su dirección |
+| `web-bonita` (`local_8a20426c…`) | `claude/landing-c-9nov` | dd552fae: los defectos de hoy medidos, sus guiones y tres direcciones pensadas (nota en `docs/proposals/`) | pintarlas y la página para Ez; sigue en **Opus** para no agotar «Weekly · Fable» |
+| `auditoria-fable` (`local_ce2d2349…`, Fable) | `claude/auditoria-fable-9nov-8401fc` | 2211eb40: informe parcial (lo de pago que no se ve, dónde se compra antes de v1, la bienvenida) y nota «dónde me quedo» | vivir el Foco con los ejercicios en la app y la página para Ez |
+
+- **El aviso de las 04:27 saltó a las 08:56** (el PC durmió). Uso al despertar: una sola vuelta de la coordinadora, con 325k de
+  contexto y la caché fría, costó el **19 % de las 5 h**. «Weekly · Fable», al 31 %; la semana, al 24 %. Las 5 h se reponen a las 13:50.
+- **Esta coordinadora pesa demasiado para seguir preguntándole cosas.** Lo nuevo, mejor en una sesión nueva de la MISMA cuenta
+  (5iWBf), que empieza ligera. Las tres sesiones avisan a la coordinadora vieja al acabar; la nueva las ve con `list_sessions`
+  y lee sus ramas. Ez pega esto:
+
+```
+Retomamos PACE en una sesión nueva de esta misma cuenta. Lee CLAUDE.md, STATE.md y el bloque «10 nov., ~9:00» de docs/traspaso/LEEME.md, y sigue como coordinadora. Mira con list_sessions cómo van las tres sesiones (chatgpt-pagina, web-bonita y auditoria-fable) y sus ramas, y dime qué páginas tengo ya para mirar. Haz pocas vueltas: este modelo gasta mucho.
+```
+
+- CI del commit de documentos de anoche (03c78e9b): en verde entero (42712881224, Android e iOS).
+
+## 9 nov., ~23:35: relevo tomado en 5iWBf (5 h al 3 %, semana al 8 %). Empieza aquí; el bloque de las 21:00, debajo, ya está hecho
+
+- **CI de la 0.196.0, en verde entero** (42696654845, el del último commit de documentos: verify, los dos trozos de e2e, Safari,
+  Android e iOS). Las tres ramas a medias, limpias y subidas.
+- **Páginas republicadas en 5iWBf:** la landing B, **3juJNAvBAFo8NKKKWLEc6J** (el HTML de EcLj6 con las imágenes sacadas a
+  archivos, para poder leerlo entero antes de publicar); la caza de rendimiento, **R3vZVCMdEvKxWhyLHRmwvE**; y la hoja,
+  versión 100 en 5iWBfHE7kD3dUVocdskmb6, con los dos enlaces apuntando aquí.
+- **Ez pidió además (23:20):** «ya que estoy con el modelo de Fable nuevo revisa y audita la app y aporta nuevas ideas, flujos de
+  ejercicios, mejora de la interfaz, etc. con vistas a que la monetización sea un éxito tanto en web como en móvil, revisa cómo se
+  integra el pomodoro a los ejercicios y localiza también dudas o mejoras de toda la app». Y a las 23:25: «También puedes mejorar
+  la estética de la landing + beta + premium para que quede una web bien bonita y atractiva».
+- **Sesiones arrancadas en 5iWBf** (los encargos llevan los topes de uso):
+
+| Sesión | Rama y carpeta | Modelo | Qué hace | Hecho es |
+|---|---|---|---|---|
+| `chatgpt-pagina` (`local_a381fb3d…`) | `claude/chatgpt-jornada-9nov`, su worktree; 8886-8887 | Opus 5.5 | la página de 4, 6 y 7 con el guion `pintar-4-6-7.spec.js.txt` | página publicada aquí, copia en `docs/audits/chatgpt-8nov/`, LEEME al día |
+| `web-bonita` (`local_8a20426c…`) | `claude/landing-c-9nov`, su worktree; 8901-8902 | Fable 5.2 | defectos de hoy con foto y dos o tres direcciones estéticas para landing, /beta y /premium; sin cambiar textos ni tocar lo publicado; commits posteriores a 39e7476e | página publicada aquí, generador y copia en `docs/proposals/` |
+| `auditoria-fable` | rama nueva `claude/auditoria-fable-9nov…`, worktree propio; 8920-8921 | Fable 5.2 | auditoría de producto: monetización web y móvil, el Foco con los ejercicios, flujos, interfaz y dudas; no monta nada | `docs/audits/fable-9nov/auditoria.md` y una página con una sola cola ordenada |
+
+- **La landing B se puede juntar sin esperar a la estética**: la maqueta va encima y aparte. Sigue esperando el «júntalo» de Ez.
+- **Sin sesión, en cola:** las propuestas de build de la caza de rendimiento (punto 5 de `scripts/audit/rendimiento-9nov/LEEME.md`);
+  sus dos arreglos invisibles esperan el «júntalo» y el aro, V1 y V2, las letras de Ez.
+- **Fable gasta mucho.** En los primeros 8 minutos (la coordinadora leyendo la hoja viva entera, con el contexto en 300k, y dos
+  sesiones recién arrancadas) las 5 h pasaron del 3 al 43 %, la semana del 8 al 13 % y «Weekly · Fable», que es un medidor aparte,
+  del 1 al 11 %. Desde ahí la coordinadora hace pocas vueltas y lo pesado va a sesiones nuevas. Topes de las sesiones en Fable:
+  WIP con push al 85 % de las 5 h o al 55 % de «Weekly · Fable»; paran al 90 % o al 60 %. Las 5 h se reponen a las 04:20.
+
+## AL RELEVO (9 nov., ~21:00): EcLj6… con la semana al 94-98 % (Ez la dejó usar hasta el final); se sigue en 5iWBf…. Empieza aquí; manda sobre todo lo de abajo
+
+**Regla de Ez:** se para al 90 % de las 5 h o al 95 % de la semana. 5iWBf repone las 5 h hacia las 21:00 y tiene la semana al
+~7 %. `main` = **0.196.0** (las voces de Ez en el Suspiro, con el «More» de sulafat cortado en 1,08 s, y la 1A de la caza):
+mira su CI con `gh run list --branch main -L 3`; si no está en verde entero, eso es lo primero. Las sesiones de EcLj6 **no se
+ven desde 5iWBf**: lo que esté a medias se retoma con una sesión nueva con `cwd` en su worktree, que empiece por su `git log`
+y su nota de dónde se quedó (abajo, en cada fila). Las páginas de EcLj6 dan 404 en 5iWBf: se republican desde su generador.
+
+| Rama | Qué lleva | Estado | Falta |
+|---|---|---|---|
+| `claude/landing-c-9nov` | la raíz con dos caras (C) y la landing B larga como /premium | 5f9629ea (el CSS de los nombres de los cinco módulos) y 39e7476e (dos pruebas que leían el documento entero y no sabían de la landing: ahora miran la app); verify y landing-cara 17/17; suite entera (1,1 h con la máquina cargada): los otros cuatro rojos, runner-cabe y runner-espera, pasan solos | republicar su página en 5iWBf (la de EcLj6 es TUES7Hw31NwYXYBypdmHwK; el generador, `pagina-ez.js`, en el scratchpad de la sesión `local_ac11222c…` de EcLj6, bajo `AppData/Local/Temp/claude/`); el «júntalo» de Ez |
+| `claude/chatgpt-jornada-9nov` | ChatGPT 2, sin cambiar nada a la vista: el 5 (d6683620), el 1 (9a398542, el Foco pausado suma lo del aro), el 3 (1c7e6fbd, cambiar cadencia, horario, semana o reuniones congela antes lo hecho) y el 2 (dfc6ee9b, el inicio se guarda también en marcha); cada uno con prueba, mutantes y fila en DECISIONES | hecho y parado al 95 % (LEEME aeecfc84). Suites de zona 50/50, 93/94 y 157/158: las dos rojas pasaron de 60 s con la máquina cargada y solas pasan | **la página de 4, 6 y 7**, sin hacer: qué pintar y la recomendación (4B, 6A, 7A), en `docs/audits/chatgpt-8nov/LEEME.md`, con el guion de fotos sin correr (`pintar-4-6-7.spec.js.txt`); el «júntalo» de Ez para 5, 1, 3 y 2 |
+| `claude/caza-rendimiento-9nov` | dos arreglos invisibles con prueba: las barras con `transform` (7cc6b238, `tests/barras-transform.spec.js`) y una `@font-face` por familia, 12 → 5 descargas (301c2b4b, `tests/fuentes-unicas.spec.js`); verify y la suite de lo tocado en verde | parada al 95 % (WIP b403a1c0). Banco de versión: la pestaña abierta no se entera de la nueva, un aviso de más al recargar, dibujos viejos mientras espera y «Actualizar» recarga la otra pestaña a mitad de Respira. La caída de las 15:00 era del instrumento | página para Ez en EcLj6 **4Fohyqi7Cth9iKGxE2FSSD** (el aro A/B/C, V1 y V2; recomienda B en las tres): republicarla en 5iWBf desde su generador; el «júntalo» de las dos invisibles; montar lo que elija; las propuestas de build (punto 5 de su LEEME) |
+
+Ya juntadas en la 0.196.0 y sin nada más: `claude/voces-suspiro-9nov` y `claude/caza-anchos-9nov-6a280f`. La página de escucha y la entrada
+`voces-suspiro` de `.claude/launch.json` ya se quitaron. La CI de la 0.196.0 (42693245511): en verde entero: verify, los dos trozos de e2e, Safari, Android e iOS. Lleva además el arreglo
+de `tests/aro-jornada.spec.js`, que cayó en GitHub al mirar el relleno del botón una sola vez (ahora `expect.poll`).
+
+**Esperan a Ez:** mirar la landing B y decir «júntalo»; subir la 0.191.1 a Play y darla en TestFlight; pegar en ChatGPT la
+revisión del cobro y lo legal (en su hoja). **La hoja:** la del repo lleva ids de 5iWBf: se publica tal cual en
+**5iWBfHE7kD3dUVocdskmb6**, con la landing apuntando a la página que se republique allí.
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (9 nov., ~21:00)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Mira el CI de la 0.196.0, republica mi hoja de pasos y la página de la landing en esta cuenta, y retoma las sesiones a medias desde sus ramas.
+```
+
+## 9 nov., ~20:00: relevo tomado en EcLj6 (5 h al 22 %, semana al 91 %; tope de Ez, 98 %)
+
+- **Ez: «puedes llevar la sesión semanal hasta el 98 %»**. Con tres sesiones y la coordinadora, la semana subió del 88 al 91 %
+  en 12 minutos (las 5 h, del 2 al 22 %): aquí queda poco. Las sesiones, WIP con push al 95 % y paran al 97 %. **5iWBf repone
+  las 5 h hacia las 21:00 y tiene la semana al ~7 %**: lo que quede se sigue allí, con el relevo de abajo puesto al día.
+- **Sesiones retomadas en EcLj6** (con `cwd` en su worktree): landing B, `local_ac11222c…` (Sonnet; el CSS sin commit de
+  `.pl-mods li > span`, la suite, push y la página para Ez desde el generador de la otra cuenta); chatgpt-jornada,
+  `local_92cdd7f1…` (1, 3 y 2 con el diseño de su nota, que estaba en `side-session-notes` de la otra cuenta y se copió al
+  encargo; luego la página de 4, 6 y 7); caza-rendimiento, `local_fd57880b…` (primero el arreglo invisible de las barras).
+- **Las voces, listas para oír**: `oir-suspiro.html` en el worktree de `voces-suspiro-9nov` (sin commit; no se sube), servida
+  en el 8915 con `voces-suspiro` de `.claude/launch.json` (sin commit). Tres partes: la palabra sola, una respiración entera
+  con el tono donde no cabe, y botones que dejan la app de la rama con cada voz e idioma. El service worker viejo del 8915
+  se purgó (servía la caché `pace-v0.195.0`, el mismo nombre que la rama, que no sube versión). Comprobado en la app de la
+  rama: con sulafat en español, `paceVozCabe('breathe.inhale.more', 1)` da `true`.
+- **Ez oyó las voces (~20:15): «Me valen todos los audios»**, y del «More» de sulafat: «¿no podemos ajustarlo un poco?». Cortado
+  en 1,08 s (e18676db en `claude/voces-suspiro-9nov`): de 1,05 s en adelante es la cola de la «r», a −40 dB o menos, y sigue
+  sonando `PACE_VOZ_COLA` detrás con su fundido; mide 0,82 y cabe. Las 33 pruebas de voz en verde; con 1,15 cae el caso de
+  sulafat en inglés. **Las voces quedan aprobadas para la próxima versión** (con la 1A de `caza-anchos`). verify en la rama
+  solo marca `oir-suspiro.html`, que está sin commit en su raíz: al juntar no existe.
+- **Landing B**: 5f9629ea (el CSS) subido y la página para Ez en **TUES7Hw31NwYXYBypdmHwK** (EcLj6); su suite entera, corriendo.
+- **Hoja, versión 130 en EcLj6io4wM9pGjtQ5wd1CT**: el «Ahora» es mirar la landing B; ChatGPT del cobro y lo legal, lo siguiente.
+
+## AL RELEVO (9 nov., ~19:45): 5iWBf… al 87-93 % de las 5 h (semana 7 %); se sigue en EcLj6…. Empieza aquí; manda sobre todo lo de abajo
+
+**Regla de Ez:** se para al 90 % de las 5 h o al 95 % de la semana (esta noche, excepción hasta el 93 % para dejar el relevo).
+`main` = **0.195.0**, con su CI en verde entero (42648271866). Las sesiones de 5iWBf **no se ven desde EcLj6**: lo que esté a
+medias se retoma con una sesión nueva en EcLj6, con `cwd` en su worktree, que empiece leyendo su `git log` y su nota «dónde me
+quedo» (en la carpeta de memoria del proyecto, que comparten las dos cuentas). Sus páginas dan 404 en EcLj6: se republican desde
+la copia de su rama. No hay ningún CronCreate vivo en 5iWBf.
+
+**Ramas por juntar, con lo que decidió Ez:**
+
+| Rama | Qué lleva | Estado | Falta |
+|---|---|---|---|
+| `claude/caza-anchos-9nov-6a280f` | **1A** de Ez: «1 h» no se queda sola en la frase del día (43655d1b); lo demás ya está en `main` | prueba con mutante, verify y zona en verde | juntarla en la próxima versión |
+| `claude/voces-suspiro-9nov` | **«Más» y «More»** del Suspiro, las voces que grabó Ez (4d80f867): señal `breathe.inhale.more`, la única voz en una fase de 1 s, con `vol` | verify; las 8 pruebas de voz en verde; prueba nueva con 3 mutantes en rojo | **que Ez las oiga antes de publicar** (en la app de la rama: Respira › Suspiro fisiológico, con cada voz y en los dos idiomas); el «More» de sulafat dura 0,89 s y no cabe en 0,85: suena el tono hasta que Ez grabe una toma más corta (los prompts, en `docs/traspaso/archivos/encargos-16oct/PROMPTS_AUDIO_SUSPIRO.md`, pidiendo menos de 0,7 s) |
+| `claude/landing-c-9nov` | la raíz con dos caras (C) y **la landing B de Ez** («B larga como premium»), con las recomendadas en sus otras preguntas | 17 pruebas con mutantes; montando la B; suite entera y WebKit en marcha al relevar | ver su nota; enseñar a Ez lo montado y qué recomendadas se pusieron; su «júntalo» |
+| `claude/chatgpt-jornada-9nov` | lo de ChatGPT 2 (Ez: «Sí, así»): el 5 primero, luego 1, 3 y 2 con prueba y mutante, y una página con 4, 6 y 7 | **el 5 se reprodujo y está arreglado** (d6683620: un bloque se cuenta una vez por su id, prueba y dos mutantes, verify) | 1, 3 y 2, y la página de 4, 6 y 7; el diseño de cada uno, en su nota de relevo |
+| `claude/caza-rendimiento-9nov` | caza nueva: móvil lento, un día entero con la pestaña abierta y el paso de versión con el service worker | lo medido y los bancos, en WIP f1085b22 (su LEEME.md); ningún arreglo montado | el banco del paso de versión, sin empezar; los arreglos; la página para Ez |
+
+Puertos: landing 8901-8902, chatgpt 8886-8887, rendimiento 8910-8911, voces 8915; el 8896 lo tiene un servidor viejo.
+La próxima versión junta 1A + voces (cuando Ez las oiga) + lo que esté listo; bump, suite entera, CHANGELOG, push y CI.
+
+**Esperan a Ez:** subir la 0.191.1 a Play y darla en TestFlight, guiándole pantalla a pantalla (`docs/launch/google-play/SUBIDAS.md`;
+el archivo, `subidas-play\PACE-0.191.1.aab`); pegar en ChatGPT la revisión del cobro y lo legal (el «Ahora» de su hoja; comprobar
+cada punto en el código antes de montar nada y esperar su sí); oír las voces; mirar la landing B y las páginas de chatgpt y rendimiento.
+
+**La hoja:** la del repo lleva ids de 5iWBf. En EcLj6 se publica en **EcLj6io4wM9pGjtQ5wd1CT** dando la vuelta a los ids con
+`docs/traspaso/archivos/hoja-ids-cuentas.js`. Ponerla al día con este bloque: las voces, puestas y por oír; la landing B montándose;
+el «Ahora», el cobro y lo legal para ChatGPT.
+
+**Para abrir la otra cuenta, Ez pega esto:**
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (9 nov., ~19:45)» de docs/traspaso/LEEME.md, y sigue como coordinadora. Republica mi hoja de pasos en esta cuenta, retoma las sesiones a medias desde sus ramas y prepárame las voces del suspiro para oírlas.
+```
+
+## 9 nov., ~19:15: la semana, repuesta (1 %); Ez elige la landing B y pide seguir cazando y auditando
+
+- **Ez: «B larga como premium, seguimos en esta sesión cazando bugs, mejorando la experiencia del usuario, auditando».**
+  landing-c monta la B con sus recomendadas en las otras preguntas (decirle a Ez cuáles), la suite entera, WebKit y su fila.
+- **chatgpt-jornada** (`local_edddd114…`, `claude/chatgpt-jornada-9nov`, 8886-8887): el 5 primero (pestaña congelada por CDP), luego
+  1, 3 y 2 con prueba y mutante, y una página con 4, 6 y 7 pintados.
+- **caza-rendimiento** (`local_03c936a2…`, `claude/caza-rendimiento-9nov`, 8910-8911): móvil lento (CPU 4×, Slow 4G), un día
+  entero con la pestaña abierta (memoria, intervalos, escrituras) y el paso de una versión a otra con el service worker.
+- La 1A de la caza (43655d1b en `caza-anchos`) entra en la siguiente versión.
+- **Las voces del suspiro**: Ez las tiene; carpeta creada, `Audio - Respirasuspiro`. Al llegar: medir a −50 dBFS, igualar el
+  volumen, copiarlas a `app/breathe/voz/` y la entrada `breathe.phase.inhala.mas` en `Sound.voz.jsx`, con su prueba.
+- Hoja v99: el «Ahora» es la revisión del cobro y lo legal para ChatGPT.
 
 ## 9 nov., ~16:45: Ez sigue en 5iWBf hasta el 95 % de la semana; la 0.195.0, en main
 
@@ -491,7 +875,7 @@ Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RE
 | `claude/recorrido-6nov-645d6b` | `local_09cd451b…` | 3 arreglos del recorrido + lo que eligió Ez (1A 2A 3A 5A; 4C sin tocar), ya con `main` 0.192.0 dentro. WIP d7995d2e: cinco mutantes en rojo y `verify` en verde | Las pruebas vecinas (`aro-jornada`, `ritmo-*`, `hora-y-medianoche`, `bloques-cortos`) y las fotos del después en la página de Ez (Pd8CZq71NjTMimaydP3caM, en EcLj6: en 5iWBf, republicar `docs/traspaso/archivos/recorrido-6nov/pagina-ez.html`). Después, la suite entera y enseñárselo a Ez para su «júntalo» |
 | `claude/abierta-horas-7nov-a2419d` | `local_d3dda760…` | PACE abierto horas: tres fallos arreglados con prueba (e30c0015) y el informe en WIP (3c404579), en `docs/audits/abierta-horas-7nov.md` | `npm run verify`, las pruebas vecinas y el banco del service worker sin red |
 | `claude/accesibilidad-7nov-e36d06` | `local_b7d2e5c1…` | A medias: tres pruebas nuevas (nombres, teclado y movimiento reducido) y cambios en `app/`; WIP guardado por la coordinadora (828d6060 y e1432c8a) | Leer el informe `docs/audits/accesibilidad-7nov.md` (si lo hay) y el diff; terminar, `verify`, sus pruebas y la página para Ez con lo visual (contraste) |
-| `claude/guardar-atomico-166e3f` | `local_84fe474b…` | Terminado: un periodo por llave en `cobro/mensual.js`, 89 del cobro en verde, dos mutantes | Espera la revisión de ChatGPT (Ez tiene el texto, que también pide revisar este arreglo) y su «júntalo» |
+| `claude/guardar-atomico-166e3f` | `local_84fe474b…` | Terminado: el arreglo del cobro mensual, con sus pruebas y dos mutantes | Espera la revisión de ChatGPT (Ez tiene el texto, que también pide revisar este arreglo) y su «júntalo» |
 | `claude/landing-web-5ec1e5` | — | Propuesta | Las letras de Ez (en 5iWBf, su página es E3tcsR3FnywQNmnCpymxrp) |
 
 Se retoman con sesión nueva, `cwd` en su carpeta de `.claude/worktrees/` y `use_worktree: false`, leyendo su informe; puertos del 8882 en adelante. No más de tres sesiones a la vez. Al juntar: un `git merge` de cada rama (tiene `main` dentro o casi), `index.html` rehecho con el build, `PACE_standalone.html` como estaba, el censo de `verify.integridad.js` sumado a mano y la suite entera.
@@ -502,9 +886,9 @@ Se retoman con sesión nueva, `cwd` en su carpeta de `.claude/worktrees/` y `use
 
 **Trampas de hoy:** en PowerShell, `Remove-Item` está bloqueado; para quitar un worktree con `node_modules` enlazado, primero `cmd /c rmdir <carpeta>\node_modules` (quita solo el enlace) y después `git worktree remove`. Un `cd` en Bash a una carpeta de worktree mueve la sesión: usa `git -C` o `( cd … )`. `logros-sin-pronto-ddf6d6` y `sweet-moser-38e06d` quedan vacías y bloqueadas.
 
-## 6 nov., ~23:40: v0.192.0 en `main`; guardar() y el recorrido, en sus ramas
+## 6 nov., ~23:40: v0.192.0 en `main`; el arreglo del cobro y el recorrido, en sus ramas
 
-Con el «Júntalo» de Ez: la tanda (`claude/tanda-jornada-catalogo`: la jornada 1A 2B y X, y catálogo, cifras y Auto B) entró por avance rápido y subió a 0.192.0. La suite de la tanda, 1315 en verde: dos pruebas de avisos esperaban «Pausar» y dentro de la jornada es «Pausar foco» (puestas al día); con la versión subida, 83 de artefacto, jornada, Caminos y pago, en verde. **En sus ramas:** `claude/guardar-atomico-166e3f` (sesión `local_84fe474b…`, parada), con `guardar()` arreglado (un periodo por llave en `cobro/mensual.js`, 89 del cobro en verde y dos mutantes en rojo), espera la revisión de ChatGPT (Ez la pasa con el texto de la hoja, que también pide revisar ese arreglo) y su «júntalo»; `claude/recorrido-6nov-645d6b` (sesión `local_09cd451b…`, en marcha, puerto 8876), el recorrido entero sobre la tanda: arregla fallos claros y deja lo visual en una página para Ez. Quitados los worktrees ya juntados, con `backups/ramas-6nov-2026.bundle` antes; `logros-sin-pronto-ddf6d6` y `sweet-moser-38e06d` quedan vacías y bloqueadas por Windows. La 0.191.1 sigue siendo la versión de prueba: Ez dijo «más tarde» a subirla a Play.
+Con el «Júntalo» de Ez: la tanda (`claude/tanda-jornada-catalogo`: la jornada 1A 2B y X, y catálogo, cifras y Auto B) entró por avance rápido y subió a 0.192.0. La suite de la tanda, 1315 en verde: dos pruebas de avisos esperaban «Pausar» y dentro de la jornada es «Pausar foco» (puestas al día); con la versión subida, 83 de artefacto, jornada, Caminos y pago, en verde. **En sus ramas:** `claude/guardar-atomico-166e3f` (sesión `local_84fe474b…`, parada), con el arreglo del cobro mensual (sus pruebas en verde y dos mutantes en rojo), espera la revisión de ChatGPT (Ez la pasa con el texto de la hoja, que también pide revisar ese arreglo) y su «júntalo»; `claude/recorrido-6nov-645d6b` (sesión `local_09cd451b…`, en marcha, puerto 8876), el recorrido entero sobre la tanda: arregla fallos claros y deja lo visual en una página para Ez. Quitados los worktrees ya juntados, con `backups/ramas-6nov-2026.bundle` antes; `logros-sin-pronto-ddf6d6` y `sweet-moser-38e06d` quedan vacías y bloqueadas por Windows. La 0.191.1 sigue siendo la versión de prueba: Ez dijo «más tarde» a subirla a Play.
 
 ## 6 nov., ~21:50: coordina EcLj6…; la 0.191.1, bajada y en TestFlight
 
@@ -531,7 +915,7 @@ El sí a la versión de prueba vale solo si está en el mensaje de Ez. Si no vie
 3. **Después, con su «júntalo»:** `maqueta-jornada-40d7ea` (88597eb8; jornada 1A 2B y X; fotos en 5P7oysx4zRBMe7qvhRjFgZ; sin probar en WebKit ni en móvil real) y `catalogo-cifras-auto-5ba756` (01086d31; carpeta `version-de-prueba-7b9668`; Auto B). En una tanda, con una suite, y salen como actualización durante los 14 días.
 4. **Espera a Ez:** el estado de TestFlight (si está lista, el enlace público va a /beta); la parte legal de ChatGPT, con el prompt de la hoja; las letras de la landing (E3tcsR3FnywQNmnCpymxrp); Año nuevo, que se repite, y Vaca feliz; oír las horas con TalkBack; y los testers, que ya busca.
 5. **Para encender la venta:** Resend y la dirección real de 19,99 € en `PACE_TIENDA_WEB.enlaces.vida`. Con la primera venta real, ese mismo día, sus datos y publicar `legal/`. La revisión profesional, en un mes.
-6. **Propuesto y sin decidir, tras la beta:** un recorrido entero en móvil y escritorio, y arreglar `guardar()` antes del mensual; pide el OK de Ez. Descanso de manos, después de v1 (`dibujos-22oct/para-revisar/manos-boca-arriba-5nov.jpg`). Quitar los worktrees juntados, con un bundle antes: Ez dijo sí.
+6. **Propuesto y sin decidir, tras la beta:** un recorrido entero en móvil y escritorio, y el arreglo del cobro antes del mensual; pide el OK de Ez. Descanso de manos, después de v1 (`dibujos-22oct/para-revisar/manos-boca-arriba-5nov.jpg`). Quitar los worktrees juntados, con un bundle antes: Ez dijo sí.
 
 ## 6 nov., ~18:45: v0.191.1 subida
 
@@ -1300,7 +1684,7 @@ gastó el 58 % de sus 5 horas en 50 minutos: Ez decidió seguir con las dos en p
       (nombres con guion: `sulafat-inhale.mp3`…), y que Ez las oiga antes de subir.
   - `ios-preparar` terminó: **el iPhone está preparado en v0.164.0** (proyecto `ios/`, `nativo.js` e
     `ios.js`, workflow `iOS` y la guía `docs/launch/app-store/guia.html`). Para TestFlight espera la
-    cuenta de Apple Developer de Ez y su llave de la API (`PACE-llave-apple`). Su hueco es para el
+    cuenta de Apple Developer de Ez y su llave de la API. Su hueco es para el
     calendario (abajo), cuando haya uso para abrir una sesión.
 - **iPhone, decisiones de Ez (14 oct.):**
   - la cuenta de Apple Developer, a su nombre (todavía no está creada);
@@ -1375,7 +1759,7 @@ La coordinadora es la única que sube a `main` (`docs/WORKFLOW.md` §9) y usa `P
 - **`claude/premium-codigos-tester` (PACE completo):** ya juntada con v0.156.0, choques resueltos y
   `verify` en verde (5a9a905). Falta: la suite entera; fotos para Ez del candado, la invitación y
   «Tengo un código» en la app de hoy; su sí; subirla como v0.157.0. Ez ya dijo «sí, y enséñamelo».
-  Los 15 enlaces de tester están en `~/PACE-llave-licencias/codigos-tester.csv` y solo funcionan
+  Los 15 enlaces de tester los guarda Ez, con las llaves, y solo funcionan
   cuando esto esté publicado.
 - **`claude/caza-foco-estado-d6bd17` (caza en Foco y lo guardado):** once hallazgos reproducidos en
   `docs/traspaso/CAZA_FOCO_ESTADO_10OCT.md`; el arreglo de las dos pestañas (pierde datos) estaba en
@@ -1408,8 +1792,7 @@ La coordinadora es la única que sube a `main` (`docs/WORKFLOW.md` §9) y usa `P
 - **iPhone (Ez, 9 oct.): PACE en Safari ahora y la app de la App Store después de v1.** La
   revisión en el motor de Safari encontró el aviso falso de «versión nueva» en la primera visita
   (arreglado en v0.151.0) y nada más en la home. Falta que un tester con iPhone mire el sonido.
-- La llave de los códigos de tester existe desde el 9 oct. (`PACE-llave-licencias`, en el PC de
-  Ez; la pública, `k1`, en `claude/premium-codigos-tester`). Ez tiene ya los ids del calendario,
+- La llave de los códigos de tester existe desde el 9 oct. (la privada, fuera del repo; la pública, `k1`, en `claude/premium-codigos-tester`). Ez tiene ya los ids del calendario,
   la lista de testers y los textos de logros, y los está pasando.
 - El logo (`app/ui/pace-logo.png`) dice «FVFN» en vez de «EVEN» en la propia imagen: Ez lo
   vuelve a exportar.
@@ -1565,7 +1948,7 @@ antes de trabajar y mira en `git log` qué subió la otra.
   «Otra», las horas a las que paras), con la carta del lunes como su cara, enseñado antes en una
   página.
 - **Android:** la llave de subida a Play existe desde el 7 de octubre. El original y su contraseña
-  están en la carpeta `PACE-llave-play` del usuario de Ez en su PC, y GitHub tiene una copia en los
+  los guarda Ez fuera del repo, y GitHub tiene una copia en los
   secretos del repo, con la que el workflow `Android` firma el AAB en cada push a `main` y lo guarda
   en el borrador de release `vX.Y.Z` (`PACE-X.Y.Z.aab`). El APK de prueba es otra app, «PACE prueba»
   (`com.ezradesign.pace.prueba`).
@@ -1616,8 +1999,8 @@ primera versión de pago, en web y Android.
   tarjeta cerrada con candado de línea fina y la invitación al tocarla; se tomó la opción B
   (semana de estadísticas gratis; mes, año y «qué te ayuda» de pago), propuesta en
   `docs/proposals/premium-pace-completo.html`. En la web el código es un enlace firmado que la app
-  comprueba sin servidor; la llave privada la crea Ez en su PC con `npm run licencia:llaves`
-  (carpeta `~/PACE-llave-licencias`, fuera del repo) y cada enlace sale con
+  comprueba sin servidor; la llave privada la crea Ez en local con `npm run licencia:llaves`
+  (fuera del repo) y cada enlace sale con
   `npm run licencia:codigo -- N`. En Android, Google Play no deja códigos propios: los testers
   recibirán un código promocional de Play del producto «PACE completo» (hasta 500 por trimestre)
   cuando la app lleve Play Billing (Fase 6).
@@ -1660,19 +2043,18 @@ primera versión de pago, en web y Android.
 | Glifos | Faltan 2 de ejercicio (rana y pica en escritorio; el descanso ya usa la figura que respira), 6 que rehacer porque no casan con su ejercicio (`archivos/glifos/revision-glifos.html`) y 19 de los 96 de logro. GPT Image bloquea las figuras desnudas y Ez no las quiere vestidas. | Rehacer los prompts desde el preámbulo con el que se hicieron los 59, sin ropa y sin que salte el filtro. Prompts y nombres de archivo en `archivos/glifos/prompts-glifos.md`. |
 | «A tu ritmo» semanal | Es lo que se paga en v1 (Fase 3). La parte gratis (la semana en la bienvenida y en Ajustes, y el día ya contestado) está en v0.148.0. | El motor que aprende de cada persona y adapta la semana, con la carta del lunes (premium): primero una página para Ez con qué aprende, con qué datos y cómo lo cuenta. |
 | Caza de bugs | v0.143.2: «Primera calistenia» y «Primer estirón» iban cruzados entre Mueve y Estira y los logros decían «Extra»; arreglado, y a quien ya los tenía se le corrigen solos. v0.143.3: la cuenta atrás de las sesiones pisaba su frase en el móvil. v0.143.4: la preparación de Mueve y Estira decía «De pie» en las 8 rutinas de silla y las 2 de suelo; en Android la bienvenida decía «en tu navegador»; a 360 px los botones de Hidrátate partían su texto; cuando la pausa proponía agua, su botón decía «Empezar» y no sumaba nada (ahora «Un vaso más», que lo suma; decisión de Ez, que dejó «Muévete» como está y eligió «En la silla»). Revisadas a 360 y 1280 la home, logros, estadísticas, ajustes, las tres bibliotecas y la entrada a las sesiones; a 360, en español e inglés, Foco en marcha, el menú de pausa, Hidrátate, la bienvenida y una sesión entera de Respira, Mueve y Estira. | La lista de Ez ya no tiene nada pendiente (Ez, 7 oct.). Después, una búsqueda en paralelo dejó 37 hallazgos SIN VERIFICAR en `CAZA_BUGS_7OCT.md` (modo oscuro, inglés, Respira e Hidrátate): reproducirlos uno a uno y arreglar los que se confirmen. El 8 de octubre, v0.148.2 arregla seis que no cambian lo que se ve (respira-4, 7, 8 y 11, ingles-9 y el `lang` de ingles-6); los que cambian algo visible, con antes y después, esperan la elección de Ez. Sin revisar: Foco, el estado guardado y la pantalla de «A tu ritmo» por dentro (la está tocando el hilo de la semana). |
-| PACE completo y códigos de tester | En `main` desde v0.157.0 (12 oct.): candado, invitación, «Para ahora» sin cerradas, la licencia firmada (`app/state-licencia.js`), su fila de Ajustes y los scripts. La llave existe desde el 9 oct. (la pública, `k1`, en `app/licencia.llaves.js`; la privada, en `PACE-llave-licencias` del PC de Ez) y los 15 enlaces de tester, desde el 12 oct., en `codigos-tester.csv` de esa carpeta. | Ez manda a cada tester su enlace y apunta a quién da cuál. En la Fase 6, Play Billing con el producto «PACE completo» y sus códigos promocionales para los testers de Android. Las estadísticas de mes y año se cierran con la Fase 4. Cómo se cobra en la web (Stripe, firma automática con k2, 2,99 € al mes con 7 días gratis y 19,99 € de por vida, landing en `/premium`), decidido por Ez el 15 oct.: `DECISIONES_PRODUCTO.md`. |
+| PACE completo y códigos de tester | En `main` desde v0.157.0 (12 oct.): candado, invitación, «Para ahora» sin cerradas, la licencia firmada (`app/state-licencia.js`), su fila de Ajustes y los scripts. La llave existe desde el 9 oct. (la pública, `k1`, en `app/licencia.llaves.js`; la privada, fuera del repo) y los 15 enlaces de tester, desde el 12 oct., guardados con ella. | Ez manda a cada tester su enlace y apunta a quién da cuál. En la Fase 6, Play Billing con el producto «PACE completo» y sus códigos promocionales para los testers de Android. Las estadísticas de mes y año se cierran con la Fase 4. Cómo se cobra en la web (Stripe, firma automática con k2, 2,99 € al mes con 7 días gratis y 19,99 € de por vida, landing en `/premium`), decidido por Ez el 15 oct.: `DECISIONES_PRODUCTO.md`. |
 | Escala con el zoom | Hecha en v0.145.0 (`app/main/_lienzo.js`), medida del 90 al 33 % y en monitores de 1080p y 1440p. | Mirarla en Safari de Mac si alguien lo usa. Nada más. |
 
 ## Lo que espera a Ez
 
-1. Copiar la carpeta `PACE-llave-play` de su PC (la llave de subida a Play) en su disco duro, con
-   la contraseña aparte.
+1. Guardar una copia de la llave de subida a Play fuera del ordenador, con la contraseña aparte.
 2. Dar de alta PACE en Google Cloud y Microsoft Entra y pasar los ids.
 3. Crear la app en Play Console y reunir unos 15 testers con Android (Google pide 12 durante 14
    días; tiene 5 o 6).
 4. Nuevas tomas de música con ElevenLabs (2 o 3 de pranayama con tanpura) y los glifos que falten.
-5. En su PC, una vez: `npm run licencia:llaves` (o pedírselo a Claude allí) y una copia de la carpeta
-   `PACE-llave-licencias` fuera del ordenador, como la de Play. Luego, la lista de testers (número y
+5. En su PC, una vez: `npm run licencia:llaves` (o pedírselo a Claude allí) y una copia de la llave
+   fuera del ordenador, como la de Play. Luego, la lista de testers (número y
    si usan web, Android o los dos) y `npm run licencia:codigo -- 1-15` para sus enlaces.
 
 ## Maquetas publicadas (cuenta anterior)
@@ -1684,10 +2066,8 @@ primera versión de pago, en web y Android.
 
 ## Lo que no está en el repo, a propósito
 
-Claves, contraseñas, tokens y correos personales no se suben nunca. La llave de Play va en los
-secretos de GitHub, y su original, con la contraseña, en la carpeta `PACE-llave-play` del PC de Ez.
-La llave privada de los códigos de PACE completo vive en `~/PACE-llave-licencias` del PC de Ez, con
-la lista de enlaces dados (`codigos-tester.csv`); `verify` falla si una llave privada entra aquí.
+Claves, contraseñas, tokens y correos personales no se suben nunca. Las llaves privadas (la de Play, la de los códigos de PACE completo y la de Apple) viven fuera del
+repo; dónde, lo sabe Ez y no se escribe aquí (D-4 C, 10 nov.). `verify` falla si una llave privada entra aquí.
 El correo de contacto de PACE, `hola.ezradesign@gmail.com`, sí está: es público a propósito
 (privacidad y ficha de Play). El historial de las conversaciones no se migra: lo que importa está
 aquí y en `git log`.

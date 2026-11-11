@@ -3,8 +3,7 @@
    Con estas llaves la app comprueba, sin conexión y sin servidor, que un código
    de PACE completo lo firmó Ez (lo comprueba `app/state-licencia.js`). Son
    PÚBLICAS: solo sirven para comprobar, no para firmar. La llave privada, la que
-   firma, no entra nunca en el repositorio: vive en la carpeta
-   `PACE-llave-licencias` del PC de Ez, al lado de la de Play, y `verify` falla si
+   firma, no entra nunca en el repositorio: vive fuera, y `verify` falla si
    aparece una en el árbol.
 
    Este archivo lo escribe `npm run licencia:llaves` (scripts/licencias/). Cada
