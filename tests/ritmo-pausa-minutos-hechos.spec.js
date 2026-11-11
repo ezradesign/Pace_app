@@ -6,6 +6,9 @@
  * arriba, y conserva su marco de la de ahora. Las hechas sin sesión apuntada (de antes de apuntarlas)
  * dicen «hecha» a secas: nunca los minutos del hueco. La línea de la home dice lo mismo.
  * La sesión se apunta en la pausa por su `runId` (`dia.sesiones`, state-ritmo.pausa.jsx).
+ * Séptima pasada de Fable (n.º 2, 3 y 5): los minutos van guardados con la sesión (`dia.sesionesMin`), así
+ * que se dicen igual sin el registro de eventos (la otra pestaña no lo relee hasta volver a ella); lo
+ * apuntado por la 0.198, sin ellos, se sigue leyendo del registro; y una sesión de 0 min dice «hecha».
  */
 'use strict';
 
@@ -24,17 +27,18 @@ const SEMILLA = {
     estados: { 1: 'hecha', 2: 'hecha', 3: 'hecha', 4: 'saltada' } } },
 };
 
-async function hacerLaPausa(page, context, lang) {
+const DOS_MIN = { elapsedSeconds: 130, activeSeconds: 120, plannedSeconds: 120, plannedSecondsSource: 'declared', creditedMinutes: 2 };
+
+async function hacerLaPausa(page, context, lang, datos) {
   await sembrar(context, Object.assign({}, SEMILLA, { lang: lang || 'es' }));
   await page.clock.install({ time: JUEVES });
   await irAlArtefacto(page);
   await esperarInit(page);
   /* Una rutina de 2 min con la pausa abierta, por donde la cuentan los cuatro runners. */
-  await page.evaluate(async () => {
-    window.emitSessionCompleted('move', 'extra.empuje-sencillo',
-      { elapsedSeconds: 130, activeSeconds: 120, plannedSeconds: 120, plannedSecondsSource: 'declared', creditedMinutes: 2 });
+  await page.evaluate(async (d) => {
+    window.emitSessionCompleted('move', 'extra.empuje-sencillo', d);
     await new Promise((r) => setTimeout(r, 300));
-  });
+  }, datos || DOS_MIN);
 }
 
 async function abrirHoy(page, lang) {
@@ -79,4 +83,36 @@ test('ya pasada, la línea de la home y Estadísticas dicen «hecha · 2 min»',
   await abrirHoy(page);
   const metas = (await tarjetas(page)).filter((c) => c.estado === 'hecha').map((c) => c.meta);
   expect(metas, 'cuatro hechas: la de las 13:15 con sus 2 min').toContain('13:15 · hecha · 2 min');
+});
+
+test('sin el registro de eventos (la otra pestaña, una copia que no lo trae), la pausa sigue diciendo «hecha · 2 min»', async ({ page, context }) => {
+  await hacerLaPausa(page, context);
+  expect(await page.evaluate(() => Object.values(getState().ritmo.dia.sesionesMin || {})), 'los minutos, con la sesión').toEqual([2]);
+  await page.evaluate(() => { window.paceEventsSnapshot = () => ({ events: [] }); });
+  await abrirHoy(page);
+  const ahora = (await tarjetas(page)).find((c) => c.estado === 'ahora');
+  expect(ahora.meta, 'leídos del registro, decía «hecha» a secas').toBe('13:15 · hecha · 2 min');
+});
+
+test('lo que apuntó la 0.198 (solo el runId, sin minutos) se sigue leyendo del registro', async ({ page, context }) => {
+  await hacerLaPausa(page, context);
+  await page.evaluate(() => {
+    const s = getState();
+    const dia = Object.assign({}, s.ritmo.dia);
+    delete dia.sesionesMin;
+    setState({ ritmo: Object.assign({}, s.ritmo, { dia }) });
+  });
+  expect(await page.evaluate(() => Object.keys(getState().ritmo.dia.sesiones)), 'GUARD: la sesión sigue apuntada').toEqual(['5']);
+  await abrirHoy(page);
+  const ahora = (await tarjetas(page)).find((c) => c.estado === 'ahora');
+  expect(ahora.meta).toBe('13:15 · hecha · 2 min');
+});
+
+test('una sesión que suma 0 min («Terminar antes» al momento) deja la pausa «hecha», nunca «hecha · 0 min»', async ({ page, context }) => {
+  await hacerLaPausa(page, context, 'es', { elapsedSeconds: 3, activeSeconds: 3, plannedSeconds: 120, plannedSecondsSource: 'declared',
+    completionReason: 'early', creditedMinutes: 0 });
+  expect(await page.evaluate(() => getState().ritmo.dia.estados[5]), 'GUARD: la pausa quedó hecha').toBe('hecha');
+  await abrirHoy(page);
+  const ahora = (await tarjetas(page)).find((c) => c.estado === 'ahora');
+  expect(ahora.meta).toBe('13:15 · hecha');
 });

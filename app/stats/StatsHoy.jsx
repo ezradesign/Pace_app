@@ -60,9 +60,14 @@ function statsHoySesiones() {
     .sort((a, b) => a.cuando - b.cuando);
 }
 
-/* Con el día elegido, las sesiones de hoy que no son de ninguna de sus pausas (6A). */
+/* Con el día elegido, las sesiones de hoy que no son de ninguna de sus pausas (6A). Si alguna pausa
+   está hecha sin sesión apuntada (hecha con la versión de antes de apuntarlas, el día en que llega
+   la actualización, o una copia importada de entonces), no se sabe cuál fue la suya: saldría dos
+   veces, en su parada y aquí. Ese día no hay «Además, por tu cuenta». */
 function statsHoySueltas(state) {
-  const por = (ritmoDe(state).dia || {}).sesiones || {};
+  const dia = ritmoDe(state).dia || {};
+  const por = dia.sesiones || {}, estados = dia.estados || {};
+  if (Object.keys(estados).some((n) => estados[n] === 'hecha' && !(Array.isArray(por[n]) && por[n].length))) return [];
   const suyas = new Set();
   Object.keys(por).forEach((n) => (Array.isArray(por[n]) ? por[n] : []).forEach((id) => suyas.add(id)));
   return statsHoySesiones().filter((s) => !s.runId || !suyas.has(s.runId));

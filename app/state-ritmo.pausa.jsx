@@ -79,8 +79,11 @@ function ritmoSigueCierre(routine, doneMeta, t) {
    pausa, s195) y, si es uno de sus platos, lo apunta como hecho. Y apunta QUÉ SESIÓN fue
    (`runId`) en `dia.sesiones` = { ordinal: [runId] }: de ahí salen los minutos que hiciste
    (7A) y qué sesiones de hoy fueron por tu cuenta (6A); la casa es por quién es, no por el
-   nombre de la rutina. */
-function ritmoPausaHecha(routineId, runId) {
+   nombre de la rutina. Sus minutos van al lado, en `dia.sesionesMin` = { runId: minutos }: el
+   registro de eventos puede no tenerlos (la otra pestaña no lo relee hasta volver a ella, una copia
+   importada sin registro, `file://`). `dia.sesiones` sigue con su forma de la 0.198, así que lo
+   que ya apuntó se lee igual y una pestaña con esa versión no tropieza con la clave nueva. */
+function ritmoPausaHecha(routineId, runId, minutos) {
   var a = ritmoPausaAbierta();
   if (!a) return;
   var esPlato = !!routineId && a.platos.some(function (pl) { return pl.id === routineId; });
@@ -97,6 +100,11 @@ function ritmoPausaHecha(routineId, runId) {
       cambio.sesiones = Object.assign({}, r.dia.sesiones || {});
       var suyas = Array.isArray(cambio.sesiones[a.n]) ? cambio.sesiones[a.n] : [];
       if (suyas.indexOf(runId) === -1) cambio.sesiones[a.n] = suyas.concat([runId]);
+      var min = Number(minutos);
+      if (minutos != null && isFinite(min) && min >= 0) {
+        cambio.sesionesMin = Object.assign({}, r.dia.sesionesMin || {});
+        cambio.sesionesMin[runId] = min;
+      }
     }
     return { dia: Object.assign({}, r.dia, cambio) };
   });
@@ -105,8 +113,10 @@ function ritmoPausaHecha(routineId, runId) {
 /* LOS MINUTOS DE UNA PAUSA HECHA SON LOS QUE HICISTE (Ez, 7A del 11 nov. 2026; revisión de ChatGPT,
    punto 7). Estadísticas › Hoy, la línea y la hoja decían «hecha · 5 min», los minutos del hueco del
    plan, aunque la rutina durara 2. Ahora suman los de las sesiones de esa pausa (`dia.sesiones`), con
-   la cifra que se sumó al total de arriba (`sessionCreditedMinutes`). Sin sesión detrás en el registro
-   (hecha antes de apuntarlas, o sin almacén), «hecha» a secas: nunca los del hueco.
+   la cifra que se sumó al total de arriba (`sessionCreditedMinutes`), guardada con la sesión en
+   `dia.sesionesMin`; lo apuntado por la 0.198 (sin ella) se busca en el registro. Sin minutos de
+   ninguna de las dos (hecha antes de apuntarlas, o sin almacén), «hecha» a secas: nunca los del
+   hueco, y nunca «hecha · 0 min» (Terminar antes al momento suma 0).
    `ritmoSesionesHoy`: las sesiones de Respira, Mueve y Estira que el registro guardó con el día de hoy. */
 function ritmoSesionesHoy() {
   var ev = [];
@@ -122,17 +132,20 @@ function ritmoSesionesHoy() {
 var RITMO_MODULO_SESION = { breathe: 'respira', move: 'mueve', stretch: 'estira' };
 /* { ordinal: minutos } de las pausas con alguna sesión suya en el registro. */
 function ritmoMinutosHechos(s) {
-  var por = (ritmoDe(s || getState()).dia || {}).sesiones || {};
+  var dia = ritmoDe(s || getState()).dia || {};
+  var por = dia.sesiones || {}, guardados = dia.sesionesMin || {};
   var ns = Object.keys(por);
   if (!ns.length) return {};
-  var min = {}, out = {};
-  ritmoSesionesHoy().forEach(function (e) { if (e.runId) min[e.runId] = sessionCreditedMinutes(e); });
+  var min = {}, out = {}, falta = false;
+  Object.keys(guardados).forEach(function (id) { var v = Number(guardados[id]); if (isFinite(v) && v >= 0) min[id] = v; });
+  ns.forEach(function (n) { (Array.isArray(por[n]) ? por[n] : []).forEach(function (id) { if (min[id] == null) falta = true; }); });
+  if (falta) ritmoSesionesHoy().forEach(function (e) { if (e.runId && min[e.runId] == null) min[e.runId] = sessionCreditedMinutes(e); });
   ns.forEach(function (n) {
     (Array.isArray(por[n]) ? por[n] : []).forEach(function (id) { if (min[id] != null) out[n] = (out[n] || 0) + min[id]; });
   });
   return out;
 }
-function ritmoMetaHecha(min, t) { return min != null ? t('ritmo.hecha') + ' · ' + min + ' min' : t('ritmo.hecha'); }
+function ritmoMetaHecha(min, t) { return min > 0 ? t('ritmo.hecha') + ' · ' + min + ' min' : t('ritmo.hecha'); }
 
 /* «YA LA HICE POR MI CUENTA» (Ez, 4A del 8 nov. 2026; Q5 de las revisiones de ChatGPT). Quien hacía
    la pausa a su manera (agua, una vuelta) sin abrir la rutina solo podía pulsar «Seguir» o «Ahora no»,
