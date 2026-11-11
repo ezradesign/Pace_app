@@ -40,7 +40,11 @@ header, section { display: flex; flex-direction: column; gap: 14px; }
 
 .pasos { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; }
 .paso { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 2px 14px; padding: 11px 12px; border-radius: 14px; }
-.paso > .n { grid-row: span 2; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-family: var(--serif); font-style: italic; font-size: 18px; line-height: 1; border: 1.5px solid var(--line); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+/* El número lo pone un contador de toda la página: al quitar un paso hecho, los demás se renumeran solos. */
+.hoja { counter-reset: paso; }
+.paso { counter-increment: paso; }
+.paso > .n { grid-row: span 2; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 0; border: 1.5px solid var(--line); color: var(--ink-3); }
+.paso > .n::before { content: counter(paso); font-family: var(--serif); font-style: italic; font-size: 18px; line-height: 1; font-variant-numeric: tabular-nums; }
 .paso.ahora { background: var(--terra-soft); border: 1px solid var(--terra); }
 .paso.ahora > .n { background: var(--terra); border-color: var(--terra); color: var(--paper); }
 .paso .t { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; font-weight: 600; color: var(--ink); }
@@ -58,7 +62,7 @@ summary:focus-visible, a:focus-visible { outline: 2px solid var(--focus); outlin
 
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.199.0 · 11 de noviembre, 17:30</div>
+    <div class="eyebrow">PACE · versión 0.199.0, en la web y con GitHub en verde · 11 de noviembre, 18:10</div>
     <h1>Lo que queda hasta v1</h1>
     <p>Solo lo pendiente, en orden. Lo hecho no sale aquí; está en tu hoja de pasos. <b>El código ya no marca la fecha</b>: la
       marcan doce testers durante 14 días seguidos y tus altas para cobrar. Desde que la prueba con testers empiece a contar,
@@ -71,15 +75,14 @@ summary:focus-visible, a:focus-visible { outline: 2px solid var(--focus); outlin
     <h2>1 · La versión de prueba sólida</h2>
     <p class="nota">Lo que decidiste el 11 de noviembre: a Play y al iPhone va una versión buena, no la 0.191.1.</p>
     <ol class="pasos">
-      <li class="paso ahora"><span class="n">1</span><span class="t">Que GitHub dé en verde la 0.199.0 <span class="quien yo">Yo · ahora</span></span>
-        <span class="c">Aquí pasaron las 1549 pruebas. GitHub la está probando otra vez, también en Safari, Android y el iPhone.</span></li>
-      <li class="paso"><span class="n">2</span><span class="t">D-8 y D-10 <span class="quien yo">Yo</span></span>
+      <li class="paso ahora"><span class="n">1</span><span class="t">D-8 y D-10 <span class="quien yo">Yo · a las 19:30</span></span>
         <span class="c">En el iPhone, el fin del Foco suena con la campana de PACE. Y un Android restaurado desde la copia de
           Google no puede borrar una reunión tuya.</span></li>
       <li class="paso"><span class="n">3</span><span class="t">La octava revisión de Fable <span class="quien yo">Yo</span></span>
         <span class="c">Compruebo sus 28 puntos sobre las pruebas y monto sus diez pruebas, con tus cinco letras: la semana de
           prueba no se alarga editando una copia, la home sin scroll con la letra del sistema hasta el 115 %, una versión mínima
-          de Android y de Safari, el archivo de Play solo con GitHub en verde y el aviso de la apnea cada vez.</span></li>
+          de Android y de Safari, el archivo de Play solo con GitHub en verde y el aviso de la apnea cada vez. Y repartir mejor las
+          pruebas de GitHub: una de sus dos mitades ya tarda casi los 25 minutos que tiene de tope.</span></li>
       <li class="paso"><span class="n">4</span><span class="t">Dos arreglos pensando en los testers <span class="quien yo">Yo</span></span>
         <span class="c">Que la quinta pausa de un tester no gaste la única vez que PACE pide la valoración. Y que en el móvil el fin
           de la pausa avise, con un sonido distinto del fin del Foco.</span></li>
