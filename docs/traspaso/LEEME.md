@@ -2,11 +2,11 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 11 de noviembre de 2026, 11:20, v0.197.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 11 de noviembre de 2026, 10:54, v0.197.0.
 
-## AL RELEVO (11 nov., 11:20): 5iWBf llega al 90 % de las 5 h (se reponen a las 14:30). Empieza aquí; el detalle, en el bloque de las 09:45, debajo
+## AL RELEVO (11 nov., 10:54): 5iWBf llega al 90 % de las 5 h (se reponen a las 14:30). Empieza aquí; el detalle, en el bloque de las 09:45, debajo
 
-Ez (11:10): «Podemos llevar el uso de esta sesión hasta el 90 % antes de migrar», y quiere aprovechar que tiene Fable hasta el 12 nov.,
+Ez (10:54): «Podemos llevar el uso de esta sesión hasta el 90 % antes de migrar», y quiere aprovechar que tiene Fable hasta el 12 nov.,
 aquí y en una app externa que no gasta. Por orden:
 
 1. **La A del aro.** La monta la sesión que lo pintó, en `claude/caza-aro-fijo-10nov` (worktree `.claude/worktrees/caza-aro-fijo-10nov-8fa0c6`).
@@ -30,7 +30,7 @@ aquí y en una app externa que no gasta. Por orden:
    rinde con Fable es la coordinadora que junta (el punto 2), no las sesiones.
 
 ```
-Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (11 nov., 11:20)» de docs/traspaso/LEEME.md (y el de las 09:45, debajo, para el detalle), y sigue como coordinadora. Por este orden: comprueba que la A del aro está subida en su rama; junta las cuatro ramas como 0.198.0 (mi «Sí, todo junto» ya está dado) con la suite entera y el CI en verde; republica mis páginas en esta cuenta; y encarga en Opus, de una en una, el aro de rendimiento con V1 y V2, y D-8 y D-10. Haz pocas vueltas: el modelo nuevo gasta mucho.
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (11 nov., 10:54)» de docs/traspaso/LEEME.md (y el de las 09:45, debajo, para el detalle), y sigue como coordinadora. Por este orden: comprueba que la A del aro está subida en su rama; junta las cuatro ramas como 0.198.0 (mi «Sí, todo junto» ya está dado) con la suite entera y el CI en verde; republica mis páginas en esta cuenta; y encarga en Opus, de una en una, el aro de rendimiento con V1 y V2, y D-8 y D-10. Haz pocas vueltas: el modelo nuevo gasta mucho.
 ```
 
 ## 11 nov., 09:45 (cuenta 5iWBf): lo de anoche está hecho en sus ramas y Ez dio ocho letras. Manda sobre lo de abajo
@@ -51,7 +51,7 @@ Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RE
 - **Montado a las 10:50, en sus ramas, subido y sin juntar** (informes leídos por la coordinadora; el código, no):
   - `claude/chatgpt-jornada-9nov`: **4 B** (bb7fe9d3), **7 A** (c1edb818) y **6 A** (80465a5b), con `origin/main` 0.197.0 ya dentro; página RifLYxtf23zjW51atRD4U3 (copia en `docs/proposals/montado-4-6-7-11nov/`). Verify verde, 9 pruebas nuevas con mutante, 348 vecinas en verde y 2 rojas por carga que pasan solas. Toca `state-ritmo.jsx` (497 líneas de 500), `state-ritmo.recolocar.jsx`, `state-ritmo.pausa.jsx`, `state-events.jsx`, `ritmo/RitmoLinea.jsx`, `ritmo/RitmoHoja.jsx`, `stats/StatsHoy.jsx`, `stats/StatsPanel.css.jsx`, `i18n/strings/stats.js` y `scripts/verify.integridad.js` (el censo de textos pasa a 1171). El día guarda un dato nuevo, `dia.sesiones`. Para Ez: la 7 A cambia también la línea del día y la lista de la jornada; el día que se junte, lo hecho esa mañana dentro de una pausa puede salir además en «Además, por tu cuenta».
   - `claude/montar-auditoria-10nov-3ef28c`: **la línea de los lunes** (ce7da785: sobre y fila del cajón en el móvil; en el ordenador va DEBAJO del resumen del día y no al lado como en la foto, porque al lado el nombre de la jornada se quedaba en 50-85 px) y **D-6 D** (59f56bbc: Ocaso 1 y Búho 1; un logro ganado no se quita); página CpnFEkENADXDVU7K7u8k5M, versión 2. Verify verde, `tests/lunes.spec.js` (5) y `tests/logros-ocaso-buho.spec.js` (6) con mutante. Toca `scripts/verify.integridad.js` (4 textos nuevos) y `DECISIONES_TECNICAS_VIGENTES.md`: **las dos ramas chocan en el censo de textos y en la tabla de decisiones** al juntarlas.
-- **EL «JÚNTALO» DE EZ YA ESTÁ DADO (11 nov., ~11:00).** A la pregunta «¿Lo junto todo en una sola versión cuando acabe el aro?» contestó **«Sí, todo junto»**. Cuando la A del aro esté subida, la coordinadora junta en una sola versión (0.198.0): `claude/caza-ci-landing-noche-5ea50b` (con su fila técnica), `claude/montar-auditoria-10nov-3ef28c`, `claude/chatgpt-jornada-9nov` y `claude/caza-aro-fijo-10nov`; con bump, build, suite entera, `STATE.md`, `CHANGELOG.md`, push y CI en verde. No cubre lo que aún no está montado (aro de rendimiento, V1, V2, D-8, D-10).
+- **EL «JÚNTALO» DE EZ YA ESTÁ DADO (11 nov., ~10:55).** A la pregunta «¿Lo junto todo en una sola versión cuando acabe el aro?» contestó **«Sí, todo junto»**. Cuando la A del aro esté subida, la coordinadora junta en una sola versión (0.198.0): `claude/caza-ci-landing-noche-5ea50b` (con su fila técnica), `claude/montar-auditoria-10nov-3ef28c`, `claude/chatgpt-jornada-9nov` y `claude/caza-aro-fijo-10nov`; con bump, build, suite entera, `STATE.md`, `CHANGELOG.md`, push y CI en verde. No cubre lo que aún no está montado (aro de rendimiento, V1, V2, D-8, D-10).
 - **En marcha desde las 10:55:** la A del aro, en la sesión que lo pintó (`claude/caza-aro-fijo-10nov`). **En cola, una a una** (las 5 h iban al 67 % a las 10:50 y se reponen a las 14:30): el aro de rendimiento B con V1 B y V2 B (`claude/caza-rendimiento-9nov`); D-8 A y D-10 B (filas S2 y S1 de `docs/audits/fable-9nov/cola.md`, rama de la auditoría).
 - **Sin letra todavía:** si se montan los arreglos pequeños S3 y S4, S3 «código portable» (sin opciones escritas), los «solo falta tu sí» de la página de decisiones y los dos «júntalos».
 - **La hoja de pasos** está al día en 5iWBfHE7kD3dUVocdskmb6. Las páginas del aro y de «Montado» no tienen par en EcLj6.
