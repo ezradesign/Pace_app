@@ -4,7 +4,13 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 11 de noviembre de 2026, 15:15, v0.198.1.
 
-## 11 nov., 15:15 (cuenta 5iWBf): Ez contestó todo con la A y dijo «Júntalo»; `main` LOCAL va por delante de GitHub. Manda sobre lo de abajo
+## 11 nov., 17:10 (cuenta 5iWBf, la coordinadora ya en Opus): la 0.199.0, subida. Manda sobre lo de abajo
+
+- **La 0.199.0 lleva la rama de rendimiento con R2 A (d214578e) y la séptima comprobada** (`claude/septima-comprobada-11nov`, afc4b5d4). Suite entera sobre el `index.html` que se sube: **1549 en verde, 2 saltadas a propósito, ninguna roja** (47 min, puerto 8775: la sesión de R2 dejó un servidor de su worktree en el 8765 y la guarda de la suite lo cazó). Subida a `main` a las ~17:10; el CI, en el commit siguiente o en el relevo de después.
+- **Siguen, sesiones en Opus de una en una:** (1) D-8 A y D-10 B (filas S2 y S1 de `docs/audits/fable-9nov/cola.md`, en `claude/auditoria-fable-9nov-8401fc`); (2) la octava (`externa-octava-11nov.md` de esa rama): comprobar sus 28 puntos y montar sus diez pruebas, con las cinco letras de Ez ya dadas (O1 A a O5 A, abajo). S2 A va con maqueta, en el paquete de v1. Con el CI justo de tiempo en `e2e (2/2)` (22 min de 25), la octava mira también el reparto.
+- **La hoja de Ez** (5iWBfHE7kD3dUVocdskmb6) aún dice la 0.198.1 en el «Ahora»: ponerla al día en la siguiente vuelta.
+
+## 11 nov., 15:15 (cuenta 5iWBf): Ez contestó todo con la A y dijo «Júntalo»
 
 - **Ez, 11 nov., 15:10 (literal, del formulario):** «Juntar rendimiento: Júntalo · R1: A, dejarlo así · R2: A, que espere · S1 ocaso: A, solo jornada y media jornada · S2 ajustes: A, enseñarlo con maqueta antes · O1 semana: A, toparla a siete días · O2 letra grande: A, sin scroll hasta el 115 % · O3 version minima: A, fijarla · O4 archivo play: A, solo en verde · O5 apnea: A, cada vez». No se le vuelve a preguntar nada de esto.
 - **`main` local lleva commits SIN SUBIR** (mirar `git status -sb`): la unión de `claude/caza-rendimiento-9nov` y estas notas. `verify` pasa; la suite entera NO está pasada (la séptima estaba trabajando y la carga la falsea) y no hay bump. **Lo que falta para subirlo, por orden:** (1) montar **R2 A** en la rama de rendimiento (la pestaña que esperaba a acabar la sesión tampoco se recarga con un sello o un aviso abierto; sesión en Opus con `cwd` en `.claude/worktrees/caza-rendimiento-9nov`, cuando acabe la séptima) y volver a juntar la rama; (2) `npm run bump -- 0.199.0`, build, `npm run test:e2e` entera con la máquina libre, `STATE.md`, `CHANGELOG.md`, push y CI en verde. R1 A no pide nada.
