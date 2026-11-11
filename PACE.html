@@ -762,13 +762,22 @@
         /* LA PESTAÑA CON UNA SESIÓN EN MARCHA NO SE RECARGA (Ez, V2 B, 11 nov. 2026). «Actualizar»
            en otra pestaña activa el worker nuevo en todas, y esta recargaba a mitad de Respira y la
            sesión se perdía: ahora espera a que acabe (paceEnSesion, ui/UpdatePrompt.jsx). La que ya
-           es la versión nueva no recarga. */
+           es la versión nueva no recarga.
+           Y LA QUE ESPERÓ A LA SESIÓN ESPERA TAMBIÉN A QUE NO HAYA NADA ABIERTO (Ez, R2 A, 11 nov.):
+           al salir de la sesión sale el sello que se ganó en ella, o se abre la pausa, y recargar en
+           ese instante lo borraba (paceAlgoAbierto). Igual con la pestaña oculta: lo que se dejó
+           abierto debe seguir ahí al volver. Lo fijo (barras, barra lateral) no cuenta. La pestaña
+           sin sesión recarga como siempre, también la que pulsó «Actualizar». Al salir de la sesión se
+           deja un segundo de respiro antes de mirar: el sello y la pausa llegan un instante después. */
         navigator.serviceWorker.addEventListener('controllerchange', function() {
           if (!hadController) { hadController = true; return; }
           versionDe(navigator.serviceWorker.controller).then(function(v) {
             if (esEstaPagina(v)) return;
+            var esperoSesion = false, respiro = false;
             (function recargar() {
-              if (typeof window.paceEnSesion === 'function' && window.paceEnSesion()) { setTimeout(recargar, 2000); return; }
+              if (typeof window.paceEnSesion === 'function' && window.paceEnSesion()) { esperoSesion = true; respiro = false; setTimeout(recargar, 2000); return; }
+              if (esperoSesion && !respiro) { respiro = true; setTimeout(recargar, 1000); return; }
+              if (esperoSesion && typeof window.paceAlgoAbierto === 'function' && window.paceAlgoAbierto()) { setTimeout(recargar, 1000); return; }
               window.location.reload();
             })();
           });
