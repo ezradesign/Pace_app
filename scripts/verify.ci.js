@@ -70,6 +70,17 @@ function tandaCI(ctx) {
   else if (imagen[1] !== pw) ctx.falla('ci.yml: e2e-safari usa la imagen de Playwright ' + imagen[1] + ' y el lockfile trae ' + pw + ': cambia la etiqueta a v' + pw + '-' + imagen[2]);
   else ctx.ok('e2e-safari corre en la imagen de Playwright del lockfile (' + pw + ')');
 
+  /* El AAB firmado para Play, solo tras un CI en verde (Ez, O4 A de la octava): antes saltaba
+     con cada push a main, a la vez que el CI, y un commit rojo podía dejar su AAB en el borrador. */
+  var android = leer(ctx.ROOT, '.github/workflows/android.yml');
+  var malAndroid = [];
+  if (/\n\s+push:/.test(android.split('\njobs:')[0])) malAndroid.push('vuelve a saltar con cada push, sin esperar al CI');
+  if (!/workflow_run:\s*\n\s+workflows: \[CI\]/.test(android)) malAndroid.push('no arranca tras el workflow CI (`workflow_run`)');
+  if (android.indexOf("github.event.workflow_run.conclusion == 'success'") < 0) malAndroid.push('no mira que el CI acabara en verde');
+  if (/--target "\$GITHUB_SHA"/.test(android)) malAndroid.push('apunta el borrador al último commit de main y no al que probó el CI');
+  if (malAndroid.length) ctx.falla('android.yml: ' + malAndroid.join('; '));
+  else ctx.ok('android.yml: el AAB firmado solo sale tras un CI en verde, del commit que probó');
+
   var total = contarPruebas(ctx.ROOT);
   if (total === null) { ctx.info('sin node_modules de Playwright no se cuentan las pruebas por trozo'); return; }
   var porTrozo = Math.ceil(total / N);
