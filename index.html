@@ -12950,6 +12950,39 @@ function calendarioAndroidEsDePace(e) {
 
 
 
+
+
+
+
+
+var CALENDARIO_ANDROID_INSTALADO = 'pace.calendario.android.instalado';
+var _calendarioAndroidListo = null;
+
+function calendarioAndroidListo() {
+  if (_calendarioAndroidListo) return _calendarioAndroidListo;
+  var pedir = typeof paceAndroidInstalado === 'function' ? paceAndroidInstalado() : Promise.resolve(null);
+  _calendarioAndroidListo = pedir.then(null, function () {return null;}).then(function (instalado) {
+    var guardada = null;
+    try {guardada = localStorage.getItem(CALENDARIO_ANDROID_INSTALADO);} catch (e) {}
+    if (instalado !== null && guardada === String(instalado)) return;
+
+
+    try {
+      localStorage.setItem(CALENDARIO_ANDROID_CLAVE, '{}');
+      if (instalado !== null) localStorage.setItem(CALENDARIO_ANDROID_INSTALADO, String(instalado));else
+      localStorage.removeItem(CALENDARIO_ANDROID_INSTALADO);
+    } catch (e) {}
+  });
+  return _calendarioAndroidListo;
+}
+
+
+function calendarioAndroidEventos(desde, hasta, propio) {
+  return calendarioAndroidListo().then(function () {return paceAndroidCalendarioEventos(desde, hasta, propio);});
+}
+
+
+
 function calendarioAndroidCrear(calendarioId, ev) {
   return paceAndroidCalendarioCrear(calendarioId, ev).then(function (id) {
     calendarioAndroidApuntar(id, ev);
@@ -13023,7 +13056,7 @@ function calendarioAcceso(destino) {
 function calendarioLeer(destino, pase, iso) {
   var d = calendarioDiaMs(iso);
   if (destino === 'android') {
-    return paceAndroidCalendarioEventos(d[0], d[1]).then(function (lista) {
+    return calendarioAndroidEventos(d[0], d[1]).then(function (lista) {
       return lista.filter(function (e) {return !e.todoElDia && !e.libre && !e.cancelado && !calendarioAndroidEsDePace(e);});
     });
   }
@@ -13033,7 +13066,7 @@ function calendarioLeer(destino, pase, iso) {
 
 function calendarioEscribirAndroid(eventos, iso, ahoraMs, calendarioId) {
   var d = calendarioDiaMs(iso);
-  return paceAndroidCalendarioEventos(Math.max(d[0], ahoraMs), d[1]).then(function (lista) {
+  return calendarioAndroidEventos(Math.max(d[0], ahoraMs), d[1]).then(function (lista) {
     var viejos = lista.filter(function (e) {return calendarioAndroidEsDePace(e) && e.fin > ahoraMs;});
     return viejos.reduce(function (p, e) {return p.then(function () {return calendarioAndroidBorrar(e.id);});}, Promise.resolve());
   }).then(function () {
@@ -13191,9 +13224,9 @@ try {calendarioArrancar();} catch (e) {}
 Object.assign(window, {
   CALENDARIO_DESTINOS, calendarioDestinos, calendarioConectado, calendarioLlevar, calendarioRefrescarReuniones, calendarioReunionesEstado,
   calendarioGuardarOcupado, calendarioBajarIcs, calendarioRefrescoCortar,
-  calendarioAndroidEsDePace, calendarioAndroidApuntar, calendarioAndroidCrear, calendarioAndroidCambiar, calendarioAndroidBorrar
+  calendarioAndroidEsDePace, calendarioAndroidEventos, calendarioAndroidApuntar, calendarioAndroidCrear, calendarioAndroidCambiar, calendarioAndroidBorrar
 });
-;Object.assign(window, { CALENDARIO_DESTINOS, _calendarioRefresco, _calendarioLectura, calendarioLecturaApuntar, calendarioReunionesEstado, CALENDARIO_ANDROID_CLAVE, CALENDARIO_ANDROID_OLVIDO, calendarioAndroidPropios, calendarioAndroidGuardar, calendarioAndroidApuntar, calendarioAndroidOlvidar, calendarioAndroidEsDePace, calendarioAndroidCrear, calendarioAndroidCambiar, calendarioAndroidBorrar, calendarioDestinos, calendarioConectado, calendarioDiaMs, calendarioGuardarAjustes, calendarioGuardarOcupado, calendarioAcceso, calendarioLeer, calendarioEscribirAndroid, calendarioEscribirWeb, calendarioEventosDeHoy, calendarioLlevar, calendarioBajarIcs, calendarioRefrescoCortar, calendarioRefrescarReuniones, calendarioArrancar });
+;Object.assign(window, { CALENDARIO_DESTINOS, _calendarioRefresco, _calendarioLectura, calendarioLecturaApuntar, calendarioReunionesEstado, CALENDARIO_ANDROID_CLAVE, CALENDARIO_ANDROID_OLVIDO, calendarioAndroidPropios, calendarioAndroidGuardar, calendarioAndroidApuntar, calendarioAndroidOlvidar, calendarioAndroidEsDePace, CALENDARIO_ANDROID_INSTALADO, _calendarioAndroidListo, calendarioAndroidListo, calendarioAndroidEventos, calendarioAndroidCrear, calendarioAndroidCambiar, calendarioAndroidBorrar, calendarioDestinos, calendarioConectado, calendarioDiaMs, calendarioGuardarAjustes, calendarioGuardarOcupado, calendarioAcceso, calendarioLeer, calendarioEscribirAndroid, calendarioEscribirWeb, calendarioEventosDeHoy, calendarioLlevar, calendarioBajarIcs, calendarioRefrescoCortar, calendarioRefrescarReuniones, calendarioArrancar });
 })();
 </script>
   <!-- El calendario que se mantiene solo (14 oct. 2026): lo puro (qué tiene que haber y qué
@@ -13513,7 +13546,7 @@ function calendarioListarDePace(destino, pase, iso, escritos) {
   var claveDe = {};
   Object.keys(escritos || {}).forEach(function (k) {if (escritos[k] && escritos[k].id) claveDe[escritos[k].id] = k;});
   var d = calendarioDiaMs(iso);
-  return paceAndroidCalendarioEventos(d[0], d[1], calendarioAndroidEsDePace).then(function (lista) {
+  return calendarioAndroidEventos(d[0], d[1], calendarioAndroidEsDePace).then(function (lista) {
     return lista.filter(calendarioAndroidEsDePace).map(function (e) {
       return { id: e.id, clave: claveDe[e.id] || null, inicio: e.inicio, fin: e.fin, titulo: e.titulo, texto: e.texto, aviso: e.aviso };
     });
@@ -19250,11 +19283,20 @@ function paceAndroidCalendarioPrivado(id) {
   return paceAndroidPedir('PaceCalendario', 'privado', { id: String(id) });
 }
 
+
+
+
+function paceAndroidInstalado() {
+  return paceAndroidPedir('PaceCalendario', 'instalado').then(function (r) {
+    return r && typeof r.instalado === 'number' && isFinite(r.instalado) && r.instalado > 0 ? r.instalado : null;
+  }, function () {return null;});
+}
+
 Object.assign(window, {
   paceAndroidCalendario, paceAndroidCalendarioPermiso, paceAndroidCalendarioTienePermiso, paceAndroidCalendarios, paceAndroidCalendarioEventos,
-  paceAndroidCalendarioCrear, paceAndroidCalendarioCambiar, paceAndroidCalendarioBorrar, paceAndroidCalendarioPrivado
+  paceAndroidCalendarioCrear, paceAndroidCalendarioCambiar, paceAndroidCalendarioBorrar, paceAndroidCalendarioPrivado, paceAndroidInstalado
 });
-;Object.assign(window, { paceAndroidCalendario, paceAndroidCalendarioPermiso, paceAndroidCalendarioTienePermiso, paceAndroidCalendarios, paceAndroidCalendarioEventos, paceAndroidCalendarioAlarmas, PACE_ANDROID_LIBRE, paceAndroidCalendarioCrear, paceAndroidCalendarioCambiar, paceAndroidCalendarioBorrar, paceAndroidCalendarioPrivado });
+;Object.assign(window, { paceAndroidCalendario, paceAndroidCalendarioPermiso, paceAndroidCalendarioTienePermiso, paceAndroidCalendarios, paceAndroidCalendarioEventos, paceAndroidCalendarioAlarmas, PACE_ANDROID_LIBRE, paceAndroidCalendarioCrear, paceAndroidCalendarioCambiar, paceAndroidCalendarioBorrar, paceAndroidCalendarioPrivado, paceAndroidInstalado });
 })();
 </script>
   <!-- ios: lo mismo en el iPhone (avisos, pantalla encendida, copia de datos y
@@ -19296,6 +19338,11 @@ Object.assign(window, {
      bloque es suya y PACE no toca la suya (`paceIosCampana`): ni al volver, ni al
      abrir PACE despues de que iOS la cerrara. Un aviso cuya hora ya paso no se
      quita: ya sono. Si no lo tenia (sin permiso o fallido), suena PACE.
+     Y suena CON LA CAMPANA DE PACE (Ez, D-10 B del 11 nov. 2026): sin `sound`
+     iOS lo entrega mudo, y con PACE en el fondo no sonaba nada. Es la misma
+     receta de Web Audio grabada en `campana-aviso.wav` (scripts/campana-aviso.js),
+     que el complemento busca en `public/`. Con el sonido apagado en Ajustes de
+     PACE, el aviso va mudo, como la campana.
    - EL PERMISO. Solo se programa con el permiso dado: sin el, iOS guarda el
      aviso sin enseñarlo y la campana de PACE callaria por el. Al volver se mira
      otra vez (puede venir de los Ajustes del iPhone) y `pace:avisos-nativo`
@@ -19327,6 +19374,15 @@ Object.assign(window, {
 
 var PACE_IOS_AVISO_FOCO_ID = 1;
 var PACE_IOS_AVISO_CLAVE = 'pace.ios.aviso';
+var PACE_IOS_AVISO_SONIDO = 'campana-aviso.wav';
+
+
+function paceIosAvisoSonido() {
+  try {
+    var s = typeof getState === 'function' ? getState() : null;
+    return s && s.soundOn ? PACE_IOS_AVISO_SONIDO : null;
+  } catch (e) {return null;}
+}
 
 
 
@@ -19457,10 +19513,10 @@ function paceIosAvisoAjustar() {
   if (quiere) {
     if (a.puesto === quiere.endsAt) return null;
     var textos = paceNativoTextosFin(quiere);
-    return paceIosPedir('LocalNotifications', 'schedule', { notifications: [{
-        id: PACE_IOS_AVISO_FOCO_ID, title: textos.title, body: textos.body,
-        schedule: { at: new Date(quiere.endsAt) }
-      }] }).then(function () {
+    var aviso = { id: PACE_IOS_AVISO_FOCO_ID, title: textos.title, body: textos.body, schedule: { at: new Date(quiere.endsAt) } };
+    var sonido = paceIosAvisoSonido();
+    if (sonido) aviso.sound = sonido;
+    return paceIosPedir('LocalNotifications', 'schedule', { notifications: [aviso] }).then(function () {
       a.puesto = quiere.endsAt;
       a.quizas = false;
       a.fallo = null;
@@ -19571,7 +19627,7 @@ Object.assign(window, {
   paceEsIos, paceIosPlugin, paceIosAvisos, paceIosAvisoPermiso, paceIosAvisoPedir, paceIosAvisoFallo, paceIosFoco,
   paceIosCampana, paceIosGuardarArchivo, paceIosEstado
 });
-;Object.assign(window, { PACE_IOS_AVISO_FOCO_ID, PACE_IOS_AVISO_CLAVE, paceIosAvisoLeer, paceIosAvisoGuardar, _paceIosLeido, _paceIos, paceEsIos, paceIosPlugin, paceIosLlamar, paceIosPedir, paceIosAvisos, paceIosAvisoContar, paceIosAvisoPermiso, paceIosGuardarPermiso, paceIosAvisoPedir, paceIosAvisoPermisoMirar, paceIosAvisoFallo, paceIosFoco, paceIosFondo, paceIosAvisoEnFila, paceIosAvisoRecolocar, paceIosAvisoAjustar, paceIosCampana, paceIosGuardarArchivo, paceIosAudioDespertar, paceIosEstado, paceIosArrancar });
+;Object.assign(window, { PACE_IOS_AVISO_FOCO_ID, PACE_IOS_AVISO_CLAVE, PACE_IOS_AVISO_SONIDO, paceIosAvisoSonido, paceIosAvisoLeer, paceIosAvisoGuardar, _paceIosLeido, _paceIos, paceEsIos, paceIosPlugin, paceIosLlamar, paceIosPedir, paceIosAvisos, paceIosAvisoContar, paceIosAvisoPermiso, paceIosGuardarPermiso, paceIosAvisoPedir, paceIosAvisoPermisoMirar, paceIosAvisoFallo, paceIosFoco, paceIosFondo, paceIosAvisoEnFila, paceIosAvisoRecolocar, paceIosAvisoAjustar, paceIosCampana, paceIosGuardarArchivo, paceIosAudioDespertar, paceIosEstado, paceIosArrancar });
 })();
 </script>
   <script>

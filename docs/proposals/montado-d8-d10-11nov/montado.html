@@ -1,0 +1,123 @@
+<title>Montado: D-8 y D-10</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+  /* Una columna de lectura, como las otras «Montado»: por cada letra, qué cambia para quien usa PACE,
+     cómo se ha probado y qué hay que mirar en el móvil. La paleta y las letras son las de PACE. */
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6E675A;
+    --line: #C9C0A8; --focus: #3E5A3A; --focus-soft: rgba(62, 90, 58, 0.10); --terra: #A85A3E;
+    --font-display: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
+    --font-ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536; --focus: #98B58B; --focus-soft: rgba(122, 154, 109, 0.14); --terra: #D99477; color-scheme: dark } }
+  :root[data-theme="dark"] {
+    --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536; --focus: #98B58B; --focus-soft: rgba(122, 154, 109, 0.14); --terra: #D99477; color-scheme: dark }
+  body { background: var(--paper); color: var(--ink); font-family: var(--font-ui); font-size: 16px; line-height: 1.55;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 64px; }
+  main { max-width: 760px; margin: 0 auto; display: grid; gap: 48px; }
+  h1, h2, h3 { font-family: var(--font-display); font-style: italic; font-weight: 500; margin: 0; text-wrap: balance; line-height: 1.1; }
+  h1 { font-size: clamp(34px, 6vw, 48px); }
+  h2 { font-size: clamp(26px, 4.4vw, 34px); }
+  h3 { font-size: 22px; }
+  p, ul, ol { margin: 0; max-width: 66ch; }
+  ul, ol { padding-left: 20px; display: grid; gap: 6px; }
+  .eyebrow { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+  header, section, .bloque { display: grid; gap: 16px; }
+  section { border-top: 1px solid var(--line); padding-top: 30px; }
+  .letra { display: inline-block; font-family: var(--font-ui); font-style: normal; font-size: 13px; font-weight: 600;
+    color: var(--focus); background: var(--focus-soft); border-radius: 999px; padding: 2px 10px; vertical-align: middle; margin-left: 6px; }
+  .cuadro { background: var(--paper-2); border-radius: 12px; padding: 18px 20px; display: grid; gap: 10px; }
+  .ojo { color: var(--terra); font-weight: 600; }
+  .nota { font-size: 14px; color: var(--ink-3); }
+</style>
+
+<main>
+  <header>
+    <div class="eyebrow">Sexta revisión · 11 nov. 2026</div>
+    <h1>Montado: D-8 y D-10</h1>
+    <p>Las dos letras que elegiste ya están hechas: <b>D-10 B</b> (el aviso del iPhone suena con la campana de PACE) y
+      <b>D-8 A</b> (la copia de Google sigue, y PACE no toca tus reuniones en un móvil nuevo). Están en una rama aparte
+      y entran en la próxima versión cuando se junten.</p>
+  </header>
+
+  <section>
+    <div class="eyebrow">iPhone</div>
+    <h2>El fin del Foco suena <span class="letra">D-10 B</span></h2>
+    <ul>
+      <li><b>Antes:</b> con PACE en segundo plano o el móvil bloqueado, al acabar un bloque el iPhone solo encendía la
+        pantalla. No sonaba nada, ni al volver a PACE.</li>
+      <li><b>Ahora:</b> el aviso suena con la campana de PACE, la misma de la web y de Android, un poco más alta para que
+        se oiga sola. Suena una vez: ni al volver a PACE ni al abrirla más tarde vuelve a sonar.</li>
+      <li>Con el sonido apagado en los Ajustes de PACE, el aviso llega sin sonido, como la campana.</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="eyebrow">Android</div>
+    <h2>Tus reuniones, a salvo en un móvil nuevo <span class="letra">D-8 A</span></h2>
+    <ul>
+      <li><b>Sigue igual:</b> la copia automática de Google. En un móvil nuevo vuelves a tener tus días y tus logros.</li>
+      <li><b>Antes:</b> esa copia llevaba también la lista de bloques que PACE había puesto en el calendario del móvil
+        viejo. En el nuevo, una entrada de esa lista podía coincidir con una reunión tuya, y al pulsar «Al calendario»
+        PACE podía borrarla o moverla.</li>
+      <li><b>Ahora:</b> PACE apunta cuándo se instaló en ese móvil. Si no coincide (móvil restaurado o PACE
+        reinstalado), olvida la lista antes de tocar el calendario. Tus reuniones no se tocan.</li>
+    </ul>
+    <div class="cuadro">
+      <h3>Lo que puedes notar</h3>
+      <p>Una vez, en un móvil nuevo, tras reinstalar o el día que llegue esta versión: si ya había bloques de PACE de hoy
+        en el calendario del móvil, PACE no los reconoce. Al llevar el día otra vez pone los nuevos sin quitar esos, así
+        que ese día puedes ver bloques repetidos. Se borran a mano. Es el precio de no tocar nunca nada que no sea seguro
+        de PACE.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Cómo se ha probado</div>
+    <h2>Con pruebas que imitan los dos móviles</h2>
+    <ul>
+      <li><b>iPhone:</b> el aviso lleva la campana; si el bloque acaba con PACE en segundo plano, PACE no suena encima;
+        al volver no suena; al abrir PACE después de que el iPhone la cerrara, tampoco. Con el sonido apagado, el aviso
+        va mudo. En los dos motores, el de Chrome y el de Safari.</li>
+      <li><b>Android:</b> un móvil «restaurado» con una reunión que tiene el mismo número que un bloque del móvil viejo.
+        PACE no la borra ni la mueve y la cuenta como reunión, al llevar el día de una vez y con «se pone al día solo».
+        Lo mismo con la lista de una versión de antes. En el mismo móvil, PACE sigue quitando y cambiando sus bloques.</li>
+      <li><b>Contraprueba:</b> quitando cada arreglo, sus pruebas fallan; con el arreglo, pasan. También fallan si la
+        campana de PACE vuelve a sonar encima del aviso.</li>
+      <li>La revisión de cada cambio vigila que el sonido esté donde el iPhone lo busca y sea la campana de hoy, y que
+        todo lo que lee el calendario del móvil pase antes por la comprobación.</li>
+    </ul>
+    <p class="nota">Aquí no se compila la app del iPhone ni la de Android: la parte de Android que da la hora de
+      instalación (unas líneas nuevas) se compila en el GitHub de la rama o en tu móvil.</p>
+  </section>
+
+  <section>
+    <div class="eyebrow">Para tu móvil</div>
+    <h2>Lo que solo se ve de verdad</h2>
+    <div class="bloque">
+      <h3>iPhone, cuando haya TestFlight</h3>
+      <ol>
+        <li>Sonido de PACE encendido y el interruptor de silencio del iPhone quitado.</li>
+        <li>Empieza un Foco de 5 minutos y bloquea el móvil.</li>
+        <li>Al acabar, <span class="ojo">¿suena la campana de PACE?</span> Es un toque corto, el mismo que dentro de la app.</li>
+        <li>Abre PACE: no debe sonar otra vez.</li>
+        <li>Repite con el interruptor de silencio puesto: lo normal es que el iPhone no lo suene.</li>
+      </ol>
+    </div>
+    <div class="bloque">
+      <h3>Android, con la beta</h3>
+      <ol>
+        <li>Pulsa «Al calendario» un día con reuniones.</li>
+        <li>Ajustes del móvil › Google › Copia de seguridad › «Crear copia ahora».</li>
+        <li>Desinstala PACE e instálalo otra vez desde Play.</li>
+        <li>Abre PACE: <span class="ojo">¿están tus días de antes?</span></li>
+        <li>Pulsa «Al calendario» otra vez: <span class="ojo">tus reuniones deben seguir todas.</span> Los bloques viejos
+          de PACE pueden salir repetidos; bórralos a mano.</li>
+      </ol>
+    </div>
+  </section>
+</main>
