@@ -7,7 +7,7 @@
  * testers, no se toca y no sale del PC.
  *
  * Qué deja, en la carpeta de las llaves (`PACE-llave-licencias`, fuera del repositorio):
- *   · k2.privada.pem          la copia de seguridad: al disco duro, con la de k1 y la de Play;
+ *   · k2.privada.pem          la copia de seguridad: fuera del ordenador, con las otras;
  *   · k2.para-cloudflare.txt  lo mismo en una línea, para pegarlo en Cloudflare. Bórralo
  *                             después de pegarlo (se rehace con --cloudflare).
  * Y escribe la llave PÚBLICA de k2 en `app/licencia.llaves.js`: esa sí se sube, no es
@@ -77,7 +77,7 @@ function main() {
   fs.writeFileSync(c.LLAVES_APP, nuevo);
 
   console.log('Hecho.');
-  console.log('  Copia de seguridad (NO se sube; al disco duro con las otras): ' + pem);
+  console.log('  Copia de seguridad (NO se sube; guárdala fuera del ordenador): ' + pem);
   console.log('  Llave pública k2 escrita en app/licencia.llaves.js: esa sí se sube con la versión.');
   pasos(txt);
 }

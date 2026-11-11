@@ -81,14 +81,13 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 - **Stripe** (`docs/launch/cobro-web.md`): el modo de prueba, entero y comprobado el 5 nov.: el aviso, la llave de lectura
   (`STRIPE_LECTURA`, del modo de prueba de la cuenta y no del sandbox), dos compras con 4242 y /recuperar con el recibo de Link;
   y los cuatro `plink_` en `PACE_ENLACES_STRIPE`. **Modo real (5 nov.)**: cuenta activada tras el alta con el gestor, y el
-  aviso (`whsec_` real) y la llave de lectura (`rk_live_`) ya en Cloudflare. Faltan lo legal, Resend y encender los enlaces. **Ez (5 nov.): solo el de por vida, solo en la web, hasta v1. Sus datos, al registrar la primera venta real, y la revisión profesional, en un mes, hablado con el gestor**: sabe que `docs/launch/legal-web.md` los pide antes de cobrar. Para encender: Resend y la dirección del enlace real (`PACE_TIENDA_WEB.enlaces.vida`); la tienda de un plan ya está en `main`.
+  aviso y la llave de lectura del modo real, ya puestos. Faltan lo legal, Resend y encender los enlaces. **Ez (5 nov.): solo el de por vida, solo en la web, hasta v1. Sus datos, al registrar la primera venta real, y la revisión profesional, en un mes, hablado con el gestor**: sabe que `docs/launch/legal-web.md` los pide antes de cobrar. Para encender: Resend y la dirección del enlace real (`PACE_TIENDA_WEB.enlaces.vida`); la tienda de un plan ya está en `main`.
   Hecho: la cuenta (autónomo), «vende por ti» con Stripe Tax, los productos y sus enlaces en real y APAGADOS, el portal,
-  k2 y Cloudflare (`PACE_K2_PRIVADA` y el KV `VENTAS`). En la web, antes de v1, solo el de por vida (Ez, 5 nov.).
+  k2 y lo que necesita el servidor. En la web, antes de v1, solo el de por vida (Ez, 5 nov.).
 - **Lo que fija la fecha de v1**: unos 15 testers de Android (tiene 5 o 6; `/beta` y el grupo, listos: `testers.md`), el
   gestor y el alta para cobrar, y los datos del aviso legal.
-- **Espera su «júntalo» y la revisión de ChatGPT:** `guardar()` a prueba de dos renovaciones a la vez
-  (`claude/guardar-atomico-166e3f`: un periodo por llave en `cobro/mensual.js`; 89 pruebas del cobro en verde). Ez le pasa a
-  ChatGPT el texto de la hoja, que también pide revisar ese arreglo. Y faltan
+- **Espera su «júntalo» y la revisión de ChatGPT:** un arreglo del cobro mensual, en su rama (`claude/guardar-atomico-166e3f`,
+  con sus pruebas en verde). Ez le pasa a ChatGPT el texto de la hoja, que también pide revisar ese arreglo. Y faltan
   dos dibujos de logros: Año
   nuevo, que se repite, y Vaca feliz.
 - **iPhone**: qué estado ve Ez en TestFlight (la prueba beta se envió el 23 oct.) e invitar a sus testers con el
@@ -97,9 +96,8 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 - Las altas de Google Cloud y Microsoft Entra (`docs/CALENDARIO_ALTAS.md`): sin ellas el calendario automático de la
   web no funciona para nadie, y abrirlo a todos pide que Google verifique la app, que tarda semanas.
 - La verificación en dos pasos en GitHub, Cloudflare, Stripe, Google y Apple; mandar a cada tester su enlace de
-  `codigos-tester.csv`. **Las llaves ya no están en el PC** (Ez, 31 oct.): `PACE-llave-play`, `-licencias` y `-apple`
-  viven solo en su disco, en `F:\Pace-llaves\` (comprobadas por md5 antes de borrarlas), y en los secretos de GitHub y
-  Cloudflare. Para hacer códigos de tester o de venta a mano, se enchufa el disco. Falta una segunda copia fuera de casa.
+  `codigos-tester.csv`. **Las llaves privadas** viven fuera del repo y
+  fuera del ordenador de trabajo (Ez, 31 oct.); dónde, lo sabe Ez y no se escribe aquí. Falta una segunda copia fuera de casa.
 - «Avísame»: el nombre que firma su privacidad, el KV `pace-avisame` como `AVISAME` y el token de Web Analytics solo
   para /premium (con él, `verify` pide que `privacy.html` lo diga); mirar el registro previo de Play.
 - S3, el código portable (un código que se puede pasar a otra persona): es decisión de Ez, sin tomar.

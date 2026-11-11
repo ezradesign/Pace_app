@@ -2,8 +2,7 @@
  * scripts/licencias/comun.js - lo que comparten `crear-llaves.js` y `firmar.js`.
  *
  * LA LLAVE PRIVADA NO ENTRA NUNCA EN EL REPOSITORIO. Vive en una carpeta fuera de
- * él (por defecto `PACE-llave-licencias` en la carpeta de usuario de Ez, al lado
- * de la de Play) y los dos scripts se niegan a usar una carpeta que esté dentro
+ * él (por defecto `~/PACE-llave-licencias`, o la que se le pase) y los dos scripts se niegan a usar una carpeta que esté dentro
  * del repo. `verify` falla además si aparece una llave privada en el árbol.
  *
  * El formato del código y su comprobación están en `app/state-licencia.js`.

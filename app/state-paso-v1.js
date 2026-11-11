@@ -20,9 +20,12 @@
    hecho. En el primer arranque de quien instala ya en v1 no hay nada de eso: la bienvenida
    todavía no ha salido.
 
-   LA LISTA: las rutinas de pago de Respira, Mueve y Estira con alguna sesión en el registro
-   de eventos (terminada o no), con alguna vez entera en los contadores del estado
-   (`rutina.<id>`) o con una respuesta a «¿Te ayudó?», que solo sale al acabar una. En el
+   LA LISTA: las rutinas de pago de Respira, Mueve y Estira que la persona ACABÓ alguna vez
+   (Ez, D-5 B del 10 nov.): en el registro de eventos, solo las sesiones con
+   `completionReason: 'natural'` (terminar antes no cuenta); en los contadores del estado,
+   `rutina.<id>`, que ya solo suben con una entera; y las que tienen una respuesta a «¿Te
+   ayudó?», que solo sale al acabar una. Lo ya podado del registro (`baseline`) no guarda el
+   motivo y se suma tal cual: ante la duda se conserva, nadie que la acabó la pierde. En el
    iPhone el registro no escribe, y la lista sale de lo demás. Las propias del constructor no
    entran: el constructor es una superficie de pago, y quedan guardadas y cerradas.
 
@@ -78,11 +81,25 @@ function pacePasoV1Rutinas(s, sesiones) {
   return Object.keys(ids).filter(pacePasoV1EsDePago).sort();
 }
 
-/* Las veces de cada rutina en el registro, o {} si no se puede leer. */
+/* Las veces que se ACABÓ cada rutina según el registro, o {} si no se puede leer. No sirve
+   `paceEventsAggregates().sessionsByRoutine`: cuenta también las terminadas antes. */
+function pacePasoV1Acabadas(snap) {
+  var out = {};
+  var base = snap && snap.baseline && snap.baseline.sessionsByRoutine;
+  Object.keys(base || {}).forEach(function (id) { if (base[id] > 0) out[id] = base[id]; });
+  var despues = typeof window.isAfterPruneCursor === 'function' ? window.isAfterPruneCursor : function () { return true; };
+  ((snap && snap.events) || []).forEach(function (e) {
+    var p = e && e.payload;
+    if (!e || e.type !== 'session.completed' || !p || !p.routineId || p.completionReason !== 'natural') return;
+    if (!despues(e, snap.pruneCursor)) return;
+    out[p.routineId] = (out[p.routineId] || 0) + 1;
+  });
+  return out;
+}
+
 function pacePasoV1Sesiones() {
   var leer = function () {
-    var agg = window.paceEventsAggregates ? window.paceEventsAggregates() : null;
-    return (agg && agg.sessionsByRoutine) || {};
+    try { return pacePasoV1Acabadas(window.paceEventsSnapshot ? window.paceEventsSnapshot() : null); } catch (e) { return {}; }
   };
   var abre = window.paceEventsInitialize ? window.paceEventsInitialize() : null;
   if (!abre || typeof abre.then !== 'function') return Promise.resolve(leer());

@@ -350,6 +350,8 @@ function SessionDone({
   const sigue = !doneButtonLabel && typeof ritmoSigueCierre === 'function' ? ritmoSigueCierre(routine, doneMeta, t) : null;
   if (sigue) doneMeta = sigue.meta;
   const label = doneButtonLabel || (sigue ? sigue.cta : t('session.backToHome'));
+  /* Si venía de una pausa, la salida dice lo que sigue (Ez, 2A del 10 nov.): SessionDone.sigue.jsx. */
+  const despues = usePaceCierreSigue(!doneButtonLabel && !sigue && !sinContar);
   /* El cierre habla con la letra de la app (la A de Ez, 10 oct.): la salida es una píldora
      en la serif itálica, como «Empezar foco» y las de la pausa; el color sigue siendo el
      del módulo (variante o buttonStyle). */
@@ -358,7 +360,8 @@ function SessionDone({
      también le da su hover; buttonVariant y buttonStyle ya no colorean la salida. */
   const ctaCierre = { ...displayItalic, fontWeight: 500, fontSize: 19, letterSpacing: 0,
     borderRadius: 'var(--r-pill)', padding: '0 34px', height: 50 };
-  const btn = <Button variant="secondary" onClick={() => onExit('done')} style={ctaCierre}>{label}</Button>;
+  const btn = despues ? <SessionDoneSigue sigue={despues} onExit={onExit} estilo={ctaCierre} />
+    : <Button variant="secondary" onClick={() => onExit('done')} style={ctaCierre}>{label}</Button>;
   const glifo = sessionDoneGlifo(routine);
 
   return (

@@ -12,7 +12,8 @@
      invitación con el campo ya puesto;
    · en Android: «PACE completo · pronto». Allí no se canjean códigos propios
      (state-licencia.js); llegará la compra de Google Play.
-   Y desde v1, mientras dura la semana de quien ya usaba PACE, «Prueba hasta el …». */
+   Y desde v1, mientras dura la semana de quien ya usaba PACE, «Prueba hasta el …».
+   Con la tienda abierta, sin código: «Tenerlo para siempre · <precio>» y «Tengo un código». */
 
 /* La fecha del código: el de los testers lleva el día («YYYY-MM-DD»); el de la mensual, milisegundos. */
 function premiumFechaTexto(datos, lang) {
@@ -25,6 +26,21 @@ function premiumFechaTexto(datos, lang) {
    debajo de «PACE completo · Hasta el …», y solo si la tienda tiene dónde (en la web, el
    portal de Stripe; en Android, las suscripciones de Google Play). Si el código caducó,
    la fila lo dice con su motivo: sin conexión para renovar, o la suscripción terminó. */
+/* UNA FILA PARA COMPRAR (Ez, 1A del 10 nov. 2026; auditoría fable-9nov, propuesta 1): con la
+   tienda abierta y sin código, «Tenerlo para siempre · 19,99 €» abre la invitación de siempre con
+   su botón de compra, y debajo «Tengo un código». No salta sola ni tapa nada: es una fila más de
+   «Tus datos», y por eso TweaksPanel pliega la sección 34 px antes en el ordenador cuando está
+   (sin eso, de 860 a 893 px de alto el panel pedía scroll). El precio lo da la tienda, nunca las
+   traducciones. Con la tienda cerrada, como antes. Devuelve el plan de por vida, o null. */
+function premiumPlanEnAjustes(lang) {
+  if (!(window.paceLicenciaPermitida && window.paceLicenciaPermitida())) return null;
+  const est = window.paceLicenciaEstado ? window.paceLicenciaEstado() : { estado: 'ninguno' };
+  if (est.estado === 'vigente' || est.estado === 'caducado') return null;
+  if (window.pacePruebaV1Hasta && window.pacePruebaV1Hasta()) return null;
+  if (!(window.paceTiendaAbierta && window.paceTiendaAbierta())) return null;
+  return (window.paceTiendaPlanes(lang) || []).find((p) => p.plan === 'vida') || null;
+}
+
 function PremiumSection() {
   const { t, tn, lang } = useT();
   usePace(); // al canjear o renovar el código, la fila cambia sin cerrar Ajustes
@@ -93,6 +109,20 @@ function PremiumSection() {
       </React.Fragment>
     );
   }
+  const vida = premiumPlanEnAjustes(lang);
+  if (vida) {
+    return (
+      <React.Fragment>
+        <AjustesAccion suave onClick={() => paceAbrirPremium({})}
+          derecha={<span data-pace-aj-comprar={vida.plan}>{vida.precio}</span>}>
+          {t('premium.settings.vida')}
+        </AjustesAccion>
+        <AjustesAccion suave onClick={() => paceAbrirPremium({ modo: 'codigo' })} derecha={t('premium.settings.enter')}>
+          {t('premium.code.have')}
+        </AjustesAccion>
+      </React.Fragment>
+    );
+  }
   if (permitida) {
     return (
       <AjustesAccion suave onClick={() => paceAbrirPremium({ modo: 'codigo' })} derecha={t('premium.settings.enter')}>
@@ -107,4 +137,4 @@ function PremiumSection() {
   );
 }
 
-Object.assign(window, { PremiumSection });
+Object.assign(window, { PremiumSection, premiumPlanEnAjustes });

@@ -48,8 +48,8 @@ async function pasarAV1(page) {
   await esperarEnPagina(page, () => !!(window.getState().pasoV1), null, { timeout: 8000 });
 }
 
-/* Sesiones en el registro, como las deja el runner: una de Respira de pago terminada antes y una
-   gratis. */
+/* Sesiones en el registro, como las deja el runner: el tercer valor dice si se
+   terminó antes (`early`) o entera (`natural`). */
 async function sembrarSesiones(page, ids) {
   await page.waitForFunction(() => typeof window.eventsWebAppend === 'function' && typeof window.makeEvent === 'function');
   await page.evaluate(async (lista) => {
@@ -86,7 +86,7 @@ test.describe('el paso a v1', () => {
     await comoEnV1(context);
     await sembrar(context, USABA);
     await irAlArtefacto(page);
-    await sembrarSesiones(page, [['breathe', 'breathe.rounds.full', true], ['breathe', 'breathe.box.4', false]]);
+    await sembrarSesiones(page, [['breathe', 'breathe.rounds.full', false], ['breathe', 'breathe.box.4', false]]);
     await pasarAV1(page);
 
     const r = await page.evaluate(() => window.getState().pasoV1);
@@ -112,6 +112,23 @@ test.describe('el paso a v1', () => {
       abierto: window.paceAbiertoAhora(),
     }));
     expect(despues).toEqual({ suyas: [true, true, true], otras: [false, false, false], gratis: true, crear: false, aprender: false, abierto: false });
+  });
+
+  /* Ez, D-5 B del 10 nov.: se quedan las de pago que acabó, no las que empezó. Terminar antes
+     (`early`) deja un evento en el registro, pero no la conserva. */
+  test('la empezada y no acabada no se queda; la acabada sí', async ({ page, context }) => {
+    await page.clock.install({ time: MEDIODIA });
+    await comoEnV1(context);
+    await sembrar(context, USABA);
+    await irAlArtefacto(page);
+    await sembrarSesiones(page, [['breathe', 'breathe.rounds.long', true], ['move', 'extra.core.plank', true],
+      ['breathe', 'breathe.rounds.full', false], ['breathe', 'breathe.rounds.full', true]]);
+    await pasarAV1(page);
+    const r = await page.evaluate(() => window.getState().pasoV1);
+    expect(r.rutinas.slice().sort()).toEqual(['breathe.rounds.full', 'extra.hang.bar', 'move.couch.stretch']);
+    await page.clock.fastForward(7 * DIA + 60000);
+    expect(await page.evaluate(() => ['breathe.rounds.long', 'extra.core.plank', 'breathe.rounds.full'].map((id) => window.canAccessRoutine(id))))
+      .toEqual([false, false, true]);
   });
 
   test('la lista se fija una sola vez: lo de después no entra y recargar no la recalcula', async ({ page, context }) => {
@@ -171,7 +188,7 @@ test.describe('la hoja del día de v1 (1A)', () => {
     await comoEnV1(context);
     await sembrar(context, USABA);
     await irAlArtefacto(page);
-    await sembrarSesiones(page, [['breathe', 'breathe.rounds.full', true]]);
+    await sembrarSesiones(page, [['breathe', 'breathe.rounds.full', false]]);
     await pasarAV1(page);
 
     const hoja = page.locator(HOJA);
@@ -271,7 +288,7 @@ test.describe('la hoja del día de v1 en un móvil', () => {
     await comoEnV1(context);
     await sembrar(context, Object.assign({}, USABA, { sidebarCollapsed: true }));
     await irAlArtefacto(page);
-    await sembrarSesiones(page, [['breathe', 'breathe.rounds.full', true]]);
+    await sembrarSesiones(page, [['breathe', 'breathe.rounds.full', false]]);
     await pasarAV1(page);
     await expect(page.locator(HOJA)).toBeVisible({ timeout: 8000 });
     /* La hoja entra animada: se mide quieta. */

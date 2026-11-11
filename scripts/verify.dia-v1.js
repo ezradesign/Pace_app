@@ -27,6 +27,10 @@ var sandbox = require('./verify.sandbox.js');
 
 /* «v1», «versión 1» y «version 1», sin cazar «PACE1» ni «v10». */
 var HABLA_V1 = /\bv1\b|\bversi[oó]n 1\b/i;
+/* Y v1 dicho sin nombrarlo, como lo dice la app desde la 4A de Ez (10 nov. 2026): «mientras está en
+   pruebas», «cuando salga a la venta». Solo para el censo de la app: lo de antes de v1 sigue en la
+   lista aunque ya no diga «v1». No caza el «En pruebas.» del calendario, que es otra cosa. */
+var HABLA_V1_SIN_NOMBRE = /salga a la venta|mientras est[aá] en pruebas|goes on sale|while it[’']?s in testing/i;
 var PAGINAS = ['privacy.html', 'safety.html', 'calendario.html', 'premium/index.html', 'beta/index.html',
   'gracias/index.html', 'recuperar/index.html', 'desistir/index.html',
   'legal/aviso-legal/index.html', 'legal/condiciones/index.html', 'legal/desistimiento/index.html'];
@@ -108,7 +112,8 @@ function tandaDiaV1(ctx, declarados) {
   var fuera = [];
   ['es', 'en'].forEach(function (lang) {
     Object.keys(S[lang] || {}).forEach(function (k) {
-      if (HABLA_V1.test(String(S[lang][k])) && !Object.prototype.hasOwnProperty.call(lista, k) && fuera.indexOf(k) === -1) fuera.push(k);
+      var txt = String(S[lang][k]);
+      if ((HABLA_V1.test(txt) || HABLA_V1_SIN_NOMBRE.test(txt)) && !Object.prototype.hasOwnProperty.call(lista, k) && fuera.indexOf(k) === -1) fuera.push(k);
     });
   });
   if (fuera.length) ctx.falla('dia-v1: ' + fuera.length + ' texto(s) de la app hablan de v1 y no están en `PACE_TEXTOS_V1` (app/state-entitlement.jsx): ' + fuera.join(', ') + '. Añádelos con el que dirán desde v1.');
@@ -122,7 +127,7 @@ function tandaDiaV1(ctx, declarados) {
       var d = lista[k];
       if (d == null) return;
       if (!(S[lang] && d in S[lang])) malas.push(k + ' → ' + d + ', que no existe en ' + lang);
-      else if (HABLA_V1.test(String(S[lang][d]))) malas.push(k + ' → ' + d + ', que también habla de v1 (' + lang + ')');
+      else if (HABLA_V1.test(String(S[lang][d])) || HABLA_V1_SIN_NOMBRE.test(String(S[lang][d]))) malas.push(k + ' → ' + d + ', que también habla de v1 (' + lang + ')');
     });
   });
   if (malas.length) ctx.falla('dia-v1: la lista tiene entradas que no sirven: ' + malas.join('; '));
@@ -167,7 +172,7 @@ function tandaDiaV1(ctx, declarados) {
 }
 
 var NO_CUBRE = [
-  'dia-v1: mira i18n de la app y las páginas de la web; las fichas de las tiendas y los correos que hablen de v1 se cambian a mano, y una frase que dependa de v1 sin nombrarlo no la ve',
+  'dia-v1: mira i18n de la app y las páginas de la web; las fichas de las tiendas y los correos que hablen de v1 se cambian a mano, y de las frases que hablan de v1 sin nombrarlo solo ve las de la 4A del 10 nov. («cuando salga a la venta», «mientras está en pruebas»)',
 ];
 
-module.exports = { tandaDiaV1: tandaDiaV1, revisarPagina: revisarPagina, NO_CUBRE: NO_CUBRE };
+module.exports = { tandaDiaV1: tandaDiaV1, revisarPagina: revisarPagina, NO_CUBRE: NO_CUBRE, HABLA_V1_SIN_NOMBRE: HABLA_V1_SIN_NOMBRE };

@@ -49,6 +49,7 @@ function completePomodoro(bloque) {
   if (focusMinsAtCompletion >= 45 && bumpCount('foco.largo') >= 5) {
     unlockAchievement('master.long.focus');
   }
+  if (typeof paceOcasoFoco === 'function') paceOcasoFoco(focusMinsAtCompletion);
   checkTimeOfDayAchievements();
   checkSilentDayAchievement();
   updateStreak();

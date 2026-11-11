@@ -114,7 +114,7 @@ cada pieza.
 | 14 | Cobrar en Android: Play Billing, restaurar la compra y los códigos de los testers | Espera el perfil de pagos de Play, que pide el alta de Ez. Se prueba dentro de la prueba cerrada |
 | 15 | Cobrar en el iPhone: la compra de Apple, «Restaurar compras», la ficha y la revisión | Espera el acuerdo de apps de pago de Apple, que pide el alta de Ez |
 | 16 | Lo legal de /premium: condiciones, devoluciones, aviso legal y la función de desistimiento en línea (UE, desde el 19 jun. 2026) | Los borradores con las letras de Ez (1A-5A) y `/desistir` cerrada, en `main` (0.189.0). Ez (5 nov.): sus datos, al registrar la primera venta real, y la revisión profesional, en un mes, hablado con el gestor. Para `/desistir` falta su alta en Resend |
-| 16 bis | Vender antes de v1: solo el de por vida, solo en la web (Ez, 5 nov.) | La tienda con un plan y /premium 1C, en `premium-solo-vida`. Para encender: los arreglos 1 y 2, la parte legal de la revisión de ChatGPT, Resend y la dirección del enlace real. El mensual llega con v1, y antes hay que cerrar `guardar()` en `functions/api/stripe.js` |
+| 16 bis | Vender antes de v1: solo el de por vida, solo en la web (Ez, 5 nov.) | La tienda con un plan y /premium 1C, en `premium-solo-vida`. Para encender: los arreglos 1 y 2, la parte legal de la revisión de ChatGPT, Resend y la dirección del enlace real. El mensual llega con v1, y antes hay que juntar un arreglo del cobro mensual |
 | 17 | v1.0: apagar `PREMIUM_ABIERTO_HASTA_V1`, quitar «Da de pastar a la vaca» de la web y probar comprar, restaurar y cancelar en las tres tiendas | Al final |
 
 **Lo que salió de las ocho revisiones de ChatGPT del 28 oct.** Están enteras en `docs/audits/chatgpt-28oct/`, y su
@@ -134,7 +134,7 @@ con Ez antes de empezar (Ez: «se valora juntos los dos y vamos implementando lo
 
 | Tanda | Estado (5 nov.) |
 |---|---|
-| Cobro y estado general (`revision-5nov.md`) | La tienda con un plan, en `main` (0.191.0). `guardar()`, arreglado en `claude/guardar-atomico-166e3f` (un periodo por llave): espera la revisión de ChatGPT y el «júntalo» de Ez |
+| Cobro y estado general (`revision-5nov.md`) | La tienda con un plan, en `main` (0.191.0). Un arreglo del cobro mensual, en `claude/guardar-atomico-166e3f`: espera la revisión de ChatGPT y el «júntalo» de Ez |
 | Datos y compra (`revision-5nov-datos-y-compra.md`) | Los cuatro arreglos, en `main` (0.191.0). «Dónde funciona tu compra», en /premium |
 | Cuando una sesión coincide con otra cosa (`revision-5nov-capas.md`) | En `main` (0.191.0). Dos pestañas, riesgo ya aceptado |
 | Cambiar de idea a mitad (`revision-5nov-sesiones.md`) | «Auto» (0.191.0), y el catálogo vacío, las cifras y qué explica «Auto» (0.192.0), en `main` |

@@ -48,9 +48,9 @@ test('con la tienda cerrada no hay nada que comprar: la bienvenida acaba en PACE
 
   /* Lo que es verdad hoy: abierto para todos, lo que costará y lo que se queda al llegar v1. */
   await expect(page.getByRole('heading', { name: 'PACE es gratis.' })).toBeVisible();
-  await expect(page.locator('[role=dialog][data-pace-scene-card]')).toContainText('Y hasta v1, PACE completo también está abierto para todos:');
+  await expect(page.locator('[role=dialog][data-pace-scene-card]')).toContainText('Y mientras está en pruebas, PACE completo también está abierto para todos:');
   await expect(page.locator('[data-pace-onb-precios]')).toHaveText('Después, 2,99 € al mes con 7 días gratis, o 19,99 € una vez.');
-  await expect(page.locator('[data-pace-onb-v1]')).toHaveText('Al llegar v1 tendrás tu semana de prueba, y las rutinas que ya hayas hecho se te quedan.');
+  await expect(page.locator('[data-pace-onb-v1]')).toHaveText('Cuando salga a la venta tendrás tu semana de prueba, y las rutinas que ya hayas hecho se te quedan.');
   /* Un solo botón: no hay nada que comprar. */
   await expect(page.locator('[data-pace-onb-comenzar]')).toHaveText('Comenzar');
   await expect(page.locator('[data-pace-onb-probar], [data-pace-onb-ahora], [data-pace-onb-vida]')).toHaveCount(0);
