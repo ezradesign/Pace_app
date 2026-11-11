@@ -1,0 +1,166 @@
+<title>Dos preguntas de la octava</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Dos preguntas, cada una con sus opciones dibujadas. Los móviles son esquemas a escala de 360 × 640
+   (no capturas): enseñan qué cabe y qué se sale. Paleta y letras de PACE (DESIGN_SYSTEM.md). */
+:root {
+  --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F695B;
+  --line: #D6CDB6; --focus: #3E5A3A; --focus-soft: rgba(62, 90, 58, 0.10);
+  --terra: #9E4F33; --terra-soft: rgba(158, 79, 51, 0.10);
+  --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --focus-soft: rgba(152, 181, 139, 0.14);
+  --terra: #E8A98F; --terra-soft: rgba(232, 169, 143, 0.13); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+  --line: #4d4536; --focus: #98B58B; --focus-soft: rgba(152, 181, 139, 0.14);
+  --terra: #E8A98F; --terra-soft: rgba(232, 169, 143, 0.13); color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.55; }
+.hoja { max-width: 760px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 36px 64px; display: flex; flex-direction: column; gap: 44px; }
+h1, h2 { font-family: var(--serif); font-style: italic; font-weight: 500; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(38px, 8vw, 52px); line-height: 1.02; }
+h2 { font-size: 29px; line-height: 1.1; }
+h3 { margin: 0; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+p { margin: 0; max-width: 64ch; color: var(--ink-2); }
+b { color: var(--ink); font-weight: 600; }
+.eyebrow { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+header, section { display: flex; flex-direction: column; gap: 16px; }
+.nota { font-size: 14px; color: var(--ink-3); }
+.responde { border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; background: var(--paper-2); }
+
+/* Las opciones: una rejilla que se apila en el móvil. La recomendada lleva borde y etiqueta. */
+.opciones { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.dos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 640px) { .opciones, .dos { grid-template-columns: minmax(0, 1fr); } }
+.op { border: 1px solid var(--line); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.op.rec { border-color: var(--focus); background: var(--focus-soft); }
+.op .letra { font-family: var(--serif); font-style: italic; font-size: 30px; line-height: 1; color: var(--ink); }
+.op .cab { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.op .t { font-weight: 600; color: var(--ink); }
+.op p { font-size: 14.5px; }
+.chip { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; color: var(--focus); border: 1px solid var(--focus); border-radius: 999px; padding: 1px 8px; }
+.pega { color: var(--terra); }
+
+/* El móvil, a escala de 360 × 640. Lo que se sale por abajo se pinta fuera del marco. */
+.movil { --h: 235px; position: relative; width: 132px; height: var(--h); margin: 4px auto 26px; border: 1.5px solid var(--ink-3); border-radius: 16px; background: var(--paper); }
+.pant { position: absolute; inset: 8px 8px auto 8px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.aro { width: 86px; height: 86px; border-radius: 50%; border: 5px solid var(--focus); display: grid; place-items: center; font-family: var(--serif); font-style: italic; color: var(--ink); font-size: 17px; }
+.tarj { width: 100%; border: 1px solid var(--line); border-radius: 9px; background: var(--paper-2); padding: 7px; display: flex; flex-direction: column; gap: 5px; }
+.ln { height: 5px; border-radius: 3px; background: var(--ink-3); opacity: 0.75; }
+.ln.c { width: 62%; } .ln.m { width: 84%; opacity: 0.45; }
+.mods { width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.mods i { height: 24px; border-radius: 7px; border: 1px solid var(--line); background: var(--paper-2); }
+.grande .aro { font-size: 20px; }
+.grande .ln { height: 6px; }
+.grande .tarj { gap: 7px; padding: 9px 7px; }
+.grande .mods i { height: 30px; }
+.grande .pant { gap: 10px; }
+.fuera { position: absolute; left: -1.5px; right: -1.5px; top: 100%; height: 19px; border: 1.5px dashed var(--terra); border-top: 0; border-radius: 0 0 10px 10px; background: var(--terra-soft); display: grid; place-items: center; font-size: 10px; color: var(--terra); font-weight: 600; }
+.barra { position: absolute; right: 3px; top: 30px; width: 3px; height: 70px; border-radius: 2px; background: var(--terra); }
+.pie { text-align: center; font-size: 12.5px; color: var(--ink-3); margin-top: -18px; }
+
+/* La noche: una línea de 22:00 a 02:00, con la medianoche marcada y un punto por pasada. */
+.noche { display: flex; flex-direction: column; gap: 12px; }
+.fila { display: grid; grid-template-columns: 78px minmax(0, 1fr); gap: 10px; align-items: center; font-size: 13px; color: var(--ink-2); }
+.eje { position: relative; height: 30px; border-bottom: 1.5px solid var(--line); }
+.eje::before { content: ''; position: absolute; left: 50%; top: 0; bottom: -4px; width: 1.5px; background: var(--ink-3); }
+.pto { position: absolute; bottom: -6px; width: 11px; height: 11px; margin-left: -5.5px; border-radius: 50%; background: var(--focus); }
+.pto span { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--ink-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.pto.mal { background: var(--paper); border: 1.5px dashed var(--terra); }
+.horas { display: grid; grid-template-columns: 78px minmax(0, 1fr); gap: 10px; font-size: 11px; color: var(--ink-3); }
+.horas div { display: flex; justify-content: space-between; }
+</style>
+
+<main class="hoja">
+  <header>
+    <div class="eyebrow">PACE · la octava revisión · 11 de noviembre de 2026</div>
+    <h1>Dos preguntas</h1>
+    <p>Salieron al comprobar la octava revisión. Lo demás que se montó no pide nada tuyo. Cada pregunta trae sus opciones
+      dibujadas y la que recomiendo.</p>
+    <p class="responde"><b>Contesta con las letras</b>, por ejemplo «1A 2B».</p>
+  </header>
+
+  <section>
+    <h2>1 · La home con la letra grande de Android</h2>
+    <p>Quien pone la letra del sistema más grande en su Android ve también más grande la de PACE. Elegiste que la home
+      no pida scroll hasta el 115 %. <b>Medido, hoy no cabe</b>: en los móviles medianos (360 × 640, 375 × 667 y
+      360 × 718) se salen de 9 a 51 px por abajo. En un móvil grande (412 × 844) sí cabe. Con la letra normal no cambia nada.</p>
+    <h3>Lo que pasa hoy</h3>
+    <div class="opciones dos">
+      <div class="op">
+        <div class="movil"><div class="pant"><div class="aro">25:00</div>
+          <div class="tarj"><div class="ln c"></div><div class="ln m"></div></div>
+          <div class="mods"><i></i><i></i><i></i><i></i></div></div></div>
+        <p class="pie">Letra normal: cabe entera</p>
+      </div>
+      <div class="op">
+        <div class="movil grande"><div class="pant"><div class="aro">25:00</div>
+          <div class="tarj"><div class="ln c"></div><div class="ln m"></div></div>
+          <div class="mods"><i></i><i></i><i></i><i></i></div></div>
+          <div class="fuera">hasta 51 px fuera</div></div>
+        <p class="pie">Letra al 115 %: <span class="pega">se sale por abajo</span></p>
+      </div>
+    </div>
+    <h3>Las tres salidas, con la letra al 115 %</h3>
+    <div class="opciones">
+      <div class="op rec">
+        <div class="cab"><span class="letra">A</span><span class="t">Se recoge sola</span><span class="chip">Recomendada</span></div>
+        <div class="movil grande"><div class="pant"><div class="aro">25:00</div>
+          <div class="tarj"><div class="ln c"></div></div>
+          <div class="mods"><i></i><i></i><i></i><i></i></div></div></div>
+        <p>Cuando la letra es grande y no cabe, la home guarda algo secundario, por ejemplo la segunda línea de la tarjeta.
+          La letra crece y no hay scroll. <b>Cambia cómo se ve</b>: te la enseño en una maqueta de verdad antes de montarla.</p>
+      </div>
+      <div class="op">
+        <div class="cab"><span class="letra">B</span><span class="t">Se acepta el scroll</span></div>
+        <div class="movil grande"><div class="pant"><div class="aro">25:00</div>
+          <div class="tarj"><div class="ln c"></div><div class="ln m"></div></div>
+          <div class="mods"><i></i><i></i><i></i><i></i></div></div>
+          <div class="barra"></div><div class="fuera">se desliza</div></div>
+        <p>No se toca nada. Con la letra por encima de la normal, la home se desliza un poco. Es lo más barato, y deja
+          de cumplirse «sin scroll» para quien agranda la letra.</p>
+      </div>
+      <div class="op">
+        <div class="cab"><span class="letra">C</span><span class="t">PACE no agranda su letra</span></div>
+        <div class="movil"><div class="pant"><div class="aro">25:00</div>
+          <div class="tarj"><div class="ln c"></div><div class="ln m"></div></div>
+          <div class="mods"><i></i><i></i><i></i><i></i></div></div></div>
+        <p>La letra de PACE se queda como está aunque el móvil la pida más grande. Cabe siempre, pero le quita la letra
+          grande justo a quien la necesita para leer.</p>
+      </div>
+    </div>
+    <p class="nota">Los móviles son esquemas a escala, no capturas de PACE: enseñan qué cabe y qué se sale, no el aspecto exacto.</p>
+  </section>
+
+  <section>
+    <h2>2 · Las pruebas de noche, en verano</h2>
+    <p>Los fallos de fecha salen cerca de la medianoche, así que desde ahora GitHub pasa las pruebas también de noche:
+      una antes de las doce y otra después, además de los lunes a las 08:00. GitHub no sabe de horario de verano:
+      <b>al cambiar la hora en marzo, las dos pasadas se corren una hora</b> y una deja de caer a su lado de la medianoche.</p>
+    <div class="noche">
+      <div class="horas"><span></span><div><span>22:00</span><span>23:00</span><span>medianoche</span><span>01:00</span><span>02:00</span></div></div>
+      <div class="fila"><span>Invierno</span><div class="eje"><div class="pto" style="left:37.5%"><span>23:30</span></div><div class="pto" style="left:62.5%"><span>00:30</span></div></div></div>
+      <div class="fila"><span>Verano, A</span><div class="eje"><div class="pto mal" style="left:37.5%"><span>falta</span></div><div class="pto" style="left:62.5%"><span>00:30</span></div><div class="pto" style="left:87.5%"><span>01:30</span></div></div></div>
+      <div class="fila"><span>Verano, B</span><div class="eje"><div class="pto" style="left:37.5%"><span>23:30</span></div><div class="pto" style="left:62.5%"><span>00:30</span></div><div class="pto" style="left:87.5%"><span>01:30</span></div></div></div>
+    </div>
+    <div class="opciones dos">
+      <div class="op">
+        <div class="cab"><span class="letra">A</span><span class="t">Dejarlo y cambiarlo en marzo</span></div>
+        <p>Dos pasadas de noche. En marzo alguien tiene que acordarse de mover las horas; si no, todo el verano falta una
+          de las dos.</p>
+      </div>
+      <div class="op rec">
+        <div class="cab"><span class="letra">B</span><span class="t">Añadir ya la de verano</span><span class="chip">Recomendada</span></div>
+        <p>Una pasada más cada noche, y las dos quedan cubiertas todo el año sin tocar nada. No cuesta dinero: el
+          repositorio es público. Cada pasada tarda unos 11 minutos.</p>
+      </div>
+    </div>
+    <p class="nota">Las horas de verano del dibujo salen de mi cuenta (la hora de GitHub es la universal, y Madrid va dos
+      horas por delante en verano). Las compruebo sobre el archivo al montarlo.</p>
+  </section>
+</main>

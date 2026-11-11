@@ -3,7 +3,7 @@
 > App de productividad y salud para quien pasa muchas horas sentado, en la web, en Android y en iPhone.
 > Micro-intervenciones cuidadas a lo largo del día, no entrenamientos largos.
 
-**Estado:** v0.200.0 · Pre-lanzamiento
+**Estado:** v0.200.1 · Pre-lanzamiento
 **Web:** [pacegrass.app](https://pacegrass.app) · [PACE completo](https://pacegrass.app/premium) · [Pruébala en Android o en iPhone](https://pacegrass.app/beta)
 **Build entregado:** `index.html` — artefacto web/PWA, instalable y offline
 **Autor:** [@ezradesign](https://github.com/ezradesign)
@@ -34,7 +34,7 @@ propias** y una **PWA** instalable que funciona sin conexión.
 
 ---
 
-## 📊 Estado actual (v0.200.0)
+## 📊 Estado actual (v0.200.1)
 
 | Área | Estado |
 |---|---|

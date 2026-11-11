@@ -95,7 +95,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.200.0 · actualizada el 11 de noviembre a las 20:25 · D-8 y D-10 ya están en la web; la octava revisión, en marcha</div>
+    <div class="eyebrow">PACE · versión 0.200.1 · actualizada el 11 de noviembre a las 21:25 · la primera parte de la octava ya está en la web; te quedan dos letras</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -107,8 +107,8 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <p class="nota">Lo que salió de mirarlo todo a fondo el 28 de octubre. El detalle, en
       <code>docs/audits/auditoria-v0.181.1.md</code>.</p>
     <ul class="lista">
-      <li><b>La app está casi entera y sana.</b> La web va por la 0.200.0, con todo lo del 5 al 11 de noviembre
-        dentro. Las últimas pruebas enteras, las de la 0.200.0 el 11 de noviembre: 1559 en verde. Lo que ChatGPT marcó para antes de lanzar ya está, salvo cobrar y
+      <li><b>La app está casi entera y sana.</b> La web va por la 0.200.1, con todo lo del 5 al 11 de noviembre
+        dentro. Las últimas pruebas enteras, las de la 0.200.1 el 11 de noviembre: 1565 en verde. Lo que ChatGPT marcó para antes de lanzar ya está, salvo cobrar y
         lo legal, que esperan tus altas y tus datos.</li>
       <li><b>Ocho revisiones de ChatGPT, comprobadas y guardadas enteras.</b> Acierta en todo lo que se puede mirar en el
         código. Los arreglos del cobro, de las rutinas sin «Auto» y de «Tus rutinas» ya están dentro de la app. Y
@@ -131,14 +131,22 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <h2>Paso a paso</h2>
     <p class="nota">La pongo al día en cada paso. Si tienes la página abierta, se actualiza sola. Si un enlace no abre, es que está en tu otra cuenta.</p>
     <ol class="pasos">
-      <li class="paso ahora"><span class="estado">Ahora · lo hago yo · no tienes que hacer nada</span>
-        <span class="t">La octava revisión de Fable: las pruebas</span>
-        <span class="c"><span class="quien">Yo, con una sesión.</span> Lo primero, repartir mejor las pruebas de GitHub: una de sus dos mitades
-          tarda ya casi los 25 minutos que tiene de tope. Después compruebo sus 28 puntos y monto sus diez pruebas con lo que
-          elegiste: la semana de prueba no se alarga editando una copia, la home sin scroll con la letra del sistema hasta el
-          115 %, una versión mínima de Android y de Safari, el archivo de Play solo con GitHub en verde y el aviso de la apnea
-          cada vez. Cuando acabe te lo enseño antes de juntarlo.
-          <b>Lo que queda, corto y en orden:</b> <a href="https://claude.ai/artifact/LtUEUn4yjYXjyq4AqJEtqV">Lo que queda hasta v1</a>.</span></li>
+      <li class="paso ahora"><span class="estado">Ahora · lo tuyo · dos letras</span>
+        <span class="t">Dos preguntas de la octava revisión</span>
+        <span class="c"><span class="quien">Tú.</span> Están en <a href="https://claude.ai/artifact/2mhP4SyDi9sWQ2E3CEEopt">una página, con las opciones dibujadas</a>: qué hace la
+          home cuando alguien pone la letra grande en su Android, y si las pruebas de noche de GitHub cubren también el
+          verano. Recomiendo «1A 2B». <b>Lo que queda, corto y en orden:</b> <a href="https://claude.ai/artifact/LtUEUn4yjYXjyq4AqJEtqV">Lo que queda hasta v1</a>.</span></li>
+      <li class="paso luego"><span class="estado">Después · lo hago yo · cuando se reponga la cuenta</span>
+        <span class="t">Lo que queda de la octava</span>
+        <span class="c"><span class="quien">Yo, con una sesión.</span> Ocho de las diez pruebas que proponía y trece arreglos pequeños. La
+          lista está escrita, así que se retoma donde paró. Te lo enseño antes de juntarlo.</span></li>
+      <li class="paso hecho"><span class="estado">Hecho · 11 de noviembre · tú dijiste «Júntalo» · en la web, 0.200.1</span>
+        <span class="t">La primera parte de la octava, en la web</span>
+        <span class="c"><span class="quien">Yo, con una sesión</span> (<a href="https://claude.ai/artifact/RuCb7GAYhuR5mpPZXjWZ3F">la página</a>). Las pruebas de GitHub van en cinco
+          tandas de unos 10 minutos en vez de dos, y ya no rozan el tope. Los 28 puntos, comprobados: 20 ciertos, 6 a medias
+          y 2 falsos. Y cuatro de tus cinco letras: la semana de prueba no se alarga editando una copia, PACE dice qué
+          Android y qué Safari pide como mínimo, el archivo de Play solo se firma con GitHub en verde y el aviso de la apnea
+          tiene su prueba. Las 1565 pruebas sobre la app tal como se publica, en verde.</span></li>
       <li class="paso hecho"><span class="estado">Hecho · 11 de noviembre · tú dijiste «Júntalo» · en la web, 0.200.0</span>
         <span class="t">D-8 y D-10, en la web</span>
         <span class="c"><span class="quien">Yo.</span> En el iPhone, el fin del Foco suena con la campana de PACE, una sola vez. Y un Android
@@ -1120,7 +1128,7 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
           <b>D-8 y D-10</b><span>Que el fin del Foco suene en el iPhone y que un Android restaurado no pueda borrar una reunión.</span></div></li>
         <li><i class="pt yo"></i><div class="que"><span class="estado yo">3 · Sin empezar · cada una la valoramos antes</span>
           <b>Lo que las revisiones marcan «antes de v1»</b><span>Que la quinta pausa de un tester no gaste la única petición de valoración; que el fin de la pausa avise en el móvil, con su sonido; una nota al acabar la semana de prueba; que los buscadores encuentren PACE con un nombre limpio; que con mala conexión no se quede en blanco al abrir; avisar de los cambios de lado dentro de un ejercicio; y unas diez cosas pequeñas más.</span></div></li>
-        <li><i class="pt yo"></i><div class="que"><span class="estado yo">4 · La séptima, hecha · la octava, en marcha</span>
+        <li><i class="pt yo"></i><div class="que"><span class="estado yo">4 · La séptima, hecha · la octava, a medias</span>
           <b>Las dos pasadas de Fable</b><span>La séptima, comprobada y en la 0.199.0. La octava, sobre las pruebas, va después de D-8 y D-10, con tus cinco letras.</span></div></li>
         <li><i class="pt espera"></i><div class="que"><span class="estado espera">5 · Espera tu sí</span>
           <b>Lo que solo espera un sí</b><span>Que dos cobros de la mensual a la vez no acorten el código, y los cuatro arreglos pequeños de la sexta revisión.</span></div></li>
