@@ -1,0 +1,10 @@
+4-antes-m {"scroll":0,"cruces":["Hoy voy por libre × Ver todo"]}
+4-antes-d {"scroll":0,"cruces":[]}
+4-antes-g {"scroll":0,"cruces":[]}
+4-despues-m {"scroll":0,"cruces":["Hoy voy por libre × Ver todo"]}
+4-despues-d {"scroll":0,"cruces":[]}
+4-despues-g {"scroll":0,"cruces":[]}
+6-antes-m {"scrollModal":0}
+6-antes-d {"scrollModal":0}
+6-despues-m {"scrollModal":0}
+6-despues-d {"scrollModal":0}
