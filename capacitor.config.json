@@ -3,7 +3,8 @@
   "appName": "PACE",
   "webDir": "www",
   "android": {
-    "backgroundColor": "#00000000"
+    "backgroundColor": "#00000000",
+    "minWebViewVersion": 111
   },
   "ios": {
     "allowsLinkPreview": false,
