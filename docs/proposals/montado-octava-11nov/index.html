@@ -1,0 +1,146 @@
+<title>La octava, montada</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de papel y tinta, como las otras «Montado»: oliva para lo hecho, terracota para lo que
+   espera a Ez. Las barras de tiempo van a escala (25 min = ancho entero). */
+:root{
+  --paper:#F2EDE0;--card:#FBF8F1;
+  --ink:#1F1C17;--ink-2:#4A453C;--ink-3:#77705F;
+  --line:#C9C0A8;
+  --olive:#3E5A3A;--olive-soft:rgba(62,90,58,.12);
+  --terra:#A85E43;--terra-soft:rgba(168,94,67,.12);
+  --display:'EB Garamond',Georgia,'Times New Roman',serif;
+  --ui:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+main{max-width:920px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 72px}
+h1,h2{font-family:var(--display);font-style:italic;font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(32px,6vw,44px)}
+h2{font-size:clamp(23px,4vw,28px);margin:52px 0 10px;padding-top:22px;border-top:1px solid var(--line)}
+p{margin:0 0 12px;color:var(--ink-2);max-width:68ch}
+strong{color:var(--ink);font-weight:500}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.lead{font-family:var(--display);font-size:21px;color:var(--ink);max-width:62ch;margin-top:14px}
+.barras{display:grid;gap:10px;margin:18px 0 8px}
+.barra{display:grid;grid-template-columns:minmax(110px,170px) 1fr;gap:12px;align-items:center;font-size:14px}
+.barra .n{color:var(--ink-2)}
+.pista{position:relative;height:22px;background:var(--card);border:1px solid var(--line);border-radius:3px}
+.pista i{position:absolute;inset:0 auto 0 0;border-radius:2px}
+.pista b{position:absolute;right:6px;top:1px;font-weight:500;font-size:13px;font-variant-numeric:tabular-nums;color:var(--ink)}
+.antes i{background:var(--terra-soft);border-right:2px solid var(--terra)}
+.despues i{background:var(--olive-soft);border-right:2px solid var(--olive)}
+.nota{font-size:13px;color:var(--ink-3)}
+.tabla{overflow-x:auto;margin:14px 0}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500}
+td:first-child{font-variant-numeric:tabular-nums;color:var(--ink-3);width:2.5em}
+.v{display:inline-block;font-size:12px;border-radius:999px;padding:1px 9px;white-space:nowrap}
+.cierto{background:var(--olive-soft);color:var(--olive)}
+.medias{background:var(--terra-soft);color:var(--terra)}
+.falso{border:1px solid var(--line);color:var(--ink-3)}
+.letras{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin-top:14px}
+.letra{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:14px 16px;min-width:0}
+.letra h3{font-family:var(--display);font-style:italic;font-weight:400;font-size:20px;margin:0 0 6px}
+.letra .est{font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.letra .est.ok{color:var(--olive)}.letra .est.no{color:var(--terra)}
+.letra p{font-size:15px;margin:0}
+.pregunta{border-left:3px solid var(--terra);padding:4px 0 4px 14px;margin:16px 0}
+.pregunta p{margin-bottom:6px}
+.rec{font-size:14px;color:var(--olive)}
+ul{padding-left:20px;color:var(--ink-2);max-width:68ch}
+li{margin-bottom:6px}
+code{font-size:.9em;background:var(--card);border:1px solid var(--line);border-radius:3px;padding:0 4px}
+</style>
+
+<main>
+  <div class="eyebrow">PACE · la octava revisión · 11 nov. 2026</div>
+  <h1>La octava, montada</h1>
+  <p class="lead">La octava miraba la red que caza los fallos antes de que lleguen a ti: las pruebas, la revisión automática y GitHub. Casi todo lo montado es invisible para quien usa PACE. Lo que gana es que un fallo de noche, de un lunes o de una copia tocada se ve antes de salir.</p>
+  <p>Todo está en la rama <code>claude/octava-11nov-418170</code>, en seis commits. Nada está en <code>main</code> todavía: lo junta la coordinadora cuando digas.</p>
+
+  <h2>GitHub, antes y después</h2>
+  <p>Las pruebas iban en dos tandas a la vez y la segunda rozaba el tope de 25 minutos: un día de más y GitHub la daba por cortada con todo en verde. Ahora van en cinco tandas, y Safari ya no descarga nada al empezar.</p>
+  <div class="barras" aria-label="Minutos de cada tanda, a escala de 25 minutos">
+    <div class="barra antes"><span class="n">Antes · tanda 2 de 2</span><span class="pista"><i style="width:98%"></i><b>24 min 30 s</b></span></div>
+    <div class="barra antes"><span class="n">Antes · tanda 1 de 2</span><span class="pista"><i style="width:75%"></i><b>18 min 40 s</b></span></div>
+    <div class="barra antes"><span class="n">Antes · Safari</span><span class="pista"><i style="width:72%"></i><b>17 min 50 s</b></span></div>
+    <div class="barra despues"><span class="n">Ahora · la más lenta de 5</span><span class="pista"><i style="width:42%"></i><b>10 min 31 s</b></span></div>
+    <div class="barra despues"><span class="n">Ahora · la más rápida</span><span class="pista"><i style="width:28%"></i><b>6 min 53 s</b></span></div>
+    <div class="barra despues"><span class="n">Ahora · Safari</span><span class="pista"><i style="width:9.5%"></i><b>2 min 22 s</b></span></div>
+  </div>
+  <p class="nota">Antes: el CI de da56e0a en <code>main</code>. Ahora: el de la rama (run 43077304826), en verde entero. De principio a fin, de unos 25 minutos a 11. La revisión automática cuenta las pruebas de cada tanda y avisa si alguna crece demasiado.</p>
+
+  <h2>Tus cinco respuestas</h2>
+  <div class="letras">
+    <div class="letra"><div class="est ok">Montada</div><h3>O1 · la semana de prueba</h3><p>Ya no se alarga editando una copia de «Tus datos»: al abrir, PACE la deja en siete días desde que empezó. Con su prueba.</p></div>
+    <div class="letra"><div class="est ok">Montada</div><h3>O3 · versión mínima</h3><p>PACE pide Android con WebView 111 o más y Safari 16.4 o más. Sale de lo que el código usa (los colores de cada módulo). Con un WebView más viejo, Android pide actualizarlo en vez de abrir la app rota.</p></div>
+    <div class="letra"><div class="est ok">Montada</div><h3>O4 · el paquete para Play</h3><p>Solo se firma después de que GitHub dé todo en verde, y es el del commit que se probó.</p></div>
+    <div class="letra"><div class="est ok">Montada</div><h3>O5 · el aviso de la apnea</h3><p>Ya se aceptaba cada vez. Ahora una prueba lo defiende en las siete rutinas: sin la casilla no empieza, ni con Escape ni con Intro, y vuelve a salir la siguiente vez.</p></div>
+    <div class="letra"><div class="est no">Medida, sin arreglar</div><h3>O2 · letra grande en Android</h3><p>Con la letra del sistema al 115 %, la home pide scroll en los móviles de 640 a 718 px de alto (de 9 a 51 px). En un móvil grande cabe. Arreglarlo cambia la home: va abajo como pregunta.</p></div>
+  </div>
+  <p style="margin-top:14px">Además: <strong>la revisión automática</strong> ya no deja entrar pruebas con el reloj a la hora de verdad (las que fallan a las 23:56), y <strong>GitHub</strong> pasará las pruebas también a las 23:30, a las 00:30 y el lunes a las 08:00, cuando salen los fallos de fecha.</p>
+
+  <h2>Los 28 puntos</h2>
+  <p>20 ciertos, 6 a medias y 2 falsos. El detalle, con archivo y línea, en <code>docs/audits/fable-9nov/externa-octava-11nov-comprobado.md</code>.</p>
+  <div class="tabla"><table>
+    <thead><tr><th>Nº</th><th>Qué decía</th><th>Veredicto</th><th>Ahora</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>La regla de relojes solo ve un caso</td><td><span class="v cierto">cierto</span></td><td>Arreglado</td></tr>
+      <tr><td>2</td><td>Tres pruebas de Respira a la hora real</td><td><span class="v cierto">cierto</span></td><td>En la lista que encoge</td></tr>
+      <tr><td>3</td><td>GitHub nunca prueba de noche</td><td><span class="v cierto">cierto</span></td><td>Arreglado</td></tr>
+      <tr><td>4</td><td>Pruebas de v1 sin reloj; la línea de los lunes</td><td><span class="v medias">a medias</span></td><td>Se verá el lunes, con la corrida de las 08:00</td></tr>
+      <tr><td>5</td><td>Solo se prueba la hora de Madrid</td><td><span class="v medias">a medias</span></td><td>Pendiente</td></tr>
+      <tr><td>6</td><td>Una prueba que mira el valor de partida</td><td><span class="v cierto">cierto</span></td><td>Pendiente</td></tr>
+      <tr><td>7</td><td>La copia corrupta</td><td><span class="v medias">a medias</span></td><td>Pendiente (menor)</td></tr>
+      <tr><td>8</td><td>Borrar podría recargar tarde</td><td><span class="v falso">falso</span></td><td>Nada que hacer</td></tr>
+      <tr><td>9</td><td>El mensual sin dónde cancelarlo</td><td><span class="v cierto">cierto</span></td><td>Pendiente</td></tr>
+      <tr><td>10</td><td>«Un martes no sale» mira demasiado pronto</td><td><span class="v cierto">cierto</span></td><td>Pendiente</td></tr>
+      <tr><td>11</td><td>Quien ya pagó no ve la tienda: sin pantallas</td><td><span class="v cierto">cierto</span></td><td>Pendiente</td></tr>
+      <tr><td>12</td><td>Nada impide saltarse pruebas</td><td><span class="v cierto">cierto</span></td><td>Pendiente</td></tr>
+      <tr><td>13</td><td>El aviso de la apnea sin prueba</td><td><span class="v medias">a medias</span></td><td>Arreglado (O5)</td></tr>
+      <tr><td>14</td><td>El navegador lleno</td><td><span class="v medias">a medias</span></td><td>Pendiente</td></tr>
+      <tr><td>15</td><td>Copias viejas sin marcas</td><td><span class="v falso">falso</span></td><td>Nada que hacer</td></tr>
+      <tr><td>16</td><td>«Sin scroll» mide poco</td><td><span class="v cierto">cierto</span></td><td>Medido al 115 % (O2)</td></tr>
+      <tr><td>17</td><td>La landing: tamaño e idioma</td><td><span class="v cierto">cierto</span></td><td>Pendiente</td></tr>
+      <tr><td>18</td><td>La semana de prueba editable</td><td><span class="v cierto">cierto</span></td><td>Arreglado (O1)</td></tr>
+      <tr><td>19</td><td>«Nada tapa nada» sin barrido</td><td><span class="v cierto">cierto</span></td><td>Pendiente (leve)</td></tr>
+      <tr><td>20</td><td>Una espera que no dice si acabó</td><td><span class="v cierto">cierto</span></td><td>Pendiente</td></tr>
+      <tr><td>21</td><td>Esperas fijas antes de mirar</td><td><span class="v cierto">cierto</span></td><td>Pendiente</td></tr>
+      <tr><td>22</td><td>El paquete de Play sin esperar a GitHub</td><td><span class="v cierto">cierto</span></td><td>Arreglado (O4)</td></tr>
+      <tr><td>23</td><td>Nadie prueba la web tal como se sube</td><td><span class="v cierto">cierto</span></td><td>Pendiente</td></tr>
+      <tr><td>24</td><td>En local se prueba un index.html viejo</td><td><span class="v cierto">cierto</span></td><td>Pendiente</td></tr>
+      <tr><td>25</td><td>La revisión de la web se salta la landing</td><td><span class="v cierto">cierto</span></td><td>Pendiente</td></tr>
+      <tr><td>26</td><td>La de privacidad mira una sola página</td><td><span class="v cierto">cierto</span></td><td>Pendiente</td></tr>
+      <tr><td>27</td><td>Las llaves de Apple no se detectan</td><td><span class="v cierto">cierto</span></td><td>Pendiente</td></tr>
+      <tr><td>28</td><td>Nadie dice qué móviles soporta PACE</td><td><span class="v medias">a medias</span></td><td>Arreglado (O3)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Lo que no llegó</h2>
+  <p>De las diez pruebas que proponía, están dos (la 1, la apnea, y la 5, los relojes) además de la de la semana de prueba. Faltan ocho y trece arreglos pequeños de la tabla. Paré antes de quedarme sin cuenta para dejar esto subido; la lista exacta está en <code>docs/audits/fable-9nov/DONDE-ME-QUEDO-octava.md</code>.</p>
+
+  <h2>Lo que pide tu decisión</h2>
+  <div class="pregunta">
+    <p><strong>1 · La home con la letra del sistema al 115 %.</strong> En móviles medianos pide de 9 a 51 px de scroll.</p>
+    <p>A · Que la home se recoja sola cuando la letra es grande (por ejemplo, quitar la segunda línea de la tarjeta). Pide maqueta antes.<br>B · Aceptar scroll por encima del 100 % y decirlo.<br>C · Topar la letra de PACE al 115 %: más fácil, pero quita la letra grande a quien la necesita.</p>
+    <p class="rec">Recomiendo A, con maqueta a 360 × 640 y la letra al 115 %.</p>
+  </div>
+  <div class="pregunta">
+    <p><strong>2 · GitHub a horas fijas, en horario de verano.</strong> Las horas van en UTC: en verano caerían una hora antes (22:30 y 23:30 de Madrid). La de las 23:30 sigue cerca de la medianoche, pero la de las 00:30 dejaría de cruzarla.</p>
+    <p>A · Dejarlo así y cambiar las horas en marzo.<br>B · Añadir ya las dos de verano (cinco corridas al día de noche en vez de tres).</p>
+    <p class="rec">Recomiendo B: cuesta cero (el repo es público) y nadie tiene que acordarse en marzo.</p>
+  </div>
+</main>
