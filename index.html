@@ -24521,21 +24521,6 @@ function medirBarridoVisible(marco) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function useBarridoVisible(marcoRef, activo) {
   const [barrido, setBarrido] = useStateTD(DIAL_VUELTA);
   useLayoutEffectTD(() => {
@@ -24588,6 +24573,30 @@ function TimerDialPunto(_ref2) {let { giro, angulo, color, nace, deGolpe } = _re
 
 }
 
+
+
+
+
+
+function pasoDelAroPx(diametro, barrido, progress, restante) {
+  if (!(diametro > 0) || !(restante > 0) || !(progress >= 0 && progress < 1)) return Infinity;
+  return barrido / DIAL_VUELTA * 2 * Math.PI * (DIAL_R / 100) * diametro * (1 - progress) / restante;
+}
+function useDiametroAro(marcoRef) {
+  const [diametro, setDiametro] = useStateTD(0);
+  useLayoutEffectTD(() => {
+    const marco = marcoRef.current;
+    if (!marco) return;
+    const leer = () => {const c = paceCaja(marco);const v = Math.min(c.width, c.height) || 0;setDiametro((p) => Math.abs(p - v) > 0.5 ? v : p);};
+    leer();
+    if (typeof ResizeObserver !== 'function') return;
+    const ro = new ResizeObserver(leer);
+    ro.observe(marco);
+    return () => ro.disconnect();
+  }, []);
+  return diametro;
+}
+
 function TimerDial(_ref3) {let { mins, secs, progress, mode, modeLabel, hasta, subtitle, inner, running, ticks, fitHeight, paused } = _ref3;
   const R = DIAL_R;
 
@@ -24598,7 +24607,7 @@ function TimerDial(_ref3) {let { mins, secs, progress, mode, modeLabel, hasta, s
 
   const restante = Number(mins) * 60 + Number(secs);
   const previoRef = useRefTD(restante);
-  const deGolpe = Math.abs(restante - previoRef.current) > 2;
+  const salto = Math.abs(restante - previoRef.current) > 2;
   useLayoutEffectTD(() => {previoRef.current = restante;});
 
 
@@ -24606,14 +24615,9 @@ function TimerDial(_ref3) {let { mins, secs, progress, mode, modeLabel, hasta, s
 
   const marcoRef = useRefTD(null);
   const barrido = useBarridoVisible(marcoRef, !!fitHeight && !ticks);
+  const diametro = useDiametroAro(marcoRef);
+  const deGolpe = salto || pasoDelAroPx(diametro, barrido, progress, restante) < 1;
   const recortado = barrido < DIAL_VUELTA - 0.01;
-
-
-
-
-
-
-
 
 
 
@@ -24625,18 +24629,7 @@ function TimerDial(_ref3) {let { mins, secs, progress, mode, modeLabel, hasta, s
 
 
 
-
-
-
-
   return (
-
-
-
-
-
-
-
 
 
 
@@ -24877,8 +24870,8 @@ const timerDialStyles = {
   }
 };
 
-Object.assign(window, { TimerDial, interpolateRingColor });
-;Object.assign(window, { interpolateRingColor, TimerTicks, medirBarridoVisible, useBarridoVisible, TimerDialPunto, TimerDial });
+Object.assign(window, { TimerDial, interpolateRingColor, pasoDelAroPx });
+;Object.assign(window, { interpolateRingColor, TimerTicks, medirBarridoVisible, useBarridoVisible, TimerDialPunto, pasoDelAroPx, useDiametroAro, TimerDial });
 })();
 </script>
   <!-- Motor de cuenta atras timestamp-based (s96): expone window.useCountdown,

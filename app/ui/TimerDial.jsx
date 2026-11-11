@@ -134,28 +134,13 @@ function medirBarridoVisible(marco) {
   return 2 * (90 + Math.asin(sen) * 180 / Math.PI);
 }
 
-/* QUE DISPARA LA MEDIDA, Y POR QUE NO BASTA EL TAMANO DEL MARCO.
-
-   La primera version observaba solo el marco con un ResizeObserver, razonando
-   que el horizonte no puede moverse sin que se mueva D. Es cierto EN REGIMEN y
-   FALSO EN EL ARRANQUE, que es justo cuando importa: medido en el artefacto,
-   la unica lectura que llego a ocurrir devolvio 360 porque --pace-horizon aun
-   no resolvia, y como el marco ya tenia sus 420 px definitivos el observer no
-   volvio a disparar nunca. El aro se quedaba redondo con el motor funcionando.
-
-   El disparo bueno es el que ve al MOTOR publicar. home-geometry.js escribe
-   --pace-timer-d y --pace-activities-overlap —los dos insumos de este
-   calculo— en el `style` de <html> (su `setVar`, home-geometry.js:136), y solo
-   cuando cambian. Un MutationObserver sobre ese atributo es por tanto el
-   evento exacto, sin sondeo y sin frames de mas.
-
-   El ResizeObserver se queda ADEMAS, y no por simetria: cubre el caso del
-   motor apagado, donde D y el horizonte salen de los fallbacks CSS y lo unico
-   que se mueve es el marco.
-
-   NINGUNO DE LOS DOS PUEDE REALIMENTARSE: lo que este hook cambia es el
-   dasharray de dos <circle> en position:absolute, que no altera ni el tamano
-   del marco ni el style de <html>. El umbral de 0,02° remata la garantia. */
+/* QUE DISPARA LA MEDIDA. Solo el tamaño del marco no basta: en el arranque --pace-horizon aún no
+   resuelve, la única lectura da 360 y, con el marco ya en su tamaño, el ResizeObserver no vuelve a
+   disparar (el aro quedaba redondo). El disparo bueno es ver al MOTOR publicar: home-geometry.js
+   escribe --pace-timer-d y --pace-activities-overlap en el `style` de <html> solo cuando cambian,
+   y un MutationObserver sobre ese atributo es el evento exacto. El ResizeObserver se queda para el
+   motor apagado (fallbacks CSS). Ninguno se realimenta: lo que cambia aquí es el dasharray de dos
+   <circle> absolutos, que no mueven el marco ni el style de <html>; el umbral de 0,02° lo remata. */
 function useBarridoVisible(marcoRef, activo) {
   const [barrido, setBarrido] = useStateTD(DIAL_VUELTA);
   useLayoutEffectTD(() => {
@@ -208,6 +193,30 @@ function TimerDialPunto({ giro, angulo, color, nace, deGolpe }) {
   );
 }
 
+/* EL ARO SOLO SE DESLIZA SI EL PASO SE NOTA (Ez, aro B, 11 nov. 2026). Cada segundo el arco avanza
+   la parte que pinta de su circunferencia entre lo que dura el bloque: en un Foco de 25 min a 360 px,
+   medio píxel, y deslizarlo costaba 60 fotogramas por segundo (76 % del hilo con CPU 4×). Por debajo
+   de 1 px salta sin transición, igual a la vista; en bloques cortos o aros grandes sigue deslizándose.
+   Sin medida todavía (0 px) o sin duración que sacar, se desliza como siempre. */
+function pasoDelAroPx(diametro, barrido, progress, restante) {
+  if (!(diametro > 0) || !(restante > 0) || !(progress >= 0 && progress < 1)) return Infinity;
+  return (barrido / DIAL_VUELTA) * 2 * Math.PI * (DIAL_R / 100) * diametro * (1 - progress) / restante;
+}
+function useDiametroAro(marcoRef) {
+  const [diametro, setDiametro] = useStateTD(0);
+  useLayoutEffectTD(() => {
+    const marco = marcoRef.current;
+    if (!marco) return;
+    const leer = () => { const c = paceCaja(marco); const v = Math.min(c.width, c.height) || 0; setDiametro((p) => (Math.abs(p - v) > 0.5 ? v : p)); };
+    leer();
+    if (typeof ResizeObserver !== 'function') return;
+    const ro = new ResizeObserver(leer);
+    ro.observe(marco);
+    return () => ro.disconnect();
+  }, []);
+  return diametro;
+}
+
 function TimerDial({ mins, secs, progress, mode, modeLabel, hasta, subtitle, inner, running, ticks, fitHeight, paused }) {
   const R = DIAL_R;
   // Color del arco/marcas una sola vez (lo comparten arco, punto guia y ticks).
@@ -218,7 +227,7 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, hasta, subtitle, inn
      reiniciar, cambiar de modo) el arco y el punto se pintan sin transición. */
   const restante = Number(mins) * 60 + Number(secs);
   const previoRef = useRefTD(restante);
-  const deGolpe = Math.abs(restante - previoRef.current) > 2;
+  const salto = Math.abs(restante - previoRef.current) > 2;
   useLayoutEffectTD(() => { previoRef.current = restante; });
 
   /* El recorte SOLO donde hay horizonte: la home (fitHeight) y solo en la
@@ -226,40 +235,24 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, hasta, subtitle, inn
      que su anillo sigue siendo la vuelta entera, byte-identico. */
   const marcoRef = useRefTD(null);
   const barrido = useBarridoVisible(marcoRef, !!fitHeight && !ticks);
+  const diametro = useDiametroAro(marcoRef);
+  const deGolpe = salto || pasoDelAroPx(diametro, barrido, progress, restante) < 1;
   const recortado = barrido < DIAL_VUELTA - 0.01;
-  /* EL TRAZO SE MIDE EN GRADOS, Y ESO ARREGLA UNA ASIMETRIA MEDIDA (s184).
-     `pathLength={360}` le dice al motor que trate el trazado como si midiera
-     360 unidades, asi que guion y desfase se escriben directamente en grados y
-     el barrido entra tal cual. No es azucar: sin el, las cuentas van contra la
-     circunferencia EXACTA (2πr = 298,451) mientras Chrome dibuja el circulo
-     con cuatro beziers cuya longitud real es 297,97 — un 0,16 % de sobra que
-     alarga el arco 0,44° y dejaba el cabo derecho 0,78 px POR DEBAJO del
-     izquierdo, medido sobre la pagina a 390x844. Con pathLength los dos cabos
-     caen en la misma linea porque el motor normaliza por su propio trazado.
-     El giro lleva el ORIGEN al extremo izquierdo; sin recorte vale 0 y
-     `360 360` pinta el circulo entero, o sea la rama de siempre. */
+  /* EL TRAZO SE MIDE EN GRADOS: `pathLength={360}` hace que guion y desfase se escriban en grados
+     y que el motor normalice por su propio trazado (cuatro beziers, 0,16 % más largas que 2πr), así
+     los dos cabos caen en la misma línea; sin él, el derecho quedaba 0,78 px por debajo a 390x844.
+     El giro lleva el ORIGEN al extremo izquierdo; sin recorte vale 0 y `360 360` es la vuelta entera. */
   const giroInicio = recortado ? -barrido / 2 : 0;
   const trazo = barrido.toFixed(3) + ' ' + DIAL_VUELTA;
 
-  /* fitHeight (s123, SOLO home): el aro se dimensiona por la ALTURA ÚTIL de su
-     contenedor (no por 56vh del viewport), encogiéndose en pantallas bajas hasta
-     un mínimo legible, para no desbordar main-content y recortar bolas/CICLO. La
-     geometría del anillo (viewBox/R/C/SVG) NO cambia: solo cambia el tamaño del
-     marco, que el SVG ya escala a 100%. El clamp real (con fallback vh→dvh) vive
-     en _responsive.js sobre [data-pace-dial-fit]. Caminos NO pasa la prop → usa
-     el marco clásico min(56vh,86vw,520px), byte-idéntico. */
+  /* fitHeight (solo home): el aro se dimensiona por la ALTURA ÚTIL de su contenedor (clamp en
+     _responsive.js sobre [data-pace-dial-fit]); la geometría del anillo no cambia, solo el marco.
+     Caminos no pasa la prop y usa el marco clásico min(56vh,86vw,520px). */
 
   return (
-    /* data-pace-dial-running: gancho para el halo "respirando" del aro
-       cuando el Pomodoro corre (CSS en tokens.css, pack de pulido A).
-       Solo presente cuando running -> el selector [data-...] no matchea
-       en reposo. Puramente presentacional; el padre decide `running`.
-       `ticks`: variante aro de marcas de minuto (Caminos Foco); sin ticks
-       es el aro clasico con arco + punto guia (FocusTimer home).
-       data-pace-dial-paused (s156): gancho DECLARATIVO para que la atmosfera de
-       amanecer distinga «pausado» de «reposo» — dos estados que hasta ahora se
-       veian igual porque `running` es false en los dos. El padre decide; aqui no
-       hay ni una linea de logica de temporizador. */
+    /* data-pace-dial-running: el halo «respirando» con el Pomodoro en marcha (tokens.css);
+       data-pace-dial-paused distingue «pausado» de «reposo» para el amanecer. Los decide el padre.
+       `ticks`: aro de marcas de minuto (Caminos); sin ticks, el aro con arco y punto (home). */
     <div ref={marcoRef}
          data-pace-dial-running={running ? '' : undefined}
          data-pace-dial-paused={paused ? '' : undefined}
@@ -497,4 +490,4 @@ const timerDialStyles = {
   },
 };
 
-Object.assign(window, { TimerDial, interpolateRingColor });
+Object.assign(window, { TimerDial, interpolateRingColor, pasoDelAroPx });
