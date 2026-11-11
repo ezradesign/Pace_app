@@ -14040,6 +14040,9 @@ function ritmoElegir(opcion) {
   var R = ritmoDe(s);
   var dia = { fecha: ritmoHoy(), opcion: opcion, desde: Math.max(R.horario.inicio, ritmoAhora()),
     cicloBase: Number(s.cycle) || 0, cambios: {}, pausa: null };
+
+  var corre = typeof ritmoFocoDelDiaNuevo === 'function' ? ritmoFocoDelDiaNuevo() : null;
+  if (corre) Object.assign(dia, { desde: corre.desde, primerBloque: corre.min, pasado: [] });
   ritmoGuardar(function () {return { libre: null, dia: dia };});
   ritmoSincronizar();
 }
@@ -14328,6 +14331,26 @@ function ritmoFocoEmpezo() {
 
 
 
+
+function ritmoFocoDelDiaNuevo() {
+  if (typeof ritmoFocoCorriendo !== 'function' || !ritmoFocoCorriendo()) return null;
+  try {
+    var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
+    var min = Number(v && v.minutes) || 0;
+    var inicio = typeof v.inicio === 'number' && isFinite(v.inicio) ? v.inicio : v.endsAt ? v.endsAt - min * 60000 : null;
+    if (!min || inicio == null || inicio > Date.now() || new Date(inicio).toDateString() !== new Date().toDateString()) return null;
+    var d = new Date(inicio);
+    return { desde: d.getHours() * 60 + d.getMinutes(), min: min };
+  } catch (e) {return null;}
+}
+
+
+
+
+
+
+
+
 function ritmoMinutosDelPlan(s, dur) {
   var r = s && s.ritmo || {};
   if (s.focusMinutes === dur && r.minutosPlan === dur) return;
@@ -14364,9 +14387,9 @@ function ritmoFocoHecho(p) {
   return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) {return a + ritmoFocoMin(f);}, 0) : 0;
 }
 
-Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho, ritmoFocoMin, ritmoFijarLoHecho,
+Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoDelDiaNuevo, ritmoFocoHecho, ritmoFocoMin, ritmoFijarLoHecho,
   ritmoMinutosDelPlan, ritmoMinutosDevolver });
-;Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoFijarLoHecho, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, _ritmoCierrePintado, ritmoMirarSalida, ritmoFocoEmpezo, ritmoMinutosDelPlan, ritmoMinutosDevolver, ritmoMinutosSonTuyos, ritmoFocoMin, ritmoFocoHecho });
+;Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoFijarLoHecho, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, _ritmoCierrePintado, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoDelDiaNuevo, ritmoMinutosDelPlan, ritmoMinutosDevolver, ritmoMinutosSonTuyos, ritmoFocoMin, ritmoFocoHecho });
 })();
 </script>
   <!-- El día elegido y sin empezar se lee desde ahora (Ez, E1 A del 7 nov. 2026). -->

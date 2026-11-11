@@ -428,6 +428,9 @@ function ritmoElegir(opcion) {
   var R = ritmoDe(s);
   var dia = { fecha: ritmoHoy(), opcion: opcion, desde: Math.max(R.horario.inicio, ritmoAhora()),
               cicloBase: Number(s.cycle) || 0, cambios: {}, pausa: null };
+  /* Con un Foco empezado, ese bloque es el primero del día nuevo (4B; state-ritmo.recolocar.jsx). */
+  var corre = typeof ritmoFocoDelDiaNuevo === 'function' ? ritmoFocoDelDiaNuevo() : null;
+  if (corre) Object.assign(dia, { desde: corre.desde, primerBloque: corre.min, pasado: [] });
   ritmoGuardar(function () { return { libre: null, dia: dia }; });
   ritmoSincronizar();
 }

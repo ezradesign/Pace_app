@@ -209,6 +209,26 @@ function ritmoFocoEmpezo() {
   } catch (e) { return null; }
 }
 
+/* «CAMBIAR» CON UN FOCO EN MARCHA (Ez, 4B del 11 nov. 2026; revisión de ChatGPT, punto 4). El día nuevo
+   se componía desde la hora de elegir y no sabía del bloque que corría: con un bloque de 45 empezado a
+   las 9:00, elegir «Una hora» a las 9:10 ponía la pausa a las 9:35, en mitad del bloque, y al acabar el
+   día nuevo se lo quedaba como suyo con otra hora. Ahora ese bloque es el bloque 1 del día nuevo, a la
+   hora a la que empezó y con la duración del aro (`desde`, `primerBloque` y `pasado: []`, sin el cual
+   la regla no lee `primerBloque`). Vale en marcha, en pausa y acabado sin contar todavía (lo que mira
+   `ritmoFocoCorriendo`); uno empezado ayer no. Lo llama ritmoElegir; lo vigila
+   tests/ritmo-cambiar-en-marcha.spec.js. */
+function ritmoFocoDelDiaNuevo() {
+  if (typeof ritmoFocoCorriendo !== 'function' || !ritmoFocoCorriendo()) return null;
+  try {
+    var v = JSON.parse(localStorage.getItem(RITMO_TIMER_KEY) || 'null');
+    var min = Number(v && v.minutes) || 0;
+    var inicio = typeof v.inicio === 'number' && isFinite(v.inicio) ? v.inicio : (v.endsAt ? v.endsAt - min * 60000 : null);
+    if (!min || inicio == null || inicio > Date.now() || new Date(inicio).toDateString() !== new Date().toDateString()) return null;
+    var d = new Date(inicio);
+    return { desde: d.getHours() * 60 + d.getMinutes(), min: min };
+  } catch (e) { return null; }
+}
+
 /* TUS MINUTOS, ANTES Y DESPUÉS DE LA JORNADA (Ez, S3 A del 8 nov. 2026). El aro mide lo que mide el
    bloque que toca (ritmoSincronizar), y al acabar el día se quedaba con los del último bloque:
    «Seguir por libre» y el Foco de la mañana siguiente empezaban de 33. La primera vez que el plan pone
@@ -252,5 +272,5 @@ function ritmoFocoHecho(p) {
   return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) { return a + ritmoFocoMin(f); }, 0) : 0;
 }
 
-Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoHecho, ritmoFocoMin, ritmoFijarLoHecho,
+Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoFocoEmpezo, ritmoFocoDelDiaNuevo, ritmoFocoHecho, ritmoFocoMin, ritmoFijarLoHecho,
   ritmoMinutosDelPlan, ritmoMinutosDevolver });
