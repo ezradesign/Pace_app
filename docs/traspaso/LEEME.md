@@ -2,7 +2,20 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 11 de noviembre de 2026, 10:54, v0.197.0.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 11 de noviembre de 2026, 12:08, v0.198.0.
+
+## 11 nov., 12:08 (cuenta EcLj6): la 0.198.0, juntada y en `main`. Manda sobre lo de abajo
+
+- **Hecho, los puntos 2 y 3 del bloque de las 10:54.** Las cuatro ramas, por su orden, con dos choques: el censo de textos (queda en 1179) y la tabla de decisiones (las filas de las dos ramas). `app/state-core.jsx` queda en 500 líneas justas: lo próximo que lo toque, lo trocea. Filas técnicas nuevas: la del CI de noche y la de la A del aro. `pace.aro.carta.v1` no se escribe con la landing delante: solo se guarda con la tarjeta pintada, y `#root` va en `display: none`; lo vigila `tests/landing-cara.spec.js`, que compara todas las claves. Suite entera sobre el `index.html` que se sube: 1515 en verde, 2 saltadas a propósito y 5 rojas, las cinco resueltas: tres pruebas puestas al día (dos de la pausa esperaban «Volver al inicio», que la 2A cambia con la pausa corriendo, y la de «Borrar todo» no conocía la clave del aro) y dos que caen con la máquina cargada y pasan solas (`foco-inicio-recarga` y `ios-avisos`).
+- **La rama de la jornada traía también la cuenta del día (ChatGPT 1, 2, 3 y 5)**, hecha el 9 nov. y a la espera de su «júntalo»: entró con el «Sí, todo junto», y está dicho a Ez.
+- **Páginas en EcLj6:** la hoja (EcLj6io4wM9pGjtQ5wd1CT), con los pasos de hoy y el roadmap en cuatro tramos; la auditoría (C2uFSMM8eWhcRxpXLGWkAx), con la sexta pasada; el aro con la A montada (BN1QuXDBSAnqjqAvvSMSny); y las dos «Montado» (1WwJbuD5qTtXJWNzVg7B7Q la de la auditoría, LaTcRknTpPcJAa6joPncjX la de 4, 6 y 7). Los tres pares nuevos están en `docs/traspaso/archivos/hoja-ids-cuentas.js`. **La hoja del repo lleva ahora los ids de EcLj6**: para publicarla en 5iWBf, pasarla antes por ese guion con `--a=5iWBf`. La de decisiones (H5UgBuqz5VeGnETpixxi96) no se republicó: solo cambian dos frases y Ez ya la contestó entera.
+- **Cola de montaje, sesiones en Opus de una en una** (el punto 4): primero el aro de rendimiento B con V1 B y V2 B, en `claude/caza-rendimiento-9nov` (worktree `.claude/worktrees/caza-rendimiento-9nov`; antes, traer `main`); después D-8 A y D-10 B (filas S2 y S1 de la cola), en `claude/auditoria-fable-9nov-8401fc`. Cada una acaba con su página «Montado» y espera el «júntalo» de Ez.
+- **Esperan a Ez:** si subió ya la 0.191.1 a Play y a TestFlight (si no, mejor la 0.198.0); las dos pasadas con Fable, hasta el 12 nov. (`docs/audits/textos-externa-11nov.md`); el sí a S3 y S4; el «júntalo» de las barras y las fuentes ligeras (rama de rendimiento) y el de `guardar()`; y la revisión de ChatGPT del cobro y lo legal.
+- **Para gastar menos al republicar:** actualizar una página en su sitio obliga a leer entera la versión publicada (la hoja son unos 55 000 tokens). Antes, `Artifact read` con `path: "index.html"` la guarda en disco: se compara con la copia de la rama y solo se republica lo que cambió.
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «11 nov., 12:08» de docs/traspaso/LEEME.md, y sigue como coordinadora. main está en la 0.198.0. Por este orden: mira cómo van las sesiones de la cola (el aro de rendimiento con V1 y V2; D-8 y D-10) y enséñame lo que acabe antes de juntarlo; publica mi hoja de pasos en esta cuenta pasándola antes por hoja-ids-cuentas.js; y dime qué espera mi respuesta. Haz pocas vueltas y usa sesiones en Opus: el modelo nuevo gasta mucho.
+```
 
 ## AL RELEVO (11 nov., 10:54): 5iWBf llega al 90 % de las 5 h (se reponen a las 14:30). Empieza aquí; el detalle, en el bloque de las 09:45, debajo
 
