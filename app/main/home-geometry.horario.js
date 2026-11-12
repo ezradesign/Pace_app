@@ -62,7 +62,7 @@ function paceAroCartaRecordar(clave, D) {
   m[clave] = D;
   var claves = Object.keys(m);
   for (var i = 0; i < claves.length - PACE_ARO_CARTA_MAX; i++) delete m[claves[i]];
-  try { localStorage.setItem(PACE_ARO_CARTA_CLAVE, JSON.stringify(m)); } catch (e) {}
+  try { localStorage.setItem(PACE_ARO_CARTA_CLAVE, JSON.stringify(m)); } catch (e) { paceAvisarNoGuarda(e); }
 }
 
 Object.assign(window, {

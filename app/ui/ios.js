@@ -91,7 +91,7 @@ function paceIosAvisoLeer() {
 }
 
 function paceIosAvisoGuardar() {
-  try { localStorage.setItem(PACE_IOS_AVISO_CLAVE, JSON.stringify({ puesto: _paceIos.puesto })); } catch (e) {}
+  try { localStorage.setItem(PACE_IOS_AVISO_CLAVE, JSON.stringify({ puesto: _paceIos.puesto })); } catch (e) { paceAvisarNoGuarda(e); }
 }
 
 var _paceIosLeido = paceIosAvisoLeer();

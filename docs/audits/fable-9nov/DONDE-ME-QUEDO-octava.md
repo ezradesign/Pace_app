@@ -27,7 +27,17 @@ Montado entero lo que quedaba de la octava. Sin bump ni CHANGELOG: lo junta la c
 **Lo que se cambió en pruebas viejas por la B:** `home-aro-interior` medía el suelo del aro a 360×600
 y 375×600, que con la fila ya caben: baja a 360×560 y 375×560.
 
-### Espera a Ez (en la página)
+### Ez contestó (12 nov.): «1 A, 2 B y júntalo»
+- **1 A:** la fila con la letra normal en móviles bajos se queda como está.
+- **2 B, montada:** la barra de «no deja guardar» sale con la primera escritura que falle, sea la que
+  sea. Un solo aviso, `paceAvisarNoGuarda(e)` (`state-core.support.jsx`), llamado desde el catch de cada
+  escritura de `app/` (lo exige `verify.escrituras.js`); solo cuenta un error del almacenamiento, no
+  escribe nada y no avisa con la landing delante. En el ordenador la barra sale al abrir (lo primero
+  que falla es el tamaño del aro). Pruebas: `estado-no-guarda` «5c» (todo lleno: la barra al empezar
+  el Foco y una sola vez) y «5d» (solo falla el reloj del Foco; mutante: su catch sin avisar).
+  `MINIMO_PRUEBAS` sube a 1543.
+
+### Lo que esperaba a Ez (ya contestado arriba)
 - La fila sale también **con la letra normal** en pantallas más bajas que 360×640 si así cabe (360×600,
   360×580, o 320×568 en castellano), igual que «Luego». Recomendado dejarlo.
 - La barra de «no deja guardar» sale al acabar el Foco, no al empezarlo: empezar solo escribe el reloj

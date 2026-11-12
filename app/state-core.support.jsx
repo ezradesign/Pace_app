@@ -216,7 +216,23 @@ function rolloverIfNeeded(state) {
   };
 }
 
+/* LA BARRA DE «NO DEJA GUARDAR» SALE CON LA PRIMERA ESCRITURA QUE FALLE, SEA LA QUE SEA (Ez, 2 B de
+   la octava, 12 nov. 2026). Antes solo la anunciaba persistState, y empezar un Foco, que solo guarda su
+   reloj (`pace.timer.v1`), no la sacaba: si se cerraba PACE a mitad, el bloque se perdía sin aviso. Cada
+   escritura de app/ en el almacenamiento la llama desde su catch (lo mira scripts/verify.escrituras.js).
+   Con un error, solo cuenta el del almacenamiento (lleno o bloqueado: DOMException), no un JSON roto que
+   cayera en el mismo catch; sin él, cuenta siempre (persistState). No escribe nada, y con la landing
+   delante no avisa: ahí no se guarda nada a propósito. La barra sale una vez por visita (AvisoNoGuarda,
+   ui/UpdatePrompt.jsx): el segundo aviso no la vuelve a sacar. Vive aquí porque esto carga antes que
+   todo lo que escribe, también el rescate del arranque (state-core.sanea.js). */
+function paceAvisarNoGuarda(e) {
+  if (arguments.length && !(typeof window.DOMException === 'function' && e instanceof window.DOMException)) return;
+  if (window.PACE_CARA === 'landing') return;
+  try { window.__paceNoGuarda = true; window.dispatchEvent(new CustomEvent('pace:no-guarda')); } catch (e2) {}
+}
+
 Object.assign(window, {
+  paceAvisarNoGuarda,
   isMobileViewport, detectInitialPalette,
   migrateWeeklyStatsToHistory, reindexWeeklyStatsMondayFirst,
   rolloverIfNeeded,

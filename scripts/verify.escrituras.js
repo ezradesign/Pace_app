@@ -9,6 +9,8 @@
  *     `localStorage` o `sessionStorage` va dentro de un `try` (la prueba 2, estado-no-guarda «5c»,
  *     lo comprueba con la app abierta). Las que fallan a propósito, para que alguien se entere,
  *     van en SIN_TRY_A_PROPOSITO con su porqué.
+ *   · Y si falla, lo dice: el catch de cada una llama a `paceAvisarNoGuarda` (state-core.support.jsx),
+ *     que saca la barra de «no deja guardar» con la primera que falle (Ez, 2 B de la octava).
  *   · Con la landing delante no se guarda nada (landing-cara.spec.js), y toda escritura sin gesto
  *     tiene que mirar la cara (`window.PACE_CARA`). Qué escritura es «sin gesto» no lo sabe un
  *     analizador, así que se lleva el CENSO: cuántas hay en cada archivo. Una nueva, o una que se
@@ -64,31 +66,44 @@ function esAlmacen(obj) {
     obj.object.type === 'Identifier' && (obj.object.name === 'window' || obj.object.name === 'self');
 }
 
-/* Las llamadas `<almacén>.setItem(...)` del archivo, cada una con si va dentro del bloque de un `try`. */
+/* ¿Llama este trozo del árbol a `nombre(...)`? */
+function llamaA(nodo, nombre) {
+  if (!nodo || typeof nodo.type !== 'string') return false;
+  if (nodo.type === 'CallExpression' && nodo.callee.type === 'Identifier' && nodo.callee.name === nombre) return true;
+  return Object.keys(nodo).some(function (k) {
+    if (k === 'loc') return false;
+    var h = nodo[k];
+    return Array.isArray(h) ? h.some(function (x) { return llamaA(x, nombre); }) : (h && typeof h.type === 'string' && llamaA(h, nombre));
+  });
+}
+
+/* Las llamadas `<almacén>.setItem(...)` del archivo, cada una con si va dentro del bloque de un `try` y
+   si el catch de ese try avisa (`paceAvisarNoGuarda`). */
 function escrituras(ast) {
   var halladas = [];
-  (function andar(nodo, enTry) {
+  (function andar(nodo, envuelve) {
     if (!nodo || typeof nodo.type !== 'string') return;
     if (nodo.type === 'CallExpression' && nodo.callee.type === 'MemberExpression' && !nodo.callee.computed &&
         nodo.callee.property.type === 'Identifier' && nodo.callee.property.name === 'setItem' && esAlmacen(nodo.callee.object)) {
-      halladas.push({ linea: nodo.loc.start.line, enTry: enTry });
+      halladas.push({ linea: nodo.loc.start.line, enTry: !!envuelve,
+        avisa: !!(envuelve && envuelve.handler && llamaA(envuelve.handler.body, 'paceAvisarNoGuarda')) });
     }
     Object.keys(nodo).forEach(function (k) {
       if (k === 'loc' || k === 'leadingComments' || k === 'trailingComments' || k === 'innerComments') return;
       var hijo = nodo[k];
-      /* Solo el bloque del `try` protege; lo que va en el `catch` o el `finally`, no. */
-      var protege = enTry || (nodo.type === 'TryStatement' && k === 'block');
+      /* Solo el bloque del `try` protege; lo que va en el `catch` o el `finally`, no. El más cercano manda. */
+      var protege = (nodo.type === 'TryStatement' && k === 'block') ? nodo : envuelve;
       if (Array.isArray(hijo)) hijo.forEach(function (h) { andar(h, protege); });
       else if (hijo && typeof hijo.type === 'string') andar(hijo, protege);
     });
-  })(ast.program, false);
+  })(ast.program, null);
   return halladas;
 }
 
 function tandaEscrituras(ctx) {
   console.log('\n[escrituras] Cada escritura de app/ en el almacenamiento, dentro de un try y en el censo');
   var parser = require(path.join(ctx.ROOT, 'node_modules', '@babel', 'parser'));
-  var hay = {}, sinTry = [], ilegibles = [];
+  var hay = {}, sinTry = [], callan = [], ilegibles = [];
   listarApp(path.join(ctx.ROOT, 'app'), []).forEach(function (abs) {
     var rel = path.relative(ctx.ROOT, abs).replace(/\\/g, '/');
     var src = fs.readFileSync(abs, 'utf8');
@@ -103,12 +118,17 @@ function tandaEscrituras(ctx) {
     if (fuera.length !== (SIN_TRY_A_PROPOSITO[rel] || 0)) {
       fuera.forEach(function (w) { sinTry.push(rel + ':' + w.linea); });
     }
+    lista.filter(function (w) { return w.enTry && !w.avisa; }).forEach(function (w) { callan.push(rel + ':' + w.linea); });
   });
   if (ilegibles.length) ctx.falla('escrituras: no se pudo leer ' + ilegibles.join(', '));
   if (sinTry.length) {
     ctx.falla('escrituras: ' + sinTry.length + ' escritura(s) en el almacenamiento fuera de un try: ' + sinTry.join(', ') +
       ' -- con el navegador lleno, cada setItem lanza y rompe lo que venga detrás (la octava, prueba 2)');
   } else ctx.ok('cada escritura de app/ en el almacenamiento va dentro de un try (salvo la de importar, a propósito)');
+  if (callan.length) {
+    ctx.falla('escrituras: ' + callan.length + ' escritura(s) cuyo catch no llama a paceAvisarNoGuarda(e): ' + callan.join(', ') +
+      ' -- si falla, la barra de «no deja guardar» tiene que salir con la primera (Ez, 2 B de la octava)');
+  } else ctx.ok('el catch de cada una avisa: la barra sale con la primera que falle');
 
   var cambios = [];
   Object.keys(hay).concat(Object.keys(CENSO)).forEach(function (rel, i, todos) {

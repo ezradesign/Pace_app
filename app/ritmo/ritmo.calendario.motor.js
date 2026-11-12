@@ -75,7 +75,7 @@ function calendarioEscritoGuardar(v) {
   try {
     if (v) localStorage.setItem(CALENDARIO_ESCRITO_CLAVE, JSON.stringify(v));
     else localStorage.removeItem(CALENDARIO_ESCRITO_CLAVE);
-  } catch (e) {}
+  } catch (e) { paceAvisarNoGuarda(e); }
 }
 
 /* Lo escrito hoy en `destino`, por clave ({} si es de otro día o de otro sitio). */

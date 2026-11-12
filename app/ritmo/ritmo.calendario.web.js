@@ -120,7 +120,7 @@ function calendarioPaseGuardar(prov, token, segundos, renovar) {
       todos[prov] = p;
     } else delete todos[prov];
     sessionStorage.setItem(CALENDARIO_PASE_CLAVE, JSON.stringify(todos));
-  } catch (e) {}
+  } catch (e) { paceAvisarNoGuarda(e); }
 }
 
 /* Hasta cuándo puede PACE escribir sin preguntar (ms), o 0. */

@@ -84,7 +84,7 @@ function calendarioAndroidPropios() {
 function calendarioAndroidGuardar(propios) {
   var limite = Date.now() - CALENDARIO_ANDROID_OLVIDO;
   Object.keys(propios).forEach(function (id) { if (!propios[id] || !(propios[id].fin > limite)) delete propios[id]; });
-  try { localStorage.setItem(CALENDARIO_ANDROID_CLAVE, JSON.stringify(propios)); } catch (e) {}
+  try { localStorage.setItem(CALENDARIO_ANDROID_CLAVE, JSON.stringify(propios)); } catch (e) { paceAvisarNoGuarda(e); }
 }
 
 function calendarioAndroidApuntar(id, ev) {
@@ -128,7 +128,7 @@ function calendarioAndroidListo() {
       localStorage.setItem(CALENDARIO_ANDROID_CLAVE, '{}');
       if (instalado !== null) localStorage.setItem(CALENDARIO_ANDROID_INSTALADO, String(instalado));
       else localStorage.removeItem(CALENDARIO_ANDROID_INSTALADO);
-    } catch (e) {}
+    } catch (e) { paceAvisarNoGuarda(e); }
   });
   return _calendarioAndroidListo;
 }

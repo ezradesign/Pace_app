@@ -71,7 +71,7 @@ function paceAndroidAvisoLeer() {
 }
 
 function paceAndroidAvisoGuardar() {
-  try { localStorage.setItem(PACE_AVISO_CLAVE, JSON.stringify({ puesto: _paceAvisoAndroid.puesto })); } catch (e) {}
+  try { localStorage.setItem(PACE_AVISO_CLAVE, JSON.stringify({ puesto: _paceAvisoAndroid.puesto })); } catch (e) { paceAvisarNoGuarda(e); }
 }
 
 var _paceAvisoAndroidLeido = paceAndroidAvisoLeer();

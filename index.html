@@ -6977,12 +6977,28 @@ function rolloverIfNeeded(state) {
   };
 }
 
+
+
+
+
+
+
+
+
+
+function paceAvisarNoGuarda(e) {
+  if (arguments.length && !(typeof window.DOMException === 'function' && e instanceof window.DOMException)) return;
+  if (window.PACE_CARA === 'landing') return;
+  try {window.__paceNoGuarda = true;window.dispatchEvent(new CustomEvent('pace:no-guarda'));} catch (e2) {}
+}
+
 Object.assign(window, {
+  paceAvisarNoGuarda,
   isMobileViewport, detectInitialPalette,
   migrateWeeklyStatsToHistory, reindexWeeklyStatsMondayFirst,
   rolloverIfNeeded
 });
-;Object.assign(window, { isMobileViewport, detectInitialPalette, migrateWeeklyStatsToHistory, reindexWeeklyStatsMondayFirst, rolloverIfNeeded });
+;Object.assign(window, { isMobileViewport, detectInitialPalette, migrateWeeklyStatsToHistory, reindexWeeklyStatsMondayFirst, rolloverIfNeeded, paceAvisarNoGuarda });
 })();
 </script>
   <!-- state-core.sanea (s198): un campo roto no se lleva todo lo demas. ANTES de
@@ -7247,7 +7263,7 @@ function paceGuardarRescate(raw, motivo) {
       raw: raw
     }));
     return true;
-  } catch (e) {return false;}
+  } catch (e) {paceAvisarNoGuarda(e);return false;}
 }
 
 
@@ -7801,7 +7817,7 @@ let _paceGuardadoAtrasado = false;
 function persistState() {
   if (_paceSinGuardar || window.PACE_CARA === 'landing') return;
   try {localStorage.setItem(LS_KEY, JSON.stringify(_state));_paceGuardadoAtrasado = false;} catch (e) {
-    _paceGuardadoAtrasado = true;try {window.__paceNoGuarda = true;window.dispatchEvent(new CustomEvent('pace:no-guarda'));} catch (e2) {}
+    _paceGuardadoAtrasado = true;paceAvisarNoGuarda();
   }
 }
 
@@ -7824,7 +7840,7 @@ function wipeLocalState() {
     }
     sobrantes.forEach((k) => {try {localStorage.removeItem(k);} catch (e) {}});
   } catch (e) {}
-  if (queda) {try {localStorage.setItem(LS_KEY, JSON.stringify({ ...loadState(), ...queda }));} catch (e) {}}
+  if (queda) {try {localStorage.setItem(LS_KEY, JSON.stringify({ ...loadState(), ...queda }));} catch (e) {paceAvisarNoGuarda(e);}}
   return true;
 }
 
@@ -12567,7 +12583,7 @@ function calendarioPaseGuardar(prov, token, segundos, renovar) {
       todos[prov] = p;
     } else delete todos[prov];
     sessionStorage.setItem(CALENDARIO_PASE_CLAVE, JSON.stringify(todos));
-  } catch (e) {}
+  } catch (e) {paceAvisarNoGuarda(e);}
 }
 
 
@@ -12941,7 +12957,7 @@ function calendarioAndroidPropios() {
 function calendarioAndroidGuardar(propios) {
   var limite = Date.now() - CALENDARIO_ANDROID_OLVIDO;
   Object.keys(propios).forEach(function (id) {if (!propios[id] || !(propios[id].fin > limite)) delete propios[id];});
-  try {localStorage.setItem(CALENDARIO_ANDROID_CLAVE, JSON.stringify(propios));} catch (e) {}
+  try {localStorage.setItem(CALENDARIO_ANDROID_CLAVE, JSON.stringify(propios));} catch (e) {paceAvisarNoGuarda(e);}
 }
 
 function calendarioAndroidApuntar(id, ev) {
@@ -12985,7 +13001,7 @@ function calendarioAndroidListo() {
       localStorage.setItem(CALENDARIO_ANDROID_CLAVE, '{}');
       if (instalado !== null) localStorage.setItem(CALENDARIO_ANDROID_INSTALADO, String(instalado));else
       localStorage.removeItem(CALENDARIO_ANDROID_INSTALADO);
-    } catch (e) {}
+    } catch (e) {paceAvisarNoGuarda(e);}
   });
   return _calendarioAndroidListo;
 }
@@ -13519,7 +13535,7 @@ function calendarioEscritoGuardar(v) {
   try {
     if (v) localStorage.setItem(CALENDARIO_ESCRITO_CLAVE, JSON.stringify(v));else
     localStorage.removeItem(CALENDARIO_ESCRITO_CLAVE);
-  } catch (e) {}
+  } catch (e) {paceAvisarNoGuarda(e);}
 }
 
 
@@ -18957,7 +18973,7 @@ function paceAndroidAvisoLeer() {
 }
 
 function paceAndroidAvisoGuardar() {
-  try {localStorage.setItem(PACE_AVISO_CLAVE, JSON.stringify({ puesto: _paceAvisoAndroid.puesto }));} catch (e) {}
+  try {localStorage.setItem(PACE_AVISO_CLAVE, JSON.stringify({ puesto: _paceAvisoAndroid.puesto }));} catch (e) {paceAvisarNoGuarda(e);}
 }
 
 var _paceAvisoAndroidLeido = paceAndroidAvisoLeer();
@@ -19410,7 +19426,7 @@ function paceIosAvisoLeer() {
 }
 
 function paceIosAvisoGuardar() {
-  try {localStorage.setItem(PACE_IOS_AVISO_CLAVE, JSON.stringify({ puesto: _paceIos.puesto }));} catch (e) {}
+  try {localStorage.setItem(PACE_IOS_AVISO_CLAVE, JSON.stringify({ puesto: _paceIos.puesto }));} catch (e) {paceAvisarNoGuarda(e);}
 }
 
 var _paceIosLeido = paceIosAvisoLeer();
@@ -20763,7 +20779,7 @@ function tomarSesionViva(clave, routineId) {
   try {
     localStorage.setItem(clave, JSON.stringify({
       pestana: PACE_PESTANA, routineId: routineId, hasta: Date.now() + PACE_VIVA_MS }));
-  } catch (e) {}
+  } catch (e) {paceAvisarNoGuarda(e);}
   return true;
 }
 
@@ -24525,6 +24541,7 @@ const updatePromptStyles = {
 
 
 
+
 function AvisoNoGuarda() {
   const { t } = useT();
   const [visto, setVisto] = useStateUP(!!window.__paceNoGuarda);
@@ -25421,7 +25438,7 @@ function persistFocusTimer(runningFoco, endsAt, minutes, id, pausaMs, inicio) {
     } else {
       localStorage.removeItem(PACE_TIMER_KEY);
     }
-  } catch (e) {}
+  } catch (e) {paceAvisarNoGuarda(e);}
 }
 
 
@@ -33209,7 +33226,7 @@ function respiraAcreditarUnaVez(id) {
     const previas = Array.isArray(lista) ? lista : [];
     if (previas.indexOf(id) !== -1) return false;
     localStorage.setItem(RESPIRA_ACREDITADAS_KEY, JSON.stringify(previas.concat(id).slice(-10)));
-  } catch (e) {}
+  } catch (e) {paceAvisarNoGuarda(e);}
   return true;
 }
 
@@ -33263,7 +33280,7 @@ function useRespiraPersistencia(datos) {
         activeMs: Math.round(c.getActiveSec() * 1000),
         holdSec: Math.round(c.holdSec()), startedAt: c.startedAt, savedAt: Date.now()
       }));
-    } catch (e) {}
+    } catch (e) {paceAvisarNoGuarda(e);}
   };
 
 
@@ -36169,7 +36186,7 @@ function useCuerpoPersistencia(d) {
         early: !!c.early(), hechos: Object.keys(c.hechos() || {}).map(Number),
         basta: Object.keys(c.basta && c.basta() || {}).map(Number)
       }));
-    } catch (e) {}
+    } catch (e) {paceAvisarNoGuarda(e);}
   };
   React.useEffect(() => {
     if (d.stage === 'done') {if (!suelto) olvidarCuerpoGuardada();return;}
@@ -42419,7 +42436,7 @@ function TweakSecretsWatcher() {
       } else if (days.size >= 7) {
         unlockAchievement('secret.dark.mode');
       }
-    } catch (e) {}
+    } catch (e) {paceAvisarNoGuarda(e);}
 
 
 
@@ -53217,7 +53234,7 @@ function paceAroCartaRecordar(clave, D) {
   m[clave] = D;
   var claves = Object.keys(m);
   for (var i = 0; i < claves.length - PACE_ARO_CARTA_MAX; i++) delete m[claves[i]];
-  try {localStorage.setItem(PACE_ARO_CARTA_CLAVE, JSON.stringify(m));} catch (e) {}
+  try {localStorage.setItem(PACE_ARO_CARTA_CLAVE, JSON.stringify(m));} catch (e) {paceAvisarNoGuarda(e);}
 }
 
 Object.assign(window, {

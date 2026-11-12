@@ -148,7 +148,7 @@ function tomarSesionViva(clave, routineId) {
   try {
     localStorage.setItem(clave, JSON.stringify({
       pestana: PACE_PESTANA, routineId: routineId, hasta: Date.now() + PACE_VIVA_MS }));
-  } catch (e) {}
+  } catch (e) { paceAvisarNoGuarda(e); }
   return true;
 }
 
