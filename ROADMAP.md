@@ -128,7 +128,7 @@ con Ez antes de empezar (Ez: «se valora juntos los dos y vamos implementando lo
 | T · Los textos que dicen más de lo que saben | P1-P3, Q1, Q3, Q6, Q7, CAL-2, CAL-4, CAL-6 | Pueden entrar en la versión de prueba | **Hecho**, en `main` con la 0.188.0 (30 oct., con el «júntalo» de Ez) |
 | M · Lo de producto: para quien empieza, cuando el día se tuerce y lo que se paga | U3-U5, la oferta de /premium, P4-P8, Q2, Q4, Q5, R1, R5 | Una actualización durante los 14 días de los testers | U3, U5, P4, P5, P6 y P8, en `main` (0.187.0 y 0.188.0); Q2, Q4 y R1, en la 0.190.0 (5 nov.); U4, después de v1. Lo demás es del grupo 3 |
 | L · El calendario de verdad: el pase que no caduca, varios calendarios y leer sin escribir | CAL-1, CAL-3, CAL-5 | Con el punto 13 (el llavero) | Espera las altas de Ez |
-| V · Que vuelvan cada día | V1 «Solo pausas» (sin Pomodoro), V2-V5 | Sin fecha: la decide Ez | Para valorar; V1, con maqueta y testers |
+| V · Que vuelvan cada día | V1 «Solo pausas» (sin Pomodoro), V2-V5 | Sin fecha: la decide Ez | Para valorar; V1, con maqueta y testers; V2 («Repetir la última pausa»), subida por Ez (12 nov.) a las actualizaciones de los 14 días de testers, con maqueta |
 
 **Lo que salió de las revisiones de ChatGPT del 5 nov.**, enteras y comprobadas en `docs/audits/chatgpt-5nov/`:
 
