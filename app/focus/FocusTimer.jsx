@@ -28,15 +28,17 @@ function FocusTimer({ onFinish }) {
   const enPausaRitmo = !!pausaRitmo && state.focusMode === pausaRitmo.modo;
 
   const { remaining, running, status, endsAt, restanteMs, start, toggle, reset, restore, seguir, congelar } = useCountdown(durationSec, () => {
-    /* Sonido de cierre — campana suave (do+sol+do6) que marca el fin del
-       bloque, sea foco, pausa o larga. Respeta soundOn (noop si apagado).
+    /* Sonido de cierre: la campana (do+sol+do6) en el foco y su propio sonido en la pausa y la
+       larga, para saber sin mirar si toca parar o volver (4.F3). Respeta soundOn (noop si apagado).
        Pausa(5)/larga(15) tickan y suenan pero NO acreditan (decision historica). */
     if (state.focusMode !== 'foco') {
       /* La de «A tu ritmo» calla si acaba con una sesión delante: Mueve y Estira avisan
          con cuencos, y una campana a mitad de un ejercicio se confundiría con ellos. Al
-         acabar, el aro vuelve al foco con el bloque que toca, sin arrancarlo. */
+         acabar, el aro vuelve al foco con el bloque que toca, sin arrancarlo. En el móvil, si
+         el aviso del sistema ya avisó de esta pausa, el sonido es suyo (FocusTimer.avisos.jsx). */
       const callar = enPausaRitmo && !!document.querySelector('[data-pace-session-root]');
-      if (!callar) { try { playSound('pomodoro.end'); } catch (e) {} }
+      const sonar = () => { try { playSound('pausa.end'); } catch (e) {} };
+      if (!callar) { if (typeof paceNativoCampana === 'function') paceNativoCampana(endsAt || (enPausaRitmo ? pausaRitmo.hasta : null), sonar); else sonar(); }
       if (enPausaRitmo) { ritmoPausaAcabada(); reset(); }
       return;
     }
@@ -150,17 +152,9 @@ function FocusTimer({ onFinish }) {
   useEffectFT(() => { completadoRef.current = status === 'completed' ? state.lastActiveDay : null; }, [status]);
   useEffectFT(() => { if (status === 'completed' && completadoRef.current && completadoRef.current !== state.lastActiveDay) reset(); }, [state.lastActiveDay]);
 
-  /* En las apps (Android y iPhone) el aviso de fin de Foco lo programa el sistema
-     (ui/nativo.js), porque con la app en el fondo esta cuenta no corre. Aqui solo
-     se le dice cuando acaba el bloque en marcha, o que no hay ninguno. Con «A tu
-     ritmo», `fin` nombra la pausa que viene, como el de la web (ritmo/ritmo.aviso.js). */
-  useEffectFT(() => {
-    if (typeof paceNativoFoco !== 'function') return;
-    const vivo = running && state.focusMode === 'foco' && !!state.notifyFocusEnd;
-    paceNativoFoco(vivo ? endsAt : null, { title: t('notify.focus.title'), body: t('notify.focus.body'),
-      fin: () => (typeof ritmoAvisoFin === 'function' ? ritmoAvisoFin(getState(), t, tn, lang) : null),
-      fijo: () => (typeof ritmoAvisoFijo === 'function' ? ritmoAvisoFijo(getState(), t, tn, lang, endsAt) : null) });   // N4: se lee al irse al fondo
-  }, [running, endsAt, state.focusMode, state.notifyFocusEnd, lang]);
+  /* En las apps (Android y iPhone) el aviso del fin del bloque y el del fin de la pausa los
+     programa el sistema, porque con la app en el fondo esta cuenta no corre (FocusTimer.avisos.jsx). */
+  useAvisosNativos({ state, running, endsAt, pausaRitmo, enPausaRitmo, t, tn, lang });
 
   /* La barra de arriba pregunta antes de cambiar de modo con un Foco empezado, y con una pausa
      empezada (Ez, 2A del 8 nov. 2026): le dice cuánto lleva, la del día desde que acabó el bloque. */

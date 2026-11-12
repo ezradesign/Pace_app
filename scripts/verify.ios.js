@@ -97,18 +97,24 @@ function chequeaCampanaAviso(ctx) {
   var www = require('./android-www.js');
   var web = texto('app/ui/ios.js');
   var malas = [];
-  var hay = leer(campana.ARCHIVO), w = campana.leerWav(hay);
-  if (!w) malas.push(campana.ARCHIVO + ' no esta o no es un .wav');
-  else if (w.formato !== 1 || w.bits !== 16 || !(w.segundos > 0.2 && w.segundos < 30)) malas.push(campana.ARCHIVO + ' no es PCM de 16 bits de menos de 30 s, y iOS no lo toca');
-  else {
-    var nuevo = campana.leerWav(campana.campanaWav()), dif = nuevo.datos.length === w.datos.length ? 0 : Infinity;
-    for (var i = 0; dif <= 2 && i < w.datos.length; i += 2) dif = Math.max(dif, Math.abs(w.datos.readInt16LE(i) - nuevo.datos.readInt16LE(i)));
-    if (dif > 2) malas.push(campana.ARCHIVO + ' ya no es la receta pomodoro.end de Sound.jsx -- vuelve a correr node scripts/campana-aviso.js');
-  }
-  if (www.listaWww().indexOf(campana.ARCHIVO) === -1) malas.push(campana.ARCHIVO + ' no va en la raiz de www/, y el complemento de avisos no lo encuentra');
+  /* El fin de la pausa (auditoria externa 4.F2 y 4.F3) lleva su propio archivo, con las mismas reglas. */
+  [[campana.ARCHIVO, campana.RECETA, campana.campanaWav], [campana.PAUSA, campana.PAUSA_RECETA, campana.pausaWav]].forEach(function (s) {
+    var hay = leer(s[0]), w = campana.leerWav(hay);
+    if (!w) malas.push(s[0] + ' no esta o no es un .wav');
+    else if (w.formato !== 1 || w.bits !== 16 || !(w.segundos > 0.2 && w.segundos < 30)) malas.push(s[0] + ' no es PCM de 16 bits de menos de 30 s, y iOS no lo toca');
+    else {
+      var nuevo = campana.leerWav(s[2]()), dif = nuevo.datos.length === w.datos.length ? 0 : Infinity;
+      for (var i = 0; dif <= 2 && i < w.datos.length; i += 2) dif = Math.max(dif, Math.abs(w.datos.readInt16LE(i) - nuevo.datos.readInt16LE(i)));
+      if (dif > 2) malas.push(s[0] + ' ya no es la receta ' + s[1] + ' de Sound.jsx -- vuelve a correr node scripts/campana-aviso.js');
+    }
+    if (www.listaWww().indexOf(s[0]) === -1) malas.push(s[0] + ' no va en la raiz de www/, y el complemento de avisos no lo encuentra');
+  });
+  var dosIguales = leer(campana.ARCHIVO), pausa = leer(campana.PAUSA);
+  if (dosIguales && pausa && dosIguales.equals(pausa)) malas.push('el fin de la pausa suena igual que el fin del Foco');
   if (web.indexOf("var PACE_IOS_AVISO_SONIDO = '" + campana.ARCHIVO + "';") === -1 || !/aviso\.sound = sonido/.test(web)) malas.push('app/ui/ios.js ya no programa el aviso con la campana de PACE');
+  if (web.indexOf("var PACE_IOS_AVISO_SONIDO_PAUSA = '" + campana.PAUSA + "';") === -1 || !/paceIosAvisoSonido\(PACE_IOS_AVISO_SONIDO_PAUSA\)/.test(web)) malas.push('app/ui/ios.js ya no programa el fin de la pausa con su sonido');
   if (malas.length) malas.forEach(function (m) { ctx.falla('ios: ' + m); });
-  else ctx.ok('ios: el aviso de fin de Foco suena con la campana de PACE (' + campana.ARCHIVO + ', la receta de Sound.jsx de hoy)');
+  else ctx.ok('ios: el aviso de fin de Foco suena con la campana de PACE y el de fin de pausa con el suyo (' + campana.ARCHIVO + ' y ' + campana.PAUSA + ', las recetas de Sound.jsx de hoy)');
 }
 
 /* La ventana de Apple para valorar PACE (Ez, 4A del 28 oct.), con las reglas de la de Android

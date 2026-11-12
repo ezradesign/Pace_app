@@ -23,9 +23,10 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, 'www');
 
-/* `campana-aviso.wav` es el sonido del aviso de fin de Foco en el iPhone (scripts/campana-aviso.js):
-   va en la raiz porque el complemento de avisos solo lo busca en la primera altura de `public/`. */
-const ARCHIVOS = ['index.html', 'privacy.html', 'safety.html', 'manifest.webmanifest', 'campana-aviso.wav'];
+/* `campana-aviso.wav` es el sonido del aviso de fin de Foco en el iPhone, y `pausa-aviso.wav` el del fin
+   de la pausa (scripts/campana-aviso.js): van en la raiz porque el complemento de avisos solo los busca
+   en la primera altura de `public/`. En Android el de la pausa va tambien en res/raw (pausa_aviso.wav). */
+const ARCHIVOS = ['index.html', 'privacy.html', 'safety.html', 'manifest.webmanifest', 'campana-aviso.wav', 'pausa-aviso.wav'];
 const CARPETAS = ['icons', 'fonts'];
 const MEDIOS = /\.(webp|png|jpe?g|svg|mp3|m4a|ogg|wav)$/i;
 

@@ -115,4 +115,19 @@ function ritmoAvisoFijo(s, t, tn, lang, endsAt) {
   return { titulo: titulo, texto: luego ? hasta + ' ' + luego : hasta };
 }
 
-Object.assign(window, { ritmoAviso, ritmoAvisoFin, ritmoAvisoFijo });
+/* LA PAUSA QUE EMPIEZA SOLA AL ACABAR EL BLOQUE QUE CORRE (auditoría externa 4.F2, 12 nov. 2026).
+   Con «A tu ritmo» el aro cuenta la pausa desde que acaba el bloque aunque nadie abra PACE
+   (`ritmoPausaEmpieza`), así que en el móvil el aviso de su fin se pide ya con el bloque en
+   marcha: quien oye el fin del bloque y se levanta sin mirar oye también cuándo volver. Las
+   reglas de `ritmoPausaEmpieza`: una pausa con platos (la comida y el cierre no se cuentan en el
+   aro), que dura lo de su parada. { hasta, n, total } (n, el bloque de después), o null. */
+function ritmoPausaTrasBloque(s, endsAt) {
+  if (typeof ritmoPlan !== 'function' || typeof ritmoDetras !== 'function' || !endsAt) return null;
+  var p = ritmoPlan(s);
+  if (!p || !p.actual) return null;
+  var it = ritmoDetras(p.m, p.actual);
+  if (!it || it.tipo !== 'pausa' || !(it.platos && it.platos.length) || !(it.dur > 0)) return null;
+  return { hasta: endsAt + it.dur * 60000, n: p.hechos + 2, total: p.total };
+}
+
+Object.assign(window, { ritmoAviso, ritmoAvisoFin, ritmoAvisoFijo, ritmoPausaTrasBloque });

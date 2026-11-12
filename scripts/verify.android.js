@@ -91,8 +91,27 @@ function chequeaAndroid(ctx) {
   chequeaBarras(ctx);
   chequeaAvisoFijo(ctx);
   chequeaValoracion(ctx);
+  chequeaSonidoPausa(ctx);
   chequeaPlay(ctx);
   chequeaListaDelMovil(ctx);
+}
+
+/* El fin de la pausa suena con su propio sonido (auditoria externa 4.F2 y 4.F3). En Android el
+   sonido es del canal, que lo nombra por su nombre en res/raw: sin el archivo, el canal suena
+   con el sonido de siempre del movil, sin que nada falle. Y es el mismo .wav que el del iPhone. */
+function chequeaSonidoPausa(ctx) {
+  var campana = require('./campana-aviso.js');
+  var web = (leer('app/ui/android.avisos.js') || '').toString();
+  var raw = leer(campana.PAUSA_ANDROID), raiz = leer(campana.PAUSA);
+  var malas = [];
+  if (!raw) malas.push(campana.PAUSA_ANDROID + ' no esta: el canal del fin de la pausa sonaria con el sonido del movil');
+  else if (!raiz || !raw.equals(raiz)) malas.push(campana.PAUSA_ANDROID + ' no es el mismo que ' + campana.PAUSA + ' -- vuelve a correr node scripts/campana-aviso.js');
+  if (web.indexOf("var PACE_AVISO_SONIDO_PAUSA = '" + require('path').basename(campana.PAUSA_ANDROID) + "';") === -1 || !/sound: PACE_AVISO_SONIDO_PAUSA/.test(web)) {
+    malas.push('app/ui/android.avisos.js ya no crea el canal del fin de la pausa con su sonido');
+  }
+  if (!/channelId: paceAndroidSonidoOn\(\) \? PACE_AVISO_CANAL_PAUSA : PACE_AVISO_CANAL_PAUSA_MUDO/.test(web)) malas.push('el aviso del fin de la pausa ya no va por su canal (con sonido o mudo, segun Ajustes)');
+  if (malas.length) malas.forEach(function (m) { ctx.falla('android: ' + m); });
+  else ctx.ok('android: el fin de la pausa avisa por su canal, con ' + campana.PAUSA_ANDROID + ' (el mismo .wav que el del iPhone), o mudo si el sonido esta apagado');
 }
 
 /* La ventana de Google Play para valorar PACE (Ez, 15 oct., reseñas punto 6): una sola vez, tras la
@@ -111,6 +130,10 @@ function chequeaValoracion(ctx) {
   if (!/requestReviewFlow\(\)/.test(pieza) || !/launchReviewFlow\(/.test(pieza)) malas.push('PaceValoracion ya no abre la ventana de Google (requestReviewFlow y launchReviewFlow)');
   if (!/implementation "com\.google\.android\.play:review:/.test(gradle)) malas.push('android/app/build.gradle ya no trae la libreria de Google Play para valorar');
   if (!/var PACE_VALORACION_PAUSAS = 5;/.test(web)) malas.push('la ventana ya no se pide tras la quinta pausa entera (PACE_VALORACION_PAUSAS)');
+  /* Hasta v1 quien llega a la quinta pausa es un tester, y su reseña no es publica (auditoria externa 2.2). */
+  if (!/function paceValoracionHastaV1\(\) \{\s*return window\.PREMIUM_ABIERTO_HASTA_V1 === true;/.test(web) || (web.match(/paceValoracionHastaV1\(\)/g) || []).length < 3) {
+    malas.push('app/ui/valoracion.js ya no espera a v1 para pedir la ventana: la gastaria un tester de la prueba cerrada');
+  }
   var apunta = web.indexOf('pedida: Date.now()'), pide = web.indexOf('p.pedir()');
   if (apunta === -1 || pide === -1 || apunta > pide) malas.push('app/ui/valoracion.js ya no apunta `pedida` antes de pedir la ventana: podria salir dos veces');
   if ((logros.match(/paceValoracionPausa\(entera\)/g) || []).length !== 3) malas.push('las tres complete*Session ya no cuentan la pausa entera para la valoracion');
@@ -121,7 +144,7 @@ function chequeaValoracion(ctx) {
     }
   });
   if (malas.length) malas.forEach(function (m) { ctx.falla('android: ' + m); });
-  else ctx.ok('android: la valoracion de Google Play se pide una vez, tras la quinta pausa entera, y cada complemento propio esta registrado');
+  else ctx.ok('android: la valoracion de Google Play se pide una vez, tras la quinta pausa entera y no antes de v1, y cada complemento propio esta registrado');
 }
 
 /* Las franjas de arriba y de abajo siguen la paleta que se ve, no el modo del
