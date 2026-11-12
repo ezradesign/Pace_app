@@ -3,7 +3,7 @@
 > Productivity and wellness app for people who spend long hours sitting, on the web, Android and iPhone.
 > Thoughtful micro-interventions throughout the day, not lengthy workouts.
 
-**Status:** v0.201.0 · Pre-launch
+**Status:** v0.202.0 · Pre-launch
 **Web:** [pacegrass.app](https://pacegrass.app) · [PACE Complete](https://pacegrass.app/premium) · [Try it on Android or iPhone](https://pacegrass.app/beta)
 **Build delivered:** `index.html` — web/PWA artifact, installable and offline
 **Author:** [@ezradesign](https://github.com/ezradesign)
@@ -33,7 +33,7 @@ and an installable **PWA** that works offline.
 
 ---
 
-## 📊 Current state (v0.201.0)
+## 📊 Current state (v0.202.0)
 
 | Area | State |
 |---|---|
