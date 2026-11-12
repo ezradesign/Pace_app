@@ -67,12 +67,13 @@ code{font-size:.9em;background:var(--card);border:1px solid var(--line);border-r
   <div class="eyebrow">PACE · antes de dar la prueba a los testers · 12 nov. 2026</div>
   <h1>Antes de los testers</h1>
   <p class="lead">Los dos arreglos que pedía la auditoría externa están montados: la quinta pausa de un tester ya no gasta la única petición de valorar PACE, y en el móvil el fin de la pausa avisa, con un sonido distinto del fin del Foco.</p>
-  <p>Todo va en la rama <code>claude/testers-12nov-954645</code>. Nada está en <code>main</code>: lo junta la coordinadora cuando digas. Hay cuatro preguntas para ti al final; la primera es elegir el sonido.</p>
+  <p>Todo va en la rama <code>claude/testers-12nov-954645</code>. Nada está en <code>main</code>: lo junta la coordinadora cuando digas. Hay cinco preguntas para ti al final; la primera es elegir el sonido.</p>
 
   <h2>1 · La valoración espera a v1 <span class="v hecho">montado</span></h2>
   <p>PACE pide que lo valores en la tienda <strong>una sola vez</strong>, al terminar la quinta pausa entera. Hasta hoy, un tester la recibía en su quinta pausa, pero en la prueba cerrada de Google Play y en TestFlight esa reseña no se publica. La petición se gastaba y ya no volvía a salir nunca.</p>
   <p><strong>Ahora, mientras PACE está abierto para todos (hasta v1), no se pide.</strong> Las pausas se siguen contando. El día de v1, en cuanto el tester termine una pausa entera, sale la ventana: a esas alturas lleva semanas con PACE y su reseña sí se ve. Quien instale PACE ese día o después la recibe en su quinta pausa, como hasta ahora.</p>
   <p>No se ve nada distinto: lo que cambia es cuándo sale la ventana de la tienda.</p>
+  <p><strong>Por qué con la fecha de v1 y no «solo en las versiones de prueba».</strong> En Android, PACE no puede saber si es una versión de prueba: la prueba cerrada de Google Play y la de la tienda son el mismo archivo. Por eso manda la fecha de v1, que vale para los dos móviles. En el iPhone sí se podría saber si es TestFlight: eso es la pregunta P5.</p>
 
   <h2>2 · El fin de la pausa avisa, y suena distinto <span class="v hecho">montado</span></h2>
   <p>Hasta hoy, con PACE en segundo plano solo avisaba el fin del Foco. Si estabas en la pausa con el móvil en el bolsillo, nada te decía que tocaba volver. Y con PACE abierto, el fin de la pausa sonaba igual que el fin del Foco: sin mirar, no sabías si tocaba parar o volver.</p>
@@ -137,6 +138,13 @@ code{font-size:.9em;background:var(--card);border:1px solid var(--line);border-r
     <p>Desde Android 14, si no das el permiso de «Alarmas y recordatorios», Android puede retrasar los avisos unos minutos. En un Foco de 25 minutos se nota poco; en una pausa de 5, sí: el aviso de volver podría llegar tarde. Hoy ese permiso solo se ofrece en Ajustes, con un toque.</p>
     <p><strong>A</strong> · Una línea, una sola vez, al empezar el primer Foco en Android, con el toque que abre ese ajuste. <strong>B</strong> · Solo en Ajustes, como hoy.</p>
     <p class="rec">Recomendada: <strong>A</strong>. Con el aviso de la pausa, llegar a su hora importa más que antes. No está montado: haría falta enseñarte cómo se ve antes de decidir.</p>
+  </div>
+
+  <div class="pregunta">
+    <h3>P5 · En el iPhone, ¿tampoco pedirla en TestFlight después de v1?</h3>
+    <p>Hasta v1 da igual: la fecha de v1 ya lo cubre. Pero si después de v1 sigues dando versiones de prueba por TestFlight, un tester que haga allí su quinta pausa gastaría la petición, y al pasar a la versión de la tienda (que guarda sus datos) ya no la recibiría nunca. El iPhone sí sabe si está en TestFlight. Android no lo sabe, así que allí no hay elección.</p>
+    <p><strong>A</strong> · Solo la fecha de v1, como está montado. <strong>B</strong> · Además, en el iPhone, nunca en TestFlight. Es una línea en la pieza nativa del iPhone, que aquí no se puede compilar ni probar.</p>
+    <p class="rec">Recomendada: <strong>A</strong> para dar la prueba a los testers. B solo si piensas seguir con versiones de prueba en TestFlight después de v1; entonces lo montamos antes del lanzamiento y se prueba en un iPhone.</p>
   </div>
 
   <h2>Lo que falta probar en un móvil</h2>
