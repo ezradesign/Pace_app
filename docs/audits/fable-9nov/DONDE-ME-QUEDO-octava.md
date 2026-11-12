@@ -9,7 +9,8 @@ Montado entero lo que quedaba de la octava. Sin bump ni CHANGELOG: lo junta la c
 | 1 · la B de Ez | 221c3021 | Con la letra al 115 %, si la home no cabe, las cuatro actividades en una fila, solo el dibujo (`home-geometry.medidas.js`, modo 1 de `ajustar`); nombre en `aria-label` y `title`; `home-fila-recogida.spec.js`; fuera los `pendiente115` de la tarjeta corta, el día contestado y el bloque terminado |
 | 2 · pruebas 2, 4, 6, 7, 8, 9 y 10 | cc5a298c | Almacenamiento lleno en todo, copia de ida y vuelta, humo contra `dist/`, landing con tamaño e idioma, la home en v1 un lunes con barras, husos de noche, compra vigente y mensual sin portal. Dos fallos de la app arreglados (abajo) |
 | 3 · ciertos sin arreglar | 40c13fa3 | nº 2, 6, 9, 11, 16, 17, 20, 21, 23, 24, 25 y 26 (9, 11, 17 y 23 los cierran las pruebas 10, 7 y 6). El nº 2 era precaución: a las 23:57 respira-5 y 6 también pasaban |
-| — | (este) | Página «Montado» (`docs/proposals/montado-octava-3-12nov/`, sin publicar) y este relevo |
+| — | 771017c4 | Página «Montado» (`docs/proposals/montado-octava-3-12nov/`, sin publicar) y este relevo |
+| 3 (resto del nº 17) | (el siguiente) | `scripts/verify.escrituras.js`: cada `setItem` de `app/` dentro de un `try` y en un censo exacto (19 en 14 archivos); hecho con el margen que dio Ez a las 14:40 |
 
 **Dos fallos de la app que destaparon las pruebas, arreglados (pequeños y claros):**
 - La tienda de la web vendía el mensual con su enlace aunque no hubiera portal para cancelarlo
@@ -36,8 +37,6 @@ y 375×600, que con la fila ya caben: baja a 360×560 y 375×560.
 - Mirar en un Android de verdad con la letra grande (aquí se emula ×1,15).
 
 ### Lo que no se hizo
-- El censo en `verify` de los `localStorage.setItem(` de `app/` (cierre propuesto en el nº 17): la
-  prueba 2 ya hace fallar todas las claves a la vez y la prueba 7 los dos gestos que faltaban.
 - nº 4 entero (reloj fijo en TODAS las pruebas que apagan la bandera): hecho en `caza-v1-compra`; las
   demás siguen en `RELOJ_SIN_HORA_ANTIGUOS` o con su hora propia. La pasada en lunes la da la prueba 8.
 
