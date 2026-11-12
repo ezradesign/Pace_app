@@ -16,6 +16,13 @@
  *     PACE llamarlo al crear y al cambiar. Si falta una pieza, privacy.html tiene que decir que
  *     ahí cada pausa va con su nombre; y si están todas, no puede decirlo.
  *
+ *   · Lo que cargan las páginas publicadas (todo HTML de dist/, scripts/web-dist.js): ninguna trae
+ *     nada de otro sitio (un script, una hoja de estilo, una fuente, una imagen) fuera de
+ *     ORIGENES_PERMITIDOS, y la analítica solo puede ir en /premium, que es la que privacy.html
+ *     nombra (la octava, nº 26: antes solo se miraba /premium, y la landing, /beta o /gracias
+ *     podían contar visitas con privacy.html diciendo que ninguna página lo hace).
+ *   Las piezas del calendario se buscan sin comentarios: una línea comentada no cuenta.
+ *
  * NO CUBRE: lo demás que dice privacy.html (el calendario, la compra) lo defienden las
  * pruebas del navegador (tests/privacidad-datos.spec.js); y si Cloudflare mete su analítica
  * por su cuenta en el proyecto de Pages, eso no está en el repo.
@@ -33,6 +40,26 @@ var DICE_ANO = [/se borra solo al año de apuntarte/, /a year after you sign up/
 var DICE_CON_NOMBRE = [/En el calendario del móvil, por ahora, cada pausa va con su nombre/, /In your phone's calendar, for now, each break keeps its name/];
 var DICE_PRIVADO_MOVIL = [/no lee qué pausa es\. También en el calendario del móvil\./, /cannot read which break it is\. Also in your phone's calendar\./];
 var JAVA = path.join('android', 'app', 'src', 'main', 'java', 'com', 'ezradesign', 'pace');
+/* Lo único de fuera que una página publicada puede cargar, y dónde: hoy, nada. La analítica de
+   Cloudflare, si vuelve, solo en /premium (y privacy.html tiene que decirlo, arriba). */
+var ORIGENES_PERMITIDOS = { 'static.cloudflareinsights.com': ['premium/index.html'] };
+
+/* Sin comentarios de bloque ni de línea (sin tocar `https://` dentro de una cadena). */
+function sinComentarios(src) {
+  return src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:\\'"])\/\/.*$/gm, '$1');
+}
+
+/* Los orígenes de fuera que carga una página: lo que piden script, link, img, iframe, source, video y
+   audio, y los url() de su CSS. Un enlace (<a href>) no carga nada: no cuenta. */
+function origenesDeFuera(html) {
+  var src = html.replace(/<!--[\s\S]*?-->/g, '');
+  var out = [], x;
+  var re = /<(script|link|img|iframe|source|video|audio)\b[^>]*?\b(?:src|href|srcset)\s*=\s*["'](?:https?:)?\/\/([^\/"'\s]+)/gi;
+  while ((x = re.exec(src))) out.push(x[2].toLowerCase());
+  var reCss = /url\(\s*['"]?(?:https?:)?\/\/([^\/'")\s]+)/gi;
+  while ((x = reCss.exec(src))) out.push(x[1].toLowerCase());
+  return out;
+}
 
 function tandaPrivacidad(ctx) {
   console.log('\n[privacidad] Lo que privacy.html dice de /premium y de «Avísame» es lo que pasa');
@@ -40,6 +67,19 @@ function tandaPrivacidad(ctx) {
   /* Las frases parten línea por cualquier sitio: se leen con los espacios juntados. */
   var privacy = leer('privacy.html').replace(/\s+/g, ' ');
   var conAnalitica = ANALITICA.test(leer(path.join('premium', 'index.html')));
+
+  var publicadas = require('./web-dist.js').listaWeb().filter(function (r) { return /\.html$/.test(r); });
+  var ajenos = [], conVisitas = [];
+  publicadas.forEach(function (pag) {
+    var html = leer(pag);
+    if (pag !== 'premium/index.html' && ANALITICA.test(html.replace(/<!--[\s\S]*?-->/g, ''))) conVisitas.push(pag);
+    origenesDeFuera(html).forEach(function (o) {
+      if ((ORIGENES_PERMITIDOS[o] || []).indexOf(pag) < 0) ajenos.push(pag + ' → ' + o);
+    });
+  });
+  if (conVisitas.length) ctx.falla('lleva(n) la analítica de Cloudflare y privacy.html solo habla de /premium: ' + conVisitas.join(', '));
+  else if (ajenos.length) ctx.falla('página(s) publicada(s) que cargan algo de otro sitio (fuera de ORIGENES_PERMITIDOS, scripts/verify.privacidad.js): ' + ajenos.slice(0, 5).join(', '));
+  else ctx.ok(publicadas.length + ' páginas publicadas: ninguna carga nada de otro sitio ni cuenta visitas fuera de /premium');
   var diceSi = DICE_SI.every(function (re) { return re.test(privacy); });
   var diceNo = DICE_NO.some(function (re) { return re.test(privacy); });
   var algunSi = DICE_SI.some(function (re) { return re.test(privacy); });
@@ -65,10 +105,10 @@ function tandaPrivacidad(ctx) {
   }
 
   /* Las cuatro piezas de lo privado en el calendario del móvil. */
-  var pieza = leer(path.join(JAVA, 'PaceCalendario.java'));
-  var actividad = leer(path.join(JAVA, 'MainActivity.java'));
-  var puente = leer(path.join('app', 'ui', 'android.calendario.js'));
-  var destinos = leer(path.join('app', 'ritmo', 'ritmo.calendario.destinos.js'));
+  var pieza = sinComentarios(leer(path.join(JAVA, 'PaceCalendario.java')));
+  var actividad = sinComentarios(leer(path.join(JAVA, 'MainActivity.java')));
+  var puente = sinComentarios(leer(path.join('app', 'ui', 'android.calendario.js')));
+  var destinos = sinComentarios(leer(path.join('app', 'ritmo', 'ritmo.calendario.destinos.js')));
   var piezas = [
     ['PaceCalendario.java pone ACCESS_PRIVATE', /@CapacitorPlugin\(name = "PaceCalendario"\)/.test(pieza) &&
       /put\(CalendarContract\.Events\.ACCESS_LEVEL, CalendarContract\.Events\.ACCESS_PRIVATE\)/.test(pieza)],
@@ -92,7 +132,7 @@ function tandaPrivacidad(ctx) {
 }
 
 var NO_CUBRE = [
-  'privacidad: se cruza privacy.html con /premium (la analítica), con «Avísame» (el año) y con lo privado del calendario del móvil (sus cuatro piezas, leídas, no ejecutadas: que Google lo suba privado se mira en un móvil); lo demás del calendario y la compra lo prueba tests/privacidad-datos.spec.js, y si Cloudflare mete analítica desde su panel, eso no está en el repo',
+  'privacidad: se cruza privacy.html con /premium (la analítica) y con lo que cargan todas las páginas publicadas (los orígenes de fuera, en el HTML: un fetch() a otro sitio desde un script no se ve), con «Avísame» (el año) y con lo privado del calendario del móvil (sus cuatro piezas, leídas, no ejecutadas: que Google lo suba privado se mira en un móvil); lo demás del calendario y la compra lo prueba tests/privacidad-datos.spec.js, y si Cloudflare mete analítica desde su panel, eso no está en el repo',
 ];
 
 module.exports = { tandaPrivacidad: tandaPrivacidad, NO_CUBRE: NO_CUBRE };

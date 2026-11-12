@@ -15,11 +15,12 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { capturarErrores, RUTA_ARTEFACTO, CLAVE_ESTADO } = require('./helpers');
+const { capturarErrores, RUTA_ARTEFACTO, CLAVE_ESTADO, abrirTusDatos } = require('./helpers');
 
 async function abrirTiendaWeb(page, mes) {
   await page.evaluate((enlaceMes) => {
     window.PACE_TIENDA_WEB.enlaces = { vida: '/index.html#tienda-vida', mes: enlaceMes || '/index.html#tienda-mes' };
+    window.PACE_TIENDA_WEB.gestionar = 'https://billing.stripe.com/p/login/prueba';   // sin portal, el mensual no se vende
   }, mes);
 }
 
@@ -138,6 +139,7 @@ test.describe('en un móvil en inglés', () => {
 });
 
 test('«Probar 7 días gratis» cierra la bienvenida y lleva a la página de pago del plan al mes', async ({ page }) => {
+  await page.clock.install({ time: new Date('2026-10-08T12:00:00+02:00') });
   await hastaLaSemana(page);
   await abrirTiendaWeb(page);
   await page.locator('[role=dialog] [data-pace-cta]').click();
@@ -145,14 +147,25 @@ test('«Probar 7 días gratis» cierra la bienvenida y lleva a la página de pag
   await page.locator('[data-pace-onb-probar]').click();
 
   await expect.poll(() => page.evaluate(() => location.hash)).toBe('#tienda-mes');
-  /* La compra sigue en la página de Stripe: no se abre la visita encima. */
-  await page.waitForTimeout(700);
+  /* La compra sigue en la página de Stripe: no se abre la visita encima. Con el reloj de la página y
+     no con 700 ms reales: con la máquina cargada, la visita podía salir después del aserto (la octava, nº 21). */
+  await page.clock.runFor(2000);
   await expect(page.locator('[data-pace-visita]')).toHaveCount(0);
   const visto = await page.evaluate((clave) => JSON.parse(localStorage.getItem(clave)).firstSeen, CLAVE_ESTADO);
   expect(typeof visto).toBe('number');
 });
 
+/* Y NINGUNA PANTALLA SE LO OFRECE (la octava, nº 11 y prueba 10, 12 nov. 2026): antes esto solo
+   comparaba lo que devuelven las funciones, y un botón de compra que no las consultara seguía saliendo a
+   quien ya pagó. Ahora, con la compra vigente, se recorren las tres puertas de la compra (el final de la
+   bienvenida, Ajustes › Tus datos y la invitación) y se cuentan cero botones de compra y cero precios.
+   Mutante: con la fila de Ajustes sin mirar `paceTiendaAbierta` (PremiumSection.jsx), sale «Tenerlo para
+   siempre · 19,99 €» y la prueba cae. */
+const COMPRA = '[data-pace-onb-probar], [data-pace-onb-vida], [data-pace-aj-comprar], [data-pace-premium-vida], [data-pace-premium-precios]';
+const precioALaVista = (page) => page.evaluate(() => /19,99|2,99/.test(document.body.innerText));
+
 test('quien ya tiene PACE completo no ve la tienda, y lo que la tienda dice que tienes abre PACE completo', async ({ page }) => {
+  await page.clock.install({ time: new Date('2026-10-08T12:00:00+02:00') });
   await hastaLaSemana(page);
   await abrirTiendaWeb(page);
   expect(await page.evaluate(() => window.paceTiendaAbierta())).toBe(true);
@@ -164,4 +177,26 @@ test('quien ya tiene PACE completo no ve la tienda, y lo que la tienda dice que 
     return { antes, despues: window.hasPremiumEntitlement(), abierta: window.paceTiendaAbierta() };
   });
   expect(conCompra).toEqual({ antes: false, despues: true, abierta: false });
+
+  /* El final de la bienvenida: sin PACE completo que vender, la semana es lo último. */
+  await page.locator('[role=dialog] [data-pace-cta]').click();
+  await expect(page.locator('[data-pace-semana-guardar]')).toHaveText('Comenzar');
+  expect(await page.locator(COMPRA).count(), 'botones de compra en la bienvenida').toBe(0);
+  await page.locator('[data-pace-semana-guardar]').click();
+  await page.locator('[data-pace-visita-saltar]').click().catch(() => {});
+  await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
+
+  /* Ajustes › Tus datos. */
+  await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  await abrirTusDatos(page);
+  await expect(page.locator('[data-pace-tweaks-panel]')).toBeVisible();
+  expect(await page.locator(COMPRA).count(), 'botones de compra en Ajustes').toBe(0);
+  expect(await precioALaVista(page), 'un precio a la vista en Ajustes').toBe(false);
+  await page.keyboard.press('Escape');
+
+  /* La invitación, la que abre una rutina de pago. */
+  await page.evaluate(() => window.paceAbrirPremium({ nombre: 'Colgarse' }));
+  await page.clock.runFor(1000);
+  expect(await page.locator(COMPRA).count(), 'botones de compra en la invitación').toBe(0);
+  expect(await precioALaVista(page), 'un precio a la vista en la invitación').toBe(false);
 });

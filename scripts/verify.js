@@ -58,6 +58,8 @@ var pruebas = require('./verify.pruebas.js');
 var ci = require('./verify.ci.js');
 /* La versión mínima de WebView y Safari, escrita y cumplida (Ez, O3 A de la octava). */
 var versiones = require('./verify.versiones.js');
+/* Cada escritura de app/ en el almacenamiento, dentro de un try y contada (la octava, nº 17). */
+var escrituras = require('./verify.escrituras.js');
 /* Que pacegrass.app publique solo la app (dist/) y que lleve todo lo que precarga sw.js. */
 var web = require('./verify.web.js');
 /* Que lo que privacy.html dice de /premium y de «Avísame» sea lo que pasa. */
@@ -429,7 +431,7 @@ var NO_CUBRE = [
   'orden de carga: un modulo que use algo publicado DESPUES sigue pasando',
   'CSS, tokens y layout: no se mira una sola regla',
   'el standalone: se restaura, no se analiza (index.html es el canonico, s134)',
-].concat(tamano.NO_CUBRE).concat(integridad.NO_CUBRE).concat(lienzo.NO_CUBRE).concat(web.NO_CUBRE).concat(privacidad.NO_CUBRE).concat(diaV1.NO_CUBRE);
+].concat(tamano.NO_CUBRE).concat(integridad.NO_CUBRE).concat(lienzo.NO_CUBRE).concat(web.NO_CUBRE).concat(privacidad.NO_CUBRE).concat(escrituras.NO_CUBRE).concat(diaV1.NO_CUBRE);
 
 function main() {
   console.log('=== PACE verify v2 (s150 + s152) — build + artefacto + node --check + integridad ===');
@@ -452,6 +454,7 @@ function main() {
   autoria.tandaAutoria({ ROOT: ROOT, falla: falla, ok: ok, info: info });
   web.tandaWeb({ ROOT: ROOT, falla: falla, ok: ok, info: info });
   privacidad.tandaPrivacidad({ ROOT: ROOT, falla: falla, ok: ok, info: info });
+  escrituras.tandaEscrituras({ ROOT: ROOT, falla: falla, ok: ok, info: info });
   diaV1.tandaDiaV1({ ROOT: ROOT, babel: babel, falla: falla, ok: ok, info: info }, declarados);
   tandaVersion();
 

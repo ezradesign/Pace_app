@@ -146,7 +146,7 @@ function useCuerpoPersistencia(d) {
         early: !!c.early(), hechos: Object.keys(c.hechos() || {}).map(Number),
         basta: Object.keys((c.basta && c.basta()) || {}).map(Number),
       }));
-    } catch (e) {}
+    } catch (e) { paceAvisarNoGuarda(e); }
   };
   React.useEffect(() => {
     if (d.stage === 'done') { if (!suelto) olvidarCuerpoGuardada(); return; }

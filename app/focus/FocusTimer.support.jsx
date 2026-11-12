@@ -162,7 +162,7 @@ function persistFocusTimer(runningFoco, endsAt, minutes, id, pausaMs, inicio) {
     } else {
       localStorage.removeItem(PACE_TIMER_KEY);
     }
-  } catch (e) {}
+  } catch (e) { paceAvisarNoGuarda(e); }
 }
 
 /* Olvida el bloque guardado. Lo pide importar una copia (TweaksData.jsx): un bloque de antes de

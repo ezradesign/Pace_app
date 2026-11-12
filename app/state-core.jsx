@@ -316,20 +316,19 @@ function loadState(estricto) {
       parsed.paths.lastViewed = null;
     }
 
-    /* Sesion 69 / v0.28.8: re-indexar weeklyStats de getDay() a lunes-primero.
-       Idempotente via guard. Debe ocurrir ANTES de cualquier escritura/lectura
-       que asuma la nueva convencion (incluyendo el rollover). */
-    if (!parsed._weeklyStatsReindexed_v0_28_8 && parsed.weeklyStats) {
-      parsed.weeklyStats = reindexWeeklyStatsMondayFirst(parsed.weeklyStats);
+    /* Sesion 69 / v0.28.8: re-indexar weeklyStats de getDay() a lunes-primero, ANTES de leer o
+       escribir nada (el rollover incluido). Sin semana guardada se marca igual: si no, la copia iba sin
+       marca y al importarla la semana se corría un día (la octava, prueba 4). */
+    if (!parsed._weeklyStatsReindexed_v0_28_8) {
+      if (parsed.weeklyStats) parsed.weeklyStats = reindexWeeklyStatsMondayFirst(parsed.weeklyStats);
       parsed._weeklyStatsReindexed_v0_28_8 = true;
     }
 
-    /* Sesion 69 / v0.28.8: migracion compensatoria de history.months/years.
-       Como history.days es integro (overwrite idempotente desde s43),
-       recalcular months/years desde days es 100% seguro y arregla cualquier
-       inflacion previa de C2/C3. Idempotente via guard. */
-    if (!parsed._historyRecalculated_v0_28_8 && parsed.history && parsed.history.days) {
-      parsed.history = recomputeAllHistoryAggregates(parsed.history);
+    /* Sesion 69 / v0.28.8: migracion compensatoria de history.months/years. history.days es
+       integro (overwrite idempotente desde s43): recalcular desde days es seguro y arregla
+       cualquier inflacion previa de C2/C3. Idempotente via guard; sin days, se marca igual. */
+    if (!parsed._historyRecalculated_v0_28_8) {
+      if (parsed.history && parsed.history.days) parsed.history = recomputeAllHistoryAggregates(parsed.history);
       parsed._historyRecalculated_v0_28_8 = true;
     }
 
@@ -389,7 +388,7 @@ let _paceGuardadoAtrasado = false;
 function persistState() {
   if (_paceSinGuardar || window.PACE_CARA === 'landing') return;
   try { localStorage.setItem(LS_KEY, JSON.stringify(_state)); _paceGuardadoAtrasado = false; } catch (e) {
-    _paceGuardadoAtrasado = true; try { window.__paceNoGuarda = true; window.dispatchEvent(new CustomEvent('pace:no-guarda')); } catch (e2) {}
+    _paceGuardadoAtrasado = true; paceAvisarNoGuarda();
   }
 }
 
@@ -412,7 +411,7 @@ function wipeLocalState() {
     }
     sobrantes.forEach((k) => { try { localStorage.removeItem(k); } catch (e) {} });
   } catch (e) {}
-  if (queda) { try { localStorage.setItem(LS_KEY, JSON.stringify({ ...loadState(), ...queda })); } catch (e) {} }
+  if (queda) { try { localStorage.setItem(LS_KEY, JSON.stringify({ ...loadState(), ...queda })); } catch (e) { paceAvisarNoGuarda(e); } }
   return true;
 }
 

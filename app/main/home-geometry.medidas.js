@@ -19,14 +19,47 @@
 
 var PACE_HOME_JUSTA = 'data-pace-home-justa';   // en [data-pace-home-body]: «Luego» no cabe
 
+/* Y SIN «LUEGO», LAS ACTIVIDADES EN UNA FILA, SOLO CON SU DIBUJO (Ez, B, 12 nov. 2026).
+   La tarjeta corta («¿Cuánto trabajas hoy?») y el día ya contestado no tienen «Luego»: al 115 %
+   pedían 21 px en castellano y 49 en inglés a 360×640. Lo que se recoge ahí es la rejilla de dos
+   por dos de Actividades: las cuatro pasan a una fila y el nombre deja de verse. Se decide igual
+   que «Luego»: midiendo, en la misma pasada y solo si así cabe. El nombre sigue en el lector de
+   pantalla (`aria-label`) y en el tooltip (`title`); los pone el motor y no ActivityBar porque con
+   la letra normal la barra no cambia en nada, tampoco al pasar el ratón. */
+var PACE_HOME_FILA = 'data-pace-home-fila';     // en [data-pace-home-body]: Actividades en una fila
+
 /* La fila de «Luego» de la tarjeta del día en el móvil, si la hay. */
 function paceHomeLuego(body) {
   return body ? body.querySelector('.pace-rt-mov [data-pace-ritmo-luego]') : null;
 }
 
-function paceHomeRecoger(body, si) {
-  if (si) { if (!body.hasAttribute(PACE_HOME_JUSTA)) body.setAttribute(PACE_HOME_JUSTA, ''); }
-  else if (body.hasAttribute(PACE_HOME_JUSTA)) body.removeAttribute(PACE_HOME_JUSTA);
+/* Los cuatro botones de Actividades (solo existen en la tarjeta corta y el día contestado). */
+function paceHomeChips(body) {
+  return body ? body.querySelectorAll('[data-pace-activitybar-chip]') : [];
+}
+
+function paceHomeMarca(body, marca, si) {
+  if (si) { if (!body.hasAttribute(marca)) body.setAttribute(marca, ''); }
+  else if (body.hasAttribute(marca)) body.removeAttribute(marca);
+}
+
+function paceHomeRecoger(body, si) { paceHomeMarca(body, PACE_HOME_JUSTA, si); }
+function paceHomeFila(body, si) { paceHomeMarca(body, PACE_HOME_FILA, si); }
+
+/* Al acabar la pasada, no en cada intento: el nombre de cada actividad en `aria-label` y `title`
+   mientras va en fila, y nada cuando no. Se lee del rótulo, así que sigue el idioma. */
+function paceHomeFilaNombres(body) {
+  if (!body) return;
+  var fila = body.hasAttribute(PACE_HOME_FILA);
+  var chips = paceHomeChips(body);
+  for (var i = 0; i < chips.length; i++) {
+    var rotulo = chips[i].querySelector('[data-pace-chip-label]');
+    var nombre = fila && rotulo ? rotulo.textContent : '';
+    ['aria-label', 'title'].forEach(function (a) {
+      if (!nombre) { if (chips[i].hasAttribute(a)) chips[i].removeAttribute(a); }
+      else if (chips[i].getAttribute(a) !== nombre) chips[i].setAttribute(a, nombre);
+    });
+  }
 }
 
 /* Localiza los puntos CICLO por texto (i18n: «Ciclo N/4» / «Cycle N/4») y toma el borde

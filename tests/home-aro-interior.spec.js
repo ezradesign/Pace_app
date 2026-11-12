@@ -6,11 +6,10 @@
  * pintaban encima del trazo. Lo vio Ez en su movil, por libre.
  *
  * Cada caso es la vista mas baja medida en la que su estado todavia no cabe, asi
- * que el aro tiene que bajar hasta su suelo: por libre a 360x600 (desde v0.146.0,
- * sin «A TU RITMO» en la tarjeta corta, a 360x640 ya cabe) y con la pregunta del
- * dia a 375x600 (con el
- * horario dibujado como linea del dia, a 375x667 y a 375x640 ya cabe). Si un
- * cambio hace que quepa, el GUARD lo dice: el caso ya no probaria el suelo.
+ * que el aro tiene que bajar hasta su suelo: por libre a 360x560 y con la pregunta
+ * del dia a 375x560. Desde la B de Ez (12 nov. 2026), si la home no cabe, las
+ * actividades van en una fila y a 600 de alto ya cabe (antes, 360x600 y 375x600).
+ * Si un cambio hace que quepa, el GUARD lo dice: el caso ya no probaria el suelo.
  *
  * Se mide lo mismo que mide el motor: la esquina mas lejana de cada hoja del
  * interior contra el centro del aro, en fraccion de D. El trazo esta en 0,475 D,
@@ -49,8 +48,8 @@ function medirInterior(page) {
 }
 
 const CASOS = [
-  { nombre: 'por libre a 360x600', viewport: { width: 360, height: 600 }, extra: { ritmo: { libre: true } } },
-  { nombre: 'con la pregunta del dia a 375x600', viewport: { width: 375, height: 600 }, extra: { ritmo: {} } },
+  { nombre: 'por libre a 360x560', viewport: { width: 360, height: 560 }, extra: { ritmo: { libre: true } } },
+  { nombre: 'con la pregunta del dia a 375x560', viewport: { width: 375, height: 560 }, extra: { ritmo: {} } },
 ];
 
 for (const caso of CASOS) {

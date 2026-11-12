@@ -89,7 +89,7 @@ function TweakSecretsWatcher() {
       } else if (days.size >= 7) {
         unlockAchievement('secret.dark.mode');
       }
-    } catch (e) { /* silencioso */ }
+    } catch (e) { paceAvisarNoGuarda(e); }
     /* `paletteAuto` va en las dependencias, no solo en el guard: salir de Auto
        estando ya en oscuro no cambia `palette`, así que sin esto el día no se
        apuntaría hasta el siguiente cambio de paleta. */

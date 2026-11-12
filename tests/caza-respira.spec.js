@@ -7,7 +7,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, overlaySuperior } = require('./helpers');
+const { sembrar, irAlArtefacto, overlaySuperior, MEDIODIA } = require('./helpers');
 
 /* El contenedor de los avisos de logro (ui/Toast.jsx): fijo, abajo y centrado.
    «No hay aviso» se cuenta UNA vez y sin esperar: el reloj de Playwright sigue
@@ -27,7 +27,7 @@ async function abrirRespira(page, rutina) {
 /* respira-5 */
 test('respira-5 · el aviso de logro no tapa el cierre de la sesión: sale al volver', async ({ page, context }) => {
   await sembrar(context);
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirRespira(page, 'Suspiro fisiológico');
   const sesion = page.locator('[data-pace-session-root]');
@@ -49,7 +49,7 @@ test('respira-5 · el aviso de logro no tapa el cierre de la sesión: sale al vo
 /* respira-6 */
 test('respira-6 · en Hidrátate los avisos esperan a que se cierre', async ({ page, context }) => {
   await sembrar(context);
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   /* «Curiosidad» se gana al abrir Ajustes y se queda en la cola. */
   await page.keyboard.press('t');
@@ -117,7 +117,7 @@ for (const [w, h] of [[360, 640], [1280, 800]]) for (const estilo of ['pulso', '
     await page.setViewportSize({ width: w, height: h });
     {
       await sembrar(context, { breathStyle: estilo });
-      await page.clock.install();
+      await page.clock.install({ time: MEDIODIA });
       await irAlArtefacto(page);
       /* Sin transiciones, lo pintado es ya la escala de la fase. */
       await page.addStyleTag({ content: '[data-pace-essential] * { transition: none !important; }' });

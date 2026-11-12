@@ -255,7 +255,7 @@ function paceGuardarRescate(raw, motivo) {
       raw: raw,
     }));
     return true;
-  } catch (e) { return false; }
+  } catch (e) { paceAvisarNoGuarda(e); return false; }
 }
 
 /* paceLeerRescate() -> el registro o null. Lo consume el export de «Tus datos». */

@@ -38,7 +38,11 @@ var ts   = (function() {
 
 var ROOT   = __dirname;
 var INPUT  = path.join(ROOT, 'PACE.html');
-var OUTPUT = path.join(ROOT, 'PACE_standalone.html');
+/* Dónde se escriben los dos artefactos: la raíz, o la carpeta de PACE_BUILD_SALIDA. Con ella la suite
+   compara el index.html de la raíz con el build de las fuentes sin tocarlo (tests/servidor-propio.setup.js;
+   la octava, nº 24: en local se probaba el index.html que hubiera, aunque fuera viejo). */
+var SALIDA = process.env.PACE_BUILD_SALIDA ? path.resolve(process.env.PACE_BUILD_SALIDA) : ROOT;
+var OUTPUT = path.join(SALIDA, 'PACE_standalone.html');
 
 /* ---------------------------------------------------------------------------
    compileBabel: compila un bloque text/babel a JS plano (s103 / Etapa A).
@@ -542,7 +546,7 @@ function main() {
   //    s102: la copia DESPLEGADA recupera el <link rel="manifest"> que el
   //    paso 3 quita del standalone (CORS en file://). Sin él, Chrome no
   //    ofrecía instalar la PWA: index.html se servía sin manifest desde s48c.
-  var indexPath = path.join(ROOT, 'index.html');
+  var indexPath = path.join(SALIDA, 'index.html');
   var indexHtml = html.replace(
     /<link rel="icon"/,
     '<link rel="manifest" href="/manifest.webmanifest">\n  <link rel="icon"'

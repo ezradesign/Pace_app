@@ -205,3 +205,37 @@ test('en Android e iPhone (www/) no va la landing, y la app monta con el navegad
   await page.goto(RUTA_ARTEFACTO);
   await expect(page.locator('[data-pace-onb-comenzar], [data-pace-dial-number]').first()).toBeVisible();
 });
+
+/* LA OCTAVA, PRUEBA 7 (12 nov. 2026): dos gestos que la prueba de «al irse» no hacía. Cambiar el tamaño
+   de la ventana (el motor de la home y el lienzo escuchan `resize`) y pulsar el idioma de la landing.
+   Tras los dos y una recarga sigue la landing, y lo único guardado es su idioma (`pace.landing.lang`,
+   de las páginas sueltas: la raíz no lo cuenta como de la app). Dos MUTANTES: el idioma guardado en una
+   clave de la app (`pace.lang`) enseña la app al recargar, y una escritura nueva que escucha `resize`
+   sin mirar la cara deja `pace.aro.carta.v1`. */
+test('con la landing delante, cambiar el tamaño y el idioma no guarda nada de la app, y al recargar sigue la landing', async ({ browser }) => {
+  const idioma = ["localStorage.setItem('pace.landing.lang', otro)", "localStorage.setItem('pace.lang', otro)"];
+  if (INDEX.indexOf(idioma[0]) < 0) throw new Error('GUARD: el idioma de la landing ya no se guarda en pace.landing.lang');
+  const conResize = INDEX.replace('</body>', () => "<script>addEventListener('resize', function () { localStorage.setItem('pace.aro.carta.v1', '{}'); });</script></body>");
+  for (const [html, etiqueta, ls, cara] of [
+    [INDEX, 'index.html', ['pace.landing.lang'], 'landing'],
+    [INDEX.replace(idioma[0], () => idioma[1]), 'MUTANTE del idioma', ['pace.lang'], 'app'],
+    [conResize, 'MUTANTE del tamaño', ['pace.aro.carta.v1', 'pace.landing.lang'], 'app'],
+  ]) {
+    const { ctx, page } = await abrirCon(browser, html);
+    await page.clock.install({ time: MEDIODIA });
+    await page.reload();
+    expect(await leerCara(page)).toBe('landing');
+    for (const [w, h] of [[360, 640], [1536, 710], [1280, 720]]) {
+      await page.setViewportSize({ width: w, height: h });
+      await page.clock.runFor(1000);
+    }
+    await page.locator('[data-pace-landing-idioma-boton]').first().click();
+    await page.clock.runFor(60000);
+    const guardado = await page.evaluate(async () => ({ ls: Object.keys(localStorage).sort(), idb: (await indexedDB.databases()).map((d) => d.name) }));
+    expect(guardado, etiqueta).toEqual({ ls, idb: [] });
+    await page.reload();
+    expect(await leerCara(page), etiqueta + ' · tras recargar').toBe(cara);
+    if (cara === 'landing') expect(await page.evaluate(() => document.documentElement.getAttribute('data-pace-landing-idioma')), 'el idioma elegido sigue').toBe('en');
+    await ctx.close();
+  }
+});

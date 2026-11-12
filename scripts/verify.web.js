@@ -98,9 +98,17 @@ function tandaWeb(ctx) {
       ' -- si es de la web, a WEB_ARCHIVOS o WEB_CARPETAS de scripts/web-dist.js');
     else ctx.ok(paginas.length + ' páginas en la raíz: cada una se publica o está apartada a propósito');
 
+    /* De la app (index.html) solo se mira la landing, entre sus marcas: el resto es la app compilada, que
+       pide sus piezas por el precache. La landing vive ahí desde el 9 nov. y sus capturas y enlaces no se
+       miraban (la octava, nº 25). Sin las marcas, falla: la landing no se estaría mirando. */
     var rotas = [];
-    Array.from(hay).filter(function (r) { return /\.html$/.test(r) && r !== 'index.html'; }).forEach(function (pag) {
+    Array.from(hay).filter(function (r) { return /\.html$/.test(r); }).forEach(function (pag) {
       var src = fs.readFileSync(path.join(tmp, pag), 'utf8');
+      if (pag === 'index.html') {
+        var trozos = src.split('<!--pace-landing-->').slice(1).map(function (t) { return t.split('<!--/pace-landing-->')[0]; });
+        if (!trozos.length) { rotas.push('index.html → sin las marcas de la landing (<!--pace-landing-->)'); return; }
+        src = trozos.join(' ');
+      }
       var re = /(?:src|href)\s*=\s*["'](\/[^"'\/][^"']*|\/)["']|url\(\s*['"]?(\/[^'")]+)['"]?\s*\)/g, x;
       while ((x = re.exec(src))) {
         var ruta = x[1] || x[2];
@@ -109,7 +117,7 @@ function tandaWeb(ctx) {
       }
     });
     if (rotas.length) ctx.falla('web: ' + rotas.length + ' ruta(s) que piden las páginas y no están en dist/: ' + rotas.slice(0, 5).join(', '));
-    else ctx.ok('lo que piden por ruta las páginas publicadas está en dist/');
+    else ctx.ok('lo que piden por ruta las páginas publicadas, la landing incluida, está en dist/');
   } finally {
     fs.rmSync(tmp, { recursive: true, force: true });
   }

@@ -62,11 +62,17 @@ var PACE_TIENDA_WEB = {
 
 var PACE_TIENDA_PLANES = ['vida', 'mes'];
 
-/* Los planes que se pueden comprar: con su precio y con su enlace. */
+/* Los planes que se pueden comprar: con su precio y con su enlace. EL MENSUAL, ADEMÁS, CON DÓNDE
+   CANCELARLO: /premium, /gracias y el aviso de los dos días prometen que se cancela desde Ajustes, y
+   sin el portal de Stripe (`gestionar`) Ajustes no tiene «Gestionar la suscripción». Con su enlace y
+   sin portal no se vende (la octava, nº 9 y prueba 10; lo vigila tests/caza-v1-compra.spec.js). */
 function paceTiendaWebCompra() {
   var pr = PACE_TIENDA_WEB.precios || {};
   var e = PACE_TIENDA_WEB.enlaces || {};
-  return PACE_TIENDA_PLANES.filter(function (p) { return !!pr[p] && typeof e[p] === 'string' && e[p].length > 0; });
+  var portal = typeof PACE_TIENDA_WEB.gestionar === 'string' && PACE_TIENDA_WEB.gestionar.length > 0;
+  return PACE_TIENDA_PLANES.filter(function (p) {
+    return !!pr[p] && typeof e[p] === 'string' && e[p].length > 0 && (p !== 'mes' || portal);
+  });
 }
 
 function paceTiendaWebLista() {

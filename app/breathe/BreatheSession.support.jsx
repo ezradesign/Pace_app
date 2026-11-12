@@ -185,7 +185,7 @@ function respiraAcreditarUnaVez(id) {
     const previas = Array.isArray(lista) ? lista : [];
     if (previas.indexOf(id) !== -1) return false;
     localStorage.setItem(RESPIRA_ACREDITADAS_KEY, JSON.stringify(previas.concat(id).slice(-10)));
-  } catch (e) {}
+  } catch (e) { paceAvisarNoGuarda(e); }
   return true;
 }
 
@@ -239,7 +239,7 @@ function useRespiraPersistencia(datos) {
         activeMs: Math.round(c.getActiveSec() * 1000),
         holdSec: Math.round(c.holdSec()), startedAt: c.startedAt, savedAt: Date.now(),
       }));
-    } catch (e) {}
+    } catch (e) { paceAvisarNoGuarda(e); }
   };
 
   /* EL REGISTRO TIENE UNA SOLA DUENA, y es este efecto: escribe mientras la
