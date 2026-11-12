@@ -66,6 +66,12 @@ function recorrer(dir, out) {
   return out;
 }
 
+/* SALTOS EN SILENCIO (la octava, nº 12): un `.skip(`, `.fixme(` u `.only(` deja pruebas sin correr
+   y el CI sigue en verde. Solo valen los de esta lista, que solo encoge: el de ios-nativo salta en
+   WebKit porque su motor de la suite no trae Web Audio (lo corre Chromium). */
+var SALTO = /\b(test|describe)\s*(\.\s*describe\s*)?\.\s*(skip|fixme|only)\s*\(/;
+var SALTOS_PERMITIDOS = ['ios-nativo.safari.spec.js'];
+
 function sinComentarios(src) {
   return src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:\\'"])\/\/.*$/gm, '$1');
 }
@@ -101,6 +107,18 @@ function tandaPruebas(ctx) {
   if (sinHora.length) ctx.falla('clock.install() sin hora, que de noche cruza la medianoche: ' + sinHora.join(', ') + '. Instálalo a una hora fija ({ time: MEDIODIA }, tests/helpers.js).');
   else ctx.ok('Ninguna prueba nueva instala el reloj sin hora (' + RELOJ_SIN_HORA_ANTIGUOS.length + ' antiguas en la lista)');
   if (yaNo.length) ctx.falla('Ya no instalan el reloj sin hora y siguen en RELOJ_SIN_HORA_ANTIGUOS (scripts/verify.pruebas.js): quítalas de la lista, que solo encoge: ' + yaNo.join(', '));
+
+  var saltos = [];
+  var saltosYaNo = SALTOS_PERMITIDOS.slice();
+  recorrer(path.join(ctx.ROOT, 'tests'), []).forEach(function (p) {
+    var rel = path.relative(path.join(ctx.ROOT, 'tests'), p).split(path.sep).join('/');
+    if (!SALTO.test(sinComentarios(fs.readFileSync(p, 'utf8')))) return;
+    var i = saltosYaNo.indexOf(rel);
+    if (i === -1) saltos.push(rel); else saltosYaNo.splice(i, 1);
+  });
+  if (saltos.length) ctx.falla('.skip / .fixme / .only en tests/, que dejan pruebas sin correr con el CI en verde: ' + saltos.join(', '));
+  else ctx.ok('Ningún .skip, .fixme ni .only fuera de SALTOS_PERMITIDOS (' + SALTOS_PERMITIDOS.length + ')');
+  if (saltosYaNo.length) ctx.falla('Ya no saltan y siguen en SALTOS_PERMITIDOS (scripts/verify.pruebas.js): quítalas, que la lista solo encoge: ' + saltosYaNo.join(', '));
 }
 
-module.exports = { tandaPruebas: tandaPruebas };
+module.exports = { tandaPruebas: tandaPruebas, SALTO: SALTO };

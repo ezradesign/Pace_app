@@ -1,35 +1,35 @@
-# La octava: dónde me quedo (11 nov. 2026, rama `claude/octava-11nov-418170`)
+# La octava: dónde me quedo
 
-Paré con la cuenta al 73 % de la ventana de 5 h, antes del tope del 85 %, para dejar la página y el informe.
+## Segunda parte (12 nov. 2026, rama `claude/octava-2-12nov-9ca0e7`, sale de `main` 0.200.1)
 
-## Hecho y subido
+Paré con la cuenta cerca del 80 % de la ventana de 5 h para dejar la página y este relevo.
 
 | Etapa | Commit | Qué |
 |---|---|---|
-| 1 | 11d79318 | `e2e` en cinco trozos; Safari en la imagen de Playwright; `scripts/verify.ci.js` lo vigila |
-| 2 | e64e5100 | `externa-octava-11nov-comprobado.md`: 20 ciertos, 6 a medias, 2 falsos |
-| 3 | f9d1e741 | O1 (tope de `pasoV1.hasta`, `tests/paso-v1-tope.spec.js`) y O4 (AAB tras CI verde) |
-| 3 | 0e831240 | O5 y prueba 1: `tests/apnea-aviso.spec.js` |
-| 3 | 69a61326 | O3: WebView 111 y Safari 16.4, `scripts/verify.versiones.js` |
-| 3 | 71e4f8ba | Prueba 5: reloj a hora fija en `verify.pruebas.js` y el CI a horas fijas |
+| 1 · 2 B | b40e65ee | Pasada de noche de las 21:30 UTC; `horasDeNoche` en `verify.ci.js` mira invierno y verano |
+| 2 · 1 A2 | 19536851 | Letra grande: «Luego» se recoge si la home no cabe (`home-geometry.medidas.js`); 3.ª medida al 115 % y `home-luego-recogido.spec.js` |
+| 4 (parte) | 3623ac1e | nº 12 (saltos y `MINIMO_PRUEBAS` = 1526), nº 27 (llaves binarias), nº 10 (`lunes`, martes) |
+| — | (este) | Página «Montado» y este relevo |
 
-CI de la rama (run 43077304826, sobre 11d79318): verde entero; trozos de 6:53 a 10:31, Safari 2:22.
-Lo de después de 11d79318 no ha pasado por el CI de GitHub: solo `verify` y las vecinas en local.
+Página para Ez: https://claude.ai/artifact/8Pgz18Qv7qMcwXCGQcJVgw (fuente en `docs/proposals/montado-octava-2-12nov/`).
 
-## Lo que queda
+### Espera a Ez
+- **A o B** para la tarjeta corta y el día contestado con la letra al 115 % (A: sin la línea de puntos;
+  B: actividades en una fila, solo el dibujo). Recomendada la B: es la única que cabe en todo
+  (inglés a 360×640: A deja 31 px). Hoy van con `pendiente115` (tope en px) en `home-sin-scroll`.
+- La pregunta del día en inglés a 360×640 pide 17 px al 115 %; ni A ni B la tocan.
+- Mirar en un Android de verdad con la letra grande (aquí se emula con ×1,15 a la letra calculada).
 
-- **O2, medida y NO garantizada.** Con toda la letra de la home al 115 % (cada tamaño ×1,15, como el
-  zoom de texto del WebView), la home pide scroll en 5 de 8 combinaciones (idioma × pantalla): de 9 a
-  51 px a 360×640, 375×667 y 360×718. Cabe a 412×844. Arreglarlo es un cambio visual: maqueta y
-  decisión de Ez (va en la página). El experimento, `zz-exp-115.spec.js` en el scratchpad de la sesión:
-  `home-sin-scroll.spec.js` con una tercera medida tras el `letter-spacing`.
-- **Pruebas de la octava sin montar:** 2 (almacenamiento lleno en todas las claves), 3 (copia antigua
-  sin marcas; el nº 15 es falso, así que pierde sentido), 4 (exportar, borrar e importar una cuenta
-  rica), 6 (humo contra `dist/`), 7 (landing: tamaño e idioma), 8 (home sin scroll en v1, en lunes,
-  con barras y midiendo el documento), 9 (husos de América y Asia de noche), 10 (sin botones de compra
-  con compra vigente; mensual sin portal).
-- **Ciertos sin arreglar** (no piden letra): nº 2 (respira-5, 6 y 12 a `MEDIODIA`; ya están en la
-  lista que encoge), 6, 9, 10, 11, 12 (prohibir `.skip`/`.fixme` y un mínimo de pruebas que solo sube:
-  `verify.ci.js` ya cuenta con `--list`), 16, 17, 20, 21, 23, 24, 25, 26 y 27.
+### Lo que queda (sin empezar)
+- **Etapa 3, pruebas de la octava:** 2 (almacenamiento lleno en todas las claves), 4 (exportar,
+  borrar e importar una cuenta rica), 6 (humo contra `dist/`), 7 (landing: tamaño e idioma), 8 (home
+  sin scroll en v1, en lunes, con barras y midiendo el documento), 9 (husos de América y Asia de
+  noche), 10 de la lista (sin botones de compra con compra vigente; mensual sin portal). La 3 no se
+  monta: el nº 15 es falso.
+- **Etapa 4, ciertos sin arreglar:** nº 2, 6, 9, 11, 16, 17, 20, 21, 23, 24, 25 y 26 (los sitios, en
+  `externa-octava-11nov-comprobado.md`).
 
-Página para Ez: https://claude.ai/artifact/RuCb7GAYhuR5mpPZXjWZ3F (fuente en `docs/proposals/montado-octava-11nov/`).
+## Primera parte (11 nov. 2026, rama `claude/octava-11nov-418170`), ya en `main` (0.200.1)
+
+CI en cinco trozos, la regla de relojes, O1, O3, O4 y O5, y las pruebas 1 y 5. Página:
+https://claude.ai/artifact/RuCb7GAYhuR5mpPZXjWZ3F (fuente en `docs/proposals/montado-octava-11nov/`).

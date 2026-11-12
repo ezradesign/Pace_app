@@ -322,6 +322,9 @@
       [data-pace-activitybar-chip] [data-pace-chip-sub] {
         font-size: 11px !important;
       }
+      /* Con la letra grande, si la home no cabe, «Luego» queda en «Ver todo» (Ez, 1 A2;
+         la marca la pone el motor, home-geometry.medidas.js). display:none: sin foco ni lector. */
+      [data-pace-home-justa] .pace-rt-mov [data-pace-ritmo-luego] { display: none !important; }
       /* Handle flotante ≡ para abrir sidebar: hit target ≥44px */
       [data-pace-sidebar-open] {
         width: 44px !important;

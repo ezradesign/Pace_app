@@ -28,6 +28,8 @@ function leer(ROOT, rel) {
 }
 
 /* Cuántas pruebas del proyecto chromium hay, con el `--list` de Playwright (no abre navegador). */
+var MINIMO_PRUEBAS = 1526;   // pruebas de Chromium en `--list` el 12 nov. 2026; solo sube
+
 function contarPruebas(ROOT) {
   var cli = path.join(ROOT, 'node_modules', '@playwright', 'test', 'cli.js');
   if (!fs.existsSync(cli)) return null;
@@ -36,6 +38,21 @@ function contarPruebas(ROOT) {
   });
   var m = /Total: (\d+) tests? in \d+ files?/.exec((r.stdout || '') + (r.stderr || ''));
   return m ? Number(m[1]) : null;
+}
+
+/* Lo que falta en el horario a hora fija de ci.yml, con los dos husos de Madrid. Solo cuentan
+   los cron diarios (`M H * * *`) para la noche y uno de lunes (`M H * * 1`) para la semana. */
+function horasDeNoche(yml) {
+  var crones = (yml.split('\njobs:')[0].match(/- cron: '[^']+'/g) || []).map(function (c) { return c.slice(9, -1).trim().split(/\s+/); });
+  var diarios = crones.filter(function (c) { return c.length === 5 && /^\d+$/.test(c[0]) && /^\d+$/.test(c[1]) && c[2] === '*' && c[3] === '*' && c[4] === '*'; });
+  var faltan = [];
+  [['invierno', 1], ['verano', 2]].forEach(function (h) {
+    var horas = diarios.map(function (c) { return (Number(c[1]) + h[1]) % 24; });
+    if (!horas.some(function (x) { return x >= 22; })) faltan.push('en ' + h[0] + ' (UTC+' + h[1] + ') no hay pasada de 22:00 a 23:59 de Madrid');
+    if (!horas.some(function (x) { return x < 2; })) faltan.push('en ' + h[0] + ' (UTC+' + h[1] + ') no hay pasada de 00:00 a 01:59 de Madrid');
+  });
+  if (!crones.some(function (c) { return c.length === 5 && c[4] === '1'; })) faltan.push('no hay pasada de lunes');
+  return faltan;
 }
 
 function tandaCI(ctx) {
@@ -80,21 +97,29 @@ function tandaCI(ctx) {
   if (/--target "\$GITHUB_SHA"/.test(android)) malAndroid.push('apunta el borrador al último commit de main y no al que probó el CI');
   if (android.indexOf("github.event.workflow_run.event == 'push'") < 0) malAndroid.push('una corrida del CI a hora fija rehace el AAB de una versión que quizá ya se subió');
 
-  /* A horas fijas (la octava, nº 3): de noche, a las 00:30 y en lunes, que es cuando salen los
-     fallos de fecha; y por evento, para que esas corridas no cancelen la de un push. */
-  var crones = (yml.split('\njobs:')[0].match(/- cron: '[^']+'/g) || []).length;
-  if (crones < 3) ctx.falla('ci.yml: ' + crones + ' corridas a hora fija y tienen que ser al menos tres (23:30, 00:30 y el lunes, hora de Madrid)');
+  /* A horas fijas (la octava, nº 3, y 2 B de Ez, 12 nov.): de noche, a los dos lados de la
+     medianoche de Madrid, y en lunes, que es cuando salen los fallos de fecha; y por evento, para
+     que esas corridas no cancelen la de un push. GitHub cuenta en UTC y no cambia de hora, así que
+     se mira con los dos husos de Madrid: una pasada de 22:00 a 23:59 y otra de 00:00 a 01:59,
+     tanto en invierno (UTC+1) como en verano (UTC+2). */
+  var horario = horasDeNoche(yml);
+  if (horario.length) ctx.falla('ci.yml: ' + horario.join('; '));
   else if (yml.indexOf('group: ci-${{ github.event_name }}-') < 0) ctx.falla('ci.yml: la concurrencia no va por evento y una corrida a hora fija cancelaría la de un push');
-  else ctx.ok('ci.yml: ' + crones + ' corridas a hora fija, en su propio grupo');
+  else ctx.ok('ci.yml: pasadas de noche antes y después de la medianoche de Madrid en invierno y en verano, y la del lunes, en su propio grupo');
   if (malAndroid.length) ctx.falla('android.yml: ' + malAndroid.join('; '));
   else ctx.ok('android.yml: el AAB firmado solo sale tras un CI en verde, del commit que probó');
 
   var total = contarPruebas(ctx.ROOT);
   if (total === null) { ctx.info('sin node_modules de Playwright no se cuentan las pruebas por trozo'); return; }
+  /* Las pruebas no bajan en silencio (la octava, nº 12): una que se borra o un archivo que deja de
+     cargar las quita del CI sin ponerlo rojo. El mínimo solo sube: si hay más, súbelo aquí. */
+  if (total < MINIMO_PRUEBAS) ctx.falla(total + ' pruebas en Chromium y el mínimo es ' + MINIMO_PRUEBAS + ': ¿se borró alguna o un archivo dejó de cargar? Si fue a propósito, baja MINIMO_PRUEBAS (scripts/verify.ci.js) en ese commit y di por qué');
+  else if (total > MINIMO_PRUEBAS) ctx.info(total + ' pruebas en Chromium, más que el mínimo (' + MINIMO_PRUEBAS + '): súbelo a ' + total + ' en scripts/verify.ci.js');
+  else ctx.ok(total + ' pruebas en Chromium, el mínimo');
   var porTrozo = Math.ceil(total / N);
   if (porTrozo > TOPE_POR_TROZO) {
     ctx.falla(total + ' pruebas en ' + N + ' trozos son ' + porTrozo + ' por trozo, más de ' + TOPE_POR_TROZO + ' (unos 13 min en GitHub): sube los trozos en ci.yml, en su nombre, en el --shard y en CLAUDE.md');
   } else ctx.ok(total + ' pruebas en ' + N + ' trozos: hasta ' + porTrozo + ' por trozo (tope ' + TOPE_POR_TROZO + ')');
 }
 
-module.exports = { tandaCI: tandaCI, TOPE_POR_TROZO: TOPE_POR_TROZO };
+module.exports = { tandaCI: tandaCI, horasDeNoche: horasDeNoche, TOPE_POR_TROZO: TOPE_POR_TROZO };
