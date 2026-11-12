@@ -14,8 +14,12 @@
  *     estado que abría PACE completo sin compra, y cualquiera lo cambia desde el navegador.
  *     Solo lo abren un código con la firma comprobada, la tienda y lo abierto hasta v1.
  *
- * NO CUBRE: secretos con otro formato (la llave de Play va en los secretos de GitHub y
- * su keystore de prueba, el de los APK de depuración, sí está en el repo a propósito).
+ *   · falla si hay un archivo de llave por su extensión (`.p8` de Apple, `.p12`, `.pfx`,
+ *     `.jks`, `.keystore`, `.mobileprovision`), que son binarios y la marca PEM no los ve
+ *     (la octava, nº 27, justo cuando entra la firma del iPhone). La única excepción es
+ *     `android/app/pace-debug.keystore`, la de los APK de depuración, a propósito.
+ *
+ * NO CUBRE: secretos con otro formato (la llave de Play va en los secretos de GitHub).
  */
 
 'use strict';
@@ -30,6 +34,8 @@ var JWK_PRIVADA = new RegExp('"k' + 'ty"\\s*:\\s*"EC"[^}]*"d"\\s*:\\s*"[A-Za-z0-
 /* .claude/worktrees: las copias de las sesiones en paralelo son otros checkouts
    (cada uno pasa su propio verify) y leerlas todas costaba ~40 s. */
 var SALTAR = /(^|[\\/])(node_modules|\.git|vendor|backups|www|dist|test-results|playwright-report|build|\.gradle|\.claude[\\/]worktrees)([\\/]|$)/;
+var LLAVE_BINARIA = /\.(p8|p12|pfx|jks|keystore|mobileprovision)$/i;
+var LLAVES_PERMITIDAS = ['android/app/pace-debug.keystore'];
 var TEXTO = /\.(js|jsx|json|html|md|txt|css|yml|yaml|pem|key|env|xml|properties|gradle|csv)$/i;
 
 /* `base` es la raíz del recorrido: SALTAR se mira sobre la ruta RELATIVA a ella, porque
@@ -51,13 +57,14 @@ function tandaLicencia(ctx) {
   recorrer(ctx.ROOT, []).forEach(function (p) {
     var rel = ctx.rel(p);
     if (/\.pem$/i.test(p)) { malas.push(rel + ' (archivo .pem)'); return; }
+    if (LLAVE_BINARIA.test(p) && LLAVES_PERMITIDAS.indexOf(rel.split(path.sep).join('/')) < 0) { malas.push(rel + ' (archivo de llave)'); return; }
     if (!TEXTO.test(p)) return;
     var st = fs.statSync(p);
     if (st.size > 2 * 1024 * 1024) return;
     var texto = fs.readFileSync(p, 'utf8');
     if (MARCA_PRIVADA.test(texto) || JWK_PRIVADA.test(texto)) malas.push(rel);
   });
-  if (malas.length) ctx.falla('Llave privada dentro del repo: ' + malas.join(', ') + '. Tiene que vivir fuera (scripts/licencias/).');
+  if (malas.length) ctx.falla('Llave privada dentro del repo: ' + malas.join(', ') + '. Tiene que vivir fuera del repositorio, en el PC de Ez o en los secretos de GitHub.');
   else ctx.ok('Ninguna llave privada en el árbol');
 
   /* Partida en dos, como la marca de la llave, para no encontrarse a sí misma. */
@@ -80,4 +87,4 @@ function tandaLicencia(ctx) {
   else ctx.ok(lineas.length + ' llave(s) pública(s) bien formada(s)');
 }
 
-module.exports = { tandaLicencia: tandaLicencia };
+module.exports = { LLAVE_BINARIA: LLAVE_BINARIA, tandaLicencia: tandaLicencia };

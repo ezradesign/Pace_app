@@ -110,6 +110,11 @@ test.describe('la línea de los lunes', () => {
     await abrir(page, context, { ancho: 360, alto: 740, hora: MARTES, extra: dia(HOY_M) });
     await expect(sobreBoton(page)).toHaveCount(0);
     await page.getByRole('button', { name: 'Abrir panel' }).click();
+    /* Lo mismo que espera la del lunes antes de mirar (la octava, nº 10): sin esto, una fila
+       pintada tarde pasaba. Y antes, algo que SÍ está, para no asertar una ausencia en el vacío.
+       Mutante: con LUNES y HOY_L en esta prueba, cae aquí. */
+    await page.clock.runFor(600);
+    await expect(page.getByText('Tus rutinas').first()).toBeVisible();
     await expect(page.locator('[data-pace-lunes-fila]')).toHaveCount(0);
   });
 

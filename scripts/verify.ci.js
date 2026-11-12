@@ -28,6 +28,8 @@ function leer(ROOT, rel) {
 }
 
 /* Cuántas pruebas del proyecto chromium hay, con el `--list` de Playwright (no abre navegador). */
+var MINIMO_PRUEBAS = 1526;   // pruebas de Chromium en `--list` el 12 nov. 2026; solo sube
+
 function contarPruebas(ROOT) {
   var cli = path.join(ROOT, 'node_modules', '@playwright', 'test', 'cli.js');
   if (!fs.existsSync(cli)) return null;
@@ -109,6 +111,11 @@ function tandaCI(ctx) {
 
   var total = contarPruebas(ctx.ROOT);
   if (total === null) { ctx.info('sin node_modules de Playwright no se cuentan las pruebas por trozo'); return; }
+  /* Las pruebas no bajan en silencio (la octava, nº 12): una que se borra o un archivo que deja de
+     cargar las quita del CI sin ponerlo rojo. El mínimo solo sube: si hay más, súbelo aquí. */
+  if (total < MINIMO_PRUEBAS) ctx.falla(total + ' pruebas en Chromium y el mínimo es ' + MINIMO_PRUEBAS + ': ¿se borró alguna o un archivo dejó de cargar? Si fue a propósito, baja MINIMO_PRUEBAS (scripts/verify.ci.js) en ese commit y di por qué');
+  else if (total > MINIMO_PRUEBAS) ctx.info(total + ' pruebas en Chromium, más que el mínimo (' + MINIMO_PRUEBAS + '): súbelo a ' + total + ' en scripts/verify.ci.js');
+  else ctx.ok(total + ' pruebas en Chromium, el mínimo');
   var porTrozo = Math.ceil(total / N);
   if (porTrozo > TOPE_POR_TROZO) {
     ctx.falla(total + ' pruebas en ' + N + ' trozos son ' + porTrozo + ' por trozo, más de ' + TOPE_POR_TROZO + ' (unos 13 min en GitHub): sube los trozos en ci.yml, en su nombre, en el --shard y en CLAUDE.md');
