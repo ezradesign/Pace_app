@@ -32,6 +32,10 @@ const pares = [
   ['LaTcRknTpPcJAa6joPncjX', 'RifLYxtf23zjW51atRD4U3'], // «Montado» de 4 B, 6 A y 7 A
   ['2nykmo2ZLNTrDyud6Qs6dM', '89XwWvAiaLnEJFPDVZ9pCY'], // «Montado» de rendimiento (aro B, V1 B y V2 B)
   ['LtUEUn4yjYXjyq4AqJEtqV', 'UkETeVK2Ee97N8kSvupwC8'], // «Lo que queda hasta v1», la lista corta de solo lo pendiente
+  ['MphAzMn67nqhWBs99wkNEp', 'SzQQE6yercRZJasfz5pWP2'], // «Montado: D-8 y D-10»
+  ['RuCb7GAYhuR5mpPZXjWZ3F', '5KZ4AZ7PaHRaNWH5fVdGXu'], // «La octava, montada» (primera parte)
+  ['2mhP4SyDi9sWQ2E3CEEopt', 'ERZwRa32ZCMByZu7JBdwbf'], // «Dos preguntas» de la octava (1 A2, 2 B)
+  ['8Pgz18Qv7qMcwXCGQcJVgw', '7mLHvjUkuyUzthehEtgLNg'], // «La octava, segunda parte», con la letra A o B
 ];
 
 const [de, hacia] = a === 'EcLj6' ? [1, 0] : [0, 1];

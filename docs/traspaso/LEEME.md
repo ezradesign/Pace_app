@@ -2,7 +2,14 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 12 de noviembre de 2026, 12:30, v0.201.0 en `main` local y sin subir.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 12 de noviembre de 2026, 13:00, v0.201.0 subida a `main`.
+
+## 12 nov., 13:00 (cuenta 5iWBf): la 0.201.0, subida; Ez eligió la B. Manda sobre lo de abajo
+
+- **La 0.201.0, cerrada y subida.** La suite de EcLj6 murió en la prueba 1066 al cerrarse su sesión (1065 en verde y desde ahí todo en 0 ms, sin `exit=`); el modo automático no deja matar la huérfana, así que se repitió en otro puerto (`PACE_E2E_PORT=8785`): **1567 en verde, 2 saltadas a propósito, ninguna roja** (31 min). Commit «v0.201.0: bump, build y lo que junta». **Comprobar su CI** (`gh run list --branch main`) y que Android corre detrás.
+- **Ez eligió la B (12:40, literal «B, iconos en fila»)**: con la letra grande, en la tarjeta corta y en el día contestado, las cuatro actividades en una fila solo con su dibujo. No se le vuelve a preguntar. Va en el encargo de lo que queda de la octava.
+- **Páginas publicadas en 5iWBf** (pares ya en `hoja-ids-cuentas.js`): D-8 y D-10, SzQQE6yercRZJasfz5pWP2; la octava (primera parte), 5KZ4AZ7PaHRaNWH5fVdGXu; dos preguntas, ERZwRa32ZCMByZu7JBdwbf; la octava, segunda parte, 7mLHvjUkuyUzthehEtgLNg.
+- **Siguiente:** republicar la hoja de pasos y la lista corta en 5iWBf, y la sesión en Opus con lo que queda de la octava (la B, las pruebas 2, 4, 6, 7, 8, 9 y 10 y los ciertos 2, 6, 9, 11, 16, 17, 20, 21, 23, 24, 25 y 26), en rama nueva desde `main`; se le enseña a Ez antes de juntar.
 
 ## AL RELEVO (12 nov., 12:30): Ez migra de EcLj6 a 5iWBf. Empieza aquí; manda sobre lo de abajo
 
