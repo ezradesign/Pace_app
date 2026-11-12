@@ -26,14 +26,13 @@ var HOY_DE_NODE = /new Date\(\)\.(getDay|getDate|toDateString)\(\)/;
    adelanta minutos cruza la medianoche si corre a las 23:56, lea o no «hoy» en Node (la de la
    landing cayó así sin que esta tanda la viera). Ahora falla cualquier `clock.install()` sin hora
    (`{ time: MEDIODIA }`, tests/helpers.js) fuera de esta lista, que solo puede encoger: un archivo
-   que ya no lo usa tiene que salir de ella. Los 26 de hoy son de antes de la regla. */
+   que ya no lo usa tiene que salir de ella. Eran 26 de antes de la regla; caza-respira salió el 12 nov. (nº 2). */
 var RELOJ_SIN_HORA = /clock\.install\(\s*\)/;
 var RELOJ_SIN_HORA_ANTIGUOS = [
   'aro-de-golpe.spec.js',
   'aro-paso.spec.js',
   'aro-recorrido.spec.js',
   'barras-transform.spec.js',
-  'caza-respira.spec.js',
   'cierre-dibujo.spec.js',
   'cierre-italica.spec.js',
   'cierre-sin-pisar.spec.js',

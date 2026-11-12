@@ -56,7 +56,9 @@ test('un weeklyStats roto se repara SOLO, y la historia, los minutos y los logro
 
   /* Un gesto que ESCRIBE: es la escritura la que pisaba lo bueno. */
   await page.getByRole('button', { name: '15 minutos', exact: true }).click();
-  await page.waitForTimeout(200);
+  /* Hasta que la escritura llega (los 15 minutos elegidos, ya guardados), no un plazo fijo: con 200 ms
+     y solo los 4321 de la semilla, un gesto que no escribía, o escribía tarde, pasaba igual (la octava, nº 6). */
+  await expect.poll(async () => ((await leerGuardado(page)) || {}).focusMinutes, { message: 'el gesto no llegó a escribir' }).toBe(15);
   const g = await leerGuardado(page);
   expect(g.totalFocusMin, 'la primera escritura piso el estado bueno con el de fabrica').toBe(4321);
   expect(Object.keys((g.history && g.history.days) || {})).toContain('2026-09-01');

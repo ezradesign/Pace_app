@@ -71,8 +71,9 @@ for (const lang of ['es', 'en']) {
       const baseURL = test.info().project.use.baseURL;
       const fallos = [];
       for (const m of MOMENTOS) {
+        /* El idioma del navegador, a juego con el de la app (la octava, nº 16: el inglés iba con es-ES). */
         const context = await browser.newContext({ baseURL, viewport: { width: vp.w, height: vp.h }, isMobile: true, hasTouch: true,
-          locale: 'es-ES', timezoneId: 'Europe/Madrid' });
+          locale: lang === 'es' ? 'es-ES' : 'en-GB', timezoneId: 'Europe/Madrid' });
         await sembrar(context, Object.assign({ lang, sidebarCollapsed: true }, m.semilla));
         /* Un bloque de 25 que terminó con PACE cerrado: al abrir cuenta y abre la pausa (foco-3). */
         if (m.terminoA) await context.addInitScript((fin) => {
@@ -93,7 +94,7 @@ for (const lang of ['es', 'en']) {
         }
         await expect(vis(page, '[data-pace-ritmo-estado], [data-pace-ritmo-tarjeta-movil]').first()).toBeVisible();
         await page.mouse.move(1, 1);
-        await asentarGeometria(page);
+        if (!(await asentarGeometria(page))) fallos.push(m.nombre + ': el aro no se asentó en 90 fotogramas');
         const medir = () => page.evaluate(() => {
           const body = Array.from(document.querySelectorAll('[data-pace-home-body]')).find((e) => e.getBoundingClientRect().width > 0);
           return body.scrollHeight - body.clientHeight;
@@ -104,7 +105,7 @@ for (const lang of ['es', 'en']) {
         if (await page.locator(FILA).count()) fallos.push(m.nombre + ': con la letra normal las actividades se pusieron en fila');
         if (await page.locator('[data-pace-activitybar-chip][title], [data-pace-activitybar-chip][aria-label]').count()) fallos.push(m.nombre + ': con la letra normal las actividades llevan tooltip');
         await page.addStyleTag({ content: '[data-pace-home-body] * { letter-spacing: ' + MARGEN_LETRA + 'px !important }' });
-        await asentarGeometria(page);
+        if (!(await asentarGeometria(page))) fallos.push(m.nombre + ': el aro no se asentó en 90 fotogramas');
         const sobraAncha = await medir();
         if (sobraAncha > 1) fallos.push(m.nombre + ' con la letra ' + MARGEN_LETRA + ' px más ancha: ' + sobraAncha + ' px');
         const conLuego = await vis(page, '.pace-rt-mov [data-pace-ritmo-luego]').count();
@@ -114,7 +115,7 @@ for (const lang of ['es', 'en']) {
           els.forEach((e, i) => e.style.setProperty('font-size', (tam[i] * f) + 'px', 'important'));
           window.dispatchEvent(new Event('pace:home-relayout'));
         }, LETRA_GRANDE);
-        await asentarGeometria(page);
+        if (!(await asentarGeometria(page))) fallos.push(m.nombre + ': el aro no se asentó en 90 fotogramas');
         const sobraGrande = await medir();
         const nombre115 = m.nombre + ' con la letra al ' + Math.round(LETRA_GRANDE * 100) + ' %';
         if (m.pendiente115) {

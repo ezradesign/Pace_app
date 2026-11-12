@@ -65,7 +65,7 @@ for (const lang of ['es', 'en']) {
     await vis(page, '[data-pace-ritmo-libre]').click();
     await expect(page.locator(CHIP)).toHaveCount(4);
     await page.mouse.move(1, 1);
-    await asentarGeometria(page);
+    expect(await asentarGeometria(page), 'el aro no se asentó en 90 fotogramas').toBe(true);
     expect(await page.locator(FILA).count(), 'a 360×600 la tarjeta corta no cabe y las actividades van en fila').toBe(1);
     expect(await page.evaluate(() => window.__visto), 'fotogramas con la rejilla de dos por dos').toBe(0);
     expect(await scrollHome(page), 'en fila, la home cabe').toBeLessThanOrEqual(1);
@@ -117,7 +117,7 @@ for (const lang of ['es', 'en']) {
     const { context, page } = await abrir(browser, lang, 640);
     await expect(page.locator(CHIP)).toHaveCount(4);
     await page.mouse.move(1, 1);
-    await asentarGeometria(page);
+    expect(await asentarGeometria(page), 'el aro no se asentó en 90 fotogramas').toBe(true);
     expect(await page.locator(FILA).count(), 'con la letra normal cabe: sin fila').toBe(0);
     expect(await scrollHome(page)).toBeLessThanOrEqual(1);
     const tops = await page.locator(CHIP).evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top)));
