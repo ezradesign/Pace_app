@@ -4,6 +4,11 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 12 de noviembre de 2026, 17:55, v0.202.0 en `main` con GitHub en verde entero.
 
+## 12 nov., 20:45 (cuenta EcLj6): la 0.203.0, cerrada; Ez dio «A y A» a P3 y P4. Manda sobre lo de abajo
+
+- **`main` = 0.203.0 con GitHub en verde entero** (CI, iOS y Android). No se le vuelve a preguntar P3 ni P4.
+- **EN MARCHA: la misma sesión «testers»** (`local_8ca54066-0dd0-4e5f-8152-3d1493da0aa5`, Opus) sigue en `claude/testers-12nov-954645`, puesta al día con `main` por avance rápido. **P3 A, a montar:** en Android, el fin del Foco con la campana de PACE por canales nuevos (sonoro y mudo), como la pausa. **P4 A, solo maqueta:** ofrecer una vez la alarma exacta al empezar el primer Foco en Android; dos o tres formas sobre la app a 360 px, sin tapar nada. Las dos, en su página (HeMyYYPyDuopL7oYYu5kpS), arriba. Al acabar: leer el diff, enseñárselo a Ez, su letra para la P4 y su «júntalo» para la P3. El mensaje salió en cola; comprobar en su informe que lo leyó.
+
 ## 12 nov., 17:55 (cuenta EcLj6): las páginas al día aquí y los dos arreglos de los testers, en marcha. Manda sobre lo de abajo
 
 - **Hecho del relevo de las 17:40:** «La octava, tercera parte», publicada en EcLj6 (PJye6h3hhiqgjUMRmbUe1h; par con AT8X9QryL4KtDetYTivxzA en `hoja-ids-cuentas.js`; su primera línea dice ya que está en `main` como 0.202.0, y la de 5iWBf aún dice que espera el «júntalo»). La hoja de pasos y la lista corta, republicadas en EcLj6 con el «Ahora» en marcha; las copias del repo llevan los ids de EcLj6 (para 5iWBf, por el guion con `--a=5iWBf`).
