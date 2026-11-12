@@ -37,6 +37,12 @@ function ActivityBar({ onOpenLibrary, onOpenHydrate }) {
     { key: 'muevete', label: t('activity.move.label'), sub: t('activity.move.sub'), color: 'var(--move)', action: () => onOpenLibrary('move'), icon: <ABMove /> },
     { key: 'hidratate', label: t('activity.hydrate.label'), sub: t('activity.hydrate.sub'), color: 'var(--hydrate)', action: onOpenHydrate, icon: <ABDrop /> },
   ];
+  /* Al aparecer (y al cambiar de idioma), el motor de la home decide YA, antes de pintar, si las
+     cuatro van en una fila (home-geometry.medidas.js, Ez B): por requestAnimationFrame se podía
+     pintar un fotograma con la rejilla de dos por dos. Lo vigila tests/home-fila-recogida.spec.js. */
+  React.useLayoutEffect(() => {
+    if (typeof window.paceHomeGeometriaYa === 'function') window.paceHomeGeometriaYa();
+  }, [activities[0].label]);
   return (
     <div data-pace-activitybar style={{ padding: '6px 40px 20px', flexShrink: 0 }}>
       <div style={{ textAlign: 'center', marginBottom: 10 }}>

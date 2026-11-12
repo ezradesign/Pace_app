@@ -24,9 +24,12 @@
  * en «Ver todo» (home-geometry.medidas.js). Aquí se emula agrandando ×1,15 el tamaño de letra
  * calculado de cada elemento de la home. Con la letra normal, la home no se recoge nunca.
  * Mutante: con `paceHomeLuego` devolviendo null, el día servido vuelve a pedir 36 px.
- * Los momentos sin «Luego» que aún desbordan al 115 % (`pendiente115`) esperan la elección
- * de Ez (docs/proposals/montado-octava-2-12nov): se miden y se apuntan, y `pendiente115` es
- * su tope en px (lo más que pidieron el 12 nov., 49 en inglés a 360×640): si crece, rojo.
+ * Donde no hay «Luego» (la tarjeta corta, el día ya contestado y el bloque terminado al
+ * volver), lo que se recoge son las Actividades: las cuatro en una fila, solo con su dibujo
+ * (Ez, B, 12 nov. 2026); el nombre sigue en `aria-label` y `title`. Mutante: con `paceHomeChips`
+ * devolviendo [], la tarjeta corta vuelve a pedir 13 px en castellano y 41 en inglés a 360×640.
+ * La pregunta del día no tiene ni «Luego» ni Actividades: en inglés a 360×640 pide 17 px y va
+ * con `pendiente115`, su tope en px (20 en la CI): se mide y se apunta, y si crece, rojo.
  */
 'use strict';
 
@@ -41,14 +44,14 @@ const hora = (hhmm) => new Date(FECHA + 'T' + hhmm + ':00+02:00');
 /* `lastActiveDay` en el formato del relevo de día (toDateString) para que no ponga
    `cycle` a cero (TRAMPA de ritmo-llevas.spec.js). */
 const MOMENTOS = [
-  { nombre: 'la tarjeta corta', semilla: { ritmo: { libre: true } }, hora: '10:00', pendiente115: 52 },
+  { nombre: 'la tarjeta corta', semilla: { ritmo: { libre: true } }, hora: '10:00' },
   { nombre: 'la pregunta', semilla: { ritmo: { libre: true } }, hora: '10:00', comienza: true, pendiente115: 20 },
   { nombre: 'el día servido llegando a las 10:00', semilla: { ritmo: { libre: true } }, hora: '10:00', comienza: true, elige: 'jornada' },
   { nombre: 'el día servido al empezar', semilla: { ritmo: { dia: JORNADA } }, hora: '09:00' },
-  { nombre: 'el día ya contestado', semilla: { ritmo: { semanaTipo: ['jornada', 'jornada', 'jornada', 'jornada', 'jornada', 'libre', 'libre'] } }, hora: '08:30', pendiente115: 26 },
+  { nombre: 'el día ya contestado', semilla: { ritmo: { semanaTipo: ['jornada', 'jornada', 'jornada', 'jornada', 'jornada', 'libre', 'libre'] } }, hora: '08:30' },
   { nombre: 'la pausa abierta', semilla: { ritmo: { dia: Object.assign({}, JORNADA, { pausa: 1 }) }, cycle: 1,
     lastActiveDay: 'Thu Oct 08 2026', _historyMigrated: true }, hora: '09:50' },
-  { nombre: 'el bloque terminado al volver', semilla: { ritmo: { libre: true } }, hora: '10:40', terminoA: '10:35', pendiente115: 52 },
+  { nombre: 'el bloque terminado al volver', semilla: { ritmo: { libre: true } }, hora: '10:40', terminoA: '10:35' },
 ];
 
 const vis = (page, sel) => page.locator(sel).filter({ visible: true });
@@ -60,6 +63,7 @@ const vis = (page, sel) => page.locator(sel).filter({ visible: true });
 const MARGEN_LETRA = 0.3;
 const LETRA_GRANDE = 1.15;
 const JUSTA = '[data-pace-home-justa]';
+const FILA = '[data-pace-home-fila]';
 
 for (const lang of ['es', 'en']) {
   for (const vp of [{ w: 360, h: 640 }, { w: 375, h: 667 }, { w: 360, h: 718 }, { w: 412, h: 844 }]) {
@@ -97,6 +101,8 @@ for (const lang of ['es', 'en']) {
         const sobra = await medir();
         if (sobra > 1) fallos.push(m.nombre + ': ' + sobra + ' px');
         if (await page.locator(JUSTA).count()) fallos.push(m.nombre + ': con la letra normal la tarjeta escondió «Luego»');
+        if (await page.locator(FILA).count()) fallos.push(m.nombre + ': con la letra normal las actividades se pusieron en fila');
+        if (await page.locator('[data-pace-activitybar-chip][title], [data-pace-activitybar-chip][aria-label]').count()) fallos.push(m.nombre + ': con la letra normal las actividades llevan tooltip');
         await page.addStyleTag({ content: '[data-pace-home-body] * { letter-spacing: ' + MARGEN_LETRA + 'px !important }' });
         await asentarGeometria(page);
         const sobraAncha = await medir();
@@ -115,6 +121,12 @@ for (const lang of ['es', 'en']) {
           if (sobraGrande > 1) test.info().annotations.push({ type: 'espera a Ez', description: nombre115 + ': ' + sobraGrande + ' px' });
           if (sobraGrande > m.pendiente115) fallos.push(nombre115 + ': ' + sobraGrande + ' px, más que su tope de ' + m.pendiente115);
         } else if (sobraGrande > 1) fallos.push(nombre115 + ': ' + sobraGrande + ' px');
+        /* En fila, cada actividad dice su nombre al lector y en el tooltip. */
+        if (await page.locator(FILA).count()) {
+          const nombres = await page.locator('[data-pace-activitybar-chip]').evaluateAll((els) => els.map((e) =>
+            [e.getAttribute('aria-label'), e.getAttribute('title'), e.querySelector('[data-pace-chip-label]').textContent]));
+          if (nombres.length !== 4 || nombres.some(([a, t, r]) => !r || a !== r || t !== r)) fallos.push(nombre115 + ': actividades en fila sin su nombre: ' + JSON.stringify(nombres));
+        }
         /* Escondida, la fila no se pinta: ni foco ni lector de pantalla (display: none). */
         if (conLuego && await page.locator(JUSTA).count()) {
           const ve = await page.locator('.pace-rt-mov [data-pace-ritmo-luego]').evaluateAll((els) => els.map((e) => getComputedStyle(e).display));

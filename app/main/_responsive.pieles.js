@@ -325,6 +325,17 @@
       /* Con la letra grande, si la home no cabe, «Luego» queda en «Ver todo» (Ez, 1 A2;
          la marca la pone el motor, home-geometry.medidas.js). display:none: sin foco ni lector. */
       [data-pace-home-justa] .pace-rt-mov [data-pace-ritmo-luego] { display: none !important; }
+      /* Y donde no hay «Luego», las cuatro actividades en una fila, solo con su dibujo (Ez, B). Los
+         textos se callan a la vista pero no se quitan: el motor copia el nombre a aria-label y title.
+         NADA DE LO QUE SE ANIMA: el botón lleva «transition: all 220ms», y un relleno o un hueco
+         distintos se medían a mitad de transición (8 px de más en WebKit al deshacer la fila, y la
+         fila puesta con la letra normal). Por eso se saca del flujo el bloque de texto y no se toca
+         ni el relleno ni el hueco: con un solo hijo en el flujo, el hueco no cuenta. */
+      [data-pace-home-fila] [data-pace-activitybar-grid] { grid-template-columns: repeat(4, 1fr) !important; }
+      [data-pace-home-fila] [data-pace-activitybar-chip] { justify-content: center !important; }
+      [data-pace-home-fila] [data-pace-activitybar-chip] > span:has(> [data-pace-chip-label]) {
+        position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+      }
       /* Handle flotante ≡ para abrir sidebar: hit target ≥44px */
       [data-pace-sidebar-open] {
         width: 44px !important;

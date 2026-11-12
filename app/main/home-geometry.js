@@ -227,10 +227,12 @@
   function compute() {
     rafId = 0;
     ajustar(0);
+    paceHomeFilaNombres(document.querySelector('[data-pace-home-body]'));
   }
 
-  /* `modo` 0: con «Luego» a la vista; 1: sin él (home-geometry.medidas.js, Ez 1 A2); 2: con él,
-     porque sin él tampoco cabía. Devuelve lo que aún desborda en el móvil. */
+  /* `modo` 0: todo a la vista; 1: recogido, sin «Luego» o, donde no lo hay, con Actividades en
+     una fila (home-geometry.medidas.js, Ez 1 A2 y B); 2: a la vista, porque recogido tampoco
+     cabía. Devuelve lo que aún desborda en el móvil. */
   function ajustar(modo) {
     /* s128: el motor corre AHORA también en móvil/tablet. isDesktop solo elige las
        CONSTANTES (la rama Desktop queda byte-idéntica); el resto del cálculo es
@@ -245,7 +247,9 @@
        solapamiento sale del CICLO, que vive DENTRO del aro. */
     if (!body || !dial) return 0;
     var luego = !isDesktop && paceHomeLuego(body);
+    var fila = !isDesktop && !luego && paceHomeChips(body).length > 0;
     paceHomeRecoger(body, !!luego && modo === 1);
+    paceHomeFila(body, fila && modo === 1);
 
     var widthCap = isDesktop ? WIDTH_CAP : WIDTH_CAP_MOBILE;
     var dFloor = isDesktop ? D_FLOOR : D_FLOOR_MOBILE;
@@ -364,8 +368,8 @@
         sobra = medirOver();
       }
       if (sobra > 1 && D !== dAntes) { D = dAntes; applyD(D, dial, horario); }
-      /* Ni en el suelo cabe: sin «Luego», si así cabe; si no, como estaba. */
-      if (sobra > 1 && luego && modo === 0) return ajustar(1) > 1 ? ajustar(2) : 0;
+      /* Ni en el suelo cabe: recogido, si así cabe; si no, como estaba. */
+      if (sobra > 1 && (luego || fila) && modo === 0) return ajustar(1) > 1 ? ajustar(2) : 0;
       if (modo === 1 && sobra > 1) return sobra;
     }
 

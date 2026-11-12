@@ -51838,6 +51838,17 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
       /* Con la letra grande, si la home no cabe, «Luego» queda en «Ver todo» (Ez, 1 A2;
          la marca la pone el motor, home-geometry.medidas.js). display:none: sin foco ni lector. */
       [data-pace-home-justa] .pace-rt-mov [data-pace-ritmo-luego] { display: none !important; }
+      /* Y donde no hay «Luego», las cuatro actividades en una fila, solo con su dibujo (Ez, B). Los
+         textos se callan a la vista pero no se quitan: el motor copia el nombre a aria-label y title.
+         NADA DE LO QUE SE ANIMA: el botón lleva «transition: all 220ms», y un relleno o un hueco
+         distintos se medían a mitad de transición (8 px de más en WebKit al deshacer la fila, y la
+         fila puesta con la letra normal). Por eso se saca del flujo el bloque de texto y no se toca
+         ni el relleno ni el hueco: con un solo hijo en el flujo, el hueco no cuenta. */
+      [data-pace-home-fila] [data-pace-activitybar-grid] { grid-template-columns: repeat(4, 1fr) !important; }
+      [data-pace-home-fila] [data-pace-activitybar-chip] { justify-content: center !important; }
+      [data-pace-home-fila] [data-pace-activitybar-chip] > span:has(> [data-pace-chip-label]) {
+        position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+      }
       /* Handle flotante ≡ para abrir sidebar: hit target ≥44px */
       [data-pace-sidebar-open] {
         width: 44px !important;
@@ -52274,6 +52285,12 @@ function ActivityBar(_ref) {let { onOpenLibrary, onOpenHydrate } = _ref;
   { key: 'muevete', label: t('activity.move.label'), sub: t('activity.move.sub'), color: 'var(--move)', action: () => onOpenLibrary('move'), icon: React.createElement(ABMove, null) },
   { key: 'hidratate', label: t('activity.hydrate.label'), sub: t('activity.hydrate.sub'), color: 'var(--hydrate)', action: onOpenHydrate, icon: React.createElement(ABDrop, null) }];
 
+
+
+
+  React.useLayoutEffect(() => {
+    if (typeof window.paceHomeGeometriaYa === 'function') window.paceHomeGeometriaYa();
+  }, [activities[0].label]);
   return (
     React.createElement("div", { "data-pace-activitybar": true, style: { padding: '6px 40px 20px', flexShrink: 0 } },
     React.createElement("div", { style: { textAlign: 'center', marginBottom: 10 } },
@@ -53229,13 +53246,46 @@ Object.assign(window, {
 var PACE_HOME_JUSTA = 'data-pace-home-justa';
 
 
+
+
+
+
+
+
+var PACE_HOME_FILA = 'data-pace-home-fila';
+
+
 function paceHomeLuego(body) {
   return body ? body.querySelector('.pace-rt-mov [data-pace-ritmo-luego]') : null;
 }
 
-function paceHomeRecoger(body, si) {
-  if (si) {if (!body.hasAttribute(PACE_HOME_JUSTA)) body.setAttribute(PACE_HOME_JUSTA, '');} else
-  if (body.hasAttribute(PACE_HOME_JUSTA)) body.removeAttribute(PACE_HOME_JUSTA);
+
+function paceHomeChips(body) {
+  return body ? body.querySelectorAll('[data-pace-activitybar-chip]') : [];
+}
+
+function paceHomeMarca(body, marca, si) {
+  if (si) {if (!body.hasAttribute(marca)) body.setAttribute(marca, '');} else
+  if (body.hasAttribute(marca)) body.removeAttribute(marca);
+}
+
+function paceHomeRecoger(body, si) {paceHomeMarca(body, PACE_HOME_JUSTA, si);}
+function paceHomeFila(body, si) {paceHomeMarca(body, PACE_HOME_FILA, si);}
+
+
+
+function paceHomeFilaNombres(body) {
+  if (!body) return;
+  var fila = body.hasAttribute(PACE_HOME_FILA);
+  var chips = paceHomeChips(body);
+  for (var i = 0; i < chips.length; i++) {
+    var rotulo = chips[i].querySelector('[data-pace-chip-label]');
+    var nombre = fila && rotulo ? rotulo.textContent : '';
+    ['aria-label', 'title'].forEach(function (a) {
+      if (!nombre) {if (chips[i].hasAttribute(a)) chips[i].removeAttribute(a);} else
+      if (chips[i].getAttribute(a) !== nombre) chips[i].setAttribute(a, nombre);
+    });
+  }
 }
 
 
@@ -53277,7 +53327,7 @@ function paceAroPisoInterior(dial, radio) {
   }
   return Math.ceil(peor / radio);
 }
-;Object.assign(window, { PACE_HOME_JUSTA, paceHomeLuego, paceHomeRecoger, paceAroCicloAbajo, paceAroPisoInterior });
+;Object.assign(window, { PACE_HOME_JUSTA, PACE_HOME_FILA, paceHomeLuego, paceHomeChips, paceHomeMarca, paceHomeRecoger, paceHomeFila, paceHomeFilaNombres, paceAroCicloAbajo, paceAroPisoInterior });
 })();
 </script>
   <script>
@@ -53511,7 +53561,9 @@ function paceAroPisoInterior(dial, radio) {
   function compute() {
     rafId = 0;
     ajustar(0);
+    paceHomeFilaNombres(document.querySelector('[data-pace-home-body]'));
   }
+
 
 
 
@@ -53529,7 +53581,9 @@ function paceAroPisoInterior(dial, radio) {
 
     if (!body || !dial) return 0;
     var luego = !isDesktop && paceHomeLuego(body);
+    var fila = !isDesktop && !luego && paceHomeChips(body).length > 0;
     paceHomeRecoger(body, !!luego && modo === 1);
+    paceHomeFila(body, fila && modo === 1);
 
     var widthCap = isDesktop ? WIDTH_CAP : WIDTH_CAP_MOBILE;
     var dFloor = isDesktop ? D_FLOOR : D_FLOOR_MOBILE;
@@ -53649,7 +53703,7 @@ function paceAroPisoInterior(dial, radio) {
       }
       if (sobra > 1 && D !== dAntes) {D = dAntes;applyD(D, dial, horario);}
 
-      if (sobra > 1 && luego && modo === 0) return ajustar(1) > 1 ? ajustar(2) : 0;
+      if (sobra > 1 && (luego || fila) && modo === 0) return ajustar(1) > 1 ? ajustar(2) : 0;
       if (modo === 1 && sobra > 1) return sobra;
     }
 
