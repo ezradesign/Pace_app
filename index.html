@@ -7732,17 +7732,16 @@ function loadState(estricto) {
 
 
 
-    if (!parsed._weeklyStatsReindexed_v0_28_8 && parsed.weeklyStats) {
-      parsed.weeklyStats = reindexWeeklyStatsMondayFirst(parsed.weeklyStats);
+    if (!parsed._weeklyStatsReindexed_v0_28_8) {
+      if (parsed.weeklyStats) parsed.weeklyStats = reindexWeeklyStatsMondayFirst(parsed.weeklyStats);
       parsed._weeklyStatsReindexed_v0_28_8 = true;
     }
 
 
 
 
-
-    if (!parsed._historyRecalculated_v0_28_8 && parsed.history && parsed.history.days) {
-      parsed.history = recomputeAllHistoryAggregates(parsed.history);
+    if (!parsed._historyRecalculated_v0_28_8) {
+      if (parsed.history && parsed.history.days) parsed.history = recomputeAllHistoryAggregates(parsed.history);
       parsed._historyRecalculated_v0_28_8 = true;
     }
 
@@ -9736,10 +9735,16 @@ var PACE_TIENDA_WEB = {
 var PACE_TIENDA_PLANES = ['vida', 'mes'];
 
 
+
+
+
 function paceTiendaWebCompra() {
   var pr = PACE_TIENDA_WEB.precios || {};
   var e = PACE_TIENDA_WEB.enlaces || {};
-  return PACE_TIENDA_PLANES.filter(function (p) {return !!pr[p] && typeof e[p] === 'string' && e[p].length > 0;});
+  var portal = typeof PACE_TIENDA_WEB.gestionar === 'string' && PACE_TIENDA_WEB.gestionar.length > 0;
+  return PACE_TIENDA_PLANES.filter(function (p) {
+    return !!pr[p] && typeof e[p] === 'string' && e[p].length > 0 && (p !== 'mes' || portal);
+  });
 }
 
 function paceTiendaWebLista() {

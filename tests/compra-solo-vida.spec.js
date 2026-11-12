@@ -30,8 +30,9 @@ const HOJA = '[data-pace-premium-hoja]';
 const SOLO_VIDA = { vida: '/index.html#tienda-vida', mes: null };
 const LOS_DOS = { vida: '/index.html#tienda-vida', mes: '/index.html#tienda-mes' };
 
+/* Con el mensual, también su portal: sin dónde cancelarlo no se vende (state-compra.js). */
 async function ponerEnlaces(page, enlaces) {
-  await page.evaluate((e) => { window.PACE_TIENDA_WEB.enlaces = e; }, enlaces);
+  await page.evaluate((e) => { window.PACE_TIENDA_WEB.enlaces = e; window.PACE_TIENDA_WEB.gestionar = e.mes ? 'https://billing.stripe.com/p/login/prueba' : null; }, enlaces);
 }
 
 async function hastaLaSemana(page) {
@@ -51,7 +52,8 @@ async function invitar(page) {
 }
 
 async function comoEnV1(page, enlaces) {
-  await page.evaluate((e) => { window.PREMIUM_ABIERTO_HASTA_V1 = false; window.PACE_TIENDA_WEB.enlaces = e; }, enlaces);
+  await page.evaluate((e) => { window.PREMIUM_ABIERTO_HASTA_V1 = false; }, enlaces);
+  await ponerEnlaces(page, enlaces);
 }
 
 /* La hoja entra animada: se mide cuando está quieta. */

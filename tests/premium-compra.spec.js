@@ -24,7 +24,8 @@ const HOJA = '[data-pace-premium-hoja]';
 async function comoEnV1(page, conTienda) {
   await page.evaluate((tienda) => {
     window.PREMIUM_ABIERTO_HASTA_V1 = false;
-    if (tienda) window.PACE_TIENDA_WEB.enlaces = { vida: '/index.html#tienda-vida', mes: '/index.html#tienda-mes' };
+    /* El mensual se vende con su portal para cancelarlo (state-compra.js). */
+    if (tienda) Object.assign(window.PACE_TIENDA_WEB, { enlaces: { vida: '/index.html#tienda-vida', mes: '/index.html#tienda-mes' }, gestionar: 'https://billing.stripe.com/p/login/prueba' });
   }, !!conTienda);
 }
 

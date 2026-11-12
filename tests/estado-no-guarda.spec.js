@@ -9,7 +9,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, abrirTusDatos, CLAVE_ESTADO } = require('./helpers');
+const { sembrar, irAlArtefacto, abrirTusDatos, capturarErrores, CLAVE_ESTADO } = require('./helpers');
 
 const aviso = (p) => p.locator('[data-pace-no-guarda]');
 const unVaso = (p) => p.locator('[data-pace-sidebar]').getByRole('button', { name: /Añadir un vaso/ }).click();
@@ -72,6 +72,34 @@ test('estado-5b · exportar desde Ajustes y desde el aviso da el mismo estado, e
   /* Abrir Ajustes gana un logro («explore.tweaks») entre una copia y otra; lo demás es lo mismo. */
   const sinLogros = ({ achievements, achievementQueue, ...resto }) => resto;
   expect(sinLogros(deAjustes.state)).toEqual(sinLogros(delAviso.state));
+});
+
+/* LA OCTAVA, PRUEBA 2 (12 nov. 2026): un navegador lleno no falla solo para `pace.state.v2`, falla
+   para TODAS las claves (el reloj del Foco, el motor del aro, el calendario, los avisos, la sesión
+   de otra pestaña…), y también `sessionStorage`. Cada escritura de `app/` va dentro de un `try`, y
+   aquí se comprueba de una vez: la home monta sin errores, sale la barra y un Foco empieza, acaba,
+   abre la pausa y se cuenta en lo que hay en memoria. Mutante: con el `try` quitado de la escritura
+   del reloj del Foco (`persistFocusTimer`), «Empezar foco» rompe la app y la prueba cae. */
+test('estado-5c · con el almacenamiento lleno para todas las claves, la app sigue y un Foco empieza y acaba', async ({ page, context }) => {
+  await sembrar(context);
+  await context.addInitScript(() => {
+    Storage.prototype.setItem = function () { throw new DOMException('lleno', 'QuotaExceededError'); };
+  });
+  const errores = capturarErrores(page);
+  await page.clock.install({ time: new Date('2026-10-08T10:00:00+02:00') });
+  await irAlArtefacto(page);
+  await expect(page.getByRole('button', { name: 'Empezar foco', exact: true })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Pausar', exact: true })).toBeVisible();
+
+  /* El reloj del Foco no se pudo guardar (`pace.timer.v1`): se salta a su final por la duración. Al
+     acabar se escribe el estado, y ahí sale la barra (empezar solo escribe el reloj del Foco). */
+  await page.clock.fastForward(25 * 60 * 1000 + 1000);
+  await expect(page.locator('[data-pace-break-shortcut]').first()).toBeAttached({ timeout: 15000 });
+  await expect(aviso(page)).toBeVisible();
+  expect(await page.evaluate(() => getState().totalFocusMin), 'el Foco se cuenta en memoria').toBe(25);
+  expect(errores, 'errores con el almacenamiento lleno').toEqual([]);
 });
 
 test('CONTROL · si se guarda bien, no sale ningún aviso', async ({ page, context }) => {

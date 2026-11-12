@@ -154,11 +154,16 @@ async function asentar(page) {
  * NO se mete dentro de `asentar` a proposito: `asentar` lo llaman veinte sitios,
  * algunos con `page.clock` instalado, y ahi requestAnimationFrame SOLO corre
  * cuando el reloj avanza — un bucle de frames se quedaria esperando hasta agotar
- * el test. Este helper se usa donde no hay reloj virtual.
+ * el test. Con `clock.install` sin `pauseAt` el reloj corre solo y los fotogramas
+ * tambien (home-sin-scroll lo usa asi); con el reloj pausado, no.
+ *
+ * DEVUELVE SI CONVERGIO (la octava, nº 20): salia a los 90 fotogramas sin decirlo y la
+ * prueba media igual, a media convergencia. Quien mide algo que depende del aro lo
+ * aserta; un `false` es «el motor no se asento», no «la home no cabe».
  */
 async function asentarGeometria(page) {
   await asentar(page);
-  await page.evaluate(async () => {
+  return page.evaluate(async () => {
     const frame = () => new Promise(r => requestAnimationFrame(r));
     const leer = () => getComputedStyle(document.documentElement)
       .getPropertyValue('--pace-timer-d').trim();
@@ -170,6 +175,7 @@ async function asentarGeometria(page) {
       iguales = (ahora === previo) ? iguales + 1 : 0;
       previo = ahora;
     }
+    return iguales >= 3;
   });
 }
 
