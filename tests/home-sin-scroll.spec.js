@@ -17,6 +17,16 @@
  * la letra más ancha (MARGEN_LETRA), falla contra v0.146.0 en inglés a 360×640.
  * El bloque terminado (al volver se cuenta, foco-3) pedía 8 px a 360×640 en
  * castellano: «Siguiente · Ciclo 2 / 4» agrandaba el aro.
+ *
+ * LA TERCERA MEDIDA, CON LA LETRA AL 115 % (Ez, 1 A2 de la octava, 12 nov. 2026): el WebView
+ * de Android escala la letra con la del sistema, y al 115 % el día servido pedía 36 px a
+ * 360×640 y 38 con la pausa abierta. Ahora la tarjeta enseña solo «Ahora» y «Luego» queda
+ * en «Ver todo» (home-geometry.medidas.js). Aquí se emula agrandando ×1,15 el tamaño de letra
+ * calculado de cada elemento de la home. Con la letra normal, la home no se recoge nunca.
+ * Mutante: con `paceHomeLuego` devolviendo null, el día servido vuelve a pedir 36 px.
+ * Los momentos sin «Luego» que aún desbordan al 115 % (`pendiente115`) esperan la elección
+ * de Ez (docs/proposals/montado-octava-2-12nov): se miden y se apuntan, y `pendiente115` es
+ * su tope en px (lo más que pidieron el 12 nov., 49 en inglés a 360×640): si crece, rojo.
  */
 'use strict';
 
@@ -31,14 +41,14 @@ const hora = (hhmm) => new Date(FECHA + 'T' + hhmm + ':00+02:00');
 /* `lastActiveDay` en el formato del relevo de día (toDateString) para que no ponga
    `cycle` a cero (TRAMPA de ritmo-llevas.spec.js). */
 const MOMENTOS = [
-  { nombre: 'la tarjeta corta', semilla: { ritmo: { libre: true } }, hora: '10:00' },
-  { nombre: 'la pregunta', semilla: { ritmo: { libre: true } }, hora: '10:00', comienza: true },
+  { nombre: 'la tarjeta corta', semilla: { ritmo: { libre: true } }, hora: '10:00', pendiente115: 52 },
+  { nombre: 'la pregunta', semilla: { ritmo: { libre: true } }, hora: '10:00', comienza: true, pendiente115: 20 },
   { nombre: 'el día servido llegando a las 10:00', semilla: { ritmo: { libre: true } }, hora: '10:00', comienza: true, elige: 'jornada' },
   { nombre: 'el día servido al empezar', semilla: { ritmo: { dia: JORNADA } }, hora: '09:00' },
-  { nombre: 'el día ya contestado', semilla: { ritmo: { semanaTipo: ['jornada', 'jornada', 'jornada', 'jornada', 'jornada', 'libre', 'libre'] } }, hora: '08:30' },
+  { nombre: 'el día ya contestado', semilla: { ritmo: { semanaTipo: ['jornada', 'jornada', 'jornada', 'jornada', 'jornada', 'libre', 'libre'] } }, hora: '08:30', pendiente115: 26 },
   { nombre: 'la pausa abierta', semilla: { ritmo: { dia: Object.assign({}, JORNADA, { pausa: 1 }) }, cycle: 1,
     lastActiveDay: 'Thu Oct 08 2026', _historyMigrated: true }, hora: '09:50' },
-  { nombre: 'el bloque terminado al volver', semilla: { ritmo: { libre: true } }, hora: '10:40', terminoA: '10:35' },
+  { nombre: 'el bloque terminado al volver', semilla: { ritmo: { libre: true } }, hora: '10:40', terminoA: '10:35', pendiente115: 52 },
 ];
 
 const vis = (page, sel) => page.locator(sel).filter({ visible: true });
@@ -48,6 +58,8 @@ const vis = (page, sel) => page.locator(sel).filter({ visible: true });
    360×640) y aquí cabía con 0,3 px. Así que cada momento se mide otra vez con la letra un poco más
    ancha: un texto que va al límite sale en rojo en cualquier máquina, antes de llegar a un móvil. */
 const MARGEN_LETRA = 0.3;
+const LETRA_GRANDE = 1.15;
+const JUSTA = '[data-pace-home-justa]';
 
 for (const lang of ['es', 'en']) {
   for (const vp of [{ w: 360, h: 640 }, { w: 375, h: 667 }, { w: 360, h: 718 }, { w: 412, h: 844 }]) {
@@ -84,10 +96,30 @@ for (const lang of ['es', 'en']) {
         });
         const sobra = await medir();
         if (sobra > 1) fallos.push(m.nombre + ': ' + sobra + ' px');
+        if (await page.locator(JUSTA).count()) fallos.push(m.nombre + ': con la letra normal la tarjeta escondió «Luego»');
         await page.addStyleTag({ content: '[data-pace-home-body] * { letter-spacing: ' + MARGEN_LETRA + 'px !important }' });
         await asentarGeometria(page);
         const sobraAncha = await medir();
         if (sobraAncha > 1) fallos.push(m.nombre + ' con la letra ' + MARGEN_LETRA + ' px más ancha: ' + sobraAncha + ' px');
+        const conLuego = await vis(page, '.pace-rt-mov [data-pace-ritmo-luego]').count();
+        await page.evaluate((f) => {
+          const els = Array.from(document.querySelectorAll('[data-pace-home-body], [data-pace-home-body] *'));
+          const tam = els.map((e) => parseFloat(getComputedStyle(e).fontSize));
+          els.forEach((e, i) => e.style.setProperty('font-size', (tam[i] * f) + 'px', 'important'));
+          window.dispatchEvent(new Event('pace:home-relayout'));
+        }, LETRA_GRANDE);
+        await asentarGeometria(page);
+        const sobraGrande = await medir();
+        const nombre115 = m.nombre + ' con la letra al ' + Math.round(LETRA_GRANDE * 100) + ' %';
+        if (m.pendiente115) {
+          if (sobraGrande > 1) test.info().annotations.push({ type: 'espera a Ez', description: nombre115 + ': ' + sobraGrande + ' px' });
+          if (sobraGrande > m.pendiente115) fallos.push(nombre115 + ': ' + sobraGrande + ' px, más que su tope de ' + m.pendiente115);
+        } else if (sobraGrande > 1) fallos.push(nombre115 + ': ' + sobraGrande + ' px');
+        /* Escondida, la fila no se pinta: ni foco ni lector de pantalla (display: none). */
+        if (conLuego && await page.locator(JUSTA).count()) {
+          const ve = await page.locator('.pace-rt-mov [data-pace-ritmo-luego]').evaluateAll((els) => els.map((e) => getComputedStyle(e).display));
+          if (ve.some((d) => d !== 'none')) fallos.push(nombre115 + ': «Luego» recogido pero aún se pinta');
+        }
         await context.close();
       }
       expect(fallos, 'la home pide scroll').toEqual([]);

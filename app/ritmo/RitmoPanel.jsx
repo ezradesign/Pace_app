@@ -18,7 +18,7 @@
    «Hoy voy por libre» es la única salida: era lo mismo que «Ver la carta» y lo
    explica mejor (ronda 3). */
 
-const { useState: useStateRP } = React;
+const { useState: useStateRP, useLayoutEffect: useLayoutEffectRP } = React;
 
 var RITMO_OPCIONES_UI = ['1h', '2h', 'media', 'jornada'];
 
@@ -257,10 +257,10 @@ function RitmoEscritorio({ state, plan }) {
   );
 }
 
-function RitmoFila({ rotulo, modulo, nombre, meta, claves }) {
+function RitmoFila({ rotulo, modulo, nombre, meta, claves, luego }) {
   const { t } = useT();
   return (
-    <div className="pace-rt-fila">
+    <div className="pace-rt-fila" data-pace-ritmo-luego={luego ? '' : undefined}>
       <div className="pace-rt-meta">{rotulo}</div>
       <div className="pace-rt-que">
         <div className="pace-rt-n"><RitmoGlifo modulo={modulo} />{nombre}</div>
@@ -278,14 +278,15 @@ function RitmoFila({ rotulo, modulo, nombre, meta, claves }) {
 function RitmoFilaParada({ it, rotulo, corta }) {
   const { t, tn, lang } = useT();
   const cab = <React.Fragment>{t(rotulo)}<br />{ritmoHora(it.desde)}</React.Fragment>;
+  const luego = rotulo === 'ritmo.luego';
   if (it.tipo === 'comida') {
-    return <RitmoFila rotulo={cab} modulo="comida" nombre={t('ritmo.comida')} meta={tn('ritmo.comida.lista', { d: ritmoDuracion(it.dur) })} />;
+    return <RitmoFila rotulo={cab} luego={luego} modulo="comida" nombre={t('ritmo.comida')} meta={tn('ritmo.comida.lista', { d: ritmoDuracion(it.dur) })} />;
   }
   if (it.tipo === 'ocupado') {
-    return <RitmoFila rotulo={cab} modulo="ocupado" nombre={t('ritmo.ocupado')} meta={ritmoDuracion(it.dur)} />;
+    return <RitmoFila rotulo={cab} luego={luego} modulo="ocupado" nombre={t('ritmo.ocupado')} meta={ritmoDuracion(it.dur)} />;
   }
   if (!it.platos || !it.platos.length) return null;
-  return <RitmoFila rotulo={cab} modulo={it.platos[0].modulo} nombre={ritmoPlatos(it, t, lang)}
+  return <RitmoFila rotulo={cab} luego={luego} modulo={it.platos[0].modulo} nombre={ritmoPlatos(it, t, lang)}
     meta={<RitmoMetaGota texto={ritmoMetaPlato(it, t, tn, corta)} agua={it.agua} />}
     claves={it.platos.map((p) => p.clave)} />;
 }
@@ -303,12 +304,18 @@ function RitmoMovil({ state, plan, onVer }) {
     : typeof getFocusDescriptorKey === 'function' ? t(getFocusDescriptorKey(b.dur)) : '';
   /* Con la pausa abierta (s193), «Ahora» es la parada y «Luego» el bloque; acabado su rato, ya no (S11 A). */
   const filaBloque = (rotulo) => (
-    <RitmoFila rotulo={<React.Fragment>{t(rotulo)}<br />{ritmoHora(b.desde)}</React.Fragment>}
+    <RitmoFila rotulo={<React.Fragment>{t(rotulo)}<br />{ritmoHora(b.desde)}</React.Fragment>} luego={rotulo === 'ritmo.luego'}
       modulo="foco" nombre={tn('ritmo.fila.bloque', { n: plan.hechos + 1, m: plan.total })}
       meta={b.dur + ' min · ' + descriptor} />
   );
   const luego = ritmoDetras(plan.m, b);
-  const filas = plan.pausa && !plan.pausaPasada
+  const conPausa = !!(plan.pausa && !plan.pausaPasada);
+  /* Las filas cambian: el motor de la home decide YA, antes de pintar, si «Luego» cabe (Ez, 1 A2;
+     home-geometry.medidas.js). Así no se ve un fotograma con «Luego» que luego se esconde. */
+  useLayoutEffectRP(() => {
+    if (typeof window.paceHomeGeometriaYa === 'function') window.paceHomeGeometriaYa();
+  }, [conPausa, !!luego, plan.hechos, plan.m.opcion]);
+  const filas = conPausa
     ? <React.Fragment><RitmoFilaParada it={plan.pausa} rotulo="ritmo.ahora" corta />{filaBloque('ritmo.luego')}</React.Fragment>
     : <React.Fragment>{filaBloque('ritmo.ahora')}{luego ? <RitmoFilaParada it={luego} rotulo="ritmo.luego" corta /> : null}</React.Fragment>;
   return (

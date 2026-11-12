@@ -156,46 +156,9 @@
     if (rootStyle.getPropertyValue(name) !== val) rootStyle.setProperty(name, val);
   }
 
-  function cicloBottomWithin(dial) {
-    // Localiza los puntos CICLO por texto (i18n: «Ciclo N/4» / «Cycle N/4»),
-    // toma el borde inferior más bajo entre las coincidencias. Sin hook JSX.
-    var best = null;
-    var nodes = dial.querySelectorAll('span, div');
-    for (var i = 0; i < nodes.length; i++) {
-      if (CICLO_RE.test(nodes[i].textContent || '')) {
-        var b = paceCaja(nodes[i]).bottom;
-        if (best == null || b > best) best = b;
-      }
-    }
-    return best;
-  }
-
-  /* El diametro que pide el interior con el D aplicado ahora: la esquina mas
-     lejana del centro de todo lo que se pinta dentro, partida por
-     RADIO_INTERIOR. Solo cuentan las HOJAS: el bloque que las envuelve mide el
-     70 % del aro y sus esquinas quedan fuera del circulo por construccion. Lo
-     que esta oculto con visibility (la fila del ciclo cuando el panel de A tu
-     ritmo ocupa su hueco) no se pinta y no cuenta. */
-  function pisoInterior(dial) {
-    var numero = dial.querySelector('[data-pace-dial-number]');
-    var bloque = numero && numero.parentElement;
-    if (!bloque) return 0;
-    var f = paceCaja(dial);
-    var cx = f.left + f.width / 2;
-    var cy = f.top + f.height / 2;
-    var peor = 0;
-    var nodos = bloque.querySelectorAll('*');
-    for (var i = 0; i < nodos.length; i++) {
-      if (nodos[i].children.length) continue;
-      var r = paceCaja(nodos[i]);
-      if (!r.width || !r.height) continue;
-      if (getComputedStyle(nodos[i]).visibility === 'hidden') continue;
-      var dx = Math.max(Math.abs(r.left - cx), Math.abs(r.right - cx));
-      var dy = Math.max(Math.abs(r.top - cy), Math.abs(r.bottom - cy));
-      peor = Math.max(peor, Math.sqrt(dx * dx + dy * dy));
-    }
-    return Math.ceil(peor / RADIO_INTERIOR);
-  }
+  /* Las medidas que solo leen viven en home-geometry.medidas.js. */
+  function cicloBottomWithin(dial) { return paceAroCicloAbajo(dial, CICLO_RE); }
+  function pisoInterior(dial) { return paceAroPisoInterior(dial, RADIO_INTERIOR); }
 
   // Fija D y, con D ya aplicado (getBoundingClientRect fuerza layout), ancla las
   // Actividades JUSTO bajo el CICLO real → solapamiento seguro y constante,
@@ -263,6 +226,12 @@
 
   function compute() {
     rafId = 0;
+    ajustar(0);
+  }
+
+  /* `modo` 0: con «Luego» a la vista; 1: sin él (home-geometry.medidas.js, Ez 1 A2); 2: con él,
+     porque sin él tampoco cabía. Devuelve lo que aún desborda en el móvil. */
+  function ajustar(modo) {
     /* s128: el motor corre AHORA también en móvil/tablet. isDesktop solo elige las
        CONSTANTES (la rama Desktop queda byte-idéntica); el resto del cálculo es
        común. El «horizonte» (clip + solapamiento) lo aplica el CSS al elemento que
@@ -274,7 +243,9 @@
     /* s156: SOLO estos dos. La tarjeta de Camino y Actividades son opcionales
        (ver cabecera) y ninguno de los dos hace falta para calcular: el techo del
        solapamiento sale del CICLO, que vive DENTRO del aro. */
-    if (!body || !dial) return;
+    if (!body || !dial) return 0;
+    var luego = !isDesktop && paceHomeLuego(body);
+    paceHomeRecoger(body, !!luego && modo === 1);
 
     var widthCap = isDesktop ? WIDTH_CAP : WIDTH_CAP_MOBILE;
     var dFloor = isDesktop ? D_FLOOR : D_FLOOR_MOBILE;
@@ -296,7 +267,7 @@
 
     var hUtil = body.clientHeight;
     var w = body.clientWidth;
-    if (!hUtil || !w) return;
+    if (!hUtil || !w) return 0;
 
     // Estimación GENEROSA por ancho (proporción de la referencia); luego se
     // ENCOGE hasta que no haya scroll. Así D es el mayor círculo que cabe:
@@ -393,6 +364,9 @@
         sobra = medirOver();
       }
       if (sobra > 1 && D !== dAntes) { D = dAntes; applyD(D, dial, horario); }
+      /* Ni en el suelo cabe: sin «Luego», si así cabe; si no, como estaba. */
+      if (sobra > 1 && luego && modo === 0) return ajustar(1) > 1 ? ajustar(2) : 0;
+      if (modo === 1 && sobra > 1) return sobra;
     }
 
     if (isDesktop && paceAroCartaVisible()) paceAroCartaRecordar(clave, D);   // el tamaño que pedirá el horario
@@ -414,7 +388,17 @@
       var luzTras = luzOver();
       if (luzTras > 0) setVar('--pace-home-slack', Math.max(0, libre - luzTras * 3) + 'px');
     }
+    return 0;
   }
+
+  /* Una pasada YA, desde el layout effect de la tarjeta del día (RitmoMovil): React acaba de
+     cambiar sus filas y el navegador aún no ha pintado, así que «Luego» no llega a verse.
+     Por rAF se habría pintado un fotograma con él. */
+  window.paceHomeGeometriaYa = function () {
+    if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
+    reintentos = 0;
+    compute();
+  };
 
   function schedule() {
     if (!rafId) rafId = requestAnimationFrame(compute);

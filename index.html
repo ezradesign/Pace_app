@@ -48872,7 +48872,7 @@ Object.assign(window, { RitmoLinea, RitmoMini, RitmoEtiqueta, RitmoFicha, ritmoC
 
 
 
-const { useState: useStateRP } = React;
+const { useState: useStateRP, useLayoutEffect: useLayoutEffectRP } = React;
 
 var RITMO_OPCIONES_UI = ['1h', '2h', 'media', 'jornada'];
 
@@ -49111,10 +49111,10 @@ function RitmoEscritorio(_ref7) {let { state, plan } = _ref7;
 
 }
 
-function RitmoFila(_ref8) {let { rotulo, modulo, nombre, meta, claves } = _ref8;
+function RitmoFila(_ref8) {let { rotulo, modulo, nombre, meta, claves, luego } = _ref8;
   const { t } = useT();
   return (
-    React.createElement("div", { className: "pace-rt-fila" },
+    React.createElement("div", { className: "pace-rt-fila", "data-pace-ritmo-luego": luego ? '' : undefined },
     React.createElement("div", { className: "pace-rt-meta" }, rotulo),
     React.createElement("div", { className: "pace-rt-que" },
     React.createElement("div", { className: "pace-rt-n" }, React.createElement(RitmoGlifo, { modulo: modulo }), nombre),
@@ -49132,14 +49132,15 @@ function RitmoFila(_ref8) {let { rotulo, modulo, nombre, meta, claves } = _ref8;
 function RitmoFilaParada(_ref9) {let { it, rotulo, corta } = _ref9;
   const { t, tn, lang } = useT();
   const cab = React.createElement(React.Fragment, null, t(rotulo), React.createElement("br", null), ritmoHora(it.desde));
+  const luego = rotulo === 'ritmo.luego';
   if (it.tipo === 'comida') {
-    return React.createElement(RitmoFila, { rotulo: cab, modulo: "comida", nombre: t('ritmo.comida'), meta: tn('ritmo.comida.lista', { d: ritmoDuracion(it.dur) }) });
+    return React.createElement(RitmoFila, { rotulo: cab, luego: luego, modulo: "comida", nombre: t('ritmo.comida'), meta: tn('ritmo.comida.lista', { d: ritmoDuracion(it.dur) }) });
   }
   if (it.tipo === 'ocupado') {
-    return React.createElement(RitmoFila, { rotulo: cab, modulo: "ocupado", nombre: t('ritmo.ocupado'), meta: ritmoDuracion(it.dur) });
+    return React.createElement(RitmoFila, { rotulo: cab, luego: luego, modulo: "ocupado", nombre: t('ritmo.ocupado'), meta: ritmoDuracion(it.dur) });
   }
   if (!it.platos || !it.platos.length) return null;
-  return React.createElement(RitmoFila, { rotulo: cab, modulo: it.platos[0].modulo, nombre: ritmoPlatos(it, t, lang),
+  return React.createElement(RitmoFila, { rotulo: cab, luego: luego, modulo: it.platos[0].modulo, nombre: ritmoPlatos(it, t, lang),
     meta: React.createElement(RitmoMetaGota, { texto: ritmoMetaPlato(it, t, tn, corta), agua: it.agua }),
     claves: it.platos.map((p) => p.clave) });
 }
@@ -49157,12 +49158,18 @@ function RitmoMovil(_ref0) {let { state, plan, onVer } = _ref0;
   typeof getFocusDescriptorKey === 'function' ? t(getFocusDescriptorKey(b.dur)) : '';
 
   const filaBloque = (rotulo) =>
-  React.createElement(RitmoFila, { rotulo: React.createElement(React.Fragment, null, t(rotulo), React.createElement("br", null), ritmoHora(b.desde)),
+  React.createElement(RitmoFila, { rotulo: React.createElement(React.Fragment, null, t(rotulo), React.createElement("br", null), ritmoHora(b.desde)), luego: rotulo === 'ritmo.luego',
     modulo: "foco", nombre: tn('ritmo.fila.bloque', { n: plan.hechos + 1, m: plan.total }),
     meta: b.dur + ' min · ' + descriptor });
 
   const luego = ritmoDetras(plan.m, b);
-  const filas = plan.pausa && !plan.pausaPasada ?
+  const conPausa = !!(plan.pausa && !plan.pausaPasada);
+
+
+  useLayoutEffectRP(() => {
+    if (typeof window.paceHomeGeometriaYa === 'function') window.paceHomeGeometriaYa();
+  }, [conPausa, !!luego, plan.hechos, plan.m.opcion]);
+  const filas = conPausa ?
   React.createElement(React.Fragment, null, React.createElement(RitmoFilaParada, { it: plan.pausa, rotulo: "ritmo.ahora", corta: true }), filaBloque('ritmo.luego')) :
   React.createElement(React.Fragment, null, filaBloque('ritmo.ahora'), luego ? React.createElement(RitmoFilaParada, { it: luego, rotulo: "ritmo.luego", corta: true }) : null);
   return (
@@ -51828,6 +51835,9 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
       [data-pace-activitybar-chip] [data-pace-chip-sub] {
         font-size: 11px !important;
       }
+      /* Con la letra grande, si la home no cabe, «Luego» queda en «Ver todo» (Ez, 1 A2;
+         la marca la pone el motor, home-geometry.medidas.js). display:none: sin foco ni lector. */
+      [data-pace-home-justa] .pace-rt-mov [data-pace-ritmo-luego] { display: none !important; }
       /* Handle flotante ≡ para abrir sidebar: hit target ≥44px */
       [data-pace-sidebar-open] {
         width: 44px !important;
@@ -53201,6 +53211,81 @@ Object.assign(window, {
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
+   MEDIDAS DEL MOTOR DE LA HOME (home-geometry.js), aparte para que el motor quepa en 500 líneas.
+   Solo leen la página: no publican nada ni saben del estado de la app.
+
+   CON LA LETRA GRANDE, LA TARJETA DEL DÍA ENSEÑA SOLO «AHORA» (Ez, 1 A2, 12 nov. 2026).
+   Con la letra del sistema al 115 % (el zoom de texto que el WebView de Android toma de la
+   letra del móvil), el día servido pedía 36 px de scroll a 360×640 y 38 con la pausa abierta:
+   el aro ya estaba en su suelo y no había más que encoger. La fila de «Luego» (la que lleva
+   `data-pace-ritmo-luego`) se esconde entonces, y sigue a un toque en «Ver todo».
+   Cómo se decide: se MIDE, no se adivina la escala del sistema. El motor ajusta el aro con
+   «Luego» a la vista; si aun en su suelo la home desborda, prueba sin «Luego», y solo lo
+   deja escondido si así cabe (si tampoco cabe, como a 320×568 con la letra normal, nada
+   cambia). Todo en la misma pasada síncrona, sin pintar entre medias: no parpadea. Y como la
+   respuesta depende solo de lo que hay en pantalla, cada pasada da la misma: no baila.
+   Escondida con `display: none` (_responsive.pieles.js), la fila no recibe el foco ni la lee el lector. */
+
+var PACE_HOME_JUSTA = 'data-pace-home-justa';
+
+
+function paceHomeLuego(body) {
+  return body ? body.querySelector('.pace-rt-mov [data-pace-ritmo-luego]') : null;
+}
+
+function paceHomeRecoger(body, si) {
+  if (si) {if (!body.hasAttribute(PACE_HOME_JUSTA)) body.setAttribute(PACE_HOME_JUSTA, '');} else
+  if (body.hasAttribute(PACE_HOME_JUSTA)) body.removeAttribute(PACE_HOME_JUSTA);
+}
+
+
+
+function paceAroCicloAbajo(dial, re) {
+  var best = null;
+  var nodes = dial.querySelectorAll('span, div');
+  for (var i = 0; i < nodes.length; i++) {
+    if (re.test(nodes[i].textContent || '')) {
+      var b = paceCaja(nodes[i]).bottom;
+      if (best == null || b > best) best = b;
+    }
+  }
+  return best;
+}
+
+
+
+
+
+
+function paceAroPisoInterior(dial, radio) {
+  var numero = dial.querySelector('[data-pace-dial-number]');
+  var bloque = numero && numero.parentElement;
+  if (!bloque) return 0;
+  var f = paceCaja(dial);
+  var cx = f.left + f.width / 2;
+  var cy = f.top + f.height / 2;
+  var peor = 0;
+  var nodos = bloque.querySelectorAll('*');
+  for (var i = 0; i < nodos.length; i++) {
+    if (nodos[i].children.length) continue;
+    var r = paceCaja(nodos[i]);
+    if (!r.width || !r.height) continue;
+    if (getComputedStyle(nodos[i]).visibility === 'hidden') continue;
+    var dx = Math.max(Math.abs(r.left - cx), Math.abs(r.right - cx));
+    var dy = Math.max(Math.abs(r.top - cy), Math.abs(r.bottom - cy));
+    peor = Math.max(peor, Math.sqrt(dx * dx + dy * dy));
+  }
+  return Math.ceil(peor / radio);
+}
+;Object.assign(window, { PACE_HOME_JUSTA, paceHomeLuego, paceHomeRecoger, paceAroCicloAbajo, paceAroPisoInterior });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
    Ayudante de geometría de la HOME DESKTOP (s126).
 
    OBJETIVO. Reproducir la composición de la captura de referencia (v0.64 a
@@ -53355,46 +53440,9 @@ Object.assign(window, {
     if (rootStyle.getPropertyValue(name) !== val) rootStyle.setProperty(name, val);
   }
 
-  function cicloBottomWithin(dial) {
 
-
-    var best = null;
-    var nodes = dial.querySelectorAll('span, div');
-    for (var i = 0; i < nodes.length; i++) {
-      if (CICLO_RE.test(nodes[i].textContent || '')) {
-        var b = paceCaja(nodes[i]).bottom;
-        if (best == null || b > best) best = b;
-      }
-    }
-    return best;
-  }
-
-
-
-
-
-
-
-  function pisoInterior(dial) {
-    var numero = dial.querySelector('[data-pace-dial-number]');
-    var bloque = numero && numero.parentElement;
-    if (!bloque) return 0;
-    var f = paceCaja(dial);
-    var cx = f.left + f.width / 2;
-    var cy = f.top + f.height / 2;
-    var peor = 0;
-    var nodos = bloque.querySelectorAll('*');
-    for (var i = 0; i < nodos.length; i++) {
-      if (nodos[i].children.length) continue;
-      var r = paceCaja(nodos[i]);
-      if (!r.width || !r.height) continue;
-      if (getComputedStyle(nodos[i]).visibility === 'hidden') continue;
-      var dx = Math.max(Math.abs(r.left - cx), Math.abs(r.right - cx));
-      var dy = Math.max(Math.abs(r.top - cy), Math.abs(r.bottom - cy));
-      peor = Math.max(peor, Math.sqrt(dx * dx + dy * dy));
-    }
-    return Math.ceil(peor / RADIO_INTERIOR);
-  }
+  function cicloBottomWithin(dial) {return paceAroCicloAbajo(dial, CICLO_RE);}
+  function pisoInterior(dial) {return paceAroPisoInterior(dial, RADIO_INTERIOR);}
 
 
 
@@ -53462,6 +53510,12 @@ Object.assign(window, {
 
   function compute() {
     rafId = 0;
+    ajustar(0);
+  }
+
+
+
+  function ajustar(modo) {
 
 
 
@@ -53473,7 +53527,9 @@ Object.assign(window, {
 
 
 
-    if (!body || !dial) return;
+    if (!body || !dial) return 0;
+    var luego = !isDesktop && paceHomeLuego(body);
+    paceHomeRecoger(body, !!luego && modo === 1);
 
     var widthCap = isDesktop ? WIDTH_CAP : WIDTH_CAP_MOBILE;
     var dFloor = isDesktop ? D_FLOOR : D_FLOOR_MOBILE;
@@ -53495,7 +53551,7 @@ Object.assign(window, {
 
     var hUtil = body.clientHeight;
     var w = body.clientWidth;
-    if (!hUtil || !w) return;
+    if (!hUtil || !w) return 0;
 
 
 
@@ -53592,6 +53648,9 @@ Object.assign(window, {
         sobra = medirOver();
       }
       if (sobra > 1 && D !== dAntes) {D = dAntes;applyD(D, dial, horario);}
+
+      if (sobra > 1 && luego && modo === 0) return ajustar(1) > 1 ? ajustar(2) : 0;
+      if (modo === 1 && sobra > 1) return sobra;
     }
 
     if (isDesktop && paceAroCartaVisible()) paceAroCartaRecordar(clave, D);
@@ -53613,7 +53672,17 @@ Object.assign(window, {
       var luzTras = luzOver();
       if (luzTras > 0) setVar('--pace-home-slack', Math.max(0, libre - luzTras * 3) + 'px');
     }
+    return 0;
   }
+
+
+
+
+  window.paceHomeGeometriaYa = function () {
+    if (rafId) {cancelAnimationFrame(rafId);rafId = 0;}
+    reintentos = 0;
+    compute();
+  };
 
   function schedule() {
     if (!rafId) rafId = requestAnimationFrame(compute);
