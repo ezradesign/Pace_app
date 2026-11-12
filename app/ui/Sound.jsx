@@ -210,6 +210,10 @@ function madera(ctx, dest, t0, peak) {
   o.start(t0); o.stop(t0 + 0.12);
 }
 
+/* El sonido del fin de la pausa: cambiarlo es cambiar esta palabra y volver a correr
+   `node scripts/campana-aviso.js`, que regraba el archivo del aviso (verify lo exige). */
+var PACE_SONIDO_PAUSA = 'pausa.end.dos';
+
 /* === CATÁLOGO DE SONIDOS === */
 var SOUND_RECIPES = {
 
@@ -235,6 +239,20 @@ var SOUND_RECIPES = {
   },
   'pomodoro.end': function(ctx, t0) {
     SOUND_RECIPES.complete(ctx, t0);
+  },
+  /* El fin de la pausa suena distinto del fin del Foco, para saber sin mirar si toca parar o
+     volver (auditoría externa 4.F3, 12 nov. 2026). Dos candidatos para que Ez elija oyéndolos;
+     `pausa.end` toca el elegido, y el aviso del móvil lo lleva grabado (scripts/campana-aviso.js).
+     Solo osciladores y ganancias: el script no sabe grabar filtros. */
+  'pausa.end.dos': function(ctx, t0) {        // dos campanadas que suben (Sol, Re)
+    bell(ctx, ctx.destination, note('G4'), t0, 0.80, 0.09);
+    bell(ctx, ctx.destination, note('D5'), t0 + 0.42, 1.20, 0.09);
+  },
+  'pausa.end.tres': function(ctx, t0) {       // tres toques cortos en Mi
+    [0, 0.24, 0.48].forEach(function (d) { bell(ctx, ctx.destination, note('E5'), t0 + d, 0.35, 0.07); });
+  },
+  'pausa.end': function(ctx, t0) {
+    SOUND_RECIPES[PACE_SONIDO_PAUSA](ctx, t0);
   },
 
   /* --- RESPIRA (ruido filtrado real) ---

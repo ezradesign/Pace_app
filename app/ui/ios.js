@@ -38,6 +38,10 @@
      receta de Web Audio grabada en `campana-aviso.wav` (scripts/campana-aviso.js),
      que el complemento busca en `public/`. Con el sonido apagado en Ajustes de
      PACE, el aviso va mudo, como la campana.
+   - EL FIN DE LA PAUSA (auditoria externa 4.F2 y 4.F3, 12 nov. 2026) avisa igual, con su
+     propio id (3), su `pausaPuesto` y su sonido, `pausa-aviso.wav` (la receta `pausa.end`):
+     distinto de la campana, para saber sin mirar si toca parar o volver. Con «A tu ritmo» se
+     pide ya con el bloque en marcha, porque la pausa empieza sola cuando el bloque acaba.
    - EL PERMISO. Solo se programa con el permiso dado: sin el, iOS guarda el
      aviso sin enseñarlo y la campana de PACE callaria por el. Al volver se mira
      otra vez (puede venir de los Ajustes del iPhone) y `pace:avisos-nativo`
@@ -70,12 +74,15 @@
 var PACE_IOS_AVISO_FOCO_ID = 1; // un solo aviso de fin de Foco a la vez, como en Android
 var PACE_IOS_AVISO_CLAVE = 'pace.ios.aviso';
 var PACE_IOS_AVISO_SONIDO = 'campana-aviso.wav';
+var PACE_IOS_AVISO_PAUSA_ID = 3;
+var PACE_IOS_AVISO_SONIDO_PAUSA = 'pausa-aviso.wav';
 
-/* El sonido del aviso: la campana de PACE si el sonido esta encendido en Ajustes; si no, ninguno. */
-function paceIosAvisoSonido() {
+/* El sonido del aviso: la campana de PACE (o el de la pausa) si el sonido esta encendido en
+   Ajustes; si no, ninguno. */
+function paceIosAvisoSonido(archivo) {
   try {
     var s = typeof getState === 'function' ? getState() : null;
-    return s && s.soundOn ? PACE_IOS_AVISO_SONIDO : null;
+    return s && s.soundOn ? (archivo || PACE_IOS_AVISO_SONIDO) : null;
   } catch (e) { return null; }
 }
 
@@ -84,19 +91,21 @@ function paceIosAvisoSonido() {
 function paceIosAvisoLeer() {
   try {
     var crudo = localStorage.getItem(PACE_IOS_AVISO_CLAVE);
-    if (crudo === null) return { puesto: null, quizas: true };
+    if (crudo === null) return { puesto: null, quizas: true, pausa: null };
     var v = JSON.parse(crudo);
-    return { puesto: v && typeof v.puesto === 'number' ? v.puesto : null, quizas: false };
-  } catch (e) { return { puesto: null, quizas: true }; }
+    return { puesto: v && typeof v.puesto === 'number' ? v.puesto : null, quizas: false,
+             pausa: v && typeof v.pausa === 'number' ? v.pausa : null };
+  } catch (e) { return { puesto: null, quizas: true, pausa: null }; }
 }
 
 function paceIosAvisoGuardar() {
-  try { localStorage.setItem(PACE_IOS_AVISO_CLAVE, JSON.stringify({ puesto: _paceIos.puesto })); } catch (e) { paceAvisarNoGuarda(e); }
+  try { localStorage.setItem(PACE_IOS_AVISO_CLAVE, JSON.stringify({ puesto: _paceIos.puesto, pausa: _paceIos.pausaPuesto })); } catch (e) { paceAvisarNoGuarda(e); }
 }
 
 var _paceIosLeido = paceIosAvisoLeer();
 var _paceIos = { fondo: false, permiso: 'default', foco: null,
   puesto: _paceIosLeido.puesto, quizas: _paceIosLeido.quizas, fallo: null, cola: Promise.resolve(),
+  pausa: null, pausaPuesto: _paceIosLeido.pausa, pausaFallo: null,
   audio: false, despertares: 0 };
 
 function paceEsIos() {
@@ -183,6 +192,14 @@ function paceIosFoco(endsAt, textos) {
   paceIosAvisoRecolocar();
 }
 
+/* La pausa que corre (o la que empezara sola al acabar el bloque, con «A tu ritmo»), o null. */
+function paceIosPausa(endsAt, textos) {
+  _paceIos.pausa = endsAt
+    ? { endsAt: endsAt, title: (textos && textos.title) || 'PACE', body: (textos && textos.body) || '' }
+    : null;
+  paceIosAvisoRecolocar();
+}
+
 function paceIosFondo(fondo) {
   if (_paceIos.fondo === !!fondo) return;
   _paceIos.fondo = !!fondo;
@@ -198,7 +215,32 @@ function paceIosAvisoEnFila(paso) {
 }
 
 function paceIosAvisoRecolocar() {
-  return paceIosAvisoEnFila(paceIosAvisoAjustar);
+  return paceIosAvisoEnFila(function () {
+    return Promise.resolve().then(paceIosAvisoAjustar).catch(function () {}).then(paceIosAvisoAjustarPausa);
+  });
+}
+
+/* El fin de la pausa: lo mismo que el de fin de Foco, con su id y su sonido. */
+function paceIosAvisoAjustarPausa() {
+  var a = _paceIos, p = a.pausa, ahora = Date.now();
+  var quiere = a.fondo && p && p.endsAt > ahora && a.permiso === 'granted' && paceIosAvisos() ? p : null;
+  if (quiere) {
+    if (a.pausaPuesto === quiere.endsAt) return null;
+    var aviso = { id: PACE_IOS_AVISO_PAUSA_ID, title: quiere.title, body: quiere.body, schedule: { at: new Date(quiere.endsAt) } };
+    var sonido = paceIosAvisoSonido(PACE_IOS_AVISO_SONIDO_PAUSA);
+    if (sonido) aviso.sound = sonido;
+    return paceIosPedir('LocalNotifications', 'schedule', { notifications: [aviso] }).then(function () {
+      a.pausaPuesto = quiere.endsAt;
+      a.pausaFallo = null;
+      paceIosAvisoGuardar();
+    }, function (e) { a.pausaFallo = String((e && e.message) || e || 'error'); });
+  }
+  /* En el fondo no se quita (android.avisos.js): entre el fin del bloque y su pausa no corre nada. */
+  if (a.fondo || a.pausaPuesto === null || a.pausaPuesto <= ahora) return null;
+  return paceIosPedir('LocalNotifications', 'cancel', { notifications: [{ id: PACE_IOS_AVISO_PAUSA_ID }] }).then(function () {
+    a.pausaPuesto = null;
+    paceIosAvisoGuardar();
+  });
 }
 
 /* Lo que deberia haber, frente a lo que iOS confirmo. */
@@ -237,7 +279,7 @@ function paceIosAvisoAjustar() {
    ese bloque. Va en la fila, detras de lo que se recoloco al volver. */
 function paceIosCampana(fin, sonar) {
   return paceIosAvisoEnFila(function () {
-    if (fin && _paceIos.puesto === fin) return;
+    if (fin && (_paceIos.puesto === fin || _paceIos.pausaPuesto === fin)) return;
     try { sonar(); } catch (e) {}
   });
 }
@@ -290,7 +332,8 @@ function paceIosAudioDespertar() {
 function paceIosEstado() {
   var a = _paceIos;
   return { fondo: a.fondo, permiso: a.permiso, programado: a.puesto !== null, puesto: a.puesto, fallo: a.fallo,
-           foco: a.foco ? a.foco.endsAt : null, audio: a.audio, despertares: a.despertares };
+           foco: a.foco ? a.foco.endsAt : null, audio: a.audio, despertares: a.despertares,
+           pausa: a.pausa ? a.pausa.endsAt : null, pausaPuesto: a.pausaPuesto, pausaFallo: a.pausaFallo };
 }
 
 function paceIosArrancar() {
@@ -320,5 +363,5 @@ try { paceIosArrancar(); } catch (e) {}
 
 Object.assign(window, {
   paceEsIos, paceIosPlugin, paceIosAvisos, paceIosAvisoPermiso, paceIosAvisoPedir, paceIosAvisoFallo, paceIosFoco,
-  paceIosCampana, paceIosGuardarArchivo, paceIosEstado,
+  paceIosPausa, paceIosCampana, paceIosGuardarArchivo, paceIosEstado,
 });

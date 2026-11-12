@@ -45,6 +45,17 @@
    sale al irse al fondo, se va al volver, al pausar o al reiniciar, y al acabar lo quita Android
    solo. No suena nunca: el que suena es el de fin. Sin botones; la pieza esta lista para ellos.
 
+   EL FIN DE LA PAUSA (auditoria externa 4.F2 y 4.F3, 12 nov. 2026): una pausa que corre con la
+   app en el fondo avisa al acabar, como el bloque, y con su propio sonido, para saber sin mirar
+   si toca parar o volver. Es otro aviso (id 3), con su `pausaPuesto` en la misma clave y en la
+   misma fila, y la misma regla de una sola campana: si Android tenia el aviso de esa pausa, PACE
+   no toca la suya. Con «A tu ritmo» se pide ya con el bloque en marcha, porque la pausa empieza
+   sola cuando el bloque acaba, aunque nadie abra PACE. EL SONIDO VA EN EL CANAL, y en Android
+   el sonido de un canal no se cambia una vez creado: `pace_pausa` suena `res/raw/pausa_aviso`
+   (por su nombre, asi que cambiarlo es sustituir el archivo) y `pace_pausa_mudo`, de importancia
+   baja, no suena, para quien apaga el sonido en Ajustes. El de fin de Foco sigue en el canal de
+   siempre del complemento.
+
    A SU HORA: desde Android 12 una alarma exacta pide el permiso «Alarmas y
    recordatorios», y desde Android 14 viene apagado. Sin el, Android puede
    retrasar el aviso unos minutos. El complemento, si no lo tiene, abre esa
@@ -56,7 +67,11 @@
    ============================================================ */
 
 var PACE_AVISO_FOCO_ID = 1; // un solo aviso de fin de Foco a la vez
+var PACE_AVISO_PAUSA_ID = 3; // y uno de fin de pausa (el 2 es el aviso fijo)
 var PACE_AVISO_CLAVE = 'pace.android.aviso';
+var PACE_AVISO_CANAL_PAUSA = 'pace_pausa';
+var PACE_AVISO_CANAL_PAUSA_MUDO = 'pace_pausa_mudo';
+var PACE_AVISO_SONIDO_PAUSA = 'pausa_aviso.wav';
 
 /* Lo que dejo el proceso anterior. Sin la clave (una version de antes de guardarla) no se sabe
    si dejo un aviso puesto: `quizas`, y lo primero que se recoloca con la app delante lo quita
@@ -64,14 +79,16 @@ var PACE_AVISO_CLAVE = 'pace.android.aviso';
 function paceAndroidAvisoLeer() {
   try {
     var crudo = localStorage.getItem(PACE_AVISO_CLAVE);
-    if (crudo === null) return { puesto: null, quizas: true };
+    if (crudo === null) return { puesto: null, quizas: true, pausa: null };
     var v = JSON.parse(crudo);
-    return { puesto: v && typeof v.puesto === 'number' ? v.puesto : null, quizas: false };
-  } catch (e) { return { puesto: null, quizas: true }; }
+    return { puesto: v && typeof v.puesto === 'number' ? v.puesto : null, quizas: false,
+             pausa: v && typeof v.pausa === 'number' ? v.pausa : null };
+  } catch (e) { return { puesto: null, quizas: true, pausa: null }; }
 }
 
 function paceAndroidAvisoGuardar() {
-  try { localStorage.setItem(PACE_AVISO_CLAVE, JSON.stringify({ puesto: _paceAvisoAndroid.puesto })); } catch (e) { paceAvisarNoGuarda(e); }
+  var a = _paceAvisoAndroid;
+  try { localStorage.setItem(PACE_AVISO_CLAVE, JSON.stringify({ puesto: a.puesto, pausa: a.pausaPuesto })); } catch (e) { paceAvisarNoGuarda(e); }
 }
 
 var _paceAvisoAndroidLeido = paceAndroidAvisoLeer();
@@ -81,6 +98,8 @@ var _paceAvisoAndroid = {
   /* el aviso fijo que Android enseña (el final de su bloque), o null; al arrancar no se sabe si
      el proceso anterior dejó uno, y lo primero que se recoloca con la app delante lo quita */
   fijo: null, fijoQuizas: true,
+  /* el fin de la pausa: la que se quiere avisar y la que Android confirmo (el final, en ms) */
+  pausa: null, pausaPuesto: _paceAvisoAndroidLeido.pausa, pausaFallo: null,
   fallo: null, cola: Promise.resolve(),
 };
 
@@ -157,6 +176,15 @@ function paceAndroidFoco(endsAt, textos) {
   paceAndroidAvisoRecolocar();
 }
 
+/* FocusTimer cuenta aqui cuando acaba la pausa que corre (o la que empezara sola al acabar el
+   bloque, con «A tu ritmo») y con que textos avisar, o null. */
+function paceAndroidPausa(endsAt, textos) {
+  _paceAvisoAndroid.pausa = endsAt
+    ? { endsAt: endsAt, title: (textos && textos.title) || 'PACE', body: (textos && textos.body) || '' }
+    : null;
+  paceAndroidAvisoRecolocar();
+}
+
 function paceAndroidFondo(fondo) {
   if (_paceAvisoAndroid.fondo === !!fondo) return;
   _paceAvisoAndroid.fondo = !!fondo;
@@ -182,7 +210,60 @@ function paceAndroidAvisoAjustar() {
   var a = _paceAvisoAndroid, f = a.foco;
   var quiere = a.fondo && f && f.endsAt > Date.now() && a.permiso === 'granted' ? f : null;
   return Promise.resolve().then(function () { return paceAndroidAvisoAjustarFin(quiere); }).catch(function () {})
-    .then(function () { return paceAndroidAvisoAjustarFijo(quiere); });
+    .then(function () { return paceAndroidAvisoAjustarFijo(quiere); }).catch(function () {})
+    .then(paceAndroidAvisoAjustarPausa);
+}
+
+/* El fin de la pausa: lo mismo que el de fin de Foco, con su id y su canal. */
+function paceAndroidAvisoAjustarPausa() {
+  var a = _paceAvisoAndroid, p = a.pausa, ahora = Date.now();
+  var quiere = a.fondo && p && p.endsAt > ahora && a.permiso === 'granted' ? p : null;
+  if (quiere) {
+    if (a.pausaPuesto === quiere.endsAt) return null;
+    return paceAndroidPedir('LocalNotifications', 'schedule', { notifications: [{
+      id: PACE_AVISO_PAUSA_ID, title: quiere.title, body: quiere.body,
+      schedule: { at: new Date(quiere.endsAt).toISOString(), allowWhileIdle: true },
+      isExactNotification: a.exacta === 'granted',
+      channelId: paceAndroidSonidoOn() ? PACE_AVISO_CANAL_PAUSA : PACE_AVISO_CANAL_PAUSA_MUDO,
+    }] }).then(function () {
+      a.pausaPuesto = quiere.endsAt;
+      a.pausaFallo = null;
+      paceAndroidAvisoGuardar();
+    }, function (e) { a.pausaFallo = String((e && e.message) || e || 'error'); });
+  }
+  /* Lo que ya llego a su hora no se toca: esta sonando, y su campana es de Android. Y EN EL FONDO
+     NO SE QUITA: con PACE detras nadie puede parar la pausa, y entre el fin del bloque y el
+     arranque de su pausa hay un momento en que no corre nada; si Android congelara PACE justo
+     despues de quitarlo, la pausa se quedaria sin aviso. Se quita al volver, si ya no corre. */
+  if (a.fondo || a.pausaPuesto === null || a.pausaPuesto <= ahora) return null;
+  return paceAndroidPedir('LocalNotifications', 'cancel', { notifications: [{ id: PACE_AVISO_PAUSA_ID }] }).then(function () {
+    a.pausaPuesto = null;
+    paceAndroidAvisoGuardar();
+  });
+}
+
+function paceAndroidSonidoOn() {
+  try { var s = typeof getState === 'function' ? getState() : null; return !!(s && s.soundOn); } catch (e) { return false; }
+}
+
+/* Un texto en el idioma de la app, para lo que Android enseña fuera de ella (los canales). */
+function paceAndroidTexto(clave) {
+  try {
+    var s = typeof getState === 'function' ? getState() : null, l = (s && s.lang) || 'en', t = window.PACE_STRINGS || {};
+    return (t[l] && t[l][clave]) || (t.en && t.en[clave]) || clave;
+  } catch (e) { return clave; }
+}
+
+/* Los dos canales del fin de la pausa. Crear uno que ya existe solo cambia su nombre (el idioma),
+   nunca su sonido: el sonido es el del archivo de res/raw que nombra. */
+function paceAndroidCanales() {
+  var crear = function (op) { return paceAndroidPedir('LocalNotifications', 'createChannel', op).catch(function () {}); };
+  var desc = paceAndroidTexto('notify.canal.pausa.desc');
+  return crear({ id: PACE_AVISO_CANAL_PAUSA, name: paceAndroidTexto('notify.canal.pausa'), description: desc,
+                 importance: 3, sound: PACE_AVISO_SONIDO_PAUSA })
+    .then(function () {
+      return crear({ id: PACE_AVISO_CANAL_PAUSA_MUDO, name: paceAndroidTexto('notify.canal.pausa.mudo'), description: desc, importance: 2 });
+    });
 }
 
 function paceAndroidAvisoAjustarFin(quiere) {
@@ -244,7 +325,7 @@ function paceAndroidAvisoAjustarFijo(quiere) {
 function paceAndroidCampana(fin, sonar) {
   return paceAndroidAvisoEnFila(function () {
     var a = _paceAvisoAndroid;
-    if (fin && a.puesto === fin) return;
+    if (fin && (a.puesto === fin || a.pausaPuesto === fin)) return;
     try { sonar(); } catch (e) {}
   });
 }
@@ -253,7 +334,8 @@ function paceAndroidCampana(fin, sonar) {
 function paceAndroidEstado() {
   var a = _paceAvisoAndroid;
   return { fondo: a.fondo, permiso: a.permiso, exacta: a.exacta, programado: a.puesto !== null, puesto: a.puesto,
-           fallo: a.fallo, fijo: a.fijo, foco: a.foco ? a.foco.endsAt : null, atras: typeof _paceAndroid === 'object' ? _paceAndroid.atras : 0 };
+           fallo: a.fallo, fijo: a.fijo, foco: a.foco ? a.foco.endsAt : null, atras: typeof _paceAndroid === 'object' ? _paceAndroid.atras : 0,
+           pausa: a.pausa ? a.pausa.endsAt : null, pausaPuesto: a.pausaPuesto, pausaFallo: a.pausaFallo };
 }
 
 function paceAndroidAvisosArrancar() {
@@ -268,6 +350,8 @@ function paceAndroidAvisosArrancar() {
       paceAndroidFondo(document.visibilityState === 'hidden');
     });
   } catch (e) {}
+  /* Los canales, antes que cualquier aviso que los nombre: en la misma fila. */
+  paceAndroidAvisoEnFila(paceAndroidCanales);
   paceAndroidAvisoPermisoMirar();
   paceAndroidAvisoExactoMirar();
 }
@@ -277,5 +361,5 @@ try { paceAndroidAvisosArrancar(); } catch (e) {}
 Object.assign(window, {
   paceAndroidAvisos, paceAndroidAvisoPermiso, paceAndroidAvisoPedir, paceAndroidAvisoExacto,
   paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidAvisoFallo, paceAndroidFoco,
-  paceAndroidCampana, paceAndroidEstado,
+  paceAndroidPausa, paceAndroidCampana, paceAndroidEstado,
 });

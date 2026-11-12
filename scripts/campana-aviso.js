@@ -1,20 +1,27 @@
-/* PACE · la campana de fin de Foco, en un archivo para el aviso del iPhone
- * =========================================================================
+/* PACE · la campana de fin de Foco y el sonido de fin de pausa, en archivos para los avisos del movil
+ * ==================================================================================================
  * En el iPhone el aviso de fin de Foco suena con la campana de PACE (Ez, D-10 B del 11 nov.
  * 2026), la misma que se oye en la web y en Android con la app abierta. Esa campana no es un
  * archivo: la toca Web Audio con la receta `pomodoro.end` de `app/ui/Sound.jsx`. Un aviso de
  * iOS necesita un archivo, y no un .mp3: iOS solo suena avisos en PCM lineal dentro de .wav,
  * .aiff o .caf, y de menos de 30 segundos.
  *
- * Aqui se toca la receta DE VERDAD (se carga Sound.jsx tal cual) contra un AudioContext de
- * mentira que solo sabe de osciladores y ganancias, y se escribe `campana-aviso.wav` en la raiz:
- * PCM de 16 bits, mono, 44,1 kHz. Va en la raiz porque el complemento de avisos solo busca el
- * sonido en la primera altura de la carpeta web de la app (`public/` en el iPhone), y
- * `android-www.js` lo copia ahi. Subida de volumen (`PICO`): en la app suena a 0,1, debajo de la
- * musica; un aviso suena solo y con el volumen del timbre del iPhone.
+ * El fin de la pausa (auditoria externa 4.F2 y 4.F3, 12 nov. 2026) avisa tambien con la app en
+ * el fondo, en Android y en el iPhone, con su propio sonido: la receta `pausa.end`. Su archivo va
+ * dos veces: `pausa-aviso.wav` en la raiz, para el iPhone, y `res/raw/pausa_aviso.wav` en Android,
+ * donde el canal de avisos lo nombra por su nombre (android.avisos.js) y Android solo acepta
+ * minusculas y guiones bajos. Los dos son el mismo .wav.
  *
- * Si la receta cambia, `verify` (verify.ios.js) lo dice: vuelve a correr
- * `node scripts/campana-aviso.js`.
+ * Aqui se toca la receta DE VERDAD (se carga Sound.jsx tal cual) contra un AudioContext de
+ * mentira que solo sabe de osciladores y ganancias, y se escribe PCM de 16 bits, mono, 44,1 kHz.
+ * Van en la raiz porque el complemento de avisos solo busca el sonido en la primera altura de la
+ * carpeta web de la app (`public/` en el iPhone), y `android-www.js` los copia ahi. Subida de
+ * volumen (`PICO`): en la app suena a 0,1, debajo de la musica; un aviso suena solo y con el
+ * volumen del timbre del movil.
+ *
+ * Si una receta cambia, `verify` (verify.ios.js y verify.android.js) lo dice: vuelve a correr
+ * `node scripts/campana-aviso.js`. Con `--candidatos <carpeta>` graba ademas cada receta
+ * `pausa.end.*` y la campana en esa carpeta, para oirlas antes de elegir.
  */
 'use strict';
 
@@ -25,6 +32,9 @@ const vm = require('vm');
 const ROOT = path.join(__dirname, '..');
 const ARCHIVO = 'campana-aviso.wav';
 const RECETA = 'pomodoro.end';
+const PAUSA = 'pausa-aviso.wav';
+const PAUSA_RECETA = 'pausa.end';
+const PAUSA_ANDROID = 'android/app/src/main/res/raw/pausa_aviso.wav';
 const MUESTRAS = 44100;
 const PICO = 0.7;
 const COLA = 0.1;
@@ -84,14 +94,19 @@ function valor(nodo, t, fases, dt) {
   return nodo.tipo === 'gain' ? suma * nodo.gain.en(t) : suma;
 }
 
-/* Las muestras de la receta, sin escalar (Float64Array). */
-function tocar() {
+/* La receta que se graba y las demas de Sound.jsx, tal cual. */
+function recetas() {
   const fuente = fs.readFileSync(path.join(ROOT, 'app', 'ui', 'Sound.jsx'), 'utf8');
   const caja = { React: { useCallback: (f) => f }, window: {}, console };
   vm.runInNewContext(fuente, caja, { filename: 'Sound.jsx' });
+  return caja.SOUND_RECIPES || {};
+}
+
+/* Las muestras de la receta, sin escalar (Float64Array). */
+function tocar(nombre) {
   const ctx = contextoDeMentira();
-  const receta = caja.SOUND_RECIPES && caja.SOUND_RECIPES[RECETA];
-  if (typeof receta !== 'function') throw new Error('campana-aviso: Sound.jsx ya no tiene la receta ' + RECETA);
+  const receta = recetas()[nombre];
+  if (typeof receta !== 'function') throw new Error('campana-aviso: Sound.jsx ya no tiene la receta ' + nombre);
   receta(ctx, 0);
   const fin = Math.max.apply(null, ctx.nodos.filter((n) => n.tipo === 'osc').map((n) => n.fin));
   if (!isFinite(fin)) throw new Error('campana-aviso: un oscilador de la receta no para nunca');
@@ -101,9 +116,9 @@ function tocar() {
   return fuera;
 }
 
-/* El .wav entero (Buffer): PCM de 16 bits, mono, con el pico en `PICO`. */
-function campanaWav() {
-  const s = tocar();
+/* El .wav entero (Buffer) de una receta: PCM de 16 bits, mono, con el pico en `PICO`. */
+function recetaWav(nombre) {
+  const s = tocar(nombre);
   let pico = 0;
   for (const x of s) pico = Math.max(pico, Math.abs(x));
   const escala = pico > 0 ? PICO / pico : 0;
@@ -117,6 +132,9 @@ function campanaWav() {
   return Buffer.concat([cab, datos]);
 }
 
+function campanaWav() { return recetaWav(RECETA); }
+function pausaWav() { return recetaWav(PAUSA_RECETA); }
+
 /* { formato, canales, muestras, bits, segundos, datos } de un .wav PCM, o null si no lo es. */
 function leerWav(buf) {
   if (!buf || buf.length < 44 || buf.toString('ascii', 0, 4) !== 'RIFF' || buf.toString('ascii', 8, 12) !== 'WAVE') return null;
@@ -126,11 +144,28 @@ function leerWav(buf) {
   return { formato, canales, muestras, bits, datos, segundos: datos.length / (muestras * canales * bits / 8) };
 }
 
-if (require.main === module) {
-  const wav = campanaWav();
-  fs.writeFileSync(path.join(ROOT, ARCHIVO), wav);
+function escribir(rel, wav) {
+  fs.mkdirSync(path.dirname(path.join(ROOT, rel)), { recursive: true });
+  fs.writeFileSync(path.join(ROOT, rel), wav);
   const w = leerWav(wav);
-  console.log(ARCHIVO + ': ' + w.segundos.toFixed(2) + ' s, ' + (wav.length / 1024).toFixed(0) + ' KB');
+  console.log(rel + ': ' + w.segundos.toFixed(2) + ' s, ' + (wav.length / 1024).toFixed(0) + ' KB');
 }
 
-module.exports = { ARCHIVO, campanaWav, leerWav };
+if (require.main === module) {
+  escribir(ARCHIVO, campanaWav());
+  const pausa = pausaWav();
+  escribir(PAUSA, pausa);
+  escribir(PAUSA_ANDROID, pausa);
+  const i = process.argv.indexOf('--candidatos');
+  if (i !== -1 && process.argv[i + 1]) {
+    const dir = path.resolve(process.argv[i + 1]);
+    fs.mkdirSync(dir, { recursive: true });
+    const nombres = [RECETA].concat(Object.keys(recetas()).filter((n) => /^pausa\.end\./.test(n)));
+    nombres.forEach((n) => {
+      fs.writeFileSync(path.join(dir, n.replace(/\./g, '-') + '.wav'), recetaWav(n));
+      console.log(path.join(dir, n.replace(/\./g, '-') + '.wav'));
+    });
+  }
+}
+
+module.exports = { ARCHIVO, RECETA, PAUSA, PAUSA_RECETA, PAUSA_ANDROID, campanaWav, pausaWav, recetaWav, leerWav };

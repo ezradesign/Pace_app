@@ -207,7 +207,7 @@ test.describe('en el iPhone', () => {
     await irAlArtefacto(page);
     await abrirAjustes(page);
     const fila = page.locator('[data-pace-aj-fila="notify"]');
-    await expect(fila).toContainText('Foco · si la app está en segundo plano');
+    await expect(fila).toContainText('Foco y pausa · si la app está en segundo plano');
     await fila.getByRole('switch').click();
     await expect.poll(() => cuantas(page, 'LocalNotifications', 'requestPermissions')).toBe(1);
     await expect(fila.getByRole('switch')).toHaveAttribute('aria-checked', 'true');

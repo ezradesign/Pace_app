@@ -15,6 +15,9 @@
  *  · Las que se terminan antes no cuentan.
  *  · En el iPhone, lo mismo: la quinta, una vez.
  *  · En la web no se apunta nada ni se pide nada.
+ *  · Hasta v1 (auditoría externa 2.2, 12 nov. 2026) la quinta pausa de un tester ni la pide ni la
+ *    gasta: se sigue contando, y con v1 sale al terminar la primera pausa entera. Las de antes de
+ *    esa fecha simulan v1 con `PREMIUM_ABIERTO_HASTA_V1` en false tras cargar (`comoV1`).
  * NO CUBRE: que Google o Apple enseñen la ventana (tienen su tope y no lo dicen); eso, en un móvil
  * con la versión de la prueba cerrada o de TestFlight.
  *
@@ -64,11 +67,15 @@ async function cerrarPantalla(page) {
 
 const pedidas = (page) => page.evaluate(() => window.__valoraciones.length);
 
+/* El día de v1 se apaga la constante; aquí, tras cargar, como en las pruebas del cobro. */
+const comoV1 = (page) => page.evaluate(() => { window.PREMIUM_ABIERTO_HASTA_V1 = false; });
+
 test.describe('la valoración en Google Play', () => {
   test('la quinta pausa entera la pide al cerrar su pantalla, una sola vez en la vida', async ({ page, context }) => {
     await comoAndroid(context);
     await sembrar(context);
     await irAlArtefacto(page);
+    await comoV1(page);
 
     for (const modo of ['respira', 'mueve', 'estira', 'respira']) { await pausa(page, modo, true); await cerrarPantalla(page); }
     await page.waitForTimeout(1500);
@@ -92,6 +99,7 @@ test.describe('la valoración en Google Play', () => {
     expect(await pedidas(page)).toBe(1);
     await page.reload();
     await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
+    await comoV1(page);
     await pausa(page, 'respira', true);
     await cerrarPantalla(page);
     await page.waitForTimeout(2000);
@@ -103,6 +111,7 @@ test.describe('la valoración en Google Play', () => {
     await comoAndroid(context);
     await sembrar(context);
     await irAlArtefacto(page);
+    await comoV1(page);
     for (let i = 0; i < 6; i++) { await pausa(page, ['respira', 'mueve', 'estira'][i % 3], false); await cerrarPantalla(page); }
     await page.waitForTimeout(1500);
     expect(await pedidas(page)).toBe(0);
@@ -116,6 +125,7 @@ test.describe('la valoración en Google Play', () => {
     await comoAndroid(context);
     await sembrar(context, { valoracion: { pausas: 5, pedida: null } });
     await irAlArtefacto(page);
+    await comoV1(page);
     await page.waitForTimeout(1500);
     expect(await pedidas(page), 'no sale al abrir PACE').toBe(0);
     await pausa(page, 'estira', true);
@@ -127,6 +137,7 @@ test.describe('la valoración en Google Play', () => {
     await comoAndroid(context, 'ios');
     await sembrar(context);
     await irAlArtefacto(page);
+    await comoV1(page);
     expect(await page.evaluate(() => window.pacePlataformaNativa())).toBe('ios');
     for (const modo of ['respira', 'mueve', 'estira', 'respira', 'mueve']) { await pausa(page, modo, true); await cerrarPantalla(page); }
     await esperarEnPagina(page, () => window.__valoraciones.length === 1, null, { timeout: 12000 });
@@ -145,4 +156,35 @@ test.describe('la valoración en Google Play', () => {
     expect(await page.evaluate(() => window.getState().valoracion)).toBeUndefined();
     expect(await page.evaluate(() => typeof window.Capacitor)).toBe('undefined');
   });
+});
+
+test.describe('hasta v1, la petición de un tester no se gasta (auditoría externa 2.2)', () => {
+  for (const plataforma of ['android', 'ios']) {
+    test(`${plataforma}: la quinta pausa entera ni pide la ventana ni la gasta; con v1, la siguiente la pide`, async ({ page, context }) => {
+      await comoAndroid(context, plataforma);
+      await sembrar(context);
+      await context.clock.install({ time: new Date('2026-11-12T10:00:00+01:00') });
+      await irAlArtefacto(page);
+      expect(await page.evaluate(() => window.PREMIUM_ABIERTO_HASTA_V1), 'esta prueba es la de antes de v1').toBe(true);
+      for (const modo of ['respira', 'mueve', 'estira', 'respira', 'mueve']) { await pausa(page, modo, true); await cerrarPantalla(page); }
+      /* La espera mira cada medio segundo: se mueve el reloj de la página, sin esperas fijas. */
+      await page.clock.runFor(5000);
+      expect(await pedidas(page), 'un tester gastó la única petición antes de v1').toBe(0);
+      expect(await page.evaluate(() => window.getState().valoracion), 'las pausas de antes de v1 se cuentan, y nada queda pedido').toEqual({ pausas: 5, pedida: null });
+
+      /* Llega v1: la primera pausa entera la pide, una vez. */
+      await comoV1(page);
+      await pausa(page, 'estira', true);
+      await cerrarPantalla(page);
+      await page.clock.runFor(5000);
+      expect(await pedidas(page), 'con v1 y cinco pausas hechas, la siguiente pausa entera la pide').toBe(1);
+      const v = await page.evaluate(() => window.getState().valoracion);
+      expect(v.pausas).toBe(6);
+      expect(typeof v.pedida).toBe('number');
+      await pausa(page, 'respira', true);
+      await cerrarPantalla(page);
+      await page.clock.runFor(5000);
+      expect(await pedidas(page), 'una vez en la vida, también desde v1').toBe(1);
+    });
+  }
 });

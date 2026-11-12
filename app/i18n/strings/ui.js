@@ -167,6 +167,14 @@ Object.assign(window.PACE_STRINGS.es, {
 
     'notify.focus.title':            'Foco completado',
     'notify.focus.body':             'Ciclo cerrado. Elige tu micro-pausa.',
+    /* El fin de la pausa en el móvil, con su propio sonido (auditoría externa 4.F2, 12 nov. 2026),
+       y los nombres de sus dos canales en los ajustes de Android. */
+    'notify.pausa.title':            'Pausa terminada',
+    'notify.pausa.body':             'Cuando quieras, vuelve al Foco.',
+    'notify.pausa.ritmo':            'Ahora, el bloque {n} de {total}.',
+    'notify.canal.pausa':            'Fin de la pausa',
+    'notify.canal.pausa.mudo':       'Fin de la pausa, sin sonido',
+    'notify.canal.pausa.desc':       'Avisa de que la pausa ha terminado.',
     /* s198 · la red de error (ui/RedDeError.jsx): una parte, y la global. Sin
        absolutos (s151): «se puede recuperar», no «se recupera todo». */
     'red.parte.titulo':              'Esta parte no ha podido abrirse',
@@ -342,6 +350,12 @@ Object.assign(window.PACE_STRINGS.en, {
 
     'notify.focus.title':            'Focus complete',
     'notify.focus.body':             'Focus complete. Choose your break.',
+    'notify.pausa.title':            'Break over',
+    'notify.pausa.body':             'Back to Focus when you’re ready.',
+    'notify.pausa.ritmo':            'Next up: block {n} of {total}.',
+    'notify.canal.pausa':            'End of break',
+    'notify.canal.pausa.mudo':       'End of break, silent',
+    'notify.canal.pausa.desc':       'Lets you know your break is over.',
     'red.parte.titulo':              'This section couldn’t load',
     'red.parte.texto':               'The rest of PACE keeps working and your data is safe. You can close it and carry on, or reload to try again.',
     'red.cerrar':                    'Close',

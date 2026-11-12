@@ -24,6 +24,13 @@
    UNA SOLA VEZ: `valoracion.pedida` se apunta ANTES de llamar a la tienda, porque la tienda
    no contesta si salió (PaceValoracion.java y PaceValoracion.swift).
 
+   HASTA v1, NI SE PIDE NI SE GASTA (auditoría externa 2.2, 12 nov. 2026). Mientras PACE está
+   abierto para todos (`PREMIUM_ABIERTO_HASTA_V1`) quien llega a la quinta pausa es un tester
+   de la prueba cerrada de Play o de TestFlight, cuya reseña aún no es pública, y la única
+   petición se perdería. Las pausas enteras se siguen contando, pero la ventana no se pide: con
+   v1 sale al terminar la primera pausa entera si ya van cinco, y desde ahí todo es como antes.
+   Se mira en cada llamada, no al cargar: el día de v1 basta con apagar la constante.
+
    `var`/`function` a propósito (un `const` no cruza la IIFE del artefacto).
    ============================================================ */
 
@@ -48,6 +55,11 @@ function paceValoracionEstado() {
   return v && typeof v === 'object' && !Array.isArray(v) ? v : { pausas: 0, pedida: null };
 }
 
+/* Hasta v1 la ventana no se pide (arriba). */
+function paceValoracionHastaV1() {
+  return window.PREMIUM_ABIERTO_HASTA_V1 === true;
+}
+
 /* Lo llaman las tres `complete*Session` al acabar una pausa; `entera === false` no cuenta. */
 function paceValoracionPausa(entera) {
   try {
@@ -56,7 +68,7 @@ function paceValoracionPausa(entera) {
     if (v.pedida) return;
     var n = (Number(v.pausas) || 0) + 1;
     setState({ valoracion: { pausas: n, pedida: null } });
-    if (n >= PACE_VALORACION_PAUSAS) paceValoracionEsperar();
+    if (n >= PACE_VALORACION_PAUSAS && !paceValoracionHastaV1()) paceValoracionEsperar();
   } catch (e) {}
 }
 
@@ -80,7 +92,7 @@ function paceValoracionEsperar() {
 function paceValoracionPedir() {
   try {
     var v = paceValoracionEstado();
-    if (v.pedida || (Number(v.pausas) || 0) < PACE_VALORACION_PAUSAS) return;
+    if (v.pedida || (Number(v.pausas) || 0) < PACE_VALORACION_PAUSAS || paceValoracionHastaV1()) return;
     var p = paceValoracionPlugin();
     if (!p) return;
     setState({ valoracion: { pausas: v.pausas, pedida: Date.now() } });

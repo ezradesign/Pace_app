@@ -72,6 +72,15 @@ function paceNativoFoco(endsAt, textos) {
   else if (p === 'ios') paceIosFoco(endsAt, textos);
 }
 
+/* Cuando acaba la pausa que corre, o la que empezara sola tras el bloque con «A tu ritmo» (ms),
+   y con que textos avisar, o null. El fin de la pausa suena distinto del fin del Foco
+   (auditoria externa 4.F2 y 4.F3, 12 nov. 2026). En la web no hace nada. */
+function paceNativoPausa(endsAt, textos) {
+  var p = pacePlataformaNativa();
+  if (p === 'android') paceAndroidPausa(endsAt, textos);
+  else if (p === 'ios') paceIosPausa(endsAt, textos);
+}
+
 /* Lo que dira el aviso de fin, al programarlo con la app ya en el fondo: con «A tu ritmo», la
    pausa que viene detras del bloque (`fin`, que FocusTimer saca de `ritmoAvisoFin`) con las
    mismas palabras que el aviso de la web al acabar; sin el, o si falla, los de siempre. */
@@ -119,5 +128,5 @@ function paceNativoEnlace(ruta) {
 
 Object.assign(window, {
   pacePlataformaNativa, paceEsNativo, paceNativoPlugin, paceNativoAvisos, paceNativoAvisoPermiso,
-  paceNativoAvisoPedir, paceNativoFoco, paceNativoTextosFin, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace,
+  paceNativoAvisoPedir, paceNativoFoco, paceNativoPausa, paceNativoTextosFin, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace,
 });
