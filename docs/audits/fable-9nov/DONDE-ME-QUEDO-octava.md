@@ -1,5 +1,46 @@
 # La octava: dónde me quedo
 
+## Tercera parte (12 nov. 2026, rama `claude/quirky-torvalds-6a57ae`, sale de `main` 0.201.0)
+
+Montado entero lo que quedaba de la octava. Sin bump ni CHANGELOG: lo junta la coordinadora.
+
+| Etapa | Commit | Qué |
+|---|---|---|
+| 1 · la B de Ez | 221c3021 | Con la letra al 115 %, si la home no cabe, las cuatro actividades en una fila, solo el dibujo (`home-geometry.medidas.js`, modo 1 de `ajustar`); nombre en `aria-label` y `title`; `home-fila-recogida.spec.js`; fuera los `pendiente115` de la tarjeta corta, el día contestado y el bloque terminado |
+| 2 · pruebas 2, 4, 6, 7, 8, 9 y 10 | cc5a298c | Almacenamiento lleno en todo, copia de ida y vuelta, humo contra `dist/`, landing con tamaño e idioma, la home en v1 un lunes con barras, husos de noche, compra vigente y mensual sin portal. Dos fallos de la app arreglados (abajo) |
+| 3 · ciertos sin arreglar | 40c13fa3 | nº 2, 6, 9, 11, 16, 17, 20, 21, 23, 24, 25 y 26 (9, 11, 17 y 23 los cierran las pruebas 10, 7 y 6). El nº 2 era precaución: a las 23:57 respira-5 y 6 también pasaban |
+| — | (este) | Página «Montado» (`docs/proposals/montado-octava-3-12nov/`, sin publicar) y este relevo |
+
+**Dos fallos de la app que destaparon las pruebas, arreglados (pequeños y claros):**
+- La tienda de la web vendía el mensual con su enlace aunque no hubiera portal para cancelarlo
+  (`app/state-compra.js`): ahora el mensual solo se vende con `gestionar`. Hoy no cambia nada (los dos
+  enlaces están en `null`). Las pruebas que abren la tienda con el mensual le ponen portal.
+- Un estado guardado sin `weeklyStats` arrancaba sin marcar la migración de la v0.28.8: la copia iba sin
+  marca y al traerla la semana se corría un día (`app/state-core.jsx`, `loadState`). Ahora, sin semana
+  que re-indexar, se marca igual. En una instalación real es raro; en las semillas de las pruebas, no.
+
+**Probado:** `verify` en verde; las vecinas de la etapa 1 (166, Chromium y WebKit), las de la etapa 2
+(363) y las de la etapa 3 (34, con `home-sin-scroll` en los dos motores), con `--workers=1` en el puerto
+8795. La suite entera no se ha pasado aquí: la pasa el CI al juntar.
+
+**Lo que se cambió en pruebas viejas por la B:** `home-aro-interior` medía el suelo del aro a 360×600
+y 375×600, que con la fila ya caben: baja a 360×560 y 375×560.
+
+### Espera a Ez (en la página)
+- La fila sale también **con la letra normal** en pantallas más bajas que 360×640 si así cabe (360×600,
+  360×580, o 320×568 en castellano), igual que «Luego». Recomendado dejarlo.
+- La barra de «no deja guardar» sale al acabar el Foco, no al empezarlo: empezar solo escribe el reloj
+  del Foco (`persistFocusTimer`, que traga el error), y si se cierra PACE a mitad ese bloque se pierde
+  sin aviso. A: dejarlo; B: que la barra salga con la primera escritura que falle, sea la que sea.
+  Recomendada la B. (La prueba 2 lo deja dicho: la barra se mira al acabar.)
+- Mirar en un Android de verdad con la letra grande (aquí se emula ×1,15).
+
+### Lo que no se hizo
+- El censo en `verify` de los `localStorage.setItem(` de `app/` (cierre propuesto en el nº 17): la
+  prueba 2 ya hace fallar todas las claves a la vez y la prueba 7 los dos gestos que faltaban.
+- nº 4 entero (reloj fijo en TODAS las pruebas que apagan la bandera): hecho en `caza-v1-compra`; las
+  demás siguen en `RELOJ_SIN_HORA_ANTIGUOS` o con su hora propia. La pasada en lunes la da la prueba 8.
+
 ## Segunda parte (12 nov. 2026, rama `claude/octava-2-12nov-9ca0e7`, sale de `main` 0.200.1)
 
 Paré con la cuenta cerca del 80 % de la ventana de 5 h para dejar la página y este relevo.
