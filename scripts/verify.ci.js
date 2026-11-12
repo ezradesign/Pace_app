@@ -38,6 +38,21 @@ function contarPruebas(ROOT) {
   return m ? Number(m[1]) : null;
 }
 
+/* Lo que falta en el horario a hora fija de ci.yml, con los dos husos de Madrid. Solo cuentan
+   los cron diarios (`M H * * *`) para la noche y uno de lunes (`M H * * 1`) para la semana. */
+function horasDeNoche(yml) {
+  var crones = (yml.split('\njobs:')[0].match(/- cron: '[^']+'/g) || []).map(function (c) { return c.slice(9, -1).trim().split(/\s+/); });
+  var diarios = crones.filter(function (c) { return c.length === 5 && /^\d+$/.test(c[0]) && /^\d+$/.test(c[1]) && c[2] === '*' && c[3] === '*' && c[4] === '*'; });
+  var faltan = [];
+  [['invierno', 1], ['verano', 2]].forEach(function (h) {
+    var horas = diarios.map(function (c) { return (Number(c[1]) + h[1]) % 24; });
+    if (!horas.some(function (x) { return x >= 22; })) faltan.push('en ' + h[0] + ' (UTC+' + h[1] + ') no hay pasada de 22:00 a 23:59 de Madrid');
+    if (!horas.some(function (x) { return x < 2; })) faltan.push('en ' + h[0] + ' (UTC+' + h[1] + ') no hay pasada de 00:00 a 01:59 de Madrid');
+  });
+  if (!crones.some(function (c) { return c.length === 5 && c[4] === '1'; })) faltan.push('no hay pasada de lunes');
+  return faltan;
+}
+
 function tandaCI(ctx) {
   console.log('\n[ci] Los trozos de las pruebas caben en su tiempo');
   var yml = leer(ctx.ROOT, '.github/workflows/ci.yml');
@@ -80,12 +95,15 @@ function tandaCI(ctx) {
   if (/--target "\$GITHUB_SHA"/.test(android)) malAndroid.push('apunta el borrador al último commit de main y no al que probó el CI');
   if (android.indexOf("github.event.workflow_run.event == 'push'") < 0) malAndroid.push('una corrida del CI a hora fija rehace el AAB de una versión que quizá ya se subió');
 
-  /* A horas fijas (la octava, nº 3): de noche, a las 00:30 y en lunes, que es cuando salen los
-     fallos de fecha; y por evento, para que esas corridas no cancelen la de un push. */
-  var crones = (yml.split('\njobs:')[0].match(/- cron: '[^']+'/g) || []).length;
-  if (crones < 3) ctx.falla('ci.yml: ' + crones + ' corridas a hora fija y tienen que ser al menos tres (23:30, 00:30 y el lunes, hora de Madrid)');
+  /* A horas fijas (la octava, nº 3, y 2 B de Ez, 12 nov.): de noche, a los dos lados de la
+     medianoche de Madrid, y en lunes, que es cuando salen los fallos de fecha; y por evento, para
+     que esas corridas no cancelen la de un push. GitHub cuenta en UTC y no cambia de hora, así que
+     se mira con los dos husos de Madrid: una pasada de 22:00 a 23:59 y otra de 00:00 a 01:59,
+     tanto en invierno (UTC+1) como en verano (UTC+2). */
+  var horario = horasDeNoche(yml);
+  if (horario.length) ctx.falla('ci.yml: ' + horario.join('; '));
   else if (yml.indexOf('group: ci-${{ github.event_name }}-') < 0) ctx.falla('ci.yml: la concurrencia no va por evento y una corrida a hora fija cancelaría la de un push');
-  else ctx.ok('ci.yml: ' + crones + ' corridas a hora fija, en su propio grupo');
+  else ctx.ok('ci.yml: pasadas de noche antes y después de la medianoche de Madrid en invierno y en verano, y la del lunes, en su propio grupo');
   if (malAndroid.length) ctx.falla('android.yml: ' + malAndroid.join('; '));
   else ctx.ok('android.yml: el AAB firmado solo sale tras un CI en verde, del commit que probó');
 
@@ -97,4 +115,4 @@ function tandaCI(ctx) {
   } else ctx.ok(total + ' pruebas en ' + N + ' trozos: hasta ' + porTrozo + ' por trozo (tope ' + TOPE_POR_TROZO + ')');
 }
 
-module.exports = { tandaCI: tandaCI, TOPE_POR_TROZO: TOPE_POR_TROZO };
+module.exports = { tandaCI: tandaCI, horasDeNoche: horasDeNoche, TOPE_POR_TROZO: TOPE_POR_TROZO };
