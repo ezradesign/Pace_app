@@ -6,10 +6,11 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 12 de 
 
 ## 12 nov., 13:00 (cuenta 5iWBf): la 0.201.0, subida; Ez eligió la B. Manda sobre lo de abajo
 
-- **La 0.201.0, cerrada y subida.** La suite de EcLj6 murió en la prueba 1066 al cerrarse su sesión (1065 en verde y desde ahí todo en 0 ms, sin `exit=`); el modo automático no deja matar la huérfana, así que se repitió en otro puerto (`PACE_E2E_PORT=8785`): **1567 en verde, 2 saltadas a propósito, ninguna roja** (31 min). Commit «v0.201.0: bump, build y lo que junta». **Comprobar su CI** (`gh run list --branch main`) y que Android corre detrás.
+- **La 0.201.0, cerrada y subida.** La suite de EcLj6 murió en la prueba 1066 al cerrarse su sesión (1065 en verde y desde ahí todo en 0 ms, sin `exit=`); el modo automático no deja matar la huérfana, así que se repitió en otro puerto (`PACE_E2E_PORT=8785`): **1567 en verde, 2 saltadas a propósito, ninguna roja** (31 min). Commit «v0.201.0: bump, build y lo que junta» (c1bc8d2a). **GitHub, en verde entero**: CI 43213919419 (`verify`, Safari y los cinco trozos), iOS y Android detrás (43215669813).
 - **Ez eligió la B (12:40, literal «B, iconos en fila»)**: con la letra grande, en la tarjeta corta y en el día contestado, las cuatro actividades en una fila solo con su dibujo. No se le vuelve a preguntar. Va en el encargo de lo que queda de la octava.
 - **Páginas publicadas en 5iWBf** (pares ya en `hoja-ids-cuentas.js`): D-8 y D-10, SzQQE6yercRZJasfz5pWP2; la octava (primera parte), 5KZ4AZ7PaHRaNWH5fVdGXu; dos preguntas, ERZwRa32ZCMByZu7JBdwbf; la octava, segunda parte, 7mLHvjUkuyUzthehEtgLNg.
-- **Siguiente:** republicar la hoja de pasos y la lista corta en 5iWBf, y la sesión en Opus con lo que queda de la octava (la B, las pruebas 2, 4, 6, 7, 8, 9 y 10 y los ciertos 2, 6, 9, 11, 16, 17, 20, 21, 23, 24, 25 y 26), en rama nueva desde `main`; se le enseña a Ez antes de juntar.
+- **Hoja de pasos y lista corta, republicadas en 5iWBf** (13:20) con la 0.201.0 hecha y la tercera parte de la octava en «Ahora».
+- **Siguiente:** la sesión en Opus con lo que queda de la octava (la B, las pruebas 2, 4, 6, 7, 8, 9 y 10 y los ciertos 2, 6, 9, 11, 16, 17, 20, 21, 23, 24, 25 y 26), en rama nueva desde `main`; se le enseña a Ez antes de juntar. **Preparada como tarjeta, sin arrancar** (la app no deja arrancarla en un turno abierto por un aviso de tarea): arrancarla con el «Arráncala» de Ez; el encargo entero está en esa tarjeta y se puede rehacer con este bloque y `DONDE-ME-QUEDO-octava.md`.
 
 ## AL RELEVO (12 nov., 12:30): Ez migra de EcLj6 a 5iWBf. Empieza aquí; manda sobre lo de abajo
 
