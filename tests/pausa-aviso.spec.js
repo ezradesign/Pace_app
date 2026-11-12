@@ -16,6 +16,7 @@
  *  · Si el sistema cerró PACE con el aviso puesto y se abre durante la pausa, se quita: suena PACE.
  *  · CONTROL: con PACE delante, la pausa acaba con su propio sonido (`pausa.end`), no con la campana.
  *  · En Android, los dos canales se crean al arrancar, el de sonido con `pausa_aviso.wav`.
+ *  · En Android el fin del Foco va por su canal, con la campana de PACE o mudo (Ez, P3 A del 12 nov.).
  * NO CUBRE: que el sistema entregue el aviso a su hora ni cómo suena de verdad (en un móvil).
  */
 'use strict';
@@ -207,11 +208,55 @@ for (const plataforma of ['android', 'ios']) {
   });
 }
 
-test('android · los dos canales del fin de la pausa se crean al arrancar, el de sonido con su archivo', async ({ page, context }) => {
+/* EL FIN DEL FOCO EN ANDROID, CON LA CAMPANA DE PACE (Ez, P3 A del 12 nov. 2026). Hasta la 0.203.0 iba
+   por el canal «Default» del complemento: con PACE en el fondo sonaba el sonido de avisos del móvil
+   y no respetaba el sonido apagado de Ajustes. Ahora va por su canal, `pace_fin_foco` con la campana
+   (`res/raw/campana_aviso`), o `pace_fin_foco_mudo`. Canales nuevos: el «Default» ya existe en los
+   móviles con PACE y su sonido no se puede cambiar, y no es el del aviso fijo (`pace_foco_en_marcha`). */
+const CANALES = (page) => nativo(page, 'llamadas').then((ls) => ls.filter((l) => l.metodo === 'createChannel').map((l) => l.opts));
+
+test('android · los cuatro canales se crean al arrancar, los de sonido con su archivo y ninguno es el viejo ni el del aviso fijo', async ({ page, context }) => {
   await abrir(page, context, 'android');
-  await esperarEnPagina(page, () => window.__nativo.llamadas.filter((l) => l.metodo === 'createChannel').length === 2);
-  const canales = (await nativo(page, 'llamadas')).filter((l) => l.metodo === 'createChannel').map((l) => l.opts);
-  expect(canales[0]).toMatchObject({ id: 'pace_pausa', name: 'Fin de la pausa', importance: 3, sound: 'pausa_aviso.wav' });
-  expect(canales[1]).toMatchObject({ id: 'pace_pausa_mudo', name: 'Fin de la pausa, sin sonido', importance: 2 });
+  await esperarEnPagina(page, () => window.__nativo.llamadas.filter((l) => l.metodo === 'createChannel').length === 4);
+  const canales = await CANALES(page);
+  expect(canales[0]).toMatchObject({ id: 'pace_fin_foco', name: 'Fin del Foco', importance: 3, sound: 'campana_aviso.wav' });
+  expect(canales[1]).toMatchObject({ id: 'pace_fin_foco_mudo', name: 'Fin del Foco, sin sonido', importance: 2 });
   expect(canales[1].sound).toBeUndefined();
+  expect(canales[2]).toMatchObject({ id: 'pace_pausa', name: 'Fin de la pausa', importance: 3, sound: 'pausa_aviso.wav' });
+  expect(canales[3]).toMatchObject({ id: 'pace_pausa_mudo', name: 'Fin de la pausa, sin sonido', importance: 2 });
+  expect(canales[3].sound).toBeUndefined();
+  expect(canales.map((c) => c.id)).not.toContain('default');
+  expect(canales.map((c) => c.id)).not.toContain('pace_foco_en_marcha');
+});
+
+test.describe('android · el fin del Foco con la campana de PACE', () => {
+  for (const [soundOn, canal] of [[true, 'pace_fin_foco'], [false, 'pace_fin_foco_mudo']]) {
+    test(`con el sonido ${soundOn ? 'encendido' : 'apagado'}, el aviso de fin de Foco va por ${canal}`, async ({ page, context }) => {
+      await abrir(page, context, 'android', { soundOn });
+      await esperarEnPagina(page, () => window.__nativo.llamadas.filter((l) => l.metodo === 'createChannel').length === 4);
+      await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
+      await esperarEnPagina(page, () => paceAndroidEstado().foco !== null);
+      await alFondo(page);
+      await esperarEnPagina(page, () => !!window.__nativo.puestos[1]);
+      const [aviso] = await programados(page, 1);
+      expect(aviso.channelId, 'el fin del Foco no va por su canal').toBe(canal);
+      const llamadas = await nativo(page, 'llamadas');
+      expect(llamadas.findIndex((l) => l.metodo === 'createChannel' && l.opts.id === canal), 'el aviso salió antes de crear su canal')
+        .toBeLessThan(llamadas.findIndex((l) => l.metodo === 'schedule'));
+    });
+  }
+
+  test('una sola campana: si el bloque acaba con PACE en el fondo, suena el aviso y no PACE, ni al volver', async ({ page, context }) => {
+    await abrir(page, context, 'android');
+    await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
+    await esperarEnPagina(page, () => paceAndroidEstado().foco !== null);
+    await alFondo(page);
+    await esperarEnPagina(page, () => !!window.__nativo.puestos[1]);
+    await context.clock.fastForward(25 * 60 * 1000 + 2000);
+    await context.clock.runFor(1500);
+    await expect(cta(page)).toHaveText('Empezar otro ciclo');
+    await alVolver(page);
+    await context.clock.runFor(1500);
+    expect(await sonidos(page, 'pomodoro.end'), 'la campana sonó dos veces: el aviso y PACE').toBe(0);
+  });
 });

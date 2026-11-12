@@ -53,8 +53,9 @@
    sola cuando el bloque acaba, aunque nadie abra PACE. EL SONIDO VA EN EL CANAL, y en Android
    el sonido de un canal no se cambia una vez creado: `pace_pausa` suena `res/raw/pausa_aviso`
    (por su nombre, asi que cambiarlo es sustituir el archivo) y `pace_pausa_mudo`, de importancia
-   baja, no suena, para quien apaga el sonido en Ajustes. El de fin de Foco sigue en el canal de
-   siempre del complemento.
+   baja, no suena, para quien apaga el sonido en Ajustes. El de fin de Foco va igual, por
+   `pace_fin_foco` con la campana de PACE (`res/raw/campana_aviso`) o `pace_fin_foco_mudo`
+   (Ez, P3 A del 12 nov.).
 
    A SU HORA: desde Android 12 una alarma exacta pide el permiso «Alarmas y
    recordatorios», y desde Android 14 viene apagado. Sin el, Android puede
@@ -72,6 +73,13 @@ var PACE_AVISO_CLAVE = 'pace.android.aviso';
 var PACE_AVISO_CANAL_PAUSA = 'pace_pausa';
 var PACE_AVISO_CANAL_PAUSA_MUDO = 'pace_pausa_mudo';
 var PACE_AVISO_SONIDO_PAUSA = 'pausa_aviso.wav';
+/* El fin del Foco con la campana de PACE (Ez, P3 A del 12 nov. 2026), como en el iPhone desde la
+   D-10 B. Canales nuevos y suyos: el «Default» del complemento, por el que iba, ya existe en los
+   moviles con PACE y su sonido (el del movil) no se puede cambiar; y no es el del aviso fijo
+   (`pace_foco_en_marcha`, PaceAvisoFijo.java), que no suena nunca. */
+var PACE_AVISO_CANAL_FIN = 'pace_fin_foco';
+var PACE_AVISO_CANAL_FIN_MUDO = 'pace_fin_foco_mudo';
+var PACE_AVISO_SONIDO_FIN = 'campana_aviso.wav';
 
 /* Lo que dejo el proceso anterior. Sin la clave (una version de antes de guardarla) no se sabe
    si dejo un aviso puesto: `quizas`, y lo primero que se recoloca con la app delante lo quita
@@ -254,16 +262,19 @@ function paceAndroidTexto(clave) {
   } catch (e) { return clave; }
 }
 
-/* Los dos canales del fin de la pausa. Crear uno que ya existe solo cambia su nombre (el idioma),
-   nunca su sonido: el sonido es el del archivo de res/raw que nombra. */
+/* Los canales del fin del Foco y del fin de la pausa, cada uno con sonido y mudo. Crear uno que ya
+   existe solo cambia su nombre (el idioma), nunca su sonido: el sonido es el del archivo de res/raw
+   que nombra. Un canal mudo de verdad va con importancia baja: sin `sound`, el complemento le deja
+   el sonido de siempre del movil. */
 function paceAndroidCanales() {
   var crear = function (op) { return paceAndroidPedir('LocalNotifications', 'createChannel', op).catch(function () {}); };
-  var desc = paceAndroidTexto('notify.canal.pausa.desc');
-  return crear({ id: PACE_AVISO_CANAL_PAUSA, name: paceAndroidTexto('notify.canal.pausa'), description: desc,
-                 importance: 3, sound: PACE_AVISO_SONIDO_PAUSA })
-    .then(function () {
-      return crear({ id: PACE_AVISO_CANAL_PAUSA_MUDO, name: paceAndroidTexto('notify.canal.pausa.mudo'), description: desc, importance: 2 });
-    });
+  var par = function (canal, mudo, clave, sonido) {
+    var desc = paceAndroidTexto(clave + '.desc');
+    return crear({ id: canal, name: paceAndroidTexto(clave), description: desc, importance: 3, sound: sonido })
+      .then(function () { return crear({ id: mudo, name: paceAndroidTexto(clave + '.mudo'), description: desc, importance: 2 }); });
+  };
+  return par(PACE_AVISO_CANAL_FIN, PACE_AVISO_CANAL_FIN_MUDO, 'notify.canal.foco', PACE_AVISO_SONIDO_FIN)
+    .then(function () { return par(PACE_AVISO_CANAL_PAUSA, PACE_AVISO_CANAL_PAUSA_MUDO, 'notify.canal.pausa', PACE_AVISO_SONIDO_PAUSA); });
 }
 
 function paceAndroidAvisoAjustarFin(quiere) {
@@ -276,6 +287,7 @@ function paceAndroidAvisoAjustarFin(quiere) {
       /* el formato exacto que lee el complemento: ISO en UTC con milisegundos */
       schedule: { at: new Date(quiere.endsAt).toISOString(), allowWhileIdle: true },
       isExactNotification: a.exacta === 'granted',
+      channelId: paceAndroidSonidoOn() ? PACE_AVISO_CANAL_FIN : PACE_AVISO_CANAL_FIN_MUDO,
     }] }).then(function () {
       a.puesto = quiere.endsAt;
       a.quizas = false;
