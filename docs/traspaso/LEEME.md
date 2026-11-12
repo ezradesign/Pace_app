@@ -2,7 +2,13 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 12 de noviembre de 2026, 17:40, v0.202.0 en `main` con GitHub en verde entero.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 12 de noviembre de 2026, 17:55, v0.202.0 en `main` con GitHub en verde entero.
+
+## 12 nov., 17:55 (cuenta EcLj6): las páginas al día aquí y los dos arreglos de los testers, en marcha. Manda sobre lo de abajo
+
+- **Hecho del relevo de las 17:40:** «La octava, tercera parte», publicada en EcLj6 (PJye6h3hhiqgjUMRmbUe1h; par con AT8X9QryL4KtDetYTivxzA en `hoja-ids-cuentas.js`; su primera línea dice ya que está en `main` como 0.202.0, y la de 5iWBf aún dice que espera el «júntalo»). La hoja de pasos y la lista corta, republicadas en EcLj6 con el «Ahora» en marcha; las copias del repo llevan los ids de EcLj6 (para 5iWBf, por el guion con `--a=5iWBf`).
+- **EN MARCHA desde las 17:50: «Dos arreglos pensando en los testers»**, sesión `local_8ca54066-0dd0-4e5f-8152-3d1493da0aa5` («testers») en Opus, con worktree propio desde `main` (rama con `testers-12nov` en el nombre: `git worktree list`). Encargo: punto 3 y filas 8 y 9 de `cola.md` (externa 2.2, 4.F2 y 4.F3, en `claude/auditoria-fable-9nov-8401fc`). 1, mientras PACE está abierto hasta v1 la valoración ni se pide ni se gasta; 2, el fin de la pausa avisa en el móvil con un sonido propio: dos candidatos para que Ez los oiga en la página, montado el recomendado. La alarma exacta de Android al primer Foco (2.T4) queda FUERA: si hace falta, la trae como pregunta. Página, en `docs/proposals/montado-testers-12nov/`; para al 85 % de las 5 h con un WIP y `DONDE-ME-QUEDO-testers.md`. Al acabar: leer informe y diff, **enseñárselo a Ez y esperar su «júntalo»**.
+- **Uso en EcLj6 a las 17:46:** 5 h al 5 % (se reponen a las 22:40), semana al 63 %, «Weekly · Fable» al 84 % (se repone el martes 17 a las 14:00): la coordinadora, las vueltas justas.
 
 ## AL RELEVO (12 nov., 17:40): Ez migra de 5iWBf a EcLj6. Empieza aquí; manda sobre lo de abajo
 
