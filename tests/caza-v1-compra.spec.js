@@ -59,7 +59,10 @@ test.describe('importar una copia el día de v1', () => {
   test('una copia de antes de v1 no vuelve a abrir la semana, y suma las de pago que trae', async ({ page, context }) => {
     await enV1(context);
     /* Su semana acabó hace dos días; se le quedó «Colgarse». */
-    const PASO = { at: Date.now() - 9 * DIA, previo: true, hasta: Date.now() - 2 * DIA, rutinas: ['extra.hang.bar'], avisado: true };
+    /* Una sola lectura del reloj en los tres PASO de este archivo: con dos, un milisegundo entre ellas
+       deja `hasta` a siete días y 1 ms de `at`, y el tope de la semana de prueba lo recorta. */
+    const ahora = Date.now();
+    const PASO = { at: ahora - 9 * DIA, previo: true, hasta: ahora - 2 * DIA, rutinas: ['extra.hang.bar'], avisado: true };
     await sembrar(context, Object.assign({}, USABA, { pasoV1: PASO }));
     await irAlArtefacto(page);
     expect(await page.evaluate(() => window.canAccessRoutine('breathe.rounds.long'))).toBe(false);
@@ -84,7 +87,8 @@ test.describe('importar una copia el día de v1', () => {
 
   test('una copia de un equipo donde PACE se instaló ya en v1 no quita las que se quedan', async ({ page, context }) => {
     await enV1(context);
-    const PASO = { at: Date.now() - 2 * DIA, previo: true, hasta: Date.now() + 5 * DIA, rutinas: ['extra.hang.bar'], avisado: true };
+    const ahora = Date.now();
+    const PASO = { at: ahora - 2 * DIA, previo: true, hasta: ahora + 5 * DIA, rutinas: ['extra.hang.bar'], avisado: true };
     await sembrar(context, Object.assign({}, USABA, { pasoV1: PASO }));
     await irAlArtefacto(page);
     await importar(page, Object.assign({}, BASE, { totalFocusMin: 30, pasoV1: { at: Date.now() - DIA, previo: false } }));
@@ -100,7 +104,8 @@ test.describe('importar una copia el día de v1', () => {
     await sembrar(context, { firstSeen: 1, lang: 'es', langAuto: false, palette: 'crema', ritmo: { libre: true }, novedadesVistas: '*',
       pasoV1: { at: Date.now() - 60000, previo: false } });
     await irAlArtefacto(page);
-    const PASO = { at: Date.now() - 3 * DIA, previo: true, hasta: Date.now() + 4 * DIA, rutinas: ['extra.hang.bar'], avisado: true };
+    const ahora = Date.now();
+    const PASO = { at: ahora - 3 * DIA, previo: true, hasta: ahora + 4 * DIA, rutinas: ['extra.hang.bar'], avisado: true };
     await importar(page, Object.assign({}, BASE, USABA, { pasoV1: PASO }));
     expect((await guardado(page)).pasoV1).toEqual(PASO);
     expect(await page.evaluate(() => window.paceAbiertoAhora())).toBe(true);
