@@ -96,22 +96,30 @@ function chequeaAndroid(ctx) {
   chequeaListaDelMovil(ctx);
 }
 
-/* El fin de la pausa suena con su propio sonido (auditoria externa 4.F2 y 4.F3). En Android el
-   sonido es del canal, que lo nombra por su nombre en res/raw: sin el archivo, el canal suena
-   con el sonido de siempre del movil, sin que nada falle. Y es el mismo .wav que el del iPhone. */
+/* El fin de la pausa suena con su propio sonido (auditoria externa 4.F2 y 4.F3) y el fin del Foco con la
+   campana de PACE (Ez, P3 A del 12 nov.). En Android el sonido es del canal, que lo nombra por su nombre
+   en res/raw: sin el archivo, el canal suena con el sonido de siempre del movil, sin que nada falle. Y
+   son los mismos .wav que los del iPhone. */
 function chequeaSonidoPausa(ctx) {
   var campana = require('./campana-aviso.js');
+  var base = require('path').basename;
   var web = (leer('app/ui/android.avisos.js') || '').toString();
-  var raw = leer(campana.PAUSA_ANDROID), raiz = leer(campana.PAUSA);
   var malas = [];
-  if (!raw) malas.push(campana.PAUSA_ANDROID + ' no esta: el canal del fin de la pausa sonaria con el sonido del movil');
-  else if (!raiz || !raw.equals(raiz)) malas.push(campana.PAUSA_ANDROID + ' no es el mismo que ' + campana.PAUSA + ' -- vuelve a correr node scripts/campana-aviso.js');
-  if (web.indexOf("var PACE_AVISO_SONIDO_PAUSA = '" + require('path').basename(campana.PAUSA_ANDROID) + "';") === -1 || !/sound: PACE_AVISO_SONIDO_PAUSA/.test(web)) {
-    malas.push('app/ui/android.avisos.js ya no crea el canal del fin de la pausa con su sonido');
+  [['el fin de la pausa', campana.PAUSA_ANDROID, campana.PAUSA, 'PAUSA'], ['el fin del Foco', campana.CAMPANA_ANDROID, campana.ARCHIVO, 'FIN']].forEach(function (c) {
+    var raw = leer(c[1]), raiz = leer(c[2]);
+    var sonido = c[3] === 'PAUSA' ? 'PACE_AVISO_SONIDO_PAUSA' : 'PACE_AVISO_SONIDO_FIN';
+    if (!raw) malas.push(c[1] + ' no esta: el canal de ' + c[0] + ' sonaria con el sonido del movil');
+    else if (!raiz || !raw.equals(raiz)) malas.push(c[1] + ' no es el mismo que ' + c[2] + ' -- vuelve a correr node scripts/campana-aviso.js');
+    if (web.indexOf('var ' + sonido + " = '" + base(c[1]) + "';") === -1) malas.push('app/ui/android.avisos.js ya no nombra ' + base(c[1]) + ' para ' + c[0]);
+    if (web.indexOf('channelId: paceAndroidSonidoOn() ? PACE_AVISO_CANAL_' + c[3] + ' : PACE_AVISO_CANAL_' + c[3] + '_MUDO') === -1) malas.push(c[0] + ' ya no avisa por su canal (con sonido o mudo, segun Ajustes)');
+  });
+  if (web.indexOf("par(PACE_AVISO_CANAL_FIN, PACE_AVISO_CANAL_FIN_MUDO, 'notify.canal.foco', PACE_AVISO_SONIDO_FIN)") === -1 ||
+      web.indexOf("par(PACE_AVISO_CANAL_PAUSA, PACE_AVISO_CANAL_PAUSA_MUDO, 'notify.canal.pausa', PACE_AVISO_SONIDO_PAUSA)") === -1 ||
+      web.indexOf('importance: 3, sound: sonido') === -1) {
+    malas.push('app/ui/android.avisos.js ya no crea los canales del fin del Foco y de la pausa con su sonido');
   }
-  if (!/channelId: paceAndroidSonidoOn\(\) \? PACE_AVISO_CANAL_PAUSA : PACE_AVISO_CANAL_PAUSA_MUDO/.test(web)) malas.push('el aviso del fin de la pausa ya no va por su canal (con sonido o mudo, segun Ajustes)');
   if (malas.length) malas.forEach(function (m) { ctx.falla('android: ' + m); });
-  else ctx.ok('android: el fin de la pausa avisa por su canal, con ' + campana.PAUSA_ANDROID + ' (el mismo .wav que el del iPhone), o mudo si el sonido esta apagado');
+  else ctx.ok('android: el fin del Foco y el de la pausa avisan por sus canales, con ' + base(campana.CAMPANA_ANDROID) + ' y ' + base(campana.PAUSA_ANDROID) + ' (los mismos .wav que los del iPhone), o mudos si el sonido esta apagado');
 }
 
 /* La ventana de Google Play para valorar PACE (Ez, 15 oct., reseñas punto 6): una sola vez, tras la

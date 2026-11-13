@@ -2284,6 +2284,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'notify.pausa.title': 'Pausa terminada',
   'notify.pausa.body': 'Cuando quieras, vuelve al Foco.',
   'notify.pausa.ritmo': 'Ahora, el bloque {n} de {total}.',
+  'notify.canal.foco': 'Fin del Foco',
+  'notify.canal.foco.mudo': 'Fin del Foco, sin sonido',
+  'notify.canal.foco.desc': 'Avisa de que el bloque de Foco ha terminado.',
   'notify.canal.pausa': 'Fin de la pausa',
   'notify.canal.pausa.mudo': 'Fin de la pausa, sin sonido',
   'notify.canal.pausa.desc': 'Avisa de que la pausa ha terminado.',
@@ -2465,6 +2468,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'notify.pausa.title': 'Break over',
   'notify.pausa.body': 'Back to Focus when you’re ready.',
   'notify.pausa.ritmo': 'Next up: block {n} of {total}.',
+  'notify.canal.foco': 'End of Focus',
+  'notify.canal.foco.mudo': 'End of Focus, silent',
+  'notify.canal.foco.desc': 'Lets you know your Focus block is over.',
   'notify.canal.pausa': 'End of break',
   'notify.canal.pausa.mudo': 'End of break, silent',
   'notify.canal.pausa.desc': 'Lets you know your break is over.',
@@ -2556,6 +2562,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'focus.cycle': 'Ciclo',
   'focus.cycleOf': 'Ciclo {n} / 4',
   'focus.cycleNext': 'Siguiente · Ciclo {n} / 4',
+  'focus.exacta': 'Avisos a su hora ›',
+  'focus.exacta.aria': 'Avisos a su hora: abre el ajuste de Android',
   'focus.min': 'Min',
   'focus.other': 'Otro',
   'focus.restart': 'Reiniciar',
@@ -2766,6 +2774,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'focus.cycle': 'Cycle',
   'focus.cycleOf': 'Cycle {n} / 4',
   'focus.cycleNext': 'Next · Cycle {n} / 4',
+  'focus.exacta': 'Alerts on time ›',
+  'focus.exacta.aria': 'Alerts on time: opens the Android setting',
   'focus.min': 'Min',
   'focus.other': 'Other',
   'focus.restart': 'Restart',
@@ -7528,7 +7538,7 @@ const defaultState = {
 
 
 
-  notifyFocusEnd: true,
+  notifyFocusEnd: true, exactaOfrecida: false,
   lang: 'en',
 
 
@@ -18984,8 +18994,9 @@ Object.assign(window, {
    sola cuando el bloque acaba, aunque nadie abra PACE. EL SONIDO VA EN EL CANAL, y en Android
    el sonido de un canal no se cambia una vez creado: `pace_pausa` suena `res/raw/pausa_aviso`
    (por su nombre, asi que cambiarlo es sustituir el archivo) y `pace_pausa_mudo`, de importancia
-   baja, no suena, para quien apaga el sonido en Ajustes. El de fin de Foco sigue en el canal de
-   siempre del complemento.
+   baja, no suena, para quien apaga el sonido en Ajustes. El de fin de Foco va igual, por
+   `pace_fin_foco` con la campana de PACE (`res/raw/campana_aviso`) o `pace_fin_foco_mudo`
+   (Ez, P3 A del 12 nov.).
 
    A SU HORA: desde Android 12 una alarma exacta pide el permiso «Alarmas y
    recordatorios», y desde Android 14 viene apagado. Sin el, Android puede
@@ -19003,6 +19014,13 @@ var PACE_AVISO_CLAVE = 'pace.android.aviso';
 var PACE_AVISO_CANAL_PAUSA = 'pace_pausa';
 var PACE_AVISO_CANAL_PAUSA_MUDO = 'pace_pausa_mudo';
 var PACE_AVISO_SONIDO_PAUSA = 'pausa_aviso.wav';
+
+
+
+
+var PACE_AVISO_CANAL_FIN = 'pace_fin_foco';
+var PACE_AVISO_CANAL_FIN_MUDO = 'pace_fin_foco_mudo';
+var PACE_AVISO_SONIDO_FIN = 'campana_aviso.wav';
 
 
 
@@ -19187,14 +19205,17 @@ function paceAndroidTexto(clave) {
 
 
 
+
+
 function paceAndroidCanales() {
   var crear = function (op) {return paceAndroidPedir('LocalNotifications', 'createChannel', op).catch(function () {});};
-  var desc = paceAndroidTexto('notify.canal.pausa.desc');
-  return crear({ id: PACE_AVISO_CANAL_PAUSA, name: paceAndroidTexto('notify.canal.pausa'), description: desc,
-    importance: 3, sound: PACE_AVISO_SONIDO_PAUSA }).
-  then(function () {
-    return crear({ id: PACE_AVISO_CANAL_PAUSA_MUDO, name: paceAndroidTexto('notify.canal.pausa.mudo'), description: desc, importance: 2 });
-  });
+  var par = function (canal, mudo, clave, sonido) {
+    var desc = paceAndroidTexto(clave + '.desc');
+    return crear({ id: canal, name: paceAndroidTexto(clave), description: desc, importance: 3, sound: sonido }).
+    then(function () {return crear({ id: mudo, name: paceAndroidTexto(clave + '.mudo'), description: desc, importance: 2 });});
+  };
+  return par(PACE_AVISO_CANAL_FIN, PACE_AVISO_CANAL_FIN_MUDO, 'notify.canal.foco', PACE_AVISO_SONIDO_FIN).
+  then(function () {return par(PACE_AVISO_CANAL_PAUSA, PACE_AVISO_CANAL_PAUSA_MUDO, 'notify.canal.pausa', PACE_AVISO_SONIDO_PAUSA);});
 }
 
 function paceAndroidAvisoAjustarFin(quiere) {
@@ -19206,7 +19227,8 @@ function paceAndroidAvisoAjustarFin(quiere) {
         id: PACE_AVISO_FOCO_ID, title: textos.title, body: textos.body,
 
         schedule: { at: new Date(quiere.endsAt).toISOString(), allowWhileIdle: true },
-        isExactNotification: a.exacta === 'granted'
+        isExactNotification: a.exacta === 'granted',
+        channelId: paceAndroidSonidoOn() ? PACE_AVISO_CANAL_FIN : PACE_AVISO_CANAL_FIN_MUDO
       }] }).then(function () {
       a.puesto = quiere.endsAt;
       a.quizas = false;
@@ -19294,7 +19316,7 @@ Object.assign(window, {
   paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidAvisoFallo, paceAndroidFoco,
   paceAndroidPausa, paceAndroidCampana, paceAndroidEstado
 });
-;Object.assign(window, { PACE_AVISO_FOCO_ID, PACE_AVISO_PAUSA_ID, PACE_AVISO_CLAVE, PACE_AVISO_CANAL_PAUSA, PACE_AVISO_CANAL_PAUSA_MUDO, PACE_AVISO_SONIDO_PAUSA, paceAndroidAvisoLeer, paceAndroidAvisoGuardar, _paceAvisoAndroidLeido, _paceAvisoAndroid, paceAndroidAvisos, paceAndroidAvisoContar, paceAndroidAvisoPermiso, paceAndroidGuardarPermiso, paceAndroidAvisoPedir, paceAndroidAvisoPermisoMirar, paceAndroidAvisoExacto, paceAndroidGuardarExacta, paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidAvisoFallo, paceAndroidFoco, paceAndroidPausa, paceAndroidFondo, paceAndroidAvisoEnFila, paceAndroidAvisoRecolocar, paceAndroidAvisoAjustar, paceAndroidAvisoAjustarPausa, paceAndroidSonidoOn, paceAndroidTexto, paceAndroidCanales, paceAndroidAvisoAjustarFin, paceAndroidAvisoAjustarFijo, paceAndroidCampana, paceAndroidEstado, paceAndroidAvisosArrancar });
+;Object.assign(window, { PACE_AVISO_FOCO_ID, PACE_AVISO_PAUSA_ID, PACE_AVISO_CLAVE, PACE_AVISO_CANAL_PAUSA, PACE_AVISO_CANAL_PAUSA_MUDO, PACE_AVISO_SONIDO_PAUSA, PACE_AVISO_CANAL_FIN, PACE_AVISO_CANAL_FIN_MUDO, PACE_AVISO_SONIDO_FIN, paceAndroidAvisoLeer, paceAndroidAvisoGuardar, _paceAvisoAndroidLeido, _paceAvisoAndroid, paceAndroidAvisos, paceAndroidAvisoContar, paceAndroidAvisoPermiso, paceAndroidGuardarPermiso, paceAndroidAvisoPedir, paceAndroidAvisoPermisoMirar, paceAndroidAvisoExacto, paceAndroidGuardarExacta, paceAndroidAvisoExactoMirar, paceAndroidAvisoExactoPedir, paceAndroidAvisoFallo, paceAndroidFoco, paceAndroidPausa, paceAndroidFondo, paceAndroidAvisoEnFila, paceAndroidAvisoRecolocar, paceAndroidAvisoAjustar, paceAndroidAvisoAjustarPausa, paceAndroidSonidoOn, paceAndroidTexto, paceAndroidCanales, paceAndroidAvisoAjustarFin, paceAndroidAvisoAjustarFijo, paceAndroidCampana, paceAndroidEstado, paceAndroidAvisosArrancar });
 })();
 </script>
   <script>
@@ -31908,7 +31930,9 @@ Object.assign(window, { aroJornada, aroPausaTerminada, aroPlatoPendiente, aroDes
 
 
 
-const { useEffect: useEffectAvisosFT } = React;
+
+
+const { useEffect: useEffectAvisosFT, useState: useStateAvisosFT } = React;
 
 function useAvisosNativos(_ref) {let { state, running, endsAt, pausaRitmo, enPausaRitmo, t, tn, lang } = _ref;
   useEffectAvisosFT(() => {
@@ -31934,8 +31958,51 @@ function useAvisosNativos(_ref) {let { state, running, endsAt, pausaRitmo, enPau
   }, [running, endsAt, state.focusMode, state.notifyFocusEnd, state.ritmo, ritmoN, lang]);
 }
 
-Object.assign(window, { useAvisosNativos });
-;Object.assign(window, { useAvisosNativos });
+
+
+
+
+
+
+
+function useOfertaExacta(_ref2) {let { state, set, status, t } = _ref2;
+  const [viva, setViva] = useStateAvisosFT(false);
+  const enMarcha = status === 'running' || status === 'paused';
+  const android = typeof paceAndroidAvisoExacto === 'function' && typeof pacePlataformaNativa === 'function' &&
+  pacePlataformaNativa() === 'android';
+  const candidata = android && !state.exactaOfrecida && state.focusMode === 'foco' && !!state.notifyFocusEnd;
+  useEffectAvisosFT(() => {
+    if (!enMarcha || !state.notifyFocusEnd) {setViva(false);return undefined;}
+    if (!candidata || status !== 'running' || paceNativoAvisoPermiso() === 'denied') return undefined;
+    let vale = true;
+    const ofrecer = (e) => {if (vale && e === 'denied') {setViva(true);set({ exactaOfrecida: true });}};
+    const e = paceAndroidAvisoExacto();
+    if (e === 'default') paceAndroidAvisoExactoMirar().then(ofrecer, () => {});else
+    ofrecer(e);
+    return () => {vale = false;};
+  }, [enMarcha, candidata, status, state.notifyFocusEnd]);
+  if (!viva) return null;
+  const pedir = () => {paceAndroidAvisoExactoPedir().then(() => setViva(false), () => setViva(false));};
+  return (
+    React.createElement("button", { type: "button", className: "pace-oferta-exacta", "data-pace-oferta-exacta": true, onClick: pedir,
+      "aria-label": t('focus.exacta.aria') }, t('focus.exacta')));
+
+}
+
+(function paceOfertaExactaCss() {
+  if (document.getElementById('pace-oferta-exacta-css')) return;
+  const s = document.createElement('style');
+  s.id = 'pace-oferta-exacta-css';
+  s.textContent = `
+.pace-oferta-exacta { background: none; border: 0; padding: 6px 4px; cursor: pointer; font-family: var(--font-ui); font-size: 11px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--focus); }
+.pace-oferta-exacta:hover { color: var(--focus-2); }
+.pace-oferta-exacta:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; border-radius: 4px; }
+`;
+  document.head.appendChild(s);
+})();
+
+Object.assign(window, { useAvisosNativos, useOfertaExacta });
+;Object.assign(window, { useAvisosNativos, useOfertaExacta });
 })();
 </script>
   <script>
@@ -32097,6 +32164,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
   useAvisosNativos({ state, running, endsAt, pausaRitmo, enPausaRitmo, t, tn, lang });
+  const ofertaExacta = useOfertaExacta({ state, set, status, t });
 
 
 
@@ -32300,7 +32368,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   tn('focus.cycleNext', { n: cycleN }) :
   tn('focus.cycleOf', { n: cycleN });
 
-  const cycleDotsEl = React.createElement(AroFila, { cycle: state.cycle, cycleLabel: cycleLabel, oculta: !!aro || enPausaRitmo || !!cerrada, fila: jornada.fila });
+  const cycleDotsEl = React.createElement(AroFila, { cycle: state.cycle, cycleLabel: cycleLabel, oculta: !!aro || enPausaRitmo || !!cerrada, fila: ofertaExacta || jornada.fila });
 
 
 

@@ -85,7 +85,7 @@ const defaultState = {
   // toggle en Ajustes); si se deniega, el flag baja a false para que el toggle
   // refleje la realidad. Solo dispara con la pestaña en segundo plano.
   // Ver FocusTimer.support.jsx (maybeRequestNotifyPermission).
-  notifyFocusEnd: true,
+  notifyFocusEnd: true, exactaOfrecida: false, // en Android, si ya salió «Avisos a su hora ›» (FocusTimer.avisos.jsx)
   lang: 'en',
 
   /* Idioma AUTOMÁTICO (s139 · Fase 1.6). `lang` sigue siendo SIEMPRE un idioma

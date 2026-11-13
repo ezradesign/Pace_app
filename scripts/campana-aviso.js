@@ -10,7 +10,8 @@
  * el fondo, en Android y en el iPhone, con su propio sonido: la receta `pausa.end`. Su archivo va
  * dos veces: `pausa-aviso.wav` en la raiz, para el iPhone, y `res/raw/pausa_aviso.wav` en Android,
  * donde el canal de avisos lo nombra por su nombre (android.avisos.js) y Android solo acepta
- * minusculas y guiones bajos. Los dos son el mismo .wav.
+ * minusculas y guiones bajos. Los dos son el mismo .wav. La campana va tambien en
+ * `res/raw/campana_aviso.wav`: en Android el fin del Foco suena con ella (Ez, P3 A del 12 nov.).
  *
  * Aqui se toca la receta DE VERDAD (se carga Sound.jsx tal cual) contra un AudioContext de
  * mentira que solo sabe de osciladores y ganancias, y se escribe PCM de 16 bits, mono, 44,1 kHz.
@@ -35,6 +36,7 @@ const RECETA = 'pomodoro.end';
 const PAUSA = 'pausa-aviso.wav';
 const PAUSA_RECETA = 'pausa.end';
 const PAUSA_ANDROID = 'android/app/src/main/res/raw/pausa_aviso.wav';
+const CAMPANA_ANDROID = 'android/app/src/main/res/raw/campana_aviso.wav';
 const MUESTRAS = 44100;
 const PICO = 0.7;
 const COLA = 0.1;
@@ -152,7 +154,9 @@ function escribir(rel, wav) {
 }
 
 if (require.main === module) {
-  escribir(ARCHIVO, campanaWav());
+  const campana = campanaWav();
+  escribir(ARCHIVO, campana);
+  escribir(CAMPANA_ANDROID, campana);
   const pausa = pausaWav();
   escribir(PAUSA, pausa);
   escribir(PAUSA_ANDROID, pausa);
@@ -168,4 +172,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { ARCHIVO, RECETA, PAUSA, PAUSA_RECETA, PAUSA_ANDROID, campanaWav, pausaWav, recetaWav, leerWav };
+module.exports = { ARCHIVO, RECETA, PAUSA, PAUSA_RECETA, PAUSA_ANDROID, CAMPANA_ANDROID, campanaWav, pausaWav, recetaWav, leerWav };

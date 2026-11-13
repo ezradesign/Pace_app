@@ -155,6 +155,7 @@ function FocusTimer({ onFinish }) {
   /* En las apps (Android y iPhone) el aviso del fin del bloque y el del fin de la pausa los
      programa el sistema, porque con la app en el fondo esta cuenta no corre (FocusTimer.avisos.jsx). */
   useAvisosNativos({ state, running, endsAt, pausaRitmo, enPausaRitmo, t, tn, lang });
+  const ofertaExacta = useOfertaExacta({ state, set, status, t });   // en Android, «Avisos a su hora ›», una vez
 
   /* La barra de arriba pregunta antes de cambiar de modo con un Foco empezado, y con una pausa
      empezada (Ez, 2A del 8 nov. 2026): le dice cuánto lleva, la del día desde que acabó el bloque. */
@@ -358,7 +359,7 @@ function FocusTimer({ onFinish }) {
     ? tn('focus.cycleNext', { n: cycleN })
     : tn('focus.cycleOf', { n: cycleN });
   /* Con la jornada cerrada la fila tampoco va: «Siguiente · Ciclo 4 / 4» no decía nada (Ez, 1A del 8 nov. 2026). */
-  const cycleDotsEl = <AroFila cycle={state.cycle} cycleLabel={cycleLabel} oculta={!!aro || enPausaRitmo || !!cerrada} fila={jornada.fila} />;
+  const cycleDotsEl = <AroFila cycle={state.cycle} cycleLabel={cycleLabel} oculta={!!aro || enPausaRitmo || !!cerrada} fila={ofertaExacta || jornada.fila} />;
 
   /* Bloque de controles + ciclo inyectado DENTRO del aro (layout ref. usuario).
      Para otros estilos se renderiza debajo en un bloque aparte. */

@@ -356,6 +356,8 @@ test.describe('en Android, el aviso a su hora', () => {
     await page.keyboard.press('Escape');
 
     await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
+    await page.waitForTimeout(300);
+    await expect(page.locator('[data-pace-oferta-exacta]'), 'ofreció el permiso que ya está dado').toHaveCount(0);
     await emitir(page, 'appStateChange', { isActive: false });
     const [programado] = await llamadas(page, 'LocalNotifications', 'schedule');
     expect(programado.opts.notifications[0].isExactNotification).toBe(true);
@@ -382,6 +384,60 @@ test.describe('en Android, el aviso a su hora', () => {
     const [programado] = await llamadas(page, 'LocalNotifications', 'schedule');
     expect(programado.opts.notifications[0].isExactNotification).toBe(true);
     expect(errores).toEqual([]);
+  });
+
+  /* P4 A de Ez (13 nov. 2026): sin el permiso, el primer Foco lo ofrece UNA vez en la fila de
+     «Ciclo 1 / 4», sin tapar nada; tocarlo abre el ajuste y al volver se va. */
+  const oferta = (page) => page.locator('[data-pace-oferta-exacta]');
+
+  test('sin el permiso, el primer Foco ofrece «Avisos a su hora» en la fila del ciclo y, tocada, se va', async ({ page, context }) => {
+    await sembrar(context, { soundOn: false });
+    await comoAndroid(context, { permiso: 'granted', exacta: 'denied', concedeExacta: 'granted' });
+    const errores = capturarErrores(page);
+    await irAlArtefacto(page);
+    await expect(oferta(page), 'salió antes de empezar').toHaveCount(0);
+
+    await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
+    await expect(oferta(page)).toBeVisible();
+    await expect(oferta(page)).toHaveText('Avisos a su hora ›');
+    await expect(page.locator('[data-pace-ciclo]'), 'la línea no ocupa el sitio del ciclo').toBeHidden();
+    expect(await cuantas(page, 'LocalNotifications', 'changeExactNotificationSetting'), 'abrió el ajuste sin un toque').toBe(0);
+    expect((await leerEstado(page)).exactaOfrecida, 'no se apuntó que ya salió').toBe(true);
+
+    await oferta(page).click();
+    await expect.poll(() => cuantas(page, 'LocalNotifications', 'changeExactNotificationSetting')).toBe(1);
+    await expect(oferta(page), 'sigue ahí al volver del ajuste').toHaveCount(0);
+    await expect(page.locator('[data-pace-ciclo]')).toBeVisible();
+    expect(errores).toEqual([]);
+  });
+
+  test('sin tocarla, se va al acabar ese Foco y no vuelve en el siguiente', async ({ page, context }) => {
+    await sembrar(context, { soundOn: false });
+    await comoAndroid(context, { permiso: 'granted', exacta: 'denied' });
+    await irAlArtefacto(page);
+    await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
+    await expect(oferta(page)).toBeVisible();
+    await page.getByRole('button', { name: 'Pausar', exact: true }).click();
+    await expect(oferta(page), 'con el Foco en pausa se fue').toBeVisible();
+    await page.getByRole('button', { name: 'Reiniciar bloque' }).click();
+    await expect(oferta(page), 'sigue sin Foco en marcha').toHaveCount(0);
+
+    await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Pausar', exact: true })).toBeVisible();
+    await page.waitForTimeout(300);
+    await expect(oferta(page), 'volvió a salir en el segundo Foco').toHaveCount(0);
+    expect(await cuantas(page, 'LocalNotifications', 'changeExactNotificationSetting')).toBe(0);
+  });
+
+  test('con el aviso apagado o el permiso dado, no sale', async ({ page, context }) => {
+    await sembrar(context, { soundOn: false, notifyFocusEnd: false });
+    await comoAndroid(context, { permiso: 'granted', exacta: 'denied' });
+    await irAlArtefacto(page);
+    await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Pausar', exact: true })).toBeVisible();
+    await page.waitForTimeout(300);
+    await expect(oferta(page), 'salió con el aviso apagado').toHaveCount(0);
+    expect((await leerEstado(page)).exactaOfrecida, 'se gastó sin salir').toBeFalsy();
   });
 });
 
