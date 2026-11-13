@@ -2,7 +2,16 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 12 de noviembre de 2026, 17:55, v0.202.0 en `main` con GitHub en verde entero.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 13 de noviembre de 2026, 15:25, v0.204.0 juntada en `main`.
+
+## 13 nov., 15:25 (cuenta 5iWBf): la 0.204.0, con P3 A y P4 A. Manda sobre lo de abajo
+
+- **Ez migró de EcLj6 a 5iWBf (~14:55).** Uso en 5iWBf: 5 h al 11 % (se reponen a las 19:50), semana al 93 % y «Weekly · Fable» al 96 % (se reponen el lunes 16 a las 18:00). **Ez (literal): «el tope ahora es el 98%»** para la semana: WIP y relevo al 96 %, y se para al 98 %.
+- **La página «Antes de los testers», publicada en 5iWBf: R1mmsxTzYjmFQGynxJYXxP** (par con HeMyYYPyDuopL7oYYu5kpS en `hoja-ids-cuentas.js`). En EcLj6 sigue la versión de antes (P4 por elegir): republicarla allí desde `docs/proposals/montado-testers-12nov/` con `files` y `root` en esa carpeta.
+- **Ez (literal): «A y me gusta la campana».** A, la forma A de la P4; «la campana», leída como que le vale la campana del Foco de la P3 (el fin de la pausa sigue con las dos campanadas de la P1 A). **Montada por la coordinadora** en `claude/testers-12nov-954645` (1bd27ba3): `useOfertaExacta` en `app/focus/FocusTimer.avisos.jsx` ocupa el hueco `fila` de `AroFila`; `exactaOfrecida` en el estado; dos claves i18n (censo en 1190); fila nueva arriba en decisiones. Cuatro pruebas nuevas en `tests/android-nativo.spec.js`, con tres mutantes cazados; `verify` y 49 vecinas en verde.
+- **Ez (literal): «Júntalo».** Unión eccdde52 en `main`, sin choques; `verify` en verde; `npm run bump -- 0.204.0` y build. Suite entera sobre el `index.html` que se sube (puerto 8805, 39 min): **1606 en verde, 2 saltadas a propósito y 1 roja**, `contraste-modulos.spec.js:150` (Hidrátate, el censo de color tras «Un vaso más»), que este cambio no toca y que pasa sola 10 de 10 y con su archivo entero: carga. Commit «v0.204.0: bump, build y lo que junta» y push; el CI, en el bloque siguiente o en `gh run list --branch main`.
+- **Sin probar en un Android de verdad:** la campana del Foco por sus canales, el fin de la pausa y «Avisos a su hora ›» (pasos en la página).
+- **Siguiente en la lista corta:** el paso 5, el sí de Ez a S3 y S4 (página C2uFSMM8eWhcRxpXLGWkAx / 2QnMBypqSRVJCmPeNJazZA), y el 6, el «júntalo» de `claude/guardar-atomico-166e3f` con la revisión de ChatGPT del cobro y lo legal. La hoja de pasos y la lista corta de 5iWBf siguen en el 12 nov. por la tarde: ponerlas al día cuesta mucho y Ez no lo ha pedido.
 
 ## 12 nov., 20:45 (cuenta EcLj6): la 0.203.0, cerrada; Ez dio «A y A» a P3 y P4. Manda sobre lo de abajo
 
