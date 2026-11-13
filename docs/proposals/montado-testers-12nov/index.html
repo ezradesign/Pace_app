@@ -67,7 +67,7 @@ code{font-size:.9em;background:var(--card);border:1px solid var(--line);border-r
   <div class="eyebrow">PACE · antes de dar la prueba a los testers · 12 nov. 2026</div>
   <h1>Antes de los testers</h1>
   <p class="lead">Los dos arreglos que pedía la auditoría externa están en la 0.203.0: la quinta pausa de un tester ya no gasta la única petición de valorar PACE, y en el móvil el fin de la pausa avisa, con un sonido distinto del fin del Foco.</p>
-  <p>Todo va en la rama <code>claude/testers-12nov-954645</code>. Lo nuevo no está en <code>main</code>: lo junta la coordinadora cuando digas. Lo nuevo, con tus respuestas a P3 y P4, va primero; queda una cosa por elegir, la forma de P4.</p>
+  <p>Todo va en la rama <code>claude/testers-12nov-954645</code>. Lo nuevo no está en <code>main</code>: lo junta la coordinadora cuando digas. Lo nuevo, con tus respuestas a P3 y P4, va primero. <strong>Con tu A del 13 nov., la P4 ya está montada: solo falta tu «júntalo».</strong></p>
 
   <h2>Lo nuevo, con tus «A y A» <span class="v hecho">13 nov.</span></h2>
   <p>Los dos arreglos de abajo ya están en la 0.203.0. Con tus respuestas a P3 y P4 van dos cosas más, en la misma rama:</p>
@@ -80,8 +80,12 @@ code{font-size:.9em;background:var(--card);border:1px solid var(--line);border-r
     <li><strong>El aviso fijo</strong> con el móvil bloqueado (lo que queda del bloque) no cambia: sigue sin sonar.</li>
   </ul>
 
-  <h3>P4 · El permiso para que el aviso llegue a su hora, al empezar el primer Foco <span class="v falta">maqueta, elige</span></h3>
-  <p>Sale <strong>una sola vez</strong>, en Android, al empezar el primer Foco, y solo si falta el permiso. Al tocarlo se abre el ajuste de Android («Alarmas y recordatorios»), y al volver desaparece; si no lo tocas, se va al acabar ese Foco y no vuelve (sigue en Ajustes, como hoy). Ninguna de las tres formas tapa nada ni se pone encima: cada una ocupa el sitio de algo que en ese momento sobra. Pintadas sobre la app de verdad, a 360 px:</p>
+  <h3>P4 · El permiso para que el aviso llegue a su hora, al empezar el primer Foco <span class="v hecho">montada la A</span></h3>
+  <p>Sale <strong>una sola vez</strong>, en Android, al empezar el primer Foco con el aviso encendido, y solo si falta el permiso. Al tocarlo se abre el ajuste de Android («Alarmas y recordatorios»), y al volver desaparece; si no lo tocas, se va al acabar ese Foco y no vuelve (sigue en Ajustes, como hoy). Nunca abre el ajuste sin que la toques. Quien ya tiene PACE instalado la ve una vez, en su primer Foco después de actualizar.</p>
+  <div class="fotos">
+    <figure class="bien"><img src="fotos/p4-montada-es.png" alt="La A montada: bajo el botón Pausar, «Avisos a su hora ›» en el sitio de «Ciclo 1 / 4»" loading="lazy"><figcaption><b>Montada</b> · la app de verdad a 360 px, con el Foco recién empezado</figcaption></figure>
+  </div>
+  <p>Las tres formas que viste, pintadas sobre la app a 360 px:</p>
   <div class="fotos">
     <figure class="bien"><img src="fotos/p4-a-es.png" alt="Forma A: bajo el botón Pausar, «Avisos a su hora ›» en el sitio de «Ciclo 1 / 4»" loading="lazy"><figcaption><b>A · recomendada</b> · en el sitio de «Ciclo 1 / 4»</figcaption></figure>
     <figure><img src="fotos/p4-b-es.png" alt="Forma B: «Para que el aviso llegue a su hora ›» en el sitio de «Concentración profunda»" loading="lazy"><figcaption><b>B</b> · en el sitio de «Concentración profunda»</figcaption></figure>
@@ -95,7 +99,7 @@ code{font-size:.9em;background:var(--card);border:1px solid var(--line);border-r
   <div class="pregunta">
     <h3>¿Cuál?</h3>
     <p><strong>A</strong> · Una línea pequeña bajo «Pausar», donde va «Ciclo 1 / 4», que en el primer Foco no dice nada. <strong>B</strong> · La línea de debajo de la hora, donde va «Concentración profunda». <strong>C</strong> · La tarjeta de abajo, con «Ahora no» y «Permitir».</p>
-    <p class="rec">Recomendada: <strong>A</strong>. Está junto al botón que acabas de tocar, no cambia nada de sitio y no quita nada que haga falta. B cambia la frase del Foco por un aviso técnico, y C quita la tarjeta de tu jornada mientras dura el Foco, aunque no la tape.</p>
+    <p class="rec">Elegiste <strong>A</strong> (13 nov.): montada.</p>
   </div>
 
   <h3>Lo que falta probar en un móvil (lo nuevo)</h3>
@@ -103,6 +107,7 @@ code{font-size:.9em;background:var(--card);border:1px solid var(--line);border-r
     <li><strong>Android con PACE ya instalado</strong> (la versión de antes): actualiza, empieza un Foco y bloquea el móvil. Al acabar debe sonar la campana de PACE, no el sonido de avisos del móvil. Al abrir PACE no suena otra vez.</li>
     <li>Con el sonido apagado en Ajustes de PACE, el mismo paso: el aviso sale sin sonido.</li>
     <li>En los ajustes de notificaciones de PACE en Android deben verse «Fin del Foco», «Fin del Foco, sin sonido», «Fin de la pausa», «Fin de la pausa, sin sonido» y «Foco en marcha».</li>
+    <li><strong>La P4</strong>, en un Android 14 sin «Alarmas y recordatorios»: al empezar el Foco sale «Avisos a su hora ›» bajo «Pausar». Al tocarla se abre ese ajuste; al volver, ya no está. En el siguiente Foco no vuelve a salir.</li>
   </ol>
 
   <h2>1 · La valoración espera a v1 <span class="v hecho">montado</span></h2>
@@ -173,7 +178,7 @@ code{font-size:.9em;background:var(--card);border:1px solid var(--line);border-r
     <h3>P4 · En Android, ¿ofrecer «que el aviso llegue a su hora» al empezar el primer Foco?</h3>
     <p>Desde Android 14, si no das el permiso de «Alarmas y recordatorios», Android puede retrasar los avisos unos minutos. En un Foco de 25 minutos se nota poco; en una pausa de 5, sí: el aviso de volver podría llegar tarde. Hoy ese permiso solo se ofrece en Ajustes, con un toque.</p>
     <p><strong>A</strong> · Una línea, una sola vez, al empezar el primer Foco en Android, con el toque que abre ese ajuste. <strong>B</strong> · Solo en Ajustes, como hoy.</p>
-    <p class="rec">Elegiste <strong>A</strong>: las tres formas están pintadas arriba, en «Lo nuevo», para que elijas una.</p>
+    <p class="rec">Elegiste <strong>A</strong>, y de las tres formas, la A: montada (arriba, en «Lo nuevo»).</p>
   </div>
 
   <div class="pregunta">
@@ -199,6 +204,7 @@ code{font-size:.9em;background:var(--card);border:1px solid var(--line);border-r
     <tbody>
       <tr><td>La valoración, «hasta v1» (Android e iPhone)</td><td>La quinta pausa de un tester no la pide ni la gasta; con v1, la siguiente sí</td><td>la espera a v1 quitada; las pausas de antes de v1 sin contar</td></tr>
       <tr><td>El fin de la pausa (15, Android e iPhone)</td><td>El aviso, su hora, su sonido, sin sonido, al volver, «A tu ritmo», PACE reabierto, los canales</td><td>once fallos a propósito, uno a uno: el sonido doble, sin aviso, la campana en vez del sonido nuevo, sin el aviso de «A tu ritmo», el aviso quitado en segundo plano, el aviso viejo sin quitar al reabrir, sin el canal mudo, sin el sonido en el iPhone, sin el sonido en el canal</td></tr>
+      <tr><td>«Avisos a su hora» (P4 A, 4 pruebas de Android)</td><td>Sale al empezar el Foco en la fila del ciclo, sin abrir nada solo; tocada, abre el ajuste y se va; sin tocarla, se va con el Foco y no vuelve; con el aviso apagado o el permiso dado, no sale</td><td>tres fallos a propósito: sin apuntar que ya salió, saliendo con el permiso dado, quedándose al volver del ajuste</td></tr>
       <tr><td><code>verify</code></td><td>Que los archivos de sonido sean las recetas de hoy, estén donde los busca el móvil y no suenen igual que la campana</td><td>—</td></tr>
     </tbody>
   </table></div>
