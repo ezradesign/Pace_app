@@ -37,6 +37,7 @@ const pares = [
   ['2mhP4SyDi9sWQ2E3CEEopt', 'ERZwRa32ZCMByZu7JBdwbf'], // «Dos preguntas» de la octava (1 A2, 2 B)
   ['8Pgz18Qv7qMcwXCGQcJVgw', '7mLHvjUkuyUzthehEtgLNg'], // «La octava, segunda parte», con la letra A o B
   ['PJye6h3hhiqgjUMRmbUe1h', 'AT8X9QryL4KtDetYTivxzA'], // «La octava, tercera parte» (la B, las siete pruebas y los doce ciertos)
+  ['HeMyYYPyDuopL7oYYu5kpS', 'R1mmsxTzYjmFQGynxJYXxP'], // «Antes de los testers» (la valoración, el fin de la pausa, P3 montada y las tres formas de la P4)
 ];
 
 const [de, hacia] = a === 'EcLj6' ? [1, 0] : [0, 1];
