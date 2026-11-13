@@ -1,0 +1,109 @@
+<title>Cuatro arreglos pequeños</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de papel y tinta, como las páginas «Montado»: cada arreglo con su antes y su después,
+   y la ventana de importar pintada en pequeño con los colores de PACE. Terracota = lo de hoy. */
+:root{
+  --paper:#F2EDE0;--card:#FBF8F1;
+  --ink:#1F1C17;--ink-2:#4A453C;--ink-3:#77705F;
+  --line:#C9C0A8;
+  --olive:#3E5A3A;--olive-soft:rgba(62,90,58,.12);
+  --terra:#A85E43;--terra-soft:rgba(168,94,67,.12);
+  --display:'EB Garamond',Georgia,'Times New Roman',serif;
+  --ui:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+main{max-width:880px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 72px}
+h1,h2,h3{font-family:var(--display);font-style:italic;font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(32px,6vw,44px)}
+h2{font-size:clamp(23px,4vw,28px);margin:44px 0 10px;padding-top:22px;border-top:1px solid var(--line)}
+p{margin:0 0 12px;color:var(--ink-2);max-width:68ch}
+strong{color:var(--ink);font-weight:500}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.lead{font-family:var(--display);font-size:21px;color:var(--ink);max-width:62ch;margin-top:14px}
+.par{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin:14px 0}
+.lado{min-width:0}
+.lado .t{font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.hoy .t{color:var(--terra)}.luego .t{color:var(--olive)}
+.ventana{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.ventana h3{font-size:20px;margin-bottom:8px}
+.ventana p{font-size:14px;margin-bottom:8px}
+.ventana .nueva{color:var(--olive)}
+.botones{display:flex;gap:10px;justify-content:flex-end;margin-top:12px;font-size:14px}
+.botones span{padding:6px 14px;border-radius:999px;border:1px solid var(--line);color:var(--ink-2)}
+.botones span.si{background:var(--olive-soft);border-color:var(--olive);color:var(--ink)}
+.fila{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;font-size:15px}
+.fila .oye{display:block;font-size:13px;color:var(--ink-3);margin-top:4px}
+.fila .oye b{font-weight:500;color:var(--ink-2)}
+.nota{font-size:13px;color:var(--ink-3)}
+.pregunta{border-left:3px solid var(--terra);padding:4px 0 4px 14px;margin:22px 0}
+.pregunta p{margin-bottom:6px}
+.rec{color:var(--olive)}
+</style>
+
+<main>
+  <div class="eyebrow">PACE · la sexta pasada externa, comprobada · 13 nov. 2026</div>
+  <h1>Cuatro arreglos pequeños</h1>
+  <p class="lead">Cuatro cosas ciertas que encontró la revisión externa, sin nada que elegir: solo tu sí para montarlas antes de la versión de prueba.</p>
+  <p>Tres ayudan a quien trae su copia de «Tus datos» a otro móvil, y uno a quien usa PACE con lector de pantalla. Casi no cambia nada a la vista. En la lista de lo pendiente es el paso 5 (filas S3 y S4 de la auditoría).</p>
+
+  <h2>1 · Importar dice de qué día es la copia</h2>
+  <p>Hoy la pregunta dice cuántos logros y minutos trae, pero no de cuándo es. Con dos copias guardadas, no sabes cuál estás metiendo, y la de ahora se pierde sin deshacer. Si la copia viene de una versión de PACE más nueva que la tuya (otro móvil ya actualizado), tampoco lo dice.</p>
+  <div class="par">
+    <div class="lado hoy"><div class="t">Hoy</div>
+      <div class="ventana">
+        <h3>¿Cambiar tus datos por los de la copia?</h3>
+        <p>La copia trae 12 logros y 340 min de foco. Lo que hay ahora en PACE se sustituye por la copia, sin juntarse, y no se puede deshacer.</p>
+        <div class="botones"><span>Cancelar</span><span class="si">Importar</span></div>
+      </div>
+    </div>
+    <div class="lado luego"><div class="t">Con el arreglo</div>
+      <div class="ventana">
+        <h3>¿Cambiar tus datos por los de la copia?</h3>
+        <p><span class="nueva">La copia es del 3 de noviembre</span> y trae 12 logros y 340 min de foco. Lo que hay ahora en PACE se sustituye por la copia, sin juntarse, y no se puede deshacer.</p>
+        <p class="nueva">Es de una versión de PACE más nueva que esta: si puedes, actualiza PACE antes de traerla.</p>
+        <div class="botones"><span>Cancelar</span><span class="si">Importar</span></div>
+      </div>
+    </div>
+  </div>
+  <p class="nota">Los números son de ejemplo. La segunda línea solo sale si la copia es de una versión más nueva. Los textos finales, en español y en inglés, van con el arreglo.</p>
+
+  <h2>2 · La copia se encuentra en Drive o en WhatsApp</h2>
+  <p>Hoy, al tocar «Importar», el móvil solo enseña los archivos que sabe que son de datos. Una copia que te mandaste por WhatsApp o que bajaste de Drive a veces llega sin esa marca, y en Android no aparece en la lista aunque esté ahí.</p>
+  <p><strong>Con el arreglo</strong>, el selector enseña todos los archivos. Si eliges uno que no es una copia de PACE, PACE lo dice y no toca nada: eso ya lo comprueba hoy con lo que entra.</p>
+
+  <h2>3 · El lector de pantalla lee el precio en Ajustes</h2>
+  <p>En Ajustes, las filas que son un botón le esconden al lector de pantalla lo que dicen a su derecha: el precio de la fila de compra, «Caducó el…» o «Introducir código». Quien no ve la pantalla oye que hay un botón, pero no qué cuesta ni en qué estado está, antes de tocarlo.</p>
+  <div class="par">
+    <div class="lado hoy"><div class="t">Hoy oye</div>
+      <div class="fila">Tenerlo para siempre · 19,99 €<span class="oye"><b>«Tenerlo para siempre, botón»</b></span></div>
+    </div>
+    <div class="lado luego"><div class="t">Con el arreglo oye</div>
+      <div class="fila">Tenerlo para siempre · 19,99 €<span class="oye"><b>«Tenerlo para siempre, 19,99 €, botón»</b></span></div>
+    </div>
+  </div>
+  <p class="nota">A la vista no cambia nada. Es la fila de compra de «Tus datos» cuando la tienda está abierta; vale igual para «Caducó el…» y para «Introducir código».</p>
+
+  <h2>4 · «Audio» en la parte inglesa de Ajustes</h2>
+  <p>En inglés, la sección «Oír» se llama «Sound», y dentro tiene un interruptor que también se llama «Sound». Se lee como un error: el mismo nombre dos veces, uno encima del otro.</p>
+  <p><strong>Con el arreglo</strong>, la sección se llama «Audio» y el interruptor sigue siendo «Sound». En español no cambia nada.</p>
+  <p class="nota">De paso se corrigen cuatro comentarios del código que ya no eran verdad (el registro del iPhone sí guarda, y el tamaño del interruptor). No se ven.</p>
+
+  <div class="pregunta">
+    <h3>¿Los monto?</h3>
+    <p><strong>Sí, los cuatro</strong> · en una rama, con sus pruebas. Te enseño la ventana de importar ya montada antes de juntarla. <strong>Solo algunos</strong> · dime cuáles.</p>
+    <p class="rec">Recomendado: los cuatro. Son poco trabajo, nadie pierde nada y los testers que cambien de móvil usarán importar.</p>
+  </div>
+</main>
