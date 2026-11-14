@@ -156,3 +156,21 @@ Ninguna captura enseña el «− 9:00 +» ni lo que pasa sin querer, así que es
 Hay dos cosas que aún no están en `main` y las dejarán viejas otra vez: los dibujos de logros nuevos (`6-logros`, que enseña
 sellos) y lo que cambie la home con la jornada (`1-jornada`, `2-pausa` y `5-foco-oscuro`). Conviene rehacer las seis una
 sola vez, al final, con todo dentro: `node build-standalone.js` y `node scripts/play/capturas.js`.
+
+### 0.205.0 (205000), para la prueba interna y después la cerrada
+
+Bajado el 14 nov. 2026, con el «Sí, dale» de Ez, a `subidas-play\PACE-0.205.0.aab` (15 672 569 bytes) desde el artefacto
+`pace-play-v0.205.0` de la ejecución 43591217429 de Android, tras el CI en verde de 45a85c7c. Lleva `campana_aviso.wav` y
+`pausa_aviso.wav`. La gente de la cerrada tiene la 0.174.0: las notas cuentan lo que notarán desde entonces.
+
+```
+<es-ES>
+Mueve y Estira, renovados: un dibujo en cada ejercicio y dónde colocarte. Con el móvil bloqueado, el fin del Foco suena con la campana de PACE y el fin de la pausa con dos campanadas. En el primer Foco, «Avisos a su hora ›» te ayuda a que el aviso no llegue tarde. Las horas de «A tu ritmo» se eligen con el «− 9:00 +». Importar una copia dice de qué día es. Con la letra grande del móvil, el inicio cabe sin scroll. Gracias por probarla: cuéntame lo que falle.
+</es-ES>
+<es-419>
+Mueve y Estira, renovados: un dibujo en cada ejercicio y dónde colocarte. Con el celular bloqueado, el fin del Foco suena con la campana de PACE y el fin de la pausa con dos campanadas. En el primer Foco, «Avisos a su hora ›» te ayuda a que el aviso no llegue tarde. Las horas de «A tu ritmo» se eligen con el «− 9:00 +». Importar una copia dice de qué día es. Con la letra grande del celular, el inicio cabe sin scroll. Gracias por probarla: cuéntame lo que falle.
+</es-419>
+<en-US>
+Move and Stretch, renewed: a drawing for every exercise and where to stand. With your phone locked, the end of Focus rings PACE's bell and the end of a break plays two chimes. On your first Focus, «Alerts on time ›» keeps the alert from arriving late. Pick the hours of «At your pace» with «− 9:00 +». Importing a copy tells you what day it's from. With large phone text, the home screen fits without scrolling. Thanks for testing: tell me what breaks.
+</en-US>
+```
