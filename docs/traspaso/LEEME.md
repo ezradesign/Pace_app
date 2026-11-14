@@ -2,7 +2,21 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
-Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 13 de noviembre de 2026, 15:25, v0.204.0 juntada en `main`.
+Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de noviembre de 2026, 10:20, v0.204.0 en `main` y los cuatro arreglos de S3 y S4 en su rama.
+
+## AL RELEVO (14 nov., 10:20, cuenta 5iWBf con la semana al 96 %): empieza aquí; manda sobre lo de abajo
+
+- **`main` = 0.204.0, subida y con GitHub en verde entero** (CI, iPhone y Android). **No hay ninguna sesión trabajando.**
+- **Ez (literal, 13 nov.): «Sí, los cuatro»** a S3 y S4 (paso 5 de la lista corta). **Montados por la coordinadora** en `claude/arreglos-s3-s4-13nov` (d4d9f559, subida; worktree `.claude/worktrees/arreglos-s3-s4-13nov`, con la junction de `node_modules`): la pregunta de importar dice el día de la copia y avisa si es de una versión más nueva; el selector sin `accept`; el lector de pantalla oye la derecha de las filas-botón de Ajustes; «Audio» en inglés; cuatro comentarios. Dos pruebas nuevas en `tests/ajustes-avisos.spec.js` con cuatro mutantes cazados; 12 pruebas buscan ya el selector por `data-pace-traer-copia`; censo i18n 1192 y mínimo de pruebas 1568; fila nueva arriba en decisiones. `verify` en verde. **Suite entera en la rama:** 1560 en verde y 8 rojas con el PC dormido de noche (12 h), que pasan al repetirlas (9 de 9).
+- **Página «Cuatro arreglos pequeños»**, al día con la foto de la ventana montada: 5iWBf Lweow3RtPa9wCsenLZNJ51 (fuente con `fotos/` en `docs/proposals/arreglos-s3-s4-13nov/` de la rama). En EcLj6 no existe: publicarla allí desde la rama y apuntar el par en `hoja-ids-cuentas.js`.
+- **Espera a Ez: el «júntalo» de S3 y S4.** Al juntar: unión en `main`, `verify`, `npm run bump -- 0.205.0`, build, suite entera (puerto 8805 u 8815), STATE, CHANGELOG, este archivo, push y CI. Sin probar en un móvil: que Android enseñe la copia de WhatsApp o Drive.
+- **Después, en la lista corta:** el paso 6, el «júntalo» de `claude/guardar-atomico-166e3f` (cobro mensual) y pasar a ChatGPT la revisión del cobro y lo legal.
+- **Trampa de hoy:** `$(sed …)` con una lista de archivos que acaba en espacio mete «tests/» y lanza la suite entera; pasar los archivos uno a uno.
+- **Uso en 5iWBf a las 10:15:** 5 h al 7 % (se reponen a las 15:00), semana al 96 % (se repone el lunes 16 a las 18:00). Ez puso el tope de la semana en el 98 %.
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (14 nov., 10:20)» de arriba del todo de docs/traspaso/LEEME.md, y sigue como coordinadora. main está en la 0.204.0 con GitHub en verde, y los cuatro arreglos de S3 y S4 están montados en su rama. Publica en esta cuenta la página «Cuatro arreglos pequeños» y apunta su par; y si te digo «júntalo», júntalos como 0.205.0 con la suite entera, push y GitHub en verde. Haz pocas vueltas.
+```
 
 ## 13 nov., 15:25 (cuenta 5iWBf): la 0.204.0, con P3 A y P4 A. Manda sobre lo de abajo
 
