@@ -190,7 +190,7 @@ test('importar un backup ANTIGUO reinicia el contenedor en vez de mezclarlo', as
   await aceptarAvisosPace(page);
   await page.locator('button[aria-label="Abrir ajustes"]').click();
   await abrirTusDatos(page);
-  await page.locator('input[type="file"][accept="application/json,.json"]')
+  await page.locator('input[type="file"][data-pace-traer-copia]')
     .setInputFiles({ name: 'pace-backup-20260101.json', mimeType: 'application/json', buffer: Buffer.from(backup) });
 
   await esperarEnPagina(page, async previo => {

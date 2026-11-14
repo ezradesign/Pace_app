@@ -23,8 +23,30 @@ function paceOlvidarPasajero() {
   try { if (typeof olvidarCuerpoGuardada === 'function') olvidarCuerpoGuardada(); } catch (e) {}
 }
 
+/* Lo que la copia dice de sí misma, para la pregunta (sexta pasada externa, nº 25 y nº 5; Ez,
+   13 nov. 2026): de qué día es (`exportedAt`, que escribe exportar) y si la hizo una versión de
+   PACE más nueva que esta. Una copia más nueva entra igual, porque el saneador guarda lo que no
+   conoce: solo se avisa, para que actualice antes si puede. Sin fecha o versión legibles, no se
+   dice nada. La fecha es la ISO entera, con hora y zona, nunca un «YYYY-MM-DD» suelto. */
+function paceDiaDeLaCopia(iso, lang) {
+  if (typeof iso !== 'string' || !/^\d{4}-\d{2}-\d{2}T/.test(iso)) return null;
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return null;
+  const opciones = { day: 'numeric', month: 'long' };
+  if (d.getFullYear() !== new Date().getFullYear()) opciones.year = 'numeric';
+  return d.toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', opciones);
+}
+
+function paceCopiaMasNueva(version) {
+  const numeros = (v) => { const m = /^v?(\d+)\.(\d+)\.(\d+)/.exec(String(v || '')); return m ? m.slice(1).map(Number) : null; };
+  const a = numeros(version), b = numeros(PACE_VERSION);
+  if (!a || !b) return false;
+  for (let i = 0; i < 3; i++) if (a[i] !== b[i]) return a[i] > b[i];
+  return false;
+}
+
 function usePaceTraerCopia(decir, capa) {
-  const { t, tn } = useT();
+  const { t, tn, lang } = useT();
   const fileInputRef = useRefImp(null);
   const [pidiendoImportar, setPidiendoImportar] = useStateImp(null); // lo que trae la copia, mientras se pregunta
   const [avisoParcial, setAvisoParcial] = useStateImp(false);       // la copia entró sin su registro
@@ -64,6 +86,7 @@ function usePaceTraerCopia(decir, capa) {
            ventanita del navegador: Ez, 3A del 27 oct.). Se escribe al decir que sí. */
         setPidiendoImportar({
           incoming, eventsSection: payload.events,
+          dia: paceDiaDeLaCopia(payload.exportedAt, lang), nueva: paceCopiaMasNueva(payload.version),
           logros: incoming.achievements ? Object.keys(incoming.achievements).length : 0,
           foco: incoming.totalFocusMin || 0,
         });
@@ -140,12 +163,15 @@ function usePaceTraerCopia(decir, capa) {
 
   const elegir = () => fileInputRef.current && fileInputRef.current.click();
 
+  /* El selector, sin `accept`: una copia que llega por WhatsApp o se baja de Drive puede venir
+     sin el tipo de JSON, y Android no la enseñaba en la lista (sexta pasada externa, nº 6). Lo que
+     entra se valida arriba: un archivo que no es una copia de PACE no toca nada. */
+  const p = pidiendoImportar;
   const piezas = (
     <React.Fragment>
       <input
         ref={fileInputRef}
         type="file"
-        accept="application/json,.json"
         data-pace-traer-copia
         style={{ display: 'none' }}
         onChange={(e) => {
@@ -156,7 +182,8 @@ function usePaceTraerCopia(decir, capa) {
       />
       <AjustesAviso abierto={!!pidiendoImportar} capa={capa} titulo={t('settings.import.titulo')} si={t('settings.import.si')}
         onSi={importarDeVerdad} onNo={() => setPidiendoImportar(null)}>
-        {pidiendoImportar ? tn('settings.import.cuerpo', { logros: pidiendoImportar.logros, foco: pidiendoImportar.foco }) : null}
+        {p ? tn(p.dia ? 'settings.import.cuerpo.dia' : 'settings.import.cuerpo', { dia: p.dia, logros: p.logros, foco: p.foco }) : null}
+        {p && p.nueva ? <span data-pace-copia-nueva style={{ display: 'block', marginTop: 10 }}>{t('settings.import.nueva')}</span> : null}
       </AjustesAviso>
       <AjustesAviso abierto={avisoParcial} capa={capa} titulo={t('settings.import.parcial.titulo')} si={t('guardar.entendido')}
         onNo={() => { paceOlvidarPasajero(); location.reload(); }}>

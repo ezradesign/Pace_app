@@ -223,8 +223,8 @@ function paceEventsAppend(event) {
 }
 
 /* PODA POR CALENDARIO (§12), programada en s174. La fachada, como todas: nadie
-   habla con un adaptador directamente. Con el adaptador inerte (`file://`,
-   iOS) devuelve el resultado nulo y no pasa nada -- alli no hay contenedor
+   habla con un adaptador directamente. Con el adaptador inerte (`file://`)
+   devuelve el resultado nulo y no pasa nada -- alli no hay contenedor
    que podar.
    El dia se puede FIJAR desde fuera, y por eso es un parametro y no una lectura
    escondida: sin eso, probar que barre lo de hace 121 dias exigiria mover el

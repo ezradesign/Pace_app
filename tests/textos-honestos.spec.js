@@ -129,7 +129,7 @@ test('9 · al importar una copia dice que se sustituye sin juntarse', async ({ p
   await page.getByRole('button', { name: 'Abrir ajustes' }).click();
   await abrirTusDatos(page);
   await expect(page.locator('.pace-aj-pie')).toContainText('Todo vive en este navegador y no se sincroniza con otros.');
-  await page.locator('input[type="file"][accept="application/json,.json"]').setInputFiles({
+  await page.locator('input[type="file"][data-pace-traer-copia]').setInputFiles({
     name: 'pace-backup.json', mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify({ app: 'PACE', version: 'v0.187.0', state: { firstSeen: 1, lang: 'es', totalFocusMin: 340 } })),
   });

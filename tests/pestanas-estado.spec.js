@@ -77,7 +77,7 @@ test('estado-3 · una copia importada en una pestaña no la pisa la otra', async
   await b.getByRole('button', { name: 'Abrir ajustes' }).click();
   await abrirTusDatos(b);
   const recarga = b.waitForEvent('load');
-  await b.locator('input[type="file"][accept="application/json,.json"]').setInputFiles({
+  await b.locator('input[type="file"][data-pace-traer-copia]').setInputFiles({
     name: 'pace-backup-20261001.json', mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify({ app: 'PACE', version: 'v0.154.0',
       state: { firstSeen: 1, lang: 'es', langAuto: false, palette: 'crema', ritmo: { libre: true }, totalFocusMin: 4321 } })),

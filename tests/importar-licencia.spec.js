@@ -36,7 +36,7 @@ async function importar(page, copia) {
   const recarga = page.waitForEvent('load');
   await page.getByRole('button', { name: 'Abrir ajustes' }).click();
   await abrirTusDatos(page);
-  await page.locator('input[type="file"][accept="application/json,.json"]').setInputFiles({
+  await page.locator('input[type="file"][data-pace-traer-copia]').setInputFiles({
     name: 'pace-backup-20261102.json', mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify({ app: 'PACE', version: 'v0.189.1', state: copia })),
   });

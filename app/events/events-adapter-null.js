@@ -9,10 +9,9 @@
      · `file://` (PACE_standalone.html) — §19.2. NO emite en v1 aunque el
        navegador exponga Web Locks: sin origen compartido no hay coordinacion
        entre pestanas que prometer. Se elige este adaptador A PROPOSITO.
-     · iOS (Capacitor) — §20. Hasta su fase, el runtime queda UNAVAILABLE.
-       Android NO pasa por aqui: elige el adaptador web de forma explicita
-       (`selectEventsAdapter`), nunca porque la URL del WebView parezca
-       `https://localhost`.
+     · iOS y Android (Capacitor) NO pasan por aqui: los dos eligen el adaptador
+       web de forma explicita (`selectEventsAdapter`; el iPhone, desde el 14 oct.
+       2026), nunca porque la URL del WebView parezca `https://localhost`.
      · Almacenamiento bloqueado o ambiguedad — §20. Ante la duda, UNAVAILABLE;
        nunca un adaptador «adivinado».
 

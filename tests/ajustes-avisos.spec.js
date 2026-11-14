@@ -132,7 +132,7 @@ test('5 · importar pregunta con un aviso de PACE que dice lo que trae la copia;
   page.on('dialog', (d) => { delNavegador.push(d.message()); d.dismiss().catch(() => {}); });
   await irAlArtefacto(page);
   await page.getByRole('button', { name: ABRIR.es }).click();
-  const entregar = () => page.locator('input[type="file"][accept="application/json,.json"]').setInputFiles({
+  const entregar = () => page.locator('input[type="file"][data-pace-traer-copia]').setInputFiles({
     name: 'pace-backup-20261027.json', mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify({ app: 'PACE', state: { firstSeen: 1, lang: 'es', langAuto: false, palette: 'crema',
       ritmo: { libre: true }, totalFocusMin: 42, achievements: { 'first.focus': 1, 'explore.tweaks': 1 } } })),
@@ -154,4 +154,62 @@ test('5 · importar pregunta con un aviso de PACE que dice lo que trae la copia;
   await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
   expect(await page.evaluate(() => window.getState().totalFocusMin)).toBe(42);
   expect(delNavegador, 'preguntó con la ventana del navegador').toEqual([]);
+});
+
+/* Sexta pasada externa, nº 25, 5 y 6 (Ez, «Sí, los cuatro», 13 nov. 2026): la pregunta dice de qué
+   día es la copia y avisa si la hizo una versión más nueva; el selector no filtra por tipo. */
+test('6 · la pregunta dice de qué día es la copia y avisa si es de una versión más nueva', async ({ page, context }) => {
+  await page.clock.install({ time: new Date(2026, 10, 13, 12, 0) });
+  await sembrar(context, { totalFocusMin: 500 });
+  await irAlArtefacto(page);
+  await page.getByRole('button', { name: ABRIR.es }).click();
+  const input = page.locator('input[type="file"][data-pace-traer-copia]');
+  expect(await input.getAttribute('accept'), 'el selector filtra: una copia de WhatsApp o Drive no sale').toBeNull();
+  const aviso = page.locator(AVISO);
+  const nueva = aviso.locator('[data-pace-copia-nueva]');
+  const entregar = (extra) => input.setInputFiles({
+    name: 'pace-backup.json', mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(Object.assign({ app: 'PACE', state: { firstSeen: 1, lang: 'es', langAuto: false, palette: 'crema',
+      ritmo: { libre: true }, totalFocusMin: 42, achievements: { 'first.focus': 1, 'explore.tweaks': 1 } } }, extra))),
+  });
+  const cancelar = async () => { await aviso.getByRole('button', { name: 'Cancelar' }).click(); await expect(aviso).toHaveCount(0); };
+
+  await entregar({ version: 'v0.100.0', exportedAt: '2026-11-03T18:30:00.000Z' });
+  await expect(aviso).toContainText('La copia es del 3 de noviembre y trae 2 logros y 42 min de foco.');
+  await expect(nueva, 'avisó de una copia más vieja').toHaveCount(0);
+  await cancelar();
+
+  await entregar({ version: 'v9.0.0', exportedAt: '2025-11-03T18:30:00.000Z' });
+  await expect(aviso).toContainText('La copia es del 3 de noviembre de 2025 y trae 2 logros');
+  await expect(nueva).toHaveText('Es de una versión de PACE más nueva que esta: si puedes, actualiza PACE antes de traerla.');
+  await cancelar();
+
+  await entregar({});   // una copia sin fecha ni versión legibles: la pregunta de siempre
+  await expect(aviso).toContainText('La copia trae 2 logros y 42 min de foco.');
+  await expect(nueva).toHaveCount(0);
+  await cancelar();
+  expect(await page.evaluate(() => window.getState().totalFocusMin), '«Cancelar» importó').toBe(500);
+});
+
+/* Sexta pasada externa, nº 19: lo de la derecha de una fila que es botón (el precio, «Caducó el…»,
+   «Introducir código») es parte de lo que dice; solo la flecha se le esconde al lector. */
+test('7 · el lector de pantalla oye lo de la derecha de una fila de Ajustes que es botón; la flecha, no', async ({ page, context }) => {
+  await sembrar(context, {});
+  await irAlArtefacto(page);
+  await page.evaluate(() => {
+    const div = document.createElement('div');
+    div.id = 'prueba-filas';
+    document.body.appendChild(div);
+    const e = React.createElement, nada = () => {};
+    ReactDOM.createRoot(div).render(e(React.Fragment, null,
+      e(AjustesAccion, { onClick: nada, derecha: '19,99 €' }, 'Tenerlo para siempre'),
+      e(AjustesAccion, { onClick: nada, derecha: 'Introducir código' }, 'Tengo un código'),
+      e(AjustesAccion, { onClick: nada, derecha: 'Gestionar ›' }, 'Suscripción'),
+      e(AjustesAccion, { onClick: nada, derecha: '›' }, 'Borrar todo')));
+  });
+  const filas = page.locator('#prueba-filas');
+  await expect(filas.getByRole('button', { name: /^Tenerlo para siempre\s*19,99 €$/ }), 'el precio no se oye').toHaveCount(1);
+  await expect(filas.getByRole('button', { name: /^Tengo un código\s*Introducir código$/ })).toHaveCount(1);
+  await expect(filas.getByRole('button', { name: /^Suscripción\s*Gestionar$/ }), 'la flecha se oye').toHaveCount(1);
+  await expect(filas.getByRole('button', { name: 'Borrar todo', exact: true })).toHaveCount(1);
 });

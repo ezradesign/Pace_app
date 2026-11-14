@@ -103,7 +103,7 @@ test('si falla la escritura del estado, el import ABORTA sin tocar los eventos',
   await aceptarAvisosPace(page);
   await page.locator('button[aria-label="Abrir ajustes"]').click();
   await abrirTusDatos(page);
-  await page.locator('input[type="file"][accept="application/json,.json"]')
+  await page.locator('input[type="file"][data-pace-traer-copia]')
     .setInputFiles({ name: 'pace-backup-rota.json', mimeType: 'application/json', buffer: Buffer.from(backup) });
 
   /* El aviso de error tiene que aparecer — y no el de «Importado». */

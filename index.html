@@ -3946,13 +3946,15 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.import.titulo': '¿Cambiar tus datos por los de la copia?',
   'settings.import.cuerpo': 'La copia trae {logros} logros y {foco} min de foco. Lo que hay ahora en PACE se sustituye por la copia, sin juntarse, y no se puede deshacer.',
   'settings.import.si': 'Importar',
+  'settings.import.cuerpo.dia': 'La copia es del {dia} y trae {logros} logros y {foco} min de foco. Lo que hay ahora en PACE se sustituye por la copia, sin juntarse, y no se puede deshacer.',
+  'settings.import.nueva': 'Es de una versión de PACE más nueva que esta: si puedes, actualiza PACE antes de traerla.',
   'settings.import.parcial.titulo': 'Falta el registro de tus sesiones'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
   'settings.title': 'Settings',
   'settings.sec.ver': 'Appearance',
-  'settings.sec.oir': 'Sound',
+  'settings.sec.oir': 'Audio',
   'settings.sec.sesiones': 'Sessions',
   'settings.sec.datos': 'Your data',
   'settings.datos.abrir': 'Copies, data deletion and PACE Complete',
@@ -4047,6 +4049,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.import.titulo': 'Replace your data with the copy?',
   'settings.import.cuerpo': 'This copy contains {logros} achievements and {foco} min of Focus. It will replace your current PACE data, not merge with it. This can’t be undone.',
   'settings.import.si': 'Import',
+  'settings.import.cuerpo.dia': 'This copy is from {dia} and contains {logros} achievements and {foco} min of Focus. It will replace your current PACE data, not merge with it. This can’t be undone.',
+  'settings.import.nueva': 'It was made by a newer version of PACE than this one: if you can, update PACE before bringing it in.',
   'settings.import.parcial.titulo': 'Your session log is missing'
 });
 })();
@@ -16939,10 +16943,9 @@ Object.assign(window, {
      · `file://` (PACE_standalone.html) — §19.2. NO emite en v1 aunque el
        navegador exponga Web Locks: sin origen compartido no hay coordinacion
        entre pestanas que prometer. Se elige este adaptador A PROPOSITO.
-     · iOS (Capacitor) — §20. Hasta su fase, el runtime queda UNAVAILABLE.
-       Android NO pasa por aqui: elige el adaptador web de forma explicita
-       (`selectEventsAdapter`), nunca porque la URL del WebView parezca
-       `https://localhost`.
+     · iOS y Android (Capacitor) NO pasan por aqui: los dos eligen el adaptador
+       web de forma explicita (`selectEventsAdapter`; el iPhone, desde el 14 oct.
+       2026), nunca porque la URL del WebView parezca `https://localhost`.
      · Almacenamiento bloqueado o ambiguedad — §20. Ante la duda, UNAVAILABLE;
        nunca un adaptador «adivinado».
 
@@ -17822,8 +17825,8 @@ Object.assign(window, {
    `completionReason: 'natural'` (terminar antes no cuenta); en los contadores del estado,
    `rutina.<id>`, que ya solo suben con una entera; y las que tienen una respuesta a «¿Te
    ayudó?», que solo sale al acabar una. Lo ya podado del registro (`baseline`) no guarda el
-   motivo y se suma tal cual: ante la duda se conserva, nadie que la acabó la pierde. En el
-   iPhone el registro no escribe, y la lista sale de lo demás. Las propias del constructor no
+   motivo y se suma tal cual: ante la duda se conserva, nadie que la acabó la pierde. El
+   iPhone escribe el registro como la web y Android (`selectEventsAdapter`). Las propias del constructor no
    entran: el constructor es una superficie de pago, y quedan guardadas y cerradas.
 
    LO QUE ABRE: durante la semana, lo mismo que abría `PREMIUM_ABIERTO_HASTA_V1`
@@ -42784,8 +42787,30 @@ function paceOlvidarPasajero() {
   try {if (typeof olvidarCuerpoGuardada === 'function') olvidarCuerpoGuardada();} catch (e) {}
 }
 
+
+
+
+
+
+function paceDiaDeLaCopia(iso, lang) {
+  if (typeof iso !== 'string' || !/^\d{4}-\d{2}-\d{2}T/.test(iso)) return null;
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return null;
+  const opciones = { day: 'numeric', month: 'long' };
+  if (d.getFullYear() !== new Date().getFullYear()) opciones.year = 'numeric';
+  return d.toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', opciones);
+}
+
+function paceCopiaMasNueva(version) {
+  const numeros = (v) => {const m = /^v?(\d+)\.(\d+)\.(\d+)/.exec(String(v || ''));return m ? m.slice(1).map(Number) : null;};
+  const a = numeros(version),b = numeros(PACE_VERSION);
+  if (!a || !b) return false;
+  for (let i = 0; i < 3; i++) if (a[i] !== b[i]) return a[i] > b[i];
+  return false;
+}
+
 function usePaceTraerCopia(decir, capa) {
-  const { t, tn } = useT();
+  const { t, tn, lang } = useT();
   const fileInputRef = useRefImp(null);
   const [pidiendoImportar, setPidiendoImportar] = useStateImp(null);
   const [avisoParcial, setAvisoParcial] = useStateImp(false);
@@ -42825,6 +42850,7 @@ function usePaceTraerCopia(decir, capa) {
 
         setPidiendoImportar({
           incoming, eventsSection: payload.events,
+          dia: paceDiaDeLaCopia(payload.exportedAt, lang), nueva: paceCopiaMasNueva(payload.version),
           logros: incoming.achievements ? Object.keys(incoming.achievements).length : 0,
           foco: incoming.totalFocusMin || 0
         });
@@ -42901,12 +42927,15 @@ function usePaceTraerCopia(decir, capa) {
 
   const elegir = () => fileInputRef.current && fileInputRef.current.click();
 
+
+
+
+  const p = pidiendoImportar;
   const piezas =
   React.createElement(React.Fragment, null,
   React.createElement("input", {
     ref: fileInputRef,
     type: "file",
-    accept: "application/json,.json",
     "data-pace-traer-copia": true,
     style: { display: 'none' },
     onChange: (e) => {
@@ -42917,7 +42946,8 @@ function usePaceTraerCopia(decir, capa) {
   ),
   React.createElement(AjustesAviso, { abierto: !!pidiendoImportar, capa: capa, titulo: t('settings.import.titulo'), si: t('settings.import.si'),
     onSi: importarDeVerdad, onNo: () => setPidiendoImportar(null) },
-  pidiendoImportar ? tn('settings.import.cuerpo', { logros: pidiendoImportar.logros, foco: pidiendoImportar.foco }) : null
+  p ? tn(p.dia ? 'settings.import.cuerpo.dia' : 'settings.import.cuerpo', { dia: p.dia, logros: p.logros, foco: p.foco }) : null,
+  p && p.nueva ? React.createElement("span", { "data-pace-copia-nueva": true, style: { display: 'block', marginTop: 10 } }, t('settings.import.nueva')) : null
   ),
   React.createElement(AjustesAviso, { abierto: avisoParcial, capa: capa, titulo: t('settings.import.parcial.titulo'), si: t('guardar.entendido'),
     onNo: () => {paceOlvidarPasajero();location.reload();} },
@@ -42930,7 +42960,7 @@ function usePaceTraerCopia(decir, capa) {
 }
 
 Object.assign(window, { usePaceTraerCopia, paceOlvidarPasajero });
-;Object.assign(window, { paceOlvidarPasajero, usePaceTraerCopia });
+;Object.assign(window, { paceOlvidarPasajero, paceDiaDeLaCopia, paceCopiaMasNueva, usePaceTraerCopia });
 })();
 </script>
   <script>
@@ -43687,9 +43717,20 @@ function AjustesAccion(_ref6) {let { children, derecha, suave, onClick, title, s
   }
   return (
     React.createElement("button", { type: "button", className: "pace-aj-accion", "data-suave": suave ? '' : undefined, onClick: onClick, title: title },
-    texto, React.createElement("span", { "aria-hidden": "true" }, derecha)
+    texto, ajustesDerecha(derecha)
     ));
 
+}
+
+
+
+
+function ajustesDerecha(derecha) {
+  if (derecha === '›') return React.createElement("span", { "aria-hidden": "true" }, "\u203A");
+  if (typeof derecha === 'string' && derecha.endsWith(' ›')) {
+    return React.createElement("span", null, derecha.slice(0, -2), " ", React.createElement("span", { "aria-hidden": "true" }, "\u203A"));
+  }
+  return React.createElement("span", null, derecha);
 }
 
 
@@ -43742,7 +43783,7 @@ Object.assign(window, {
   AJUSTES_MODULO, AjustesSeccion, AjustesFila, AjustesPildoras, AjustesInterruptor,
   AjustesPaso, AjustesAccion, AjustesAviso, MuestraPaleta, PictoCirculo
 });
-;Object.assign(window, { _extends, AjustesSeccion, AjustesFila, AjustesPildoras, AjustesInterruptor, AjustesPaso, AjustesAccion, AjustesAviso, MuestraPaleta, PictoCirculo });
+;Object.assign(window, { _extends, AjustesSeccion, AjustesFila, AjustesPildoras, AjustesInterruptor, AjustesPaso, AjustesAccion, ajustesDerecha, AjustesAviso, MuestraPaleta, PictoCirculo });
 })();
 </script>
   <!-- TweaksAudio (s176): el bloque de sonido del panel. Va ANTES que

@@ -51,6 +51,10 @@ strong{color:var(--ink);font-weight:500}
 .pregunta{border-left:3px solid var(--terra);padding:4px 0 4px 14px;margin:22px 0}
 .pregunta p{margin-bottom:6px}
 .rec{color:var(--olive)}
+.montado{background:var(--olive-soft);border-radius:10px;padding:12px 16px;margin:18px 0 0;color:var(--ink);max-width:68ch}
+figure{margin:14px 0;max-width:340px}
+figure img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:6px}
+figcaption{font-size:13px;color:var(--ink-3);margin-top:6px}
 </style>
 
 <main>
@@ -58,6 +62,7 @@ strong{color:var(--ink);font-weight:500}
   <h1>Cuatro arreglos pequeños</h1>
   <p class="lead">Cuatro cosas ciertas que encontró la revisión externa, sin nada que elegir: solo tu sí para montarlas antes de la versión de prueba.</p>
   <p>Tres ayudan a quien trae su copia de «Tus datos» a otro móvil, y uno a quien usa PACE con lector de pantalla. Casi no cambia nada a la vista. En la lista de lo pendiente es el paso 5 (filas S3 y S4 de la auditoría).</p>
+  <p class="montado"><strong>Montados los cuatro</strong> (14 nov.), con tu «Sí, los cuatro», en la rama <code>claude/arreglos-s3-s4-13nov</code>. Falta tu «júntalo». Abajo, la ventana de importar ya montada.</p>
 
   <h2>1 · Importar dice de qué día es la copia</h2>
   <p>Hoy la pregunta dice cuántos logros y minutos trae, pero no de cuándo es. Con dos copias guardadas, no sabes cuál estás metiendo, y la de ahora se pierde sin deshacer. Si la copia viene de una versión de PACE más nueva que la tuya (otro móvil ya actualizado), tampoco lo dice.</p>
@@ -78,7 +83,8 @@ strong{color:var(--ink);font-weight:500}
       </div>
     </div>
   </div>
-  <p class="nota">Los números son de ejemplo. La segunda línea solo sale si la copia es de una versión más nueva. Los textos finales, en español y en inglés, van con el arreglo.</p>
+  <p class="nota">Los números son de ejemplo. La segunda línea solo sale si la copia es de una versión más nueva. Si la copia es de otro año, lo dice («del 3 de noviembre de 2025»); una copia vieja sin fecha sigue con la pregunta de siempre.</p>
+  <figure><img src="fotos/importar-montada.png" alt="La pregunta de importar montada, a 360 px: dice que la copia es del 3 de noviembre y avisa de que es de una versión más nueva" loading="lazy"><figcaption><b>Montada</b> · la app de verdad a 360 px, con una copia de una versión más nueva</figcaption></figure>
 
   <h2>2 · La copia se encuentra en Drive o en WhatsApp</h2>
   <p>Hoy, al tocar «Importar», el móvil solo enseña los archivos que sabe que son de datos. Una copia que te mandaste por WhatsApp o que bajaste de Drive a veces llega sin esa marca, y en Android no aparece en la lista aunque esté ahí.</p>
@@ -102,8 +108,8 @@ strong{color:var(--ink);font-weight:500}
   <p class="nota">De paso se corrigen cuatro comentarios del código que ya no eran verdad (el registro del iPhone sí guarda, y el tamaño del interruptor). No se ven.</p>
 
   <div class="pregunta">
-    <h3>¿Los monto?</h3>
-    <p><strong>Sí, los cuatro</strong> · en una rama, con sus pruebas. Te enseño la ventana de importar ya montada antes de juntarla. <strong>Solo algunos</strong> · dime cuáles.</p>
-    <p class="rec">Recomendado: los cuatro. Son poco trabajo, nadie pierde nada y los testers que cambien de móvil usarán importar.</p>
+    <h3>¿Los junto?</h3>
+    <p>Elegiste <strong>los cuatro</strong> (13 nov.): montados, con dos pruebas nuevas que cazan cuatro fallos puestos a propósito, y la suite entera pasada en la rama (las ocho rojas de la noche, con el ordenador dormido, pasan al repetirlas). Al juntarlos sale la 0.205.0.</p>
+    <p class="rec">Sin probar en un móvil: que Android enseñe ya la copia de WhatsApp o Drive en la lista.</p>
   </div>
 </main>
