@@ -25,8 +25,8 @@
    `completionReason: 'natural'` (terminar antes no cuenta); en los contadores del estado,
    `rutina.<id>`, que ya solo suben con una entera; y las que tienen una respuesta a «¿Te
    ayudó?», que solo sale al acabar una. Lo ya podado del registro (`baseline`) no guarda el
-   motivo y se suma tal cual: ante la duda se conserva, nadie que la acabó la pierde. En el
-   iPhone el registro no escribe, y la lista sale de lo demás. Las propias del constructor no
+   motivo y se suma tal cual: ante la duda se conserva, nadie que la acabó la pierde. El
+   iPhone escribe el registro como la web y Android (`selectEventsAdapter`). Las propias del constructor no
    entran: el constructor es una superficie de pago, y quedan guardadas y cerradas.
 
    LO QUE ABRE: durante la semana, lo mismo que abría `PREMIUM_ABIERTO_HASTA_V1`

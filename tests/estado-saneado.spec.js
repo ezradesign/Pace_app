@@ -138,7 +138,7 @@ test('un backup con campos rotos se importa SANEADO: tras recargar, la persona s
   await page.getByRole('button', { name: 'Abrir ajustes' }).click();
   await abrirTusDatos(page);
   const recarga = page.waitForEvent('load');
-  await page.locator('input[type="file"][accept="application/json,.json"]').setInputFiles({
+  await page.locator('input[type="file"][data-pace-traer-copia]').setInputFiles({
     name: 'pace-backup-20260901.json', mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify({
       app: 'PACE', version: 'v0.120.0',
@@ -176,7 +176,7 @@ test('la copia de rescate que descarga PACE se puede importar (caza del 10 oct.,
   await page.getByRole('button', { name: 'Abrir ajustes' }).click();
   await abrirTusDatos(page);
   const recarga = page.waitForEvent('load');
-  await page.locator('input[type="file"][accept="application/json,.json"]').setInputFiles({
+  await page.locator('input[type="file"][data-pace-traer-copia]').setInputFiles({
     name: 'pace-rescate-20261010.json', mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify({ app: 'PACE', kind: 'rescate', version: 'v0.154.0', exportedAt: '2026-10-10T10:00:00Z',
       rescate: { v: 1, savedAt: 1791000000000, motivo: 'x', raw: JSON.stringify(CON_HISTORIA) } })),
@@ -232,7 +232,7 @@ async function importarCopia(page, estado) {
   await page.getByRole('button', { name: 'Abrir ajustes' }).click();
   await abrirTusDatos(page);
   const recarga = page.waitForEvent('load');
-  await page.locator('input[type="file"][accept="application/json,.json"]').setInputFiles({
+  await page.locator('input[type="file"][data-pace-traer-copia]').setInputFiles({
     name: 'pace-backup-20261021.json', mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify({ app: 'PACE', version: 'v0.174.0', state: estado })),
   });

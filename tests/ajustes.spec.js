@@ -218,7 +218,7 @@ test.describe('ajustes · el panel de s188', () => {
     await page.getByRole('button', { name: 'Open settings' }).click();
     await page.locator(PANEL).waitFor({ state: 'visible' });
     const secciones = await page.locator(PANEL + ' [data-pace-aj-seccion]').evaluateAll(els => els.map(e => e.dataset.paceAjSeccion));
-    expect(secciones).toEqual(['Appearance', 'Sound', 'Sessions', 'Your data']);
+    expect(secciones).toEqual(['Appearance', 'Audio', 'Sessions', 'Your data']);
     await expect(page.locator(PANEL + ' [data-pace-aj-fila="circle"] .pace-aj-sub')).toHaveText('Breathe · Lotus');
     await expect(page.locator(PANEL)).toContainText("Everything lives in this browser and doesn't sync with others.");
   });

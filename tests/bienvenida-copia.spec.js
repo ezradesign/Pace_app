@@ -110,7 +110,7 @@ for (const [lang, vp] of [['es', { w: 360, h: 800 }], ['en', { w: 1280, h: 800 }
     await p2.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
     await p2.getByRole('button', { name: TXT[lang].ajustes }).filter({ visible: true }).first().click();
     await abrirTusDatos(p2);
-    await p2.locator('input[type="file"][accept="application/json,.json"]').setInputFiles({
+    await p2.locator('input[type="file"][data-pace-traer-copia]').setInputFiles({
       name: 'pace-copia.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(COPIA)) });
     const recarga2 = p2.waitForEvent('load');
     await p2.locator('[data-pace-aj-aviso]').getByRole('button', { name: TXT[lang].si, exact: true }).click();

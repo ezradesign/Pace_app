@@ -63,7 +63,7 @@ function AjustesSeccion({ titulo, ultima, accion, plegadaMovil, children }) {
    circulo tambien el estilo elegido). `atenuada` la deja visible pero inerte:
    es lo que hace el bloque de sonido con el maestro apagado.
    `alTocar`: la fila de un interruptor se toca ENTERA, como en los ajustes del
-   movil. El interruptor solo mide 32x18 (28 de toque con el dedo, toques.css.jsx);
+   movil. El interruptor solo mide 40 x 24 (TweaksPanel.support.jsx; 28 de toque con el dedo, toques.css.jsx);
    la fila, todo el ancho y 34 px o mas. El teclado sigue en el interruptor, que es
    el boton: aqui solo llegan el raton y el dedo, y un toque que cae en un boton
    es de ese boton. */
@@ -137,9 +137,20 @@ function AjustesAccion({ children, derecha, suave, onClick, title, sub }) {
   }
   return (
     <button type="button" className="pace-aj-accion" data-suave={suave ? '' : undefined} onClick={onClick} title={title}>
-      {texto}<span aria-hidden="true">{derecha}</span>
+      {texto}{ajustesDerecha(derecha)}
     </button>
   );
+}
+
+/* Lo de la derecha de una fila que es botón: el precio, «Caducó el…» o «Introducir código» son
+   parte de lo que dice el botón, y el lector de pantalla los lee antes del toque (sexta pasada
+   externa, nº 19; Ez, 13 nov. 2026). Solo la flecha es adorno y se le esconde. */
+function ajustesDerecha(derecha) {
+  if (derecha === '›') return <span aria-hidden="true">›</span>;
+  if (typeof derecha === 'string' && derecha.endsWith(' ›')) {
+    return <span>{derecha.slice(0, -2)} <span aria-hidden="true">›</span></span>;
+  }
+  return <span>{derecha}</span>;
 }
 
 /* UN AVISO DE PACE para lo que no se deshace (borrar todo, importar una copia) y para lo que

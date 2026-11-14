@@ -122,13 +122,15 @@ Object.assign(window.PACE_STRINGS.es, {
     'settings.import.titulo':        '¿Cambiar tus datos por los de la copia?',
     'settings.import.cuerpo':        'La copia trae {logros} logros y {foco} min de foco. Lo que hay ahora en PACE se sustituye por la copia, sin juntarse, y no se puede deshacer.',
     'settings.import.si':            'Importar',
+    'settings.import.cuerpo.dia':    'La copia es del {dia} y trae {logros} logros y {foco} min de foco. Lo que hay ahora en PACE se sustituye por la copia, sin juntarse, y no se puede deshacer.',
+    'settings.import.nueva':         'Es de una versión de PACE más nueva que esta: si puedes, actualiza PACE antes de traerla.',
     'settings.import.parcial.titulo': 'Falta el registro de tus sesiones',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
     'settings.title':                'Settings',
     'settings.sec.ver':              'Appearance',
-    'settings.sec.oir':              'Sound',
+    'settings.sec.oir':              'Audio',   // no «Sound»: dentro hay un interruptor que se llama así (sexta pasada, nº 20)
     'settings.sec.sesiones':         'Sessions',
     'settings.sec.datos':            'Your data',
     'settings.datos.abrir':          'Copies, data deletion and PACE Complete',
@@ -223,5 +225,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'settings.import.titulo':        'Replace your data with the copy?',
     'settings.import.cuerpo':        'This copy contains {logros} achievements and {foco} min of Focus. It will replace your current PACE data, not merge with it. This can’t be undone.',
     'settings.import.si':            'Import',
+    'settings.import.cuerpo.dia':    'This copy is from {dia} and contains {logros} achievements and {foco} min of Focus. It will replace your current PACE data, not merge with it. This can’t be undone.',
+    'settings.import.nueva':         'It was made by a newer version of PACE than this one: if you can, update PACE before bringing it in.',
     'settings.import.parcial.titulo': 'Your session log is missing',
 });

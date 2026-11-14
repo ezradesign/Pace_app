@@ -29,7 +29,7 @@ test('la copia que se descarga lleva «Cuaderno a salvo», y al traerla no se pi
 
   /* La misma copia, traída a un PACE sin ese logro. */
   await page.evaluate(() => { const s = getState(); const a = Object.assign({}, s.achievements); delete a['secret.backup']; setState({ achievements: a }); });
-  await page.locator('input[type="file"][accept="application/json,.json"]').setInputFiles({
+  await page.locator('input[type="file"][data-pace-traer-copia]').setInputFiles({
     name: 'pace-backup.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(copia)),
   });
   await page.getByRole('button', { name: /^Importar/ }).last().click();
