@@ -26,7 +26,9 @@ const www = require('./android-www.js');
 const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, 'dist');
 
-const WEB_ARCHIVOS = ['sw.js', '_headers', 'calendario.html'];
+/* `robots.txt` y `sitemap.xml`: sin ellos Cloudflare servía la app con un 200 en esas dos
+   direcciones y los buscadores leían una página en vez de las reglas (auditoría del 10 nov., X2b). */
+const WEB_ARCHIVOS = ['sw.js', '_headers', 'calendario.html', 'robots.txt', 'sitemap.xml'];
 const WEB_CARPETAS = ['premium', 'beta', 'gracias', 'recuperar', 'desistir'];
 
 /* Lo que va en `dist/`, en rutas relativas a la raiz. */

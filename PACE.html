@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PACE · Foco · Cuerpo — v0.206.0</title>
+  <!-- Lo que leen los buscadores de la raíz: la frase de la landing. El « — vX.Y.Z» del
+       título solo vive aquí, en desarrollo: el build lo quita de index.html (paso 8b). -->
+  <meta name="description" content="Pausas activas para quien trabaja sentado. Foco, respiración, movilidad y agua, a tu ritmo. Sin cuenta, sin anuncios, sin rastreo: lo tuyo se queda en tu equipo.">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -453,6 +456,8 @@
   <script type="text/babel" src="app/focus/FocusTimer.jornada.jsx"></script>
   <!-- Los avisos del móvil: el fin del bloque y el fin de la pausa. Antes de FocusTimer.jsx. -->
   <script type="text/babel" src="app/focus/FocusTimer.avisos.jsx"></script>
+  <!-- La cuenta atrás del bloque en el título de la pestaña. Antes de FocusTimer.jsx. -->
+  <script type="text/babel" src="app/focus/FocusTimer.titulo.jsx"></script>
   <script type="text/babel" src="app/focus/FocusTimer.jsx"></script>
   <script type="text/babel" src="app/breathe/BreatheVisual.jsx"></script>
   <!-- Hoja inyectada del loto (s139): keyframes de giro y vela, tinta por

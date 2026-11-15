@@ -25,7 +25,7 @@ var os = require('os');
 var path = require('path');
 
 var NECESARIOS = ['index.html', 'sw.js', '_headers', 'calendario.html', 'premium/index.html', 'beta/index.html', 'gracias/index.html', 'recuperar/index.html', 'desistir/index.html',
-                  'privacy.html', 'safety.html', 'manifest.webmanifest'];
+                  'privacy.html', 'safety.html', 'manifest.webmanifest', 'robots.txt', 'sitemap.xml'];
 /* Lo que está en la raíz y no se publica a propósito: el de desarrollo y el export. */
 var NO_SE_PUBLICA = ['PACE.html', 'PACE_standalone.html'];
 /* Carpetas que se generan (fuera de git) y no son páginas de la web. */
@@ -97,6 +97,24 @@ function tandaWeb(ctx) {
     if (sinDecidir.length) ctx.falla('web: página(s) en la raíz que no se publican ni están en NO_SE_PUBLICA: ' + sinDecidir.join(', ') +
       ' -- si es de la web, a WEB_ARCHIVOS o WEB_CARPETAS de scripts/web-dist.js');
     else ctx.ok(paginas.length + ' páginas en la raíz: cada una se publica o está apartada a propósito');
+
+    /* Los buscadores (auditoría del 10 nov., X2b y X2c): el título de la raíz sin la versión y con su
+       descripción, y cada dirección del mapa es una página de dist/ que no lleva `noindex`. */
+    var raiz = fs.readFileSync(path.join(tmp, 'index.html'), 'utf8');
+    var titulo = (raiz.match(/<title>([^<]*)<\/title>/) || [])[1] || '';
+    if (!titulo || /v\d+\.\d+/.test(titulo)) ctx.falla('web: el <title> de index.html lleva la versión o no está («' + titulo + '») -- los buscadores leen ese nombre; el build la quita (paso 8b de build-standalone.js)');
+    else if (!/<meta name="description" content="[^"]{50,}"/.test(raiz)) ctx.falla('web: index.html sin <meta name="description"> -- los buscadores inventan la suya');
+    else ctx.ok('la raíz se llama «' + titulo + '», sin la versión, y lleva su descripción');
+    var mapa = fs.readFileSync(path.join(tmp, 'sitemap.xml'), 'utf8');
+    var locs = [], rl = /<loc>https:\/\/pacegrass\.app(\/[^<]*)<\/loc>/g, xl;
+    while ((xl = rl.exec(mapa))) locs.push(xl[1]);
+    var malas = locs.filter(function (r) {
+      var a = archivoDeRuta(r, hay);
+      return !a || /<meta name="robots" content="[^"]*noindex/.test(fs.readFileSync(path.join(tmp, a), 'utf8'));
+    });
+    if (!locs.length || malas.length) ctx.falla('web: sitemap.xml ' + (locs.length ? 'lleva direcciones que no existen o llevan noindex: ' + malas.join(', ') : 'sin direcciones de pacegrass.app'));
+    else if (!/^Sitemap: https:\/\/pacegrass\.app\/sitemap\.xml\r?$/m.test(fs.readFileSync(path.join(tmp, 'robots.txt'), 'utf8'))) ctx.falla('web: robots.txt no dice dónde está el mapa');
+    else ctx.ok('robots.txt y sitemap.xml propios: ' + locs.length + ' páginas en el mapa, todas en dist/ y sin noindex');
 
     /* De la app (index.html) solo se mira la landing, entre sus marcas: el resto es la app compilada, que
        pide sus piezas por el precache. La landing vive ahí desde el 9 nov. y sus capturas y enlaces no se

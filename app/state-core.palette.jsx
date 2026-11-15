@@ -115,20 +115,26 @@ function applyTheme(estado) {
   _marcarPaletaLista();
 }
 
+/* El nombre de la pestaña, en el idioma de la interfaz. El sufijo « — vX.Y.Z» solo lo
+   lleva el <title> de PACE.html, en desarrollo: el build lo quita de index.html para que
+   los buscadores lean un nombre limpio. Se lee una vez, al cargar, porque la cuenta atrás
+   del bloque (FocusTimer.titulo.jsx) reescribe el título mientras corre. */
+const _paceTituloSufijo = (() => {
+  try { return (document.title.match(/\s—\s*v[\d.]+\s*$/) || [''])[0]; } catch (e) { return ''; }
+})();
+function paceTituloApp(lang) {
+  return (lang === 'en' ? 'PACE · Focus · Body' : 'PACE · Foco · Cuerpo') + _paceTituloSufijo;
+}
+
 /* El idioma del documento sigue al de la interfaz: con `lang="es"` fijo, el
    lector de pantalla leía el inglés con voz castellana y Chrome ofrecía
-   «traducir del español». La pestaña también: el nombre se traduce y el sufijo
-   « — vX.Y.Z» se conserva tal como lo trae el <title>, porque al cargar
-   `PACE_VERSION` todavía no está en window. */
+   «traducir del español». La pestaña también. */
 function applyLang(estado) {
   if (!estado || !estado.lang) return;
   document.documentElement.setAttribute('lang', estado.lang);
-  try {
-    const sufijo = (document.title.match(/\s—\s*v[\d.]+\s*$/) || [''])[0];
-    document.title = (estado.lang === 'en' ? 'PACE · Focus · Body' : 'PACE · Foco · Cuerpo') + sufijo;
-  } catch (e) {}
+  try { document.title = paceTituloApp(estado.lang); } catch (e) {}
 }
 
 /* Solo `applyTheme` cruza: los dos marcadores son su mecanica interna y nadie
    de fuera tiene por que poder armar un cruce sin aplicar un tema. */
-Object.assign(window, { applyTheme, applyLang });
+Object.assign(window, { applyTheme, applyLang, paceTituloApp });

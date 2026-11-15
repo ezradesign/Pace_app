@@ -155,6 +155,7 @@ function FocusTimer({ onFinish }) {
   /* En las apps (Android y iPhone) el aviso del fin del bloque y el del fin de la pausa los
      programa el sistema, porque con la app en el fondo esta cuenta no corre (FocusTimer.avisos.jsx). */
   useAvisosNativos({ state, running, endsAt, pausaRitmo, enPausaRitmo, t, tn, lang });
+  useTituloCuenta({ running, remaining, modo: state.focusMode, lang, t });   // «24:13 · Foco · PACE» en la pestaña
   const ofertaExacta = useOfertaExacta({ state, set, status, t });   // en Android, «Avisos a su hora ›», una vez
 
   /* La barra de arriba pregunta antes de cambiar de modo con un Foco empezado, y con una pausa

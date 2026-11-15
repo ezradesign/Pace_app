@@ -291,7 +291,10 @@ html[data-pace-landing-idioma="en"] #pace-landing [lang="es"] { display: none !i
 
   </style>
   <!--/pace-landing-->
-  <title>PACE · Foco · Cuerpo — v0.206.0</title>
+  <title>PACE · Foco · Cuerpo</title>
+  <!-- Lo que leen los buscadores de la raíz: la frase de la landing. El « — vX.Y.Z» del
+       título solo vive aquí, en desarrollo: el build lo quita de index.html (paso 8b). -->
+  <meta name="description" content="Pausas activas para quien trabaja sentado. Foco, respiración, movilidad y agua, a tu ritmo. Sin cuenta, sin anuncios, sin rastreo: lo tuyo se queda en tu equipo.">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -7472,20 +7475,26 @@ function applyTheme(estado) {
 
 
 
-
-function applyLang(estado) {
-  if (!estado || !estado.lang) return;
-  document.documentElement.setAttribute('lang', estado.lang);
-  try {
-    const sufijo = (document.title.match(/\s—\s*v[\d.]+\s*$/) || [''])[0];
-    document.title = (estado.lang === 'en' ? 'PACE · Focus · Body' : 'PACE · Foco · Cuerpo') + sufijo;
-  } catch (e) {}
+const _paceTituloSufijo = (() => {
+  try {return (document.title.match(/\s—\s*v[\d.]+\s*$/) || [''])[0];} catch (e) {return '';}
+})();
+function paceTituloApp(lang) {
+  return (lang === 'en' ? 'PACE · Focus · Body' : 'PACE · Foco · Cuerpo') + _paceTituloSufijo;
 }
 
 
 
-Object.assign(window, { applyTheme, applyLang });
-;Object.assign(window, { _marcarPaletaLista, _marcarCruce, applyTheme, applyLang });
+
+function applyLang(estado) {
+  if (!estado || !estado.lang) return;
+  document.documentElement.setAttribute('lang', estado.lang);
+  try {document.title = paceTituloApp(estado.lang);} catch (e) {}
+}
+
+
+
+Object.assign(window, { applyTheme, applyLang, paceTituloApp });
+;Object.assign(window, { _marcarPaletaLista, _marcarCruce, applyTheme, paceTituloApp, applyLang });
 })();
 </script>
   <script>
@@ -32289,6 +32298,46 @@ Object.assign(window, { useAvisosNativos, useOfertaExacta });
 ;Object.assign(window, { useAvisosNativos, useOfertaExacta });
 })();
 </script>
+  <!-- La cuenta atrás del bloque en el título de la pestaña. Antes de FocusTimer.jsx. -->
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+const { useEffect: useEffectTitulo } = React;
+
+function paceTituloCuenta(remaining, modo, t) {
+  const seg = Math.max(0, Math.floor(remaining || 0));
+  const dos = (n) => (n < 10 ? '0' : '') + n;
+  const etiqueta = modo === 'foco' ? t('focus.mode.focus') :
+  modo === 'pausa' ? t('focus.mode.pause') :
+  t('focus.mode.long');
+  return dos(Math.floor(seg / 60)) + ':' + dos(seg % 60) + ' · ' + etiqueta + ' · PACE';
+}
+
+function useTituloCuenta(_ref) {let { running, remaining, modo, lang, t } = _ref;
+  useEffectTitulo(() => {
+    try {
+      document.title = running ? paceTituloCuenta(remaining, modo, t) : paceTituloApp(lang);
+    } catch (e) {}
+  }, [running, remaining, modo, lang]);
+
+  useEffectTitulo(() => () => {
+    try {document.title = paceTituloApp(getState().lang);} catch (e) {}
+  }, []);
+}
+
+Object.assign(window, { useTituloCuenta, paceTituloCuenta });
+;Object.assign(window, { paceTituloCuenta, useTituloCuenta });
+})();
+</script>
   <script>
 ;(function () {
 
@@ -32448,6 +32497,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
   useAvisosNativos({ state, running, endsAt, pausaRitmo, enPausaRitmo, t, tn, lang });
+  useTituloCuenta({ running, remaining, modo: state.focusMode, lang, t });
   const ofertaExacta = useOfertaExacta({ state, set, status, t });
 
 
