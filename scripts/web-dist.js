@@ -28,7 +28,9 @@ const OUT = path.join(ROOT, 'dist');
 
 /* `robots.txt` y `sitemap.xml`: sin ellos Cloudflare servía la app con un 200 en esas dos
    direcciones y los buscadores leían una página en vez de las reglas (auditoría del 10 nov., X2b). */
-const WEB_ARCHIVOS = ['sw.js', '_headers', 'calendario.html', 'robots.txt', 'sitemap.xml'];
+/* `manifest.en.webmanifest`: el manifiesto en inglés, que pone la app cuando su idioma es el inglés
+   (applyLang). Solo en la web: en Android y en el iPhone no hay instalación desde el navegador. */
+const WEB_ARCHIVOS = ['sw.js', '_headers', 'calendario.html', 'robots.txt', 'sitemap.xml', 'manifest.en.webmanifest'];
 const WEB_CARPETAS = ['premium', 'beta', 'gracias', 'recuperar', 'desistir'];
 
 /* Lo que va en `dist/`, en rutas relativas a la raiz. */

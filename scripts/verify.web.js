@@ -25,7 +25,7 @@ var os = require('os');
 var path = require('path');
 
 var NECESARIOS = ['index.html', 'sw.js', '_headers', 'calendario.html', 'premium/index.html', 'beta/index.html', 'gracias/index.html', 'recuperar/index.html', 'desistir/index.html',
-                  'privacy.html', 'safety.html', 'manifest.webmanifest', 'robots.txt', 'sitemap.xml'];
+                  'privacy.html', 'safety.html', 'manifest.webmanifest', 'manifest.en.webmanifest', 'robots.txt', 'sitemap.xml'];
 /* Lo que está en la raíz y no se publica a propósito: el de desarrollo y el export. */
 var NO_SE_PUBLICA = ['PACE.html', 'PACE_standalone.html'];
 /* Carpetas que se generan (fuera de git) y no son páginas de la web. */
@@ -115,6 +115,25 @@ function tandaWeb(ctx) {
     if (!locs.length || malas.length) ctx.falla('web: sitemap.xml ' + (locs.length ? 'lleva direcciones que no existen o llevan noindex: ' + malas.join(', ') : 'sin direcciones de pacegrass.app'));
     else if (!/^Sitemap: https:\/\/pacegrass\.app\/sitemap\.xml\r?$/m.test(fs.readFileSync(path.join(tmp, 'robots.txt'), 'utf8'))) ctx.falla('web: robots.txt no dice dónde está el mapa');
     else ctx.ok('robots.txt y sitemap.xml propios: ' + locs.length + ' páginas en el mapa, todas en dist/ y sin noindex');
+
+    /* Los dos manifiestos (auditoría externa del 10 nov., 2.T5 y T12): la misma app (id, inicio, ámbito,
+       iconos y las direcciones de los atajos) en los dos idiomas, y las capturas de la instalación, en
+       dist/ y de los dos tamaños (móvil y ordenador). Una captura que no está tumba la instalación con fotos. */
+    try {
+      var mEs = JSON.parse(fs.readFileSync(path.join(tmp, 'manifest.webmanifest'), 'utf8'));
+      var mEn = JSON.parse(fs.readFileSync(path.join(tmp, 'manifest.en.webmanifest'), 'utf8'));
+      var igual = function (m) { return JSON.stringify([m.id, m.start_url, m.scope, m.icons, (m.shortcuts || []).map(function (a) { return a.url; })]); };
+      var malM = [];
+      if (mEs.lang !== 'es' || mEn.lang !== 'en') malM.push('el idioma de cada manifiesto');
+      if (igual(mEs) !== igual(mEn)) malM.push('id, inicio, ámbito, iconos o atajos distintos');
+      [mEs, mEn].forEach(function (m) {
+        var caps = m.screenshots || [];
+        if (!caps.some(function (c) { return c.form_factor === 'narrow'; }) || !caps.some(function (c) { return c.form_factor === 'wide'; })) malM.push(m.lang + ': sin capturas de móvil y de ordenador');
+        caps.forEach(function (c) { if (!archivoDeRuta(c.src, hay)) malM.push(m.lang + ': ' + c.src + ' no está en dist/'); });
+      });
+      if (malM.length) ctx.falla('web: manifiestos -- ' + malM.join('; '));
+      else ctx.ok('los dos manifiestos (es y en) son la misma app y sus ' + (mEs.screenshots.length + mEn.screenshots.length) + ' capturas están en dist/');
+    } catch (e) { ctx.falla('web: no se pueden leer los manifiestos de dist/ (' + e.message + ')'); }
 
     /* De la app (index.html) solo se mira la landing, entre sus marcas: el resto es la app compilada, que
        pide sus piezas por el precache. La landing vive ahí desde el 9 nov. y sus capturas y enlaces no se

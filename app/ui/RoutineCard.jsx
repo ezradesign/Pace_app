@@ -46,13 +46,7 @@ function RoutineCard({ routine, color, onClick, variant = 'body' }) {
   /* Duración DERIVADA para las rutinas del contrato v1 (s115): una sola
      promesa vía `estimateDuration`, con el preset de descanso actual. El resto
      conserva `routine.min`. Prod nunca muestra las dos. */
-  const isV1 = !!(routine.steps && routine.steps.some(s => s && s.mode));
-  let cifra = String(routine.min);
-  if (isV1 && typeof window.estimateDuration === 'function') {
-    const est = window.estimateDuration(routine, pace.restBetweenSets);
-    const lo = Math.floor(est.minSec / 60), hi = Math.ceil(est.maxSec / 60);
-    cifra = lo === hi ? String(lo) : (lo + '–' + hi);
-  }
+  const cifra = routineCifraMin(routine, pace.restBetweenSets);
 
   const nivelKey = ['intermediate', 'advanced'].includes(routine.level) ? routine.level : null;
   const intensKey = ['gentle', 'moderate', 'strong'].includes(routine.intensity) ? routine.intensity : null;
@@ -177,4 +171,23 @@ function routineRhythmText(routine, tn, t) {
   return s === k ? null : s;
 }
 
-Object.assign(window, { RoutineCard, routineRhythmText });
+/* LOS MINUTOS DE UNA RUTINA, UNA SOLA CIFRA en la tarjeta, la ficha («Antes de empezar») y la ventana
+   de la pausa. Las del contrato v1, derivados de sus pasos con el descanso de Ajustes («2–3»); una
+   propia, los de su constructor (`customMinutos`); las demás, su `min`. La pausa decía «3 MIN» (el `min`
+   del catálogo) y la ficha, un toque después, «2–3 MIN» (auditoría de Fable del 10 nov., F4). */
+function routineCifraMin(routine, restBetweenSets) {
+  if (!routine) return '';
+  if (String(routine.id || '').indexOf('custom.') === 0 && Array.isArray(routine.steps) && typeof window.customMinutos === 'function') {
+    return String(window.customMinutos(routine.steps));
+  }
+  const guiada = typeof window.moveRutinaGuiada === 'function' ? window.moveRutinaGuiada(routine) : routine;
+  const isV1 = !!(guiada.steps && guiada.steps.some(s => s && s.mode));
+  if (!isV1 || typeof window.estimateDuration !== 'function') return String(routine.min);
+  try {
+    const est = window.estimateDuration(guiada, restBetweenSets);
+    const lo = Math.floor(est.minSec / 60), hi = Math.ceil(est.maxSec / 60);
+    return lo === hi ? String(lo) : (lo + '–' + hi);
+  } catch (e) { return String(routine.min); }
+}
+
+Object.assign(window, { RoutineCard, routineRhythmText, routineCifraMin });

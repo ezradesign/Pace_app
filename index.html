@@ -1478,7 +1478,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
         </ul>
         <div class="pl-par">
           <figure><picture><source media="(prefers-color-scheme: dark)" srcset="/beta/respira-es-oscuro.webp"><img lang="es" src="/beta/respira-es.webp" alt="Respira: una técnica guiada, con voz" width="540" height="960" loading="lazy"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="/beta/respira-en-oscuro.webp"><img lang="en" src="/beta/respira-en.webp" alt="Breathe: a guided technique with voice cues" width="540" height="960" loading="lazy"></picture></figure>
-          <figure><picture><source media="(prefers-color-scheme: dark)" srcset="/beta/logros-es-oscuro.webp"><img lang="es" src="/beta/logros-es.webp" alt="Los logros: sellos de cuaderno de campo, sin rachas" width="540" height="960" loading="lazy"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="/beta/logros-en-oscuro.webp"><img lang="en" src="/beta/logros-en.webp" alt="Achievements: field-notebook stamps, no streaks" width="540" height="960" loading="lazy"></picture></figure>
+          <figure><picture><source media="(prefers-color-scheme: dark)" srcset="/beta/logros-es-oscuro.webp"><img lang="es" src="/beta/logros-es.webp" alt="Los logros: sellos de cuaderno de campo, sin rachas que castigan" width="540" height="960" loading="lazy"></picture><picture><source media="(prefers-color-scheme: dark)" srcset="/beta/logros-en-oscuro.webp"><img lang="en" src="/beta/logros-en.webp" alt="Achievements: field-notebook stamps, no streaks that punish you" width="540" height="960" loading="lazy"></picture></figure>
         </div>
       </section>
       <!-- LA LANDING LARGA, «como /premium» (B, Ez, 9 nov. 2026): las capturas de PACE completo, las
@@ -3778,7 +3778,8 @@ Object.assign(window.PACE_STRINGS.en, {
 
 Object.assign(window.PACE_STRINGS.es, {
   'break.tag': 'Ciclo completado',
-  'break.title': 'Pausa bien hecha',
+
+  'break.title': 'Tu pausa',
   'break.subtitle': 'Has cerrado un bloque. Elige tu pausa.',
   'break.breathe.label': 'Respira',
   'break.breathe.desc': '2 min para volver al centro',
@@ -3817,7 +3818,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
 Object.assign(window.PACE_STRINGS.en, {
   'break.tag': 'Cycle complete',
-  'break.title': 'Well-earned break',
+  'break.title': 'Your break',
   'break.subtitle': 'You’ve finished a Focus block. Choose your break.',
   'break.breathe.label': 'Breathe',
   'break.breathe.desc': '2 min to pause and breathe',
@@ -7485,10 +7486,18 @@ function paceTituloApp(lang) {
 
 
 
+
+
+
 function applyLang(estado) {
   if (!estado || !estado.lang) return;
   document.documentElement.setAttribute('lang', estado.lang);
   try {document.title = paceTituloApp(estado.lang);} catch (e) {}
+  try {
+    const enlace = document.querySelector('link[rel="manifest"]');
+    const href = estado.lang === 'en' ? '/manifest.en.webmanifest' : '/manifest.webmanifest';
+    if (enlace && enlace.getAttribute('href') !== href) enlace.setAttribute('href', href);
+  } catch (e) {}
 }
 
 
@@ -10704,8 +10713,20 @@ function customMinutos(steps) {
 }
 
 
+
+
+function customNombreSinNombre() {
+  try {
+    const lang = (getState() || {}).lang === 'en' ? 'en' : 'es';
+    const v = window.PACE_STRINGS && window.PACE_STRINGS[lang] && window.PACE_STRINGS[lang]['custom.code'];
+    if (v) return v;
+  } catch (e) {}
+  return 'Rutina propia';
+}
+
+
 function sanitizeCustomRoutine(draft) {
-  const name = String(draft.name || '').trim().slice(0, CUSTOM_LIMITS.maxNameLen) || 'Rutina propia';
+  const name = String(draft.name || '').trim().slice(0, CUSTOM_LIMITS.maxNameLen) || customNombreSinNombre();
   const steps = (Array.isArray(draft.steps) ? draft.steps : []).
   slice(0, CUSTOM_LIMITS.maxSteps).
   map((s) => ({
@@ -10798,7 +10819,7 @@ Object.assign(window, {
   addCustomRoutine, updateCustomRoutine, deleteCustomRoutine,
   getCustomDraft, setCustomDraft, clearCustomDraft, customBorradorCuando
 });
-;Object.assign(window, { getCustomRoutines, getCustomRoutine, customTieneTrabajo, customSegundos, customMinutos, sanitizeCustomRoutine, addCustomRoutine, updateCustomRoutine, deleteCustomRoutine, getCustomDraft, setCustomDraft, customSinBorrador, clearCustomDraft, customBorradorCuando });
+;Object.assign(window, { getCustomRoutines, getCustomRoutine, customTieneTrabajo, customSegundos, customMinutos, customNombreSinNombre, sanitizeCustomRoutine, addCustomRoutine, updateCustomRoutine, deleteCustomRoutine, getCustomDraft, setCustomDraft, customSinBorrador, clearCustomDraft, customBorradorCuando });
 })();
 </script>
   <!-- Feedback ligero por rutina (s116 · B2.2b-2): recordRoutineFeedback +
@@ -30542,16 +30563,9 @@ function RoutinePreview(_ref) {let { routine, kind = 'move', onStart, onClose } 
   (t('preview.doneCount.many') || '').replace('{n}', String(veces)) :
   null;
 
-  const isV1 = !!(guiada.steps && guiada.steps.some((s) => s && s.mode));
-  let durLabel = `${routine.min} min`;
-  if (propia && typeof window.customMinutos === 'function') {
 
-    durLabel = `${window.customMinutos(routine.steps)} min`;
-  } else if (isV1 && typeof window.estimateDuration === 'function') {
-    const est = window.estimateDuration(guiada, pace.restBetweenSets);
-    const lo = Math.floor(est.minSec / 60),hi = Math.ceil(est.maxSec / 60);
-    durLabel = lo === hi ? `${lo} min` : `${lo}–${hi} min`;
-  }
+
+  const durLabel = `${routineCifraMin(routine, pace.restBetweenSets)} min`;
 
   const intensidad = ['gentle', 'moderate', 'strong'].includes(routine.intensity) ?
   t(`lib.intensity.${routine.intensity}`) : null;
@@ -31487,13 +31501,7 @@ function RoutineCard(_ref) {let { routine, color, onClick, variant = 'body' } = 
 
 
 
-  const isV1 = !!(routine.steps && routine.steps.some((s) => s && s.mode));
-  let cifra = String(routine.min);
-  if (isV1 && typeof window.estimateDuration === 'function') {
-    const est = window.estimateDuration(routine, pace.restBetweenSets);
-    const lo = Math.floor(est.minSec / 60),hi = Math.ceil(est.maxSec / 60);
-    cifra = lo === hi ? String(lo) : lo + '–' + hi;
-  }
+  const cifra = routineCifraMin(routine, pace.restBetweenSets);
 
   const nivelKey = ['intermediate', 'advanced'].includes(routine.level) ? routine.level : null;
   const intensKey = ['gentle', 'moderate', 'strong'].includes(routine.intensity) ? routine.intensity : null;
@@ -31618,8 +31626,27 @@ function routineRhythmText(routine, tn, t) {
   return s === k ? null : s;
 }
 
-Object.assign(window, { RoutineCard, routineRhythmText });
-;Object.assign(window, { RoutineCard, routineRhythmText });
+
+
+
+
+function routineCifraMin(routine, restBetweenSets) {
+  if (!routine) return '';
+  if (String(routine.id || '').indexOf('custom.') === 0 && Array.isArray(routine.steps) && typeof window.customMinutos === 'function') {
+    return String(window.customMinutos(routine.steps));
+  }
+  const guiada = typeof window.moveRutinaGuiada === 'function' ? window.moveRutinaGuiada(routine) : routine;
+  const isV1 = !!(guiada.steps && guiada.steps.some((s) => s && s.mode));
+  if (!isV1 || typeof window.estimateDuration !== 'function') return String(routine.min);
+  try {
+    const est = window.estimateDuration(guiada, restBetweenSets);
+    const lo = Math.floor(est.minSec / 60),hi = Math.ceil(est.maxSec / 60);
+    return lo === hi ? String(lo) : lo + '–' + hi;
+  } catch (e) {return String(routine.min);}
+}
+
+Object.assign(window, { RoutineCard, routineRhythmText, routineCifraMin });
+;Object.assign(window, { RoutineCard, routineRhythmText, routineCifraMin });
 })();
 </script>
   <script>
@@ -39989,7 +40016,7 @@ function BreakAntes(_ref2) {let { lda, onChoose, estilo } = _ref2;
     React.createElement("button", { type: "button", "data-pace-break-antes": r.id, className: "pace-break-agua", style: estilo, onClick: () => onChoose(lda.modulo, r) },
     React.createElement("span", { className: "pace-break-glifo", style: { '--c': BREAK_COLOR[lda.modulo] } }, Glifo ? React.createElement(Glifo, null) : null),
     React.createElement("b", null, nombre),
-    React.createElement("span", { className: "pace-break-mas" }, "\xB7 ", tn('break.antes', { n: r.min })),
+    React.createElement("span", { className: "pace-break-mas" }, "\xB7 ", tn('break.antes', { n: routineCifraMin(r, getState().restBetweenSets) })),
     React.createElement("i", { "aria-hidden": "true" }, "\u203A")
     ));
 
@@ -40017,7 +40044,7 @@ function BreakMenuRitmo(_ref3) {let { open, onClose, onChoose, onSeguir, onPropu
     ctx: React.createElement(React.Fragment, null, React.createElement("b", null, pausa ? pausa.dur : ''), React.createElement("u", null, t('lib.min')), pausa && pausa.agua && React.createElement("em", null, t('break.ritmo.conAgua'))) } :
   { color: BREAK_COLOR[prop.modulo], boton: BREAK_COLOR[prop.modulo], glifo: breakGlifo(prop.modulo, rutina),
     nombre: dos ? ritmoPlatos(pausa, t, lang) : nombre,
-    ctx: rutina ? React.createElement(React.Fragment, null, React.createElement("b", null, dos ? pausa.dur : rutina.min), React.createElement("u", null, t('lib.min')),
+    ctx: rutina ? React.createElement(React.Fragment, null, React.createElement("b", null, dos ? pausa.dur : routineCifraMin(rutina, getState().restBetweenSets)), React.createElement("u", null, t('lib.min')),
     React.createElement("em", null, dos ? tn('ritmo.y', { a: ritmoModulo(pausa.platos[0].modulo, t), b: ritmoModulo(pausa.platos[1].modulo, t) }) :
     t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label')),
     pausa && pausa.agua && React.createElement("em", null, t('break.ritmo.agua'))) : null };
@@ -40219,7 +40246,7 @@ function BreakMenu(_ref) {let { open, onClose, onChoose, onSeguir } = _ref;
     React.createElement(BreakPlato, { color: colorProp, glifo: breakGlifo(prop.modulo, rutinaProp), datos: { 'data-pace-break-prop': '' },
       motivo: prop.porque === 'sitting' ? tn('break.prop.sitting', { n: prop.datos.n }) : t('break.prop.' + prop.porque),
       nombre: nombreProp || (prop.modulo === 'water' ? t('break.water.label') : null),
-      ctx: rutinaProp ? React.createElement(React.Fragment, null, React.createElement("b", null, rutinaProp.min), React.createElement("u", null, t('lib.min')), React.createElement("em", null, t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label'))) : null },
+      ctx: rutinaProp ? React.createElement(React.Fragment, null, React.createElement("b", null, routineCifraMin(rutinaProp, state.restBetweenSets)), React.createElement("u", null, t('lib.min')), React.createElement("em", null, t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label'))) : null },
     React.createElement("div", { className: "pace-break-acciones", style: { marginTop: 12 } },
     React.createElement("button", { type: "button", className: "pace-break-pildora pace-break-llena", style: { '--cd': letraDe(colorProp) }, onClick: () => elegirPropuesta(prop) },
     t(prop.modulo === 'water' ? 'hydrate.more' : 'break.prop.start')
@@ -53598,7 +53625,7 @@ function PaceApp() {
     let go = null;
     try {go = new URLSearchParams(window.location.search).get('go');} catch (e) {}
     if (!go) return;
-    if (go === 'breathe' || go === 'move') abrirBiblioteca(go);else
+    if (go === 'breathe' || go === 'move' || go === 'stretch') abrirBiblioteca(go === 'stretch' ? 'extra' : go);else
     if (go === 'hydrate') setOpenHydrate(true);else
     if (go === 'focus') set({ focusMode: 'foco' });
     try {window.history.replaceState(null, '', window.location.pathname);} catch (e) {}

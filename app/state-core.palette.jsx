@@ -128,11 +128,19 @@ function paceTituloApp(lang) {
 
 /* El idioma del documento sigue al de la interfaz: con `lang="es"` fijo, el
    lector de pantalla leía el inglés con voz castellana y Chrome ofrecía
-   «traducir del español». La pestaña también. */
+   «traducir del español». La pestaña también, y el manifiesto: instalada en inglés, PACE
+   se presentaba y ofrecía sus atajos en castellano (auditoría externa del 10 nov., 2.T5). Un
+   manifiesto no lleva dos idiomas, así que hay dos, con el mismo `id`; sin el enlace (el
+   export, que lo quita), no se toca nada. */
 function applyLang(estado) {
   if (!estado || !estado.lang) return;
   document.documentElement.setAttribute('lang', estado.lang);
   try { document.title = paceTituloApp(estado.lang); } catch (e) {}
+  try {
+    const enlace = document.querySelector('link[rel="manifest"]');
+    const href = estado.lang === 'en' ? '/manifest.en.webmanifest' : '/manifest.webmanifest';
+    if (enlace && enlace.getAttribute('href') !== href) enlace.setAttribute('href', href);
+  } catch (e) {}
 }
 
 /* Solo `applyTheme` cruza: los dos marcadores son su mecanica interna y nadie

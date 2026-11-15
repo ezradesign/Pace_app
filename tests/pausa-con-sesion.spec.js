@@ -2,7 +2,7 @@
  * ======================================================================================================
  * Mientras alguien hace una pausa, esa práctica tiene prioridad. El Foco sigue corriendo detrás de una
  * sesión de Respira, Mueve o Estira, y al llegar a cero `usePausaALaVista` (FocusTimer.pestanas.jsx)
- * abría «Pausa bien hecha» encima: el menú es un `Modal` (capa 100) y la sesión va a 90, así que la
+ * abría «Tu pausa» encima: el menú es un `Modal` (capa 100) y la sesión va a 90, así que la
  * tapaba, y el ejercicio seguía corriendo debajo.
  *
  * Ahora la pausa pendiente espera: sigue en `state.focoPausa` mientras haya una sesión montada y se

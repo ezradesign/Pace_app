@@ -198,7 +198,7 @@ test.describe('H5 · un Foco cuenta si PACE se entera de su final el mismo día,
     return { miercoles: s.weeklyStats.focusMinutes[2], jueves: s.weeklyStats.focusMinutes[3],
              historia: (s.history.days['2026-10-21'] || {}).focusMinutes || 0, ciclo: s.cycle, total: s.totalFocusMin };
   });
-  const pausa = (page) => page.locator('[data-pace-modal-backdrop]').last().getByText('Pausa bien hecha', { exact: true });
+  const pausa = (page) => page.locator('[data-pace-modal-backdrop]').last().getByText('Tu pausa', { exact: true });
 
   /* Un Foco de 25 empezado a `cuando`. */
   async function empezar(page, context, cuando) {
