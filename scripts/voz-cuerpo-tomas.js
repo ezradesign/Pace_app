@@ -12,6 +12,11 @@
    Cortar en la tabla no pierde calidad, no recodifica y deja cuatro descargas por voz e idioma en vez de
    36. Cada palabra queda con su nombre en la tabla, y una repetida es un archivo suelto que la sustituye.
 
+   EL SILENCIO DE MÁS SE QUITA: una toma MP3 (y una repetida) se escribe con unos 0,4 s entre palabra y
+   palabra, quitando cuadros enteros sin recodificar (scripts/voz-cuerpo-mp3.js), y se mide ya recortada.
+   Si al recortarla cambiara una palabra, se escribe sin recortar y se dice. Las tomas que quedan en la
+   tabla se apuntan en el precache de sw.js, entre sus marcas: Mueve y Estira hablan sin conexión.
+
    Uso:
      node scripts/voz-cuerpo-tomas.js "<carpeta con las tomas>" [--solo NOMBRE] [--salida DIR] [--datos ARCHIVO]
 
@@ -23,6 +28,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const mp3 = require('./voz-cuerpo-mp3.js');
 
 const ROOT = path.join(__dirname, '..');
 const VOCES = ['sulafat', 'bradford'];
@@ -133,8 +139,8 @@ async function abrirDescodificador() {
   const { chromium } = require(path.join(ROOT, 'node_modules', '@playwright', 'test'));
   const browser = await chromium.launch();
   const page = await browser.newPage();
-  const leer = async (archivo) => {
-    const b64 = fs.readFileSync(archivo).toString('base64');
+  const leerBytes = async (bytes) => {
+    const b64 = bytes.toString('base64');
     const r = await page.evaluate(async (datos) => {
       const bin = atob(datos); const u = new Uint8Array(bin.length);
       for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
@@ -149,7 +155,50 @@ async function abrirDescodificador() {
     const raw = Buffer.from(r.b64, 'base64');
     return { rate: r.rate, x: new Float32Array(raw.buffer, raw.byteOffset, raw.length / 4) };
   };
-  return { leer, cerrar: () => browser.close() };
+  return { leerBytes, leer: (archivo) => leerBytes(fs.readFileSync(archivo)), cerrar: () => browser.close() };
+}
+
+const kb = (n) => Math.round(n / 1024) + ' KB';
+
+/* Lee una toma y, si es MP3, le quita el silencio de más. Devuelve los bytes que se escriben y lo que
+   suena en ellos, ya descodificado ({ bytes, x, rate, nota }), o { error, tramos } si no salen tantas
+   palabras como líneas. Se escribe sin recortar si el recorte cambia el número de palabras o lo que dura
+   alguna, o si callaría un cuadro dentro del trozo que suena. */
+async function prepararToma(dec, bruto, ext, lineas, corte) {
+  const cuadros = ext === '.mp3' ? mp3.cuadrosMp3(bruto) : [];
+  const limpio = cuadros.length ? mp3.ensamblar(bruto, cuadros).bytes : bruto;
+  const d1 = await dec.leerBytes(limpio);
+  const t1 = segmentar(d1.x, d1.rate, corte);
+  if (t1.length !== lineas) return { error: 'salen ' + t1.length + ' palabras y ' + (lineas === 1 ? 'tiene que ser una' : 'la toma tiene ' + lineas + ' líneas'), tramos: t1 };
+  const tal = { bytes: limpio, x: d1.x, rate: d1.rate, nota: '' };
+  const quitar = cuadros.length ? mp3.cuadrosDeMas(cuadros, t1) : new Set();
+  if (!quitar.size) return tal;
+  const r = mp3.ensamblar(bruto, cuadros, quitar);
+  const d2 = await dec.leerBytes(r.bytes);
+  const t2 = segmentar(d2.x, d2.rate, corte);
+  const paso = cuadros[0].muestras / cuadros[0].hz;
+  const motivo = t2.length !== lineas ? 'salen ' + t2.length + ' palabras'
+    : t2.some((s, i) => Math.abs((s.fin - s.ini) - (t1[i].fin - t1[i].ini)) > 0.03) ? 'cambia lo que dura una palabra'
+    : r.callados.some((k) => t2.some((s) => k * paso < s.fin + DETRAS && (k + 1) * paso > s.ini - DELANTE)) ? 'callaría un trozo de palabra' : '';
+  if (motivo) return Object.assign(tal, { nota: ' · SIN RECORTAR (' + motivo + ')' });
+  return { bytes: r.bytes, x: d2.x, rate: d2.rate, nota: ' · ' + kb(bruto.length) + ' → ' + kb(r.bytes.length) };
+}
+
+/* El precache de sw.js: entre sus dos marcas, una fila por toma que la tabla usa. */
+const SW_INICIO = '/* La voz de Mueve y Estira: ESTAS FILAS LAS ESCRIBE scripts/voz-cuerpo-tomas.js, no se tocan a mano. */';
+const SW_FIN = '/* Fin de la voz de Mueve y Estira. */';
+function escribirPrecache(archivo, datos) {
+  const sw = fs.readFileSync(archivo, 'utf8');
+  const a = sw.indexOf(SW_INICIO), z = sw.indexOf(SW_FIN);
+  if (a < 0 || z < a) return 'NO · sw.js no tiene las marcas de la voz de Mueve y Estira: las tomas no se guardan para sin conexión';
+  const nl = sw.includes('\r\n') ? '\r\n' : '\n';
+  const sangria = sw.slice(sw.lastIndexOf('\n', a) + 1, a);
+  const tomas = new Set();
+  for (const voces of Object.values(datos)) for (const pal of Object.values(voces)) for (const e of Object.values(pal)) tomas.add(e.archivo);
+  const filas = [...tomas].sort().map((t) => sangria + "'/app/move/voz/" + t + "'," + nl).join('');
+  const nuevo = sw.slice(0, a + SW_INICIO.length) + nl + filas + sangria + sw.slice(z);
+  if (nuevo !== sw) fs.writeFileSync(archivo, nuevo);
+  return 'ok · sw.js guarda ' + tomas.size + ' tomas para sin conexión';
 }
 
 /* El volumen de Respira, por voz: la media de sus palabras en castellano con su `vol`. */
@@ -201,30 +250,32 @@ async function procesar(carpeta, op) {
         const f = archivos.find(a => new RegExp('^' + voz + '-' + idioma + '-' + toma + '\\.(mp3|wav)$', 'i').test(a));
         if (!f) continue;
         if (op.solo && !filas.some(r => r[col] === op.solo)) continue;
-        const { x, rate } = await dec.leer(path.join(carpeta, f));
-        const r = cortarToma(x, rate, filas.map(r => r[0]), objetivo[voz], op.corte);
-        if (r.error) { informe.push('NO · ' + f + ': ' + r.error + ' (' + r.tramos.map(t => t.ini + '-' + t.fin).join(', ') + ')'); continue; }
-        const final = voz + '-' + idioma + '-' + toma + path.extname(f).toLowerCase();
-        fs.copyFileSync(path.join(carpeta, f), path.join(salida, final));
+        const ext = path.extname(f).toLowerCase();
+        const t = await prepararToma(dec, fs.readFileSync(path.join(carpeta, f)), ext, filas.length, op.corte);
+        const r = t.error ? t : cortarToma(t.x, t.rate, filas.map(r => r[0]), objetivo[voz], op.corte);
+        if (r.error) { informe.push('NO · ' + f + ': ' + r.error + ' (' + r.tramos.map(s => s.ini + '-' + s.fin).join(', ') + ')'); continue; }
+        const final = voz + '-' + idioma + '-' + toma + ext;
+        fs.writeFileSync(path.join(salida, final), t.bytes);
         datos[idioma] = datos[idioma] || {}; datos[idioma][voz] = datos[idioma][voz] || {};
         for (const fila of filas) {
           if (op.solo && fila[col] !== op.solo) continue;
           datos[idioma][voz][fila[0]] = Object.assign({ archivo: final }, r.entradas[fila[0]]);
         }
-        informe.push('ok · ' + f + ' → ' + filas.length + ' palabras');
+        informe.push('ok · ' + f + ' → ' + filas.length + ' palabras' + t.nota);
       }
       // Las repetidas sustituyen a la palabra cortada de su toma.
       for (const [, filas] of Object.entries(TOMAS)) for (const fila of filas) {
         const rep = archivos.find(a => new RegExp('^' + voz + '-' + idioma + '-repite-' + fila[col] + '\\.(mp3|wav)$', 'i').test(a));
         if (!rep || (op.solo && fila[col] !== op.solo)) continue;
-        const { x, rate } = await dec.leer(path.join(carpeta, rep));
-        const tramos = segmentar(x, rate, op.corte);
-        if (tramos.length !== 1) { informe.push('NO · ' + rep + ': salen ' + tramos.length + ' palabras y tiene que ser una'); continue; }
-        const final = voz + '-' + idioma + '-repite-' + fila[col] + path.extname(rep).toLowerCase();
-        fs.copyFileSync(path.join(carpeta, rep), path.join(salida, final));
+        const ext = path.extname(rep).toLowerCase();
+        const t = await prepararToma(dec, fs.readFileSync(path.join(carpeta, rep)), ext, 1, op.corte);
+        if (t.error) { informe.push('NO · ' + rep + ': ' + t.error); continue; }
+        const tramo = segmentar(t.x, t.rate, op.corte)[0];
+        const final = voz + '-' + idioma + '-repite-' + fila[col] + ext;
+        fs.writeFileSync(path.join(salida, final), t.bytes);
         datos[idioma] = datos[idioma] || {}; datos[idioma][voz] = datos[idioma][voz] || {};
-        datos[idioma][voz][fila[0]] = Object.assign({ archivo: final }, medirPalabra(x, rate, tramos[0], 0, x.length / rate, objetivo[voz]));
-        informe.push('ok · ' + rep + ' sustituye a «' + fila[col] + '»');
+        datos[idioma][voz][fila[0]] = Object.assign({ archivo: final }, medirPalabra(t.x, t.rate, tramo, 0, t.x.length / t.rate, objetivo[voz]));
+        informe.push('ok · ' + rep + ' sustituye a «' + fila[col] + '»' + t.nota);
       }
       // Lo que se pasa de largo, por voz e idioma.
       const juego = (datos[idioma] || {})[voz] || {};
@@ -235,10 +286,13 @@ async function procesar(carpeta, op) {
     }
   } finally { await dec.cerrar(); }
   escribirDatos(datosArchivo, datos);
+  // El precache solo se toca cuando se escribe en la app de verdad (no en las pruebas, que van a otra carpeta).
+  const sw = op.sw !== undefined ? op.sw : (path.resolve(salida) === path.join(ROOT, 'app/move/voz') ? path.join(ROOT, 'sw.js') : null);
+  if (sw) informe.push(escribirPrecache(sw, datos));
   return { informe, datos };
 }
 
-module.exports = { segmentar, nivelDb, cortarToma, procesar, TOMAS, TOPE, CORTE };
+module.exports = { segmentar, nivelDb, cortarToma, procesar, abrirDescodificador, TOMAS, TOPE, CORTE, SW_INICIO, SW_FIN };
 
 if (require.main === module) {
   const args = process.argv.slice(2);

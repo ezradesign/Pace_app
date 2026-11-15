@@ -90,3 +90,27 @@ test('tomas-2 · el guion corta, iguala el volumen, rechaza la toma que no cuadr
   expect(r2.datos.es.sulafat.n17.fin).not.toBe(juego.n17.fin);
   fs.rmSync(dir, { recursive: true, force: true });
 });
+
+/* Una toma de verdad de Genspark (la cuenta atrás de sulafat, 15 nov.): tres palabras con unos 3 s de
+   silencio entre ellas. Se escribe recortada, sin recodificar (scripts/voz-cuerpo-mp3.js): las mismas
+   palabras, con lo que dura cada una, y unos 0,4 s entre ellas. Si el recorte junta palabras o no recorta,
+   cae. */
+test('tomas-3 · una toma MP3 con silencios largos sale recortada: mismas palabras y unos 0,4 s entre ellas', async () => {
+  test.setTimeout(60000);
+  const fuente = path.join(__dirname, 'fixtures', 'voz-toma-con-silencios.mp3');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pace-tomas-'));
+  const salida = path.join(dir, 'salida'); const datos = path.join(dir, 'datos.js');
+  fs.copyFileSync(fuente, path.join(dir, 'sulafat-es-cuenta.mp3'));
+  const r = await procesar(dir, { salida, datos, objetivo: { sulafat: -22, bradford: -24 } });
+  expect(r.informe.join('\n')).toMatch(/ok · sulafat-es-cuenta\.mp3 → 3 palabras · 170 KB → \d+ KB/);
+  const e = r.datos.es.sulafat;
+  expect(Object.keys(e)).toEqual(['c3', 'c2', 'c1']);
+  expect(fs.statSync(path.join(salida, 'sulafat-es-cuenta.mp3')).size).toBeLessThan(fs.statSync(fuente).size * 0.45);
+  /* Lo que dura cada palabra en la toma sin recortar (medido en ella: 0,65, 0,66 y 0,43 s). */
+  [['c3', 0.65], ['c2', 0.66], ['c1', 0.43]].forEach(([k, d]) => expect(Math.abs(e[k].fin - e[k].ini - d), k).toBeLessThan(0.04));
+  for (const h of [e.c2.ini - e.c3.fin, e.c1.ini - e.c2.fin]) {
+    expect(h).toBeGreaterThan(0.37);
+    expect(h).toBeLessThan(0.5);
+  }
+  fs.rmSync(dir, { recursive: true, force: true });
+});

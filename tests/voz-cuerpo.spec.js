@@ -134,6 +134,11 @@ test('voz-5 · las tomas grabadas: las 36 palabras con su archivo y su tope, y e
     }
   }
   expect(voces.length).toBeGreaterThan(0);
+  /* Y cada toma, en el precache de sw.js: sin eso, sin conexión la voz no habla. */
+  const sw = fs.readFileSync(path.join(raiz, 'sw.js'), 'utf8');
+  for (const pal of Object.values(caja.D).flatMap((j) => Object.values(j))) {
+    for (const e of Object.values(pal)) expect(sw, e.archivo + ' sin precache').toContain("'/app/move/voz/" + e.archivo + "'");
+  }
   await sembrar(context, { soundOn: true, voiceOn: true, voice: 'sulafat', lang: 'es' });
   await irAlArtefacto(page);
   await page.mouse.click(2, 700);
