@@ -408,14 +408,18 @@ function paceEventsWipeAll(alTerminar) {
 
 /* --- Arranque ------------------------------------------------------------ */
 
-/* En las apps se pide almacenamiento PERSISTENTE: sin el, el WebView (Chromium
-   en Android, WebKit en el iPhone) puede vaciar el IndexedDB si el movil se
-   queda sin espacio. Si ya lo es, no cambia nada, y si no lo concede, tampoco.
-   En la web no se pide: Firefox lo pregunta con un aviso. */
+/* Se pide almacenamiento PERSISTENTE: sin el, el WebView (Chromium en Android,
+   WebKit en el iPhone) puede vaciar el IndexedDB si el movil se queda sin
+   espacio, y Safari borra lo guardado de una web que no se visita en siete dias
+   (salvo instalada): ahi viven el historial, la copia del estado y el codigo
+   (auditoria externa del 10 nov., T10 y 2.T6). Si ya lo es, no cambia nada, y si
+   no lo concede, tampoco. Safari y Chrome lo deciden sin preguntar; Firefox lo
+   pregunta con un aviso encima de la app, y en el no se pide. */
 function paceEventsPedirPersistencia() {
   try {
     const runtime = paceEventsRuntime();
-    if (runtime !== 'capacitor-android' && runtime !== 'capacitor-ios') return;
+    const app = runtime === 'capacitor-android' || runtime === 'capacitor-ios';
+    if (!app && /Firefox\//.test(navigator.userAgent || '')) return;
     const almacen = navigator.storage;
     if (!almacen || typeof almacen.persist !== 'function') return;
     const peticion = almacen.persist();

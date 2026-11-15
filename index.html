@@ -17491,10 +17491,14 @@ function paceEventsWipeAll(alTerminar) {
 
 
 
+
+
+
 function paceEventsPedirPersistencia() {
   try {
     const runtime = paceEventsRuntime();
-    if (runtime !== 'capacitor-android' && runtime !== 'capacitor-ios') return;
+    const app = runtime === 'capacitor-android' || runtime === 'capacitor-ios';
+    if (!app && /Firefox\//.test(navigator.userAgent || '')) return;
     const almacen = navigator.storage;
     if (!almacen || typeof almacen.persist !== 'function') return;
     const peticion = almacen.persist();
