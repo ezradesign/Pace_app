@@ -53,6 +53,9 @@ code{font-size:13px}
 .sello.ya{color:var(--paper);background:var(--olive)}
 .porque{color:var(--olive);font-size:15px}
 .antes{opacity:.82}
+.montado-caja{background:var(--olive-soft);border-radius:10px;padding:12px 16px;margin:12px 0;color:var(--ink);max-width:68ch}
+h3+.fotos,h3+p{margin-top:8px}
+main>h3{margin-top:26px}
 .medido{font-size:13px;color:var(--ink-3)}
 .medido.mal{color:var(--terra)}
 .copy{border-top:1px dashed var(--line);margin:10px 0 12px;padding-top:10px;display:grid;gap:8px}
@@ -83,19 +86,19 @@ figcaption b{font-weight:500;color:var(--ink-2)}
   <h1>Tres mejoras de uso diario</h1>
   <p class="lead">Un aviso por la mañana, «¿Te ayudó?» menos veces y «la de antes» en la ventana de la pausa. Elige una letra en cada pregunta. Van como actualizaciones, de una en una, y no se monta nada sin tu sí.</p>
   <p>Todo está pintado sobre la app de verdad (la 0.205.0, en un móvil de 360 × 640 y de 360 × 740, en español): son sus filas, sus botones y su letra, con lo nuevo puesto en su sitio. Solo el aviso del sistema va dibujado, porque desde la web no se puede fotografiar. Las fotos de borde discontinuo son la app de hoy. En la lista de lo pendiente es el paso «Lo pequeño de antes de v1, como actualizaciones» (lo subiste el 12 nov.).</p>
-  <p class="espera"><b>Elegiste 1A, 2A, 3A y 5A</b> (15 nov.), y para la 4: «Me gusta el diseño de la 4B pero con la metodología de la 4A, démosle una vuelta». <b>Espera tu letra la 4, otra vuelta</b>, aquí debajo. Lo demás ya no se pregunta: va marcado como elegido.</p>
+  <p class="espera"><b>Elegiste las cinco</b> (15 nov.): 1A, 2A, 3A y 5A, y en la 4 «la forma de la B con lo que hace la A», con la A de la segunda vuelta. <b>Las cinco están montadas en la rama</b> (más abajo, «Montado»); falta tu «júntalo».</p>
 
   <!-- ============================================================ 4 otra vuelta -->
   <h2>4, otra vuelta · El porqué del «No»</h2>
   <p>La forma de la B: tras el «No», un texto y debajo, en una línea, «¿Por qué? Aquí no podía · Difícil · Me molestó», sin un paso más. Con lo que hace la A: «Aquí no podía» no la aparta ni cuenta como «No»; «Difícil» la aparta una semana; «Me molestó» la aparta y enlaza Seguridad; si sales sin elegir, la aparta una semana, como hoy; y «Deshacer» sigue. El texto de arriba ya no adelanta lo que aún no sabe. Solo cambia cómo se dice.</p>
 
   <div class="pregunta">
-    <div class="t">Pregunta 4, otra vuelta</div>
+    <div class="t">Pregunta 4, otra vuelta · elegiste la A</div>
     <h3>¿Qué dice el texto de arriba mientras no eliges?</h3>
   </div>
 
   <div class="opcion rec">
-    <div class="cab"><span class="letra">A</span><h3>Lo que pasará si no eliges, dicho como condición</h3><span class="sello">Recomendada</span></div>
+    <div class="cab"><span class="letra">A</span><h3>Lo que pasará si no eliges, dicho como condición</h3><span class="sello ya">Elegida</span></div>
     <p>«Gracias. Si no me dices por qué, no te la propondré durante una semana.» No da nada por hecho: dice qué pasa si sales sin más, y los porqués están justo debajo.</p>
     <p class="porque">Por qué: es la única que avisa de lo que pasa al salir sin elegir, como pediste el 5 nov. (el «No» dice lo que hace), sin adelantar el porqué.</p>
     <div class="fotos">
@@ -147,7 +150,54 @@ figcaption b{font-weight:500;color:var(--ink-2)}
   </div>
   <p class="medido">Medido en las tres: a 360 × 640 y a 360 × 740 nada pide scroll y ningún botón pisa a otro ni a «Volver al inicio», también con la letra al 115 %.</p>
 
-  <!-- MONTADO -->
+  <h2>Montado · 1A, 2A, 3A, 4A y 5A</h2>
+  <p class="montado-caja"><strong>Montadas las cinco el 15 nov.</strong> en la rama <code>claude/maquetas-uso-15nov-82f8e3</code>, sin juntar: falta tu «júntalo». Las fotos son la app de verdad, sin nada pintado encima.</p>
+
+  <h3>5A · «La de antes» en la ventana de la pausa</h3>
+  <p>Como en la maqueta: por libre, debajo de las otras puertas; con «A tu ritmo», debajo de Hidrátate. Entra en la rutina por la misma puerta que la propuesta. No sale si le dijiste «No» esta semana, si es de pago cerrada o lleva aviso de seguridad, ni si es la misma que propone la pausa. Con «A tu ritmo», al acabarla la pausa queda hecha con sus minutos de verdad, como cualquier rutina que acabas con la pausa abierta.</p>
+  <div class="fotos">
+    <figure><img src="fotos/m-5a-640.jpg" alt="La ventana de la pausa por libre con la fila Escritorio express, la de antes, 2 min, ya montada"><figcaption><b>Por libre</b>, 360 × 640</figcaption></figure>
+    <figure><img src="fotos/m-5a-740.jpg" alt="Lo mismo a 360 por 740"><figcaption><b>Por libre</b>, 360 × 740</figcaption></figure>
+    <figure><img src="fotos/m-5a-ritmo-640.jpg" alt="La ventana de la pausa con A tu ritmo y la fila debajo de Hidrátate, ya montada"><figcaption><b>Con «A tu ritmo»</b>, 360 × 640</figcaption></figure>
+  </div>
+
+  <h3>1A y 2A · El aviso a tu hora de entrada</h3>
+  <p>La línea «Avísame a mi hora de entrada» en «Tu semana», solo en la app del móvil; en la web no sale. Apagada de fábrica. Al guardar con ella encendida, PACE pide el permiso de avisos si aún no lo tiene. Pone los avisos de los siete días siguientes, desde mañana, cada vez que abres PACE: si un día lo abres antes de tu hora, ese día no avisa, y si dejas de abrirlo, deja de avisar al cabo de una semana. Dice «Hoy, como cada jueves» y «Jornada de 9:00 a 17:00. Tu día ya está preparado.» (o «Media jornada de…»), a tu hora de entrada.</p>
+  <div class="fotos">
+    <figure><img src="fotos/m-1a-640.jpg" alt="Tu semana en Android con la línea Avísame a mi hora de entrada, apagada"><figcaption><b>Apagado de fábrica</b>, 360 × 640</figcaption></figure>
+    <figure><img src="fotos/m-1a-640-encendido.jpg" alt="Lo mismo con el interruptor encendido"><figcaption><b>Encendido</b>, 360 × 640</figcaption></figure>
+    <figure><img src="fotos/m-1a-740.jpg" alt="Tu semana a 360 por 740"><figcaption><b>360 × 740</b></figcaption></figure>
+    <figure><img src="fotos/m-1a-640-115.jpg" alt="Tu semana con la letra al 115 por ciento, entera en la pantalla"><figcaption><b>360 × 640, letra al 115 %</b></figcaption></figure>
+  </div>
+  <div class="espera">
+    <p style="margin:0 0 6px;color:var(--ink)"><b>Sin probar en un móvil de verdad.</b> Aquí se comprueba lo que PACE le pide al sistema, no que el aviso suene. Para probarlo, cuando se junte:</p>
+    <ul style="margin:0">
+      <li>En Ajustes, Sesiones, «Tu semana ›»: enciende «Avísame a mi hora de entrada» y toca «Guardar mi semana». Acepta el permiso de avisos si lo pide.</li>
+      <li>Cierra PACE y no lo abras al día siguiente antes de tu hora. Si es día de jornada, a tu hora de entrada tiene que llegar «Hoy, como cada…» con tu horario. Al tocarlo se abre PACE.</li>
+      <li>Otro día, abre PACE antes de tu hora: ese día no tiene que llegar.</li>
+      <li>Un día libre (sábado o domingo), nada.</li>
+      <li>En el iPhone, lo mismo con la versión de TestFlight.</li>
+    </ul>
+  </div>
+
+  <h3>4A · El «No» con su porqué</h3>
+  <p>Tras el «No», arriba lo que pasa si no dices más, como condición, y debajo «¿Por qué? Aquí no podía · Difícil · Me molestó». «Aquí no podía» no la aparta ni cuenta como «No»; «Difícil» la aparta una semana; «Me molestó» la aparta y enlaza Seguridad; si sales sin elegir, la aparta una semana, como antes. «Deshacer» vuelve a la pregunta desde cualquiera. Si la rutina ya te había ayudado (y por eso no se aparta), arriba dice «Gracias» y los porqués siguen debajo.</p>
+  <div class="fotos">
+    <figure><img src="fotos/m-4a-640.jpg" alt="Tras el No, montado: Gracias. Si no me dices por qué, no te la propondré durante una semana. Deshacer. Debajo, los tres porqués"><figcaption><b>Tras el «No»</b>, 360 × 640</figcaption></figure>
+    <figure><img src="fotos/m-4a-740.jpg" alt="Lo mismo a 360 por 740"><figcaption><b>360 × 740</b></figcaption></figure>
+    <figure><img src="fotos/m-4a-640-115.jpg" alt="Lo mismo con la letra al 115 por ciento"><figcaption><b>360 × 640, letra al 115 %</b></figcaption></figure>
+    <figure><img src="fotos/m-4a-aqui-640.jpg" alt="Tras Aquí no podía: Gracias. No la aparto: otro día puede encajar. Deshacer"><figcaption>Tras <b>«Aquí no podía»</b></figcaption></figure>
+    <figure><img src="fotos/m-4a-molesto-640.jpg" alt="Tras Me molestó: Gracias. Durante una semana no te la propondré. Si notas dolor, para y lee Seguridad. Deshacer"><figcaption>Tras <b>«Me molestó»</b></figcaption></figure>
+  </div>
+
+  <h3>3A · «¿Te ayudó?» menos veces</h3>
+  <p>Las tres primeras veces que acabas cada rutina; después, como mucho una vez a la semana por rutina; y nunca más de dos veces en un día («Ahora no» cuenta como una). Cuando no toca, el cierre sale sin la pregunta, como en la foto: la tercera rutina de un día con dos preguntas ya hechas.</p>
+  <div class="fotos">
+    <figure><img src="fotos/m-3a-640.jpg" alt="El cierre de Escritorio express sin la pregunta, solo con Volver al inicio"><figcaption><b>La tercera del día</b>, 360 × 640</figcaption></figure>
+  </div>
+
+  <p class="medido">Comprobado: cuatro pruebas nuevas (<code>pausa-la-de-antes</code>, <code>aviso-entrada</code>, <code>feedback-frecuencia</code> y <code>feedback-porque</code>, 27 casos), nueve fallos puestos a propósito que las ponen en rojo, <code>verify</code>, y las pruebas vecinas en verde con un solo navegador: 77 de la ventana de la pausa, 181 del aviso y de la pregunta (la única que cayó, una de Android que contaba las llamadas al sistema, destapó un fallo del aviso; arreglado, pasa) y 68 del cierre, más las 16 del iPhone en WebKit. A 360 × 640 y 360 × 740 nada pide scroll ni pisa, también con la letra al 115 %.</p>
+
 
   <h2>Lo que ya elegiste</h2>
   <p>Lo de abajo es la página tal como la viste, con tus letras marcadas. La 4 de antes queda para comparar.</p>
@@ -393,7 +443,7 @@ figcaption b{font-weight:500;color:var(--ink-2)}
 
   <!-- ============================================================ tabla -->
   <h2>Tus letras</h2>
-  <p>Elegidas el 15 nov., salvo la 4, que espera su vuelta (arriba del todo).</p>
+  <p>Elegidas el 15 nov. y montadas en la rama.</p>
   <div class="tabla">
     <table class="final">
       <thead><tr><th>Pregunta</th><th>Letra</th><th>En una línea</th></tr></thead>
@@ -403,7 +453,7 @@ figcaption b{font-weight:500;color:var(--ink-2)}
         <tr><td>2 · ¿Qué dice, y a qué hora?</td><td class="l">A</td><td>«Hoy, como cada jueves», a tu hora de entrada: lo mismo que verás al abrir.</td></tr>
         <tr class="grupo"><td colspan="3">«¿Te ayudó?»</td></tr>
         <tr><td>3 · ¿Cada cuánto pregunta?</td><td class="l">A</td><td>Tres veces por rutina y luego de vez en cuando; dos al día como mucho.</td></tr>
-        <tr><td>4 · ¿Cómo se dice el porqué del «No»?</td><td class="l" style="color:var(--terra)">¿?</td><td>Espera tu letra en la vuelta: la forma de la B con lo que hace la A. Recomendada, su A (lo que pasa si no eliges, dicho como condición).</td></tr>
+        <tr><td>4 · ¿Cómo se dice el porqué del «No»?</td><td class="l">A</td><td>La de la segunda vuelta: la forma de la B con lo que hace la A; arriba, lo que pasa si no eliges, dicho como condición.</td></tr>
         <tr class="grupo"><td colspan="3">La de antes</td></tr>
         <tr><td>5 · ¿Dónde vive?</td><td class="l">A</td><td>Una fila en la ventana de la pausa, igual con y sin «A tu ritmo».</td></tr>
       </tbody>

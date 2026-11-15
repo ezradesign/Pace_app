@@ -24,7 +24,7 @@ const { chromium } = require(path.join(RAIZ, 'node_modules', 'playwright'));
 
 const AQUI = __dirname;
 const FOTOS = path.join(AQUI, 'fotos');
-const PUERTO = 8825;
+const PUERTO = Number(process.env.PACE_FOTOS_PORT || 8825);
 const BASE = 'http://localhost:' + PUERTO;
 const SEMILLA = { firstSeen: 1, lang: 'es', langAuto: false, palette: 'crema', novedadesVistas: '*', soundOn: false, sidebarCollapsed: true };
 const SEMANA = ['jornada', 'jornada', 'jornada', 'jornada', 'jornada', 'libre', 'libre'];
@@ -377,7 +377,7 @@ async function quitarPintado(page) {
   });
 }
 
-const BOTONES_CIERRE = '[data-pace-session-root] [data-pace-fb-chip], [data-pace-session-root] [data-pace-fb-ghost], [data-pace-session-root] [data-pace-fb-deshacer], [data-pace-session-root] [data-maqueta-boton], [data-pace-session-footer] button, [data-pace-session-header] button';
+const BOTONES_CIERRE = '[data-pace-session-root] [data-pace-fb-chip], [data-pace-session-root] [data-pace-fb-ghost], [data-pace-session-root] [data-pace-fb-deshacer], [data-pace-session-root] [data-maqueta-boton], [data-pace-session-root] [data-pace-fb-razon], [data-pace-session-root] [data-pace-fb-seguridad], [data-pace-session-footer] button, [data-pace-session-header] button';
 
 async function medirCierre(page, clave, h) {
   const s = await scrollDe(page, '[data-pace-session-center]') || await scrollDe(page, '[data-pace-session-done]');
@@ -650,6 +650,90 @@ async function escena5Ritmo(browser) {
   await context.close();
 }
 
+/* ============================================================
+   MONTADO (15 nov.): lo mismo, ya en la app, sin pintar nada encima.
+   ============================================================ */
+async function escenaMontado(browser) {
+  console.log('Montado');
+  medidas.montado = {};
+  /* 5A por libre */
+  let r = await abrir(browser, { estado: LIBRE, hora: JUEVES('10:00'), alto: 640 });
+  await hastaElCierre(r.page);
+  await r.page.locator('[data-pace-fb-chip]').first().click();
+  await r.page.waitForTimeout(300);
+  await r.page.locator('[data-pace-session-footer] button').first().click();
+  await r.page.waitForTimeout(800);
+  await hastaLaPausa(r.page);
+  for (const h of [640, 740]) { await alto(r.page, h); await medirPausa(r.page, 'm-5a', h); await foto(r.page, 'm-5a-' + h); }
+  await r.context.close();
+  /* 5A con «A tu ritmo» */
+  r = await abrir(browser, { estado: CON_SEMANA, hora: JUEVES('08:50'), alto: 640 });
+  await hastaElCierre(r.page);
+  await r.page.locator('[data-pace-fb-chip]').first().click();
+  await r.page.waitForTimeout(300);
+  await r.page.locator('[data-pace-session-footer] button').first().click();
+  await r.page.waitForTimeout(900);
+  await r.page.getByRole('button', { name: /Preparar jornada/ }).filter({ visible: true }).first().click();
+  await r.page.waitForTimeout(700);
+  await r.page.getByRole('button', { name: /Preparar jornada/ }).filter({ visible: true }).last().click();
+  await r.page.waitForTimeout(900);
+  await hastaLaPausa(r.page);
+  await medirPausa(r.page, 'm-5a-ritmo', 640);
+  await foto(r.page, 'm-5a-ritmo-640');
+  await r.context.close();
+  /* 1A: «Tu semana» en Android, con el interruptor */
+  for (const h of [640, 740]) {
+    r = await abrir(browser, { estado: CON_SEMANA, hora: JUEVES('08:30'), alto: h, android: 'granted' });
+    await r.page.evaluate(() => window.dispatchEvent(new CustomEvent('pace:ritmo-semana')));
+    await r.page.locator('[data-pace-semana-hoja]').waitFor();
+    await r.page.waitForTimeout(700);
+    medidas.montado['1a-' + h] = await scrollDe(r.page, '[role=dialog]');
+    await foto(r.page, 'm-1a-' + h);
+    if (h === 640) {
+      await r.page.locator('[data-pace-semana-aviso] [role=switch]').click();
+      await r.page.waitForTimeout(300);
+      await foto(r.page, 'm-1a-640-encendido');
+      await letraGrande(r.page, '[role=dialog]', true);
+      await foto(r.page, 'm-1a-640-115');
+      await letraGrande(r.page, '[role=dialog]', false);
+    }
+    await r.context.close();
+  }
+  /* 3A: la tercera rutina del día acaba sin pregunta */
+  const fb = { 'breathe.box.4': { yes: 1, some: 0, no: 0, lastPromptDay: '2026-11-19' }, 'extra.calves': { yes: 0, some: 0, no: 0, lastPromptDay: '2026-11-19' } };
+  r = await abrir(browser, { estado: Object.assign({ routineFeedback: fb }, LIBRE), hora: JUEVES('12:00'), alto: 640 });
+  await hastaElCierre(r.page);
+  medidas.montado['3a-preguntas'] = await r.page.locator('[data-pace-session-feedback]').count();
+  await foto(r.page, 'm-3a-640');
+  await r.context.close();
+}
+
+/* La 4A montada (Ez, 15 nov.): el «No» de verdad, sus porqués y lo que dice cada uno. */
+async function escenaMontado4(browser) {
+  console.log('Montado 4A');
+  const r = await abrir(browser, { estado: LIBRE, hora: JUEVES('10:00'), alto: 640 });
+  await hastaElCierre(r.page);
+  await r.page.locator('[data-pace-fb-chip]').nth(2).click();
+  await r.page.waitForTimeout(400);
+  for (const h of [640, 740]) { await alto(r.page, h); await medirCierre(r.page, 'm-4a', h); await foto(r.page, 'm-4a-' + h); }
+  await alto(r.page, 640);
+  await letraGrande(r.page, '[data-pace-session-root]', true);
+  await foto(r.page, 'm-4a-640-115');
+  await letraGrande(r.page, '[data-pace-session-root]', false);
+  await r.page.locator('[data-pace-fb-razon="aqui"]').click();
+  await r.page.waitForTimeout(300);
+  await foto(r.page, 'm-4a-aqui-640');
+  await r.page.locator('[data-pace-fb-deshacer]').click();
+  await r.page.waitForTimeout(300);
+  await r.page.locator('[data-pace-fb-chip]').nth(2).click();
+  await r.page.waitForTimeout(300);
+  await r.page.locator('[data-pace-fb-razon="molesto"]').click();
+  await r.page.waitForTimeout(300);
+  await medirCierre(r.page, 'm-4a-molesto', 640);
+  await foto(r.page, 'm-4a-molesto-640');
+  await r.context.close();
+}
+
 (async () => {
   fs.mkdirSync(FOTOS, { recursive: true });
   const srv = spawn(process.execPath, [path.join(RAIZ, '.claude', 'static-server.js')], { cwd: RAIZ, env: Object.assign({}, process.env, { PORT: String(PUERTO) }), stdio: 'ignore' });
@@ -657,7 +741,7 @@ async function escena5Ritmo(browser) {
   const browser = await chromium.launch();
   const solo = process.argv[2];
   try {
-    const escenas = { '4V': escena4V, '1A': escena1A, '1B': escena1B, '2': escena2, '4': escena4, '5': escena5, '5R': escena5Ritmo };
+    const escenas = { 'M4': escenaMontado4, 'M': escenaMontado, '4V': escena4V, '1A': escena1A, '1B': escena1B, '2': escena2, '4': escena4, '5': escena5, '5R': escena5Ritmo };
     for (const [k, f] of Object.entries(escenas)) {
       if (solo && solo.split(',').indexOf(k) === -1) continue;
       await f(browser);
