@@ -3778,6 +3778,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'break.ritmo.cuenta': 'Ya la hice por mi cuenta',
   'break.ritmo.agua': 'y un vaso de agua',
   'break.ritmo.vaso': 'un vaso ahora',
+
+  'break.antes': 'la de antes, {n} min',
   'break.ritmo.comida': 'Hora de comer',
   'break.ritmo.conAgua': 'con un vaso de agua',
   'break.ritmo.comer': 'Ir a comer'
@@ -3814,6 +3816,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'break.ritmo.cuenta': 'I did it my own way',
   'break.ritmo.agua': 'and a glass of water',
   'break.ritmo.vaso': 'a glass now',
+  'break.antes': 'your last one, {n} min',
   'break.ritmo.comida': 'Lunchtime',
   'break.ritmo.conAgua': 'with a glass of water',
   'break.ritmo.comer': 'Take a lunch break'
@@ -39466,8 +39469,56 @@ function breakPropuesta(state, ctx) {
   return null;
 }
 
-Object.assign(window, { breakPozo, breakVetadas, breakProponible, breakElige, breakPropuesta });
-;Object.assign(window, { breakPozo, BREAK_VETO_DIAS, breakVetadas, breakProponible, breakElige, breakPropuesta });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function breakLaDeAntes(state, eventos, excluir) {
+  try {
+    if (!Array.isArray(eventos)) return null;
+    let ultima = null,cuando = -Infinity;
+    eventos.forEach(function (e) {
+      if (!e || e.type !== 'session.completed' || !e.payload) return;
+      const m = e.payload.module;
+      if (m !== 'breathe' && m !== 'move' && m !== 'stretch') return;
+      if (e.payload.completionReason !== 'natural' || !e.payload.routineId) return;
+      const t = Date.parse(e.occurredAt);
+      if (isNaN(t) || t < cuando) return;
+      cuando = t;ultima = e.payload.routineId;
+    });
+    if (!ultima || (excluir || []).indexOf(ultima) !== -1) return null;
+    if (!breakProponible(ultima)) return null;
+    if (breakVetadas((state || {}).routineFeedback)[ultima]) return null;
+    const respira = window.getBreatheRoutine && window.getBreatheRoutine(ultima);
+    if (respira) return { modulo: 'breathe', rutina: respira };
+    const cuerpo = window.resolveBodyRoutine && window.resolveBodyRoutine(ultima);
+    if (cuerpo && cuerpo.routine) return { modulo: cuerpo.source === 'move' ? 'move' : 'extra', rutina: cuerpo.routine };
+    return null;
+  } catch (e) {return null;}
+}
+
+
+function breakLaDeAntesAhora(state, excluir) {
+  let eventos = null;
+  try {
+    const snap = window.paceEventsSnapshot && window.paceEventsSnapshot();
+    eventos = snap && Array.isArray(snap.events) ? snap.events : null;
+  } catch (e) {eventos = null;}
+  return breakLaDeAntes(state, eventos, excluir);
+}
+
+Object.assign(window, { breakPozo, breakVetadas, breakProponible, breakElige, breakPropuesta, breakLaDeAntes, breakLaDeAntesAhora });
+;Object.assign(window, { breakPozo, BREAK_VETO_DIAS, breakVetadas, breakProponible, breakElige, breakPropuesta, breakLaDeAntes, breakLaDeAntesAhora });
 })();
 </script>
   <script>
@@ -39539,7 +39590,29 @@ function BreakPlato(_ref) {let { color, glifo, motivo, nombre, ctx, children, da
 
 }
 
-function BreakMenuRitmo(_ref2) {let { open, onClose, onChoose, onSeguir, onPropuesta, prop, plan, opciones, nombre } = _ref2;
+
+
+
+
+const BREAK_GLIFO_MODULO = { breathe: 'ABBreathe', extra: 'ABStretch', move: 'ABMove' };
+function BreakAntes(_ref2) {let { lda, onChoose, estilo } = _ref2;
+  const { t, tn, lang } = useT();
+  if (!lda || !lda.rutina) return null;
+  const r = lda.rutina;
+  const v = lang === 'en' ? t(r.id + '.name') : null;
+  const nombre = v && v !== r.id + '.name' ? v : r.name;
+  const Glifo = window[BREAK_GLIFO_MODULO[lda.modulo]];
+  return (
+    React.createElement("button", { type: "button", "data-pace-break-antes": r.id, className: "pace-break-agua", style: estilo, onClick: () => onChoose(lda.modulo, r) },
+    React.createElement("span", { className: "pace-break-glifo", style: { '--c': BREAK_COLOR[lda.modulo] } }, Glifo ? React.createElement(Glifo, null) : null),
+    React.createElement("b", null, nombre),
+    React.createElement("span", { className: "pace-break-mas" }, "\xB7 ", tn('break.antes', { n: r.min })),
+    React.createElement("i", { "aria-hidden": "true" }, "\u203A")
+    ));
+
+}
+
+function BreakMenuRitmo(_ref3) {let { open, onClose, onChoose, onSeguir, onPropuesta, prop, plan, opciones, nombre } = _ref3;
   const { t, tn, lang } = useT();
   if (!open || !prop || !plan) return null;
   const agua = (opciones || []).find((o) => o.key === 'water');
@@ -39553,6 +39626,9 @@ function BreakMenuRitmo(_ref2) {let { open, onClose, onChoose, onSeguir, onPropu
 
 
   const aTuManera = !comida && !!pausa && pausa.tipo === 'pausa' && typeof ritmoPausaPorTuCuenta === 'function';
+
+  const excluir = [rutina && rutina.id].concat((pausa && pausa.platos || []).map((pl) => pl.id)).filter(Boolean);
+  const laDeAntes = typeof breakLaDeAntesAhora === 'function' ? breakLaDeAntesAhora(getState(), excluir) : null;
   const plato = comida ?
   { color: 'var(--ink-2)', boton: 'var(--focus-cta)', glifo: { nodo: React.createElement(ABMeal, null), modulo: true }, nombre: t('break.ritmo.comida'),
     ctx: React.createElement(React.Fragment, null, React.createElement("b", null, pausa ? pausa.dur : ''), React.createElement("u", null, t('lib.min')), pausa && pausa.agua && React.createElement("em", null, t('break.ritmo.conAgua'))) } :
@@ -39586,6 +39662,8 @@ function BreakMenuRitmo(_ref2) {let { open, onClose, onChoose, onSeguir, onPropu
     ),
 
 
+    !comida && React.createElement(BreakAntes, { lda: laDeAntes, onChoose: onChoose, estilo: agua ? undefined : { marginTop: 16 } }),
+
 
     React.createElement("div", { "data-pace-break-shortcut": true, className: "pace-break-pie", style: { marginTop: 6, justifyContent: aTuManera ? 'space-between' : undefined } },
     aTuManera &&
@@ -39597,8 +39675,8 @@ function BreakMenuRitmo(_ref2) {let { open, onClose, onChoose, onSeguir, onPropu
 
 }
 
-Object.assign(window, { BreakMenuRitmo, BreakPlato, breakGlifo, BREAK_COLOR });
-;Object.assign(window, { _extends, breakGlifo, BreakPlato, BreakMenuRitmo });
+Object.assign(window, { BreakMenuRitmo, BreakPlato, BreakAntes, breakGlifo, BREAK_COLOR });
+;Object.assign(window, { _extends, breakGlifo, BreakPlato, BreakAntes, BreakMenuRitmo });
 })();
 </script>
   <script>
@@ -39748,6 +39826,9 @@ function BreakMenu(_ref) {let { open, onClose, onChoose, onSeguir } = _ref;
 
 
   const colorProp = prop ? BREAK_COLOR[prop.modulo] : null;
+
+  const laDeAntes = typeof breakLaDeAntesAhora === 'function' ?
+  breakLaDeAntesAhora(state, rutinaProp ? [rutinaProp.id] : []) : null;
   return (
     React.createElement(Modal, { open: open, onClose: onClose, tagLabel: t('break.tag'), title: t('break.title'), subtitle: t('break.subtitle'), maxWidth: 720 },
     prop &&
@@ -39835,6 +39916,8 @@ function BreakMenu(_ref) {let { open, onClose, onChoose, onSeguir } = _ref;
     })
     ),
 
+
+    typeof BreakAntes === 'function' && React.createElement(BreakAntes, { lda: laDeAntes, onChoose: handleChoose, estilo: { marginTop: prop ? 14 : 0 } }),
 
     React.createElement("div", { "data-pace-break-shortcut": true, className: "pace-break-pie", style: { marginTop: prop ? 8 : 4 } },
     React.createElement("button", { type: "button", className: "pace-break-saltar", onClick: onClose }, t('break.skip'))

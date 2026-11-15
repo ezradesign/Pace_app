@@ -143,6 +143,9 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
   /* La propuesta va vestida como la tarjeta de su rutina, con su botón dentro (la opción A
      de Ez, BreakMenu.css.jsx); el agua no tiene rutina y lleva la gota y «Hidrátate». */
   const colorProp = prop ? BREAK_COLOR[prop.modulo] : null;
+  /* La última rutina que acabaste, si no es la propuesta (BreakMenu.support.jsx). */
+  const laDeAntes = typeof breakLaDeAntesAhora === 'function'
+    ? breakLaDeAntesAhora(state, rutinaProp ? [rutinaProp.id] : []) : null;
   return (
     <Modal open={open} onClose={onClose} tagLabel={t('break.tag')} title={t('break.title')} subtitle={t('break.subtitle')} maxWidth={720}>
       {prop && (
@@ -230,6 +233,8 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
         })}
       </div>}
 
+      {/* La de antes (Ez, 5A del 15 nov. 2026), debajo de las otras puertas (BreakMenu.ritmo.jsx). */}
+      {typeof BreakAntes === 'function' && <BreakAntes lda={laDeAntes} onChoose={handleChoose} estilo={{ marginTop: prop ? 14 : 0 }} />}
       {/* El pie, sin línea de atajos (Ez, 8 oct.); su `data-*` lo usan las pruebas. */}
       <div data-pace-break-shortcut className="pace-break-pie" style={{ marginTop: prop ? 8 : 4 }}>
         <button type="button" className="pace-break-saltar" onClick={onClose}>{t('break.skip')}</button>

@@ -196,6 +196,9 @@ Object.assign(window.PACE_STRINGS.es, {
     'ritmo.st.guardar':              'Guardar mi semana',
     'ritmo.st.aria':                 '{dia}, {tipo}',
     'ritmo.st.ajustes':              'Tu semana',
+    /* El interruptor del aviso a tu hora de entrada, solo en la app del móvil (Ez, 1A del 15 nov.). */
+    'ritmo.st.aviso.verbo':          'Avísame',
+    'ritmo.st.aviso.resto':          'a mi hora de entrada',
     'ritmo.manana.titulo':           'Hoy, como cada {dia}',
     'ritmo.manana.como':             'como cada {dia}',
     'ritmo.manana.distinto':         'Hoy es distinto',
@@ -381,6 +384,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.st.guardar':              'Save my week',
     'ritmo.st.aria':                 '{dia}, {tipo}',
     'ritmo.st.ajustes':              'Your week',
+    'ritmo.st.aviso.verbo':          'Remind me',
+    'ritmo.st.aviso.resto':          'at my start time',
     'ritmo.manana.titulo':           'Today, like every {dia}',
     'ritmo.manana.como':             'like every {dia}',
     'ritmo.manana.distinto':         'Today is different',
