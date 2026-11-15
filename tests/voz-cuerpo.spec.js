@@ -110,3 +110,35 @@ test('voz-4 · Ajustes: «En Respira, Mueve y Estira» bajo «Marca la fase», y
     await context.close();
   }
 });
+
+/* Las tomas que grabó Ez, tal como las dejó scripts/voz-cuerpo-tomas.js: cada voz e idioma de la tabla trae
+   sus 36 palabras, cada una con su archivo, dentro de su trozo y sin pasar de su tope; y en la app, cada voz
+   en castellano se descodifica y suena (`paceVozCuerpoIntenta` solo dice que sí con la toma ya descodificada
+   y el audio en marcha). */
+test('voz-5 · las tomas grabadas: las 36 palabras con su archivo y su tope, y en la app suenan', async ({ page, context }) => {
+  const fs = require('fs'); const path = require('path'); const vm = require('vm');
+  const { TOMAS, TOPE } = require('../scripts/voz-cuerpo-tomas.js');
+  const raiz = path.join(__dirname, '..');
+  const caja = { window: {} }; vm.createContext(caja);
+  vm.runInContext(fs.readFileSync(path.join(raiz, 'app/ui/Sound.voz.cuerpo.datos.js'), 'utf8') + ';this.D=PACE_VOZ_CUERPO;', caja);
+  const claves = Object.values(TOMAS).flat().map((f) => f[0]).sort();
+  const voces = [];
+  for (const [idioma, juego] of Object.entries(caja.D)) for (const [voz, pal] of Object.entries(juego)) {
+    voces.push([idioma, voz]);
+    expect(Object.keys(pal).sort(), idioma + '/' + voz).toEqual(claves);
+    for (const [k, e] of Object.entries(pal)) {
+      const quien = idioma + '/' + voz + ' «' + k + '»';
+      expect(fs.existsSync(path.join(raiz, 'app/move/voz', e.archivo)), quien + ' sin ' + e.archivo).toBe(true);
+      expect(e.a < e.ini && e.ini < e.fin && e.fin < e.b, quien + ' fuera de su trozo').toBe(true);
+      expect(e.fin - e.ini, quien).toBeLessThanOrEqual(TOPE[k] || TOPE.defecto);
+    }
+  }
+  expect(voces.length).toBeGreaterThan(0);
+  await sembrar(context, { soundOn: true, voiceOn: true, voice: 'sulafat', lang: 'es' });
+  await irAlArtefacto(page);
+  await page.mouse.click(2, 700);
+  for (const [, voz] of voces.filter((v) => v[0] === 'es')) {
+    await page.evaluate((v) => window.setState({ voice: v }), voz);
+    await expect.poll(() => page.evaluate(() => window.paceVozCuerpoIntenta('c3', 1)), { timeout: 15000, message: voz }).toBe(true);
+  }
+});

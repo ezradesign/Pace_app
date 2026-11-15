@@ -96,8 +96,8 @@ más larga del catálogo (Elevación de talones, en Mueve); desde la 26 sonaría
 Cada tanda son cuatro tomas y funciona sola: si a una voz le falta un archivo, en ese momento suena el
 cuenco o la madera de hoy.
 
-1. **sulafat en castellano**: la voz y el idioma de fábrica, lo que oye casi todo el mundo.
-2. **bradford en castellano**.
+1. **sulafat en castellano**: la voz y el idioma de fábrica, lo que oye casi todo el mundo. Hecha (15 nov.).
+2. **bradford en castellano**. Hecha (15 nov.; de las dos tomas que dio Genspark, la 2).
 3. **sulafat en inglés**.
 4. **bradford en inglés**.
 

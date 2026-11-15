@@ -91,14 +91,27 @@ details[open] summary{border-bottom:1px solid var(--line);margin-bottom:10px}
 .copiar{font:500 12px var(--ui);color:var(--olive);background:transparent;border:1px solid var(--olive);border-radius:999px;padding:2px 10px;cursor:pointer;margin-left:8px;vertical-align:2px}
 .resumen{background:var(--olive-soft);border-radius:10px;padding:14px 16px;margin:18px 0;color:var(--ink);max-width:68ch}
 .resumen p{color:var(--ink)}
+
+/* Para oír */
+.oir-voz{margin:24px 0 10px}
+.oir-vcab{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.oir-vcab h3{margin:0}
+.oir-vcab h3 small{font-family:var(--ui);font-style:normal;font-size:13px;color:var(--ink-3)}
+.oir-estado{font-size:13px;color:var(--ink-3);min-height:1.4em;margin:2px 0 4px}
+.oir-grupo{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px 12px;margin:8px 0}
+.oir-cab{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.oir-botones{display:flex;flex-wrap:wrap;gap:6px}
+.palabra{font:400 15px var(--ui);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:6px 13px;min-height:40px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.palabra.suena{border-color:var(--olive);color:var(--olive);background:var(--olive-soft)}
+.oir-btn{font:500 13px var(--ui);color:var(--olive);background:transparent;border:1px solid var(--olive);border-radius:999px;padding:6px 13px;min-height:36px;cursor:pointer;letter-spacing:0;text-transform:none;white-space:nowrap}
 @media (prefers-reduced-motion: reduce){*{scroll-behavior:auto}}
 </style>
 
 <main>
-  <div class="eyebrow">PACE · elegido 1A–7A y montado en su rama · 15 nov. 2026, sobre la 0.205.0</div>
+  <div class="eyebrow">PACE · elegido 1A–7A, montado en su rama y con tus primeras tomas · 15 nov. 2026, sobre la 0.205.0</div>
   <h1>Voz en Mueve y Estira</h1>
   <p class="lead">Que el runner de Mueve y Estira se pueda seguir sin mirar: la voz de Respira dice qué toca y cuenta, y el móvil vibra al ritmo. Son siete preguntas, cada una con su recomendada. Con las recomendadas, 132 audios cortos que puedes hacer en cuatro tandas.</p>
-  <p>Lo pediste hoy: «Esto ya lo podemos diseñar: Voz en Mueve y Estira, y vibración al ritmo de las repeticiones». Estaba en «Después de v1». Aquí está solo el diseño y los prompts para Genspark. No hay nada montado, y lo pintado sobre la app no se ha guardado.</p>
+  <p>Lo pediste hoy: «Esto ya lo podemos diseñar: Voz en Mueve y Estira, y vibración al ritmo de las repeticiones». Estaba en «Después de v1». Las fotos de más abajo son del diseño: se pintaron sobre la app antes de montarlo.</p>
 
   <div class="resumen">
     <p><strong>Elegiste 1A 2A 3A 4A 5A 6A 7A</strong> (15 nov.), «y sí, todos los números seguidos». Montado en la rama <code>claude/voz-cuerpo-15nov-21e284</code>, sin juntar a <code>main</code>:</p>
@@ -109,8 +122,18 @@ details[open] summary{border-bottom:1px solid var(--line);margin-bottom:10px}
       <li><strong>El guion que corta tus tomas</strong>, con su prueba, y los prompts por tomas: abajo y en <code>PROMPTS_VOZ_CUERPO.md</code>.</li>
       <li><strong>Seis pruebas nuevas</strong>, vistas caer contra un fallo puesto a propósito, y las 32 del runner y de Ajustes que ya había, en verde.</li>
     </ul>
-    <p>Suena con <strong>audios de muestra</strong> (la voz de Windows, solo la «Voz clara» en castellano), que no van a <code>main</code>. Falta: tus 16 tomas, oírlo en el móvil y que GitHub compile las dos apps con el complemento al juntar.</p>
+    <p>Suenan <strong>tus tomas de castellano</strong>, sulafat y bradford: escúchalas en <a href="#para-oir">«Para oír»</a>, justo debajo. Falta el inglés (las ocho tomas de inglés), oírlo y sentirlo en el móvil, y que GitHub compile las dos apps con el complemento al juntar.</p>
   </div>
+
+    <h2 id="para-oir">Para oír</h2>
+  <p>Tus primeras tomas, las de castellano, ya cortadas por el guion. Cada botón suena <strong>el trozo exacto que sonará en la app</strong>, con el volumen igualado al de Respira. «Oír seguidas» dice las de un grupo una tras otra, para oír si van parejas, y «Una serie» suena el principio de «Levántate y sube» como en el runner (tiempos aproximados).</p>
+  <p class="nota">La primera vez que tocas una voz tarda un momento: carga sus cuatro tomas. Si en el iPhone no oyes nada, quita el modo silencio.</p>
+  <div class="resumen">
+    <p><strong>Las ocho tomas cortan limpias</strong>: 25, 3, 4 y 4 palabras, y ninguna pasa de su tope, así que no hace falta repetir nada para que funcione. <strong>De bradford me quedé con la toma 2</strong> en las cuatro: corta igual de limpia que la 1 y sale más pareja (el tono de los números varía 1,7 semitonos frente a 2,0, y deja más hueco entre palabra y palabra).</p>
+    <p>Lo que no se puede medir es si suenan bien. El reconocedor de voz de Windows entendió 34 de las 36 palabras de bradford, pero solo 25 de sulafat: escucha sobre todo en sulafat <strong>«seis», «trece», de «dieciséis» a «diecinueve» y «veintitrés»</strong>. Y si las dos tienen acento de España, que el reconocedor no lo distingue. Si una suena mal, se repite solo esa con el prompt «Una palabra repetida» de más abajo, y el archivo se llama <code>VOZ-es-repite-NOMBRE.mp3</code>: NOMBRE es la palabra sin tildes y con guiones (<code>veintitres</code>, <code>ultimo-paso</code>, <code>cambia-de-lado</code>), y en la cuenta atrás <code>cuenta-tres</code>, <code>cuenta-dos</code> y <code>cuenta-uno</code>.</p>
+  </div>
+  <div class="oir" data-oir></div>
+  <noscript><p class="nota">Esta parte necesita JavaScript para sonar.</p></noscript>
 
   <h2>Lo que hay hoy</h2>
   <p><strong>Respira habla.</strong> Dos voces, «Voz clara» (sulafat) y «Voz grave» (bradford), dicen «Inhala», «Mantén», «Exhala» y «Más», en castellano y en inglés: 16 audios. Se elige en Ajustes, en la fila «Marca la fase»: Tono, Voz clara o Voz grave. Nunca suenan el tono y la voz a la vez: si una palabra no cabe en su fase, suena el tono.</p>
@@ -409,12 +432,166 @@ Descansa.</pre></div>
     </tbody>
   </table></div>
   <div class="resumen">
-    <p><strong>Elegidas todas en A</strong> (15 nov.). Lo que queda: tus 16 tomas (cuatro tandas), oírlo y sentirlo en el móvil, y juntar la rama cuando estén las voces.</p>
+    <p><strong>Elegidas todas en A</strong> (15 nov.). Lo que queda: las ocho tomas de inglés, oírlo y sentirlo en el móvil, y juntar la rama.</p>
   </div>
   <div class="fotos">
     <figure><img src="fotos/a3-recomendada.jpg" alt="Ajustes con las dos recomendadas: la línea En Respira, Mueve y Estira y la fila Vibrar en Sin sonido" loading="lazy"><figcaption><b>4A y 6A juntas</b> · lo único que cambia a la vista, sin scroll a 360 × 640</figcaption></figure>
   </div>
 </main>
+
+<script src="datos.js"></script>
+<script>
+/* «Para oír»: cada palabra suena como en la app (Sound.voz.cuerpo.js): el trozo a..b de su toma, con su
+   volumen y un fundido de 5 ms a cada lado. La tabla es la misma que lee la app (datos.js, que es
+   app/ui/Sound.voz.cuerpo.datos.js) y las tomas, las mismas (voz/, que es app/move/voz/). Una voz carga
+   sus cuatro tomas al tocarla por primera vez. Lo que suena se para al tocar otra cosa. */
+(function () {
+  var raiz = document.querySelector('[data-oir]');
+  if (!raiz) return;
+  var D = (window.PACE_VOZ_CUERPO || {}).es || {};
+  var NUM = ['uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez', 'once', 'doce', 'trece', 'catorce',
+    'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve', 'veinte', 'veintiuno', 'veintidós', 'veintitrés', 'veinticuatro', 'veinticinco'];
+  var VOCES = [['sulafat', 'Voz clara', 'sulafat'], ['bradford', 'Voz grave', 'bradford, toma 2']];
+  var GRUPOS = [
+    ['Números', NUM.map(function (n, i) { return ['n' + (i + 1), n]; })],
+    ['Cuenta atrás', [['c3', 'tres'], ['c2', 'dos'], ['c1', 'uno']]],
+    ['Avisos', [['colocate', 'Colócate'], ['siguiente', 'Siguiente'], ['ya', 'Ya'], ['ultimo', 'Último paso']]],
+    ['Lados y descanso', [['izquierda', 'Izquierda'], ['derecha', 'Derecha'], ['cambia', 'Cambia de lado'], ['descansa', 'Descansa']]]
+  ];
+  /* El principio de «Levántate y sube» en el runner: la cuenta de entrada, «Colócate» y su cuenta, «Ya», tres
+     repeticiones y «Descansa». Segundos aproximados. */
+  var SERIE = [['c3', 0], ['c2', 1], ['c1', 2], ['colocate', 3], ['c3', 6], ['c2', 7], ['c1', 8], ['ya', 9],
+    ['n1', 11.5], ['n2', 14], ['n3', 16.5], ['descansa', 19]];
+
+  var ctx = null, tomas = {}, botones = {}, vivos = [], relojes = [];
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+
+  /* El contexto nace y arranca dentro del toque: Safari no deja sonar sin él. */
+  function contexto() {
+    if (!ctx) {
+      var C = window.AudioContext || window.webkitAudioContext;
+      if (!C) return null;
+      ctx = new C();
+      try { var b = ctx.createBuffer(1, 1, 22050); var s = ctx.createBufferSource(); s.buffer = b; s.connect(ctx.destination); s.start(0); } catch (e) {}
+    }
+    if (ctx.state === 'suspended') { try { ctx.resume(); } catch (e) {} }
+    return ctx;
+  }
+  function toma(archivo) {
+    if (!tomas[archivo]) {
+      tomas[archivo] = fetch('voz/' + archivo).then(function (r) {
+        if (!r.ok) throw new Error(r.status);
+        return r.arrayBuffer();
+      }).then(function (datos) {
+        return new Promise(function (ok, ko) { ctx.decodeAudioData(datos, ok, ko); });
+      });
+      tomas[archivo].catch(function () { delete tomas[archivo]; });
+    }
+    return tomas[archivo];
+  }
+  function cargar(voz) {
+    var archivos = {};
+    Object.keys(D[voz]).forEach(function (k) { archivos[D[voz][k].archivo] = true; });
+    var lista = Object.keys(archivos);
+    return Promise.all(lista.map(toma)).then(function (bufs) {
+      var porArchivo = {};
+      lista.forEach(function (a, i) { porArchivo[a] = bufs[i]; });
+      return porArchivo;
+    });
+  }
+  function para() {
+    vivos.forEach(function (s) { try { s.stop(); } catch (e) {} });
+    vivos = [];
+    relojes.forEach(clearTimeout);
+    relojes = [];
+    raiz.querySelectorAll('.suena').forEach(function (b) { b.classList.remove('suena'); });
+  }
+  function marca(voz, clave, on) {
+    (botones[voz + '.' + clave] || []).forEach(function (b) { b.classList.toggle('suena', on); });
+  }
+  /* Programa una palabra en t0 (reloj del contexto). Devuelve cuándo acaba. */
+  function programa(voz, clave, t0, bufs) {
+    var e = D[voz][clave];
+    var buf = bufs[e.archivo];
+    var dur = Math.min(e.b, buf.duration) - e.a;
+    var vol = typeof e.vol === 'number' ? e.vol : 1, f = 0.005;
+    var s = ctx.createBufferSource(), g = ctx.createGain();
+    s.buffer = buf;
+    g.gain.setValueAtTime(0, t0);
+    g.gain.linearRampToValueAtTime(vol, t0 + f);
+    g.gain.setValueAtTime(vol, t0 + dur - f);
+    g.gain.linearRampToValueAtTime(0, t0 + dur);
+    s.connect(g); g.connect(ctx.destination);
+    s.start(t0, e.a); s.stop(t0 + dur + 0.01);
+    vivos.push(s);
+    var desde = Math.max(0, (t0 - ctx.currentTime) * 1000);
+    relojes.push(setTimeout(function () { marca(voz, clave, true); }, desde));
+    relojes.push(setTimeout(function () { marca(voz, clave, false); }, desde + dur * 1000));
+    return t0 + dur;
+  }
+  /* plan(bufs, ahora) programa lo que toque. */
+  function tocar(voz, estado, plan) {
+    para();
+    if (!contexto()) { estado.textContent = 'Este navegador no puede sonar audio.'; return; }
+    var espera = setTimeout(function () { estado.textContent = 'Cargando las tomas…'; }, 150);
+    cargar(voz).then(function (bufs) {
+      clearTimeout(espera); estado.textContent = '';
+      plan(bufs, ctx.currentTime + 0.05);
+    }, function () {
+      clearTimeout(espera); estado.textContent = 'No se han podido cargar las tomas. Prueba otra vez.';
+    });
+  }
+  function boton(clase, texto, alPulsar) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = clase; b.textContent = texto;
+    b.addEventListener('click', alPulsar);
+    return b;
+  }
+
+  VOCES.forEach(function (v) {
+    var voz = v[0];
+    if (!D[voz]) return;
+    var caja = document.createElement('section');
+    caja.className = 'oir-voz';
+    var cab = document.createElement('div'); cab.className = 'oir-vcab';
+    var h = document.createElement('h3'); h.textContent = v[1] + ' ';
+    var sm = document.createElement('small'); sm.textContent = v[2]; h.appendChild(sm);
+    var estado = document.createElement('p'); estado.className = 'oir-estado'; estado.setAttribute('aria-live', 'polite');
+    cab.appendChild(h);
+    cab.appendChild(boton('oir-btn', 'Una serie', function () {
+      tocar(voz, estado, function (bufs, t) { SERIE.forEach(function (p) { if (D[voz][p[0]]) programa(voz, p[0], t + p[1], bufs); }); });
+    }));
+    caja.appendChild(cab);
+    caja.appendChild(estado);
+    GRUPOS.forEach(function (gr) {
+      var palabras = gr[1].filter(function (p) { return D[voz][p[0]]; });
+      if (!palabras.length) return;
+      var g = document.createElement('div'); g.className = 'oir-grupo';
+      var gc = document.createElement('div'); gc.className = 'oir-cab';
+      var t = document.createElement('span'); t.textContent = gr[0];
+      gc.appendChild(t);
+      gc.appendChild(boton('oir-btn', 'Oír seguidas', function () {
+        tocar(voz, estado, function (bufs, t0) {
+          palabras.forEach(function (p) { t0 = programa(voz, p[0], t0, bufs) + 0.6; });
+        });
+      }));
+      g.appendChild(gc);
+      var fila = document.createElement('div'); fila.className = 'oir-botones';
+      palabras.forEach(function (p) {
+        var b = boton('palabra', p[1], function () {
+          tocar(voz, estado, function (bufs, t0) { programa(voz, p[0], t0, bufs); });
+        });
+        (botones[voz + '.' + p[0]] = botones[voz + '.' + p[0]] || []).push(b);
+        fila.appendChild(b);
+      });
+      g.appendChild(fila);
+      caja.appendChild(g);
+    });
+    raiz.appendChild(caja);
+  });
+  if (!raiz.children.length) raiz.innerHTML = '<p class="nota">No hay tomas cortadas todavía.</p>';
+})();
+</script>
 
 <script>
 /* Copiar un prompt: el portapapeles solo se escribe dentro del clic, y si la vista no lo deja se

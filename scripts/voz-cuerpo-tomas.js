@@ -238,7 +238,7 @@ async function procesar(carpeta, op) {
   return { informe, datos };
 }
 
-module.exports = { segmentar, nivelDb, cortarToma, procesar, TOMAS, CORTE };
+module.exports = { segmentar, nivelDb, cortarToma, procesar, TOMAS, TOPE, CORTE };
 
 if (require.main === module) {
   const args = process.argv.slice(2);
