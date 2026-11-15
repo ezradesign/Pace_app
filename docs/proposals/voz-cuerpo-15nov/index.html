@@ -1,0 +1,411 @@
+<title>Voz en Mueve y Estira</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de papel y tinta, como las demás páginas de propuestas: el runner de verdad en cada
+   momento en que hablaría la voz, y las siete preguntas con su recomendada. Terracota = lo que espera
+   a Ez; oliva = lo recomendado y lo que se oiría. */
+:root{
+  --paper:#F2EDE0;--card:#FBF8F1;
+  --ink:#1F1C17;--ink-2:#4A453C;--ink-3:#77705F;
+  --line:#C9C0A8;
+  --olive:#3E5A3A;--olive-soft:rgba(62,90,58,.12);
+  --terra:#A85E43;--terra-soft:rgba(168,94,67,.12);
+  --display:'EB Garamond',Georgia,'Times New Roman',serif;
+  --ui:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:ui-monospace,'Cascadia Mono',Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+main{max-width:880px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 72px}
+h1,h2,h3{font-family:var(--display);font-style:italic;font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(32px,6vw,44px)}
+h2{font-size:clamp(23px,4vw,28px);margin:44px 0 10px;padding-top:22px;border-top:1px solid var(--line)}
+h3{font-size:21px;margin:0 0 6px}
+p{margin:0 0 12px;color:var(--ink-2);max-width:68ch}
+ul{margin:0 0 14px;padding-left:20px;color:var(--ink-2);max-width:68ch}
+li{margin-bottom:6px}
+strong{color:var(--ink);font-weight:500}
+code{font-family:var(--mono);font-size:.86em;background:var(--card);border:1px solid var(--line);border-radius:4px;padding:0 4px;word-break:break-word}
+a{color:var(--olive)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--olive);outline-offset:2px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.lead{font-family:var(--display);font-size:21px;color:var(--ink);max-width:62ch;margin-top:14px}
+.nota{font-size:13px;color:var(--ink-3)}
+.rec{color:var(--olive)}
+
+/* Lo que se oiría, fotograma a fotograma */
+.cuadros{display:grid;gap:18px 14px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));margin:16px 0 8px}
+.cuadro{min-width:0;margin:0}
+.cuadro img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:8px}
+.cuadro .oye{display:block;font-family:var(--display);font-style:italic;font-size:20px;line-height:1.2;color:var(--olive);margin-top:8px}
+.cuadro .hoy{display:block;font-size:12px;color:var(--ink-3);margin-top:2px}
+.cuadro .que{display:block;font-size:13px;color:var(--ink-2);margin-top:4px}
+
+/* Las preguntas */
+.pregunta{border-left:3px solid var(--terra);padding:2px 0 2px 16px;margin:26px 0 8px}
+.pregunta > p{margin-bottom:10px}
+.ops{display:grid;gap:10px;margin:12px 0}
+.op{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:start}
+.op .letra{font-family:var(--display);font-size:22px;line-height:1;color:var(--ink-3);padding-top:2px}
+.op .txt{min-width:0}
+.op .txt p{margin:0 0 4px;font-size:15px}
+.op .txt p:last-child{margin-bottom:0}
+.op.es-rec{border-color:var(--olive);background:linear-gradient(var(--olive-soft),var(--olive-soft)),var(--card)}
+.op.es-rec .letra{color:var(--olive)}
+.chip{display:inline-block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--olive);border:1px solid var(--olive);border-radius:999px;padding:1px 8px;margin-left:6px;vertical-align:2px}
+.cuenta{font-size:13px;color:var(--ink-3)}
+.fotos{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));margin:14px 0}
+.fotos figure{margin:0;min-width:0}
+.fotos img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:8px}
+figcaption{font-size:13px;color:var(--ink-3);margin-top:6px}
+figcaption b{color:var(--ink-2);font-weight:500}
+
+/* Tablas */
+.tabla{overflow-x:auto;margin:12px 0 16px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:8px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{font-weight:500;color:var(--ink);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+td{color:var(--ink-2)}
+td.voz{font-family:var(--display);font-style:italic;font-size:17px;color:var(--olive);white-space:nowrap}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* Los prompts */
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;margin:10px 0;padding:0 14px}
+summary{cursor:pointer;padding:12px 0;font-weight:500;color:var(--ink)}
+details[open] summary{border-bottom:1px solid var(--line);margin-bottom:10px}
+.prompt{position:relative;margin:0 0 14px}
+.prompt h4{font-family:var(--display);font-style:italic;font-weight:400;font-size:18px;margin:0 0 4px;color:var(--ink)}
+.prompt pre{margin:0;white-space:pre-wrap;word-break:break-word;font-family:var(--mono);font-size:12.5px;line-height:1.5;color:var(--ink-2);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 12px 10px}
+.copiar{font:500 12px var(--ui);color:var(--olive);background:transparent;border:1px solid var(--olive);border-radius:999px;padding:2px 10px;cursor:pointer;margin-left:8px;vertical-align:2px}
+.resumen{background:var(--olive-soft);border-radius:10px;padding:14px 16px;margin:18px 0;color:var(--ink);max-width:68ch}
+.resumen p{color:var(--ink)}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto}}
+</style>
+
+<main>
+  <div class="eyebrow">PACE · diseño, sin montar · 15 nov. 2026, sobre la 0.205.0</div>
+  <h1>Voz en Mueve y Estira</h1>
+  <p class="lead">Que el runner de Mueve y Estira se pueda seguir sin mirar: la voz de Respira dice qué toca y cuenta, y el móvil vibra al ritmo. Son siete preguntas, cada una con su recomendada. Con las recomendadas, 132 audios cortos que puedes hacer en cuatro tandas.</p>
+  <p>Lo pediste hoy: «Esto ya lo podemos diseñar: Voz en Mueve y Estira, y vibración al ritmo de las repeticiones». Estaba en «Después de v1». Aquí está solo el diseño y los prompts para Genspark. No hay nada montado, y lo pintado sobre la app no se ha guardado.</p>
+
+  <h2>Lo que hay hoy</h2>
+  <p><strong>Respira habla.</strong> Dos voces, «Voz clara» (sulafat) y «Voz grave» (bradford), dicen «Inhala», «Mantén», «Exhala» y «Más», en castellano y en inglés: 16 audios. Se elige en Ajustes, en la fila «Marca la fase»: Tono, Voz clara o Voz grave. Nunca suenan el tono y la voz a la vez: si una palabra no cabe en su fase, suena el tono.</p>
+  <p><strong>Mueve y Estira ya se siguen por el oído, pero sin voz.</strong> Cada momento tiene su cuenco o su madera:</p>
+  <div class="tabla"><table>
+    <thead><tr><th>Momento</th><th>Hoy suena</th></tr></thead>
+    <tbody>
+      <tr><td>Empieza un ejercicio</td><td>un cuenco</td></tr>
+      <tr><td>Acaba la cuenta de colocarse o de cambiar de lado</td><td>un cuenco agudo, el «¡ya!»</td></tr>
+      <tr><td>Cambia de lado</td><td>dos cuencos</td></tr>
+      <tr><td>Descanso</td><td>un cuenco grave</td></tr>
+      <tr><td>Cada repetición guiada</td><td>una madera suave</td></tr>
+      <tr><td>Los tres últimos segundos de cualquier cuenta</td><td>una madera por segundo</td></tr>
+      <tr><td>Fin de la rutina</td><td>tres cuencos</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>No hay música en Mueve y Estira.</strong> «Suena detrás» solo suena en Respira, y Ajustes lo dice («La música, solo en Respira»).</p>
+  <p><strong>No vibra nada</strong>, en ningún sitio de la app.</p>
+  <div class="fotos">
+    <figure><img src="fotos/a0-hoy.jpg" alt="Ajustes hoy a 360 por 640: Sonido, Marca la fase con Voz clara, Suena detrás con La música, solo en Respira" loading="lazy"><figcaption><b>Hoy</b> · Ajustes a 360 × 640: «Marca la fase» solo manda en Respira</figcaption></figure>
+  </div>
+
+  <h2>Así sonaría una rutina</h2>
+  <p>Con las recomendadas, la voz dice lo que ya dice la pantalla, en el momento en que hoy suena un cuenco o una madera. Debajo de cada foto, lo que se oiría y lo que suena hoy. Son «Levántate y sube» (Mueve), «Cuello suave» (Estira, por lados) y «Hombros» (Estira, un aguante), a 360 × 640.</p>
+  <div class="cuadros">
+    <figure class="cuadro"><img src="fotos/r1-cuenta.jpg" alt="Runner de Levántate y sube en Colócate, Sentadilla a silla, con la cuenta en 3 para empezar" loading="lazy">
+      <span class="oye">«Colócate» … «Tres, dos, uno» … «Ya»</span><span class="hoy">Hoy: cuenco, tres maderas y el cuenco agudo</span></figure>
+    <figure class="cuadro"><img src="fotos/r3-reps.jpg" alt="Sentadilla a silla en la repetición 2 de 5" loading="lazy">
+      <span class="oye">«Uno»</span><span class="hoy">Hoy: madera suave</span>
+      <span class="que">Acaba la primera. La pantalla ya enseña la 2: la voz cuenta la que acabas, como quien cuenta en voz alta.</span></figure>
+    <figure class="cuadro"><img src="fotos/r4-descanso.jpg" alt="Descanso de 29 segundos, luego Sentadilla a silla" loading="lazy">
+      <span class="oye">«Descansa»</span><span class="hoy">Hoy: cuenco grave</span></figure>
+    <figure class="cuadro"><img src="fotos/r5-descanso-321.jpg" alt="Descanso en 2 segundos, con Prepárate para seguir" loading="lazy">
+      <span class="oye">«Dos»</span><span class="hoy">Hoy: madera</span>
+      <span class="que">Del «tres, dos, uno» del final. Luego, en la otra serie, «Ya».</span></figure>
+    <figure class="cuadro"><img src="fotos/r6-ultimo.jpg" alt="Paso 7 de 7, Elevación de talones, con Último paso en la línea de abajo" loading="lazy">
+      <span class="oye">«Último paso»</span><span class="hoy">Hoy: cuenco</span>
+      <span class="que">Es lo que pone abajo. Al acabar, los tres cuencos de siempre.</span></figure>
+    <figure class="cuadro"><img src="fotos/l1-colocate-lado.jpg" alt="Cuello suave, Inclinación de cuello en Colócate, Empiezas por: Izquierda" loading="lazy">
+      <span class="oye">«Colócate»</span><span class="hoy">Hoy: cuenco</span></figure>
+    <figure class="cuadro"><img src="fotos/l2-izquierda.jpg" alt="Inclinación de cuello, lado izquierdo, 10 segundos" loading="lazy">
+      <span class="oye">«Izquierda»</span><span class="hoy">Hoy: cuenco agudo</span>
+      <span class="que">En lugar de «Ya»: la misma palabra que abre el texto.</span></figure>
+    <figure class="cuadro"><img src="fotos/l3-cambia.jpg" alt="Cambia de lado, Ahora: Derecha, 8 para empezar" loading="lazy">
+      <span class="oye">«Cambia de lado»</span><span class="hoy">Hoy: dos cuencos</span></figure>
+    <figure class="cuadro"><img src="fotos/l4-derecha.jpg" alt="Inclinación de cuello, lado derecho, 10 segundos" loading="lazy">
+      <span class="oye">«Derecha»</span><span class="hoy">Hoy: cuenco agudo</span></figure>
+    <figure class="cuadro"><img src="fotos/h1-aguante-321.jpg" alt="Deslizamientos en pared con 03 segundos" loading="lazy">
+      <span class="oye">«Tres»</span><span class="hoy">Hoy: madera</span>
+      <span class="que">Los tres últimos segundos de un paso con reloj.</span></figure>
+  </div>
+  <p class="nota">Si a una voz le falta un archivo, en ese momento suena el cuenco o la madera de hoy, como ya hace Respira. Por eso se puede montar por tandas.</p>
+
+  <h3 style="margin-top:22px">Lo que no dice</h3>
+  <ul>
+    <li><strong>Ni las colocaciones, ni las acciones, ni los «Cuídate».</strong> Siguen escritos en la pantalla. Serían más de 300 frases, y cada cambio de texto pediría regrabarlas.</li>
+    <li><strong>Ni «baja» o «sube» en las repeticiones.</strong> El dato guarda cuánto dura bajar, aguantar y subir, pero no en qué orden va cada movimiento: en Elevación de talones se sube primero. La voz estaría inventando la técnica.</li>
+    <li><strong>Ni ánimos</strong> («¡Muy bien!», «¡Ya casi!»), <strong>ni consejos de salud nuevos</strong>, ni minutos o logros al acabar.</li>
+    <li><strong>Ni «Pulsa ›».</strong> Sin «Auto», el cuenco agudo de hoy ya dice que la cuenta llegó a 0.</li>
+  </ul>
+
+  <h2>Las siete preguntas</h2>
+
+  <div class="pregunta">
+    <h3>1 · Qué dice al empezar cada ejercicio</h3>
+    <div class="ops">
+      <div class="op es-rec"><span class="letra">A</span><div class="txt">
+        <p><strong>«Colócate», «Siguiente» o «Ya», sin el nombre.</strong> <span class="chip">recomendada</span></p>
+        <p class="rec">La pantalla y el dibujo ya dicen cuál es, y al colocarte vas a mirar igual. Con los nombres serían 292 audios más.</p>
+        <p class="cuenta">«Colócate» si hay que colocarse; «Siguiente» si empieza otro ejercicio sin colocarse; «Ya» en la otra serie del mismo, tras el descanso. 132 audios en total.</p></div></div>
+      <div class="op"><span class="letra">B</span><div class="txt">
+        <p><strong>El nombre del ejercicio</strong> («Sentadilla a silla») en lugar de «Siguiente», y antes de «Colócate».</p>
+        <p class="cuenta">73 nombres: los 63 del catálogo y 10 que solo salen en «Tus rutinas». 424 audios, y cada nombre que cambie habría que regrabarlo con las dos voces y en los dos idiomas.</p></div></div>
+      <div class="op"><span class="letra">C</span><div class="txt">
+        <p><strong>Nada:</strong> al empezar suena el cuenco de siempre, y la voz solo cuenta y avisa.</p>
+        <p class="cuenta">124 audios.</p></div></div>
+    </div>
+  </div>
+
+  <div class="pregunta">
+    <h3>2 · Qué cuenta</h3>
+    <div class="ops">
+      <div class="op es-rec"><span class="letra">A</span><div class="txt">
+        <p><strong>Las repeticiones, una a una al acabarlas, y el «tres, dos, uno» del final de cada cuenta</strong>, en lugar de la madera. <span class="chip">recomendada</span></p>
+        <p class="rec">Es lo que hoy obliga a mirar el número, y los mismos 25 números sirven para las dos cosas.</p>
+        <p class="cuenta">La última repetición se dice entera y lo que viene después espera a que acabe la palabra.</p></div></div>
+      <div class="op"><span class="letra">B</span><div class="txt">
+        <p><strong>Solo las repeticiones.</strong> El «tres, dos, uno» sigue con madera.</p>
+        <p class="cuenta">Los mismos 132 audios.</p></div></div>
+      <div class="op"><span class="letra">C</span><div class="txt">
+        <p><strong>No cuenta:</strong> la madera como hoy, y la voz solo avisa de lo que cambia.</p>
+        <p class="cuenta">32 audios.</p></div></div>
+    </div>
+  </div>
+
+  <div class="pregunta">
+    <h3>3 · Los avisos de en medio y el final</h3>
+    <div class="ops">
+      <div class="op es-rec"><span class="letra">A</span><div class="txt">
+        <p><strong>«Izquierda», «Cambia de lado», «Derecha», «Descansa» y «Último paso».</strong> El final, con los tres cuencos de siempre. <span class="chip">recomendada</span></p>
+        <p class="rec">El lado hoy solo se lee; al acabar, los cuencos ya dicen «terminado» y la pantalla pregunta «¿Te ayudó?», que vas a mirar igual.</p></div></div>
+      <div class="op"><span class="letra">B</span><div class="txt">
+        <p><strong>Lo mismo, y el final también con voz:</strong> «Movimiento completado» o «Estiramiento completado», como dice la pantalla.</p>
+        <p class="cuenta">140 audios.</p></div></div>
+      <div class="op"><span class="letra">C</span><div class="txt">
+        <p><strong>Solo «Cambia de lado» y «Descansa».</strong> Sin lados ni «Último paso».</p>
+        <p class="cuenta">120 audios.</p></div></div>
+    </div>
+  </div>
+
+  <div class="pregunta">
+    <h3>4 · Cómo se enciende la voz</h3>
+    <div class="ops">
+      <div class="op es-rec"><span class="letra">A</span><div class="txt">
+        <p><strong>La misma fila de Ajustes, «Marca la fase», para Respira, Mueve y Estira</strong>, con una línea debajo que lo dice. De fábrica, como la tenga cada uno: hoy, «Voz clara». <span class="chip">recomendada</span></p>
+        <p class="rec">Es la misma decisión, tono o voz, y no añade ningún botón. Cuando dijiste «es demasiado menús», cinco controles se quedaron en dos.</p>
+        <p class="cuenta">Quien tenga la voz en Respira la oirá también en Mueve al actualizar. El interruptor «Sonido» lo sigue callando todo.</p></div></div>
+      <div class="op"><span class="letra">B</span><div class="txt">
+        <p><strong>Una fila propia, «Voz en Mueve y Estira»</strong>, apagada de fábrica.</p>
+        <p class="cuenta">Cabe sin scroll a 360 × 640 (569 px de 584). Son dos decisiones sobre lo mismo.</p></div></div>
+      <div class="op"><span class="letra">C</span><div class="txt">
+        <p><strong>Un botón «Voz» en el runner</strong>, junto a «Auto».</p>
+        <p class="cuenta">Cuando lo que sigue tiene un nombre largo, la fila pasa a dos líneas y mueve el runner entero, que tiene que quedarse quieto. Mira la tercera foto.</p></div></div>
+    </div>
+    <div class="fotos">
+      <figure><img src="fotos/a1-marca-todo.jpg" alt="Ajustes con la línea En Respira, Mueve y Estira debajo de Marca la fase" loading="lazy"><figcaption><b>A</b> · «En Respira, Mueve y Estira» debajo de «Marca la fase»</figcaption></figure>
+      <figure><img src="fotos/a2-fila-propia.jpg" alt="Ajustes con una fila nueva Voz en Mueve y Estira, apagada" loading="lazy"><figcaption><b>B</b> · una fila propia, apagada</figcaption></figure>
+      <figure><img src="fotos/r8-voz-nombre-largo.jpg" alt="Runner en un descanso con Siguiente: Sentadilla a silla, Auto y un botón Voz que baja a una segunda línea" loading="lazy"><figcaption><b>C</b> · «Voz» junto a «Auto»: con «Siguiente: Sentadilla a silla» baja a otra línea</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="pregunta">
+    <h3>5 · Qué vibra</h3>
+    <div class="ops">
+      <div class="op es-rec"><span class="letra">A</span><div class="txt">
+        <p><strong>Donde hoy suena algo:</strong> un toque corto en cada repetición y en el «tres, dos, uno»; uno medio al empezar; dos al cambiar de lado; uno largo al descansar; tres al acabar. <span class="chip">recomendada</span></p>
+        <p class="rec">Es lo que pediste, al ritmo de las repeticiones, y sigue el mismo mapa que los sonidos, así que se entiende sin explicarlo.</p></div></div>
+      <div class="op"><span class="letra">B</span><div class="txt">
+        <p><strong>Solo los cambios:</strong> empezar, cambiar de lado, descansar y acabar. Nada por repetición.</p></div></div>
+      <div class="op"><span class="letra">C</span><div class="txt">
+        <p><strong>Solo el ritmo:</strong> cada repetición y el «tres, dos, uno», nada más.</p></div></div>
+    </div>
+    <div class="tabla"><table>
+      <thead><tr><th>Momento (A)</th><th>Hoy suena</th><th>Android</th><th>iPhone</th></tr></thead>
+      <tbody>
+        <tr><td>Cada repetición y cada segundo del «tres, dos, uno»</td><td>madera</td><td class="num">un toque de 30 ms</td><td>toque ligero</td></tr>
+        <tr><td>Empieza un ejercicio, «Ya», un lado</td><td>cuenco</td><td class="num">uno de 70 ms</td><td>toque medio</td></tr>
+        <tr><td>Cambia de lado</td><td>dos cuencos</td><td class="num">60 · pausa 120 · 60 ms</td><td>dos toques medios</td></tr>
+        <tr><td>Descanso</td><td>cuenco grave</td><td class="num">uno de 250 ms</td><td>una vibración de 250 ms</td></tr>
+        <tr><td>Fin de la rutina</td><td>tres cuencos</td><td class="num">80 · 120 · 80 · 120 · 80 ms</td><td>el aviso de «hecho» del iPhone</td></tr>
+      </tbody>
+    </table></div>
+    <p class="nota">Las cifras son un punto de partida: se afinan con el móvil en la mano.</p>
+  </div>
+
+  <div class="pregunta">
+    <h3>6 · Cuándo vibra de fábrica</h3>
+    <div class="ops">
+      <div class="op es-rec"><span class="letra">A</span><div class="txt">
+        <p><strong>Una fila «Vibrar» en Sesiones con tres opciones: «No», «Sin sonido» y «Siempre».</strong> De fábrica, «Sin sonido»: vibra cuando apagas el sonido de PACE. <span class="chip">recomendada</span></p>
+        <p class="rec">Con sonido, vibrar repite la madera y en la mesa suena a zumbido; sin sonido, es lo único que marca el ritmo.</p>
+        <p class="cuenta">Con la línea de la pregunta 4, cabe sin scroll a 360 × 640 (577 px de 584).</p></div></div>
+      <div class="op"><span class="letra">B</span><div class="txt">
+        <p><strong>Un interruptor «Vibrar», apagado</strong> de fábrica.</p></div></div>
+      <div class="op"><span class="letra">C</span><div class="txt">
+        <p><strong>Un interruptor «Vibrar», encendido</strong> de fábrica.</p></div></div>
+    </div>
+    <div class="fotos">
+      <figure><img src="fotos/v1-vibrar-pildoras.jpg" alt="Ajustes con la fila Vibrar: No, Sin sonido, Siempre, marcada Sin sonido" loading="lazy"><figcaption><b>A</b> · «No · Sin sonido · Siempre», en Sesiones junto a lo de Mueve</figcaption></figure>
+      <figure><img src="fotos/v2-vibrar-apagado.jpg" alt="Ajustes con la fila Vibrar y un interruptor apagado" loading="lazy"><figcaption><b>B</b> · interruptor apagado</figcaption></figure>
+      <figure><img src="fotos/v3-vibrar-encendido.jpg" alt="Ajustes con la fila Vibrar y un interruptor encendido" loading="lazy"><figcaption><b>C</b> · interruptor encendido</figcaption></figure>
+    </div>
+    <p class="nota">Dos cosas al montarla. En el iPhone por la web la fila no sale, porque allí no se puede vibrar. Y si el navegador tiene los avisos bloqueados, Ajustes enseña una línea más («El navegador tiene las notificaciones bloqueadas…») y el panel correría 12 px: habrá que ganar ese sitio, por ejemplo acortando esa línea.</p>
+  </div>
+
+  <div class="pregunta">
+    <h3>7 · En qué móviles vibra</h3>
+    <div class="ops">
+      <div class="op es-rec"><span class="letra">A</span><div class="txt">
+        <p><strong>Android e iPhone.</strong> En las dos apps, con el complemento de vibración de Capacitor (Haptics); en Chrome de Android, con la vibración del navegador. En el iPhone por la web, nada. <span class="chip">recomendada</span></p>
+        <p class="rec">El iPhone está dentro de v1 desde el 22 oct., y sin el complemento no vibraría nunca.</p></div></div>
+      <div class="op"><span class="letra">B</span><div class="txt">
+        <p><strong>Solo Android:</strong> la app con el permiso de vibrar y Chrome, sin complemento. En el iPhone no vibra y la fila no sale.</p></div></div>
+    </div>
+    <p>Lo que se puede en cada sitio, comprobado en el código y en la documentación (no en un móvil):</p>
+    <div class="tabla"><table>
+      <thead><tr><th></th><th>Chrome en Android</th><th>App de Android</th><th>App de iPhone</th><th>iPhone por la web</th></tr></thead>
+      <tbody>
+        <tr><td><strong>¿Vibra hoy?</strong></td><td>Sí se puede, con <code>navigator.vibrate</code>, después de tocar la pantalla (empezar la rutina ya cuenta)</td><td>No: a la app le falta el permiso de vibrar (<code>android.permission.VIBRATE</code>), y sin él el navegador de dentro no vibra</td><td>No: el navegador del iPhone no tiene vibración</td><td>No, y no hay manera</td></tr>
+        <tr><td><strong>¿Qué hace falta?</strong></td><td>Nada más</td><td>El permiso. Lo trae el complemento Haptics, o una línea en el manifiesto</td><td>El complemento Haptics, que usa el motor háptico del iPhone</td><td>—</td></tr>
+        <tr><td><strong>¿Versión nueva?</strong></td><td>No</td><td>Sí, un AAB nuevo</td><td>Sí, una de TestFlight nueva</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+    <p class="nota">El complemento oficial (<code>@capacitor/haptics</code> 8) declara él mismo el permiso de vibrar en Android y, en el iPhone, vibra con Core Haptics. MDN avisa de que algunos móviles no vibran en silencio o con «No molestar».</p>
+  </div>
+
+  <h2>Con «Auto» y con la música</h2>
+  <p><strong>Con «Auto» encendido</strong>, que es como viene, todo lo de arriba.</p>
+  <p><strong>Con «Auto» apagado</strong>, las repeticiones van a tu ritmo, así que la voz no las cuenta y el móvil no vibra por repetición (hoy tampoco suena la madera). Las cuentas de colocarse, cambiar de lado, aguantar y descansar dicen «tres, dos, uno» igual; al llegar a 0 suena el cuenco agudo de hoy y la rutina espera a «›»; al tocarlo, la voz dice «Ya», o el lado.</p>
+  <p><strong>En pausa</strong>, la voz calla. Al reanudar, el «3, 2, 1» de la vuelta también va con voz.</p>
+  <p><strong>Con la música:</strong> PACE no pone música en Mueve y Estira, así que no hay nada que mezclar. Con la tuya (Spotify, la radio), la voz saldría por el mismo camino que los cuencos de hoy y haría lo mismo que ellos. Lo que hacen los cuencos con tu música en el móvil no se puede saber desde aquí: abajo está la prueba de un minuto.</p>
+
+  <h2>Los audios</h2>
+  <p>Con las recomendadas son <strong>33 por voz y por idioma</strong>: ocho frases y los números del uno al veinticinco (la serie más larga del catálogo es de 25). Con las dos voces y los dos idiomas, <strong>132</strong>. Las mismas voces que Respira, para que suene a PACE.</p>
+  <div class="tabla"><table>
+    <thead><tr><th>Castellano</th><th>Inglés</th><th>Cuándo</th><th>Dura como mucho</th></tr></thead>
+    <tbody>
+      <tr><td class="voz">Colócate</td><td class="voz">Get set</td><td>ejercicio nuevo que pide colocarse</td><td class="num">1,5 s</td></tr>
+      <tr><td class="voz">Siguiente</td><td class="voz">Next</td><td>ejercicio nuevo sin colocarse</td><td class="num">1,5 s</td></tr>
+      <tr><td class="voz">Ya</td><td class="voz">Go</td><td>acaba la cuenta de colocarse; otra serie</td><td class="num">0,85 s</td></tr>
+      <tr><td class="voz">Último paso</td><td class="voz">Last step</td><td>el último paso de la rutina</td><td class="num">1,5 s</td></tr>
+      <tr><td class="voz">Izquierda · Derecha</td><td class="voz">Left · Right</td><td>empieza cada lado</td><td class="num">1,5 s</td></tr>
+      <tr><td class="voz">Cambia de lado</td><td class="voz">Switch sides</td><td>cambio de lado</td><td class="num">2 s</td></tr>
+      <tr><td class="voz">Descansa</td><td class="voz">Rest</td><td>descanso</td><td class="num">1,5 s</td></tr>
+      <tr><td class="voz">Uno … Veinticinco</td><td class="voz">One … Twenty-five</td><td>cada repetición; «tres, dos, uno»</td><td class="num">0,85 s del uno al tres; 1,5 s los demás</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>Por tandas, cada una funciona sola:</strong> 1) sulafat en castellano, la de fábrica, la que oye casi todo el mundo; 2) bradford en castellano; 3) sulafat en inglés; 4) bradford en inglés. Si se te hace largo, los números pueden ir de cinco en cinco en un archivo: la tanda baja de 33 a 13 y el total de 132 a 52, y Claude mide cada número dentro sin cortar nada.</p>
+  <div class="tabla"><table>
+    <thead><tr><th>Si eliges</th><th>Por voz e idioma</th><th>En total</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Las recomendadas</strong></td><td class="num">33</td><td class="num">132</td></tr>
+      <tr><td>1B · con el nombre de cada ejercicio</td><td class="num">106</td><td class="num">424</td></tr>
+      <tr><td>1C · al empezar, el cuenco</td><td class="num">31</td><td class="num">124</td></tr>
+      <tr><td>2C · sin contar</td><td class="num">8</td><td class="num">32</td></tr>
+      <tr><td>3B · el final también con voz</td><td class="num">35</td><td class="num">140</td></tr>
+      <tr><td>3C · sin lados ni «Último paso»</td><td class="num">30</td><td class="num">120</td></tr>
+    </tbody>
+  </table></div>
+  <p>Los nombres de archivo, lo que tiene que cumplir cada uno, la carpeta donde dejarlos y todos los prompts están en <a href="PROMPTS_VOZ_CUERPO.md"><code>PROMPTS_VOZ_CUERPO.md</code></a>, en esta misma carpeta del repo (<code>docs/proposals/voz-cuerpo-15nov/</code>). Aquí tienes los de castellano para copiarlos:</p>
+
+  <details>
+    <summary>Los prompts de castellano para Genspark</summary>
+    <p class="nota">Con sulafat y con bradford, el mismo prompt. Archivo: <code>sulafat-colocate.mp3</code>, <code>bradford-colocate.mp3</code>, y así. En una herramienta sin instrucciones de estilo, pega solo la palabra con su punto.</p>
+    <div class="prompt"><h4>Colócate · <code>VOZ-colocate.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. One single word, no breath before it, no pause before it, gentle and inviting, under one and a half seconds: Colócate.</pre></div>
+    <div class="prompt"><h4>Siguiente · <code>VOZ-siguiente.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. One single word, no breath before it, no pause before it, neutral, like announcing the next movement, under one and a half seconds: Siguiente.</pre></div>
+    <div class="prompt"><h4>Ya · <code>VOZ-ya.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. One single very short word, no breath before it, no pause before it, calm but decisive, like a soft signal to begin, well under one second: Ya.</pre></div>
+    <div class="prompt"><h4>Último paso · <code>VOZ-ultimo-paso.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. Two words said together without a pause, no breath before them, neutral and without excitement, under one and a half seconds: Último paso.</pre></div>
+    <div class="prompt"><h4>Izquierda · <code>VOZ-izquierda.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. One single word, no breath before it, no pause before it, clear and neutral, under one and a half seconds: Izquierda.</pre></div>
+    <div class="prompt"><h4>Derecha · <code>VOZ-derecha.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. One single word, no breath before it, no pause before it, clear and neutral, under one and a half seconds: Derecha.</pre></div>
+    <div class="prompt"><h4>Cambia de lado · <code>VOZ-cambia-de-lado.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. A short instruction of three words said together without pauses, no breath before it, unhurried, under two seconds: Cambia de lado.</pre></div>
+    <div class="prompt"><h4>Descansa · <code>VOZ-descansa.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. One single word, no breath before it, no pause before it, a little softer, like letting the body settle, but under one and a half seconds: Descansa.</pre></div>
+    <div class="prompt"><h4>Los números, uno por archivo · <code>VOZ-uno.mp3</code> … <code>VOZ-veinticinco.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. One single number, said evenly, like counting repetitions for someone moving slowly, no breath before it, no pause before it, the same steady tone every time, not rising and not falling at the end, well under one second: Uno.</pre>
+      <p class="nota" style="margin-top:6px">Cambia solo el número del final, con letra y con su punto: Dos., Tres., … Veinticinco. Sin tildes en el nombre del archivo: <code>dieciseis</code>, <code>veintidos</code>, <code>veintitres</code>. «Uno», «Dos» y «Tres» tienen que durar menos de 0,85 s: van un segundo detrás de otro.</p></div>
+  </details>
+  <p class="nota">Los de inglés, la versión de cinco en cinco y la lista de los 73 nombres por si eliges 1B están en el archivo.</p>
+
+  <h2>Lo que no se puede saber sin un móvil</h2>
+  <p><strong>Una prueba de un minuto que puedes hacer ya</strong>, con la app de hoy: pon música en el móvil (Spotify o lo que uses) y haz «Levántate y sube» con el sonido de PACE puesto. ¿La música sigue, baja o se corta con los cuencos? En Android y, si puedes, en el iPhone, y en el iPhone también con el botón de silencio puesto: ¿suenan los cuencos? La voz hará lo mismo que ellos.</p>
+  <ul>
+    <li>Si los toques de 30 ms se notan en tu móvil, en la mano, en el bolsillo y encima de la mesa, o hay que alargarlos.</li>
+    <li>Si Android vibra en silencio o con «No molestar», y si el ajuste de vibración al tocar la apaga.</li>
+    <li>Si en el iPhone, con la vibración del sistema apagada, los toques se callan.</li>
+    <li>Si la voz se entiende con el móvil en el suelo, a uno o dos metros, con el volumen normal.</li>
+    <li>Cuánto tarda la primera palabra en un móvil lento. Se precargaría en la cuenta de entrada, como en Respira.</li>
+  </ul>
+
+  <h2>Cuánto trabajo es montarlo después</h2>
+  <div class="tabla"><table>
+    <thead><tr><th>Pieza</th><th>Trabajo</th></tr></thead>
+    <tbody>
+      <tr><td>La voz en el runner: cada momento con su palabra, el número de cada repetición, «Último paso», y que la última repetición no pise lo que viene</td><td>una sesión. El runner roza las 500 líneas, así que va en un archivo aparte, y las tablas de los audios aparte de las de Respira</td></tr>
+      <tr><td>Medir e igualar cada tanda de audios</td><td>media sesión por tanda, con el guion de Respira adaptado</td></tr>
+      <tr><td>Ajustes: la línea de «Marca la fase» y la fila «Vibrar», medidas a 360 × 640</td><td>media sesión</td></tr>
+      <tr><td>La vibración y el complemento Haptics en las dos apps</td><td>media sesión, más un AAB y una de TestFlight nuevos, que hace GitHub</td></tr>
+      <tr><td>Pruebas: cada palabra en su momento con el reloj acelerado, sin «Auto» no cuenta, la vibración se pide, en el iPhone por la web la fila no sale</td><td>media sesión</td></tr>
+      <tr><td>Probarlo tú en los dos móviles</td><td>15 minutos</td></tr>
+    </tbody>
+  </table></div>
+  <p>Unas tres sesiones en total, más tus tandas de audio. La vibración no depende de los audios: se puede montar antes.</p>
+
+  <h2>Las preguntas, de un vistazo</h2>
+  <div class="tabla"><table>
+    <thead><tr><th></th><th>Pregunta</th><th>Recomendada</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>Qué dice al empezar cada ejercicio</td><td><strong>A</strong> · «Colócate», «Siguiente» o «Ya», sin el nombre</td></tr>
+      <tr><td class="num">2</td><td>Qué cuenta</td><td><strong>A</strong> · las repeticiones y el «tres, dos, uno»</td></tr>
+      <tr><td class="num">3</td><td>Los avisos de en medio y el final</td><td><strong>A</strong> · los lados, «Descansa» y «Último paso»; el final con los cuencos</td></tr>
+      <tr><td class="num">4</td><td>Cómo se enciende la voz</td><td><strong>A</strong> · la misma «Marca la fase», con una línea debajo</td></tr>
+      <tr><td class="num">5</td><td>Qué vibra</td><td><strong>A</strong> · donde hoy suena algo, también cada repetición</td></tr>
+      <tr><td class="num">6</td><td>Cuándo vibra de fábrica</td><td><strong>A</strong> · «No · Sin sonido · Siempre», de fábrica «Sin sonido»</td></tr>
+      <tr><td class="num">7</td><td>En qué móviles vibra</td><td><strong>A</strong> · Android e iPhone, con el complemento</td></tr>
+    </tbody>
+  </table></div>
+  <div class="resumen">
+    <p><strong>Con todas en A:</strong> 132 audios cortos (33 por voz y por idioma, en cuatro tandas), unas tres sesiones de trabajo y una versión nueva de las dos apps por la vibración. Contesta como siempre, por ejemplo «1A 2A 3A 4A 5A 6A 7A».</p>
+  </div>
+  <div class="fotos">
+    <figure><img src="fotos/a3-recomendada.jpg" alt="Ajustes con las dos recomendadas: la línea En Respira, Mueve y Estira y la fila Vibrar en Sin sonido" loading="lazy"><figcaption><b>4A y 6A juntas</b> · lo único que cambia a la vista, sin scroll a 360 × 640</figcaption></figure>
+  </div>
+</main>
+
+<script>
+/* Copiar un prompt: el portapapeles solo se escribe dentro del clic, y si la vista no lo deja se
+   selecciona el texto para copiarlo a mano. */
+document.querySelectorAll('.copiar').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var pre = b.closest('.prompt').querySelector('pre');
+    var texto = pre.textContent;
+    var hecho = function () { b.textContent = 'Copiado'; setTimeout(function () { b.textContent = 'Copiar'; }, 1600); };
+    var aMano = function () {
+      try { var r = document.createRange(); r.selectNodeContents(pre); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Seleccionado'; } catch (e) {}
+    };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(texto).then(hecho, aMano);
+      else aMano();
+    } catch (e) { aMano(); }
+  });
+});
+</script>
