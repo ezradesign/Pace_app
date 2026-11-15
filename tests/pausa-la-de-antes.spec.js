@@ -69,7 +69,9 @@ test('por libre: la última rutina acabada sale en su fila y entra en ella', asy
   await expect(fila, 'no salió la de antes').toHaveCount(1);
   await expect(fila).toHaveAttribute('data-pace-break-antes', 'move.desk.quick');
   await expect(fila).toContainText('Escritorio express');
-  await expect(fila).toContainText('la de antes, 2 min');
+  /* Los mismos minutos que su tarjeta y su ficha (routineCifraMin; antes, el `min` del catálogo, «2»). */
+  const cifra = await page.evaluate(() => routineCifraMin(getExtraRoutine('move.desk.quick'), getState().restBetweenSets));
+  await expect(fila).toContainText('la de antes, ' + cifra + ' min');
   /* Debajo de las otras puertas, y la propuesta es otra rutina. */
   await expect(modal(page).locator('[data-pace-break-prop]')).not.toContainText('Escritorio express');
   const m = await medir(page);
