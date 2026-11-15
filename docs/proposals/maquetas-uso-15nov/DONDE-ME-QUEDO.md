@@ -5,7 +5,7 @@ Encargo de la coordinadora tras las letras de Ez («1A + 2A + 3A + 4B con la met
 ## Hecho y subido
 - **Paso 1, la 4 otra vuelta**: tres variantes pintadas y medidas (recomendada la A: «Gracias. Si no me dices por qué, no te la propondré durante una semana. Deshacer» + «¿Por qué? Aquí no podía · Difícil · Me molestó»). Página republicada con lo elegido marcado: https://claude.ai/artifact/U8L5AgXmWcbBrT8Tp7Zrx2 (commit df4a5530). **Espera la letra de Ez.**
 - **5A, «la de antes»**: montada (`breakLaDeAntes` en `app/breakmenu/BreakMenu.support.jsx`, `BreakAntes` en `BreakMenu.ritmo.jsx`, fila en las dos ventanas, `break.antes` en es/en, censo i18n a 1193). `tests/pausa-la-de-antes.spec.js`: 4 en verde en el 8825; los dos mutantes (sin veto, función a null) caen. `verify` pasa. `index.html` compilado con la 5A.
-- Las vecinas de la pausa se lanzaron con `--workers=1` en el 8825 (salida en el scratchpad de la sesión, `vecinas5.txt`): **el resultado no se llegó a leer**. Repetirlas.
+- Las vecinas de la pausa, con `--workers=1` en el 8825 y la 5A compilada: **77 de 77 en verde** (5,0 min): pausa-*, ritmo-pausa*, ritmo-tras-la-pausa, feedback-una-semana y la nueva.
 
 ## Escrito, SIN compilar ni probar
 - **1A + 2A, el aviso a la hora de entrada**: `app/ui/nativo.entrada.js` (nuevo, cargado en `PACE.html` tras `nativo.js`), interruptor en `RitmoSemanaHoja` (`RitmoSemanaTipo.jsx`, solo nativo, guarda `ritmo.avisoEntrada`), textos `notify.entrada.*`, `notify.canal.entrada*`, `ritmo.st.aviso.*` (8 claves nuevas por idioma: **subir el censo a 1201**). Prueba: `tests/aviso-entrada.spec.js`.
