@@ -56,7 +56,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     : routine;
 
   /* Una rutina a medias sigue por su paso, con lo hecho (MoveSessionV1.reanudar.jsx). */
-  const [rein] = useStateV1(() => cuerpoReanudacion(routine, reanudar));
+  const [rein] = useStateV1(() => (v1VozPrecarga(), cuerpoReanudacion(routine, reanudar)));   // la voz se carga ya, antes del 3, 2, 1
   const [stage, setStage] = useStateV1('prep');    // 'prep' | 'run' | 'done'
   const [prepCount, setPrepCount] = useStateV1(V1_PREP_SECONDS); // s113: prep 5 s (antes 3)
   const [stepIdx, setStepIdx] = useStateV1(rein.step);
@@ -175,7 +175,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     // con el default s113 (10 s) si el paso no la declara.
     setPhase('change'); setElapsed(0); setChangeLeft(v1TransitionSeconds(step)); totalesRef.current.change = v1TransitionSeconds(step);
     // Dos cuencos, agudo y grave: el gesto de «giro». Silencio si soundOn está apagado.
-    try { playSound('move.side'); } catch (e) {}
+    try { playSound('move.side', v1VozLado()); } catch (e) {}
   };
   // Salida anticipada de reps guiadas: acredita solo las reps ya guiadas.
   const darSerie = (reps) => { repsGuidedRef.current += reps; hechosRef.current[stepIdx] = true; seriesRef.current += 1; };
@@ -203,7 +203,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   // La cuenta de la preparación también suena a madera en sus 3 últimos segundos. Va aparte, con
   // [prepCount] solo: con [paused] en las dependencias sonaría otra vez al pausar y reanudar.
   useEffectV1(() => {
-    if (stage === 'prep' && prepCount > 0 && prepCount <= 3) { try { playSound('move.warn'); } catch (e) {} }
+    if (stage === 'prep' && prepCount > 0 && prepCount <= 3) { try { playSound('move.warn', v1VozCuenta(prepCount)); } catch (e) {} }
   }, [prepCount]);
 
   // Relojes por fase — patrón s113: los intervalos SOLO decrementan/incrementan
@@ -221,7 +221,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   useSesionAlOcultar(stage === 'run', vuelta.pausar); // s200: politica en SESION_AL_OCULTAR
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'place') return;
-    if (placeLeft > 0 && placeLeft <= 3) { try { playSound('move.warn'); } catch (e) {} }
+    if (placeLeft > 0 && placeLeft <= 3) { try { playSound('move.warn', v1VozCuenta(placeLeft)); } catch (e) {} }
   }, [placeLeft]);
   // Al llegar a 0 empieza solo; sin Auto, espera a «›», y si se enciende Auto ahí, sigue. En pausa,
   // encender Auto solo cambia la preferencia: lo que toque pasa al reanudar.
@@ -259,10 +259,10 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
       // y la madera corren igual; los 5 pilotos son guided → comportamiento intacto.
       const guided = v1CompletionMode(step) !== 'manual';
       if (guided && elapsed >= v1RepTarget(step) * repSec) {
-        darSerie(v1RepTarget(step));
+        darSerie(v1RepTarget(step)); try { playSound('move.rep', v1VozRep(v1RepTarget(step), repSec, true)); } catch (e) {}
         advanceStep();
       } else if (suena && elapsed % repSec === 0) {
-        try { playSound('move.rep'); } catch (e) {}
+        try { playSound('move.rep', v1VozRep(elapsed / repSec, repSec)); } catch (e) {}
       }
       return;
     }
@@ -270,7 +270,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     const effDur = v1StepDur(step);
     // Los últimos 3 segundos de cada paso con reloj y de cada descanso suenan a madera, uno
     // por segundo, para seguir la rutina sin mirar (opción A). Silencio si soundOn está apagado.
-    if (suena && effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) { try { playSound('move.warn'); } catch (e) {} }
+    if (suena && effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) { try { playSound('move.warn', v1VozCuenta(effDur - elapsed)); } catch (e) {} }
     if (elapsed >= effDur) {
       if (!auto) {
         // Sin Auto la cuenta se queda en 0 y suena una vez: lo que sigue lo decide «›».
@@ -289,7 +289,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   useRelojSesion(stage === 'run' && phase === 'change' && !paused, n => setChangeLeft(c => Math.max(0, c - n)), [stepIdx]);
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'change') return;
-    if (changeLeft > 0 && changeLeft <= 3) { try { playSound('move.warn'); } catch (e) {} }
+    if (changeLeft > 0 && changeLeft <= 3) { try { playSound('move.warn', v1VozCuenta(changeLeft)); } catch (e) {} }
   }, [changeLeft]);
   useEffectV1(() => {
     if (stage === 'run' && phase === 'change' && changeLeft <= 0 && auto && !paused) onSideReady();
@@ -305,14 +305,14 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   useEffectV1(() => { if (stage === 'done') { try { playSound('move.end'); } catch(e) {} } }, [stage]);
   useEffectV1(() => {
     if (stage !== 'run' || !step) return;
-    try { playSound(step.mode === 'rest' ? 'move.rest' : 'move.start'); } catch (e) {}
+    try { playSound(step.mode === 'rest' ? 'move.rest' : 'move.start', v1VozEntrada(routine, stepIdx, phase)); } catch (e) {}
   }, [stage, stepIdx]);
   const faseAntes = useRefV1({ phase, stepIdx });
   useEffectV1(() => {
     const antes = faseAntes.current;
     faseAntes.current = { phase, stepIdx };
     if (stage !== 'run' || phase !== 'work' || antes.stepIdx !== stepIdx) return;
-    if (antes.phase === 'place' || antes.phase === 'change') { try { playSound('move.go'); } catch (e) {} }
+    if (antes.phase === 'place' || antes.phase === 'change') { try { playSound('move.go', v1VozGo(step, side)); } catch (e) {} }
   }, [phase, stepIdx]);
 
   // s115 · dev-check: duración declarada vs calculada (sólo dev; una vez por

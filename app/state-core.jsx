@@ -78,6 +78,7 @@ const defaultState = {
   restBetweenSets: 30,
   // «Auto» de Mueve y Estira (Ez, 1A del 25 oct.): apagado, cada paso espera a «›».
   cuerpoAuto: true,
+  vibrar: 'sinSonido',   // «Vibrar» en Mueve y Estira (Ez, 6A del 15 nov.): 'no' · 'sinSonido' (de fábrica) · 'siempre'
 
   // Aviso de fin de Pomodoro vía notificación del navegador (s102 · PWA).
   // B1.2 (s108): ON por defecto (opt-out en Ajustes). El permiso del navegador

@@ -73,7 +73,7 @@ function useV1Vuelta(paused, setPaused) {
   const [cuenta, setCuenta] = React.useState(null);   // 3, 2, 1 al volver; null si no se vuelve
   React.useEffect(() => {
     if (cuenta == null) return undefined;
-    try { playSound('move.warn'); } catch (e) {}
+    try { playSound('move.warn', v1VozCuenta(cuenta)); } catch (e) {}
     const to = setTimeout(() => {
       if (cuenta > 1) setCuenta(cuenta - 1);
       else { setCuenta(null); setPaused(false); }

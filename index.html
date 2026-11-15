@@ -3887,6 +3887,12 @@ Object.assign(window.PACE_STRINGS.es, {
 
   'settings.signal.escuchar': 'Escuchar',
   'settings.bg.music.nota': 'La música, solo en Respira',
+  'settings.signal.nota': 'En Respira, Mueve y Estira',
+  'settings.vibrar': 'Vibrar',
+  'settings.vibrar.sub': 'Mueve y Estira',
+  'settings.vibrar.no': 'No',
+  'settings.vibrar.sinSonido': 'Sin sonido',
+  'settings.vibrar.siempre': 'Siempre',
 
 
   'settings.notify': 'Aviso al terminar',
@@ -3990,6 +3996,12 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.bg.music': 'Music',
   'settings.signal.escuchar': 'Listen',
   'settings.bg.music.nota': 'Music plays only in Breathe',
+  'settings.signal.nota': 'In Breathe, Move and Stretch',
+  'settings.vibrar': 'Vibrate',
+  'settings.vibrar.sub': 'Move and Stretch',
+  'settings.vibrar.no': 'Never',
+  'settings.vibrar.sinSonido': 'Sound off',
+  'settings.vibrar.siempre': 'Always',
 
 
   'settings.notify': 'Alert at the end',
@@ -7535,6 +7547,7 @@ const defaultState = {
   restBetweenSets: 30,
 
   cuerpoAuto: true,
+  vibrar: 'sinSonido',
 
 
 
@@ -22909,7 +22922,13 @@ function playSound(name) {
   var args = Array.prototype.slice.call(arguments, 1);
   try {
     var s = typeof getState === 'function' ? getState() : null;
+
+
+    var op = args[0] && typeof args[0] === 'object' ? args[0] : null;
+    if (name.indexOf('move.') === 0 && !(op && op.soloVoz) && typeof window.paceVibra === 'function') window.paceVibra(name, s);
     if (!s || !s.soundOn) return;
+    if (op && op.voz && typeof window.paceVozCuerpoIntenta === 'function' && window.paceVozCuerpoIntenta(op.voz, op.max)) return;
+    if (op && op.soloVoz) return;
 
 
 
@@ -23452,6 +23471,175 @@ Object.assign(window, {
   paceVozIntenta: paceVozIntenta
 });
 ;Object.assign(window, { PACE_VOZ_DEFECTO, PACE_VOCES, PACE_VOZ_MARGEN, PACE_VOZ_CLIPS, PACE_VOZ_FASE_MIN, PACE_VOZ_PREV, PACE_VOZ_FUNDIDO, PACE_VOZ_COLA, paceVozDescodifica, paceVozWebAudio, paceVozEstado, paceVozActiva, paceVozEncendida, paceVozIdioma, _paceVoz, paceVozInit, paceVozCabe, PACE_VOZ_RESPALDO_MS, paceVozIntenta });
+})();
+</script>
+  <!-- La voz de Mueve y Estira (Ez, 15 nov. 2026): dónde está cada palabra en sus tomas, cómo se suena y la vibración. -->
+  <script>
+;(function () {
+
+
+
+var PACE_VOZ_CUERPO = { "es": { "sulafat": { "n1": { "archivo": "sulafat-es-numeros.wav", "ini": 0.12, "fin": 0.38, "a": 0.09, "b": 0.5, "vol": 0.523, "nivel": -15.8 }, "n2": { "archivo": "sulafat-es-numeros.wav", "ini": 0.89, "fin": 1.19, "a": 0.86, "b": 1.31, "vol": 0.739, "nivel": -18.8 }, "n3": { "archivo": "sulafat-es-numeros.wav", "ini": 1.74, "fin": 2.01, "a": 1.71, "b": 2.13, "vol": 0.918, "nivel": -20.7 }, "n4": { "archivo": "sulafat-es-numeros.wav", "ini": 2.6, "fin": 2.97, "a": 2.57, "b": 3.09, "vol": 0.771, "nivel": -19.1 }, "n5": { "archivo": "sulafat-es-numeros.wav", "ini": 3.55, "fin": 3.91, "a": 3.52, "b": 4.03, "vol": 0.877, "nivel": -20.3 }, "n6": { "archivo": "sulafat-es-numeros.wav", "ini": 4.43, "fin": 4.76, "a": 4.4, "b": 4.88, "vol": 0.814, "nivel": -19.6 }, "n7": { "archivo": "sulafat-es-numeros.wav", "ini": 5.31, "fin": 5.71, "a": 5.28, "b": 5.83, "vol": 0.87, "nivel": -20.2 }, "n8": { "archivo": "sulafat-es-numeros.wav", "ini": 6.22, "fin": 6.55, "a": 6.19, "b": 6.67, "vol": 1.079, "nivel": -22.1 }, "n9": { "archivo": "sulafat-es-numeros.wav", "ini": 7.06, "fin": 7.45, "a": 7.03, "b": 7.57, "vol": 0.773, "nivel": -19.2 }, "n10": { "archivo": "sulafat-es-numeros.wav", "ini": 7.95, "fin": 8.2, "a": 7.92, "b": 8.32, "vol": 0.856, "nivel": -20 }, "n11": { "archivo": "sulafat-es-numeros.wav", "ini": 8.83, "fin": 9.19, "a": 8.8, "b": 9.31, "vol": 0.934, "nivel": -20.8 }, "n12": { "archivo": "sulafat-es-numeros.wav", "ini": 9.69, "fin": 10.08, "a": 9.66, "b": 10.2, "vol": 0.898, "nivel": -20.5 }, "n13": { "archivo": "sulafat-es-numeros.wav", "ini": 10.63, "fin": 11.01, "a": 10.6, "b": 11.13, "vol": 0.917, "nivel": -20.6 }, "n14": { "archivo": "sulafat-es-numeros.wav", "ini": 11.56, "fin": 12.07, "a": 11.53, "b": 12.19, "vol": 0.899, "nivel": -20.5 }, "n15": { "archivo": "sulafat-es-numeros.wav", "ini": 12.65, "fin": 13.06, "a": 12.62, "b": 13.18, "vol": 0.834, "nivel": -19.8 }, "n16": { "archivo": "sulafat-es-numeros.wav", "ini": 13.57, "fin": 14.72, "a": 13.54, "b": 14.84, "vol": 0.854, "nivel": -20 }, "n17": { "archivo": "sulafat-es-numeros.wav", "ini": 15.26, "fin": 15.99, "a": 15.23, "b": 16.11, "vol": 0.929, "nivel": -20.8 }, "n18": { "archivo": "sulafat-es-numeros.wav", "ini": 16.5, "fin": 17.16, "a": 16.47, "b": 17.28, "vol": 0.907, "nivel": -20.6 }, "n19": { "archivo": "sulafat-es-numeros.wav", "ini": 17.68, "fin": 18.34, "a": 17.65, "b": 18.46, "vol": 0.785, "nivel": -19.3 }, "n20": { "archivo": "sulafat-es-numeros.wav", "ini": 18.85, "fin": 19.3, "a": 18.82, "b": 19.42, "vol": 0.664, "nivel": -17.8 }, "n21": { "archivo": "sulafat-es-numeros.wav", "ini": 19.81, "fin": 20.43, "a": 19.78, "b": 20.55, "vol": 0.759, "nivel": -19 }, "n22": { "archivo": "sulafat-es-numeros.wav", "ini": 20.94, "fin": 22.63, "a": 20.91, "b": 22.75, "vol": 0.842, "nivel": -19.9 }, "n23": { "archivo": "sulafat-es-numeros.wav", "ini": 23.14, "fin": 24.49, "a": 23.11, "b": 24.61, "vol": 0.825, "nivel": -19.7 }, "n24": { "archivo": "sulafat-es-numeros.wav", "ini": 24.99, "fin": 25.74, "a": 24.96, "b": 25.86, "vol": 0.773, "nivel": -19.2 }, "n25": { "archivo": "sulafat-es-numeros.wav", "ini": 26.26, "fin": 27, "a": 26.23, "b": 27.12, "vol": 0.868, "nivel": -20.2 }, "c3": { "archivo": "sulafat-es-cuenta.wav", "ini": 0.14, "fin": 0.41, "a": 0.11, "b": 0.53, "vol": 0.961, "nivel": -21.1 }, "c2": { "archivo": "sulafat-es-cuenta.wav", "ini": 0.94, "fin": 1.24, "a": 0.91, "b": 1.36, "vol": 0.905, "nivel": -20.5 }, "c1": { "archivo": "sulafat-es-cuenta.wav", "ini": 1.77, "fin": 2.02, "a": 1.74, "b": 2.14, "vol": 1.312, "nivel": -23.8 }, "colocate": { "archivo": "sulafat-es-avisos.wav", "ini": 0.16, "fin": 1.65, "a": 0.13, "b": 1.77, "vol": 0.756, "nivel": -19 }, "siguiente": { "archivo": "sulafat-es-avisos.wav", "ini": 2.15, "fin": 2.74, "a": 2.12, "b": 2.86, "vol": 0.97, "nivel": -21.1 }, "ya": { "archivo": "sulafat-es-avisos.wav", "ini": 3.25, "fin": 3.47, "a": 3.22, "b": 3.59, "vol": 0.904, "nivel": -20.5 }, "ultimo": { "archivo": "sulafat-es-avisos.wav", "ini": 3.97, "fin": 4.65, "a": 3.94, "b": 4.77, "vol": 1.016, "nivel": -21.5 }, "izquierda": { "archivo": "sulafat-es-lados.wav", "ini": 0.12, "fin": 0.74, "a": 0.09, "b": 0.86, "vol": 0.856, "nivel": -20.1 }, "derecha": { "archivo": "sulafat-es-lados.wav", "ini": 1.2, "fin": 1.7, "a": 1.17, "b": 1.82, "vol": 0.891, "nivel": -20.4 }, "cambia": { "archivo": "sulafat-es-lados.wav", "ini": 2.36, "fin": 3.08, "a": 2.33, "b": 3.2, "vol": 0.637, "nivel": -17.5 }, "descansa": { "archivo": "sulafat-es-lados.wav", "ini": 3.58, "fin": 4.16, "a": 3.55, "b": 4.28, "vol": 1.259, "nivel": -23.4 } } } };
+
+Object.assign(window, { PACE_VOZ_CUERPO: PACE_VOZ_CUERPO });
+;Object.assign(window, { PACE_VOZ_CUERPO });
+})();
+</script>
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var PACE_VOZ_CUERPO_MARGEN = 0.15;
+var PACE_VOZ_CUERPO_ESPERA = 1.2;
+var _paceVozCuerpoTomas = {};
+var _paceVozCuerpoLibre = 0;
+
+function paceVozCuerpoJuego() {
+  var idioma = typeof paceVozIdioma === 'function' ? paceVozIdioma() : 'es';
+  var voz = typeof paceVozActiva === 'function' ? paceVozActiva() : 'sulafat';
+  var tabla = window.PACE_VOZ_CUERPO || {};
+  return { clave: idioma + '.' + voz, palabras: (tabla[idioma] || {})[voz] || {} };
+}
+
+
+function paceVozCuerpoPrecarga() {
+  try {
+    if (typeof paceVozEncendida === 'function' && !paceVozEncendida()) return;
+    var j = paceVozCuerpoJuego();
+    var tomas = _paceVozCuerpoTomas[j.clave] || (_paceVozCuerpoTomas[j.clave] = {});
+    Object.keys(j.palabras).forEach(function (k) {
+      var archivo = j.palabras[k].archivo;
+      if (!archivo || tomas[archivo]) return;
+      tomas[archivo] = { buffer: null };
+      if (typeof paceVozDescodifica === 'function') paceVozDescodifica(tomas[archivo], 'app/move/voz/' + archivo);
+    });
+  } catch (e) {}
+}
+
+
+
+function paceVozCuerpoIntenta(palabra, max) {
+  try {
+    if (typeof paceVozEncendida === 'function' && !paceVozEncendida()) return false;
+    var j = paceVozCuerpoJuego();
+    var e = j.palabras[palabra];
+    if (!e) return false;
+    if (typeof max === 'number' && e.fin - e.ini + PACE_VOZ_CUERPO_MARGEN > max) return false;
+    paceVozCuerpoPrecarga();
+    var toma = (_paceVozCuerpoTomas[j.clave] || {})[e.archivo];
+    if (!toma || !toma.buffer) return false;
+    var ctx = typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;
+    if (!ctx) return false;
+    if (ctx.state === 'suspended') {try {ctx.resume();} catch (er) {}}
+    if (ctx.state !== 'running') return false;
+    var ahora = ctx.currentTime;
+    var t0 = Math.max(ahora, _paceVozCuerpoLibre);
+    if (t0 - ahora > PACE_VOZ_CUERPO_ESPERA) return true;
+    var dur = Math.min(e.b, toma.buffer.duration) - e.a;
+    if (!(dur > 0.02)) return false;
+    var vol = typeof e.vol === 'number' ? e.vol : 1;
+    var f = 0.005;
+    var s = ctx.createBufferSource();
+    var g = ctx.createGain();
+    s.buffer = toma.buffer;
+    g.gain.setValueAtTime(0, t0);
+    g.gain.linearRampToValueAtTime(vol, t0 + f);
+    g.gain.setValueAtTime(vol, t0 + dur - f);
+    g.gain.linearRampToValueAtTime(0, t0 + dur);
+    s.connect(g);
+    g.connect(ctx.destination);
+    s.start(t0, e.a);
+    s.stop(t0 + dur + 0.01);
+    s.onended = function () {try {g.disconnect();} catch (er) {}};
+    _paceVozCuerpoLibre = t0 + (e.fin - e.a) + 0.05;
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+Object.assign(window, { paceVozCuerpoPrecarga: paceVozCuerpoPrecarga, paceVozCuerpoIntenta: paceVozCuerpoIntenta });
+;Object.assign(window, { PACE_VOZ_CUERPO_MARGEN, PACE_VOZ_CUERPO_ESPERA, _paceVozCuerpoTomas, _paceVozCuerpoLibre, paceVozCuerpoJuego, paceVozCuerpoPrecarga, paceVozCuerpoIntenta });
+})();
+</script>
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+var PACE_VIBRA_TIPO = { 'move.rep': 'toque', 'move.warn': 'toque', 'move.start': 'medio', 'move.go': 'medio',
+  'move.side': 'doble', 'move.rest': 'largo', 'move.end': 'fin' };
+
+var PACE_VIBRA_MS = { toque: [30], medio: [70], doble: [60, 120, 60], largo: [250], fin: [80, 120, 80, 120, 80] };
+
+function paceHaptics() {
+  try {
+    var C = window.Capacitor;
+    if (!C || typeof C.isNativePlatform !== 'function' || !C.isNativePlatform()) return null;
+    return C.Plugins && C.Plugins.Haptics || null;
+  } catch (e) {return null;}
+}
+
+function paceVibraPosible() {
+  if (paceHaptics()) return true;
+  try {return typeof navigator.vibrate === 'function' && (navigator.maxTouchPoints || 0) > 0;} catch (e) {return false;}
+}
+
+function paceVibraModo(s) {
+  var v = s && s.vibrar;
+  return v === 'no' || v === 'siempre' ? v : 'sinSonido';
+}
+
+
+function paceVibra(nombre, s) {
+  try {
+    var tipo = PACE_VIBRA_TIPO[nombre];
+    if (!tipo) return false;
+    var modo = paceVibraModo(s);
+    if (modo === 'no' || modo === 'sinSonido' && s && s.soundOn) return false;
+    if (!paceVibraPosible()) return false;
+    var H = paceHaptics();
+    if (H) {
+      var toque = function (estilo) {try {H.impact({ style: estilo });} catch (e) {}};
+      if (tipo === 'toque') toque('LIGHT');else
+      if (tipo === 'medio') toque('MEDIUM');else
+      if (tipo === 'doble') {toque('MEDIUM');setTimeout(function () {toque('MEDIUM');}, 180);} else
+      if (tipo === 'largo') {try {H.vibrate({ duration: 250 });} catch (e) {}} else
+      {try {H.notification({ type: 'SUCCESS' });} catch (e) {}}
+      return true;
+    }
+    return !!navigator.vibrate(PACE_VIBRA_MS[tipo]);
+  } catch (e) {
+    return false;
+  }
+}
+
+Object.assign(window, { paceVibra: paceVibra, paceVibraPosible: paceVibraPosible, paceVibraModo: paceVibraModo });
+;Object.assign(window, { PACE_VIBRA_TIPO, PACE_VIBRA_MS, paceHaptics, paceVibraPosible, paceVibraModo, paceVibra });
 })();
 </script>
   <!-- La receta de cada técnica de Respira (datos que Sound.musica.jsx lee al empezar). -->
@@ -35980,6 +36168,68 @@ Object.assign(window, {
 ;Object.assign(window, { v1TempoSeconds, v1RepSeconds, v1RepTarget, v1TransitionSeconds, v1CompletionMode, v1RestSeconds, v1StepDur, v1MismoEjercicioAntes, v1StepSetup, v1StepProgress, v1StepWeight, v1EsEscritorio, v1GlyphSize, v1GlyphSizeAhora, estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock, useV1SessionClock, v1LadoGlifo, v1Prefijo, v1Clave, v1Instr, v1EventoSesion, useRelojSesion, useSesionAlOcultar });
 })();
 </script>
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+function v1VozCuenta(n) {
+  return n >= 1 && n <= 3 ? { voz: 'c' + n, max: 1 } : null;
+}
+
+
+
+
+function v1VozRep(n, repSec, ultima) {
+  if (!(n >= 1 && n <= 25 && n === Math.floor(n))) return ultima ? { soloVoz: true } : null;
+  return ultima ? { voz: 'n' + n, soloVoz: true } : { voz: 'n' + n, max: repSec };
+}
+
+
+
+
+function v1VozEntrada(routine, idx, fase) {
+  const pasos = routine && routine.steps || [];
+  const st = pasos[idx];
+  if (!st) return null;
+  if (st.mode === 'rest') return { voz: 'descansa' };
+  const conTrabajo = pasos.filter((p) => p.mode !== 'rest').length;
+  const quedan = pasos.slice(idx + 1).some((p) => p.mode !== 'rest');
+  if (!quedan && conTrabajo > 1) return { voz: 'ultimo' };
+  if (fase === 'place') return { voz: 'colocate' };
+  let antes = idx - 1;
+  while (antes >= 0 && pasos[antes].mode === 'rest') antes--;
+  if (antes < 0 || pasos[antes].name === st.name) return { voz: 'ya' };
+  return { voz: 'siguiente' };
+}
+
+
+
+function v1VozGo(step, side) {
+  if (step && step.mode === 'perSide') return { voz: side === 0 ? 'izquierda' : 'derecha' };
+  return { voz: 'ya' };
+}
+
+function v1VozLado() {return { voz: 'cambia' };}
+
+
+function v1VozPrecarga() {
+  try {if (typeof window.paceVozCuerpoPrecarga === 'function') window.paceVozCuerpoPrecarga();} catch (e) {}
+}
+
+Object.assign(window, { v1VozCuenta, v1VozRep, v1VozEntrada, v1VozGo, v1VozLado, v1VozPrecarga });
+;Object.assign(window, { v1VozCuenta, v1VozRep, v1VozEntrada, v1VozGo, v1VozLado, v1VozPrecarga });
+})();
+</script>
   <!-- El mando de tres y el cuerpo del runner (opción A del runner guiado): antes de su consumidor. -->
   <script>
 ;(function () {
@@ -36597,7 +36847,7 @@ function useV1Vuelta(paused, setPaused) {
   const [cuenta, setCuenta] = React.useState(null);
   React.useEffect(() => {
     if (cuenta == null) return undefined;
-    try {playSound('move.warn');} catch (e) {}
+    try {playSound('move.warn', v1VozCuenta(cuenta));} catch (e) {}
     const to = setTimeout(() => {
       if (cuenta > 1) setCuenta(cuenta - 1);else
       {setCuenta(null);setPaused(false);}
@@ -36736,7 +36986,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   routine;
 
 
-  const [rein] = useStateV1(() => cuerpoReanudacion(routine, reanudar));
+  const [rein] = useStateV1(() => (v1VozPrecarga(), cuerpoReanudacion(routine, reanudar)));
   const [stage, setStage] = useStateV1('prep');
   const [prepCount, setPrepCount] = useStateV1(V1_PREP_SECONDS);
   const [stepIdx, setStepIdx] = useStateV1(rein.step);
@@ -36855,7 +37105,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
     setPhase('change');setElapsed(0);setChangeLeft(v1TransitionSeconds(step));totalesRef.current.change = v1TransitionSeconds(step);
 
-    try {playSound('move.side');} catch (e) {}
+    try {playSound('move.side', v1VozLado());} catch (e) {}
   };
 
   const darSerie = (reps) => {repsGuidedRef.current += reps;hechosRef.current[stepIdx] = true;seriesRef.current += 1;};
@@ -36883,7 +37133,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
 
   useEffectV1(() => {
-    if (stage === 'prep' && prepCount > 0 && prepCount <= 3) {try {playSound('move.warn');} catch (e) {}}
+    if (stage === 'prep' && prepCount > 0 && prepCount <= 3) {try {playSound('move.warn', v1VozCuenta(prepCount));} catch (e) {}}
   }, [prepCount]);
 
 
@@ -36901,7 +37151,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   useSesionAlOcultar(stage === 'run', vuelta.pausar);
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'place') return;
-    if (placeLeft > 0 && placeLeft <= 3) {try {playSound('move.warn');} catch (e) {}}
+    if (placeLeft > 0 && placeLeft <= 3) {try {playSound('move.warn', v1VozCuenta(placeLeft));} catch (e) {}}
   }, [placeLeft]);
 
 
@@ -36939,10 +37189,10 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
       const guided = v1CompletionMode(step) !== 'manual';
       if (guided && elapsed >= v1RepTarget(step) * repSec) {
-        darSerie(v1RepTarget(step));
+        darSerie(v1RepTarget(step));try {playSound('move.rep', v1VozRep(v1RepTarget(step), repSec, true));} catch (e) {}
         advanceStep();
       } else if (suena && elapsed % repSec === 0) {
-        try {playSound('move.rep');} catch (e) {}
+        try {playSound('move.rep', v1VozRep(elapsed / repSec, repSec));} catch (e) {}
       }
       return;
     }
@@ -36950,7 +37200,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     const effDur = v1StepDur(step);
 
 
-    if (suena && effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) {try {playSound('move.warn');} catch (e) {}}
+    if (suena && effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) {try {playSound('move.warn', v1VozCuenta(effDur - elapsed));} catch (e) {}}
     if (elapsed >= effDur) {
       if (!auto) {
 
@@ -36969,7 +37219,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   useRelojSesion(stage === 'run' && phase === 'change' && !paused, (n) => setChangeLeft((c) => Math.max(0, c - n)), [stepIdx]);
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'change') return;
-    if (changeLeft > 0 && changeLeft <= 3) {try {playSound('move.warn');} catch (e) {}}
+    if (changeLeft > 0 && changeLeft <= 3) {try {playSound('move.warn', v1VozCuenta(changeLeft));} catch (e) {}}
   }, [changeLeft]);
   useEffectV1(() => {
     if (stage === 'run' && phase === 'change' && changeLeft <= 0 && auto && !paused) onSideReady();
@@ -36985,14 +37235,14 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   useEffectV1(() => {if (stage === 'done') {try {playSound('move.end');} catch (e) {}}}, [stage]);
   useEffectV1(() => {
     if (stage !== 'run' || !step) return;
-    try {playSound(step.mode === 'rest' ? 'move.rest' : 'move.start');} catch (e) {}
+    try {playSound(step.mode === 'rest' ? 'move.rest' : 'move.start', v1VozEntrada(routine, stepIdx, phase));} catch (e) {}
   }, [stage, stepIdx]);
   const faseAntes = useRefV1({ phase, stepIdx });
   useEffectV1(() => {
     const antes = faseAntes.current;
     faseAntes.current = { phase, stepIdx };
     if (stage !== 'run' || phase !== 'work' || antes.stepIdx !== stepIdx) return;
-    if (antes.phase === 'place' || antes.phase === 'change') {try {playSound('move.go');} catch (e) {}}
+    if (antes.phase === 'place' || antes.phase === 'change') {try {playSound('move.go', v1VozGo(step, side));} catch (e) {}}
   }, [phase, stepIdx]);
 
 
@@ -43889,7 +44139,8 @@ function TweaksAudioBlock(_ref) {let { state, set } = _ref;
     ),
 
 
-    React.createElement(AjustesFila, { id: "signal", nombre: t('settings.signal'), atenuada: apagado },
+
+    React.createElement(AjustesFila, { id: "signal", nombre: t('settings.signal'), sub: t('settings.signal.nota'), atenuada: apagado },
     React.createElement(AjustesPildoras, { aria: t('settings.signal'), valor: senal, onChange: ponerSenal, apagado: apagado, opciones: [
       { v: 'tono', name: t('settings.signal.tone') },
       { v: 'sulafat', name: t('settings.signal.clear') },
@@ -43912,8 +44163,29 @@ function TweaksAudioBlock(_ref) {let { state, set } = _ref;
 
 }
 
-Object.assign(window, { TweaksAudioBlock, paceEscucharSenal });
-;Object.assign(window, { paceEscucharSenal, TweaksAudioBlock });
+
+
+
+
+function TweaksVibrar(_ref2) {let { state, set } = _ref2;
+  const { t } = useT();
+  let posible = false;
+  try {posible = typeof window.paceVibraPosible === 'function' && window.paceVibraPosible();} catch (e) {posible = false;}
+  if (!posible) return null;
+  const valor = typeof window.paceVibraModo === 'function' ? window.paceVibraModo(state) : 'sinSonido';
+  return (
+    React.createElement(AjustesFila, { id: "vibrar", nombre: t('settings.vibrar'), sub: t('settings.vibrar.sub'), modulo: "move" },
+    React.createElement(AjustesPildoras, { aria: t('settings.vibrar'), valor: valor, onChange: (v) => set({ vibrar: v }), opciones: [
+      { v: 'no', name: t('settings.vibrar.no') },
+      { v: 'sinSonido', name: t('settings.vibrar.sinSonido') },
+      { v: 'siempre', name: t('settings.vibrar.siempre') }] }
+    )
+    ));
+
+}
+
+Object.assign(window, { TweaksAudioBlock, paceEscucharSenal, TweaksVibrar });
+;Object.assign(window, { paceEscucharSenal, TweaksAudioBlock, TweaksVibrar });
 })();
 </script>
   <script>
@@ -44278,6 +44550,7 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
       { v: 45, name: t('settings.rest.45') }] }
     )
     ),
+    React.createElement(TweaksVibrar, { state: state, set: set }),
 
 
     React.createElement(AjustesFila, { id: "water", nombre: t('settings.water'), sub: t('settings.water.sub'), modulo: "hydrate" },
