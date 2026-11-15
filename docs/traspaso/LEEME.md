@@ -4,6 +4,13 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de noviembre de 2026, 10:20, v0.204.0 en `main` y los cuatro arreglos de S3 y S4 en su rama.
 
+## 15 nov., 12:30 (cuenta 5iWBf, 5 h al 94 %; Ez: «Puedes llevar esta sesión hasta el 100%»). Manda sobre lo de abajo
+
+- **`main` = 0.205.0** con GitHub en verde; sobre ella, solo documentos y las capturas de /beta (publicadas en pacegrass.app, comprobado). Play: la prueba cerrada en revisión de Google. TestFlight: la 205000 subida, falta darla al grupo «Testers iPhone».
+- **Ez contestó las voces (literal): «1A - 2A - 3A - 4A - 5A - 6A - 7A y si todos los numeros seguidos».** La sesión «voz-cuerpo» (`local_26914806-fb98-4547-94c6-d4e03a2af659`, rama `claude/voz-cuerpo-15nov-21e284`, a458d9c0) lo montó con audios de muestra: voz en el runner (`app/move/MoveSessionV1.voz.jsx`, `app/ui/Sound.voz.cuerpo.js`), «Vibrar» en Ajustes y el complemento Haptics (`app/ui/vibra.js`, Android e iOS); prompts por tomas en `docs/proposals/voz-cuerpo-15nov/PROMPTS_VOZ_CUERPO.md` (16 tomas: 4 por voz e idioma) y el guion que las corta (`scripts/voz-cuerpo-tomas.js`). **Espera a Ez: grabar las tomas en Genspark y dejarlas en `..Audio - Cuerpo`.** Sin suite entera ni móvil; los audios de muestra NO van a `main`. Página JvtkcA2htQF8ByWtMGu9oU.
+- **Ez contestó las tres mejoras (literal): «1A + 2A + 3A + Me gusta el diseño de la 4B pero con la metodología de la 4A, démosle una vuelta + 5A».** La sesión «maquetas-uso» (`local_d703c73f-7fd3-450a-b749-4f0dfc406a60`, rama `claude/maquetas-uso-15nov-82f8e3`) pinta la vuelta de la 4 y monta 5A, 1A-2A y 3A en su rama, con «Montado» en su página (U8L5AgXmWcbBrT8Tp7Zrx2). Avisada a las 12:30 de que haga WIP con push tras cada paso.
+- **Espera a Ez además:** pegar a Fable `docs/audits/fable-15nov/encargo-avisos.md` y traer su respuesta; la declaración de operador en Play; el párrafo «A tu ritmo» y las capturas nuevas en la ficha de Play; el mensaje de WhatsApp cuando Google apruebe la cerrada.
+
 ## AL RELEVO (14 nov., 10:20, cuenta 5iWBf con la semana al 96 %): empieza aquí; manda sobre lo de abajo
 
 - **`main` = 0.204.0, subida y con GitHub en verde entero** (CI, iPhone y Android). **No hay ninguna sesión trabajando.**
