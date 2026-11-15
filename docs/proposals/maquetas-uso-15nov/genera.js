@@ -346,6 +346,8 @@ async function pintarCierre(page, partes) {
       }
       if (p.tipo === 'acuse') {
         el = thanksBase();
+        if (p.tam) el.style.fontSize = p.tam + 'px';
+        if (p.margen) el.style.marginTop = p.margen + 'px';
         p.trozos.forEach((t) => {
           if (typeof t === 'string') el.append(document.createTextNode(t));
           else { const b = enlace(t.enlace, t.color); b.setAttribute('data-maqueta-boton', ''); el.append(b); }
@@ -354,10 +356,11 @@ async function pintarCierre(page, partes) {
       if (p.tipo === 'porque') {
         el = document.createElement('div');
         el.style.cssText = "font-family:var(--font-display);font-style:italic;font-size:15px;color:var(--ink-3);margin-top:10px;text-align:center;line-height:1.5";
-        el.append(document.createTextNode('¿Por qué? '));
+        if (!p.sinPrefijo) el.append(document.createTextNode('¿Por qué? '));
+        if (p.tam) el.style.fontSize = p.tam + 'px';
         p.textos.forEach((t, i) => {
           if (i) el.append(document.createTextNode(' · '));
-          const b = enlace(t, 'var(--ink-3)'); b.style.fontSize = '15px'; b.setAttribute('data-maqueta-boton', ''); el.append(b);
+          const b = enlace(t, p.color || 'var(--ink-3)'); b.style.fontSize = (p.tam || 15) + 'px'; b.setAttribute('data-maqueta-boton', ''); el.append(b);
         });
       }
       el.setAttribute('data-maqueta', '');
@@ -379,8 +382,70 @@ const BOTONES_CIERRE = '[data-pace-session-root] [data-pace-fb-chip], [data-pace
 async function medirCierre(page, clave, h) {
   const s = await scrollDe(page, '[data-pace-session-center]') || await scrollDe(page, '[data-pace-session-done]');
   const p = await pisados(page, BOTONES_CIERRE);
+  /* Lo mismo con la letra al 115 %: que ningún enlace caiga encima de «Volver al inicio». */
+  await letraGrande(page, '[data-pace-session-root]', true);
+  const p115 = await pisados(page, BOTONES_CIERRE);
+  await letraGrande(page, '[data-pace-session-root]', false);
   medidas[clave] = medidas[clave] || {};
-  medidas[clave][h] = { scroll: s, pisados: p };
+  medidas[clave][h] = { scroll: s, pisados: p, pisados115: p115 };
+}
+
+/* ============================================================
+   4, OTRA VUELTA (Ez, 15 nov.: «Me gusta el diseño de la 4B pero con la metodología de la 4A»)
+   La forma de la B: el texto y, debajo, una línea «¿Por qué? Aquí no podía · Difícil · Me
+   molestó», sin un paso más. Lo que hace la A: cada porqué hace lo suyo. Y el texto de arriba no
+   adelanta lo que aún no sabe. Tres maneras de decir lo de arriba.
+   ============================================================ */
+const PORQUES = ['Aquí no podía', 'Difícil', 'Me molestó'];
+async function escena4V(browser) {
+  console.log('4 · otra vuelta');
+  const { context, page } = await abrir(browser, { estado: LIBRE, hora: JUEVES('10:00'), alto: 640 });
+  await hastaElCierre(page);
+  await guardarPiezasCierre(page);
+  const variantes = {
+    'v4a': [
+      { tipo: 'acuse', trozos: ['Gracias. Si no me dices por qué, no te la propondré durante una semana. ', { enlace: 'Deshacer' }] },
+      { tipo: 'porque', textos: PORQUES },
+    ],
+    'v4b': [
+      { tipo: 'acuse', trozos: ['Gracias. ', { enlace: 'Deshacer' }] },
+      { tipo: 'porque', textos: PORQUES },
+    ],
+    'v4c': [
+      { tipo: 'pregunta', texto: '¿Qué pasó?' },
+      { tipo: 'porque', textos: PORQUES, sinPrefijo: true, tam: 16, color: 'var(--ink-2)' },
+      { tipo: 'acuse', trozos: ['Si no eliges, no te la propondré durante una semana. ', { enlace: 'Deshacer' }], tam: 14, margen: 10 },
+    ],
+  };
+  for (const [nombre, partes] of Object.entries(variantes)) {
+    await alto(page, 640);
+    await pintarCierre(page, partes);
+    for (const h of [640, 740]) {
+      await alto(page, h);
+      await medirCierre(page, nombre, h);
+      await foto(page, nombre + '-' + h);
+      if (h === 640 && nombre === 'v4a') {
+        await letraGrande(page, '[data-pace-session-root]', true);
+        await foto(page, nombre + '-640-115');
+        await letraGrande(page, '[data-pace-session-root]', false);
+      }
+    }
+    await quitarPintado(page);
+  }
+  /* Tras elegir un porqué (igual en las tres): arriba lo que hace, y la línea se va. */
+  const despues = {
+    'v4-aqui': ['Gracias. No la aparto: otro día puede encajar. ', { enlace: 'Deshacer' }],
+    'v4-dificil': ['Gracias. Durante una semana no te la propondré en las pausas. ', { enlace: 'Deshacer' }],
+    'v4-molesto': ['Gracias. Durante una semana no te la propondré. Si notas dolor, para y lee ', { enlace: 'Seguridad' }, '. ', { enlace: 'Deshacer' }],
+  };
+  await alto(page, 640);
+  for (const [nombre, trozos] of Object.entries(despues)) {
+    await pintarCierre(page, [{ tipo: 'acuse', trozos }]);
+    await medirCierre(page, nombre, 640);
+    await foto(page, nombre + '-640');
+    await quitarPintado(page);
+  }
+  await context.close();
 }
 
 async function escena4(browser) {
@@ -592,7 +657,7 @@ async function escena5Ritmo(browser) {
   const browser = await chromium.launch();
   const solo = process.argv[2];
   try {
-    const escenas = { '1A': escena1A, '1B': escena1B, '2': escena2, '4': escena4, '5': escena5, '5R': escena5Ritmo };
+    const escenas = { '4V': escena4V, '1A': escena1A, '1B': escena1B, '2': escena2, '4': escena4, '5': escena5, '5R': escena5Ritmo };
     for (const [k, f] of Object.entries(escenas)) {
       if (solo && solo.split(',').indexOf(k) === -1) continue;
       await f(browser);

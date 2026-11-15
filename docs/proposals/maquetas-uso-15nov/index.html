@@ -50,7 +50,9 @@ code{font-size:13px}
 .rec .letra{color:var(--olive)}
 .cab h3{flex:1 1 220px;min-width:0}
 .sello{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--olive);border:1px solid var(--olive);border-radius:999px;padding:2px 9px;white-space:nowrap}
+.sello.ya{color:var(--paper);background:var(--olive)}
 .porque{color:var(--olive);font-size:15px}
+.antes{opacity:.82}
 .medido{font-size:13px;color:var(--ink-3)}
 .medido.mal{color:var(--terra)}
 .copy{border-top:1px dashed var(--line);margin:10px 0 12px;padding-top:10px;display:grid;gap:8px}
@@ -81,7 +83,75 @@ figcaption b{font-weight:500;color:var(--ink-2)}
   <h1>Tres mejoras de uso diario</h1>
   <p class="lead">Un aviso por la mañana, «¿Te ayudó?» menos veces y «la de antes» en la ventana de la pausa. Elige una letra en cada pregunta. Van como actualizaciones, de una en una, y no se monta nada sin tu sí.</p>
   <p>Todo está pintado sobre la app de verdad (la 0.205.0, en un móvil de 360 × 640 y de 360 × 740, en español): son sus filas, sus botones y su letra, con lo nuevo puesto en su sitio. Solo el aviso del sistema va dibujado, porque desde la web no se puede fotografiar. Las fotos de borde discontinuo son la app de hoy. En la lista de lo pendiente es el paso «Lo pequeño de antes de v1, como actualizaciones» (lo subiste el 12 nov.).</p>
-  <p class="espera"><b>Espera tu letra</b> en cinco preguntas: dos del aviso, dos de «¿Te ayudó?» y una de «la de antes». La tabla del final las junta con las recomendadas.</p>
+  <p class="espera"><b>Elegiste 1A, 2A, 3A y 5A</b> (15 nov.), y para la 4: «Me gusta el diseño de la 4B pero con la metodología de la 4A, démosle una vuelta». <b>Espera tu letra la 4, otra vuelta</b>, aquí debajo. Lo demás ya no se pregunta: va marcado como elegido.</p>
+
+  <!-- ============================================================ 4 otra vuelta -->
+  <h2>4, otra vuelta · El porqué del «No»</h2>
+  <p>La forma de la B: tras el «No», un texto y debajo, en una línea, «¿Por qué? Aquí no podía · Difícil · Me molestó», sin un paso más. Con lo que hace la A: «Aquí no podía» no la aparta ni cuenta como «No»; «Difícil» la aparta una semana; «Me molestó» la aparta y enlaza Seguridad; si sales sin elegir, la aparta una semana, como hoy; y «Deshacer» sigue. El texto de arriba ya no adelanta lo que aún no sabe. Solo cambia cómo se dice.</p>
+
+  <div class="pregunta">
+    <div class="t">Pregunta 4, otra vuelta</div>
+    <h3>¿Qué dice el texto de arriba mientras no eliges?</h3>
+  </div>
+
+  <div class="opcion rec">
+    <div class="cab"><span class="letra">A</span><h3>Lo que pasará si no eliges, dicho como condición</h3><span class="sello">Recomendada</span></div>
+    <p>«Gracias. Si no me dices por qué, no te la propondré durante una semana.» No da nada por hecho: dice qué pasa si sales sin más, y los porqués están justo debajo.</p>
+    <p class="porque">Por qué: es la única que avisa de lo que pasa al salir sin elegir, como pediste el 5 nov. (el «No» dice lo que hace), sin adelantar el porqué.</p>
+    <div class="fotos">
+      <figure><img src="fotos/v4a-640.jpg" alt="Tras el No: Gracias. Si no me dices por qué, no te la propondré durante una semana. Deshacer. Debajo: ¿Por qué? Aquí no podía, Difícil, Me molestó"><figcaption><b>360 × 640</b></figcaption></figure>
+      <figure><img src="fotos/v4a-740.jpg" alt="Lo mismo a 360 por 740"><figcaption><b>360 × 740</b></figcaption></figure>
+      <figure><img src="fotos/v4a-640-115.jpg" alt="Lo mismo con la letra al 115 por ciento"><figcaption><b>360 × 640, letra al 115 %</b></figcaption></figure>
+    </div>
+    <div class="copy">
+      <div>Gracias. Si no me dices por qué, no te la propondré durante una semana. Deshacer<span>Thank you. Unless you tell me why, I won’t suggest it for a week. Undo</span></div>
+      <div>¿Por qué? Aquí no podía · Difícil · Me molestó<span>Why? Couldn’t do it here · Too hard · Uncomfortable</span></div>
+    </div>
+  </div>
+
+  <div class="opcion">
+    <div class="cab"><span class="letra">B</span><h3>Solo «Gracias»</h3></div>
+    <p>«Gracias. Deshacer» y la línea de los porqués. Lo más corto, pero si sales sin elegir la aparta una semana sin decirlo.</p>
+    <div class="fotos">
+      <figure><img src="fotos/v4b-640.jpg" alt="Tras el No: Gracias. Deshacer. Debajo: ¿Por qué? Aquí no podía, Difícil, Me molestó"><figcaption><b>360 × 640</b></figcaption></figure>
+      <figure><img src="fotos/v4b-740.jpg" alt="Lo mismo a 360 por 740"><figcaption><b>360 × 740</b></figcaption></figure>
+    </div>
+    <div class="copy">
+      <div>Gracias. Deshacer<span>Thank you. Undo</span></div>
+    </div>
+  </div>
+
+  <div class="opcion">
+    <div class="cab"><span class="letra">C</span><h3>La pregunta arriba y la condición debajo</h3></div>
+    <p>«¿Qué pasó?» con la letra de «¿Te ayudó esta pausa?», los porqués en su línea, y debajo, en pequeño, «Si no eliges, no te la propondré durante una semana». Se lee como una pregunta, pero son tres líneas y el dibujo encoge más.</p>
+    <div class="fotos">
+      <figure><img src="fotos/v4c-640.jpg" alt="Tras el No: ¿Qué pasó? Debajo: Aquí no podía, Difícil, Me molestó; y en pequeño: Si no eliges, no te la propondré durante una semana. Deshacer"><figcaption><b>360 × 640</b></figcaption></figure>
+      <figure><img src="fotos/v4c-740.jpg" alt="Lo mismo a 360 por 740"><figcaption><b>360 × 740</b></figcaption></figure>
+    </div>
+    <div class="copy">
+      <div>¿Qué pasó?<span>What happened?</span></div>
+      <div>Si no eliges, no te la propondré durante una semana. Deshacer<span>If you don’t choose, I won’t suggest it for a week. Undo</span></div>
+    </div>
+  </div>
+
+  <p><strong>Al tocar un porqué</strong>, igual en las tres: arriba sale lo que hace, la línea se va y «Deshacer» sigue (devuelve «¿Te ayudó esta pausa?»).</p>
+  <div class="fotos">
+    <figure><img src="fotos/v4-aqui-640.jpg" alt="Tras Aquí no podía: Gracias. No la aparto: otro día puede encajar. Deshacer"><figcaption>Tras <b>«Aquí no podía»</b></figcaption></figure>
+    <figure><img src="fotos/v4-dificil-640.jpg" alt="Tras Difícil: Gracias. Durante una semana no te la propondré en las pausas. Deshacer"><figcaption>Tras <b>«Difícil»</b></figcaption></figure>
+    <figure><img src="fotos/v4-molesto-640.jpg" alt="Tras Me molestó: Gracias. Durante una semana no te la propondré. Si notas dolor, para y lee Seguridad. Deshacer"><figcaption>Tras <b>«Me molestó»</b></figcaption></figure>
+  </div>
+  <div class="copy">
+    <div>Gracias. No la aparto: otro día puede encajar.<span>Thank you. I’ll keep suggesting it: it may fit another day.</span></div>
+    <div>Gracias. Durante una semana no te la propondré en las pausas.<span>Thank you. I won’t suggest it in your breaks for a week.</span></div>
+    <div>Gracias. Durante una semana no te la propondré. Si notas dolor, para y lee Seguridad.<span>Thank you. I won’t suggest it for a week. If you feel pain, stop and read Safety.</span></div>
+  </div>
+  <p class="medido">Medido en las tres: a 360 × 640 y a 360 × 740 nada pide scroll y ningún botón pisa a otro ni a «Volver al inicio», también con la letra al 115 %.</p>
+
+  <!-- MONTADO -->
+
+  <h2>Lo que ya elegiste</h2>
+  <p>Lo de abajo es la página tal como la viste, con tus letras marcadas. La 4 de antes queda para comparar.</p>
+
 
   <!-- ============================================================ 1 -->
   <h2>1 · Un aviso a tu hora de entrada</h2>
@@ -100,7 +170,7 @@ figcaption b{font-weight:500;color:var(--ink-2)}
   </div>
 
   <div class="opcion rec">
-    <div class="cab"><span class="letra">A</span><h3>En «Tu semana», debajo de tus horas</h3><span class="sello">Recomendada</span></div>
+    <div class="cab"><span class="letra">A</span><h3>En «Tu semana», debajo de tus horas</h3><span class="sello ya">Elegida</span></div>
     <p>Una línea más en la hoja «¿Cómo es tu semana?», con su interruptor. Se guarda con «Guardar mi semana». Se llega desde Ajustes, en Sesiones, con «Tu semana ›».</p>
     <p class="porque">Por qué: el aviso sale de tu semana y está junto a las horas que lo deciden. Y Ajustes no crece.</p>
     <div class="fotos">
@@ -134,7 +204,7 @@ figcaption b{font-weight:500;color:var(--ink-2)}
   </div>
 
   <div class="opcion rec">
-    <div class="cab"><span class="letra">A</span><h3>A tu hora de entrada, con las palabras de la tarjeta de la mañana</h3><span class="sello">Recomendada</span></div>
+    <div class="cab"><span class="letra">A</span><h3>A tu hora de entrada, con las palabras de la tarjeta de la mañana</h3><span class="sello ya">Elegida</span></div>
     <p>A las 9:00 en punto, si tu jornada empieza a las 9:00. Dice lo mismo que la tarjeta que verás al abrir PACE. Al tocarlo se abre la home con «Hoy, como cada jueves» y «Preparar jornada».</p>
     <p class="porque">Por qué: no pide nada ni promete nada que luego cambie, y no hace falta otro ajuste para la hora.</p>
     <div class="fotos">
@@ -179,7 +249,7 @@ figcaption b{font-weight:500;color:var(--ink-2)}
   </div>
 
   <div class="opcion rec">
-    <div class="cab"><span class="letra">A</span><h3>Tres veces, y luego de vez en cuando</h3><span class="sello">Recomendada</span></div>
+    <div class="cab"><span class="letra">A</span><h3>Tres veces, y luego de vez en cuando</h3><span class="sello ya">Elegida</span></div>
     <p>Las tres primeras veces que acabas cada rutina. Después, como mucho una vez a la semana por rutina. Y nunca más de dos veces en un día: «Ahora no» cuenta como una de las dos.</p>
     <p class="porque">Por qué: tres respuestas son justo las que necesita «Qué te ayuda» para hablar de una rutina, y se pasa de hasta nueve preguntas al día a dos como mucho.</p>
   </div>
@@ -204,12 +274,14 @@ figcaption b{font-weight:500;color:var(--ink-2)}
   </div>
 
   <div class="pregunta">
-    <div class="t">Pregunta 4</div>
+    <div class="t">Pregunta 4 (antes de la vuelta)</div>
     <h3>¿Cómo se dice el porqué del «No»?</h3>
+    <p>Elegiste la forma de la B con lo que hace la A: la vuelta está arriba del todo.</p>
   </div>
+  <div class="antes">
 
   <div class="opcion rec">
-    <div class="cab"><span class="letra">A</span><h3>Tras el «No», «¿Qué pasó?» en el mismo sitio</h3><span class="sello">Recomendada</span></div>
+    <div class="cab"><span class="letra">A</span><h3>Tras el «No», «¿Qué pasó?» en el mismo sitio</h3><span class="sello">Antes de la vuelta</span></div>
     <p>Tres respuestas donde estaban «Sí · Un poco · No», y «Deshacer» debajo, donde estaba «Ahora no». Cada una hace lo que dice:</p>
     <ul>
       <li><strong>«Aquí no podía»</strong>: no la aparta, y no cuenta como «No».</li>
@@ -257,6 +329,8 @@ figcaption b{font-weight:500;color:var(--ink-2)}
     </div>
   </div>
 
+  </div>
+
   <!-- ============================================================ 3 -->
   <h2>3 · «La de antes» en la ventana de la pausa</h2>
   <p>Es la V2 de la revisión 8 de ChatGPT: «ponme aquella que ya sé hacer». La ventana de la pausa propone una rutina distinta cada vez, a propósito. Esto añade la última que hiciste, para quien prefiere lo conocido. Reglas para todas las letras:</p>
@@ -280,7 +354,7 @@ figcaption b{font-weight:500;color:var(--ink-2)}
   </div>
 
   <div class="opcion rec">
-    <div class="cab"><span class="letra">A</span><h3>Una fila más en la ventana de la pausa</h3><span class="sello">Recomendada</span></div>
+    <div class="cab"><span class="letra">A</span><h3>Una fila más en la ventana de la pausa</h3><span class="sello ya">Elegida</span></div>
     <p>Con el dibujo de su módulo, su nombre y «la de antes». Por libre, debajo de las otras tres puertas; con «A tu ritmo», debajo de «Hidrátate» y con su mismo estilo.</p>
     <p class="porque">Por qué: es la única que sirve igual en las dos ventanas, dice qué rutina es y no compite con la propuesta.</p>
     <div class="fotos">
@@ -318,18 +392,18 @@ figcaption b{font-weight:500;color:var(--ink-2)}
   </div>
 
   <!-- ============================================================ tabla -->
-  <h2>Lo que espera a Ez</h2>
-  <p>Basta con contestar «1A 2A 3A 4A 5A», o cambiar las letras que quieras.</p>
+  <h2>Tus letras</h2>
+  <p>Elegidas el 15 nov., salvo la 4, que espera su vuelta (arriba del todo).</p>
   <div class="tabla">
     <table class="final">
-      <thead><tr><th>Pregunta</th><th>Recomendada</th><th>En una línea</th></tr></thead>
+      <thead><tr><th>Pregunta</th><th>Letra</th><th>En una línea</th></tr></thead>
       <tbody>
         <tr class="grupo"><td colspan="3">Un aviso a tu hora de entrada</td></tr>
         <tr><td>1 · ¿Dónde se enciende?</td><td class="l">A</td><td>En «Tu semana», junto a tus horas. Ajustes no crece.</td></tr>
         <tr><td>2 · ¿Qué dice, y a qué hora?</td><td class="l">A</td><td>«Hoy, como cada jueves», a tu hora de entrada: lo mismo que verás al abrir.</td></tr>
         <tr class="grupo"><td colspan="3">«¿Te ayudó?»</td></tr>
         <tr><td>3 · ¿Cada cuánto pregunta?</td><td class="l">A</td><td>Tres veces por rutina y luego de vez en cuando; dos al día como mucho.</td></tr>
-        <tr><td>4 · ¿Cómo se dice el porqué del «No»?</td><td class="l">A</td><td>«¿Qué pasó?» en el mismo sitio; «Aquí no podía» ya no aparta la rutina.</td></tr>
+        <tr><td>4 · ¿Cómo se dice el porqué del «No»?</td><td class="l" style="color:var(--terra)">¿?</td><td>Espera tu letra en la vuelta: la forma de la B con lo que hace la A. Recomendada, su A (lo que pasa si no eliges, dicho como condición).</td></tr>
         <tr class="grupo"><td colspan="3">La de antes</td></tr>
         <tr><td>5 · ¿Dónde vive?</td><td class="l">A</td><td>Una fila en la ventana de la pausa, igual con y sin «A tu ritmo».</td></tr>
       </tbody>

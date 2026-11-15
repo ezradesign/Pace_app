@@ -350,5 +350,152 @@
     "mal": []
    }
   }
+ },
+ "v4a": {
+  "640": {
+   "scroll": {
+    "normal": 0,
+    "grande": 0,
+    "arriba": 59
+   },
+   "pisados": {
+    "botones": 6,
+    "mal": []
+   },
+   "pisados115": {
+    "botones": 6,
+    "mal": []
+   }
+  },
+  "740": {
+   "scroll": {
+    "normal": 0,
+    "grande": 0,
+    "arriba": 59
+   },
+   "pisados": {
+    "botones": 6,
+    "mal": []
+   },
+   "pisados115": {
+    "botones": 6,
+    "mal": []
+   }
+  }
+ },
+ "v4b": {
+  "640": {
+   "scroll": {
+    "normal": 0,
+    "grande": 0,
+    "arriba": 59
+   },
+   "pisados": {
+    "botones": 6,
+    "mal": []
+   },
+   "pisados115": {
+    "botones": 6,
+    "mal": []
+   }
+  },
+  "740": {
+   "scroll": {
+    "normal": 0,
+    "grande": 0,
+    "arriba": 59
+   },
+   "pisados": {
+    "botones": 6,
+    "mal": []
+   },
+   "pisados115": {
+    "botones": 6,
+    "mal": []
+   }
+  }
+ },
+ "v4c": {
+  "640": {
+   "scroll": {
+    "normal": 0,
+    "grande": 0,
+    "arriba": 59
+   },
+   "pisados": {
+    "botones": 6,
+    "mal": []
+   },
+   "pisados115": {
+    "botones": 6,
+    "mal": []
+   }
+  },
+  "740": {
+   "scroll": {
+    "normal": 0,
+    "grande": 0,
+    "arriba": 59
+   },
+   "pisados": {
+    "botones": 6,
+    "mal": []
+   },
+   "pisados115": {
+    "botones": 6,
+    "mal": []
+   }
+  }
+ },
+ "v4-aqui": {
+  "640": {
+   "scroll": {
+    "normal": 0,
+    "grande": 0,
+    "arriba": 59
+   },
+   "pisados": {
+    "botones": 3,
+    "mal": []
+   },
+   "pisados115": {
+    "botones": 3,
+    "mal": []
+   }
+  }
+ },
+ "v4-dificil": {
+  "640": {
+   "scroll": {
+    "normal": 0,
+    "grande": 0,
+    "arriba": 59
+   },
+   "pisados": {
+    "botones": 3,
+    "mal": []
+   },
+   "pisados115": {
+    "botones": 3,
+    "mal": []
+   }
+  }
+ },
+ "v4-molesto": {
+  "640": {
+   "scroll": {
+    "normal": 0,
+    "grande": 0,
+    "arriba": 59
+   },
+   "pisados": {
+    "botones": 4,
+    "mal": []
+   },
+   "pisados115": {
+    "botones": 4,
+    "mal": []
+   }
+  }
  }
 }
