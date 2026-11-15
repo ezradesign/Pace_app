@@ -86,6 +86,9 @@ function paceEntradaPonerYa() {
   var ids = [];
   for (var i = 0; i < PACE_ENTRADA_DIAS; i++) ids.push({ id: PACE_ENTRADA_PRIMER_ID + i });
   var s = getState();
+  /* Quien nunca ha tocado el interruptor no tiene nada puesto: ni se quita ni se pone nada, y el
+     complemento solo oye a PACE por sus avisos de siempre (lo cuentan android-nativo y ios-avisos). */
+  if (typeof ((s && s.ritmo) || {}).avisoEntrada !== 'boolean') return null;
   var avisos = paceEntradaAvisos(s, Date.now());
   var android = pacePlataformaNativa() === 'android';
   /* El permiso se mira cada vez: el que guarda la app puede no haber llegado aún al abrir. */

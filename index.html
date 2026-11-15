@@ -2660,6 +2660,15 @@ Object.assign(window.PACE_STRINGS.es, {
   'session.feedback.aparta': 'Gracias. Durante una semana no te la propondré en las pausas.',
   'session.feedback.deshacer': 'Deshacer',
 
+  'session.feedback.porque': '¿Por qué?',
+  'session.feedback.aqui': 'Aquí no podía',
+  'session.feedback.dificil': 'Difícil',
+  'session.feedback.molesto': 'Me molestó',
+  'session.feedback.aparta.si': 'Gracias. Si no me dices por qué, no te la propondré durante una semana.',
+  'session.feedback.noAparta': 'Gracias. No la aparto: otro día puede encajar.',
+  'session.feedback.molesto.aparta': 'Gracias. Durante una semana no te la propondré.',
+  'session.feedback.dolor': 'Si notas dolor, para y lee',
+
 
   'hydrate.tag': 'Hidratación',
   'hydrate.title': 'Hidrátate',
@@ -2863,6 +2872,14 @@ Object.assign(window.PACE_STRINGS.en, {
   'session.feedback.thanks': 'Thank you',
   'session.feedback.aparta': 'Thank you. I won’t suggest it in your breaks for a week.',
   'session.feedback.deshacer': 'Undo',
+  'session.feedback.porque': 'Why?',
+  'session.feedback.aqui': 'Couldn’t do it here',
+  'session.feedback.dificil': 'Too hard',
+  'session.feedback.molesto': 'Uncomfortable',
+  'session.feedback.aparta.si': 'Thank you. Unless you tell me why, I won’t suggest it for a week.',
+  'session.feedback.noAparta': 'Thank you. I’ll keep suggesting it: it may fit another day.',
+  'session.feedback.molesto.aparta': 'Thank you. I won’t suggest it for a week.',
+  'session.feedback.dolor': 'If you feel pain, stop and read',
 
 
   'hydrate.tag': 'Hydration',
@@ -20114,6 +20131,9 @@ function paceEntradaPonerYa() {
   var ids = [];
   for (var i = 0; i < PACE_ENTRADA_DIAS; i++) ids.push({ id: PACE_ENTRADA_PRIMER_ID + i });
   var s = getState();
+
+
+  if (typeof (s && s.ritmo || {}).avisoEntrada !== 'boolean') return null;
   var avisos = paceEntradaAvisos(s, Date.now());
   var android = pacePlataformaNativa() === 'android';
 
@@ -22152,6 +22172,15 @@ Object.assign(window, { SessionPrep, sessionPrepCopy });
    reescribe, y un «No» deshecho no debe quedar en él. Solo se promete apartar lo que
    se propone de verdad (breakProponible).
 
+   EL «NO» CON SU PORQUÉ (Ez, 4A del 15 nov. 2026, sobre docs/proposals/maquetas-uso-15nov/):
+   tras el «No», arriba lo que pasa si no dices más, como condición («Si no me dices por qué, no
+   te la propondré durante una semana»), y debajo, en una línea, «¿Por qué? Aquí no podía ·
+   Difícil · Me molestó». Arriba nunca se adelanta lo que aún no se sabe. Cada porqué hace lo suyo:
+   «Aquí no podía» devuelve la entrada de antes y apunta solo que se preguntó hoy (no cuenta como
+   «No», no aparta y no deja evento); «Difícil» deja el «No», como siempre; «Me molestó» lo deja y
+   enlaza la página de Seguridad. Salir sin elegir deja el «No», como hasta ahora. «Deshacer»
+   vuelve a la pregunta desde cualquiera de ellos.
+
    «AHORA NO», EN SU LÍNEA (Ez, 5 nov. 2026): debajo de Sí · Un poco · No, centrado.
    Hasta entonces iba al final de la misma fila (Ez, 16 oct., opción B).
 
@@ -22169,9 +22198,13 @@ function SessionFeedback(_ref) {let { routineId, kind = 'move', accent = 'var(--
   });
   const [decided, setDecided] = useStateSF(false);
   const [aparta, setAparta] = useStateSF(false);
+  const [esNo, setEsNo] = useStateSF(false);
+  const [porque, setPorque] = useStateSF(null);
   const lockRef = useRefSF(false);
 
+
   const pendienteRef = useRefSF(null);
+  const antesRef = useRefSF(null);
 
   useEffectSF(() => {
     const emitir = () => {
@@ -22194,20 +22227,61 @@ function SessionFeedback(_ref) {let { routineId, kind = 'move', accent = 'var(--
     try {recordRoutineFeedback(routineId, response, { sinEvento: no });} catch (e) {}
     if (no) {
       pendienteRef.current = { antes: antes };
+      antesRef.current = antes;
       let si = false;
       try {si = breakProponible(routineId) && !!breakVetadas(getState().routineFeedback)[routineId];} catch (e) {}
       setAparta(si);
+      setEsNo(true);
+      setPorque(null);
     }
     setDecided(true);
   };
 
+
+
+  const elegirPorque = (k) => {
+    if (k === 'aqui') {
+      pendienteRef.current = null;
+      try {restaurarRoutineFeedback(routineId, antesRef.current);} catch (e) {}
+      try {recordRoutineFeedback(routineId, 'later');} catch (e) {}
+    }
+    setPorque(k);
+  };
+
   const deshacer = () => {
-    const p = pendienteRef.current;
     pendienteRef.current = null;
-    try {restaurarRoutineFeedback(routineId, p ? p.antes : null);} catch (e) {}
+    try {restaurarRoutineFeedback(routineId, antesRef.current);} catch (e) {}
+    antesRef.current = null;
     lockRef.current = false;
     setAparta(false);
+    setEsNo(false);
+    setPorque(null);
     setDecided(false);
+  };
+
+  const botonDeshacer =
+  React.createElement("button", { type: "button", "data-pace-fb-deshacer": true, onClick: deshacer, style: sessionFeedbackStyles.deshacer },
+  t('session.feedback.deshacer')
+  );
+
+  const dolor =
+  React.createElement(React.Fragment, null,
+  t('session.feedback.dolor'), ' ',
+  React.createElement("a", { href: typeof paceNativoEnlace === 'function' ? paceNativoEnlace('/safety') : '/safety', target: "_blank", rel: "noopener",
+    "data-pace-fb-seguridad": true, style: sessionFeedbackStyles.deshacer }, t('settings.legal.safety')), "."
+  );
+
+
+  const acuse = () => {
+    if (!esNo) return t('session.feedback.thanks');
+    if (porque === 'aqui') return React.createElement(React.Fragment, null, t('session.feedback.noAparta'), aparta ? React.createElement(React.Fragment, null, ' ', botonDeshacer) : null);
+    if (!aparta) {
+      if (porque === 'molesto') return React.createElement(React.Fragment, null, t('session.feedback.thanks'), ". ", dolor);
+      return t('session.feedback.thanks');
+    }
+    if (porque === 'dificil') return React.createElement(React.Fragment, null, t('session.feedback.aparta'), ' ', botonDeshacer);
+    if (porque === 'molesto') return React.createElement(React.Fragment, null, t('session.feedback.molesto.aparta'), " ", dolor, ' ', botonDeshacer);
+    return React.createElement(React.Fragment, null, t('session.feedback.aparta.si'), ' ', botonDeshacer);
   };
 
   const wrapStyle = {
@@ -22220,15 +22294,21 @@ function SessionFeedback(_ref) {let { routineId, kind = 'move', accent = 'var(--
     React.createElement("div", { "data-pace-session-feedback": true, "data-pace-fb-kind": kind, style: wrapStyle },
     React.createElement("div", { "data-pace-fb-rule": true, style: sessionFeedbackStyles.rule }),
     decided ?
-    React.createElement("div", { "data-pace-fb-thanks": true, style: sessionFeedbackStyles.thanks },
-    aparta ?
     React.createElement(React.Fragment, null,
-    t('session.feedback.aparta'), ' ',
-    React.createElement("button", { type: "button", "data-pace-fb-deshacer": true, onClick: deshacer, style: sessionFeedbackStyles.deshacer },
-    t('session.feedback.deshacer')
+    React.createElement("div", { "data-pace-fb-thanks": true, style: sessionFeedbackStyles.thanks }, acuse()),
+    esNo && porque === null &&
+    React.createElement("div", { "data-pace-fb-porque": true, style: sessionFeedbackStyles.porque },
+    t('session.feedback.porque'), ' ',
+    ['aqui', 'dificil', 'molesto'].map((k, i) =>
+    React.createElement(React.Fragment, { key: k },
+    i ? ' · ' : null,
+    React.createElement("button", { type: "button", "data-pace-fb-razon": k, onClick: () => elegirPorque(k), style: sessionFeedbackStyles.razon },
+    t('session.feedback.' + k)
     )
-    ) :
-    t('session.feedback.thanks')
+    )
+    )
+    )
+
     ) :
 
     React.createElement(React.Fragment, null,
@@ -22304,6 +22384,17 @@ const sessionFeedbackStyles = {
     ...displayItalic,
     fontSize: 'inherit', color: 'var(--ink-2)',
     background: 'none', border: 'none', padding: '0 2px', cursor: 'pointer',
+    textDecoration: 'underline', textUnderlineOffset: 3
+  },
+
+  porque: {
+    ...displayItalic,
+    fontSize: 15, color: 'var(--ink-3)', marginTop: 10, lineHeight: 1.5, textAlign: 'center'
+  },
+  razon: {
+    ...displayItalic,
+    fontSize: 'inherit', color: 'var(--ink-3)',
+    background: 'none', border: 'none', padding: '2px 2px', cursor: 'pointer',
     textDecoration: 'underline', textUnderlineOffset: 3
   },
   thanks: {
