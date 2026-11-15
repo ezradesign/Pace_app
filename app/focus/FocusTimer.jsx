@@ -90,7 +90,7 @@ function FocusTimer({ onFinish }) {
         try {
           const aviso = typeof ritmoAviso === 'function' ? ritmoAviso(getState(), t, tn, lang) : null;
           maybeNotifyFocusEnd({
-            enabled: avisoOn,
+            enabled: avisoOn, bloque,   // una etiqueta por bloque: el siguiente no pisa a este
             title: aviso ? aviso.title : t('notify.focus.title'),
             body: aviso ? aviso.body : t('notify.focus.body'),
           });

@@ -220,6 +220,16 @@ function paceIosAvisoRecolocar() {
   });
 }
 
+/* El del bloque siguiente no pisa al anterior (fila 17 de la cola; el porqué, en android.avisos.js):
+   antes de pedir el de otro bloque u otra pausa se quita del centro de avisos el que ya llegó. iOS
+   quita lo pendiente con `cancel`, pero lo entregado se queda; con el mismo id, el nuevo lo sustituía.
+   Si falla, se pide igual. */
+function paceIosQuitarLlegado(id, puesto, quizas) {
+  if (!quizas && (puesto === null || puesto > Date.now())) return Promise.resolve();
+  return paceIosPedir('LocalNotifications', 'removeDeliveredNotifications', { notifications: [{ id: id }] })
+    .then(null, function () {});
+}
+
 /* El fin de la pausa: lo mismo que el de fin de Foco, con su id y su sonido. */
 function paceIosAvisoAjustarPausa() {
   var a = _paceIos, p = a.pausa, ahora = Date.now();
@@ -229,7 +239,9 @@ function paceIosAvisoAjustarPausa() {
     var aviso = { id: PACE_IOS_AVISO_PAUSA_ID, title: quiere.title, body: quiere.body, schedule: { at: new Date(quiere.endsAt) } };
     var sonido = paceIosAvisoSonido(PACE_IOS_AVISO_SONIDO_PAUSA);
     if (sonido) aviso.sound = sonido;
-    return paceIosPedir('LocalNotifications', 'schedule', { notifications: [aviso] }).then(function () {
+    return paceIosQuitarLlegado(PACE_IOS_AVISO_PAUSA_ID, a.pausaPuesto, false).then(function () {
+      return paceIosPedir('LocalNotifications', 'schedule', { notifications: [aviso] });
+    }).then(function () {
       a.pausaPuesto = quiere.endsAt;
       a.pausaFallo = null;
       paceIosAvisoGuardar();
@@ -253,7 +265,9 @@ function paceIosAvisoAjustar() {
     var aviso = { id: PACE_IOS_AVISO_FOCO_ID, title: textos.title, body: textos.body, schedule: { at: new Date(quiere.endsAt) } };
     var sonido = paceIosAvisoSonido();
     if (sonido) aviso.sound = sonido;
-    return paceIosPedir('LocalNotifications', 'schedule', { notifications: [aviso] }).then(function () {
+    return paceIosQuitarLlegado(PACE_IOS_AVISO_FOCO_ID, a.puesto, a.quizas).then(function () {
+      return paceIosPedir('LocalNotifications', 'schedule', { notifications: [aviso] });
+    }).then(function () {
       a.puesto = quiere.endsAt;
       a.quizas = false;
       a.fallo = null;
