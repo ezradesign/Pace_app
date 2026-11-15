@@ -15,6 +15,8 @@ Hola 👋 Ya está lista la versión de prueba de *PACE*, la app de pausas activ
 2️⃣ Únete al grupo de Google «PACE testers»
 3️⃣ Abre el enlace de la prueba, hazte tester e instálala desde Play Store
 
+🔄 *¿Ya estabas en la prueba?* Solo tienes que actualizar PACE desde Play Store.
+
 🔔 *Lo que me ayuda que mires:*
 • El fin del Foco suena con *la campana* de PACE, y el fin de la pausa con *dos campanadas*, también con el móvil bloqueado
 • En el primer Foco puede salir *«Avisos a su hora ›»*: tócalo para que el aviso no llegue tarde

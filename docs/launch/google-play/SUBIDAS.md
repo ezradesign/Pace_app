@@ -174,3 +174,44 @@ Mueve y Estira, renovados: un dibujo en cada ejercicio y dónde colocarte. Con e
 Move and Stretch, renewed: a drawing for every exercise and where to stand. With your phone locked, the end of Focus rings PACE's bell and the end of a break plays two chimes. On your first Focus, «Alerts on time ›» keeps the alert from arriving late. Pick the hours of «At your pace» with «− 9:00 +». Importing a copy tells you what day it's from. With large phone text, the home screen fits without scrolling. Thanks for testing: tell me what breaks.
 </en-US>
 ```
+
+### «Qué probar» de TestFlight para la 0.205.0 (205000)
+
+Subida a TestFlight el 15 nov. 2026 con el «Sí, súbela» de Ez (ejecución 43699696086 de `ios.yml`, a mano). El grupo
+externo «Testers iPhone» tenía la 0.175.0 (la 191001 no llegó a darse). Sin «Avisos a su hora»: es solo de Android.
+
+```
+Esta versión trae todo lo nuevo desde la 0.175.0.
+
+Lo nuevo:
+• Mueve y Estira, renovados: un dibujo en cada ejercicio y dónde colocarte.
+• «A tu ritmo» prepara tu jornada, y sus horas se eligen con el «− 9:00 +».
+• Con el iPhone bloqueado, el fin del Foco suena con la campana de PACE y el fin de la pausa con dos campanadas.
+• Importar una copia dice de qué día es.
+• Nueva bienvenida y «Qué te ayuda» en Estadísticas.
+
+Qué probar, si puedes:
+1. Empieza un Foco, bloquea el iPhone y espera al final: suena la campana de PACE, y no vuelve a sonar al abrir PACE.
+2. Haz una pausa con el iPhone bloqueado: al acabar suenan dos campanadas.
+3. Con el interruptor de silencio puesto, los avisos no suenan.
+
+Cuéntame lo que falle o lo que eches de menos. ¡Gracias por probarla!
+
+—
+
+This version brings everything new since 0.175.0.
+
+What's new:
+• Move and Stretch, renewed: a drawing for every exercise and where to stand.
+• «At your pace» plans your workday, and you pick its hours with «− 9:00 +».
+• With your iPhone locked, the end of Focus rings PACE's bell and the end of a break plays two chimes.
+• Importing a copy tells you what day it's from.
+• A new welcome and «What helps» in Stats.
+
+What to test, if you can:
+1. Start a Focus, lock your iPhone and wait for the end: PACE's bell rings, and it doesn't ring again when you open PACE.
+2. Take a break with your iPhone locked: two chimes play when it ends.
+3. With the silent switch on, the alerts make no sound.
+
+Tell me what breaks or what you'd miss. Thanks for testing!
+```
