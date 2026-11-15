@@ -153,7 +153,10 @@ test.describe('en crema, la letra y los botones de color van en el hondo', () =>
     const vasos = page.getByRole('dialog', { name: /Hidrátate/ });
     expect(await colorDe(vasos.getByRole('button', { name: 'Un vaso más', exact: true }), 'backgroundColor')).toBe(await tokenRgb(page, '--hydrate-deep'));
     await vasos.getByRole('button', { name: 'Un vaso más', exact: true }).click();
-    expect((await censo(page, '[data-pace-modal-backdrop]')).malos).toEqual([]);
+    /* Tras el toque, el botón pasa unos milisegundos por su color de pulsado: con la máquina cargada el
+       censo lo cogía a medias y caía en la suite entera (0.204.0 a 0.206.0), y solo pasaba 10 de 10.
+       Se espera a que se asiente; un color malo que se queda sigue fallando. */
+    await expect.poll(async () => (await censo(page, '[data-pace-modal-backdrop]')).malos, { timeout: 3000 }).toEqual([]);
   });
 
   test('la ventana de la pausa: el motivo y el botón del plato', async ({ page }) => {
