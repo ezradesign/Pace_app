@@ -84,12 +84,14 @@ test('«Ahora no» va en su línea, debajo de Sí · Un poco · No', async ({ pa
   }
 });
 
+/* Desde la 4A del 15 nov. (feedback-porque.spec.js) el acuse lo dice como condición mientras no se
+   elige un porqué: «Si no me dices por qué, no te la propondré durante una semana». */
 test('tras «No» dice que la aparta una semana, y «Deshacer» lo deja como estaba', async ({ page, context }) => {
   await hastaElCierre(page, context);
   expect(await entrada(page), 'GUARD: la rutina ya traía respuestas').toBeNull();
   await page.locator('[data-pace-fb-chip]').nth(2).click();
   const acuse = page.locator('[data-pace-fb-thanks]');
-  await expect(acuse).toContainText('Durante una semana no te la propondré en las pausas.');
+  await expect(acuse).toContainText('Si no me dices por qué, no te la propondré durante una semana.');
   expect((await entrada(page)).no, 'el «No» no se ha guardado').toBe(1);
   expect(await page.evaluate((id) => !!window.breakVetadas(getState().routineFeedback)[id], RUTINA), 'el «No» no la aparta').toBe(true);
 

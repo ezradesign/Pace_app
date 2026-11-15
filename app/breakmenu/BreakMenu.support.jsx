@@ -228,4 +228,52 @@ function breakPropuesta(state, ctx) {
   return null;
 }
 
-Object.assign(window, { breakPozo, breakVetadas, breakProponible, breakElige, breakPropuesta });
+/* breakLaDeAntes(state, eventos, excluir) -> { modulo, rutina } o null.
+   «LA DE ANTES» (Ez, 5A del 15 nov. 2026; V2 de la revisión 8 de ChatGPT: «ponme aquella que ya
+   sé hacer»). La propuesta rota a propósito; esto ofrece al lado la última rutina que acabaste,
+   para quien prefiere lo conocido. PURA: los eventos entran por parámetro (la foto del registro,
+   `paceEventsSnapshot`), igual que la tarjeta de la barra lateral.
+
+   La última de Respira, Mueve o Estira terminada entera (`natural`): una dejada a medias no es
+   «la que ya sé hacer». Y solo si PACE podría proponerla (`breakProponible`: abierta, fuera de lo
+   que va aparte y sin aviso de seguridad, así que una apnea no se ofrece sola), si no está
+   apartada por un «No» de esta semana (`breakVetadas`) y si no es ya lo que la ventana propone
+   (`excluir`: la propuesta y, con «A tu ritmo», los platos de la pausa): no se dice dos veces lo
+   mismo. `modulo` usa las claves de las tarjetas ('extra' es Estira, 'move' es Mueve), como la
+   propuesta, y entra por la misma puerta. Con «A tu ritmo», hacerla cierra la pausa como hecha:
+   lo hace ya cualquier sesión terminada con la pausa abierta (`ritmoPausaHecha`). */
+function breakLaDeAntes(state, eventos, excluir) {
+  try {
+    if (!Array.isArray(eventos)) return null;
+    let ultima = null, cuando = -Infinity;
+    eventos.forEach(function (e) {
+      if (!e || e.type !== 'session.completed' || !e.payload) return;
+      const m = e.payload.module;
+      if (m !== 'breathe' && m !== 'move' && m !== 'stretch') return;
+      if (e.payload.completionReason !== 'natural' || !e.payload.routineId) return;
+      const t = Date.parse(e.occurredAt);
+      if (isNaN(t) || t < cuando) return;
+      cuando = t; ultima = e.payload.routineId;
+    });
+    if (!ultima || (excluir || []).indexOf(ultima) !== -1) return null;
+    if (!breakProponible(ultima)) return null;
+    if (breakVetadas((state || {}).routineFeedback)[ultima]) return null;
+    const respira = window.getBreatheRoutine && window.getBreatheRoutine(ultima);
+    if (respira) return { modulo: 'breathe', rutina: respira };
+    const cuerpo = window.resolveBodyRoutine && window.resolveBodyRoutine(ultima);
+    if (cuerpo && cuerpo.routine) return { modulo: cuerpo.source === 'move' ? 'move' : 'extra', rutina: cuerpo.routine };
+    return null;
+  } catch (e) { return null; }
+}
+
+/* Lo que pinta las dos ventanas: la de antes con la foto de ahora del registro. */
+function breakLaDeAntesAhora(state, excluir) {
+  let eventos = null;
+  try {
+    const snap = window.paceEventsSnapshot && window.paceEventsSnapshot();
+    eventos = (snap && Array.isArray(snap.events)) ? snap.events : null;
+  } catch (e) { eventos = null; }
+  return breakLaDeAntes(state, eventos, excluir);
+}
+
+Object.assign(window, { breakPozo, breakVetadas, breakProponible, breakElige, breakPropuesta, breakLaDeAntes, breakLaDeAntesAhora });

@@ -42,6 +42,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'break.ritmo.cuenta':            'Ya la hice por mi cuenta',
     'break.ritmo.agua':              'y un vaso de agua',
     'break.ritmo.vaso':              'un vaso ahora',
+    /* «La de antes» (Ez, 5A del 15 nov. 2026): la última rutina que acabaste, en su fila. */
+    'break.antes':                   'la de antes, {n} min',
     'break.ritmo.comida':            'Hora de comer',
     'break.ritmo.conAgua':           'con un vaso de agua',
     'break.ritmo.comer':             'Ir a comer',
@@ -78,6 +80,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'break.ritmo.cuenta':            'I did it my own way',
     'break.ritmo.agua':              'and a glass of water',
     'break.ritmo.vaso':              'a glass now',
+    'break.antes':                   'your last one, {n} min',
     'break.ritmo.comida':            'Lunchtime',
     'break.ritmo.conAgua':           'with a glass of water',
     'break.ritmo.comer':             'Take a lunch break',

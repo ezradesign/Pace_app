@@ -101,15 +101,40 @@ function RitmoSemanaRaiz() {
   return <RitmoSemanaHoja onClose={() => setAbierta(false)} />;
 }
 
+/* EL AVISO A TU HORA DE ENTRADA (Ez, 1A del 15 nov. 2026): una línea con su interruptor debajo de
+   las horas que lo deciden, solo en la app del móvil (en la web no puede avisar con PACE cerrado).
+   Apagado de fábrica; se guarda con «Guardar mi semana», y lo pone ui/nativo.entrada.js. */
+function RitmoSemanaAviso({ on, onChange }) {
+  const { t } = useT();
+  return (
+    <div data-pace-semana-aviso style={ritmoSemanaStyles.aviso}>
+      <span style={ritmoSemanaStyles.avisoFrase}><b style={ritmoSemanaStyles.nombre}>{t('ritmo.st.aviso.verbo')}</b> {t('ritmo.st.aviso.resto')}</span>
+      <button type="button" role="switch" aria-checked={on ? 'true' : 'false'} className="pace-aj-sw"
+        aria-label={t('ritmo.st.aviso.verbo') + ' ' + t('ritmo.st.aviso.resto')} onClick={() => onChange(!on)} />
+    </div>
+  );
+}
+
 function RitmoSemanaHoja({ onClose }) {
   const { t } = useT();
   const [state] = usePace();
   const b = useRitmoSemanaBorrador(state);
-  const guardar = (tipo) => { ritmoGuardarSemana(tipo, b.horas); onClose(); };
+  const movil = typeof paceEsNativo === 'function' && paceEsNativo();
+  const [aviso, setAviso] = useStateRST(() => !!(state && state.ritmo && state.ritmo.avisoEntrada === true));
+  const guardar = (tipo) => {
+    ritmoGuardarSemana(tipo, b.horas);
+    if (movil) {
+      ritmoGuardar(() => ({ avisoEntrada: aviso }));
+      /* Encenderlo pide el permiso de avisos dentro de este toque; sin semana no hay aviso. */
+      try { if (aviso && tipo) paceEntradaEncender(); else paceEntradaPoner(); } catch (e) {}
+    }
+    onClose();
+  };
   return (
     <Modal open onClose={onClose} maxWidth={460} tagLabel={t('ritmo.nombre')} title={t('ritmo.st.titulo')} subtitle={t('ritmo.st.sub')}>
       <div data-pace-semana-hoja style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
         <RitmoSemanaEditor dias={b.dias} onDias={b.setDias} horario={b.horario} onHora={b.onHora} />
+        {movil && <RitmoSemanaAviso on={aviso} onChange={setAviso} />}
         {/* Lo que el motor de la semana ha aprendido, con su «Olvidar» (RitmoCarta.jsx). */}
         {typeof RitmoAprendido === 'function' && <RitmoAprendido state={state} />}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
@@ -149,7 +174,9 @@ const ritmoSemanaStyles = {
     background: 'var(--paper-2)', border: '1px solid rgba(62,90,58,.35)', color: 'var(--focus)',
     fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 18,
   },
+  aviso: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: -6, paddingTop: 12, borderTop: '1px solid var(--paper-3)' },
+  avisoFrase: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, lineHeight: 1.35, color: 'var(--ink-2)', textAlign: 'left' },
   saltar: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 14, color: 'var(--ink-3)', background: 'transparent', border: 'none', padding: '8px 10px', cursor: 'pointer' },
 };
 
-Object.assign(window, { RitmoSemanaGlifo, RitmoSemanaEditor, useRitmoSemanaBorrador, ritmoSemanaAbrir, RitmoSemanaRaiz, RitmoSemanaHoja });
+Object.assign(window, { RitmoSemanaGlifo, RitmoSemanaEditor, RitmoSemanaAviso, useRitmoSemanaBorrador, ritmoSemanaAbrir, RitmoSemanaRaiz, RitmoSemanaHoja });

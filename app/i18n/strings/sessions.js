@@ -149,6 +149,15 @@ Object.assign(window.PACE_STRINGS.es, {
     'session.feedback.thanks':         'Gracias',
     'session.feedback.aparta':         'Gracias. Durante una semana no te la propondré en las pausas.',
     'session.feedback.deshacer':       'Deshacer',
+    /* El «No» con su porqué (Ez, 4A del 15 nov. 2026; SessionFeedback.jsx). */
+    'session.feedback.porque':         '¿Por qué?',
+    'session.feedback.aqui':           'Aquí no podía',
+    'session.feedback.dificil':        'Difícil',
+    'session.feedback.molesto':        'Me molestó',
+    'session.feedback.aparta.si':      'Gracias. Si no me dices por qué, no te la propondré durante una semana.',
+    'session.feedback.noAparta':       'Gracias. No la aparto: otro día puede encajar.',
+    'session.feedback.molesto.aparta': 'Gracias. Durante una semana no te la propondré.',
+    'session.feedback.dolor':          'Si notas dolor, para y lee',
 
     // Hydrate
     'hydrate.tag':                     'Hidratación',
@@ -353,6 +362,14 @@ Object.assign(window.PACE_STRINGS.en, {
     'session.feedback.thanks':         'Thank you',
     'session.feedback.aparta':         'Thank you. I won’t suggest it in your breaks for a week.',
     'session.feedback.deshacer':       'Undo',
+    'session.feedback.porque':         'Why?',
+    'session.feedback.aqui':           'Couldn’t do it here',
+    'session.feedback.dificil':        'Too hard',
+    'session.feedback.molesto':        'Uncomfortable',
+    'session.feedback.aparta.si':      'Thank you. Unless you tell me why, I won’t suggest it for a week.',
+    'session.feedback.noAparta':       'Thank you. I’ll keep suggesting it: it may fit another day.',
+    'session.feedback.molesto.aparta': 'Thank you. I won’t suggest it for a week.',
+    'session.feedback.dolor':          'If you feel pain, stop and read',
 
     // Hydrate
     'hydrate.tag':                     'Hydration',
