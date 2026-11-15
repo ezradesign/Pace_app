@@ -37,7 +37,7 @@ const LOGROS = ['first.step', 'first.breath', 'first.stretch', 'first.sip', 'fir
   'first.day', 'first.plan', 'explore.box', 'explore.coherent', 'explore.physiological', 'explore.neck', 'explore.desk',
   'explore.hips', 'explore.shoulders'];
 
-const re = (es, en) => new RegExp('^(' + es + '|' + en + ')');
+const re = (es, en) => new RegExp('^(' + es + '|' + en + ')', 'i');   // sin mayúsculas: en inglés «Start Focus» cambió de letra
 const B = {
   foco: re('Empezar foco', 'Start focus'),
   respira: re('Respira', 'Breathe'),

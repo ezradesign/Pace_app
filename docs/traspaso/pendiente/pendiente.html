@@ -2,7 +2,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=Inter+Tight:wght@400;500;600&display=swap">
 <style>
-/* Una columna de lectura con cuatro tramos en orden: solo lo pendiente. Cada paso dice quién lo hace con una
+/* Una columna de lectura con tres tramos en orden: solo lo pendiente. Cada paso dice quién lo hace con una
    etiqueta (yo, tú, espera tu alta) y el único paso en marcha va apartado. Paleta y letras de PACE (DESIGN_SYSTEM.md). */
 :root {
   --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F695B;
@@ -62,40 +62,28 @@ summary:focus-visible, a:focus-visible { outline: 2px solid var(--focus); outlin
 
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.203.0, en la web · 12 de noviembre, 20:20</div>
+    <div class="eyebrow">PACE · versión 0.205.0, en la web, en revisión en Play y en TestFlight · 15 de noviembre</div>
     <h1>Lo que queda hasta v1</h1>
-    <p>Solo lo pendiente, en orden. Lo hecho no sale aquí; está en <a href="https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT">tu hoja de pasos</a>. <b>El código ya no marca la fecha</b>: la
-      marcan doce testers durante 14 días seguidos y tus altas para cobrar. Desde que la prueba con testers empiece a contar,
-      v1 puede salir en unas tres semanas.</p>
+    <p>Solo lo pendiente, en orden. Lo hecho no sale aquí; está en <a href="https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6">tu hoja de pasos</a>. <b>La versión de prueba
+      ya está hecha y subida</b>: la 0.205.0. Ahora la fecha la marcan doce testers durante 14 días seguidos y tus altas para
+      cobrar. Desde que la prueba con testers empiece a contar, v1 puede salir en unas tres semanas.</p>
     <div class="leyenda"><span class="quien yo">Yo</span> lo hago yo <span class="quien tu">Tú</span> te toca a ti
       <span class="quien alta">Tu alta</span> espera una cuenta a tu nombre</div>
   </header>
 
   <section>
-    <h2>1 · La versión de prueba sólida</h2>
-    <p class="nota">Lo que decidiste el 11 de noviembre: a Play y al iPhone va una versión buena, no la 0.191.1.</p>
+    <h2>1 · La prueba con testers</h2>
     <ol class="pasos">
-      <li class="paso ahora"><span class="n">4</span><span class="t">El sonido en Android <span class="quien yo">Yo</span></span>
-        <span class="c">Con tu «A y A»: que en Android el fin del Foco suene con la campana de PACE y respete el sonido
-          apagado (se monta), y ofrecer una vez que el aviso llegue a su hora al empezar el primer Foco (te lo pinto antes). Te lo
-          enseño en <a href="https://claude.ai/artifact/HeMyYYPyDuopL7oYYu5kpS">su página</a> antes de juntarlo.</span></li>
-      <li class="paso"><span class="n">5</span><span class="t">Un sí a cuatro arreglos pequeños <span class="quien tu">Tú</span></span>
-        <span class="c">Importar dice de qué día es la copia, avisa si es de una versión más nueva y la encuentra en Drive o
-          WhatsApp; el lector de pantalla lee el precio en Ajustes; y «Audio» en la parte inglesa
-          (<a href="https://claude.ai/artifact/C2uFSMM8eWhcRxpXLGWkAx">la auditoría</a>, filas S3 y S4).</span></li>
-      <li class="paso"><span class="n">6</span><span class="t">Un «júntalo» y una revisión de ChatGPT <span class="quien tu">Tú</span></span>
-        <span class="c">El arreglo de los dos cobros de la mensual a la vez, hecho en su rama. Y pasar a ChatGPT la revisión del
-          cobro y de lo legal: el texto para copiar está en tu hoja de pasos.</span></li>
-    </ol>
-    <p class="hito">Con eso, la versión de prueba sólida, con GitHub en verde.</p>
-  </section>
-
-  <section>
-    <h2>2 · La prueba con testers</h2>
-    <ol class="pasos" start="7">
-      <li class="paso"><span class="n">7</span><span class="t">Subirla a Play y al iPhone <span class="quien tu">Tú, conmigo</span></span>
-        <span class="c">A la prueba cerrada de Play y a TestFlight, una pantalla por mensaje. De paso, el párrafo «A tu ritmo» en
-          la ficha de Play, y las seis capturas rehechas una sola vez, con la jornada dentro.</span></li>
+      <li class="paso ahora"><span class="n">1</span><span class="t">Que la 0.205.0 llegue a los testers <span class="quien tu">Tú, conmigo</span></span>
+        <span class="c">
+          <ul>
+            <li><b>Play:</b> la prueba cerrada está en revisión. Cuando Google la apruebe, pruébala en tu Android (los pasos, en
+              <a href="https://claude.ai/artifact/R1mmsxTzYjmFQGynxJYXxP">su página</a>) y manda el mensaje de WhatsApp a los testers.</li>
+            <li><b>iPhone:</b> ya está en TestFlight. Dásela al grupo «Testers iPhone» con su «Qué probar», y activa su enlace
+              público para que lo ponga en pacegrass.app/beta.</li>
+            <li><b>La ficha de Play:</b> el párrafo «A tu ritmo» y las seis capturas nuevas, ya hechas con la jornada dentro.</li>
+            <li><b>La declaración de operador</b> en Play Console, mirando antes qué dirección enseña.</li>
+          </ul></span></li>
       <li class="paso"><span class="n">8</span><span class="t">Doce testers durante 14 días <span class="quien tu">Tú</span></span>
         <span class="c">Tienes 5 o 6. Todos a pacegrass.app/beta, con el texto de LinkedIn ya escrito, y a cada uno su código de
           PACE completo. Al cumplirse los 14 días se pide a Google el acceso a producción.</span></li>
@@ -110,19 +98,24 @@ summary:focus-visible, a:focus-visible { outline: 2px solid var(--focus); outlin
             <li>que con una wifi mala PACE no se quede en blanco al abrir, y que Safari no borre lo guardado;</li>
             <li>/beta sin «sin rachas», textos de la pausa que no se contradigan, el inglés que falta y las fotos al instalar;</li>
             <li>los botones del constructor de rutinas más grandes para el dedo (te lo pinto antes);</li>
-            <li>un aviso opcional a la hora en que empieza tu jornada, apagado hasta que lo enciendas (te lo pinto antes);</li>
-            <li>«¿Te ayudó?» menos veces, y el «No» con su porqué de un toque (te lo pinto antes);</li>
-            <li>«Repetir la última pausa», de un toque (te lo pinto antes).</li>
-          </ul></span></li>
+            <li>un aviso opcional a la hora en que empieza tu jornada, apagado hasta que lo enciendas;</li>
+            <li>«¿Te ayudó?» menos veces, y el «No» con su porqué de un toque;</li>
+            <li>«Repetir la última pausa», de un toque.</li>
+          </ul>
+          Las maquetas de las tres últimas ya se están pintando, en una página para que elijas.</span></li>
       <li class="paso"><span class="n">10</span><span class="t">Que lo mire un fisioterapeuta <span class="quien tu">Tú</span></span>
         <span class="c">Fondos en silla y los ejercicios aparcados: es la revisión que el contenido pide antes de v1.</span></li>
     </ol>
   </section>
 
   <section>
-    <h2>3 · Cobrar</h2>
+    <h2>2 · Cobrar</h2>
     <p class="nota">Cada alta tuya desbloquea un trozo de código mío. Caben dentro de los 14 días.</p>
     <ol class="pasos" start="11">
+      <li class="paso"><span class="n">6</span><span class="t">Un «júntalo» y una revisión de ChatGPT <span class="quien tu">Tú</span></span>
+        <span class="c">El arreglo de los dos cobros de la mensual a la vez, hecho en su rama. Y pasar a ChatGPT la revisión del
+          cobro y de lo legal: el texto para copiar está en tu hoja de pasos. Solo toca a la venta en la web, que antes de v1
+          vende solo el de por vida.</span></li>
       <li class="paso"><span class="n">11</span><span class="t">El perfil de pagos de Play <span class="quien alta">Tu alta</span></span>
         <span class="c">Con él monto la compra en Android, restaurarla al cambiar de móvil y los códigos de tus testers.</span></li>
       <li class="paso"><span class="n">12</span><span class="t">El acuerdo de apps de pago de Apple <span class="quien alta">Tu alta</span></span>
@@ -144,7 +137,7 @@ summary:focus-visible, a:focus-visible { outline: 2px solid var(--focus); outlin
   </section>
 
   <section>
-    <h2>4 · El día de v1</h2>
+    <h2>3 · El día de v1</h2>
     <ol class="pasos" start="18">
       <li class="paso"><span class="n">18</span><span class="t">PACE se puede comprar <span class="quien yo">Yo</span> <span class="quien tu">Tú</span></span>
         <span class="c">En la web, en Android y en el iPhone: 2,99 € al mes con 7 días de prueba, o 19,99 € de por vida. Se cierra

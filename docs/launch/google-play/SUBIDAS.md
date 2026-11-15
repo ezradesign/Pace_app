@@ -142,6 +142,8 @@ Tell me what breaks or what you would miss: take a screenshot of PACE and the iP
 
 ### Capturas de la ficha: cuáles se han quedado viejas
 
+**Rehechas las seis el 15 nov. 2026 sobre la 0.205.0**, en español y en inglés, con `scripts/play/capturas.js` (ahora busca los botones sin mirar mayúsculas: en inglés el botón es «Start Focus»), y con ellas las de /beta y la landing en claro (`beta/*.webp`, desde `capturas/`) y en oscuro (`--beta-oscuro`). Lo de abajo es la medida del 6 nov.
+
 Medido el 6 nov. 2026: se rehicieron las seis con `scripts/play/capturas.js` sobre la 0.190.0 (en una carpeta aparte) y se
 compararon píxel a píxel con las de `capturas-sin-marco/`. Las de `capturas/` son la misma pantalla con su título encima, así
 que valen lo mismo. Español e inglés van juntos.
