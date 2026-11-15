@@ -11,7 +11,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, overlaySuperior } = require('./helpers');
+const { sembrar, irAlArtefacto, overlaySuperior, MEDIODIA } = require('./helpers');
 
 const HOY = '2026-11-19';
 const toca = (page, fb, id) => page.evaluate(([f, i, h]) => feedbackToca(f, i, h), [fb, id, HOY]);
@@ -47,11 +47,11 @@ test.describe('la regla, en puro', () => {
 
 /* En el cierre de verdad: con dos rutinas ya preguntadas hoy, «Escritorio express» no pregunta. */
 async function cierreDeEscritorio(page, context, routineFeedback) {
-  const hoy = (() => { const d = new Date(); const dd = (n) => (n < 10 ? '0' : '') + n; return d.getFullYear() + '-' + dd(d.getMonth() + 1) + '-' + dd(d.getDate()); })();
+  const hoy = (() => { const d = new Date(MEDIODIA); const dd = (n) => (n < 10 ? '0' : '') + n; return d.getFullYear() + '-' + dd(d.getMonth() + 1) + '-' + dd(d.getDate()); })();
   const fb = {};
   Object.keys(routineFeedback).forEach((k) => { fb[k] = Object.assign({}, routineFeedback[k], { lastPromptDay: hoy }); });
   await sembrar(context, { soundOn: false, routineFeedback: fb });
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await page.getByRole('button', { name: /^Estira/ }).first().click();
   await overlaySuperior(page).getByRole('heading', { name: 'Escritorio express', exact: true }).filter({ visible: true }).first().click();

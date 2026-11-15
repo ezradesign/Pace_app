@@ -2292,6 +2292,12 @@ Object.assign(window.PACE_STRINGS.es, {
   'notify.canal.pausa.desc': 'Avisa de que la pausa ha terminado.',
 
 
+  'notify.entrada.jornada': 'Jornada de {inicio} a {salida}. Tu día ya está preparado.',
+  'notify.entrada.media': 'Media jornada de {inicio} a {salida}. Tu día ya está preparado.',
+  'notify.canal.entrada': 'Al empezar la jornada',
+  'notify.canal.entrada.desc': 'Un aviso a tu hora de entrada, los días de jornada.',
+
+
   'red.parte.titulo': 'Esta parte no ha podido abrirse',
   'red.parte.texto': 'El resto de PACE sigue funcionando y tus datos están a salvo. Puedes cerrarla y seguir, o recargar para volver a intentarlo.',
   'red.cerrar': 'Cerrar',
@@ -2474,6 +2480,10 @@ Object.assign(window.PACE_STRINGS.en, {
   'notify.canal.pausa': 'End of break',
   'notify.canal.pausa.mudo': 'End of break, silent',
   'notify.canal.pausa.desc': 'Lets you know your break is over.',
+  'notify.entrada.jornada': 'Full day, {inicio} to {salida}. Your day is ready.',
+  'notify.entrada.media': 'Half day, {inicio} to {salida}. Your day is ready.',
+  'notify.canal.entrada': 'Start of your day',
+  'notify.canal.entrada.desc': 'A reminder at your start time, on workdays.',
   'red.parte.titulo': 'This section couldn’t load',
   'red.parte.texto': 'The rest of PACE keeps working and your data is safe. You can close it and carry on, or reload to try again.',
   'red.cerrar': 'Close',
@@ -4573,6 +4583,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.st.guardar': 'Guardar mi semana',
   'ritmo.st.aria': '{dia}, {tipo}',
   'ritmo.st.ajustes': 'Tu semana',
+
+  'ritmo.st.aviso.verbo': 'Avísame',
+  'ritmo.st.aviso.resto': 'a mi hora de entrada',
   'ritmo.manana.titulo': 'Hoy, como cada {dia}',
   'ritmo.manana.como': 'como cada {dia}',
   'ritmo.manana.distinto': 'Hoy es distinto',
@@ -4758,6 +4771,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.st.guardar': 'Save my week',
   'ritmo.st.aria': '{dia}, {tipo}',
   'ritmo.st.ajustes': 'Your week',
+  'ritmo.st.aviso.verbo': 'Remind me',
+  'ritmo.st.aviso.resto': 'at my start time',
   'ritmo.manana.titulo': 'Today, like every {dia}',
   'ritmo.manana.como': 'like every {dia}',
   'ritmo.manana.distinto': 'Today is different',
@@ -10786,8 +10801,9 @@ Object.assign(window, {
    es solo el CONTADOR; el consumidor (Pausa PACE / «qué te ayuda» premium)
    llega en fases posteriores. Voz/TTS y porcentajes visibles: fuera de alcance.
 
-   Frecuencia: la pregunta se muestra como máximo UNA vez por rutina y DÍA LOCAL
-   (todayISO() — regla #10, prohibido new Date("YYYY-MM-DD")). Salir por el CTA
+   Frecuencia: como máximo UNA vez por rutina y DÍA LOCAL (todayISO() — regla #10,
+   prohibido new Date("YYYY-MM-DD")), y desde el 15 nov. 2026 menos: tres veces por
+   rutina, luego una a la semana y dos al día como mucho (feedbackToca). Salir por el CTA
    sin responder NO escribe lastPromptDay: la pregunta puede reaparecer tras
    otra finalización válida de esa rutina el mismo día.
 */
@@ -10889,13 +10905,39 @@ function restaurarRoutineFeedback(routineId, antes) {
 
 
 
+
+
+
+
+
+
+var FEEDBACK_PRIMERAS = 3;
+var FEEDBACK_CADA_DIAS = 7;
+var FEEDBACK_TOPE_DIA = 2;
+
+
+function feedbackToca(fb, id, hoy) {
+  const slice = fb && typeof fb === 'object' ? fb : {};
+  const entry = slice[id];
+  if (entry && entry.lastPromptDay === hoy) return false;
+  let hoyYa = 0;
+  Object.keys(slice).forEach(function (k) {if (slice[k] && slice[k].lastPromptDay === hoy) hoyYa++;});
+  if (hoyYa >= FEEDBACK_TOPE_DIA) return false;
+  if (!entry) return true;
+  const respuestas = feedbackCount(entry.yes) + feedbackCount(entry.some) + feedbackCount(entry.no);
+  if (respuestas < FEEDBACK_PRIMERAS) return true;
+  const dia = typeof libraryDiaOrdinal === 'function' ? libraryDiaOrdinal(hoy) : 0;
+  const desde = typeof libraryDiaOrdinal === 'function' ? libraryDiaOrdinal(entry.lastPromptDay) : 0;
+  if (!dia || !desde) return true;
+  return dia - desde >= FEEDBACK_CADA_DIAS;
+}
+
+
+
 function shouldPromptRoutineFeedback(routineId) {
   const id = sanitizeRoutineId(routineId);
   if (!id) return false;
-  const fb = getState().routineFeedback || {};
-  const entry = fb[id];
-  if (!entry) return true;
-  return entry.lastPromptDay !== todayISO();
+  return feedbackToca(getState().routineFeedback || {}, id, todayISO());
 }
 
 Object.assign(window, {
@@ -10903,9 +10945,10 @@ Object.assign(window, {
   nextRoutineFeedback,
   recordRoutineFeedback,
   restaurarRoutineFeedback,
-  shouldPromptRoutineFeedback
+  shouldPromptRoutineFeedback,
+  feedbackToca
 });
-;Object.assign(window, { sanitizeFeedbackResponse, feedbackCount, sanitizeRoutineId, nextRoutineFeedback, recordRoutineFeedback, restaurarRoutineFeedback, shouldPromptRoutineFeedback });
+;Object.assign(window, { sanitizeFeedbackResponse, feedbackCount, sanitizeRoutineId, nextRoutineFeedback, recordRoutineFeedback, restaurarRoutineFeedback, FEEDBACK_PRIMERAS, FEEDBACK_CADA_DIAS, FEEDBACK_TOPE_DIA, feedbackToca, shouldPromptRoutineFeedback });
 })();
 </script>
   <!-- «A tu ritmo» (s192): la REGLA pura que compone el día y su ESTADO
@@ -19979,6 +20022,150 @@ Object.assign(window, {
   paceNativoAvisoPedir, paceNativoFoco, paceNativoPausa, paceNativoTextosFin, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace
 });
 ;Object.assign(window, { pacePlataformaNativa, paceEsNativo, paceNativoPlugin, paceNativoAvisos, paceNativoAvisoPermiso, paceNativoAvisoPedir, paceNativoFoco, paceNativoPausa, paceNativoTextosFin, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   nativo.entrada.js — EL AVISO A TU HORA DE ENTRADA (Ez, 1A y 2A del 15 nov. 2026)
+   ============================================================
+   Hasta ahora PACE solo avisaba al acabar un Foco o una pausa: nada te traía de vuelta por la
+   mañana. Esto pone un aviso a tu hora de entrada, para quien lo encienda en «Tu semana»
+   (`ritmo.avisoEntrada`, RitmoSemanaTipo.jsx), en Android y en el iPhone. Maqueta elegida:
+   docs/proposals/maquetas-uso-15nov/.
+
+     · APAGADO DE FÁBRICA. Sin `avisoEntrada === true`, no se pone nada.
+     · SOLO LOS DÍAS DE JORNADA O MEDIA de la semana guardada, a su hora de entrada; los días
+       libres, nada («PACE te deja en paz»), y sin semana guardada tampoco.
+     · DESDE MAÑANA, SIEMPRE. Cada vez que PACE se abre o se va al fondo, se quitan los avisos y
+       se ponen los de los siete días siguientes, empezando por mañana. Así, si hoy abriste PACE
+       antes de tu hora, el de hoy ya no sale, y «Hoy es distinto» no deja un aviso colgado. Y si
+       dejas de abrir PACE, deja de avisar al cabo de una semana: nada de «te echamos de menos».
+     · LAS PALABRAS DE LA TARJETA DE LA MAÑANA: «Hoy, como cada jueves» y «Jornada de 9:00 a
+       17:00. Tu día ya está preparado.», en el idioma de la app al ponerlo.
+
+   En la web no existe: sin un servidor, la web no puede avisar con PACE cerrado. Que suene en un
+   móvil de verdad no se puede probar aquí (pasos en la página de la maqueta).
+
+   `var`/`function` a propósito (un `const` no cruza la IIFE del artefacto).
+   ============================================================ */
+
+var PACE_ENTRADA_PRIMER_ID = 10;
+var PACE_ENTRADA_DIAS = 7;
+var PACE_ENTRADA_CANAL = 'pace_entrada';
+
+
+function paceEntradaTexto(s, clave, vars) {
+  var l = s && s.lang || 'es',t = window.PACE_STRINGS || {};
+  var v = t[l] && t[l][clave] || t.en && t.en[clave] || clave;
+  Object.keys(vars || {}).forEach(function (k) {v = v.split('{' + k + '}').join(vars[k]);});
+  return v;
+}
+
+
+
+
+function paceEntradaAvisos(s, ahora) {
+  var out = [];
+  try {
+    var r = s && s.ritmo || {};
+    if (r.avisoEntrada !== true || typeof ritmoSemanaTipoDe !== 'function') return out;
+    var semana = ritmoSemanaTipoDe(r.semanaTipo);
+    if (!semana) return out;
+    var h = typeof ritmoDe === 'function' ? ritmoDe(s).horario : null;
+    if (!h) return out;
+    var hoy = new Date(ahora);
+    var dias = String(paceEntradaTexto(s, 'ritmo.dias')).split(',');
+    for (var d = 1; d <= PACE_ENTRADA_DIAS; d++) {
+      var dia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + d);
+      var n = (dia.getDay() + 6) % 7;
+      var tipo = semana[n];
+      if (tipo !== 'jornada' && tipo !== 'media') continue;
+      var desde = tipo === 'media' ? h.media.inicio : h.inicio;
+      var hasta = tipo === 'media' ? h.media.salida : h.salida;
+      if (!(desde >= 0) || !(hasta > desde)) continue;
+      out.push({
+        id: PACE_ENTRADA_PRIMER_ID + d - 1,
+        at: new Date(dia.getFullYear(), dia.getMonth(), dia.getDate(), Math.floor(desde / 60), desde % 60).getTime(),
+        title: paceEntradaTexto(s, 'ritmo.manana.titulo', { dia: dias[n] || '' }),
+        body: paceEntradaTexto(s, 'notify.entrada.' + tipo, { inicio: ritmoHora(desde), salida: ritmoHora(hasta) })
+      });
+    }
+  } catch (e) {return [];}
+  return out;
+}
+
+
+
+
+var _paceEntrada = { cola: Promise.resolve() };
+function paceEntradaPoner() {
+  if (typeof paceEsNativo !== 'function' || !paceEsNativo()) return Promise.resolve(null);
+  _paceEntrada.cola = _paceEntrada.cola.then(paceEntradaPonerYa, paceEntradaPonerYa);
+  return _paceEntrada.cola;
+}
+
+function paceEntradaPonerYa() {
+  var ln = paceNativoPlugin('LocalNotifications');
+  if (!ln || typeof ln.cancel !== 'function' || typeof ln.schedule !== 'function') return null;
+  var ids = [];
+  for (var i = 0; i < PACE_ENTRADA_DIAS; i++) ids.push({ id: PACE_ENTRADA_PRIMER_ID + i });
+  var s = getState();
+  var avisos = paceEntradaAvisos(s, Date.now());
+  var android = pacePlataformaNativa() === 'android';
+
+  var permiso = null;
+  return Promise.resolve(ln.cancel({ notifications: ids })).catch(function () {}).then(function () {
+    if (!avisos.length) return null;
+    return Promise.resolve(typeof ln.checkPermissions === 'function' ? ln.checkPermissions() : { display: paceNativoAvisoPermiso() }).
+    then(function (r) {permiso = r && r.display;}, function () {permiso = null;});
+  }).then(function () {
+    if (!avisos.length || permiso !== 'granted') return null;
+    var canal = android && typeof ln.createChannel === 'function' ?
+    Promise.resolve(ln.createChannel({ id: PACE_ENTRADA_CANAL, name: paceEntradaTexto(s, 'notify.canal.entrada'),
+      description: paceEntradaTexto(s, 'notify.canal.entrada.desc'), importance: 3 })).catch(function () {}) :
+    Promise.resolve();
+    return canal.then(function () {
+      return ln.schedule({ notifications: avisos.map(function (a) {
+          var n = { id: a.id, title: a.title, body: a.body };
+
+          if (android) {n.schedule = { at: new Date(a.at).toISOString(), allowWhileIdle: true };n.channelId = PACE_ENTRADA_CANAL;} else
+          n.schedule = { at: new Date(a.at) };
+          return n;
+        }) });
+    });
+  }).catch(function () {return null;});
+}
+
+
+
+function paceEntradaEncender() {
+  if (typeof paceEsNativo !== 'function' || !paceEsNativo()) return Promise.resolve(null);
+  var permiso = paceNativoAvisoPermiso();
+  var pedir = permiso === 'granted' ? Promise.resolve() : Promise.resolve(paceNativoAvisoPedir()).catch(function () {});
+  return pedir.then(paceEntradaPoner);
+}
+
+
+(function () {
+  if (typeof window === 'undefined') return;
+  var arrancar = function () {
+    if (typeof paceEsNativo !== 'function' || !paceEsNativo()) return;
+    paceEntradaPoner();
+    try {
+      var app = paceNativoPlugin('App');
+      if (app && typeof app.addListener === 'function') app.addListener('appStateChange', function () {paceEntradaPoner();});
+    } catch (e) {}
+  };
+  if (document.readyState === 'complete') setTimeout(arrancar, 0);else
+  window.addEventListener('load', function () {setTimeout(arrancar, 0);});
+})();
+
+Object.assign(window, { paceEntradaAvisos, paceEntradaPoner, paceEntradaEncender });
+;Object.assign(window, { PACE_ENTRADA_PRIMER_ID, PACE_ENTRADA_DIAS, PACE_ENTRADA_CANAL, paceEntradaTexto, paceEntradaAvisos, _paceEntrada, paceEntradaPoner, paceEntradaPonerYa, paceEntradaEncender });
 })();
 </script>
   <!-- valoracion: la ventana de la tienda para valorar PACE, una vez, tras la quinta pausa
@@ -50343,15 +50530,40 @@ function RitmoSemanaRaiz() {
   return React.createElement(RitmoSemanaHoja, { onClose: () => setAbierta(false) });
 }
 
-function RitmoSemanaHoja(_ref3) {let { onClose } = _ref3;
+
+
+
+function RitmoSemanaAviso(_ref3) {let { on, onChange } = _ref3;
+  const { t } = useT();
+  return (
+    React.createElement("div", { "data-pace-semana-aviso": true, style: ritmoSemanaStyles.aviso },
+    React.createElement("span", { style: ritmoSemanaStyles.avisoFrase }, React.createElement("b", { style: ritmoSemanaStyles.nombre }, t('ritmo.st.aviso.verbo')), " ", t('ritmo.st.aviso.resto')),
+    React.createElement("button", { type: "button", role: "switch", "aria-checked": on ? 'true' : 'false', className: "pace-aj-sw",
+      "aria-label": t('ritmo.st.aviso.verbo') + ' ' + t('ritmo.st.aviso.resto'), onClick: () => onChange(!on) })
+    ));
+
+}
+
+function RitmoSemanaHoja(_ref4) {let { onClose } = _ref4;
   const { t } = useT();
   const [state] = usePace();
   const b = useRitmoSemanaBorrador(state);
-  const guardar = (tipo) => {ritmoGuardarSemana(tipo, b.horas);onClose();};
+  const movil = typeof paceEsNativo === 'function' && paceEsNativo();
+  const [aviso, setAviso] = useStateRST(() => !!(state && state.ritmo && state.ritmo.avisoEntrada === true));
+  const guardar = (tipo) => {
+    ritmoGuardarSemana(tipo, b.horas);
+    if (movil) {
+      ritmoGuardar(() => ({ avisoEntrada: aviso }));
+
+      try {if (aviso && tipo) paceEntradaEncender();else paceEntradaPoner();} catch (e) {}
+    }
+    onClose();
+  };
   return (
     React.createElement(Modal, { open: true, onClose: onClose, maxWidth: 460, tagLabel: t('ritmo.nombre'), title: t('ritmo.st.titulo'), subtitle: t('ritmo.st.sub') },
     React.createElement("div", { "data-pace-semana-hoja": true, style: { display: 'flex', flexDirection: 'column', gap: 18 } },
     React.createElement(RitmoSemanaEditor, { dias: b.dias, onDias: b.setDias, horario: b.horario, onHora: b.onHora }),
+    movil && React.createElement(RitmoSemanaAviso, { on: aviso, onChange: setAviso }),
 
     typeof RitmoAprendido === 'function' && React.createElement(RitmoAprendido, { state: state }),
     React.createElement("div", { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 } },
@@ -50391,11 +50603,13 @@ const ritmoSemanaStyles = {
     background: 'var(--paper-2)', border: '1px solid rgba(62,90,58,.35)', color: 'var(--focus)',
     fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 18
   },
+  aviso: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: -6, paddingTop: 12, borderTop: '1px solid var(--paper-3)' },
+  avisoFrase: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, lineHeight: 1.35, color: 'var(--ink-2)', textAlign: 'left' },
   saltar: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 14, color: 'var(--ink-3)', background: 'transparent', border: 'none', padding: '8px 10px', cursor: 'pointer' }
 };
 
-Object.assign(window, { RitmoSemanaGlifo, RitmoSemanaEditor, useRitmoSemanaBorrador, ritmoSemanaAbrir, RitmoSemanaRaiz, RitmoSemanaHoja });
-;Object.assign(window, { RitmoSemanaGlifo, RitmoSemanaEditor, useRitmoSemanaBorrador, ritmoSemanaAbrir, RitmoSemanaRaiz, RitmoSemanaHoja });
+Object.assign(window, { RitmoSemanaGlifo, RitmoSemanaEditor, RitmoSemanaAviso, useRitmoSemanaBorrador, ritmoSemanaAbrir, RitmoSemanaRaiz, RitmoSemanaHoja });
+;Object.assign(window, { RitmoSemanaGlifo, RitmoSemanaEditor, useRitmoSemanaBorrador, ritmoSemanaAbrir, RitmoSemanaRaiz, RitmoSemanaAviso, RitmoSemanaHoja });
 })();
 </script>
   <script>

@@ -19,7 +19,6 @@ const { sembrar, irAlArtefacto } = require('./helpers');
 
 const SEMANA = ['jornada', 'jornada', 'jornada', 'jornada', 'media', 'libre', 'libre'];
 const HORARIO = { inicio: 540, comida: 840, comidaDur: 60, salida: 1020 };
-const IDS = [10, 11, 12, 13, 14, 15, 16];
 
 async function comoAndroid(context) {
   await context.addInitScript(() => {
@@ -45,12 +44,15 @@ async function comoAndroid(context) {
   });
 }
 
-/* Los avisos de entrada que PACE pidió la última vez (ids del 10 al 16), o [] si no pidió ninguno. */
+/* Los avisos que no son de fin de Foco, del aviso fijo ni de fin de pausa (ids 1, 2 y 3) que PACE
+   pidió la última vez, o [] si no pidió ninguno. Se miran todos y no solo del 10 al 16: un aviso de
+   más con otro id también tiene que verse. */
+const OTROS = [1, 2, 3];
 async function avisosPuestos(page) {
   await page.waitForTimeout(400);
   const llamadas = await page.evaluate(() => window.__nativo.llamadas);
   const puestos = llamadas.filter((l) => l.metodo === 'schedule')
-    .map((l) => l.opts.notifications.filter((n) => IDS.indexOf(n.id) !== -1))
+    .map((l) => l.opts.notifications.filter((n) => OTROS.indexOf(n.id) === -1))
     .filter((lista) => lista.length);
   return puestos.length ? puestos[puestos.length - 1] : [];
 }
@@ -75,6 +77,7 @@ test('encendido: los días de jornada y media de la semana que sigue, desde mañ
   expect(avisos[0].body).toBe('Jornada de 9:00 a 17:00. Tu día ya está preparado.');
   expect(avisos[1].title).toBe('Hoy, como cada viernes');
   expect(avisos[1].body).toMatch(/^Media jornada de 9:00 a \d+:\d\d\. Tu día ya está preparado\.$/);
+  expect(avisos.map((a) => a.id)).toEqual([10, 11, 14, 15, 16]);
   expect(avisos[0].channelId).toBe('pace_entrada');
   expect(avisos[0].schedule.allowWhileIdle).toBe(true);
   for (const a of avisos) expect(a.body + a.title, 'el aviso no puede reprochar nada').not.toMatch(/echamos|racha|seguidos/i);
