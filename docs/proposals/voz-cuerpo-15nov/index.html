@@ -95,10 +95,22 @@ details[open] summary{border-bottom:1px solid var(--line);margin-bottom:10px}
 </style>
 
 <main>
-  <div class="eyebrow">PACE · diseño, sin montar · 15 nov. 2026, sobre la 0.205.0</div>
+  <div class="eyebrow">PACE · elegido 1A–7A y montado en su rama · 15 nov. 2026, sobre la 0.205.0</div>
   <h1>Voz en Mueve y Estira</h1>
   <p class="lead">Que el runner de Mueve y Estira se pueda seguir sin mirar: la voz de Respira dice qué toca y cuenta, y el móvil vibra al ritmo. Son siete preguntas, cada una con su recomendada. Con las recomendadas, 132 audios cortos que puedes hacer en cuatro tandas.</p>
   <p>Lo pediste hoy: «Esto ya lo podemos diseñar: Voz en Mueve y Estira, y vibración al ritmo de las repeticiones». Estaba en «Después de v1». Aquí está solo el diseño y los prompts para Genspark. No hay nada montado, y lo pintado sobre la app no se ha guardado.</p>
+
+  <div class="resumen">
+    <p><strong>Elegiste 1A 2A 3A 4A 5A 6A 7A</strong> (15 nov.), «y sí, todos los números seguidos». Montado en la rama <code>claude/voz-cuerpo-15nov-21e284</code>, sin juntar a <code>main</code>:</p>
+    <ul>
+      <li><strong>La voz en el runner</strong>: cada momento pide su palabra y, si esa voz no la tiene grabada, suena el cuenco de siempre. La última repetición se dice entera antes de lo que viene.</li>
+      <li><strong>Ajustes</strong>: «En Respira, Mueve y Estira» bajo «Marca la fase», y «Vibrar» (No · Sin sonido · Siempre, de fábrica «Sin sonido») solo donde se puede vibrar.</li>
+      <li><strong>La vibración</strong>, con el complemento Haptics en las dos apps y la del navegador en Chrome de Android.</li>
+      <li><strong>El guion que corta tus tomas</strong>, con su prueba, y los prompts por tomas: abajo y en <code>PROMPTS_VOZ_CUERPO.md</code>.</li>
+      <li><strong>Seis pruebas nuevas</strong>, vistas caer contra un fallo puesto a propósito, y las 32 del runner y de Ajustes que ya había, en verde.</li>
+    </ul>
+    <p>Suena con <strong>audios de muestra</strong> (la voz de Windows, solo la «Voz clara» en castellano), que no van a <code>main</code>. Falta: tus 16 tomas, oírlo en el móvil y que GitHub compile las dos apps con el complemento al juntar.</p>
+  </div>
 
   <h2>Lo que hay hoy</h2>
   <p><strong>Respira habla.</strong> Dos voces, «Voz clara» (sulafat) y «Voz grave» (bradford), dicen «Inhala», «Mantén», «Exhala» y «Más», en castellano y en inglés: 16 audios. Se elige en Ajustes, en la fila «Marca la fase»: Tono, Voz clara o Voz grave. Nunca suenan el tono y la voz a la vez: si una palabra no cabe en su fase, suena el tono.</p>
@@ -166,7 +178,7 @@ details[open] summary{border-bottom:1px solid var(--line);margin-bottom:10px}
     <h3>1 · Qué dice al empezar cada ejercicio</h3>
     <div class="ops">
       <div class="op es-rec"><span class="letra">A</span><div class="txt">
-        <p><strong>«Colócate», «Siguiente» o «Ya», sin el nombre.</strong> <span class="chip">recomendada</span></p>
+        <p><strong>«Colócate», «Siguiente» o «Ya», sin el nombre.</strong> <span class="chip">elegida</span></p>
         <p class="rec">La pantalla y el dibujo ya dicen cuál es, y al colocarte vas a mirar igual. Con los nombres serían 292 audios más.</p>
         <p class="cuenta">«Colócate» si hay que colocarse; «Siguiente» si empieza otro ejercicio sin colocarse; «Ya» en la otra serie del mismo, tras el descanso. 132 audios en total.</p></div></div>
       <div class="op"><span class="letra">B</span><div class="txt">
@@ -182,7 +194,7 @@ details[open] summary{border-bottom:1px solid var(--line);margin-bottom:10px}
     <h3>2 · Qué cuenta</h3>
     <div class="ops">
       <div class="op es-rec"><span class="letra">A</span><div class="txt">
-        <p><strong>Las repeticiones, una a una al acabarlas, y el «tres, dos, uno» del final de cada cuenta</strong>, en lugar de la madera. <span class="chip">recomendada</span></p>
+        <p><strong>Las repeticiones, una a una al acabarlas, y el «tres, dos, uno» del final de cada cuenta</strong>, en lugar de la madera. <span class="chip">elegida</span></p>
         <p class="rec">Es lo que hoy obliga a mirar el número, y los mismos 25 números sirven para las dos cosas.</p>
         <p class="cuenta">La última repetición se dice entera y lo que viene después espera a que acabe la palabra.</p></div></div>
       <div class="op"><span class="letra">B</span><div class="txt">
@@ -198,7 +210,7 @@ details[open] summary{border-bottom:1px solid var(--line);margin-bottom:10px}
     <h3>3 · Los avisos de en medio y el final</h3>
     <div class="ops">
       <div class="op es-rec"><span class="letra">A</span><div class="txt">
-        <p><strong>«Izquierda», «Cambia de lado», «Derecha», «Descansa» y «Último paso».</strong> El final, con los tres cuencos de siempre. <span class="chip">recomendada</span></p>
+        <p><strong>«Izquierda», «Cambia de lado», «Derecha», «Descansa» y «Último paso».</strong> El final, con los tres cuencos de siempre. <span class="chip">elegida</span></p>
         <p class="rec">El lado hoy solo se lee; al acabar, los cuencos ya dicen «terminado» y la pantalla pregunta «¿Te ayudó?», que vas a mirar igual.</p></div></div>
       <div class="op"><span class="letra">B</span><div class="txt">
         <p><strong>Lo mismo, y el final también con voz:</strong> «Movimiento completado» o «Estiramiento completado», como dice la pantalla.</p>
@@ -213,7 +225,7 @@ details[open] summary{border-bottom:1px solid var(--line);margin-bottom:10px}
     <h3>4 · Cómo se enciende la voz</h3>
     <div class="ops">
       <div class="op es-rec"><span class="letra">A</span><div class="txt">
-        <p><strong>La misma fila de Ajustes, «Marca la fase», para Respira, Mueve y Estira</strong>, con una línea debajo que lo dice. De fábrica, como la tenga cada uno: hoy, «Voz clara». <span class="chip">recomendada</span></p>
+        <p><strong>La misma fila de Ajustes, «Marca la fase», para Respira, Mueve y Estira</strong>, con una línea debajo que lo dice. De fábrica, como la tenga cada uno: hoy, «Voz clara». <span class="chip">elegida</span></p>
         <p class="rec">Es la misma decisión, tono o voz, y no añade ningún botón. Cuando dijiste «es demasiado menús», cinco controles se quedaron en dos.</p>
         <p class="cuenta">Quien tenga la voz en Respira la oirá también en Mueve al actualizar. El interruptor «Sonido» lo sigue callando todo.</p></div></div>
       <div class="op"><span class="letra">B</span><div class="txt">
@@ -234,7 +246,7 @@ details[open] summary{border-bottom:1px solid var(--line);margin-bottom:10px}
     <h3>5 · Qué vibra</h3>
     <div class="ops">
       <div class="op es-rec"><span class="letra">A</span><div class="txt">
-        <p><strong>Donde hoy suena algo:</strong> un toque corto en cada repetición y en el «tres, dos, uno»; uno medio al empezar; dos al cambiar de lado; uno largo al descansar; tres al acabar. <span class="chip">recomendada</span></p>
+        <p><strong>Donde hoy suena algo:</strong> un toque corto en cada repetición y en el «tres, dos, uno»; uno medio al empezar; dos al cambiar de lado; uno largo al descansar; tres al acabar. <span class="chip">elegida</span></p>
         <p class="rec">Es lo que pediste, al ritmo de las repeticiones, y sigue el mismo mapa que los sonidos, así que se entiende sin explicarlo.</p></div></div>
       <div class="op"><span class="letra">B</span><div class="txt">
         <p><strong>Solo los cambios:</strong> empezar, cambiar de lado, descansar y acabar. Nada por repetición.</p></div></div>
@@ -258,7 +270,7 @@ details[open] summary{border-bottom:1px solid var(--line);margin-bottom:10px}
     <h3>6 · Cuándo vibra de fábrica</h3>
     <div class="ops">
       <div class="op es-rec"><span class="letra">A</span><div class="txt">
-        <p><strong>Una fila «Vibrar» en Sesiones con tres opciones: «No», «Sin sonido» y «Siempre».</strong> De fábrica, «Sin sonido»: vibra cuando apagas el sonido de PACE. <span class="chip">recomendada</span></p>
+        <p><strong>Una fila «Vibrar» en Sesiones con tres opciones: «No», «Sin sonido» y «Siempre».</strong> De fábrica, «Sin sonido»: vibra cuando apagas el sonido de PACE. <span class="chip">elegida</span></p>
         <p class="rec">Con sonido, vibrar repite la madera y en la mesa suena a zumbido; sin sonido, es lo único que marca el ritmo.</p>
         <p class="cuenta">Con la línea de la pregunta 4, cabe sin scroll a 360 × 640 (577 px de 584).</p></div></div>
       <div class="op"><span class="letra">B</span><div class="txt">
@@ -278,7 +290,7 @@ details[open] summary{border-bottom:1px solid var(--line);margin-bottom:10px}
     <h3>7 · En qué móviles vibra</h3>
     <div class="ops">
       <div class="op es-rec"><span class="letra">A</span><div class="txt">
-        <p><strong>Android e iPhone.</strong> En las dos apps, con el complemento de vibración de Capacitor (Haptics); en Chrome de Android, con la vibración del navegador. En el iPhone por la web, nada. <span class="chip">recomendada</span></p>
+        <p><strong>Android e iPhone.</strong> En las dos apps, con el complemento de vibración de Capacitor (Haptics); en Chrome de Android, con la vibración del navegador. En el iPhone por la web, nada. <span class="chip">elegida</span></p>
         <p class="rec">El iPhone está dentro de v1 desde el 22 oct., y sin el complemento no vibraría nunca.</p></div></div>
       <div class="op"><span class="letra">B</span><div class="txt">
         <p><strong>Solo Android:</strong> la app con el permiso de vibrar y Chrome, sin complemento. En el iPhone no vibra y la fila no sale.</p></div></div>
@@ -301,50 +313,63 @@ details[open] summary{border-bottom:1px solid var(--line);margin-bottom:10px}
   <p><strong>En pausa</strong>, la voz calla. Al reanudar, el «3, 2, 1» de la vuelta también va con voz.</p>
   <p><strong>Con la música:</strong> PACE no pone música en Mueve y Estira, así que no hay nada que mezclar. Con la tuya (Spotify, la radio), la voz saldría por el mismo camino que los cuencos de hoy y haría lo mismo que ellos. Lo que hacen los cuencos con tu música en el móvil no se puede saber desde aquí: abajo está la prueba de un minuto.</p>
 
-  <h2>Los audios</h2>
-  <p>Con las recomendadas son <strong>33 por voz y por idioma</strong>: ocho frases y los números del uno al veinticinco (la serie más larga del catálogo es de 25). Con las dos voces y los dos idiomas, <strong>132</strong>. Las mismas voces que Respira, para que suene a PACE.</p>
+  <h2>Los audios, por tomas</h2>
+  <p>Grabas <strong>cuatro tomas por voz y por idioma, 16 en total</strong>, con las mismas voces que Respira. Cada toma es un audio con varias líneas y un silencio entre ellas; el guion las corta, iguala el volumen con Respira y deja cada palabra con su nombre: <strong>36 palabras por voz e idioma, 144 en total</strong>.</p>
   <div class="tabla"><table>
-    <thead><tr><th>Castellano</th><th>Inglés</th><th>Cuándo</th><th>Dura como mucho</th></tr></thead>
+    <thead><tr><th>Toma</th><th>Archivo que entregas</th><th>Lo que dice</th></tr></thead>
     <tbody>
-      <tr><td class="voz">Colócate</td><td class="voz">Get set</td><td>ejercicio nuevo que pide colocarse</td><td class="num">1,5 s</td></tr>
-      <tr><td class="voz">Siguiente</td><td class="voz">Next</td><td>ejercicio nuevo sin colocarse</td><td class="num">1,5 s</td></tr>
-      <tr><td class="voz">Ya</td><td class="voz">Go</td><td>acaba la cuenta de colocarse; otra serie</td><td class="num">0,85 s</td></tr>
-      <tr><td class="voz">Último paso</td><td class="voz">Last step</td><td>el último paso de la rutina</td><td class="num">1,5 s</td></tr>
-      <tr><td class="voz">Izquierda · Derecha</td><td class="voz">Left · Right</td><td>empieza cada lado</td><td class="num">1,5 s</td></tr>
-      <tr><td class="voz">Cambia de lado</td><td class="voz">Switch sides</td><td>cambio de lado</td><td class="num">2 s</td></tr>
-      <tr><td class="voz">Descansa</td><td class="voz">Rest</td><td>descanso</td><td class="num">1,5 s</td></tr>
-      <tr><td class="voz">Uno … Veinticinco</td><td class="voz">One … Twenty-five</td><td>cada repetición; «tres, dos, uno»</td><td class="num">0,85 s del uno al tres; 1,5 s los demás</td></tr>
+      <tr><td>Números</td><td><code>VOZ-IDIOMA-numeros.mp3</code></td><td>del uno al veinticinco</td></tr>
+      <tr><td>Cuenta atrás</td><td><code>VOZ-IDIOMA-cuenta.mp3</code></td><td>tres, dos, uno (cada uno, menos de 0,85 s)</td></tr>
+      <tr><td>Avisos</td><td><code>VOZ-IDIOMA-avisos.mp3</code></td><td>Colócate, Siguiente, Ya, Último paso</td></tr>
+      <tr><td>Lados y descanso</td><td><code>VOZ-IDIOMA-lados.mp3</code></td><td>Izquierda, Derecha, Cambia de lado, Descansa</td></tr>
     </tbody>
   </table></div>
-  <p><strong>Por tandas, cada una funciona sola:</strong> 1) sulafat en castellano, la de fábrica, la que oye casi todo el mundo; 2) bradford en castellano; 3) sulafat en inglés; 4) bradford en inglés. Si se te hace largo, los números pueden ir de cinco en cinco en un archivo: la tanda baja de 33 a 13 y el total de 132 a 52, y Claude mide cada número dentro sin cortar nada.</p>
-  <div class="tabla"><table>
-    <thead><tr><th>Si eliges</th><th>Por voz e idioma</th><th>En total</th></tr></thead>
-    <tbody>
-      <tr><td><strong>Las recomendadas</strong></td><td class="num">33</td><td class="num">132</td></tr>
-      <tr><td>1B · con el nombre de cada ejercicio</td><td class="num">106</td><td class="num">424</td></tr>
-      <tr><td>1C · al empezar, el cuenco</td><td class="num">31</td><td class="num">124</td></tr>
-      <tr><td>2C · sin contar</td><td class="num">8</td><td class="num">32</td></tr>
-      <tr><td>3B · el final también con voz</td><td class="num">35</td><td class="num">140</td></tr>
-      <tr><td>3C · sin lados ni «Último paso»</td><td class="num">30</td><td class="num">120</td></tr>
-    </tbody>
-  </table></div>
-  <p>Los nombres de archivo, lo que tiene que cumplir cada uno, la carpeta donde dejarlos y todos los prompts están en <a href="PROMPTS_VOZ_CUERPO.md"><code>PROMPTS_VOZ_CUERPO.md</code></a>, en esta misma carpeta del repo (<code>docs/proposals/voz-cuerpo-15nov/</code>). Aquí tienes los de castellano para copiarlos:</p>
-
+  <p><code>VOZ</code> es <code>sulafat</code> o <code>bradford</code>; <code>IDIOMA</code>, <code>es</code> o <code>en</code>: <code>sulafat-es-numeros.mp3</code>, <code>bradford-en-lados.mp3</code>… Déjalas en <code>Audio - Cuerpo\</code>, junto a <code>Pace_app</code>, y avisa. <strong>Si una palabra sale rara</strong>, se repite solo esa: <code>sulafat-es-repite-diecisiete.mp3</code>, y el guion la cambia por la de la toma. Por tandas: sulafat en castellano primero, que es la de fábrica.</p>
   <details>
-    <summary>Los prompts de castellano para Genspark</summary>
-    <p class="nota">Con sulafat y con bradford, el mismo prompt. Archivo: <code>sulafat-colocate.mp3</code>, <code>bradford-colocate.mp3</code>, y así. En una herramienta sin instrucciones de estilo, pega solo la palabra con su punto.</p>
-    <div class="prompt"><h4>Colócate · <code>VOZ-colocate.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. One single word, no breath before it, no pause before it, gentle and inviting, under one and a half seconds: Colócate.</pre></div>
-    <div class="prompt"><h4>Siguiente · <code>VOZ-siguiente.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. One single word, no breath before it, no pause before it, neutral, like announcing the next movement, under one and a half seconds: Siguiente.</pre></div>
-    <div class="prompt"><h4>Ya · <code>VOZ-ya.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. One single very short word, no breath before it, no pause before it, calm but decisive, like a soft signal to begin, well under one second: Ya.</pre></div>
-    <div class="prompt"><h4>Último paso · <code>VOZ-ultimo-paso.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. Two words said together without a pause, no breath before them, neutral and without excitement, under one and a half seconds: Último paso.</pre></div>
-    <div class="prompt"><h4>Izquierda · <code>VOZ-izquierda.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. One single word, no breath before it, no pause before it, clear and neutral, under one and a half seconds: Izquierda.</pre></div>
-    <div class="prompt"><h4>Derecha · <code>VOZ-derecha.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. One single word, no breath before it, no pause before it, clear and neutral, under one and a half seconds: Derecha.</pre></div>
-    <div class="prompt"><h4>Cambia de lado · <code>VOZ-cambia-de-lado.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. A short instruction of three words said together without pauses, no breath before it, unhurried, under two seconds: Cambia de lado.</pre></div>
-    <div class="prompt"><h4>Descansa · <code>VOZ-descansa.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. One single word, no breath before it, no pause before it, a little softer, like letting the body settle, but under one and a half seconds: Descansa.</pre></div>
-    <div class="prompt"><h4>Los números, uno por archivo · <code>VOZ-uno.mp3</code> … <code>VOZ-veinticinco.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. One single number, said evenly, like counting repetitions for someone moving slowly, no breath before it, no pause before it, the same steady tone every time, not rising and not falling at the end, well under one second: Uno.</pre>
-      <p class="nota" style="margin-top:6px">Cambia solo el número del final, con letra y con su punto: Dos., Tres., … Veinticinco. Sin tildes en el nombre del archivo: <code>dieciseis</code>, <code>veintidos</code>, <code>veintitres</code>. «Uno», «Dos» y «Tres» tienen que durar menos de 0,85 s: van un segundo detrás de otro.</p></div>
+    <summary>Las cuatro tomas de castellano para Genspark</summary>
+    <p class="nota">El mismo prompt con sulafat y con bradford. Pega el prompt entero, con las líneas tal cual. Los de inglés están en <a href="PROMPTS_VOZ_CUERPO.md"><code>PROMPTS_VOZ_CUERPO.md</code></a>.</p>
+    <div class="prompt"><h4>Números · <code>VOZ-es-numeros.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. Read each line as its own separate short sentence, with about one second of silence after each one and no breath in between. Say every number in exactly the same neutral, even tone, as if it were the only word you say: do not read them as a list, do not rise along the way and do not drop on the last one.
+Uno.
+Dos.
+Tres.
+Cuatro.
+Cinco.
+Seis.
+Siete.
+Ocho.
+Nueve.
+Diez.
+Once.
+Doce.
+Trece.
+Catorce.
+Quince.
+Dieciséis.
+Diecisiete.
+Dieciocho.
+Diecinueve.
+Veinte.
+Veintiuno.
+Veintidós.
+Veintitrés.
+Veinticuatro.
+Veinticinco.</pre></div>
+    <div class="prompt"><h4>Cuenta atrás · <code>VOZ-es-cuenta.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. A slow countdown: read each line as its own separate word, with about one second of silence after each one and no breath in between. Each number very short, well under one second, all three in the same calm tone, the last one not louder and not falling.
+Tres.
+Dos.
+Uno.</pre></div>
+    <div class="prompt"><h4>Avisos · <code>VOZ-es-avisos.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. Read each line as its own separate short instruction, with about one second of silence after each one and no breath in between, all in the same calm, neutral tone, not as a list. Keep each line short: "Ya" well under one second, the others under one and a half seconds.
+Colócate.
+Siguiente.
+Ya.
+Último paso.</pre></div>
+    <div class="prompt"><h4>Lados y descanso · <code>VOZ-es-lados.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. Read each line as its own separate short instruction, with about one second of silence after each one and no breath in between, all in the same calm, neutral tone, not as a list. Keep each line under one and a half seconds, and "Cambia de lado" under two seconds, its three words together without pauses. "Descansa" a little softer, like letting the body settle.
+Izquierda.
+Derecha.
+Cambia de lado.
+Descansa.</pre></div>
+    <div class="prompt"><h4>Una palabra repetida · <code>VOZ-es-repite-NOMBRE.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in Spanish from Spain, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. One single word, no breath before it, no pause before it, in a neutral, even tone, well under one second: Diecisiete.</pre></div>
   </details>
-  <p class="nota">Los de inglés, la versión de cinco en cinco y la lista de los 73 nombres por si eliges 1B están en el archivo.</p>
 
   <h2>Lo que no se puede saber sin un móvil</h2>
   <p><strong>Una prueba de un minuto que puedes hacer ya</strong>, con la app de hoy: pon música en el móvil (Spotify o lo que uses) y haz «Levántate y sube» con el sonido de PACE puesto. ¿La música sigue, baja o se corta con los cuencos? En Android y, si puedes, en el iPhone, y en el iPhone también con el botón de silencio puesto: ¿suenan los cuencos? La voz hará lo mismo que ellos.</p>
@@ -356,7 +381,7 @@ details[open] summary{border-bottom:1px solid var(--line);margin-bottom:10px}
     <li>Cuánto tarda la primera palabra en un móvil lento. Se precargaría en la cuenta de entrada, como en Respira.</li>
   </ul>
 
-  <h2>Cuánto trabajo es montarlo después</h2>
+  <h2>Cuánto trabajo era montarlo</h2>
   <div class="tabla"><table>
     <thead><tr><th>Pieza</th><th>Trabajo</th></tr></thead>
     <tbody>
@@ -372,7 +397,7 @@ details[open] summary{border-bottom:1px solid var(--line);margin-bottom:10px}
 
   <h2>Las preguntas, de un vistazo</h2>
   <div class="tabla"><table>
-    <thead><tr><th></th><th>Pregunta</th><th>Recomendada</th></tr></thead>
+    <thead><tr><th></th><th>Pregunta</th><th>Elegida</th></tr></thead>
     <tbody>
       <tr><td class="num">1</td><td>Qué dice al empezar cada ejercicio</td><td><strong>A</strong> · «Colócate», «Siguiente» o «Ya», sin el nombre</td></tr>
       <tr><td class="num">2</td><td>Qué cuenta</td><td><strong>A</strong> · las repeticiones y el «tres, dos, uno»</td></tr>
@@ -384,7 +409,7 @@ details[open] summary{border-bottom:1px solid var(--line);margin-bottom:10px}
     </tbody>
   </table></div>
   <div class="resumen">
-    <p><strong>Con todas en A:</strong> 132 audios cortos (33 por voz y por idioma, en cuatro tandas), unas tres sesiones de trabajo y una versión nueva de las dos apps por la vibración. Contesta como siempre, por ejemplo «1A 2A 3A 4A 5A 6A 7A».</p>
+    <p><strong>Elegidas todas en A</strong> (15 nov.). Lo que queda: tus 16 tomas (cuatro tandas), oírlo y sentirlo en el móvil, y juntar la rama cuando estén las voces.</p>
   </div>
   <div class="fotos">
     <figure><img src="fotos/a3-recomendada.jpg" alt="Ajustes con las dos recomendadas: la línea En Respira, Mueve y Estira y la fila Vibrar en Sin sonido" loading="lazy"><figcaption><b>4A y 6A juntas</b> · lo único que cambia a la vista, sin scroll a 360 × 640</figcaption></figure>
