@@ -1,42 +1,36 @@
-# Dónde me quedo · avisos de la novena (16 nov. 2026)
+# Dónde me quedo · avisos de la novena (16 nov. 2026, segunda parada)
 
-Rama `claude/avisos-novena-16nov-cdf66e`, sobre `main` en la 0.207.0 (147cff8c). Parada al empezar porque el uso
-de 5 h estaba al 94 % (vuelve a cero a las 19:40, hora de Madrid). **No hay código tocado**: solo este archivo.
+Rama `claude/avisos-novena-16nov-cdf66e`, subida. Parada con el uso de 5 h al 98 % (vuelve a cero a las
+00:40 del 17 nov., hora de Madrid). `verify` en verde en cada commit; mínimo de pruebas en 1638.
 
-## Lo hecho
+## Hecho (un commit por punto, cada uno con su prueba vista caer con mutantes)
 
-- Leídos `CLAUDE.md`, `STATE.md`, `docs/audits/fable-15nov/externa-novena-16nov-comprobado.md` (la tabla),
-  `encargo-avisos.md` y las filas de avisos de `DECISIONES_TECNICAS_VIGENTES.md` (líneas 29, 34, 39, 40, 41 y 51).
-- Leídos enteros `app/ui/nativo.entrada.js` (142 líneas) y `tests/aviso-entrada.spec.js` (6 pruebas, Android de
-  mentira con `window.__nativo.llamadas`).
-- `node_modules` del worktree: enlace (junction) al del proyecto, creado con `mklink /J`. Al quitar el worktree,
-  primero `cmd /c rmdir node_modules` sin `/s`.
+| Commit | Punto | Pruebas (todas en `tests/aviso-entrada.spec.js`) |
+|---|---|---|
+| 3307969e | 1 · nº 3 y 12: programa primero, quita solo lo que sobra, firma en `pace.entrada.puesto` | 3 · 3 mutantes |
+| 7fe474cf | 2 · nº 4: «Borrar todo» e importar quitan los ids 10-16 (`paceEntradaQuitar`) | 3 · 3 mutantes |
+| 13033ba3 | 3 · nº 5: exacta con «Alarmas y recordatorios» | 2 · 2 mutantes |
+| 484c1494 | 4 · nº 6 y 7: dos campanadas, `pace_entrada_campanas` / `pace_entrada_mudo`, `pace_entrada` borrado; iPhone `pausa-aviso.wav` | 5 · 4 mutantes + guardas en verify.android/ios |
+| 481020c5 | 5 · nº 8: nota de Ajustes en «Tu semana»; el permiso se pide al encender | 2 · 3 mutantes |
 
-## Falta (el encargo entero, uno por commit, cada uno con su mutante)
+Vecinas (android-nativo, android-avisos, pausa-aviso, aviso-no-pisa: 64) en verde tras el punto 1; importar-borrar,
+copia-ida-vuelta e importar-licencia (18) tras el 2. **Falta repasar las vecinas al final** (las de arriba, más
+`ios-nativo.safari.spec.js` y las de la barra de arriba), puerto 8875, `--workers=1`.
 
-1. Nº 3 y 12: en `paceEntradaPonerYa` (`nativo.entrada.js:83`), hoy es `cancel` de los siete → permiso → canal →
-   `schedule`. Cambiar a: `schedule` primero (mismo id sustituye) y después `cancel` solo de los ids del 10 al 16
-   que no están en la lista; firma de lo deseado (ids + hora + texto + canal + sonido) guardada, y si no cambió, no
-   llamar al complemento. Ojo: la regla de la fila 34 dice que sin `avisoEntrada` booleano no se llama ni para quitar
-   (android-nativo cuenta los `cancel`).
-2. Nº 4: «Borrar todo» e importar quitan los ids 10-16 aunque el estado nuevo no traiga `avisoEntrada`
-   (`app/tweaks/TweaksData.importar.jsx`, `usePaceTraerCopia`, y el borrado de Ajustes › Tus datos).
-3. Nº 5: exacta como el Foco (`paceAndroidAvisoExacto` en `app/ui/android.avisos.js`).
-4. Nº 6 y 7: dos campanadas (`pausa_aviso` en Android, `pausa-aviso.wav` en iOS) y canal mudo. `pace_entrada` ya
-   existe SIN sonido en quien tiene la 0.206.0/0.207.0: hace falta un id nuevo para el sonoro (p. ej.
-   `pace_entrada_campana`) y `pace_entrada_mudo` con importancia baja, como `pace_pausa_mudo`.
-5. Nº 8: `app/ritmo/RitmoSemanaTipo.jsx` no mira lo que devuelve `paceEntradaEncender()`; copiar el patrón y los
-   textos de la fila de avisos de `app/tweaks/TweaksPanel.jsx`.
+## Falta
+
 6. Nº 9 y Nº 1: `MY_PACKAGE_REPLACED` en `LocalNotificationRestoreReceiver` con `tools:node="merge"` desde
-   `android/app/src/main/AndroidManifest.xml`, y `scripts/verify.android.js` que lo vigile y que exija
-   `SCHEDULE_EXACT_ALARM`, `POST_NOTIFICATIONS` y `RECEIVE_BOOT_COMPLETED` en el manifiesto del complemento.
-7. Nº 10: de 0:00 a 4:00, contar también hoy si la hora de entrada aún no ha llegado (`paceEntradaAvisos`, el bucle
-   empieza en `d = 1`).
-8. Atajo «Foco» del icono (`app/main.jsx:96`): preguntar con el aviso de la barra de arriba al dejar una pausa.
-9. Página «Montado» en `docs/proposals/avisos-novena-16nov/` y fila en las decisiones.
+   `android/app/src/main/AndroidManifest.xml`; `scripts/verify.android.js` lo vigila y exige
+   `SCHEDULE_EXACT_ALARM`, `POST_NOTIFICATIONS` y `RECEIVE_BOOT_COMPLETED` en
+   `node_modules/@capacitor/local-notifications/android/src/main/AndroidManifest.xml`.
+7. Nº 10: `paceEntradaAvisos`, de 0:00 a 4:00 contar también hoy si la entrada no ha llegado (ids: 10 + índice
+   en la ventana de 7).
+8. Atajo «Foco» del icono (`app/main.jsx:96`, `?go=focus`): preguntar con el aviso de la barra de arriba
+   (`topbar.pausa.*`) al dejar una pausa empezada.
+9. Fila arriba en `DECISIONES_TECNICAS_VIGENTES.md` (y marcar lo que cambia de la fila del 15 nov. del aviso de
+   entrada: ya no «quita los siete y pone», y el permiso se pide al encender). Página «Montado» en
+   `docs/proposals/avisos-novena-16nov/` con los pasos de Fable para un móvil (Android 14 del 1 al 9, iPhone del
+   1 al 5) **que no están en el repo**: pedírselos a la coordinadora. Publicarla e informe corto.
 
-## Pendiente de la coordinadora
-
-Los pasos «Solo se sabe en un móvil» de Fable (Android 14 del 1 al 9, iPhone del 1 al 5) **no están en el repo**:
-solo en la conversación de la coordinadora (`local_ff76d287`). Hay que pedírselos o que los guarde en
-`docs/audits/fable-15nov/externa-novena-16nov.md` antes de la página «Montado».
+Herramienta de mutantes (en el scratchpad de esta sesión): aplica un cambio, compila, corre la prueba en el 8875
+y lo deshace. El `node_modules` del worktree es un enlace: quitarlo con `rmdir` sin `/s`.
