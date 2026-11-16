@@ -94,6 +94,49 @@ function chequeaAndroid(ctx) {
   chequeaSonidoPausa(ctx);
   chequeaPlay(ctx);
   chequeaListaDelMovil(ctx);
+  chequeaManifiesto(ctx);
+}
+
+/* LOS AVISOS Y SU MANIFIESTO (novena pasada externa, n.º 1 y 9, 16 nov. 2026).
+   N.º 1: los permisos de los avisos (alarma exacta, avisos y arranque) no los declara PACE sino el
+   complemento, y el AAB los lleva fundidos; una version del complemento que dejara de declararlos los
+   perderia en silencio. N.º 9: PACE suma MY_PACKAGE_REPLACED al receptor que repone los avisos, por
+   su nombre: si el complemento cambiara de clase, la fusion crearia un receptor a una clase que no
+   existe. Puras con el texto del manifiesto, para poder probarlas sin tocar node_modules. */
+var COMPLEMENTO_AVISOS = 'node_modules/@capacitor/local-notifications/android/src/main/';
+var RECEPTOR_AVISOS = 'com.capacitorjs.plugins.localnotifications.LocalNotificationRestoreReceiver';
+var PERMISOS_AVISOS = ['android.permission.SCHEDULE_EXACT_ALARM', 'android.permission.POST_NOTIFICATIONS', 'android.permission.RECEIVE_BOOT_COMPLETED'];
+
+function faltanEnComplemento(xml) {
+  var malas = PERMISOS_AVISOS.filter(function (p) {
+    return !new RegExp('<uses-permission\\s+android:name="' + p.replace(/\./g, '\\.') + '"').test(xml);
+  }).map(function (p) { return 'el complemento de avisos ya no declara ' + p.split('.').pop(); });
+  if (xml.indexOf('android:name="' + RECEPTOR_AVISOS + '"') === -1) malas.push('el complemento de avisos ya no tiene ' + RECEPTOR_AVISOS.split('.').pop());
+  return malas;
+}
+
+function faltanEnPace(xml) {
+  var malas = [];
+  if (xml.indexOf('xmlns:tools="http://schemas.android.com/tools"') === -1) malas.push('el manifiesto de PACE no declara xmlns:tools');
+  var m = xml.match(new RegExp('<receiver\\s[^>]*android:name="' + RECEPTOR_AVISOS.replace(/\./g, '\\.') + '"[^>]*>([\\s\\S]*?)</receiver>'));
+  if (!m) malas.push('el manifiesto de PACE ya no suma nada al receptor que repone los avisos');
+  else {
+    if (!/tools:node="merge"/.test(m[0])) malas.push('el receptor que repone los avisos no va con tools:node="merge" y pisaria el del complemento');
+    if (!/<action\s+android:name="android\.intent\.action\.MY_PACKAGE_REPLACED"/.test(m[1])) malas.push('el receptor que repone los avisos ya no escucha MY_PACKAGE_REPLACED: tras actualizar PACE, los avisos puestos no vuelven hasta abrirla');
+  }
+  return malas;
+}
+
+function chequeaManifiesto(ctx) {
+  var complemento = (leer(COMPLEMENTO_AVISOS + 'AndroidManifest.xml') || '').toString();
+  var malas = complemento ? faltanEnComplemento(complemento) : ['no esta ' + COMPLEMENTO_AVISOS + 'AndroidManifest.xml (npm ci)'];
+  if (!leer(COMPLEMENTO_AVISOS + 'kotlin/com/capacitorjs/plugins/localnotifications/LocalNotificationRestoreReceiver.kt') &&
+      !leer(COMPLEMENTO_AVISOS + 'java/com/capacitorjs/plugins/localnotifications/LocalNotificationRestoreReceiver.java')) {
+    malas.push('el complemento de avisos ya no trae la clase LocalNotificationRestoreReceiver');
+  }
+  malas = malas.concat(faltanEnPace((leer('android/app/src/main/AndroidManifest.xml') || '').toString()));
+  if (malas.length) malas.forEach(function (m) { ctx.falla('android: ' + m); });
+  else ctx.ok('android: el complemento declara la alarma exacta, los avisos y el arranque, y PACE le suma MY_PACKAGE_REPLACED al receptor que los repone');
 }
 
 /* El fin de la pausa suena con su propio sonido (auditoria externa 4.F2 y 4.F3) y el fin del Foco con la
@@ -292,6 +335,8 @@ function chequeaIconoAviso(ctx, css) {
 var NO_CUBRE_ANDROID = [
   'android: se comparan las copias del logo y los colores, no como se VEN el icono, el arranque y ' +
     'las barras -- eso se mira en un movil, y si el XML compila lo dice el workflow Android',
+  'android: se lee que el receptor de los avisos escuche MY_PACKAGE_REPLACED, no que Android los reponga al ' +
+    'actualizar -- eso solo se sabe en un movil con una actualizacion de Play',
 ];
 
-module.exports = { chequeaAndroid: chequeaAndroid, NO_CUBRE_ANDROID: NO_CUBRE_ANDROID };
+module.exports = { chequeaAndroid: chequeaAndroid, NO_CUBRE_ANDROID: NO_CUBRE_ANDROID, faltanEnComplemento: faltanEnComplemento, faltanEnPace: faltanEnPace };
