@@ -346,7 +346,13 @@ function playSound(name) {
   var args = Array.prototype.slice.call(arguments, 1);
   try {
     var s = (typeof getState === 'function') ? getState() : null;
+    /* Mueve y Estira (Ez, 15 nov. 2026): el runner pasa la palabra de la voz (`{ voz, max, soloVoz }`). Vibrar va
+       antes que el sonido porque de fábrica vibra justo cuando está apagado (vibra.js). */
+    var op = args[0] && typeof args[0] === 'object' ? args[0] : null;
+    if (name.indexOf('move.') === 0 && !(op && op.soloVoz) && typeof window.paceVibra === 'function') window.paceVibra(name, s);
     if (!s || !s.soundOn) return;
+    if (op && op.voz && typeof window.paceVozCuerpoIntenta === 'function' && window.paceVozCuerpoIntenta(op.voz, op.max)) return;
+    if (op && op.soloVoz) return;
     /* s175 · LA VOZ VA PRIMERO, y sólo si CABE en la fase. `paceVozIntenta`
        recibe los segundos de esta fase y contesta de forma SÍNCRONA: devuelve
        `true` únicamente cuando el clip está precargado y entra entero con su

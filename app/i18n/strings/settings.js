@@ -63,6 +63,12 @@ Object.assign(window.PACE_STRINGS.es, {
     /* Oír la señal elegida sin empezar una Respira, y dónde suena la música (Ez, 6A del 8 nov.). */
     'settings.signal.escuchar':      'Escuchar',
     'settings.bg.music.nota':        'La música, solo en Respira',
+    'settings.signal.nota':          'En Respira, Mueve y Estira',
+    'settings.vibrar':               'Vibrar',
+    'settings.vibrar.sub':           'Mueve y Estira',
+    'settings.vibrar.no':            'No',
+    'settings.vibrar.sinSonido':     'Sin sonido',
+    'settings.vibrar.siempre':       'Siempre',
 
     // Sesiones: cada fila dice de que modulo es
     'settings.notify':               'Aviso al terminar',
@@ -175,6 +181,12 @@ Object.assign(window.PACE_STRINGS.en, {
     'settings.bg.music':             'Music',
     'settings.signal.escuchar':      'Listen',
     'settings.bg.music.nota':        'Music plays only in Breathe',
+    'settings.signal.nota':          'Breathe, Move, Stretch',
+    'settings.vibrar':               'Vibrate',
+    'settings.vibrar.sub':           'Move and Stretch',
+    'settings.vibrar.no':            'Never',
+    'settings.vibrar.sinSonido':     'Sound off',
+    'settings.vibrar.siempre':       'Always',
 
     // Sessions
     'settings.notify':               'Alert at the end',
