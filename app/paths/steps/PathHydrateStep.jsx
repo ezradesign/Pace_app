@@ -44,7 +44,7 @@ function PathHydrateStep({ step, onExit }) {
           '--pfbtn': 'var(--ink-3)',
         })}
       >
-        {t('path.hydrate.skip') || t('path.runner.skip')}
+        {t('path.runner.skip')}
       </button>
       <button
         data-pace-cta

@@ -1894,8 +1894,8 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
        Los 5 archivos siguientes son Object.assign sobre PACE_STRINGS.{es,en}.
        content/* (s92 / v0.37.0): strings-content.js (s38) se troceo por
        modulo visual (breathe/move/extra) al superar ~470 ln con F6. Sigue
-       siendo el patch FINAL EN de contenido -- carga al final para preservar
-       el override de breathe.phase.inhala.mas/oceanica (D-1). -->
+       siendo el patch FINAL EN de contenido; ya no redefine ninguna clave de
+       strings/* (verify.claves.js). -->
   <!-- EL CORTE ENTRE LAS DOS PIELES (s197). VA EL PRIMERO: lo interpolan las hojas
        inyectadas (pieles, ritmo, library, la hoja del sidebar, Stats) y lo consultan
        tres `matchMedia`. Si se carga despues, esas hojas salen con `undefined`. -->
@@ -2833,8 +2833,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'breathe.phase.exhala': 'Exhale',
   'breathe.phase.sosten': 'Hold',
   'breathe.phase.inhala.mas': 'Inhale more',
-  'breathe.phase.inhala.oceanica': 'Ocean inhale',
-  'breathe.phase.exhala.oceanica': 'Ocean exhale',
+  'breathe.phase.inhala.oceanica': 'Oceanic inhale',
+  'breathe.phase.exhala.oceanica': 'Oceanic exhale',
   'breathe.phase.inhala.izq': 'Inhale left',
   'breathe.phase.inhala.dcha': 'Inhale right',
   'breathe.phase.exhala.dcha': 'Exhale right',
@@ -2965,7 +2965,6 @@ Object.assign(window.PACE_STRINGS.en, {
        moverse es content/*, que patchea EN y debe seguir cargando al final. -->
   <script>
 ;(function () {
-
 
 
 
@@ -3391,7 +3390,6 @@ Object.assign(window.PACE_STRINGS.es, {
   'path.runner.transition.continue': 'toca para continuar',
   'path.hydrate.copy': 'Si te apetece, suma un vaso.',
   'path.hydrate.drank': 'Beber',
-  'path.hydrate.skip': 'Saltar',
   'path.hydrate.glasses.today': 'Vasos hoy',
   'path.error.routineNotFound': 'Rutina no encontrada: {id}',
 
@@ -3428,7 +3426,6 @@ Object.assign(window.PACE_STRINGS.es, {
   'paths.suggested.approxMin': '~{n} min',
   'paths.suggested.guidedSteps': 'Rutina guiada · {n} pasos',
   'paths.runner.repeat': 'Repetir camino',
-  'path.card.done': 'Hecho hoy',
   'path.card.start': 'Iniciar camino'
 });
 
@@ -3452,7 +3449,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'path.runner.transition.continue': 'tap to continue',
   'path.hydrate.copy': 'If you feel like it, add a glass.',
   'path.hydrate.drank': 'Drink',
-  'path.hydrate.skip': 'Skip',
   'path.hydrate.glasses.today': 'Glasses today',
   'path.error.routineNotFound': 'Routine not found: {id}',
 
@@ -3489,7 +3485,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'paths.suggested.approxMin': '~{n} min',
   'paths.suggested.guidedSteps': 'Guided routine · {n} steps',
   'paths.runner.repeat': 'Repeat path',
-  'path.card.done': 'Done today',
   'path.card.start': 'Start path'
 });
 })();
@@ -5153,19 +5148,6 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
 Object.assign(window.PACE_STRINGS.en, {
-
-
-  'breathe.phase.inhala': 'Inhale',
-  'breathe.phase.exhala': 'Exhale',
-  'breathe.phase.sosten': 'Hold',
-  'breathe.phase.inhala.mas': 'Inhale more',
-  'breathe.phase.inhala.oceanica': 'Oceanic inhale',
-  'breathe.phase.exhala.oceanica': 'Oceanic exhale',
-  'breathe.phase.inhala.izq': 'Inhale left',
-  'breathe.phase.inhala.dcha': 'Inhale right',
-  'breathe.phase.exhala.dcha': 'Exhale right',
-  'breathe.phase.exhala.izq': 'Exhale left',
-  'breathe.phase.respira': 'Breathe',
 
 
   'breathe.cat.energia.label': 'Energy',
@@ -44853,7 +44835,7 @@ function PathMiniCard(_ref) {let { pathObj, label, doneToday, onStart } = _ref;
     React.createElement("span", { "data-pace-spc-name": true, style: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, fontWeight: 500, color: 'var(--ink)', lineHeight: 1.1 } }, name),
     doneToday &&
     React.createElement("span", { style: { fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', padding: '2px 6px', border: '1px solid var(--line)', borderRadius: 'var(--r-pill)' } },
-    t('path.card.done') || 'Hecho hoy'
+    t('paths.library.doneToday') || 'Hecho hoy'
     )
 
     ),
@@ -46435,7 +46417,7 @@ function PathHydrateStep(_ref) {let { step, onExit } = _ref;
       '--pfbtn': 'var(--ink-3)'
     }) },
 
-  t('path.hydrate.skip') || t('path.runner.skip')
+  t('path.runner.skip')
   ),
   React.createElement("button", {
     "data-pace-cta": true,

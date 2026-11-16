@@ -33,7 +33,6 @@ Object.assign(window.PACE_STRINGS.es, {
     'path.runner.transition.continue':'toca para continuar',
     'path.hydrate.copy':             'Si te apetece, suma un vaso.',
     'path.hydrate.drank':            'Beber',
-    'path.hydrate.skip':             'Saltar',
     'path.hydrate.glasses.today':    'Vasos hoy',
     'path.error.routineNotFound':    'Rutina no encontrada: {id}',
     // Caminos - nombres y taglines (sesion 75 - renombrado sensorial)
@@ -70,7 +69,6 @@ Object.assign(window.PACE_STRINGS.es, {
     'paths.suggested.approxMin':      '~{n} min',
     'paths.suggested.guidedSteps':    'Rutina guiada · {n} pasos',
     'paths.runner.repeat':            'Repetir camino',
-    'path.card.done':                 'Hecho hoy',
     'path.card.start':                'Iniciar camino',
 });
 
@@ -94,7 +92,6 @@ Object.assign(window.PACE_STRINGS.en, {
     'path.runner.transition.continue':'tap to continue',
     'path.hydrate.copy':             'If you feel like it, add a glass.',
     'path.hydrate.drank':            'Drink',
-    'path.hydrate.skip':             'Skip',
     'path.hydrate.glasses.today':    'Glasses today',
     'path.error.routineNotFound':    'Routine not found: {id}',
     // Paths - names and taglines (session 75 - sensory renaming)
@@ -131,6 +128,5 @@ Object.assign(window.PACE_STRINGS.en, {
     'paths.suggested.approxMin':      '~{n} min',
     'paths.suggested.guidedSteps':    'Guided routine · {n} steps',
     'paths.runner.repeat':            'Repeat path',
-    'path.card.done':                 'Done today',
     'path.card.start':                'Start path',
 });

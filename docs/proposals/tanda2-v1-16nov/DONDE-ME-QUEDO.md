@@ -32,7 +32,11 @@ Rama `claude/tanda2-v1-16nov-ea1aa2`, worktree `version-de-prueba-7b9668`. Cort�
      `paceReparadosAlCargar` vacío; los eventos de antes siguen y uno nuevo se escribe
      (`paceEventsCanWrite`, `paceEventsAppend`); recargar tras una escritura y volver a mirar
      (un catch de fábrica falla en la PRIMERA escritura).
-4. **D-1, D-2, D-3** (`docs/audits/audit-completa-s178.md` §5.2), sin cambiar texto visible:
+4. **D-1 y D-2, HECHOS** en el commit siguiente al wip (`scripts/verify.claves.js`, visto caer con dos
+   mutantes; `verify` en verde; censo 1208: salen `path.card.done` y `path.hydrate.skip`, que repetía
+   «Saltar»/«Skip»). SIN PASAR todavía las vecinas e2e: caza-ingles, caza-respira, respira-cierre,
+   logros-i18n y alguna de los Caminos (con `--workers=1` en el 8855). **Falta D-3.** Lo de antes:
+   **D-1, D-2, D-3** (`docs/audits/audit-completa-s178.md` §5.2), sin cambiar texto visible:
    - D-1: `content/breathe.js` redefine 11 claves de `strings/sessions.js`; 9 iguales y 2 distintas
      (las oceánicas: lo que se ve es «Oceanic inhale/exhale»). Poner esos dos valores en
      sessions.js (EN) y quitar el bloque de content/breathe.js; una comprobación en verify de que

@@ -173,7 +173,7 @@ function PathMiniCard({ pathObj, label, doneToday, onStart }) {
           <span data-pace-spc-name style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, fontWeight: 500, color: 'var(--ink)', lineHeight: 1.1 }}>{name}</span>
           {doneToday && (
             <span style={{ fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', padding: '2px 6px', border: '1px solid var(--line)', borderRadius: 'var(--r-pill)' }}>
-              {t('path.card.done') || 'Hecho hoy'}
+              {t('paths.library.doneToday') || 'Hecho hoy'}
             </span>
           )}
         </div>
