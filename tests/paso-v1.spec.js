@@ -227,6 +227,11 @@ test.describe('la hoja del día de v1 (1A)', () => {
 
     /* Pasada la semana, la fila vuelve a la de siempre. */
     await page.clock.fastForward(7 * DIA + 60000);
+    /* Al acabar la semana sale una vez su nota (2B, fin-prueba.spec.js); se cierra antes de Ajustes. */
+    const fin = page.locator('[data-pace-premium-hoja="fin"]');
+    await expect(fin).toBeVisible({ timeout: 8000 });
+    await fin.getByRole('button', { name: 'Entendido' }).click();
+    await expect(fin).toHaveCount(0);
     await page.getByRole('button', { name: 'Abrir ajustes' }).click();
     await abrirTusDatos(page);
     await expect(page.locator('[data-pace-licencia-prueba]')).toHaveCount(0);
