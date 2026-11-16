@@ -3372,26 +3372,26 @@ Object.assign(window.PACE_STRINGS.en, {
 
 Object.assign(window.PACE_STRINGS.es, {
 
-  'path.runner.exit': 'Salir del camino',
-  'path.runner.exitConfirmTitle': 'Salir del camino?',
-  'path.runner.exitConfirmBody': 'Perderas el progreso de este camino.',
-  'path.runner.exitConfirmYes': 'Si, salir',
-  'path.runner.exitConfirmNo': 'Seguir',
-  'path.runner.skip': 'Saltar',
-  'path.runner.next': 'Siguiente',
-  'path.runner.done': 'Hecho',
-  'path.runner.complete.title': 'Camino completado',
-  'path.runner.complete.body': 'Has terminado {name}.',
-  'path.runner.complete.back': 'Volver',
-  'path.runner.complete.recorrido': 'Recorrido',
+  'paths.runner.exit': 'Salir del camino',
+  'paths.runner.exitConfirmTitle': 'Salir del camino?',
+  'paths.runner.exitConfirmBody': 'Perderas el progreso de este camino.',
+  'paths.runner.exitConfirmYes': 'Si, salir',
+  'paths.runner.exitConfirmNo': 'Seguir',
+  'paths.runner.skip': 'Saltar',
+  'paths.runner.next': 'Siguiente',
+  'paths.runner.done': 'Hecho',
+  'paths.runner.complete.title': 'Camino completado',
+  'paths.runner.complete.body': 'Has terminado {name}.',
+  'paths.runner.complete.back': 'Volver',
+  'paths.runner.complete.recorrido': 'Recorrido',
 
-  'path.runner.complete.steps': '{n} pasos',
-  'path.runner.complete.achievements': 'Desbloqueado',
-  'path.runner.transition.continue': 'toca para continuar',
-  'path.hydrate.copy': 'Si te apetece, suma un vaso.',
-  'path.hydrate.drank': 'Beber',
-  'path.hydrate.glasses.today': 'Vasos hoy',
-  'path.error.routineNotFound': 'Rutina no encontrada: {id}',
+  'paths.runner.complete.steps': '{n} pasos',
+  'paths.runner.complete.achievements': 'Desbloqueado',
+  'paths.runner.transition.continue': 'toca para continuar',
+  'paths.hydrate.copy': 'Si te apetece, suma un vaso.',
+  'paths.hydrate.drank': 'Beber',
+  'paths.hydrate.glasses.today': 'Vasos hoy',
+  'paths.error.routineNotFound': 'Rutina no encontrada: {id}',
 
   'paths.path.dawn.name': 'Morning Glory',
   'paths.path.dawn.tagline': 'Una flor que abre con la primera luz.',
@@ -3426,31 +3426,31 @@ Object.assign(window.PACE_STRINGS.es, {
   'paths.suggested.approxMin': '~{n} min',
   'paths.suggested.guidedSteps': 'Rutina guiada · {n} pasos',
   'paths.runner.repeat': 'Repetir camino',
-  'path.card.start': 'Iniciar camino'
+  'paths.card.start': 'Iniciar camino'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
 
-  'path.runner.exit': 'Exit path',
-  'path.runner.exitConfirmTitle': 'Exit path?',
-  'path.runner.exitConfirmBody': 'You will lose progress on this path.',
-  'path.runner.exitConfirmYes': 'Yes, exit',
-  'path.runner.exitConfirmNo': 'Stay',
-  'path.runner.skip': 'Skip',
-  'path.runner.next': 'Next',
-  'path.runner.done': 'Done',
-  'path.runner.complete.title': 'Path completed',
-  'path.runner.complete.body': 'You finished {name}.',
-  'path.runner.complete.back': 'Back',
-  'path.runner.complete.recorrido': 'Journey',
+  'paths.runner.exit': 'Exit path',
+  'paths.runner.exitConfirmTitle': 'Exit path?',
+  'paths.runner.exitConfirmBody': 'You will lose progress on this path.',
+  'paths.runner.exitConfirmYes': 'Yes, exit',
+  'paths.runner.exitConfirmNo': 'Stay',
+  'paths.runner.skip': 'Skip',
+  'paths.runner.next': 'Next',
+  'paths.runner.done': 'Done',
+  'paths.runner.complete.title': 'Path completed',
+  'paths.runner.complete.body': 'You finished {name}.',
+  'paths.runner.complete.back': 'Back',
+  'paths.runner.complete.recorrido': 'Journey',
 
-  'path.runner.complete.steps': '{n} steps',
-  'path.runner.complete.achievements': 'Unlocked',
-  'path.runner.transition.continue': 'tap to continue',
-  'path.hydrate.copy': 'If you feel like it, add a glass.',
-  'path.hydrate.drank': 'Drink',
-  'path.hydrate.glasses.today': 'Glasses today',
-  'path.error.routineNotFound': 'Routine not found: {id}',
+  'paths.runner.complete.steps': '{n} steps',
+  'paths.runner.complete.achievements': 'Unlocked',
+  'paths.runner.transition.continue': 'tap to continue',
+  'paths.hydrate.copy': 'If you feel like it, add a glass.',
+  'paths.hydrate.drank': 'Drink',
+  'paths.hydrate.glasses.today': 'Glasses today',
+  'paths.error.routineNotFound': 'Routine not found: {id}',
 
   'paths.path.dawn.name': 'Morning Glory',
   'paths.path.dawn.tagline': 'A flower that opens with the first light.',
@@ -3485,7 +3485,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'paths.suggested.approxMin': '~{n} min',
   'paths.suggested.guidedSteps': 'Guided routine · {n} steps',
   'paths.runner.repeat': 'Repeat path',
-  'path.card.start': 'Start path'
+  'paths.card.start': 'Start path'
 });
 })();
 </script>
@@ -44864,7 +44864,7 @@ function PathMiniCard(_ref) {let { pathObj, label, doneToday, onStart } = _ref;
       onMouseEnter: function (e) {e.currentTarget.style.background = 'var(--focus-soft)';},
       onMouseLeave: function (e) {e.currentTarget.style.background = 'transparent';} },
 
-    t('path.card.start') || 'Iniciar camino'
+    t('paths.card.start') || 'Iniciar camino'
     ),
 
     doneToday &&
@@ -45976,7 +45976,7 @@ function TransitionCardBase(_ref)
 
     React.createElement("div", { style: Object.assign({}, pathTransitionStyles.hint,
       hasIllustration ? pathTransitionStyles.textHaloScene : null) },
-    t('path.runner.transition.continue')
+    t('paths.runner.transition.continue')
     )
     ));
 
@@ -46304,7 +46304,7 @@ function PathFocusStep(_ref) {let { step, onExit } = _ref;
   React.createElement(React.Fragment, null,
   React.createElement("button", { "data-pace-path-btn": true, onClick: toggle, style: pfBtn('var(--focus)', 'var(--focus-soft)') }, React.createElement(PaceConIcono, { texto: pauseLabel })),
   React.createElement("button", { "data-pace-path-btn": true, onClick: reset, style: pfBtn('var(--breathe)', 'var(--breathe-soft)') }, t('focus.restart')),
-  React.createElement("button", { "data-pace-path-btn": true, onClick: () => onExit('skip'), style: pfBtn('var(--ink-3)', 'var(--paper-3)') }, t('path.runner.skip'))
+  React.createElement("button", { "data-pace-path-btn": true, onClick: () => onExit('skip'), style: pfBtn('var(--ink-3)', 'var(--paper-3)') }, t('paths.runner.skip'))
   );
 
 
@@ -46417,7 +46417,7 @@ function PathHydrateStep(_ref) {let { step, onExit } = _ref;
       '--pfbtn': 'var(--ink-3)'
     }) },
 
-  t('path.runner.skip')
+  t('paths.runner.skip')
   ),
   React.createElement("button", {
     "data-pace-cta": true,
@@ -46428,7 +46428,7 @@ function PathHydrateStep(_ref) {let { step, onExit } = _ref;
       color: 'var(--paper)'
     }) },
 
-  t('path.hydrate.drank')
+  t('paths.hydrate.drank')
   )
   );
 
@@ -46449,7 +46449,7 @@ function PathHydrateStep(_ref) {let { step, onExit } = _ref;
         fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase',
         color: 'var(--ink-3)', marginTop: 8, marginBottom: 22
       } },
-    t('path.hydrate.glasses.today') || 'Vasos hoy'
+    t('paths.hydrate.glasses.today') || 'Vasos hoy'
     ),
 
 
@@ -46488,7 +46488,7 @@ function PathHydrateStep(_ref) {let { step, onExit } = _ref;
         color: 'var(--ink-2)', margin: '0 auto', lineHeight: 1.4,
         maxWidth: 360
       } },
-    t('path.hydrate.copy')
+    t('paths.hydrate.copy')
     )
     )
     ));
@@ -46554,7 +46554,7 @@ function PathTopBar(_ref) {let { pathName, onRequestExit } = _ref;
     React.createElement("div", { style: { flex: 1 } }),
     React.createElement("button", {
       onClick: onRequestExit,
-      "aria-label": t('path.runner.exit'),
+      "aria-label": t('paths.runner.exit'),
       style: {
         background: 'transparent', border: 'none',
         color: 'var(--ink-3)', cursor: 'pointer',
@@ -46600,10 +46600,10 @@ function ExitConfirmModal(_ref2) {let { open, onCancel, onConfirm } = _ref2;
       } },
 
     React.createElement("h3", { id: "exit-confirm-title", style: { margin: '0 0 12px', fontSize: 20, fontWeight: 500, fontFamily: 'var(--font-display)', fontStyle: 'italic' } },
-    t('path.runner.exitConfirmTitle')
+    t('paths.runner.exitConfirmTitle')
     ),
     React.createElement("p", { style: { margin: '0 0 24px', color: 'var(--ink-2)', fontSize: 14, lineHeight: 1.6 } },
-    t('path.runner.exitConfirmBody')
+    t('paths.runner.exitConfirmBody')
     ),
     React.createElement("div", { style: { display: 'flex', gap: 10, justifyContent: 'flex-end' } },
     React.createElement("button", {
@@ -46615,7 +46615,7 @@ function ExitConfirmModal(_ref2) {let { open, onCancel, onConfirm } = _ref2;
         color: 'var(--ink)', cursor: 'pointer', fontSize: 13
       } },
 
-    t('path.runner.exitConfirmNo')
+    t('paths.runner.exitConfirmNo')
     ),
     React.createElement("button", {
       onClick: onConfirm,
@@ -46625,7 +46625,7 @@ function ExitConfirmModal(_ref2) {let { open, onCancel, onConfirm } = _ref2;
         color: 'var(--paper)', cursor: 'pointer', fontSize: 13
       } },
 
-    t('path.runner.exitConfirmYes')
+    t('paths.runner.exitConfirmYes')
     )
     )
     )
@@ -46642,7 +46642,7 @@ function StepError(_ref3) {let { routineId, onSkip } = _ref3;
         alignItems: 'center', justifyContent: 'center', padding: 40, textAlign: 'center'
       } },
     React.createElement("p", { style: { color: 'var(--ink-2)', marginBottom: 20, fontSize: 14 } },
-    t('path.error.routineNotFound').replace('{id}', routineId)
+    t('paths.error.routineNotFound').replace('{id}', routineId)
     ),
     React.createElement("button", {
       onClick: onSkip,
@@ -46652,7 +46652,7 @@ function StepError(_ref3) {let { routineId, onSkip } = _ref3;
         color: 'var(--ink)', cursor: 'pointer', fontSize: 13
       } },
 
-    t('path.runner.skip')
+    t('paths.runner.skip')
     )
     ));
 
@@ -46771,7 +46771,7 @@ function CompletionScreen(_ref) {let { snapshot, onBack, fadeIn } = _ref;
 
 
   const stepsLabel = totalSteps > 0 ?
-  tn('path.runner.complete.steps', { n: CS_ROMAN[totalSteps - 1] || totalSteps }) :
+  tn('paths.runner.complete.steps', { n: CS_ROMAN[totalSteps - 1] || totalSteps }) :
   '';
   const metaLine = [stepsLabel, elapsed > 0 ? elapsed + ' min' : null].
   filter(Boolean).join(' · ');
@@ -46822,7 +46822,7 @@ function CompletionScreen(_ref) {let { snapshot, onBack, fadeIn } = _ref;
         fontSize: 11, letterSpacing: '0.28em', textTransform: 'uppercase',
         color: 'var(--ink-3)', margin: '0 0 14px'
       } },
-    t('path.runner.complete.title')
+    t('paths.runner.complete.title')
     ),
     React.createElement("h2", { style: {
         fontFamily: 'var(--font-display)',
@@ -46867,7 +46867,7 @@ function CompletionScreen(_ref) {let { snapshot, onBack, fadeIn } = _ref;
     totalSteps > 0 &&
     React.createElement("div", { style: { maxWidth: 340, width: '100%', margin: '0 0 6px' } },
     React.createElement("div", { style: csKickerStyle },
-    t('path.runner.complete.recorrido')
+    t('paths.runner.complete.recorrido')
     ),
     React.createElement("ul", { style: {
         listStyle: 'none', padding: 0, margin: 0,
@@ -46916,7 +46916,7 @@ function CompletionScreen(_ref) {let { snapshot, onBack, fadeIn } = _ref;
         gap: 10, margin: '4px 0 2px'
       } },
     React.createElement("div", { style: { ...csKickerStyle, marginBottom: 2 } },
-    t('path.runner.complete.achievements')
+    t('paths.runner.complete.achievements')
     ),
     achievementsDuring.map(function (a) {
       return (
@@ -46959,7 +46959,7 @@ function CompletionScreen(_ref) {let { snapshot, onBack, fadeIn } = _ref;
         fontSize: 13, letterSpacing: '0.12em'
       } },
 
-    t('path.runner.complete.back')
+    t('paths.runner.complete.back')
     ),
     React.createElement("button", {
       onClick: function () {onBack();if (typeof startPath === 'function') startPath(snapshot.pathId);},
@@ -47096,7 +47096,7 @@ function PathRunner() {
         className: "path-runner-overlay",
         role: "dialog",
         "aria-modal": "true",
-        "aria-label": t('path.runner.complete.title') },
+        "aria-label": t('paths.runner.complete.title') },
 
       React.createElement(CompletionScreen, {
         snapshot: justCompleted,

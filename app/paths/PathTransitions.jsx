@@ -223,7 +223,7 @@ function TransitionCardBase({
 
       <div style={Object.assign({}, pathTransitionStyles.hint,
         hasIllustration ? pathTransitionStyles.textHaloScene : null)}>
-        {t('path.runner.transition.continue')}
+        {t('paths.runner.transition.continue')}
       </div>
     </div>
   );

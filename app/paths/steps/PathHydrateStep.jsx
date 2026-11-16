@@ -44,7 +44,7 @@ function PathHydrateStep({ step, onExit }) {
           '--pfbtn': 'var(--ink-3)',
         })}
       >
-        {t('path.runner.skip')}
+        {t('paths.runner.skip')}
       </button>
       <button
         data-pace-cta
@@ -55,7 +55,7 @@ function PathHydrateStep({ step, onExit }) {
           color: 'var(--paper)',
         })}
       >
-        {t('path.hydrate.drank')}
+        {t('paths.hydrate.drank')}
       </button>
     </React.Fragment>
   );
@@ -76,7 +76,7 @@ function PathHydrateStep({ step, onExit }) {
           fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase',
           color: 'var(--ink-3)', marginTop: 8, marginBottom: 22,
         }}>
-          {t('path.hydrate.glasses.today') || 'Vasos hoy'}
+          {t('paths.hydrate.glasses.today') || 'Vasos hoy'}
         </div>
 
         {/* Vasos visuales (no interactivos: es Camino, no tracker) */}
@@ -115,7 +115,7 @@ function PathHydrateStep({ step, onExit }) {
           color: 'var(--ink-2)', margin: '0 auto', lineHeight: 1.4,
           maxWidth: 360,
         }}>
-          {t('path.hydrate.copy')}
+          {t('paths.hydrate.copy')}
         </p>
       </div>
     </SessionShell>

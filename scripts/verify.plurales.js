@@ -46,7 +46,7 @@ var SIN_SINGULAR = {
   'lib.series.cada': 'librarySeries solo da 2 ejercicios o más, de 2 series o más',
   'lib.rhythm.rounds': 'las rondas de Respira van de 2 a 5',
   'move.repsOf': 'las repeticiones del catálogo empiezan en 5',
-  'path.runner.complete.steps': 'un Camino tiene varios pasos (ocultos hasta después de v1)',
+  'paths.runner.complete.steps': 'un Camino tiene varios pasos (ocultos hasta después de v1)',
   'paths.suggested.guidedSteps': 'un Camino tiene varios pasos (ocultos hasta después de v1)',
   'premium.onb.precios': 'los días de prueba, 7',
   'premium.onb.probar': 'los días de prueba, 7',

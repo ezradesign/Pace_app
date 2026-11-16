@@ -202,7 +202,7 @@ function PathMiniCard({ pathObj, label, doneToday, onStart }) {
           onMouseEnter={function(e) { e.currentTarget.style.background = 'var(--focus-soft)'; }}
           onMouseLeave={function(e) { e.currentTarget.style.background = 'transparent'; }}
         >
-          {t('path.card.start') || 'Iniciar camino'}
+          {t('paths.card.start') || 'Iniciar camino'}
         </button>
       )}
       {doneToday && (
