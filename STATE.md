@@ -96,7 +96,7 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
   enlace público del grupo «Testers iPhone», que va también a /beta. Para vender: el acuerdo de apps de pago con banco
   y W-8BEN, el programa para pequeñas empresas y una dirección visible en la UE.
 - Las altas de Google Cloud y Microsoft Entra (`docs/CALENDARIO_ALTAS.md`): sin ellas el calendario automático de la
-  web no funciona para nadie, y abrirlo a todos pide que Google verifique la app, que tarda semanas.
+  web no funciona para nadie, y abrirlo a todos pide que Google verifique la app, que tarda semanas. **Ez (16 nov.): v1 sale con el calendario marcado «en pruebas»**, sin esperar a esa verificación.
 - La verificación en dos pasos en GitHub, Cloudflare, Stripe, Google y Apple; mandar a cada tester su enlace de
   `codigos-tester.csv`. **Las llaves privadas** viven fuera del repo y
   fuera del ordenador de trabajo (Ez, 31 oct.); dónde, lo sabe Ez y no se escribe aquí. Falta una segunda copia fuera de casa.
