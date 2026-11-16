@@ -16,6 +16,7 @@
        siete días siguientes, empezando por mañana, y se quitan los demás. Así, si hoy abriste PACE
        antes de tu hora, el de hoy ya no sale, y «Hoy es distinto» no deja un aviso colgado. Y si
        dejas de abrir PACE, deja de avisar al cabo de una semana: nada de «te echamos de menos».
+       Salvo de madrugada: abrir PACE antes de las 4:00 no cuenta como abrirla antes de tu hora.
      · LAS PALABRAS DE LA TARJETA DE LA MAÑANA: «Hoy, como cada jueves» y «Jornada de 9:00 a
        17:00. Tu día ya está preparado.», en el idioma de la app al ponerlo.
 
@@ -51,7 +52,12 @@ function paceEntradaTexto(s, clave, vars) {
 
 /* paceEntradaAvisos(s, ahora) -> [{ id, at, title, body }] de los siete días que siguen a hoy.
    PURA respecto al reloj: `ahora` (ms) entra por parámetro. Vacía si el aviso está apagado, si no
-   hay semana guardada o si todos esos días son libres. */
+   hay semana guardada o si todos esos días son libres.
+   PASADA LA MEDIANOCHE (novena pasada externa, nº 10): abrir PACE a las 0:10 es aún la noche de
+   ayer, no «abrirla antes de tu hora». Hasta las 4:00 (`PACE_ENTRADA_MADRUGADA`) los siete días
+   empiezan hoy, y el de hoy cuenta si su hora de entrada aún no ha llegado. Los ids van por su
+   puesto en esos siete días, así que siguen siendo del 10 al 16. */
+var PACE_ENTRADA_MADRUGADA = 4;
 function paceEntradaAvisos(s, ahora) {
   var out = [];
   try {
@@ -63,17 +69,20 @@ function paceEntradaAvisos(s, ahora) {
     if (!h) return out;
     var hoy = new Date(ahora);
     var dias = String(paceEntradaTexto(s, 'ritmo.dias')).split(',');
-    for (var d = 1; d <= PACE_ENTRADA_DIAS; d++) {
-      var dia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + d);
+    var primero = hoy.getHours() < PACE_ENTRADA_MADRUGADA ? 0 : 1;
+    for (var i = 0; i < PACE_ENTRADA_DIAS; i++) {
+      var dia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + primero + i);
       var n = (dia.getDay() + 6) % 7;   // lunes = 0, como la semana tipo
       var tipo = semana[n];
       if (tipo !== 'jornada' && tipo !== 'media') continue;
       var desde = tipo === 'media' ? h.media.inicio : h.inicio;
       var hasta = tipo === 'media' ? h.media.salida : h.salida;
       if (!(desde >= 0) || !(hasta > desde)) continue;
+      var at = new Date(dia.getFullYear(), dia.getMonth(), dia.getDate(), Math.floor(desde / 60), desde % 60).getTime();
+      if (at <= ahora) continue;
       out.push({
-        id: PACE_ENTRADA_PRIMER_ID + d - 1,
-        at: new Date(dia.getFullYear(), dia.getMonth(), dia.getDate(), Math.floor(desde / 60), desde % 60).getTime(),
+        id: PACE_ENTRADA_PRIMER_ID + i,
+        at: at,
         title: paceEntradaTexto(s, 'ritmo.manana.titulo', { dia: dias[n] || '' }),
         body: paceEntradaTexto(s, 'notify.entrada.' + tipo, { inicio: ritmoHora(desde), salida: ritmoHora(hasta) }),
       });

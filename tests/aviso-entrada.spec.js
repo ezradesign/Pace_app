@@ -270,6 +270,34 @@ for (const [soundOn, esperado] of [[true, 'pausa-aviso.wav'], [false, undefined]
   });
 }
 
+/* Novena pasada externa, nº 10: «desde mañana» contaba el día natural, y abrir PACE a las 0:10 del
+   jueves quitaba el aviso de esa misma mañana. */
+test('nº 10 · abierto a las 0:10, también avisa esa misma mañana', async ({ page, context }) => {
+  await abrir(page, context, ENCENDIDO, new Date('2026-11-19T00:10:00+01:00'));
+  const avisos = await avisosPuestos(page);
+  expect(avisos.map((a) => local(a.schedule.at)), 'el del jueves 19 a las 9:00 no está').toEqual([
+    [19, 9, 0], [20, 9, 0], [23, 9, 0], [24, 9, 0], [25, 9, 0],
+  ]);
+  expect(avisos.map((a) => a.id), 'los ids siguen siendo del 10 al 16').toEqual([10, 11, 14, 15, 16]);
+});
+
+test('nº 10 · a las 4:00 ya cuenta como abrir PACE antes de tu hora', async ({ page, context }) => {
+  await abrir(page, context, ENCENDIDO, new Date('2026-11-19T04:00:00+01:00'));
+  const avisos = await avisosPuestos(page);
+  expect(avisos.length, 'GUARD').toBeGreaterThan(0);
+  expect(local(avisos[0].schedule.at), 'el primero tiene que ser el del viernes').toEqual([20, 9, 0]);
+});
+
+test('nº 10 · de madrugada, la entrada de hoy que ya pasó no se pone', async ({ page, context }) => {
+  /* Quien entra a las 2:00 y abre PACE a las 3:00: el de hoy ya pasó y no puede salir tarde. */
+  await abrir(page, context, { semanaTipo: SEMANA, horario: { inicio: 120, comida: 360, comidaDur: 30, salida: 600 }, avisoEntrada: true },
+    new Date('2026-11-19T03:00:00+01:00'));
+  const avisos = await avisosPuestos(page);
+  expect(avisos.length, 'GUARD').toBeGreaterThan(0);
+  expect(avisos.every((a) => new Date(a.schedule.at).getTime() > new Date('2026-11-19T03:00:00+01:00').getTime()), 'puso un aviso que ya pasó').toBe(true);
+  expect(local(avisos[0].schedule.at)[0], 'el primero tiene que ser el del viernes').toBe(20);
+});
+
 test('apagado de fábrica: no pone ninguno', async ({ page, context }) => {
   await abrir(page, context, { semanaTipo: SEMANA, horario: HORARIO }, new Date('2026-11-18T20:00:00+01:00'));
   expect(await avisosPuestos(page)).toEqual([]);
