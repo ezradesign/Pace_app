@@ -40,8 +40,13 @@ async function comoAndroid(context, plataforma) {
           minimizeApp: () => Promise.resolve(),
         },
         LocalNotifications: {
-          checkPermissions: () => Promise.resolve({ display: 'granted' }),
-          requestPermissions: (op) => { apunta('requestPermissions', op); return Promise.resolve({ display: 'granted' }); },
+          /* `__permiso` y `__pide`: el permiso de avisos que hay y el que deja la ventana de Android. */
+          checkPermissions: () => Promise.resolve({ display: window.__permiso || 'granted' }),
+          requestPermissions: (op) => {
+            apunta('requestPermissions', op);
+            if (window.__pide) window.__permiso = window.__pide;
+            return Promise.resolve({ display: window.__permiso || 'granted' });
+          },
           checkExactNotificationSetting: () => Promise.resolve({ exact_alarm: window.__exacta || 'granted' }),
           changeExactNotificationSetting: () => Promise.resolve({ exact_alarm: 'granted' }),
           createChannel: (op) => { apunta('createChannel', op); return Promise.resolve(); },
@@ -299,6 +304,52 @@ test('en Android, «Tu semana» trae el interruptor, cabe a 360 × 640 y al guar
   expect(await page.evaluate(() => getState().ritmo.avisoEntrada)).toBe(true);
   const avisos = await avisosPuestos(page);
   expect(avisos.length, 'al encenderlo no puso los avisos').toBe(5);
+});
+
+/* Novena pasada externa, nº 8: con el permiso negado, el interruptor quedaba encendido y nunca
+   avisaba, sin decirlo. Ahora, como la fila de avisos de Ajustes: se pide al encenderlo y, negado, el
+   interruptor se ve apagado y la nota lo dice con las mismas palabras. */
+const NOTA_ANDROID = 'Los avisos de PACE están desactivados en los ajustes de Android.';
+async function abrirSemana(page, context, permiso, pide) {
+  await page.setViewportSize({ width: 360, height: 640 });
+  await context.addInitScript(([p, d]) => { window.__permiso = p; window.__pide = d; }, [permiso, pide || null]);
+  await abrir(page, context, { semanaTipo: SEMANA, horario: HORARIO }, MIERCOLES);
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('pace:ritmo-semana')));
+  const hoja = page.locator('[data-pace-semana-hoja]');
+  await expect(hoja).toBeVisible();
+  return hoja;
+}
+const pedidos = (page) => page.evaluate(() => window.__nativo.llamadas.filter((l) => l.metodo === 'requestPermissions').length);
+
+test('nº 8 · con los avisos negados, al encenderlo la línea lo dice con las palabras de Ajustes, y cabe a 360 × 640', async ({ page, context }) => {
+  const hoja = await abrirSemana(page, context, 'denied');
+  await expect(hoja.locator('[data-pace-semana-aviso-nota]'), 'la nota sale sin haberlo encendido').toHaveCount(0);
+  const sw = hoja.locator('[data-pace-semana-aviso] [role="switch"]');
+  await sw.click();
+  await expect(hoja.locator('[data-pace-semana-aviso-nota]')).toHaveText(NOTA_ANDROID);
+  await expect(sw, 'sin permiso no puede verse encendido').toHaveAttribute('aria-checked', 'false');
+  const cabe = await page.evaluate(() => {
+    const m = document.querySelector('[data-pace-semana-hoja]').closest('[role="dialog"]');
+    const r = m.getBoundingClientRect();
+    return { scroll: m.scrollHeight - m.clientHeight, fuera: r.top < 0 || r.bottom > innerHeight };
+  });
+  expect(cabe.scroll, '«Tu semana» pide scroll con la nota').toBeLessThanOrEqual(0);
+  expect(cabe.fuera, '«Tu semana» se sale de la pantalla con la nota').toBe(false);
+  await hoja.locator('[data-pace-semana-guardar]').click();
+  expect(await pedidos(page), 'negado, no se vuelve a pedir').toBe(0);
+  expect(await avisosPuestos(page), 'sin permiso no hay avisos que poner').toEqual([]);
+});
+
+test('nº 8 · al encenderlo se pide el permiso ahí mismo; si se niega, la línea lo dice y guardar no lo vuelve a pedir', async ({ page, context }) => {
+  const hoja = await abrirSemana(page, context, 'prompt', 'denied');
+  const sw = hoja.locator('[data-pace-semana-aviso] [role="switch"]');
+  await sw.click();
+  await expect(hoja.locator('[data-pace-semana-aviso-nota]')).toHaveText(NOTA_ANDROID);
+  expect(await pedidos(page), 'no pidió el permiso al encenderlo').toBe(1);
+  await expect(sw).toHaveAttribute('aria-checked', 'false');
+  await hoja.locator('[data-pace-semana-guardar]').click();
+  await expect(hoja).toHaveCount(0);
+  expect(await pedidos(page), 'al guardar volvió a enseñar la ventana del permiso').toBe(1);
 });
 
 test('en la web no hay interruptor: sin servidor no puede avisar con PACE cerrado', async ({ page, context }) => {

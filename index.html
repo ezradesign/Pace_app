@@ -50984,13 +50984,17 @@ function RitmoSemanaRaiz() {
 
 
 
-function RitmoSemanaAviso(_ref3) {let { on, onChange } = _ref3;
+
+
+
+function RitmoSemanaAviso(_ref3) {let { on, onChange, nota } = _ref3;
   const { t } = useT();
   return (
     React.createElement("div", { "data-pace-semana-aviso": true, style: ritmoSemanaStyles.aviso },
     React.createElement("span", { style: ritmoSemanaStyles.avisoFrase }, React.createElement("b", { style: ritmoSemanaStyles.nombre }, t('ritmo.st.aviso.verbo')), " ", t('ritmo.st.aviso.resto')),
     React.createElement("button", { type: "button", role: "switch", "aria-checked": on ? 'true' : 'false', className: "pace-aj-sw",
-      "aria-label": t('ritmo.st.aviso.verbo') + ' ' + t('ritmo.st.aviso.resto'), onClick: () => onChange(!on) })
+      "aria-label": t('ritmo.st.aviso.verbo') + ' ' + t('ritmo.st.aviso.resto'), onClick: () => onChange(!on) }),
+    nota && React.createElement("div", { className: "pace-aj-nota", "data-pace-semana-aviso-nota": true, style: ritmoSemanaStyles.avisoNota }, nota)
     ));
 
 }
@@ -51001,12 +51005,31 @@ function RitmoSemanaHoja(_ref4) {let { onClose } = _ref4;
   const b = useRitmoSemanaBorrador(state);
   const movil = typeof paceEsNativo === 'function' && paceEsNativo();
   const [aviso, setAviso] = useStateRST(() => !!(state && state.ritmo && state.ritmo.avisoEntrada === true));
+
+
+
+
+
+  const [permiso, setPermiso] = useStateRST(() => movil ? paceNativoAvisoPermiso() : 'granted');
+  useEffectRST(() => {
+    if (!movil) return undefined;
+    const mirar = () => setPermiso(paceNativoAvisoPermiso());
+    window.addEventListener('pace:avisos-nativo', mirar);
+    return () => window.removeEventListener('pace:avisos-nativo', mirar);
+  }, [movil]);
+  const bloqueado = movil && permiso === 'denied';
+  const ponerAviso = (v) => {
+    setAviso(v);
+    if (!v || permiso === 'granted' || permiso === 'denied') return;
+    try {Promise.resolve(paceNativoAvisoPedir()).then(() => setPermiso(paceNativoAvisoPermiso()), () => {});} catch (e) {}
+  };
   const guardar = (tipo) => {
     ritmoGuardarSemana(tipo, b.horas);
     if (movil) {
       ritmoGuardar(() => ({ avisoEntrada: aviso }));
 
-      try {if (aviso && tipo) paceEntradaEncender();else paceEntradaPoner();} catch (e) {}
+
+      try {if (aviso && tipo && !bloqueado) paceEntradaEncender();else paceEntradaPoner();} catch (e) {}
     }
     onClose();
   };
@@ -51014,7 +51037,8 @@ function RitmoSemanaHoja(_ref4) {let { onClose } = _ref4;
     React.createElement(Modal, { open: true, onClose: onClose, maxWidth: 460, tagLabel: t('ritmo.nombre'), title: t('ritmo.st.titulo'), subtitle: t('ritmo.st.sub') },
     React.createElement("div", { "data-pace-semana-hoja": true, style: { display: 'flex', flexDirection: 'column', gap: 18 } },
     React.createElement(RitmoSemanaEditor, { dias: b.dias, onDias: b.setDias, horario: b.horario, onHora: b.onHora }),
-    movil && React.createElement(RitmoSemanaAviso, { on: aviso, onChange: setAviso }),
+    movil && React.createElement(RitmoSemanaAviso, { on: aviso && !bloqueado, onChange: () => ponerAviso(!aviso),
+      nota: aviso && bloqueado ? t('settings.notify.blocked.' + pacePlataformaNativa()) : null }),
 
     typeof RitmoAprendido === 'function' && React.createElement(RitmoAprendido, { state: state }),
     React.createElement("div", { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 } },
@@ -51054,7 +51078,8 @@ const ritmoSemanaStyles = {
     background: 'var(--paper-2)', border: '1px solid rgba(62,90,58,.35)', color: 'var(--focus)',
     fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 18
   },
-  aviso: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: -6, paddingTop: 12, borderTop: '1px solid var(--paper-3)' },
+  aviso: { display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0 12px', marginTop: -6, paddingTop: 12, borderTop: '1px solid var(--paper-3)' },
+  avisoNota: { flexBasis: '100%', margin: '-2px 0 0', textAlign: 'left' },
   avisoFrase: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, lineHeight: 1.35, color: 'var(--ink-2)', textAlign: 'left' },
   saltar: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 14, color: 'var(--ink-3)', background: 'transparent', border: 'none', padding: '8px 10px', cursor: 'pointer' }
 };
