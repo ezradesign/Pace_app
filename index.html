@@ -53264,7 +53264,7 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
      onOpenTweaks   -- abre TweaksPanel
 */
 
-const { useState: useStateTB } = React;
+const { useState: useStateTB, useEffect: useEffectTB } = React;
 
 function TopBar(_ref) {let { onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks } = _ref;
   const [state, set] = usePace();
@@ -53279,6 +53279,14 @@ function TopBar(_ref) {let { onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTw
     if (foco || lleva != null) {setPendiente({ v, lleva });return;}
     set({ focusMode: v });
   };
+
+
+
+  useEffectTB(() => {
+    const alPedir = (e) => {const v = e && e.detail && e.detail.v;if (v) elegirModo(v);};
+    window.addEventListener('pace:elegir-modo', alPedir);
+    return () => window.removeEventListener('pace:elegir-modo', alPedir);
+  }, [state.focusMode]);
   const pregunta = topBarPregunta(pendiente, t, tn);
   const modes = [
   { v: 'foco', label: t('topbar.mode.focus') },
@@ -53362,6 +53370,17 @@ function TopBar(_ref) {let { onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTw
 
 
 
+
+function paceAtajoFoco(vez) {
+  const n = vez || 0;
+  const s = typeof getState === 'function' ? getState() : null;
+  if (s && s.focusMode !== 'foco' && pacePausaLleva() == null && n < 10) {setTimeout(() => paceAtajoFoco(n + 1), 50);return;}
+  try {window.dispatchEvent(new CustomEvent('pace:elegir-modo', { detail: { v: 'foco' } }));} catch (e) {}
+}
+
+
+
+
 function topBarPregunta(p, t, tn) {
   if (!p) return null;
   if (p.lleva == null) {
@@ -53392,8 +53411,8 @@ const topBarStyles = {
   }
 };
 
-Object.assign(window, { TopBar });
-;Object.assign(window, { TopBar, topBarPregunta });
+Object.assign(window, { TopBar, paceAtajoFoco });
+;Object.assign(window, { TopBar, paceAtajoFoco, topBarPregunta });
 })();
 </script>
   <script>
@@ -53883,13 +53902,14 @@ function PaceApp() {
 
 
 
+
   useEffectMain(() => {
     let go = null;
     try {go = new URLSearchParams(window.location.search).get('go');} catch (e) {}
     if (!go) return;
     if (go === 'breathe' || go === 'move' || go === 'stretch') abrirBiblioteca(go === 'stretch' ? 'extra' : go);else
     if (go === 'hydrate') setOpenHydrate(true);else
-    if (go === 'focus') set({ focusMode: 'foco' });
+    if (go === 'focus') paceAtajoFoco();
     try {window.history.replaceState(null, '', window.location.pathname);} catch (e) {}
   }, []);
 
