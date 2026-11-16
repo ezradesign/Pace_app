@@ -65,6 +65,28 @@ function BreakPlato({ color, glifo, motivo, nombre, ctx, children, datos }) {
   );
 }
 
+/* «LA DE ANTES» (Ez, 5A del 15 nov. 2026): una fila más, con el estilo de la de Hidrátate, con
+   el dibujo de su módulo, su nombre y «la de antes». La elige `breakLaDeAntes`
+   (BreakMenu.support.jsx); aquí solo se pinta. La usan las dos ventanas: por libre va debajo de
+   las otras puertas y con «A tu ritmo», debajo de Hidrátate. */
+const BREAK_GLIFO_MODULO = { breathe: 'ABBreathe', extra: 'ABStretch', move: 'ABMove' };
+function BreakAntes({ lda, onChoose, estilo }) {
+  const { t, tn, lang } = useT();
+  if (!lda || !lda.rutina) return null;
+  const r = lda.rutina;
+  const v = lang === 'en' ? t(r.id + '.name') : null;
+  const nombre = v && v !== r.id + '.name' ? v : r.name;
+  const Glifo = window[BREAK_GLIFO_MODULO[lda.modulo]];
+  return (
+    <button type="button" data-pace-break-antes={r.id} className="pace-break-agua" style={estilo} onClick={() => onChoose(lda.modulo, r)}>
+      <span className="pace-break-glifo" style={{ '--c': BREAK_COLOR[lda.modulo] }}>{Glifo ? <Glifo /> : null}</span>
+      <b>{nombre}</b>
+      <span className="pace-break-mas">· {tn('break.antes', { n: routineCifraMin(r, getState().restBetweenSets) })}</span>
+      <i aria-hidden="true">›</i>
+    </button>
+  );
+}
+
 function BreakMenuRitmo({ open, onClose, onChoose, onSeguir, onPropuesta, prop, plan, opciones, nombre }) {
   const { t, tn, lang } = useT();
   if (!open || !prop || !plan) return null;
@@ -79,12 +101,15 @@ function BreakMenuRitmo({ open, onClose, onChoose, onSeguir, onPropuesta, prop, 
   /* «Ya la hice por mi cuenta», a la izquierda de «Ahora no», con su mismo estilo (Ez, 4A del 8 nov.
      2026): solo en las pausas entre bloques, no en la comida ni en la de cierre. */
   const aTuManera = !comida && !!pausa && pausa.tipo === 'pausa' && typeof ritmoPausaPorTuCuenta === 'function';
+  /* La de antes no repite la propuesta ni ninguno de los platos de esta pausa. */
+  const excluir = [rutina && rutina.id].concat(((pausa && pausa.platos) || []).map((pl) => pl.id)).filter(Boolean);
+  const laDeAntes = typeof breakLaDeAntesAhora === 'function' ? breakLaDeAntesAhora(getState(), excluir) : null;
   const plato = comida
     ? { color: 'var(--ink-2)', boton: 'var(--focus-cta)', glifo: { nodo: <ABMeal />, modulo: true }, nombre: t('break.ritmo.comida'),
         ctx: <><b>{pausa ? pausa.dur : ''}</b><u>{t('lib.min')}</u>{pausa && pausa.agua && <em>{t('break.ritmo.conAgua')}</em>}</> }
     : { color: BREAK_COLOR[prop.modulo], boton: BREAK_COLOR[prop.modulo], glifo: breakGlifo(prop.modulo, rutina),
         nombre: dos ? ritmoPlatos(pausa, t, lang) : nombre,
-        ctx: rutina ? <><b>{dos ? pausa.dur : rutina.min}</b><u>{t('lib.min')}</u>
+        ctx: rutina ? <><b>{dos ? pausa.dur : routineCifraMin(rutina, getState().restBetweenSets)}</b><u>{t('lib.min')}</u>
           <em>{dos ? tn('ritmo.y', { a: ritmoModulo(pausa.platos[0].modulo, t), b: ritmoModulo(pausa.platos[1].modulo, t) })
             : t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label')}</em>
           {pausa && pausa.agua && <em>{t('break.ritmo.agua')}</em>}</> : null };
@@ -111,6 +136,8 @@ function BreakMenuRitmo({ open, onClose, onChoose, onSeguir, onPropuesta, prop, 
           <i aria-hidden="true">›</i>
         </button>
       )}
+      {/* La de antes, debajo de Hidrátate; tampoco a la hora de comer. */}
+      {!comida && <BreakAntes lda={laDeAntes} onChoose={onChoose} estilo={agua ? undefined : { marginTop: 16 }} />}
       {/* `data-pace-break-shortcut` ya no lleva atajos: es el pie, y las pruebas lo usan
           para saber que la pausa está abierta. */}
       <div data-pace-break-shortcut className="pace-break-pie" style={{ marginTop: 6, justifyContent: aTuManera ? 'space-between' : undefined }}>
@@ -123,4 +150,4 @@ function BreakMenuRitmo({ open, onClose, onChoose, onSeguir, onPropuesta, prop, 
   );
 }
 
-Object.assign(window, { BreakMenuRitmo, BreakPlato, breakGlifo, BREAK_COLOR });
+Object.assign(window, { BreakMenuRitmo, BreakPlato, BreakAntes, breakGlifo, BREAK_COLOR });

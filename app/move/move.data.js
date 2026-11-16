@@ -17,6 +17,15 @@
    `var` (no `const`) a propósito: el build re-expone function/var top-level como global, y
    MoveModule referencia MOVE_ROUTINES sin `window.`. Carga ANTES de MoveModule. */
 
+/* EL DESCANSO DE LAS DOS SUAVES DE PIE, 15 S (cola de las auditorías de Fable, fila 16; externa 3.3).
+   «Levántate y sube» y «Piernas sin pasos» descansaban tanto como trabajaban (88 y 94 s de ejercicio
+   frente a 90 de descanso) y una pausa de tres minutos se sentía lenta. Son actividad suave: la base
+   (`docs/product/BASE_MUEVE_ESTIRA.md` §6) da 10-30 s de descanso ahí, y reserva los largos a la fuerza
+   de verdad. Por eso sus descansos no llevan `restKind: 'betweenSets'`: el ajuste «Descanso entre
+   series» (20/30/45) es para las series de fuerza, y estos duran su `dur`. «Con una basta» sigue igual:
+   mira que sea un descanso entre dos series del mismo ejercicio, no su clase. */
+var PACE_DESCANSO_SUAVE = 15;
+
 var MOVE_ROUTINES = {
   empezar: {
     label: 'Para empezar',
@@ -38,14 +47,14 @@ var MOVE_ROUTINES = {
               setup: 'De pie delante de la silla, pies al ancho de las caderas. Silla estable y sin ruedas.',
               action: 'Siéntate del todo, con control. Echa el tronco un poco adelante y levántate empujando el suelo.',
               care: 'Ayúdate con las manos si lo necesitas. La primera vez, una serie basta.' } },
-          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
+          { name: 'Descanso', mode: 'rest', dur: PACE_DESCANSO_SUAVE,
             instruction: { action: 'Respira.' } },
           { name: 'Sentadilla a silla', mode: 'reps', reps: 5, dur: 20,
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
             instruction: {
               action: 'Otra serie: siéntate con control y levántate sin impulso.',
               care: 'Si cuesta, apoya las manos en los muslos.' } },
-          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
+          { name: 'Descanso', mode: 'rest', dur: PACE_DESCANSO_SUAVE,
             instruction: { action: 'Respira.' } },
           { name: 'Elevación de talones', mode: 'reps', reps: 6, dur: 24,
             tempo: { down: 2, hold: 1, up: 1 }, completion: { mode: 'guided' },
@@ -53,7 +62,7 @@ var MOVE_ROUTINES = {
               setup: 'De pie, con una mano en la silla o en la mesa.',
               action: 'Sube los talones hasta donde controles. Baja despacio.',
               care: 'Sin rebotes. Si te balanceas, apóyate con las dos manos.' } },
-          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
+          { name: 'Descanso', mode: 'rest', dur: PACE_DESCANSO_SUAVE,
             instruction: { action: 'Respira.' } },
           { name: 'Elevación de talones', mode: 'reps', reps: 6, dur: 24,
             tempo: { down: 2, hold: 1, up: 1 }, completion: { mode: 'guided' },
@@ -91,21 +100,21 @@ var MOVE_ROUTINES = {
               setup: 'Espalda y glúteos en la pared, pies al ancho de las caderas, talones a un palmo de ella.',
               action: 'Sube las puntas de los pies hacia las espinillas. Bájalas despacio.',
               care: 'Movimiento pequeño, sin balancearte hacia atrás.' } },
-          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
+          { name: 'Descanso', mode: 'rest', dur: PACE_DESCANSO_SUAVE,
             instruction: { action: 'Respira.' } },
           { name: 'Elevación de puntas', mode: 'reps', reps: 8, dur: 32,
             tempo: { down: 2, hold: 1, up: 1 }, completion: { mode: 'guided' },
             instruction: {
               action: 'Segunda serie, igual de despacio.',
               care: 'Notarás el trabajo delante de la espinilla.' } },
-          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
+          { name: 'Descanso', mode: 'rest', dur: PACE_DESCANSO_SUAVE,
             instruction: { action: 'Respira.' } },
           { name: 'Silla en la pared', mode: 'timed', dur: 15,
             instruction: {
               setup: 'Espalda en la pared, pies un paso por delante.',
               action: 'Desliza un poco hacia abajo y quédate. Respira sin aguantar el aire.',
               care: 'Empieza alto: no hace falta llegar a 90°. Para salir, empuja con los pies y sube.' } },
-          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
+          { name: 'Descanso', mode: 'rest', dur: PACE_DESCANSO_SUAVE,
             instruction: { action: 'Respira.' } },
           { name: 'Silla en la pared', mode: 'timed', dur: 15,
             instruction: {

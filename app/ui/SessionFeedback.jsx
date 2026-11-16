@@ -29,6 +29,15 @@
    reescribe, y un «No» deshecho no debe quedar en él. Solo se promete apartar lo que
    se propone de verdad (breakProponible).
 
+   EL «NO» CON SU PORQUÉ (Ez, 4A del 15 nov. 2026, sobre docs/proposals/maquetas-uso-15nov/):
+   tras el «No», arriba lo que pasa si no dices más, como condición («Si no me dices por qué, no
+   te la propondré durante una semana»), y debajo, en una línea, «¿Por qué? Aquí no podía ·
+   Difícil · Me molestó». Arriba nunca se adelanta lo que aún no se sabe. Cada porqué hace lo suyo:
+   «Aquí no podía» devuelve la entrada de antes y apunta solo que se preguntó hoy (no cuenta como
+   «No», no aparta y no deja evento); «Difícil» deja el «No», como siempre; «Me molestó» lo deja y
+   enlaza la página de Seguridad. Salir sin elegir deja el «No», como hasta ahora. «Deshacer»
+   vuelve a la pregunta desde cualquiera de ellos.
+
    «AHORA NO», EN SU LÍNEA (Ez, 5 nov. 2026): debajo de Sí · Un poco · No, centrado.
    Hasta entonces iba al final de la misma fila (Ez, 16 oct., opción B).
 
@@ -46,9 +55,13 @@ function SessionFeedback({ routineId, kind = 'move', accent = 'var(--move)' }) {
   });
   const [decided, setDecided] = useStateSF(false);
   const [aparta, setAparta] = useStateSF(false);
+  const [esNo, setEsNo] = useStateSF(false);
+  const [porque, setPorque] = useStateSF(null);   // null | 'aqui' | 'dificil' | 'molesto'
   const lockRef = useRefSF(false);
-  /* El «No» que aún se puede deshacer: { antes } con la entrada previa. */
+  /* El «No» cuyo evento espera a dejar la pantalla: { antes }. La entrada de antes, aparte: «Deshacer»
+     la necesita también tras «Aquí no podía», que ya no tiene evento pendiente. */
   const pendienteRef = useRefSF(null);
+  const antesRef = useRefSF(null);
 
   useEffectSF(() => {
     const emitir = () => {
@@ -71,20 +84,61 @@ function SessionFeedback({ routineId, kind = 'move', accent = 'var(--move)' }) {
     try { recordRoutineFeedback(routineId, response, { sinEvento: no }); } catch (e) {}
     if (no) {
       pendienteRef.current = { antes: antes };
+      antesRef.current = antes;
       let si = false;
       try { si = breakProponible(routineId) && !!breakVetadas(getState().routineFeedback)[routineId]; } catch (e) {}
       setAparta(si);
+      setEsNo(true);
+      setPorque(null);
     }
     setDecided(true);
   };
 
+  /* El porqué del «No». «Aquí no podía» no es un «No»: se devuelve la entrada y queda solo que hoy
+     ya se preguntó (como «Ahora no», que no suma ni deja evento). */
+  const elegirPorque = (k) => {
+    if (k === 'aqui') {
+      pendienteRef.current = null;
+      try { restaurarRoutineFeedback(routineId, antesRef.current); } catch (e) {}
+      try { recordRoutineFeedback(routineId, 'later'); } catch (e) {}
+    }
+    setPorque(k);
+  };
+
   const deshacer = () => {
-    const p = pendienteRef.current;
     pendienteRef.current = null;
-    try { restaurarRoutineFeedback(routineId, p ? p.antes : null); } catch (e) {}
+    try { restaurarRoutineFeedback(routineId, antesRef.current); } catch (e) {}
+    antesRef.current = null;
     lockRef.current = false;
     setAparta(false);
+    setEsNo(false);
+    setPorque(null);
     setDecided(false);
+  };
+
+  const botonDeshacer = (
+    <button type="button" data-pace-fb-deshacer onClick={deshacer} style={sessionFeedbackStyles.deshacer}>
+      {t('session.feedback.deshacer')}
+    </button>
+  );
+  const dolor = (
+    <React.Fragment>
+      {t('session.feedback.dolor')}{' '}
+      <a href={typeof paceNativoEnlace === 'function' ? paceNativoEnlace('/safety') : '/safety'} target="_blank" rel="noopener"
+        data-pace-fb-seguridad style={sessionFeedbackStyles.deshacer}>{t('settings.legal.safety')}</a>.
+    </React.Fragment>
+  );
+  /* Lo que dice el acuse: sin «No», «Gracias»; con «No», según el porqué y si PACE la aparta. */
+  const acuse = () => {
+    if (!esNo) return t('session.feedback.thanks');
+    if (porque === 'aqui') return <React.Fragment>{t('session.feedback.noAparta')}{aparta ? <React.Fragment>{' '}{botonDeshacer}</React.Fragment> : null}</React.Fragment>;
+    if (!aparta) {
+      if (porque === 'molesto') return <React.Fragment>{t('session.feedback.thanks')}. {dolor}</React.Fragment>;
+      return t('session.feedback.thanks');
+    }
+    if (porque === 'dificil') return <React.Fragment>{t('session.feedback.aparta')}{' '}{botonDeshacer}</React.Fragment>;
+    if (porque === 'molesto') return <React.Fragment>{t('session.feedback.molesto.aparta')} {dolor}{' '}{botonDeshacer}</React.Fragment>;
+    return <React.Fragment>{t('session.feedback.aparta.si')}{' '}{botonDeshacer}</React.Fragment>;
   };
 
   const wrapStyle = {
@@ -97,16 +151,22 @@ function SessionFeedback({ routineId, kind = 'move', accent = 'var(--move)' }) {
     <div data-pace-session-feedback data-pace-fb-kind={kind} style={wrapStyle}>
       <div data-pace-fb-rule style={sessionFeedbackStyles.rule} />
       {decided ? (
-        <div data-pace-fb-thanks style={sessionFeedbackStyles.thanks}>
-          {aparta ? (
-            <React.Fragment>
-              {t('session.feedback.aparta')}{' '}
-              <button type="button" data-pace-fb-deshacer onClick={deshacer} style={sessionFeedbackStyles.deshacer}>
-                {t('session.feedback.deshacer')}
-              </button>
-            </React.Fragment>
-          ) : t('session.feedback.thanks')}
-        </div>
+        <React.Fragment>
+          <div data-pace-fb-thanks style={sessionFeedbackStyles.thanks}>{acuse()}</div>
+          {esNo && porque === null && (
+            <div data-pace-fb-porque style={sessionFeedbackStyles.porque}>
+              {t('session.feedback.porque')}{' '}
+              {['aqui', 'dificil', 'molesto'].map((k, i) => (
+                <React.Fragment key={k}>
+                  {i ? ' · ' : null}
+                  <button type="button" data-pace-fb-razon={k} onClick={() => elegirPorque(k)} style={sessionFeedbackStyles.razon}>
+                    {t('session.feedback.' + k)}
+                  </button>
+                </React.Fragment>
+              ))}
+            </div>
+          )}
+        </React.Fragment>
       ) : (
         <React.Fragment>
           <div data-pace-fb-question style={sessionFeedbackStyles.question}>
@@ -181,6 +241,17 @@ const sessionFeedbackStyles = {
     ...displayItalic,
     fontSize: 'inherit', color: 'var(--ink-2)',
     background: 'none', border: 'none', padding: '0 2px', cursor: 'pointer',
+    textDecoration: 'underline', textUnderlineOffset: 3,
+  },
+  /* La línea de los porqués (la forma de la B que eligió Ez): enlaces en la letra de «Ahora no». */
+  porque: {
+    ...displayItalic,
+    fontSize: 15, color: 'var(--ink-3)', marginTop: 10, lineHeight: 1.5, textAlign: 'center',
+  },
+  razon: {
+    ...displayItalic,
+    fontSize: 'inherit', color: 'var(--ink-3)',
+    background: 'none', border: 'none', padding: '2px 2px', cursor: 'pointer',
     textDecoration: 'underline', textUnderlineOffset: 3,
   },
   thanks: {

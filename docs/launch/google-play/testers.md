@@ -70,7 +70,7 @@ una vez:
 
 Mientras un enlace está pendiente, su paso dice que llega pronto. El regalo (PACE completo de por vida)
 no va en la página: el código de la web, de `codigos-tester.csv`, se manda a cada uno, y el de Android
-será un código promocional de Play al salir v1.
+será un código promocional de Play al salir v1. En el iPhone, un código de oferta de Apple: los códigos promocionales de compras dentro de la app se retiraron el 26 mar. 2026, y los de oferta valen para compras únicas como el de por vida (comprobado el 16 nov.).
 
 ## Cuando pasen los 14 días
 

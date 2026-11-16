@@ -71,7 +71,7 @@ test('el Pomodoro cuenta, se pausa, se reanuda y al terminar abre el BreakMenu',
      recomienda Hidrátate y abajo también sale»): cada actividad está UNA vez, como
      puerta o como propuesta. Cuál se propone depende de la hora y del plan del día. */
   const menu = page.locator('[data-pace-modal-backdrop]').last();
-  await expect(menu.getByText('Pausa bien hecha', { exact: true })).toBeVisible();
+  await expect(menu.getByText('Tu pausa', { exact: true })).toBeVisible();
   const prop = menu.locator('[data-pace-break-prop]');
   const textoProp = (await prop.count()) ? ((await prop.textContent()) || '') : '';
   for (const nombre of ['Hidrátate', 'Respira', 'Estira', 'Muévete']) {

@@ -534,6 +534,12 @@ function main() {
     process.exit(1);
   }
 
+  // 8b. El título sin la versión: « — vX.Y.Z» es para quien desarrolla con PACE.html;
+  //     en lo que se publica, los buscadores y la pestaña leen solo el nombre
+  //     (auditoría externa del 10 nov., X2c). La versión sigue al pie de la barra
+  //     lateral (PACE_VERSION). Lo vigila `verify` (tanda web).
+  html = html.replace(/(<title>[^<]*?)\s*—\s*v[\d.]+\s*<\/title>/, '$1</title>');
+
   // 8. Escribir (standalone = html base + laminas como data URI, s104)
   console.log('\n[5/7] Escribiendo PACE_standalone.html ...');
   var standaloneHtml = inlineFonts(inlineIllustrations(html));

@@ -40,7 +40,8 @@
      gestionar()    -> abre donde se cancela la suscripción: la página de Stripe
                        o las suscripciones de Google Play.
 
-   EN EL IPHONE NO HAY TIENDA hasta después de v1: su canal es 'ninguno'.
+   EN EL IPHONE, LA TIENDA LLEGA CON V1 (Ez, 22 oct. 2026: el iPhone, dentro de v1). Hasta que se monte
+   la compra de Apple su canal es 'ninguno', igual que la de Play espera el alta de Ez.
 
    `var`/`function` a propósito: un `const` no cruza la IIFE del artefacto. Carga
    después de state-licencia y antes de state-entitlement, y lee `paceEsNativo`

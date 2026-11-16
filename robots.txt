@@ -1,0 +1,9 @@
+# PACE · lo que pueden leer los buscadores en pacegrass.app
+# Todo, salvo /api/ (las funciones de Cloudflare: el cobro y «Avísame»). Las páginas que no
+# deben salir en un buscador (/gracias, /recuperar, /desistir, la vuelta del calendario)
+# llevan su `noindex`. Lo vigila `verify` (tanda web): cada dirección del mapa existe en dist/.
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://pacegrass.app/sitemap.xml

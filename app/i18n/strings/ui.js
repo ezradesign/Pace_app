@@ -178,6 +178,12 @@ Object.assign(window.PACE_STRINGS.es, {
     'notify.canal.pausa':            'Fin de la pausa',
     'notify.canal.pausa.mudo':       'Fin de la pausa, sin sonido',
     'notify.canal.pausa.desc':       'Avisa de que la pausa ha terminado.',
+    /* El aviso a tu hora de entrada (Ez, 1A y 2A del 15 nov. 2026; ui/nativo.entrada.js): el título es
+       el de la tarjeta de la mañana ('ritmo.manana.titulo'). */
+    'notify.entrada.jornada':        'Jornada de {inicio} a {salida}. Tu día ya está preparado.',
+    'notify.entrada.media':          'Media jornada de {inicio} a {salida}. Tu día ya está preparado.',
+    'notify.canal.entrada':          'Al empezar la jornada',
+    'notify.canal.entrada.desc':     'Un aviso a tu hora de entrada, los días de jornada.',
     /* s198 · la red de error (ui/RedDeError.jsx): una parte, y la global. Sin
        absolutos (s151): «se puede recuperar», no «se recupera todo». */
     'red.parte.titulo':              'Esta parte no ha podido abrirse',
@@ -362,6 +368,10 @@ Object.assign(window.PACE_STRINGS.en, {
     'notify.canal.pausa':            'End of break',
     'notify.canal.pausa.mudo':       'End of break, silent',
     'notify.canal.pausa.desc':       'Lets you know your break is over.',
+    'notify.entrada.jornada':        'Full day, {inicio} to {salida}. Your day is ready.',
+    'notify.entrada.media':          'Half day, {inicio} to {salida}. Your day is ready.',
+    'notify.canal.entrada':          'Start of your day',
+    'notify.canal.entrada.desc':     'A reminder at your start time, on workdays.',
     'red.parte.titulo':              'This section couldn’t load',
     'red.parte.texto':               'The rest of PACE keeps working and your data is safe. You can close it and carry on, or reload to try again.',
     'red.cerrar':                    'Close',

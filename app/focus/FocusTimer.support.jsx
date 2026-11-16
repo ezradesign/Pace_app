@@ -81,24 +81,36 @@ function maybeRequestNotifyPermission(state, set) {
   } catch (e) {}
 }
 
+const PACE_AVISO_FIN_TAG = 'pace-focus-end';
 function maybeNotifyFocusEnd(opts) {
   try {
     if (!opts || !opts.enabled) return;
     if (typeof document !== 'undefined' && document.visibilityState === 'visible') return;
     if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
     const title = opts.title || 'PACE';
+    /* UNA ETIQUETA POR BLOQUE (cola de las auditorías de Fable, fila 17; externa T4). Con la misma
+       para todos y `silent`, el aviso del bloque siguiente sustituía al anterior que seguía sin
+       cerrar sin asomar: no se veía. La del bloque sigue juntando lo repetido de ESE bloque (otra
+       pestaña, una recarga), y el aviso nuevo cierra los de bloques anteriores, que ya no dicen
+       nada. Sigue `silent`: la campana es la de PACE, una sola. */
+    const tag = PACE_AVISO_FIN_TAG + (opts.bloque ? '-' + opts.bloque : '');
     const nOpts = {
       body: opts.body || '',
       icon: '/icons/icon-192.png',
       badge: '/icons/icon-192.png',
-      tag: 'pace-focus-end', // colapsa duplicados en una sola notificación
+      tag,
       silent: true,
     };
     const fallback = () => { try { new Notification(title, nOpts); } catch (e) {} };
     if (navigator.serviceWorker && navigator.serviceWorker.getRegistration) {
       navigator.serviceWorker.getRegistration().then((reg) => {
-        if (reg && reg.showNotification) reg.showNotification(title, nOpts);
-        else fallback();
+        if (!(reg && reg.showNotification)) { fallback(); return; }
+        return Promise.resolve(reg.showNotification(title, nOpts)).then(() => {
+          if (!reg.getNotifications) return;
+          return reg.getNotifications().then((viejos) => {
+            (viejos || []).forEach((n) => { if (n.tag !== tag && String(n.tag || '').indexOf(PACE_AVISO_FIN_TAG) === 0) n.close(); });
+          }).catch(() => {});
+        });
       }).catch(fallback);
     } else {
       fallback();

@@ -137,8 +137,11 @@ function TweaksPanel({ open, onClose }) {
   /* «Pantalla baja» es el alto que ve la app, el del lienzo (main/_lienzo.js): una media query
      miraría la ventana real, que con la app crecida en una pantalla grande es más alta que ella. */
   /* Con la fila para comprar (PremiumSection.jsx, Ez 1A del 10 nov.), la sección mide 34 px más y
-     se pliega 34 px antes: donde antes cabía sin scroll, sigue cabiendo. */
-  const umbralBajo = () => 860 + (typeof premiumPlanEnAjustes === 'function' && premiumPlanEnAjustes() ? 34 : 0);
+     se pliega 34 px antes: donde antes cabía sin scroll, sigue cabiendo. Igual con la línea de la última
+     copia (TweaksData.copia.jsx, Ez «A+B» del 16 nov.), que solo sale en la web sin instalar y mide 47 px:
+     sin contarla, a 1280 × 940 con la fila sobraban 16 px y a 1440 × 900 en castellano, 22. */
+  const umbralBajo = () => 860 + (typeof premiumPlanEnAjustes === 'function' && premiumPlanEnAjustes() ? 34 : 0)
+    + (typeof paceWebSinInstalar === 'function' && paceWebSinInstalar() ? 47 : 0);
   const [bajo, setBajo] = useStateTW(() => paceLienzoAlto() < umbralBajo());
   useEffectTW(() => {
     if (!open) return undefined;

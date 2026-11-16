@@ -24,7 +24,7 @@ function PathTopBar({ pathName, onRequestExit }) {
       <div style={{ flex: 1 }} />
       <button
         onClick={onRequestExit}
-        aria-label={t('path.runner.exit')}
+        aria-label={t('paths.runner.exit')}
         style={{
           background: 'transparent', border: 'none',
           color: 'var(--ink-3)', cursor: 'pointer',
@@ -70,10 +70,10 @@ function ExitConfirmModal({ open, onCancel, onConfirm }) {
         }}
       >
         <h3 id="exit-confirm-title" style={{ margin: '0 0 12px', fontSize: 20, fontWeight: 500, fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
-          {t('path.runner.exitConfirmTitle')}
+          {t('paths.runner.exitConfirmTitle')}
         </h3>
         <p style={{ margin: '0 0 24px', color: 'var(--ink-2)', fontSize: 14, lineHeight: 1.6 }}>
-          {t('path.runner.exitConfirmBody')}
+          {t('paths.runner.exitConfirmBody')}
         </p>
         <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
           <button
@@ -85,7 +85,7 @@ function ExitConfirmModal({ open, onCancel, onConfirm }) {
               color: 'var(--ink)', cursor: 'pointer', fontSize: 13,
             }}
           >
-            {t('path.runner.exitConfirmNo')}
+            {t('paths.runner.exitConfirmNo')}
           </button>
           <button
             onClick={onConfirm}
@@ -95,7 +95,7 @@ function ExitConfirmModal({ open, onCancel, onConfirm }) {
               color: 'var(--paper)', cursor: 'pointer', fontSize: 13,
             }}
           >
-            {t('path.runner.exitConfirmYes')}
+            {t('paths.runner.exitConfirmYes')}
           </button>
         </div>
       </div>
@@ -112,7 +112,7 @@ function StepError({ routineId, onSkip }) {
       alignItems: 'center', justifyContent: 'center', padding: 40, textAlign: 'center',
     }}>
       <p style={{ color: 'var(--ink-2)', marginBottom: 20, fontSize: 14 }}>
-        {t('path.error.routineNotFound').replace('{id}', routineId)}
+        {t('paths.error.routineNotFound').replace('{id}', routineId)}
       </p>
       <button
         onClick={onSkip}
@@ -122,7 +122,7 @@ function StepError({ routineId, onSkip }) {
           color: 'var(--ink)', cursor: 'pointer', fontSize: 13,
         }}
       >
-        {t('path.runner.skip')}
+        {t('paths.runner.skip')}
       </button>
     </div>
   );

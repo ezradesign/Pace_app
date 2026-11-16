@@ -22,8 +22,7 @@
    ORDEN DE CARGA: después de `_bootstrap.js` (que crea PACE_STRINGS vacío) y
    antes de `useT.jsx`. Va justo detrás de `sessions.js`, aunque entre dominios
    el orden da igual: no hay claves compartidas. Lo que SÍ tiene que seguir
-   cargando al final es `content/*`, que patchea inglés y depende de ir último
-   para conservar el override de `breathe.phase.*` (deuda D-1).
+   cargando al final es `content/*`, que añade el inglés del contenido.
 */
 
 Object.assign(window.PACE_STRINGS.es, {

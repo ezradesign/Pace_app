@@ -19,8 +19,9 @@
    es solo el CONTADOR; el consumidor (Pausa PACE / «qué te ayuda» premium)
    llega en fases posteriores. Voz/TTS y porcentajes visibles: fuera de alcance.
 
-   Frecuencia: la pregunta se muestra como máximo UNA vez por rutina y DÍA LOCAL
-   (todayISO() — regla #10, prohibido new Date("YYYY-MM-DD")). Salir por el CTA
+   Frecuencia: como máximo UNA vez por rutina y DÍA LOCAL (todayISO() — regla #10,
+   prohibido new Date("YYYY-MM-DD")), y desde el 15 nov. 2026 menos: tres veces por
+   rutina, luego una a la semana y dos al día como mucho (feedbackToca). Salir por el CTA
    sin responder NO escribe lastPromptDay: la pregunta puede reaparecer tras
    otra finalización válida de esa rutina el mismo día.
 */
@@ -119,16 +120,42 @@ function restaurarRoutineFeedback(routineId, antes) {
   });
 }
 
-/* shouldPromptRoutineFeedback — ¿mostrar la pregunta para esta rutina AHORA?
-   true si no se preguntó hoy (lastPromptDay !== día local). Lectura defensiva:
+/* CADA CUÁNTO PREGUNTA (Ez, 3A del 15 nov. 2026; auditoría externa 3.V3). Una vez por rutina y
+   día la preguntaba hasta nueve veces en una jornada entera de «A tu ritmo» (siete pausas, nueve
+   rutinas), y la gente acaba pulsando «Ahora no». Ahora:
+     · las tres primeras veces que acabas cada rutina (las tres respuestas que pide «Qué te
+       ayuda» para hablar de una rutina, stats-ayuda.js);
+     · después, como mucho una vez a la semana por rutina;
+     · y nunca más de dos preguntas en un día, sumando todas las rutinas. «Ahora no» escribe
+       `lastPromptDay`, así que cuenta como una de las dos; salir sin contestar, no.
+   Sigue siendo una vez por rutina y día como mucho. */
+var FEEDBACK_PRIMERAS = 3;
+var FEEDBACK_CADA_DIAS = 7;
+var FEEDBACK_TOPE_DIA = 2;
+
+/* feedbackToca(fb, id, hoy) — la regla de arriba, PURA: el slice y el día entran por parámetro. */
+function feedbackToca(fb, id, hoy) {
+  const slice = (fb && typeof fb === 'object') ? fb : {};
+  const entry = slice[id];
+  if (entry && entry.lastPromptDay === hoy) return false;
+  let hoyYa = 0;
+  Object.keys(slice).forEach(function (k) { if (slice[k] && slice[k].lastPromptDay === hoy) hoyYa++; });
+  if (hoyYa >= FEEDBACK_TOPE_DIA) return false;
+  if (!entry) return true;
+  const respuestas = feedbackCount(entry.yes) + feedbackCount(entry.some) + feedbackCount(entry.no);
+  if (respuestas < FEEDBACK_PRIMERAS) return true;
+  const dia = typeof libraryDiaOrdinal === 'function' ? libraryDiaOrdinal(hoy) : 0;
+  const desde = typeof libraryDiaOrdinal === 'function' ? libraryDiaOrdinal(entry.lastPromptDay) : 0;
+  if (!dia || !desde) return true;
+  return dia - desde >= FEEDBACK_CADA_DIAS;
+}
+
+/* shouldPromptRoutineFeedback — ¿mostrar la pregunta para esta rutina AHORA? Lectura defensiva:
    un state previo SIN el slice devuelve true (primera vez). id vacío → false. */
 function shouldPromptRoutineFeedback(routineId) {
   const id = sanitizeRoutineId(routineId);
   if (!id) return false;
-  const fb = getState().routineFeedback || {};
-  const entry = fb[id];
-  if (!entry) return true;
-  return entry.lastPromptDay !== todayISO();
+  return feedbackToca(getState().routineFeedback || {}, id, todayISO());
 }
 
 Object.assign(window, {
@@ -137,4 +164,5 @@ Object.assign(window, {
   recordRoutineFeedback,
   restaurarRoutineFeedback,
   shouldPromptRoutineFeedback,
+  feedbackToca,
 });

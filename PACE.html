@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.205.0</title>
+  <title>PACE · Foco · Cuerpo — v0.207.0</title>
+  <!-- Lo que leen los buscadores de la raíz: la frase de la landing. El « — vX.Y.Z» del
+       título solo vive aquí, en desarrollo: el build lo quita de index.html (paso 8b). -->
+  <meta name="description" content="Pausas activas para quien trabaja sentado. Foco, respiración, movilidad y agua, a tu ritmo. Sin cuenta, sin anuncios, sin rastreo: lo tuyo se queda en tu equipo.">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -131,8 +134,8 @@
        Los 5 archivos siguientes son Object.assign sobre PACE_STRINGS.{es,en}.
        content/* (s92 / v0.37.0): strings-content.js (s38) se troceo por
        modulo visual (breathe/move/extra) al superar ~470 ln con F6. Sigue
-       siendo el patch FINAL EN de contenido -- carga al final para preservar
-       el override de breathe.phase.inhala.mas/oceanica (D-1). -->
+       siendo el patch FINAL EN de contenido; ya no redefine ninguna clave de
+       strings/* (verify.claves.js). -->
   <!-- EL CORTE ENTRE LAS DOS PIELES (s197). VA EL PRIMERO: lo interpolan las hojas
        inyectadas (pieles, ritmo, library, la hoja del sidebar, Stats) y lo consultan
        tres `matchMedia`. Si se carga despues, esas hojas salen con `undefined`. -->
@@ -316,6 +319,7 @@
        audio). nativo: la capa comun, que es a la que pregunta el resto de la app. -->
   <script type="text/babel" src="app/ui/ios.js"></script>
   <script type="text/babel" src="app/ui/nativo.js"></script>
+  <script type="text/babel" src="app/ui/nativo.entrada.js"></script>
   <!-- valoracion: la ventana de la tienda para valorar PACE, una vez, tras la quinta pausa
        entera (Ez, 15 oct.). La llaman las complete*Session; habla con la tienda por nativo. -->
   <script type="text/babel" src="app/ui/valoracion.js"></script>
@@ -456,6 +460,8 @@
   <script type="text/babel" src="app/focus/FocusTimer.jornada.jsx"></script>
   <!-- Los avisos del móvil: el fin del bloque y el fin de la pausa. Antes de FocusTimer.jsx. -->
   <script type="text/babel" src="app/focus/FocusTimer.avisos.jsx"></script>
+  <!-- La cuenta atrás del bloque en el título de la pestaña. Antes de FocusTimer.jsx. -->
+  <script type="text/babel" src="app/focus/FocusTimer.titulo.jsx"></script>
   <script type="text/babel" src="app/focus/FocusTimer.jsx"></script>
   <script type="text/babel" src="app/breathe/BreatheVisual.jsx"></script>
   <!-- Hoja inyectada del loto (s139): keyframes de giro y vela, tinta por
@@ -534,6 +540,8 @@
   <script type="text/babel" src="app/tweaks/TweakSecretsWatcher.jsx"></script>
   <!-- Split s89: secciones del panel cargan antes que TweaksPanel (que las consume) -->
   <script type="text/babel" src="app/tweaks/TweaksData.importar.jsx"></script>
+  <!-- La copia recordada (Ez, A+B del 16 nov.): la línea de «Tus datos» y el aviso del sobre. Antes de TweaksData.jsx. -->
+  <script type="text/babel" src="app/tweaks/TweaksData.copia.jsx"></script>
   <script type="text/babel" src="app/tweaks/TweaksData.jsx"></script>
   <script type="text/babel" src="app/tweaks/PremiumSection.jsx"></script>
   <!-- TweaksPanel.support (s163): estilo SIN UI del panel -- `tweaksStyles`, la

@@ -101,16 +101,9 @@ function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
         : (t('preview.doneCount.many') || '').replace('{n}', String(veces)))
     : null;
 
-  const isV1 = !!(guiada.steps && guiada.steps.some(s => s && s.mode));
-  let durLabel = `${routine.min} min`;
-  if (propia && typeof window.customMinutos === 'function') {
-    /* Una propia, con la cifra de su tarjeta y del constructor (C2). */
-    durLabel = `${window.customMinutos(routine.steps)} min`;
-  } else if (isV1 && typeof window.estimateDuration === 'function') {
-    const est = window.estimateDuration(guiada, pace.restBetweenSets);
-    const lo = Math.floor(est.minSec / 60), hi = Math.ceil(est.maxSec / 60);
-    durLabel = lo === hi ? `${lo} min` : `${lo}–${hi} min`;
-  }
+  /* La misma cifra que su tarjeta y que la ventana de la pausa (routineCifraMin, RoutineCard.jsx);
+     una propia, la de su constructor (C2). */
+  const durLabel = `${routineCifraMin(routine, pace.restBetweenSets)} min`;
 
   const intensidad = ['gentle', 'moderate', 'strong'].includes(routine.intensity)
     ? t(`lib.intensity.${routine.intensity}`) : null;
