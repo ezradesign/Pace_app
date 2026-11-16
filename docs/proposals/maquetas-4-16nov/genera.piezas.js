@@ -352,6 +352,83 @@ async function pintarBibliotecas(page, op) {
   }, op);
 }
 
+/* ---------- 4, segunda vuelta (Ez, 16 nov.: «no la veo, no hay más alternativas») ----------
+   Tres huecos que la home YA tiene y que hoy repiten algo: la fila «Ahora» del panel (dice lo
+   mismo que el aro), la línea de horas (también está en «Ver todo») y la fila del ciclo dentro
+   del aro, que con la jornada va escondida sin soltar su sitio (AroFila, FocusTimer.jornada.jsx). */
+async function pintarBibliotecas2(page, op) {
+  await page.evaluate((op) => {
+    const molde = document.createElement('div');
+    molde.innerHTML = window.__mqFila;
+    const fila = molde.firstElementChild;
+    fila.setAttribute('data-maqueta', '');
+    const panel = [...document.querySelectorAll('.pace-rt-panel.pace-rt-mov')].find((e) => e.getBoundingClientRect().height > 0);
+    if (op === 'D') {
+      /* D · «Por tu cuenta» en el sitio de «Ahora» mientras el Foco es lo que toca. */
+      const ahora = [...panel.querySelectorAll('.pace-rt-fila')].find((e) => !e.hasAttribute('data-pace-ritmo-luego'));
+      ahora.setAttribute('data-maqueta', '');
+      ahora.querySelector('.pace-rt-meta').innerHTML = 'Por tu<br>cuenta';
+      const que = ahora.querySelector('.pace-rt-que');
+      que.innerHTML = '';
+      fila.style.cssText += ';display:flex;justify-content:space-between;align-items:center;padding:0;margin:0;gap:4px;width:100%;';
+      fila.querySelectorAll('button').forEach((b) => { b.style.alignItems = 'center'; b.style.padding = '2px 2px'; b.style.minHeight = '34px'; });
+      que.appendChild(fila);
+    } else if (op === 'E') {
+      /* E · la línea de horas se queda en «Ver todo» y deja su sitio a las tres bibliotecas. */
+      const horas = panel.querySelector('.pace-rt-sub.pace-rt-frase');
+      horas.style.display = 'none';
+      const caja = document.createElement('div');
+      caja.setAttribute('data-maqueta', '');
+      caja.style.cssText = 'margin:2px 0 0;';
+      fila.style.cssText += ';display:flex;justify-content:space-between;align-items:center;padding:0;margin:0;';
+      fila.querySelectorAll('button').forEach((b) => { b.style.alignItems = 'center'; b.style.padding = '6px 2px'; b.style.minHeight = '40px'; });
+      caja.appendChild(fila);
+      const cab = panel.querySelector('.pace-rt-cab');
+      cab.after(caja);
+      /* La columna de la derecha («Cambiar», «Hoy voy por libre») baja más que el título solo:
+         la fila empieza debajo de ella. */
+      const der = cab.querySelector('.pace-rt-cab-der').getBoundingClientRect().bottom;
+      const sobra = Math.ceil(der - caja.getBoundingClientRect().top);
+      if (sobra > 0) caja.style.marginTop = (sobra + 2) + 'px';
+    } else if (op === 'F') {
+      /* F · la fila de minutos de arriba: con la jornada, el minuto elegido queda como un solo
+         botón («45 min ⌄», que abre lo mismo que «Otro») y el resto de la fila es de las bibliotecas. */
+      const grupo = [...document.querySelectorAll('[data-pace-minutos]')].find((e) => e.getBoundingClientRect().height > 0);
+      const activo = grupo.querySelector('[aria-pressed="true"]');
+      [...grupo.children].forEach((c) => { if (c !== activo) c.style.display = 'none'; });
+      activo.setAttribute('data-maqueta', '');
+      activo.textContent = activo.textContent.trim() + ' min ⌄';
+      activo.style.paddingLeft = '12px'; activo.style.paddingRight = '12px'; activo.style.width = 'auto';
+      grupo.style.justifyContent = 'space-between';
+      grupo.style.width = '100%';
+      fila.style.cssText += ';display:flex;gap:6px;align-items:center;padding:0;margin:0;';
+      fila.querySelectorAll('button').forEach((b) => { b.style.alignItems = 'center'; b.style.padding = '0 4px'; b.style.minHeight = '0'; b.style.height = '26px'; b.style.fontSize = '16px'; });
+      fila.querySelectorAll('svg').forEach((g) => { g.setAttribute('width', '18'); g.setAttribute('height', '18'); });
+      grupo.appendChild(fila);
+    }
+  }, op);
+}
+
+/* F · que las tres palabras queden dentro del círculo, con aire (lo que sobra hasta el borde). */
+async function dentroDelAro(page) {
+  return page.evaluate(() => {
+    const ring = [...document.querySelectorAll('[data-pace-dial-ring]')].find((e) => e.getBoundingClientRect().width > 0);
+    const fila = document.querySelector('.pace-aro-fila[data-maqueta]');
+    if (!ring || !fila) return null;
+    const c = ring.getBoundingClientRect(), r = fila.getBoundingClientRect();
+    const cx = c.left + c.width / 2, cy = c.top + c.height / 2, R = c.width / 2;
+    const esquinas = [[r.left, r.top], [r.right, r.top], [r.left, r.bottom], [r.right, r.bottom]];
+    const aire = Math.min(...esquinas.map(([x, y]) => R - Math.hypot(x - cx, y - cy)));
+    const boton = [...document.querySelectorAll('button')].find((b) => /Empezar jornada|Pausar/.test(b.textContent) && b.getBoundingClientRect().height > 0);
+    const panel = [...document.querySelectorAll('[data-pace-activitybar]')].find((e) => e.getBoundingClientRect().height > 0);
+    return {
+      aireAlBorde: Math.round(aire), ancho: Math.round(r.width),
+      bajoElBoton: boton ? Math.round(r.top - boton.getBoundingClientRect().bottom) : null,
+      sobreElPanel: panel ? Math.round(panel.getBoundingClientRect().top - r.bottom) : null,
+    };
+  });
+}
+
 async function medirHome(page) {
   return page.evaluate(() => {
     const vis = (sel) => [...document.querySelectorAll(sel)].find((e) => e.getBoundingClientRect().width > 0);
@@ -376,5 +453,5 @@ async function medirHome(page) {
 module.exports = {
   ocultoDe, letraGrande, pisados, marcarConstructor, pintarConstructor, medirConstructor, verPasos,
   bajarHastaCandado, apuntarEnElSobre, hojaDelFinal, alturaCabeceraLib, lineaEnLaBiblioteca,
-  pintarDatos, filasDatos, pintarBibliotecas, medirHome, filaDelCajon,
+  pintarDatos, filasDatos, pintarBibliotecas, medirHome, filaDelCajon, pintarBibliotecas2, dentroDelAro,
 };

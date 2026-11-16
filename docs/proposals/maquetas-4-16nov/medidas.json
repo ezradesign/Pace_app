@@ -417,5 +417,185 @@
     "mal": []
    }
   }
+ },
+ "4b": {
+  "D-640": {
+   "home": {
+    "scroll": 0,
+    "aro": 318,
+    "panel": "408–640",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 20,
+    "mal": []
+   },
+   "grande": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "435–623",
+    "fuera": []
+   },
+   "grandeToques": {
+    "botones": 16,
+    "mal": []
+   }
+  },
+  "D-640-foco": {
+   "home": {
+    "scroll": 0,
+    "aro": 318,
+    "panel": "408–640",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 20,
+    "mal": []
+   }
+  },
+  "E-640": {
+   "home": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "421–629",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 15,
+    "mal": [
+     "Hoy voy por libre pisa Abrir Mueve"
+    ]
+   },
+   "grande": {
+    "scroll": 1,
+    "aro": 328,
+    "panel": "424–640",
+    "fuera": []
+   },
+   "grandeToques": {
+    "botones": 12,
+    "mal": [
+     "Hoy voy por libre pisa Abrir Mueve"
+    ]
+   }
+  },
+  "E-640-foco": {
+   "home": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "421–629",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 15,
+    "mal": [
+     "Hoy voy por libre pisa Abrir Mueve"
+    ]
+   }
+  },
+  "F-640": {
+   "home": {
+    "scroll": 0,
+    "aro": 312,
+    "panel": "405–639",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 16,
+    "mal": []
+   },
+   "grande": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "432–628",
+    "fuera": []
+   },
+   "grandeToques": {
+    "botones": 12,
+    "mal": []
+   }
+  },
+  "F-640-foco": {
+   "home": {
+    "scroll": 0,
+    "aro": 312,
+    "panel": "405–639",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 16,
+    "mal": []
+   }
+  },
+  "D-740": {
+   "home": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "471–710",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 20,
+    "mal": []
+   },
+   "grande": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "472–723",
+    "fuera": []
+   },
+   "grandeToques": {
+    "botones": 17,
+    "mal": []
+   }
+  },
+  "E-740": {
+   "home": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "461–727",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 16,
+    "mal": [
+     "Hoy voy por libre pisa Abrir Mueve"
+    ]
+   },
+   "grande": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "461–740",
+    "fuera": []
+   },
+   "grandeToques": {
+    "botones": 13,
+    "mal": [
+     "Hoy voy por libre pisa Abrir Mueve"
+    ]
+   }
+  },
+  "F-740": {
+   "home": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "471–712",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 16,
+    "mal": []
+   },
+   "grande": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "469–727",
+    "fuera": []
+   },
+   "grandeToques": {
+    "botones": 13,
+    "mal": []
+   }
+  }
  }
 }

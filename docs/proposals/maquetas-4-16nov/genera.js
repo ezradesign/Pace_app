@@ -247,6 +247,41 @@ async function escena4(browser) {
   }
 }
 
+/* ---------- 4, segunda vuelta: D, E y F ---------- */
+
+async function escena4b(browser) {
+  console.log('4 · otra vuelta');
+  medidas['4b'] = {};
+  for (const h of [640, 740]) {
+    for (const op of ['D', 'E', 'F']) {
+      for (const corriendo of [false, true]) {
+        if (corriendo && h === 740) continue;
+        const { context, page } = await abrir(browser, { estado: CON_DIA, alto: h });
+        await P.filaDelCajon(page);
+        if (corriendo) {
+          await page.getByRole('button', { name: /Empezar jornada/ }).filter({ visible: true }).first().click();
+          await page.mouse.move(200, 230);
+          await page.waitForTimeout(1200);
+        }
+        await P.pintarBibliotecas2(page, op);
+        await page.waitForTimeout(900);
+        const m = { home: await P.medirHome(page), toques: await P.pisados(page, '[data-pace-topbar] button, [data-maqueta] button, [data-pace-ritmo-panel] button, [data-pace-dial-fit] button, [data-pace-minutos] button', '[data-maqueta]') };
+        const nombre = '4' + op.toLowerCase() + '-' + h + (corriendo ? '-foco' : '');
+        await foto(page, nombre);
+        if (!corriendo) {
+          await P.letraGrande(page, '#root', true);
+          await page.waitForTimeout(900);
+          m.grande = await P.medirHome(page);
+          m.grandeToques = await P.pisados(page, '[data-maqueta] button, [data-pace-ritmo-panel] button, [data-pace-dial-fit] button, [data-pace-minutos] button', '[data-maqueta]');
+          if (h === 640) await foto(page, nombre + '-115');
+        }
+        medidas['4b'][op + '-' + h + (corriendo ? '-foco' : '')] = m;
+        await context.close();
+      }
+    }
+  }
+}
+
 (async () => {
   fs.mkdirSync(FOTOS, { recursive: true });
   const srv = spawn(process.execPath, [path.join(RAIZ, '.claude', 'static-server.js')], { cwd: RAIZ, env: Object.assign({}, process.env, { PORT: String(PUERTO) }), stdio: 'ignore' });
@@ -254,7 +289,7 @@ async function escena4(browser) {
   const browser = await chromium.launch();
   const solo = process.argv[2];
   try {
-    const escenas = { 1: escena1, 2: escena2, 3: escena3, 4: escena4 };
+    const escenas = { 1: escena1, 2: escena2, 3: escena3, 4: escena4, '4b': escena4b };
     for (const [k, f] of Object.entries(escenas)) {
       if (solo && solo.split(',').indexOf(k) === -1) continue;
       await f(browser);
