@@ -1,0 +1,596 @@
+{
+ "hoy-1280": {
+  "scroll": 0,
+  "aro": 479,
+  "tarjeta": 120
+ },
+ "A-1280": {
+  "scroll": 0,
+  "aro": 479,
+  "tarjeta": 120,
+  "pisa": [],
+  "dentro": true,
+  "alto": 14,
+  "toque": [
+   81,
+   26
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "B-1280": {
+  "scroll": 0,
+  "aro": 479,
+  "tarjeta": 120,
+  "pisa": [],
+  "dentro": true,
+  "alto": 14,
+  "toque": [
+   93,
+   26
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "C-1280": {
+  "scroll": 0,
+  "aro": 434,
+  "tarjeta": 158,
+  "pisa": [],
+  "dentro": true,
+  "alto": 19,
+  "toque": [
+   1154,
+   28
+  ],
+  "lineas": [
+   1,
+   1,
+   1
+  ]
+ },
+ "A-con-1280": {
+  "scroll": 0,
+  "aro": 479,
+  "tarjeta": 120,
+  "pisa": [],
+  "dentro": true,
+  "alto": 14,
+  "toque": [
+   119,
+   26
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "hoy-1536": {
+  "scroll": 0,
+  "aro": 372,
+  "tarjeta": 120
+ },
+ "A-1536": {
+  "scroll": 0,
+  "aro": 372,
+  "tarjeta": 120,
+  "pisa": [],
+  "dentro": true,
+  "alto": 14,
+  "toque": [
+   81,
+   26
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "B-1536": {
+  "scroll": 0,
+  "aro": 372,
+  "tarjeta": 120,
+  "pisa": [],
+  "dentro": true,
+  "alto": 14,
+  "toque": [
+   93,
+   26
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "C-1536": {
+  "scroll": 0,
+  "aro": 327,
+  "tarjeta": 158,
+  "pisa": [],
+  "dentro": true,
+  "alto": 19,
+  "toque": [
+   1410,
+   28
+  ],
+  "lineas": [
+   1,
+   1,
+   1
+  ]
+ },
+ "A-con-1536": {
+  "scroll": 0,
+  "aro": 372,
+  "tarjeta": 120,
+  "pisa": [],
+  "dentro": true,
+  "alto": 14,
+  "toque": [
+   119,
+   26
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "hoy-640": {
+  "scroll": 0,
+  "aro": 307,
+  "tarjeta": 118
+ },
+ "A-640": {
+  "scroll": 0,
+  "aro": 307,
+  "tarjeta": 118,
+  "pisa": [],
+  "dentro": true,
+  "alto": 14,
+  "toque": [
+   87,
+   44
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "B-640": {
+  "scroll": 0,
+  "aro": 307,
+  "tarjeta": 118,
+  "pisa": [],
+  "dentro": true,
+  "alto": 19,
+  "toque": [
+   101,
+   44
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "C-640": {
+  "scroll": 0,
+  "aro": 323,
+  "tarjeta": 157,
+  "pisa": [],
+  "dentro": true,
+  "alto": 20,
+  "toque": [
+   306,
+   29
+  ],
+  "lineas": [
+   1,
+   1,
+   1
+  ]
+ },
+ "A-con-640": {
+  "scroll": 0,
+  "aro": 307,
+  "tarjeta": 118,
+  "pisa": [],
+  "dentro": true,
+  "alto": 14,
+  "toque": [
+   128,
+   44
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "hoy-740": {
+  "scroll": 0,
+  "aro": 331,
+  "tarjeta": 142
+ },
+ "A-740": {
+  "scroll": 0,
+  "aro": 331,
+  "tarjeta": 142,
+  "pisa": [],
+  "dentro": true,
+  "alto": 14,
+  "toque": [
+   87,
+   44
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "B-740": {
+  "scroll": 0,
+  "aro": 331,
+  "tarjeta": 142,
+  "pisa": [],
+  "dentro": true,
+  "alto": 19,
+  "toque": [
+   101,
+   44
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "C-740": {
+  "scroll": 0,
+  "aro": 313,
+  "tarjeta": 181,
+  "pisa": [],
+  "dentro": true,
+  "alto": 20,
+  "toque": [
+   302,
+   29
+  ],
+  "lineas": [
+   1,
+   1,
+   1
+  ]
+ },
+ "A-con-740": {
+  "scroll": 0,
+  "aro": 331,
+  "tarjeta": 142,
+  "pisa": [],
+  "dentro": true,
+  "alto": 14,
+  "toque": [
+   128,
+   44
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "hoy-640-es": {
+  "scroll": 0,
+  "aro": 307,
+  "tarjeta": 118
+ },
+ "hoy-640-es-115": {
+  "scroll": 0,
+  "aro": 331,
+  "tarjeta": 118
+ },
+ "A-640-es": {
+  "scroll": 0,
+  "aro": 307,
+  "tarjeta": 118,
+  "pisa": [],
+  "dentro": true,
+  "alto": 14,
+  "toque": [
+   87,
+   44
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "A-640-es-115": {
+  "scroll": 0,
+  "aro": 331,
+  "tarjeta": 118,
+  "pisa": [],
+  "dentro": true,
+  "alto": 14,
+  "toque": [
+   97,
+   44
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "A-con-640-es": {
+  "scroll": 0,
+  "aro": 307,
+  "tarjeta": 118,
+  "pisa": [],
+  "dentro": true,
+  "alto": 14,
+  "toque": [
+   128,
+   44
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "A-con-640-es-115": {
+  "scroll": 0,
+  "aro": 331,
+  "tarjeta": 118,
+  "pisa": [],
+  "dentro": false,
+  "alto": 14,
+  "toque": [
+   144,
+   44
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "B-640-es": {
+  "scroll": 0,
+  "aro": 307,
+  "tarjeta": 118,
+  "pisa": [],
+  "dentro": true,
+  "alto": 19,
+  "toque": [
+   101,
+   44
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "B-640-es-115": {
+  "scroll": 0,
+  "aro": 331,
+  "tarjeta": 118,
+  "pisa": [],
+  "dentro": true,
+  "alto": 43,
+  "toque": [
+   105,
+   44
+  ],
+  "lineas": [
+   2
+  ]
+ },
+ "C-640-es": {
+  "scroll": 0,
+  "aro": 323,
+  "tarjeta": 157,
+  "pisa": [],
+  "dentro": true,
+  "alto": 20,
+  "toque": [
+   306,
+   29
+  ],
+  "lineas": [
+   1,
+   1,
+   1
+  ]
+ },
+ "C-640-es-115": {
+  "scroll": 63,
+  "aro": 326,
+  "tarjeta": 160,
+  "pisa": [],
+  "dentro": true,
+  "alto": 23,
+  "toque": [
+   306,
+   32
+  ],
+  "lineas": [
+   1,
+   1,
+   1
+  ]
+ },
+ "hoy-640-en": {
+  "scroll": 0,
+  "aro": 307,
+  "tarjeta": 118
+ },
+ "hoy-640-en-115": {
+  "scroll": 0,
+  "aro": 331,
+  "tarjeta": 144
+ },
+ "A-640-en": {
+  "scroll": 0,
+  "aro": 307,
+  "tarjeta": 118,
+  "pisa": [],
+  "dentro": true,
+  "alto": 14,
+  "toque": [
+   100,
+   44
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "A-640-en-115": {
+  "scroll": 0,
+  "aro": 331,
+  "tarjeta": 144,
+  "pisa": [],
+  "dentro": true,
+  "alto": 14,
+  "toque": [
+   112,
+   44
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "A-con-640-en": {
+  "scroll": 0,
+  "aro": 307,
+  "tarjeta": 118,
+  "pisa": [],
+  "dentro": true,
+  "alto": 14,
+  "toque": [
+   118,
+   44
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "A-con-640-en-115": {
+  "scroll": 0,
+  "aro": 331,
+  "tarjeta": 144,
+  "pisa": [],
+  "dentro": false,
+  "alto": 14,
+  "toque": [
+   133,
+   44
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "B-640-en": {
+  "scroll": 0,
+  "aro": 307,
+  "tarjeta": 118,
+  "pisa": [],
+  "dentro": true,
+  "alto": 19,
+  "toque": [
+   115,
+   44
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "B-640-en-115": {
+  "scroll": 0,
+  "aro": 331,
+  "tarjeta": 144,
+  "pisa": [],
+  "dentro": true,
+  "alto": 22,
+  "toque": [
+   128,
+   44
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "C-640-en": {
+  "scroll": 0,
+  "aro": 323,
+  "tarjeta": 157,
+  "pisa": [],
+  "dentro": true,
+  "alto": 20,
+  "toque": [
+   306,
+   29
+  ],
+  "lineas": [
+   1,
+   1,
+   1
+  ]
+ },
+ "C-640-en-115": {
+  "scroll": 91,
+  "aro": 331,
+  "tarjeta": 186,
+  "pisa": [],
+  "dentro": true,
+  "alto": 23,
+  "toque": [
+   306,
+   32
+  ],
+  "lineas": [
+   1,
+   1,
+   1
+  ]
+ },
+ "A-con-1280-en": {
+  "scroll": 0,
+  "aro": 479,
+  "tarjeta": 120,
+  "pisa": [],
+  "dentro": true,
+  "alto": 14,
+  "toque": [
+   110,
+   26
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "A-con-1536-en": {
+  "scroll": 0,
+  "aro": 372,
+  "tarjeta": 120,
+  "pisa": [],
+  "dentro": true,
+  "alto": 14,
+  "toque": [
+   110,
+   26
+  ],
+  "lineas": [
+   1
+  ]
+ },
+ "hoja-web-1280": {
+  "alto": 372,
+  "scroll": 0
+ },
+ "hoja-altas-1280": {
+  "alto": 575,
+  "scroll": 0
+ },
+ "hoja-android-640": {
+  "alto": 511,
+  "scroll": 0
+ },
+ "hoja-android-hecho-640": {
+  "alto": 573,
+  "scroll": 0
+ },
+ "hoja-iphone-hoy-640": {
+  "alto": 356,
+  "scroll": 0
+ },
+ "hoja-iphone-plan-640": {
+  "alto": 511,
+  "scroll": 0
+ },
+ "hoja-web-640": {
+  "alto": 356,
+  "scroll": 0
+ }
+}
