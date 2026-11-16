@@ -145,7 +145,7 @@ function RitmoCartaVentana({ carta, onCerrar, leida }) {
   const barras = res.barras.filter((b, i) => i < 5 || b.total > 0);
   const nombres = res.ayudo.map((id) => ritmoCartaRutina(id, t, lang));
   const ayudo = nombres.length > 1 ? tn('ritmo.y', { a: nombres[0], b: nombres[1] }) : nombres[0];
-  const hechas = tn('ritmo.carta.hechas', { h: res.hechas, t: res.total });
+  const hechas = tn(res.total === 1 ? 'ritmo.carta.hechas.una' : 'ritmo.carta.hechas', { h: res.hechas, t: res.total });
   const S = ritmoCartaStyles;
   return (
     <Modal open onClose={onCerrar} maxWidth={420} relleno={leida ? '20px 18px 20px' : '20px 18px 14px'} ariaLabel={t('ritmo.carta.aria')}>
@@ -247,7 +247,7 @@ if (typeof paceSobreApuntar === 'function') {
     if (!c) return null;
     return { sinLeer: !c.vista, titulo: t(c.vista ? 'ritmo.carta.sobre' : 'ritmo.carta.sobre.nueva'), abrir: ritmoCartaAbrir,
       fecha: c.lunes, tipo: t('sobre.carta.tipo'), cuando: paceFechaCorta(c.lunes, lang, { weekday: 'long', day: 'numeric', month: 'short' }),
-      tituloHoja: t('ritmo.carta.sobre'), resumen: tn('ritmo.carta.hechas', { h: c.res.hechas, t: c.res.total }) + '.', enlace: t('sobre.carta.abrir') };
+      tituloHoja: t('ritmo.carta.sobre'), resumen: tn(c.res.total === 1 ? 'ritmo.carta.hechas.una' : 'ritmo.carta.hechas', { h: c.res.hechas, t: c.res.total }) + '.', enlace: t('sobre.carta.abrir') };
   } });
 }
 

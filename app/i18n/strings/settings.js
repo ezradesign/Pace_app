@@ -123,6 +123,9 @@ Object.assign(window.PACE_STRINGS.es, {
     'settings.import.cuerpo':        'La copia trae {logros} logros y {foco} min de foco. Lo que hay ahora en PACE se sustituye por la copia, sin juntarse, y no se puede deshacer.',
     'settings.import.si':            'Importar',
     'settings.import.cuerpo.dia':    'La copia es del {dia} y trae {logros} logros y {foco} min de foco. Lo que hay ahora en PACE se sustituye por la copia, sin juntarse, y no se puede deshacer.',
+    /* Con un solo logro, en singular: «1 logros» (verify.plurales.js). */
+    'settings.import.cuerpo.uno':    'La copia trae 1 logro y {foco} min de foco. Lo que hay ahora en PACE se sustituye por la copia, sin juntarse, y no se puede deshacer.',
+    'settings.import.cuerpo.dia.uno': 'La copia es del {dia} y trae 1 logro y {foco} min de foco. Lo que hay ahora en PACE se sustituye por la copia, sin juntarse, y no se puede deshacer.',
     'settings.import.nueva':         'Es de una versión de PACE más nueva que esta: si puedes, actualiza PACE antes de traerla.',
     'settings.import.parcial.titulo': 'Falta el registro de tus sesiones',
 });
@@ -226,6 +229,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'settings.import.cuerpo':        'This copy contains {logros} achievements and {foco} min of Focus. It will replace your current PACE data, not merge with it. This can’t be undone.',
     'settings.import.si':            'Import',
     'settings.import.cuerpo.dia':    'This copy is from {dia} and contains {logros} achievements and {foco} min of Focus. It will replace your current PACE data, not merge with it. This can’t be undone.',
+    'settings.import.cuerpo.uno':    'This copy contains 1 achievement and {foco} min of Focus. It will replace your current PACE data, not merge with it. This can’t be undone.',
+    'settings.import.cuerpo.dia.uno': 'This copy is from {dia} and contains 1 achievement and {foco} min of Focus. It will replace your current PACE data, not merge with it. This can’t be undone.',
     'settings.import.nueva':         'It was made by a newer version of PACE than this one: if you can, update PACE before bringing it in.',
     'settings.import.parcial.titulo': 'Your session log is missing',
 });

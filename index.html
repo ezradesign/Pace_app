@@ -3977,6 +3977,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.import.cuerpo': 'La copia trae {logros} logros y {foco} min de foco. Lo que hay ahora en PACE se sustituye por la copia, sin juntarse, y no se puede deshacer.',
   'settings.import.si': 'Importar',
   'settings.import.cuerpo.dia': 'La copia es del {dia} y trae {logros} logros y {foco} min de foco. Lo que hay ahora en PACE se sustituye por la copia, sin juntarse, y no se puede deshacer.',
+
+  'settings.import.cuerpo.uno': 'La copia trae 1 logro y {foco} min de foco. Lo que hay ahora en PACE se sustituye por la copia, sin juntarse, y no se puede deshacer.',
+  'settings.import.cuerpo.dia.uno': 'La copia es del {dia} y trae 1 logro y {foco} min de foco. Lo que hay ahora en PACE se sustituye por la copia, sin juntarse, y no se puede deshacer.',
   'settings.import.nueva': 'Es de una versión de PACE más nueva que esta: si puedes, actualiza PACE antes de traerla.',
   'settings.import.parcial.titulo': 'Falta el registro de tus sesiones'
 });
@@ -4080,6 +4083,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.import.cuerpo': 'This copy contains {logros} achievements and {foco} min of Focus. It will replace your current PACE data, not merge with it. This can’t be undone.',
   'settings.import.si': 'Import',
   'settings.import.cuerpo.dia': 'This copy is from {dia} and contains {logros} achievements and {foco} min of Focus. It will replace your current PACE data, not merge with it. This can’t be undone.',
+  'settings.import.cuerpo.uno': 'This copy contains 1 achievement and {foco} min of Focus. It will replace your current PACE data, not merge with it. This can’t be undone.',
+  'settings.import.cuerpo.dia.uno': 'This copy is from {dia} and contains 1 achievement and {foco} min of Focus. It will replace your current PACE data, not merge with it. This can’t be undone.',
   'settings.import.nueva': 'It was made by a newer version of PACE than this one: if you can, update PACE before bringing it in.',
   'settings.import.parcial.titulo': 'Your session log is missing'
 });
@@ -4812,6 +4817,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.carta.ayudo': 'Te ayudó',
   'ritmo.carta.tusemana': 'Tu semana',
   'ritmo.carta.hechas': '{h} de {t} pausas hechas',
+  'ritmo.carta.hechas.una': '{h} de 1 pausa hecha',
   'ritmo.carta.semana': 'Esta semana',
   'ritmo.carta.igual': 'Sigue igual: no ha habido nada que cambiar.',
   'ritmo.carta.descansa': '{rutina}, que cambiaste {n} veces, descansa un mes.',
@@ -4854,6 +4860,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.carta.ayudo': 'What helped',
   'ritmo.carta.tusemana': 'Your week',
   'ritmo.carta.hechas': '{h} of {t} breaks done',
+  'ritmo.carta.hechas.una': '{h} of 1 break done',
   'ritmo.carta.semana': 'This week',
   'ritmo.carta.igual': 'Same as before: nothing needed changing.',
   'ritmo.carta.descansa': '{rutina}, which you swapped {n} times, takes a month off.',
@@ -43307,7 +43314,9 @@ function usePaceTraerCopia(decir, capa) {
   ),
   React.createElement(AjustesAviso, { abierto: !!pidiendoImportar, capa: capa, titulo: t('settings.import.titulo'), si: t('settings.import.si'),
     onSi: importarDeVerdad, onNo: () => setPidiendoImportar(null) },
-  p ? tn(p.dia ? 'settings.import.cuerpo.dia' : 'settings.import.cuerpo', { dia: p.dia, logros: p.logros, foco: p.foco }) : null,
+  p ? tn(p.logros === 1 ?
+  p.dia ? 'settings.import.cuerpo.dia.uno' : 'settings.import.cuerpo.uno' :
+  p.dia ? 'settings.import.cuerpo.dia' : 'settings.import.cuerpo', { dia: p.dia, logros: p.logros, foco: p.foco }) : null,
   p && p.nueva ? React.createElement("span", { "data-pace-copia-nueva": true, style: { display: 'block', marginTop: 10 } }, t('settings.import.nueva')) : null
   ),
   React.createElement(AjustesAviso, { abierto: avisoParcial, capa: capa, titulo: t('settings.import.parcial.titulo'), si: t('guardar.entendido'),
@@ -50852,7 +50861,7 @@ function RitmoCartaVentana(_ref4) {let { carta, onCerrar, leida } = _ref4;
   const barras = res.barras.filter((b, i) => i < 5 || b.total > 0);
   const nombres = res.ayudo.map((id) => ritmoCartaRutina(id, t, lang));
   const ayudo = nombres.length > 1 ? tn('ritmo.y', { a: nombres[0], b: nombres[1] }) : nombres[0];
-  const hechas = tn('ritmo.carta.hechas', { h: res.hechas, t: res.total });
+  const hechas = tn(res.total === 1 ? 'ritmo.carta.hechas.una' : 'ritmo.carta.hechas', { h: res.hechas, t: res.total });
   const S = ritmoCartaStyles;
   return (
     React.createElement(Modal, { open: true, onClose: onCerrar, maxWidth: 420, relleno: leida ? '20px 18px 20px' : '20px 18px 14px', ariaLabel: t('ritmo.carta.aria') },
@@ -50954,7 +50963,7 @@ if (typeof paceSobreApuntar === 'function') {
       if (!c) return null;
       return { sinLeer: !c.vista, titulo: t(c.vista ? 'ritmo.carta.sobre' : 'ritmo.carta.sobre.nueva'), abrir: ritmoCartaAbrir,
         fecha: c.lunes, tipo: t('sobre.carta.tipo'), cuando: paceFechaCorta(c.lunes, lang, { weekday: 'long', day: 'numeric', month: 'short' }),
-        tituloHoja: t('ritmo.carta.sobre'), resumen: tn('ritmo.carta.hechas', { h: c.res.hechas, t: c.res.total }) + '.', enlace: t('sobre.carta.abrir') };
+        tituloHoja: t('ritmo.carta.sobre'), resumen: tn(c.res.total === 1 ? 'ritmo.carta.hechas.una' : 'ritmo.carta.hechas', { h: c.res.hechas, t: c.res.total }) + '.', enlace: t('sobre.carta.abrir') };
     } });
 }
 
