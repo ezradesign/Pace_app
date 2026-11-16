@@ -25,7 +25,7 @@ var os = require('os');
 var path = require('path');
 
 var NECESARIOS = ['index.html', 'sw.js', '_headers', 'calendario.html', 'premium/index.html', 'beta/index.html', 'gracias/index.html', 'recuperar/index.html', 'desistir/index.html',
-                  'privacy.html', 'safety.html', 'manifest.webmanifest', 'manifest.en.webmanifest', 'robots.txt', 'sitemap.xml'];
+                  'privacy.html', 'safety.html', 'manifest.webmanifest', 'manifest.en.webmanifest', 'robots.txt', 'sitemap.xml', '404.html'];
 /* Lo que está en la raíz y no se publica a propósito: el de desarrollo y el export. */
 var NO_SE_PUBLICA = ['PACE.html', 'PACE_standalone.html'];
 /* Carpetas que se generan (fuera de git) y no son páginas de la web. */
@@ -134,6 +134,15 @@ function tandaWeb(ctx) {
       if (malM.length) ctx.falla('web: manifiestos -- ' + malM.join('; '));
       else ctx.ok('los dos manifiestos (es y en) son la misma app y sus ' + (mEs.screenshots.length + mEn.screenshots.length) + ' capturas están en dist/');
     } catch (e) { ctx.falla('web: no se pueden leer los manifiestos de dist/ (' + e.message + ')'); }
+
+    /* Lo que no existe (auditoría externa del 16 nov.): sin un 404.html arriba del todo, Cloudflare Pages
+       sirve la app entera con un 200 en cualquier ruta. Tiene que ser una página suya, no la app, y llevar
+       a la raíz. */
+    var noHay = hay.has('404.html') ? fs.readFileSync(path.join(tmp, '404.html'), 'utf8') : '';
+    if (!noHay) ctx.falla('web: dist/ sin 404.html -- Cloudflare serviría la app con un 200 en lo que no existe');
+    else if (/serviceWorker\.register|ReactDOM/.test(noHay) || !/href="\/"/.test(noHay)) ctx.falla('web: 404.html es la app o no lleva a la raíz');
+    else ctx.ok('404.html arriba del todo: lo que no existe recibe su página y un 404, no la app');
+
 
     /* De la app (index.html) solo se mira la landing, entre sus marcas: el resto es la app compilada, que
        pide sus piezas por el precache. La landing vive ahí desde el 9 nov. y sus capturas y enlaces no se

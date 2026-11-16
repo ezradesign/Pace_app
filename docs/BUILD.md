@@ -177,8 +177,11 @@ solo esta la app, sin los documentos, las pruebas ni las fotos de trabajo.
   en la raiz que no se publica ni esta apartada a proposito (`scripts/verify.web.js`).
 - Para probarla en local: `npm run web:dist` y el servidor `pace-dist` de `.claude/launch.json`
   (`node .claude/static-server.js dist`), que sirve la app en `/` como pacegrass.app.
-- Comprobar lo publicado por el TAMAÑO, no por el codigo: una ruta que no existe devuelve el
-  `index.html` (unos 1,85 MB) con un 200.
+- Lo que no existe recibe `404.html` con un 404 (auditoría externa del 16 nov. 2026): Cloudflare Pages,
+  sin un `404.html` arriba del todo, toma la web por una app de una página y servía `index.html` (la
+  app entera, más de 2 MB) con un 200 en cualquier ruta. `web-dist.js` lo publica, `verify` falla si
+  falta, y `.claude/static-server.js` hace lo mismo en local (salvo `/api/`, que en la web son funciones).
+
 
 ---
 
