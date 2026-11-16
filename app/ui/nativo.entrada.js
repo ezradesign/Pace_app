@@ -12,8 +12,8 @@
      · APAGADO DE FÁBRICA. Sin `avisoEntrada === true`, no se pone nada.
      · SOLO LOS DÍAS DE JORNADA O MEDIA de la semana guardada, a su hora de entrada; los días
        libres, nada («PACE te deja en paz»), y sin semana guardada tampoco.
-     · DESDE MAÑANA, SIEMPRE. Cada vez que PACE se abre o se va al fondo, se quitan los avisos y
-       se ponen los de los siete días siguientes, empezando por mañana. Así, si hoy abriste PACE
+     · DESDE MAÑANA, SIEMPRE. Cada vez que PACE se abre o se va al fondo, se ponen los de los
+       siete días siguientes, empezando por mañana, y se quitan los demás. Así, si hoy abriste PACE
        antes de tu hora, el de hoy ya no sale, y «Hoy es distinto» no deja un aviso colgado. Y si
        dejas de abrir PACE, deja de avisar al cabo de una semana: nada de «te echamos de menos».
      · LAS PALABRAS DE LA TARJETA DE LA MAÑANA: «Hoy, como cada jueves» y «Jornada de 9:00 a
@@ -70,21 +70,51 @@ function paceEntradaAvisos(s, ahora) {
   return out;
 }
 
-/* Quita los siete y pone los que tocan. Solo en el móvil y con el permiso de avisos ya dado: el
-   permiso se pide al encender el interruptor (paceEntradaEncender), nunca solo. En fila, para que
-   dos llamadas seguidas no se pisen. */
-var _paceEntrada = { cola: Promise.resolve() };
+/* PRIMERO SE PONE, DESPUÉS SE QUITA LO QUE SOBRA (novena pasada externa, nº 3 y 12, 16 nov. 2026).
+   Antes se quitaban los siete y se volvían a poner tres pasos después, también al irse al fondo: si
+   el sistema congelaba PACE en medio, la mañana se quedaba sin aviso. Ahora se programa la lista
+   (el mismo id sustituye al anterior, en Android y en el iPhone) y luego se quitan los ids del 10 al
+   16 que no están en ella. Y si lo que toca poner es lo mismo que ya se puso (`firma`, en
+   `pace.entrada.puesto`), no se toca nada: así irse al fondo, que es cuando el sistema congela,
+   casi nunca llama al complemento. La primera vez de cada proceso se pone igual, si hay algo que
+   poner: un cierre forzado o una actualización quitan las alarmas sin decirlo, y la firma seguiría
+   diciendo que están. Si quitar falla, la firma no se guarda y se reintenta la vez siguiente (nº 12). */
+var PACE_ENTRADA_CLAVE = 'pace.entrada.puesto';
+var _paceEntrada = { cola: Promise.resolve(), yaPuso: false };
+
+/* { firma, ids } de lo último que el sistema aceptó, o null. */
+function paceEntradaLeer() {
+  try {
+    var v = JSON.parse(localStorage.getItem(PACE_ENTRADA_CLAVE) || 'null');
+    return v && typeof v.firma === 'string' && Array.isArray(v.ids) ? v : null;
+  } catch (e) { return null; }
+}
+
+/* Solo en las apps, donde no hay landing delante (`PACE_CARA` es de la web). */
+function paceEntradaGuardar(firma, ids) {
+  try { localStorage.setItem(PACE_ENTRADA_CLAVE, JSON.stringify({ firma: firma, ids: ids })); } catch (e) { paceAvisarNoGuarda(e); }
+}
+
+/* Solo en el móvil y con el permiso de avisos ya dado: el permiso se pide al encender el
+   interruptor (paceEntradaEncender), nunca solo. En fila, para que dos llamadas seguidas no se pisen. */
 function paceEntradaPoner() {
   if (typeof paceEsNativo !== 'function' || !paceEsNativo()) return Promise.resolve(null);
   _paceEntrada.cola = _paceEntrada.cola.then(paceEntradaPonerYa, paceEntradaPonerYa);
   return _paceEntrada.cola;
 }
 
+/* Lo que se le pide al sistema por cada aviso, tal cual: también es lo que firma. */
+function paceEntradaNotificacion(a, android) {
+  var n = { id: a.id, title: a.title, body: a.body };
+  /* Android lee ISO en UTC con milisegundos; un par de minutos tarde da igual (sin exacta). */
+  if (android) { n.schedule = { at: new Date(a.at).toISOString(), allowWhileIdle: true }; n.channelId = PACE_ENTRADA_CANAL; }
+  else n.schedule = { at: new Date(a.at) };
+  return n;
+}
+
 function paceEntradaPonerYa() {
   var ln = paceNativoPlugin('LocalNotifications');
   if (!ln || typeof ln.cancel !== 'function' || typeof ln.schedule !== 'function') return null;
-  var ids = [];
-  for (var i = 0; i < PACE_ENTRADA_DIAS; i++) ids.push({ id: PACE_ENTRADA_PRIMER_ID + i });
   var s = getState();
   /* Quien nunca ha tocado el interruptor no tiene nada puesto: ni se quita ni se pone nada, y el
      complemento solo oye a PACE por sus avisos de siempre (lo cuentan android-nativo y ios-avisos). */
@@ -93,25 +123,29 @@ function paceEntradaPonerYa() {
   var android = pacePlataformaNativa() === 'android';
   /* El permiso se mira cada vez: el que guarda la app puede no haber llegado aún al abrir. */
   var permiso = null;
-  return Promise.resolve(ln.cancel({ notifications: ids })).catch(function () {}).then(function () {
-    if (!avisos.length) return null;
-    return Promise.resolve(typeof ln.checkPermissions === 'function' ? ln.checkPermissions() : { display: paceNativoAvisoPermiso() })
+  var mirar = !avisos.length ? Promise.resolve()
+    : Promise.resolve(typeof ln.checkPermissions === 'function' ? ln.checkPermissions() : { display: paceNativoAvisoPermiso() })
       .then(function (r) { permiso = r && r.display; }, function () { permiso = null; });
-  }).then(function () {
-    if (!avisos.length || permiso !== 'granted') return null;
-    var canal = android && typeof ln.createChannel === 'function'
+  return mirar.then(function () {
+    var lista = permiso === 'granted' ? avisos.map(function (a) { return paceEntradaNotificacion(a, android); }) : [];
+    var firma = JSON.stringify(lista);
+    var antes = paceEntradaLeer();
+    if (antes && antes.firma === firma && (_paceEntrada.yaPuso || !lista.length)) return null;
+    var ids = lista.map(function (n) { return n.id; });
+    var sobran = [];
+    for (var i = 0; i < PACE_ENTRADA_DIAS; i++) {
+      if (ids.indexOf(PACE_ENTRADA_PRIMER_ID + i) < 0) sobran.push({ id: PACE_ENTRADA_PRIMER_ID + i });
+    }
+    var canal = lista.length && android && typeof ln.createChannel === 'function'
       ? Promise.resolve(ln.createChannel({ id: PACE_ENTRADA_CANAL, name: paceEntradaTexto(s, 'notify.canal.entrada'),
           description: paceEntradaTexto(s, 'notify.canal.entrada.desc'), importance: 3 })).catch(function () {})
       : Promise.resolve();
     return canal.then(function () {
-      return ln.schedule({ notifications: avisos.map(function (a) {
-        var n = { id: a.id, title: a.title, body: a.body };
-        /* Android lee ISO en UTC con milisegundos; un par de minutos tarde da igual (sin exacta). */
-        if (android) { n.schedule = { at: new Date(a.at).toISOString(), allowWhileIdle: true }; n.channelId = PACE_ENTRADA_CANAL; }
-        else n.schedule = { at: new Date(a.at) };
-        return n;
-      }) });
-    });
+      return lista.length ? ln.schedule({ notifications: lista }) : null;
+    }).then(function () {
+      _paceEntrada.yaPuso = true;
+      return sobran.length ? ln.cancel({ notifications: sobran }) : null;
+    }).then(function () { paceEntradaGuardar(firma, ids); });
   }).catch(function () { return null; });
 }
 

@@ -22,13 +22,18 @@ const HORARIO = { inicio: 540, comida: 840, comidaDur: 60, salida: 1020 };
 
 async function comoAndroid(context) {
   await context.addInitScript(() => {
-    const nativo = window.__nativo = { llamadas: [] };
+    /* `oyentes`: para mandar PACE al fondo como lo haría Android (`alFondo`). `cancelFalla`: cuántos
+       `cancel` del aviso de entrada fallan (lo siembra `window.__cancelFalla`, que va antes). */
+    const nativo = window.__nativo = { llamadas: [], oyentes: {}, cancelFalla: window.__cancelFalla || 0 };
     const apunta = (metodo, opts) => nativo.llamadas.push({ metodo, opts: opts === undefined ? null : JSON.parse(JSON.stringify(opts)) });
     window.Capacitor = {
       getPlatform: () => 'android',
       isNativePlatform: () => true,
       Plugins: {
-        App: { addListener: () => ({ remove() {} }), minimizeApp: () => Promise.resolve() },
+        App: {
+          addListener: (ev, cb) => { (nativo.oyentes[ev] = nativo.oyentes[ev] || []).push(cb); return { remove() {} }; },
+          minimizeApp: () => Promise.resolve(),
+        },
         LocalNotifications: {
           checkPermissions: () => Promise.resolve({ display: 'granted' }),
           requestPermissions: (op) => { apunta('requestPermissions', op); return Promise.resolve({ display: 'granted' }); },
@@ -36,7 +41,11 @@ async function comoAndroid(context) {
           changeExactNotificationSetting: () => Promise.resolve({ exact_alarm: 'granted' }),
           createChannel: (op) => { apunta('createChannel', op); return Promise.resolve(); },
           schedule: (op) => { apunta('schedule', op); return Promise.resolve({ notifications: op.notifications.map((n) => ({ id: n.id })) }); },
-          cancel: (op) => { apunta('cancel', op); return Promise.resolve(); },
+          cancel: (op) => {
+            apunta('cancel', op);
+            if (nativo.cancelFalla > 0 && op.notifications.some((n) => n.id >= 10)) { nativo.cancelFalla--; return Promise.reject(new Error('cancel')); }
+            return Promise.resolve();
+          },
         },
         PaceAvisoFijo: { poner: () => Promise.resolve(), quitar: () => Promise.resolve() },
       },
@@ -56,6 +65,20 @@ async function avisosPuestos(page) {
     .filter((lista) => lista.length);
   return puestos.length ? puestos[puestos.length - 1] : [];
 }
+
+/* Lo que PACE pidió para los ids del aviso de entrada (del 10 al 16), en orden: «schedule 10,11» o
+   «cancel 12,13». */
+const ENTRADA = (id) => id >= 10 && id <= 16;
+async function llamadasEntrada(page) {
+  await page.waitForTimeout(400);
+  const llamadas = await page.evaluate(() => window.__nativo.llamadas);
+  return llamadas.filter((l) => (l.metodo === 'schedule' || l.metodo === 'cancel') && l.opts.notifications.some((n) => ENTRADA(n.id)))
+    .map((l) => l.metodo + ' ' + l.opts.notifications.map((n) => n.id).join(','));
+}
+
+/* PACE se va al fondo, como cuando Android lo avisa (`appStateChange`). */
+const alFondo = (page) => page.evaluate(() => (window.__nativo.oyentes.appStateChange || []).forEach((cb) => cb({ isActive: false })));
+const olvidarLlamadas = (page) => page.evaluate(() => { window.__nativo.llamadas = []; });
 
 async function abrir(page, context, ritmo, cuando) {
   await sembrar(context, { soundOn: false, ritmo });
@@ -88,6 +111,36 @@ test('abierto antes de la hora, el de hoy no sale', async ({ page, context }) =>
   const avisos = await avisosPuestos(page);
   expect(avisos.length, 'GUARD: no puso ninguno').toBeGreaterThan(0);
   expect(local(avisos[0].schedule.at), 'el primero tiene que ser el del viernes').toEqual([20, 9, 0]);
+});
+
+/* Novena pasada externa, nº 3 y 12: se quitaban los siete y se ponían tres pasos después, también
+   al irse al fondo; si Android congelaba PACE en medio, la mañana se quedaba sin aviso. */
+test('nº 3 · primero programa la lista y después quita solo los ids que sobran', async ({ page, context }) => {
+  await abrir(page, context, { semanaTipo: SEMANA, horario: HORARIO, avisoEntrada: true }, new Date('2026-11-18T20:00:00+01:00'));
+  /* Del jueves 19 al miércoles 25: el sábado y el domingo (12 y 13) sobran. */
+  expect(await llamadasEntrada(page)).toEqual(['schedule 10,11,14,15,16', 'cancel 12,13']);
+});
+
+test('nº 3 · al irse al fondo sin nada que cambiar, no toca los avisos; con la semana cambiada, programa antes de quitar', async ({ page, context }) => {
+  await abrir(page, context, { semanaTipo: SEMANA, horario: HORARIO, avisoEntrada: true }, new Date('2026-11-18T20:00:00+01:00'));
+  expect((await llamadasEntrada(page)).length, 'GUARD: al abrir no puso nada').toBeGreaterThan(0);
+  await olvidarLlamadas(page);
+  await alFondo(page);
+  expect(await llamadasEntrada(page), 'al irse al fondo volvió a tocar unos avisos que no cambiaron').toEqual([]);
+  /* El viernes pasa a libre: se pone la lista nueva y se quita el viernes (11), en ese orden. */
+  await page.evaluate(() => setState((s) => Object.assign({}, s, { ritmo: Object.assign({}, s.ritmo,
+    { semanaTipo: ['jornada', 'jornada', 'jornada', 'jornada', 'libre', 'libre', 'libre'] }) })));
+  await alFondo(page);
+  expect(await llamadasEntrada(page)).toEqual(['schedule 10,14,15,16', 'cancel 11,12,13']);
+});
+
+test('nº 12 · si quitar falla, se vuelve a intentar la vez siguiente', async ({ page, context }) => {
+  await context.addInitScript(() => { window.__cancelFalla = 1; });
+  await abrir(page, context, { semanaTipo: SEMANA, horario: HORARIO, avisoEntrada: true }, new Date('2026-11-18T20:00:00+01:00'));
+  expect(await llamadasEntrada(page), 'GUARD').toEqual(['schedule 10,11,14,15,16', 'cancel 12,13']);
+  await olvidarLlamadas(page);
+  await alFondo(page);
+  expect(await llamadasEntrada(page), 'el sábado y el domingo pueden seguir puestos y no se reintentó').toEqual(['schedule 10,11,14,15,16', 'cancel 12,13']);
 });
 
 test('apagado de fábrica: no pone ninguno', async ({ page, context }) => {
