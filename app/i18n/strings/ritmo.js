@@ -76,6 +76,11 @@ Object.assign(window.PACE_STRINGS.es, {
     'ritmo.sigue.cta':               'Seguir con {modulo}',
     'ritmo.pausa.luego':             'Luego, el bloque {n} de {m}',
     'ritmo.pausa.ya':                'Empezar ya el bloque {n}',
+    /* El cierre, como cualquier pausa (Ez, 2.1 A del 16 nov. 2026): el rótulo del aro, lo que dice
+       debajo y el enlace que corta la pausa y cierra el día. */
+    'ritmo.aro.cierre':              'Para cerrar',
+    'ritmo.cierre.luego':            'Luego, la jornada cerrada',
+    'ritmo.pausa.cerrar':            'Cerrar la jornada',
     /* s198 · v0.133.0 (D2, texto V1): el aviso del sistema al acabar un bloque
        con «A tu ritmo» (ritmo/ritmo.aviso.js). */
     'notify.ritmo.titulo':           'Tu pausa: {plato} · {min} min',
@@ -272,6 +277,9 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.sigue.cta':               'Continue with {modulo}',
     'ritmo.pausa.luego':             'Then, block {n} of {m}',
     'ritmo.pausa.ya':                'Start block {n} now',
+    'ritmo.aro.cierre':              'Wind down',
+    'ritmo.cierre.luego':            'Then, your day is done',
+    'ritmo.pausa.cerrar':            'Close the day',
     'notify.ritmo.titulo':           'Your break: {plato} · {min} min',
     'notify.ritmo.larga':            'Your long break: {plato} · {min} min',
     'notify.ritmo.cierre':           'Wind down: {plato} · {min} min',

@@ -33,7 +33,8 @@ function useAvisosNativos({ state, running, endsAt, pausaRitmo, enPausaRitmo, t,
     if (typeof paceNativoPausa !== 'function') return;
     let pausa = null;
     if (running && endsAt && state.notifyFocusEnd) {
-      if (state.focusMode !== 'foco') pausa = { hasta: endsAt, n: ritmoN, total: ritmoN ? pausaRitmo.de : null };
+      /* Tras el cierre no hay Foco al que volver: su fin no avisa (Ez, 2.1 A del 16 nov.). */
+      if (state.focusMode !== 'foco') pausa = enPausaRitmo && pausaRitmo.cierre ? null : { hasta: endsAt, n: ritmoN, total: ritmoN ? pausaRitmo.de : null };
       else if (typeof ritmoPausaTrasBloque === 'function') pausa = ritmoPausaTrasBloque(getState(), endsAt);
     }
     paceNativoPausa(pausa ? pausa.hasta : null, pausa && {

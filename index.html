@@ -4497,6 +4497,11 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.pausa.ya': 'Empezar ya el bloque {n}',
 
 
+  'ritmo.aro.cierre': 'Para cerrar',
+  'ritmo.cierre.luego': 'Luego, la jornada cerrada',
+  'ritmo.pausa.cerrar': 'Cerrar la jornada',
+
+
   'notify.ritmo.titulo': 'Tu pausa: {plato} · {min} min',
   'notify.ritmo.larga': 'Tu pausa larga: {plato} · {min} min',
   'notify.ritmo.cierre': 'Para cerrar: {plato} · {min} min',
@@ -4691,6 +4696,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.sigue.cta': 'Continue with {modulo}',
   'ritmo.pausa.luego': 'Then, block {n} of {m}',
   'ritmo.pausa.ya': 'Start block {n} now',
+  'ritmo.aro.cierre': 'Wind down',
+  'ritmo.cierre.luego': 'Then, your day is done',
+  'ritmo.pausa.cerrar': 'Close the day',
   'notify.ritmo.titulo': 'Your break: {plato} · {min} min',
   'notify.ritmo.larga': 'Your long break: {plato} · {min} min',
   'notify.ritmo.cierre': 'Wind down: {plato} · {min} min',
@@ -11617,6 +11625,7 @@ Object.assign(window, { semanaISO, SEMANA_TEMAS, SEMANA_ACENTOS, semanaDe, seman
 
 
 
+
 var RITMO_SERIES_META = {
 
 
@@ -11825,7 +11834,15 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
     var t0 = base;
     var sinDescanso = t0.filter(function (r) {return !descansa[r.id];});
     if (sinDescanso.length) t0 = sinDescanso;
-    if (c.sentada || c.firme) {var dePie = t0.filter(function (r) {return ritmoSeriesDePie(r.id);});if (dePie.length) t0 = dePie;}
+
+
+
+
+    if (c.sentada || c.firme) {
+      var dePie = t0.filter(function (r) {return ritmoSeriesDePie(r.id);});
+      if (!dePie.length) dePie = pool.filter(function (r) {return ritmoSeriesDePie(r.id) && !descansa[r.id];});
+      if (dePie.length) t0 = dePie;
+    }
     if (nuevo) entero(alcanzaNueva);
     if (cabe) entero(alcanza);
     if (c.corta) {var cortos = t0.filter(function (r) {return (r.min || 0) <= c.corta;});if (cortos.length) t0 = cortos;}
@@ -11931,7 +11948,8 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
 
       var nota = function (z) {
 
-        return !z ? 9 : (primera ? z.deja >= 8 ? 8 : 0 : z.deja + z.carga / 2) + (c.corta && (z.r.min || 0) > c.corta ? 4 : 0) + (c.levantar && !ritmoSeriesDePie(z.r.id) ? 2 : 0) + (z.hoy ? 3 : 0) + (z.aqui ? 1 : 0);
+
+        return !z ? 9 : (primera ? z.deja >= 8 ? 8 : 0 : z.deja + z.carga / 2) + (c.corta && (z.r.min || 0) > c.corta ? 4 : 0) + (c.levantar && !ritmoSeriesDePie(z.r.id) ? 4 : 0) + (z.hoy ? 3 : 0) + (z.aqui ? 1 : 0);
       };
       if (modulo !== 'respira' && (!x || (c.levantar || c.corta || x.hoy || (primera ? x.deja >= 8 : x.deja || x.carga > 1)) && nota(x) > 0)) {
         var otro = modulo === 'mueve' ? 'estira' : 'mueve';
@@ -15044,6 +15062,10 @@ Object.assign(window, {
 
 
 
+
+
+
+
 function ritmoPausaAbierta(s) {
   var st = s || getState();
   var p = ritmoPlan(st);
@@ -15209,7 +15231,7 @@ function ritmoSinPausa(s) {
 
 function ritmoPausaEmpieza(fin) {
   var a = ritmoPausaAbierta();
-  if (!a || a.it.tipo !== 'pausa') return;
+  if (!a || a.it.tipo !== 'pausa' && a.it.tipo !== 'cierre') return;
   var ahora = Date.now();
   var hasta = (typeof fin === 'number' && fin > 0 && fin <= ahora ? fin : ahora) + a.it.dur * 60000;
   if (hasta <= ahora) return;
@@ -15241,13 +15263,21 @@ function ritmoParadaHasta(fin) {
 
 
 
+
 function ritmoPausaCuenta(s) {
   var r = s && s.ritmo || {};
   var hasta = r.dia && r.dia.pausaHasta;
   if (!(typeof hasta === 'number' && hasta > 0)) return null;
   var a = ritmoPausaAbierta(s);
-  if (!a || a.it.tipo !== 'pausa') return null;
-  return { modo: a.it.larga ? 'larga' : 'pausa', hasta: hasta, n: a.p.hechos + 1, de: a.p.total, dur: a.it.dur };
+  if (!a || a.it.tipo !== 'pausa' && a.it.tipo !== 'cierre') return null;
+  return { modo: a.it.larga ? 'larga' : 'pausa', hasta: hasta, n: a.p.hechos + 1, de: a.p.total, dur: a.it.dur, cierre: a.it.tipo === 'cierre' };
+}
+
+
+
+function ritmoCierreEnCurso(s) {
+  var c = ritmoPausaCuenta(s);
+  return !!c && c.cierre && s.focusMode === c.modo && c.hasta > Date.now();
 }
 
 
@@ -15286,9 +15316,9 @@ function ritmoPausaCerrarConElDia() {
 Object.assign(window, {
   ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta,
   ritmoSesionesHoy, ritmoMinutosHechos, ritmoMetaHecha, RITMO_MODULO_SESION,
-  ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia, ritmoParadaHasta
+  ritmoPausaEmpieza, ritmoPausaCuenta, ritmoCierreEnCurso, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia, ritmoParadaHasta
 });
-;Object.assign(window, { ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, RITMO_METAS_DE_FIN, ritmoSigueCierre, ritmoPausaHecha, ritmoSesionesHoy, RITMO_MODULO_SESION, ritmoMinutosHechos, ritmoMetaHecha, ritmoPausaPorTuCuenta, ritmoSinPausa, ritmoPausaEmpieza, ritmoParadaHasta, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia });
+;Object.assign(window, { ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, RITMO_METAS_DE_FIN, ritmoSigueCierre, ritmoPausaHecha, ritmoSesionesHoy, RITMO_MODULO_SESION, ritmoMinutosHechos, ritmoMetaHecha, ritmoPausaPorTuCuenta, ritmoSinPausa, ritmoPausaEmpieza, ritmoParadaHasta, ritmoPausaCuenta, ritmoCierreEnCurso, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia });
 })();
 </script>
   <!-- Las pausas con bloques cortos (22 oct. 2026): la invitación, «a mi ritmo» o tras cada bloque, y sin día. -->
@@ -22560,6 +22590,7 @@ function paceCierreSigue() {
     const s = getState();
     const p = typeof ritmoPausaCuenta === 'function' ? ritmoPausaCuenta(s) : null;
     if (p) {
+      if (p.cierre) return null;
       const ms = p.hasta - Date.now();
       return ms > 0 ? { tipo: 'jornada', min: Math.max(1, Math.ceil(ms / 60000)), n: p.n } : null;
     }
@@ -32230,7 +32261,7 @@ function aroJornada(_ref) {let { state, t, tn, aro, enPausaRitmo, pausaRitmo, st
       },
       fila:
       React.createElement("button", { type: "button", className: "pace-aro-seguir", "data-pace-aro-seguir": true, onClick: empezarYa },
-      tn('ritmo.pausa.ya', { n: pausaRitmo.n })
+      pausaRitmo.cierre ? t('ritmo.pausa.cerrar') : tn('ritmo.pausa.ya', { n: pausaRitmo.n })
       )
 
     };
@@ -32326,7 +32357,8 @@ function useAvisosNativos(_ref) {let { state, running, endsAt, pausaRitmo, enPau
     if (typeof paceNativoPausa !== 'function') return;
     let pausa = null;
     if (running && endsAt && state.notifyFocusEnd) {
-      if (state.focusMode !== 'foco') pausa = { hasta: endsAt, n: ritmoN, total: ritmoN ? pausaRitmo.de : null };else
+
+      if (state.focusMode !== 'foco') pausa = enPausaRitmo && pausaRitmo.cierre ? null : { hasta: endsAt, n: ritmoN, total: ritmoN ? pausaRitmo.de : null };else
       if (typeof ritmoPausaTrasBloque === 'function') pausa = ritmoPausaTrasBloque(getState(), endsAt);
     }
     paceNativoPausa(pausa ? pausa.hasta : null, pausa && {
@@ -32642,7 +32674,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
   const modeLabel = aro ? aro.label : cerrada ? cerrada.label : state.focusMode === 'foco' ? t('focus.manual.label') :
-  state.focusMode === 'pausa' ? t('focus.mode.pause') :
+  enPausaRitmo && pausaRitmo.cierre ? t('ritmo.aro.cierre') : state.focusMode === 'pausa' ? t('focus.mode.pause') :
   t('focus.mode.long');
 
   const isFocoMode = state.focusMode === 'foco';
@@ -32664,7 +32696,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
   const subtitle = bloques.subtitulo ? bloques.subtitulo :
-  enPausaRitmo ? tn('ritmo.pausa.luego', { n: pausaRitmo.n, m: pausaRitmo.de }) :
+  enPausaRitmo ? pausaRitmo.cierre ? t('ritmo.cierre.luego') : tn('ritmo.pausa.luego', { n: pausaRitmo.n, m: pausaRitmo.de }) :
   aro && aroPausaTerminada(state) ? t('ritmo.aro.pausaTerminada') : cerrada && cerrada.sub ? cerrada.sub :
   isFocoMode ?
   isCompleted ? t('focus.cycleComplete') : t(getFocusDescriptorKey(state.focusMinutes)) :
@@ -32720,7 +32752,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
     restore(pausaRitmo.hasta);
   }, [enPausaRitmo, pausaHuerfana, pausaRitmo && pausaRitmo.hasta, status]);
   const seguirTrasPausaRef = useRefFT(false);
-  const empezarYa = () => {seguirTrasPausaRef.current = true;reset();ritmoPausaAcabada();};
+  const empezarYa = () => {seguirTrasPausaRef.current = !pausaRitmo.cierre;reset();ritmoPausaAcabada();};
   useEffectFT(() => {
     if (!seguirTrasPausaRef.current || state.focusMode !== 'foco' || status !== 'idle') return;
     seguirTrasPausaRef.current = false;
@@ -32757,7 +32789,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
   let ctaLabel, ctaAction;
   if (enPausaRitmo) {
-    ctaLabel = tn('ritmo.pausa.ya', { n: pausaRitmo.n });
+    ctaLabel = pausaRitmo.cierre ? t('ritmo.pausa.cerrar') : tn('ritmo.pausa.ya', { n: pausaRitmo.n });
     ctaAction = empezarYa;
   } else if (running) {
     ctaLabel = t('focus.pause');
@@ -50137,14 +50169,15 @@ function RitmoMovil(_ref0) {let { state, plan, onVer } = _ref0;
 
   const empezado = typeof usePaceFocoEmpezado === 'function' ? usePaceFocoEmpezado() : true;
   const descriptor = plan.hechos === 0 && !empezado ? t('ritmo.frase.movil.empieza') :
-  typeof getFocusDescriptorKey === 'function' ? t(getFocusDescriptorKey(b.dur)) : '';
+  b && typeof getFocusDescriptorKey === 'function' ? t(getFocusDescriptorKey(b.dur)) : '';
 
   const filaBloque = (rotulo) =>
   React.createElement(RitmoFila, { rotulo: React.createElement(React.Fragment, null, t(rotulo), React.createElement("br", null), ritmoHora(b.desde)), luego: rotulo === 'ritmo.luego',
     modulo: "foco", nombre: tn('ritmo.fila.bloque', { n: plan.hechos + 1, m: plan.total }),
     meta: b.dur + ' min · ' + descriptor });
 
-  const luego = ritmoDetras(plan.m, b);
+
+  const luego = b ? ritmoDetras(plan.m, b) : null;
   const conPausa = !!(plan.pausa && !plan.pausaPasada);
 
 
@@ -50152,7 +50185,7 @@ function RitmoMovil(_ref0) {let { state, plan, onVer } = _ref0;
     if (typeof window.paceHomeGeometriaYa === 'function') window.paceHomeGeometriaYa();
   }, [conPausa, !!luego, plan.hechos, plan.m.opcion]);
   const filas = conPausa ?
-  React.createElement(React.Fragment, null, React.createElement(RitmoFilaParada, { it: plan.pausa, rotulo: "ritmo.ahora", corta: true }), filaBloque('ritmo.luego')) :
+  React.createElement(React.Fragment, null, React.createElement(RitmoFilaParada, { it: plan.pausa, rotulo: "ritmo.ahora", corta: true }), b ? filaBloque('ritmo.luego') : null) :
   React.createElement(React.Fragment, null, filaBloque('ritmo.ahora'), luego ? React.createElement(RitmoFilaParada, { it: luego, rotulo: "ritmo.luego", corta: true }) : null);
   return (
     React.createElement("div", { className: "pace-rt-panel pace-rt-mov", "data-pace-ritmo-estado": "menu" },
@@ -51468,7 +51501,8 @@ function RitmoHome(_ref) {let { onOpenLibrary, onOpenHydrate } = _ref;
 
     React.createElement("div", { "data-pace-ritmo-panel": true },
     !plan ? React.createElement(RitmoPregunta, { state: state }) :
-    plan.terminado ? React.createElement(RitmoHecho, { plan: plan }) :
+
+    plan.terminado && !(typeof ritmoCierreEnCurso === 'function' && ritmoCierreEnCurso(state)) ? React.createElement(RitmoHecho, { plan: plan }) :
 
     React.createElement(React.Fragment, null,
     React.createElement(RitmoEscritorio, { state: state, plan: plan }),

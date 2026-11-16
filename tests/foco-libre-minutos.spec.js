@@ -40,6 +40,9 @@ test('en el acto, al acabar el último bloque: «Seguir por libre» empieza con 
   await terminarBloque(page);
   await page.keyboard.press('Escape');
   await page.waitForTimeout(300);
+  /* Desde la 2.1 A de Ez (16 nov.) el aro cuenta antes el cierre: «Cerrar la jornada» lo corta. */
+  await vis(page, '[data-pace-aro-seguir]').click();
+  await page.waitForTimeout(300);
   await expect(vis(page, '[data-pace-dial-label]'), 'GUARD: el día se cerró').toHaveText('Jornada cerrada');
   expect(await minutos(page), 'se quedaba con los 25 del último bloque').toBe(15);
   await expect(vis(page, '[data-pace-dial-number]')).toHaveText('15:00');

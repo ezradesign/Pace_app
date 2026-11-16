@@ -88,7 +88,7 @@ function aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empez
       },
       fila: (
         <button type="button" className="pace-aro-seguir" data-pace-aro-seguir onClick={empezarYa}>
-          {tn('ritmo.pausa.ya', { n: pausaRitmo.n })}
+          {pausaRitmo.cierre ? t('ritmo.pausa.cerrar') : tn('ritmo.pausa.ya', { n: pausaRitmo.n })}
         </button>
       ),
     };

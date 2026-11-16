@@ -211,13 +211,18 @@ test.describe('V1 · si al volver la pausa entera ya pasó, la ventana no sale',
 });
 
 test.describe('V2 · el último bloque cierra el día también en el aro', () => {
-  test('acaba a su hora (17:55): «Jornada cerrada», «Seguir por libre» y la ventana sin bloque siguiente', async ({ page, context }) => {
+  test('acaba a su hora (17:55): el cierre y, pasados sus minutos, «Jornada cerrada», «Seguir por libre» y la ventana sin bloque siguiente', async ({ page, context }) => {
     const errores = capturarErrores(page);
     await empezarA(page, context, '17:10');
     await expect(vis(page, '[data-pace-dial-label]')).toHaveText('Bloque 1 de 1');
     await terminarBloque(page);
     await expect(page.locator('[data-pace-break-ritmo]').first()).toBeVisible();
     await expect(page.locator('[data-pace-break-acciones]').first()).not.toContainText('Seguir con el bloque');
+    /* Desde la 2.1 A de Ez (16 nov.) el aro cuenta antes el cierre (ritmo-cierre-ahora.spec.js); acabado, se cierra el día. */
+    await expect(vis(page, '[data-pace-dial-label]')).toHaveText('Para cerrar');
+    await page.keyboard.press('Escape');
+    await page.clock.fastForward(5 * 60 * 1000 + 2000);
+    await page.waitForTimeout(500);
     await expect(vis(page, '[data-pace-dial-label]'), 'el aro decía «Foco manual»').toHaveText('Jornada cerrada');
     await expect(vis(page, '[data-pace-dial-hasta]')).toHaveText('45 min de foco');
     await expect(vis(page, '[data-pace-dial-subtitle]'), 'decía «Ciclo completado»').toHaveText('Lo que queda del día es tuyo');

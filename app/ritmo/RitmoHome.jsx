@@ -74,7 +74,8 @@ function RitmoHome({ onOpenLibrary, onOpenHydrate }) {
           hueco que tenía aquí se devuelve a la home: es lo que deja bajar el aro sin scroll. */}
       <div data-pace-ritmo-panel>
         {!plan ? <RitmoPregunta state={state} />
-          : plan.terminado ? <RitmoHecho plan={plan} />
+          /* Con el cierre contando, el día aún no está cerrado: se propone como cualquier pausa (Ez, 2.1 A del 16 nov.). */
+          : plan.terminado && !(typeof ritmoCierreEnCurso === 'function' && ritmoCierreEnCurso(state)) ? <RitmoHecho plan={plan} />
           : (
             <React.Fragment>
               <RitmoEscritorio state={state} plan={plan} />

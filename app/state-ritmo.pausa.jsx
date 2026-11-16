@@ -11,9 +11,13 @@
      y las tres puertas ofrecen el que falta. Lo hecho de cada parada se apunta en
      `dia.platos` = { ordinal: [ids] } al terminar la sesión, junto a `dia.estados`.
    · 2A · 3A · EL ARO CUENTA LA PAUSA desde que acaba el bloque, la corta y la larga, con
-     el modo «Pausa» o «Larga» de siempre hasta `dia.pausaHasta` (ms). La comida y el
-     cierre del día no. Al llegar a cero vuelve al foco con el bloque siguiente, sin
-     arrancarlo; «Empezar ya el bloque N» lo arranca antes.
+     el modo «Pausa» o «Larga» de siempre hasta `dia.pausaHasta` (ms). La comida no. Al
+     llegar a cero vuelve al foco con el bloque siguiente, sin arrancarlo; «Empezar ya el
+     bloque N» lo arranca antes.
+   · EL CIERRE TAMBIÉN (Ez, 2.1 A del 16 nov. 2026): tras el último bloque el aro cuenta su
+     pausa de cierre como «Para cerrar», y la home la propone como cualquier pausa. Antes
+     iba directo a «Jornada cerrada» y, cerrada la ventana, el cierre ya no se podía hacer
+     desde la home. «Cerrar la jornada» la corta; al llegar a cero, «Jornada cerrada».
 
    `var`/`function` a propósito: un `const` no cruza la IIFE del artefacto. */
 
@@ -183,7 +187,7 @@ function ritmoSinPausa(s) {
    empezó entonces. Si ya pasó entera, el aro sigue esperando el bloque como antes. */
 function ritmoPausaEmpieza(fin) {
   var a = ritmoPausaAbierta();
-  if (!a || a.it.tipo !== 'pausa') return;
+  if (!a || (a.it.tipo !== 'pausa' && a.it.tipo !== 'cierre')) return;
   var ahora = Date.now();
   var hasta = (typeof fin === 'number' && fin > 0 && fin <= ahora ? fin : ahora) + a.it.dur * 60000;
   if (hasta <= ahora) return;
@@ -212,16 +216,24 @@ function ritmoParadaHasta(fin) {
   return (typeof fin === 'number' && fin > 0 && fin <= ahora ? fin : ahora) + it.dur * 60000;
 }
 
-/* La pausa que el aro está contando: { modo, hasta, n, de, dur }, o null. `n de` es el bloque
-   que viene («Luego, el bloque 3 de 9»); `dur`, sus minutos. Mira primero la hora guardada, que
-   es barato: el aro lo pregunta en cada segundo. */
+/* La pausa que el aro está contando: { modo, hasta, n, de, dur, cierre }, o null. `n de` es el
+   bloque que viene («Luego, el bloque 3 de 9»); `dur`, sus minutos; `cierre`, si es la del final
+   del día, que no tiene bloque detrás. Mira primero la hora guardada, que es barato: el aro lo
+   pregunta en cada segundo. */
 function ritmoPausaCuenta(s) {
   var r = (s && s.ritmo) || {};
   var hasta = r.dia && r.dia.pausaHasta;
   if (!(typeof hasta === 'number' && hasta > 0)) return null;
   var a = ritmoPausaAbierta(s);
-  if (!a || a.it.tipo !== 'pausa') return null;
-  return { modo: a.it.larga ? 'larga' : 'pausa', hasta: hasta, n: a.p.hechos + 1, de: a.p.total, dur: a.it.dur };
+  if (!a || (a.it.tipo !== 'pausa' && a.it.tipo !== 'cierre')) return null;
+  return { modo: a.it.larga ? 'larga' : 'pausa', hasta: hasta, n: a.p.hechos + 1, de: a.p.total, dur: a.it.dur, cierre: a.it.tipo === 'cierre' };
+}
+
+/* ¿El aro está contando el cierre ahora? Mientras, la home lo propone como cualquier pausa
+   y no dice «Jornada cerrada» (RitmoHome). Con otro modo elegido a mano, no. */
+function ritmoCierreEnCurso(s) {
+  var c = ritmoPausaCuenta(s);
+  return !!c && c.cierre && s.focusMode === c.modo && c.hasta > Date.now();
 }
 
 /* Una pausa guardada que ya no está abierta (el día se recompuso, cambió de fecha, te
@@ -260,5 +272,5 @@ function ritmoPausaCerrarConElDia() {
 Object.assign(window, {
   ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta,
   ritmoSesionesHoy, ritmoMinutosHechos, ritmoMetaHecha, RITMO_MODULO_SESION,
-  ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia, ritmoParadaHasta,
+  ritmoPausaEmpieza, ritmoPausaCuenta, ritmoCierreEnCurso, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia, ritmoParadaHasta,
 });

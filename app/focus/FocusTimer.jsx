@@ -215,7 +215,7 @@ function FocusTimer({ onFinish }) {
      ocupar una línea extra fuera del aro (decisión del usuario: la etiqueta
      vive dentro del círculo, no como kicker suelto). Pausa/Larga sin cambio. */
   const modeLabel = aro ? aro.label : cerrada ? cerrada.label : state.focusMode === 'foco' ? t('focus.manual.label')
-                  : state.focusMode === 'pausa' ? t('focus.mode.pause')
+                  : enPausaRitmo && pausaRitmo.cierre ? t('ritmo.aro.cierre') : state.focusMode === 'pausa' ? t('focus.mode.pause')
                   : t('focus.mode.long');
 
   const isFocoMode = state.focusMode === 'foco';
@@ -237,7 +237,7 @@ function FocusTimer({ onFinish }) {
        atardecer de s123).
      - pausa/larga: conservan su copy propio (invariante: copys de pausa). */
   const subtitle = bloques.subtitulo ? bloques.subtitulo
-    : enPausaRitmo ? tn('ritmo.pausa.luego', { n: pausaRitmo.n, m: pausaRitmo.de })
+    : enPausaRitmo ? (pausaRitmo.cierre ? t('ritmo.cierre.luego') : tn('ritmo.pausa.luego', { n: pausaRitmo.n, m: pausaRitmo.de }))
     : aro && aroPausaTerminada(state) ? t('ritmo.aro.pausaTerminada') : cerrada && cerrada.sub ? cerrada.sub
     : isFocoMode
     ? (isCompleted ? t('focus.cycleComplete') : t(getFocusDescriptorKey(state.focusMinutes)))
@@ -293,7 +293,7 @@ function FocusTimer({ onFinish }) {
     restore(pausaRitmo.hasta);
   }, [enPausaRitmo, pausaHuerfana, pausaRitmo && pausaRitmo.hasta, status]);
   const seguirTrasPausaRef = useRefFT(false);
-  const empezarYa = () => { seguirTrasPausaRef.current = true; reset(); ritmoPausaAcabada(); };
+  const empezarYa = () => { seguirTrasPausaRef.current = !pausaRitmo.cierre; reset(); ritmoPausaAcabada(); };   // tras el cierre no hay bloque: cierra la jornada
   useEffectFT(() => {
     if (!seguirTrasPausaRef.current || state.focusMode !== 'foco' || status !== 'idle') return;
     seguirTrasPausaRef.current = false;
@@ -330,7 +330,7 @@ function FocusTimer({ onFinish }) {
 
   let ctaLabel, ctaAction;
   if (enPausaRitmo) {
-    ctaLabel = tn('ritmo.pausa.ya', { n: pausaRitmo.n });
+    ctaLabel = pausaRitmo.cierre ? t('ritmo.pausa.cerrar') : tn('ritmo.pausa.ya', { n: pausaRitmo.n });
     ctaAction = empezarYa;
   } else if (running) {
     ctaLabel = t('focus.pause');

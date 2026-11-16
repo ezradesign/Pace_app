@@ -229,6 +229,10 @@ test('tras el último bloque, un Foco por libre acaba con «Ciclo completado» y
   await terminarBloque(page);
   await expect(page.locator('[data-pace-modal-backdrop]'), 'GUARD: no es el último bloque').toContainText('Bloque 1 de 1 · hecho');
   await page.keyboard.press('Escape');
+  /* Desde la 2.1 A de Ez (16 nov.) el aro cuenta el cierre y su botón es «Hacer la pausa»: para seguir
+     por libre, «Cerrar la jornada» primero. */
+  await vis(page, '[data-pace-aro-seguir]').click();
+  await page.waitForTimeout(250);
   /* Lo que acabar el Foco libre no puede tocar: `ritmoPropuesta` ya no abre su ventana, pero la guarda
      de `ritmoBloqueTerminado` es la que evita que el día se recoloque desde la hora en que acaba
      (congelar lo hecho en `pasado`, mover `desde` y volver a abrir la pausa que empezar cerró). */

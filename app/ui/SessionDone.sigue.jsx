@@ -25,6 +25,7 @@ function paceCierreSigue() {
     const s = getState();
     const p = typeof ritmoPausaCuenta === 'function' ? ritmoPausaCuenta(s) : null;
     if (p) {
+      if (p.cierre) return null;   // el cierre del día no tiene bloque detrás: «Volver al inicio»
       const ms = p.hasta - Date.now();
       return ms > 0 ? { tipo: 'jornada', min: Math.max(1, Math.ceil(ms / 60000)), n: p.n } : null;
     }

@@ -10,7 +10,7 @@
 > 14 rutinas por F6; s91: Estira a 14 por F5; s90: Respira a 20 por F4; s88:
 > columnas `access` fijadas por F3b), no el aspiracional.
 >
-> **Cifras de hoy (v0.176.0, 23 oct. 2026)**, evaluando el objeto y no leyendo el fuente. Los totales
+> **Cifras de hoy (v0.207.0, 16 nov. 2026)**, evaluando el objeto y no leyendo el fuente. Los totales
 > los cruza el `verify` en cada pasada (`chequeaContenido` en `scripts/verify.integridad.js`); el
 > reparto entre gratis y de pago se contó con el mismo objeto:
 >
@@ -52,6 +52,9 @@ visual** (el botón). No tocar los ids: están blindados por compat.
 > descanso tipado (`restKind:'betweenSets'`; los descansos suaves entre holds y
 > los cierres respiratorios NO se tipan) y acredita **minutos reales**.
 >
+> **Hoy (16 nov. 2026), las 35 rutinas de cuerpo (14 de Mueve, 19 de Estira y las 2 fuera de la
+> lista) están en el contrato v1 y ninguna sigue legacy.** Lo que sigue es la historia de la migración.
+>
 > **Cobertura del contrato v1 (migración MECÁNICA de B2.3 CERRADA en s121):** de las
 > 31 rutinas de cuerpo (14 Mueve + 17 Estira; +3 en s178), **25 están en el contrato v1** — 5
 > pilotos (`desk.pushups`, `chair.squats`, `neck.3`, `chair.antidote`, `couch.stretch`)
@@ -68,7 +71,7 @@ visual** (el botón). No tocar los ids: están blindados por compat.
 > migraciones son mecánicas, no tocan `access` (en s120 se evaluó un intercambio
 > core.stealth↔back.desk para elegir la rutina Mueve de entrada y se descartó — la
 > cifra «1 free + 6 premium» describía solo el subconjunto legacy, no el catálogo
-> real de 8 Mueve free / 6 premium; queda como decisión de producto aparte).
+> real de 8 Mueve free / 6 premium, hoy 7 y 7; queda como decisión de producto aparte).
 >
 > **Revisión de los ejercicios (16 oct. 2026, elegida por Ez):** las seis legacy ya están en
 > el formato de hoy (repeticiones con ritmo, lo de un lado por lado, colocación y cuidado),
@@ -135,8 +138,8 @@ yin/rítmica, diafragmática) · Tom Woodfin (rondas tipo Wim Hof / CTB,
 retenciones, tolerancia CO₂).
 Datos en `app/breathe/BreatheLibrary.jsx`. Estado actual: **20 técnicas**
 (F4, s90, v0.35.0). Orden en biblioteca: **free primero** dentro de cada
-grupo. Grupos: energia 4 · equilibrio 4 · balance 3 · relajacion 4 ·
-pranayama 5.
+grupo. Grupos: energia 3 · equilibrio 4 · balance 3 · relajacion 4 ·
+pranayama 6 (Bhastrika pasó de Energía a pranayama en B1.2).
 Las descripciones y los subtítulos de grupo dicen lo que se hace, no lo que le pasa al cuerpo:
 nada de «regula el sistema nervioso» ni «la mente se aquieta», en los dos idiomas (Ez, 7 nov. 2026).
 
@@ -210,9 +213,8 @@ en los dos idiomas (Ez, 7 nov. 2026).
 > **De dónde sale cada una.** «Levántate y sube», «Empuje sencillo» y «Piernas sin pasos» rehacen
 > «Sentadillas de silla», «Flexiones de escritorio» y «Piernas de pie» con su id. Nuevas: «Fuerza en
 > suelo» y «Espalda con banda». Pasaron a Estira «Postura reset», «Grip + antebrazos» (ahora «Manos y
-> antebrazos») y «Espalda de oficina», que son estirar. Los ejercicios nuevos (3A) que aún llevan el
-> glifo del módulo: Remo con banda, Remo con tu mano, Bisagra de cadera y Desliza el talón
-> (`docs/product/GLIFOS_A_DIBUJAR.md`).
+> antebrazos») y «Espalda de oficina», que son estirar. Los ejercicios nuevos (3A), Remo con banda,
+> Remo con tu mano, Bisagra de cadera y Desliza el talón, tienen su dibujo desde el 29 oct.
 
 ---
 
@@ -239,7 +241,7 @@ columna», «Caderas y piernas» y «Para ir a más» (`aparte`). ATG y Ancestra
 | `move.shoulders.5` | Hombros | Hombros y columna | 3 | free |
 | `extra.back.desk` | Espalda de oficina | Hombros y columna | 3 | free |
 | `move.back.standing` | Espalda de pie | Hombros y columna | 3 | free |
-| `move.spine.waves` | Columna · ondas | Hombros y columna | 5 | **premium** |
+| `move.spine.waves` | Columna · ondas | Hombros y columna | 4 | **premium** |
 | `move.hips.standing` | Caderas de pie | Caderas y piernas | 4 | free |
 | `move.hips.5` | Caderas | Caderas y piernas | 5 | free |
 | `move.hamstrings` | Cadena posterior | Caderas y piernas | 4 | **premium** |
@@ -252,7 +254,7 @@ columna», «Caderas y piernas» y «Para ir a más» (`aparte`). ATG y Ancestra
 > ejercicio se borra: los escalenos van a «Antídoto silla» y las palmas en la mesa y el rezo
 > invertido a «Manos y antebrazos». Salen de sus rutinas, hasta tener texto y dibujo claros, la
 > sentadilla de cuádriceps, el puente torácico, la onda espinal y la marcha del elefante. Los
-> ejercicios nuevos (3A) con el glifo del módulo: Inclinación de tronco y Gemelo en pared.
+> ejercicios nuevos (3A), Inclinación de tronco y Gemelo en pared, tienen su dibujo desde el 29 oct.
 
 ---
 
@@ -265,8 +267,9 @@ Desbloqueada: crear/editar/borrar rutinas propias y lanzarlas con el
 runner de `MoveSession` (una rutina custom = solo datos).
 
 - **Registro interno de ejercicios** (`app/custom/exercise-registry.js`):
-  **65 ejercicios en 8 grupos** (empuje 5 · piernas 9 · core 8 · cuello 11
-  · columna 8 · caderas 7 · suelo 7 · muñecas/tobillos/pausas 10), unión
+  **73 ejercicios en 8 grupos** (empuje 5 · piernas 11 · core 11 · cuello 11
+  · columna 9 · caderas 7 · suelo 9 · muñecas/tobillos/pausas 10; contados el
+  16 nov. 2026, eran 65 en F7), unión
   deduplicada **curada a mano** de los steps de `MOVE_ROUTINES` +
   `EXTRA_ROUTINES`, con cue neutro y dur por defecto. `name` = ES canónico
   = key de glifo. **NO es una biblioteca navegable** (decisión s85: la
@@ -394,13 +397,13 @@ Crecer el catálogo y activar el gating, en fases (ver `ROADMAP.md`):
   piernas·a una y core·plancha (premium). De regalo: `strings-content.js`
   troceado en `app/i18n/content/` (breathe/move/extra).
 - **Constructor de rutinas premium.** ✅ **Hecho en F7 (s93, v0.38.0):**
-  registro interno curado (65 ejercicios / 8 grupos) + constructor
+  registro interno curado (65 ejercicios / 8 grupos entonces, 73 hoy) + constructor
   completo en la biblioteca Mueve (sección "Tus rutinas", superficie
   premium entera). Ver sección propia más arriba.
 
-**Glifos nuevos (los aprueba el usuario):** Couch stretch, círculos de
-hombro, gato-camello. Más activar los **15 glifos pendientes** (D-4 de
-`STATE.md`) cuando toquen rutinas premium.
+**Dibujos (16 nov. 2026):** los 63 ejercicios distintos de Mueve y Estira tienen dibujo (68
+dibujos; tres usan el de uno parecido) y de los 96 logros faltan 2. La cuenta única de lo que
+falta vive en `docs/product/GLIFOS_A_DIBUJAR.md`.
 
 ---
 
