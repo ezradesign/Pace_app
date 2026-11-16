@@ -98,8 +98,8 @@ cuenco o la madera de hoy.
 
 1. **sulafat en castellano**: la voz y el idioma de fábrica, lo que oye casi todo el mundo. Hecha (15 nov.).
 2. **bradford en castellano**. Hecha (15 nov.; de las dos tomas que dio Genspark, la 2).
-3. **sulafat en inglés**.
-4. **bradford en inglés**.
+3. **sulafat en inglés**. Hecha (16 nov.; Genspark dio dos versiones de cada toma: escoge Ez en la página, y en los números van juntas, el «one» de la 2 y lo demás de la 1).
+4. **bradford en inglés**. Hecha (16 nov.; dos versiones de cada toma, escoge Ez en la página).
 
 ## Con qué hacerlas
 
@@ -234,6 +234,15 @@ Left.
 Right.
 Switch sides.
 Rest.
+```
+
+### One word again · `VOZ-en-repite-NOMBRE.mp3`
+
+Por ejemplo, `sulafat-en-repite-one.mp3` si el «one» de los números no convence (16 nov.: en la versión 1
+dura 1,9 s y en la app suena el de la versión 2).
+
+```
+Say it in English, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. One single word, no breath before it, no pause before it, in a neutral, even tone, well under one second: One.
 ```
 
 ## Cuando los tengas
