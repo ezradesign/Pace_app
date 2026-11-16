@@ -42,7 +42,7 @@ async function comoAndroid(context) {
         LocalNotifications: {
           checkPermissions: () => Promise.resolve({ display: 'granted' }),
           requestPermissions: (op) => { apunta('requestPermissions', op); return Promise.resolve({ display: 'granted' }); },
-          checkExactNotificationSetting: () => Promise.resolve({ exact_alarm: 'granted' }),
+          checkExactNotificationSetting: () => Promise.resolve({ exact_alarm: window.__exacta || 'granted' }),
           changeExactNotificationSetting: () => Promise.resolve({ exact_alarm: 'granted' }),
           createChannel: (op) => { apunta('createChannel', op); return Promise.resolve(); },
           schedule: (op) => { apunta('schedule', op); return Promise.resolve({ notifications: op.notifications.map((n) => ({ id: n.id })) }); },
@@ -218,6 +218,18 @@ test('nº 4 · sin `avisoEntrada` pero con avisos puestos según lo guardado, lo
   await abrir(page, context, { semanaTipo: SEMANA, horario: HORARIO }, new Date('2026-11-18T20:00:00+01:00'));
   expect(await llamadasEntrada(page)).toEqual([TODOS]);
 });
+
+/* Novena pasada externa, nº 5: sin alarma exacta, tras una noche con el móvil quieto Android puede
+   dejar el aviso de la mañana para mucho más tarde. Exacta solo con «Alarmas y recordatorios». */
+for (const [exacta, esperado] of [['granted', true], ['denied', false]]) {
+  test('nº 5 · con «Alarmas y recordatorios» ' + (esperado ? 'concedido, el aviso de entrada va a su hora exacta' : 'sin conceder, no la pide'), async ({ page, context }) => {
+    await context.addInitScript((e) => { window.__exacta = e; }, exacta);
+    await abrir(page, context, { semanaTipo: SEMANA, horario: HORARIO, avisoEntrada: true }, new Date('2026-11-18T20:00:00+01:00'));
+    const avisos = await avisosPuestos(page);
+    expect(avisos.length, 'GUARD: no puso ninguno').toBe(5);
+    for (const a of avisos) expect(a.isExactNotification, 'el aviso del ' + a.id).toBe(esperado);
+  });
+}
 
 test('apagado de fábrica: no pone ninguno', async ({ page, context }) => {
   await abrir(page, context, { semanaTipo: SEMANA, horario: HORARIO }, new Date('2026-11-18T20:00:00+01:00'));

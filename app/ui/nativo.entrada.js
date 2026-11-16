@@ -103,13 +103,25 @@ function paceEntradaPoner() {
   return _paceEntrada.cola;
 }
 
-/* Lo que se le pide al sistema por cada aviso, tal cual: también es lo que firma. */
-function paceEntradaNotificacion(a, android) {
+/* Lo que se le pide al sistema por cada aviso, tal cual: también es lo que firma. Android lee ISO
+   en UTC con milisegundos. A SU HORA (novena pasada externa, nº 5): tras una noche con el móvil
+   quieto, sin alarma exacta Android puede dejarlo para la siguiente ventana de mantenimiento y llegar
+   mucho más tarde que la hora de entrada. Exacta solo si «Alarmas y recordatorios» ya está
+   concedido, como el aviso del Foco (android.avisos.js): sin él, el complemento la pone inexacta. */
+function paceEntradaNotificacion(a, android, exacta) {
   var n = { id: a.id, title: a.title, body: a.body };
-  /* Android lee ISO en UTC con milisegundos; un par de minutos tarde da igual (sin exacta). */
-  if (android) { n.schedule = { at: new Date(a.at).toISOString(), allowWhileIdle: true }; n.channelId = PACE_ENTRADA_CANAL; }
-  else n.schedule = { at: new Date(a.at) };
+  if (android) {
+    n.schedule = { at: new Date(a.at).toISOString(), allowWhileIdle: true };
+    n.isExactNotification = exacta === 'granted';
+    n.channelId = PACE_ENTRADA_CANAL;
+  } else n.schedule = { at: new Date(a.at) };
   return n;
+}
+
+/* «Alarmas y recordatorios», mirado ahora (se puede haber cambiado en los ajustes de Android). */
+function paceEntradaExacta() {
+  if (typeof paceAndroidAvisoExactoMirar !== 'function') return Promise.resolve('denied');
+  return Promise.resolve(paceAndroidAvisoExactoMirar()).then(null, function () { return 'denied'; });
 }
 
 function paceEntradaPonerYa() {
@@ -125,12 +137,14 @@ function paceEntradaPonerYa() {
   var avisos = tocado ? paceEntradaAvisos(s, Date.now()) : [];
   var android = pacePlataformaNativa() === 'android';
   /* El permiso se mira cada vez: el que guarda la app puede no haber llegado aún al abrir. */
-  var permiso = null;
+  var permiso = null, exacta = null;
   var mirar = !avisos.length ? Promise.resolve()
     : Promise.resolve(typeof ln.checkPermissions === 'function' ? ln.checkPermissions() : { display: paceNativoAvisoPermiso() })
-      .then(function (r) { permiso = r && r.display; }, function () { permiso = null; });
+      .then(function (r) { permiso = r && r.display; }, function () { permiso = null; })
+      .then(function () { return android && permiso === 'granted' ? paceEntradaExacta() : null; })
+      .then(function (e) { exacta = e; });
   return mirar.then(function () {
-    var lista = permiso === 'granted' ? avisos.map(function (a) { return paceEntradaNotificacion(a, android); }) : [];
+    var lista = permiso === 'granted' ? avisos.map(function (a) { return paceEntradaNotificacion(a, android, exacta); }) : [];
     var firma = JSON.stringify(lista);
     if (puestos && puestos.firma === firma && (_paceEntrada.yaPuso || !lista.length)) return null;
     var ids = lista.map(function (n) { return n.id; });

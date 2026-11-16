@@ -20225,12 +20225,24 @@ function paceEntradaPoner() {
 }
 
 
-function paceEntradaNotificacion(a, android) {
-  var n = { id: a.id, title: a.title, body: a.body };
 
-  if (android) {n.schedule = { at: new Date(a.at).toISOString(), allowWhileIdle: true };n.channelId = PACE_ENTRADA_CANAL;} else
-  n.schedule = { at: new Date(a.at) };
+
+
+
+function paceEntradaNotificacion(a, android, exacta) {
+  var n = { id: a.id, title: a.title, body: a.body };
+  if (android) {
+    n.schedule = { at: new Date(a.at).toISOString(), allowWhileIdle: true };
+    n.isExactNotification = exacta === 'granted';
+    n.channelId = PACE_ENTRADA_CANAL;
+  } else n.schedule = { at: new Date(a.at) };
   return n;
+}
+
+
+function paceEntradaExacta() {
+  if (typeof paceAndroidAvisoExactoMirar !== 'function') return Promise.resolve('denied');
+  return Promise.resolve(paceAndroidAvisoExactoMirar()).then(null, function () {return 'denied';});
 }
 
 function paceEntradaPonerYa() {
@@ -20246,12 +20258,14 @@ function paceEntradaPonerYa() {
   var avisos = tocado ? paceEntradaAvisos(s, Date.now()) : [];
   var android = pacePlataformaNativa() === 'android';
 
-  var permiso = null;
+  var permiso = null,exacta = null;
   var mirar = !avisos.length ? Promise.resolve() :
   Promise.resolve(typeof ln.checkPermissions === 'function' ? ln.checkPermissions() : { display: paceNativoAvisoPermiso() }).
-  then(function (r) {permiso = r && r.display;}, function () {permiso = null;});
+  then(function (r) {permiso = r && r.display;}, function () {permiso = null;}).
+  then(function () {return android && permiso === 'granted' ? paceEntradaExacta() : null;}).
+  then(function (e) {exacta = e;});
   return mirar.then(function () {
-    var lista = permiso === 'granted' ? avisos.map(function (a) {return paceEntradaNotificacion(a, android);}) : [];
+    var lista = permiso === 'granted' ? avisos.map(function (a) {return paceEntradaNotificacion(a, android, exacta);}) : [];
     var firma = JSON.stringify(lista);
     if (puestos && puestos.firma === firma && (_paceEntrada.yaPuso || !lista.length)) return null;
     var ids = lista.map(function (n) {return n.id;});
@@ -20319,7 +20333,7 @@ function paceEntradaEncender() {
 })();
 
 Object.assign(window, { paceEntradaAvisos, paceEntradaPoner, paceEntradaEncender, paceEntradaQuitar });
-;Object.assign(window, { PACE_ENTRADA_PRIMER_ID, PACE_ENTRADA_DIAS, PACE_ENTRADA_CANAL, paceEntradaTexto, paceEntradaAvisos, PACE_ENTRADA_CLAVE, _paceEntrada, paceEntradaLeer, paceEntradaGuardar, paceEntradaPoner, paceEntradaNotificacion, paceEntradaPonerYa, PACE_ENTRADA_TOPE_MS, paceEntradaQuitar, paceEntradaEncender });
+;Object.assign(window, { PACE_ENTRADA_PRIMER_ID, PACE_ENTRADA_DIAS, PACE_ENTRADA_CANAL, paceEntradaTexto, paceEntradaAvisos, PACE_ENTRADA_CLAVE, _paceEntrada, paceEntradaLeer, paceEntradaGuardar, paceEntradaPoner, paceEntradaNotificacion, paceEntradaExacta, paceEntradaPonerYa, PACE_ENTRADA_TOPE_MS, paceEntradaQuitar, paceEntradaEncender });
 })();
 </script>
   <!-- valoracion: la ventana de la tienda para valorar PACE, una vez, tras la quinta pausa
