@@ -120,13 +120,35 @@ input:focus-visible,a:focus-visible{outline:2px solid var(--olive);outline-offse
   <p class="nota">Lo que se acepta tal cual (nº 11, 13 y 14 de la revisión): un cambio de huso se corrige al abrir PACE, lo que se guarda justo antes de que Android cierre PACE se mira en el móvil, y un canal silenciado a mano se trata después de v1.</p>
 
   <h2 id="movil">Solo se sabe en un móvil</h2>
-  <p>Los pasos de la revisión de Fable, puestos al día con lo montado. Las casillas son para ir marcando y solo se guardan en este navegador.</p>
+  <p>Los pasos de la revisión de Fable, puestos al día con lo montado («al día» y «nuevo» marcan lo que cambia). <strong>Con la versión instalada desde Play y TestFlight, no con el APK de prueba.</strong> Las casillas son para ir marcando y solo se guardan en este navegador. En el repo: <code>docs/proposals/avisos-novena-16nov/pasos-movil.md</code>.</p>
   <div class="movil" data-pace-pasos></div>
 </main>
 
 <script>
 /* Los pasos, con su casilla. Lo marcado vive solo en este navegador (localStorage, con try). */
-var PASOS = { android: [], iphone: [] };
+var PASOS = {
+  android: [
+    { t: 'Instalación limpia. Foco de 2 minutos, sal de PACE y bloquea: debe sonar la campana de PACE, no el tono del móvil.' },
+    { t: 'Pausa de 1 minuto en el fondo: dos campanadas.' },
+    { t: 'Apaga el sonido en PACE y repite los pasos 1 y 2: los avisos salen sin sonido.' },
+    { t: 'Ajustes de Android, «Alarmas y recordatorios»: debe aparecer PACE. Concédelo: lo usan el aviso del Foco y, desde ahora, el de la mañana.', nuevo: 'al día' },
+    { t: 'Pon un Foco de 10 minutos, reinicia el móvil y no abras PACE: ¿avisa?' },
+    { t: 'Enciende «Avísame a mi hora de entrada» con la entrada a 20 minutos del día siguiente (cambia la fecha si hace falta), déjalo quieto y sin cargar toda la noche, y mide el retraso: con «Alarmas y recordatorios» debe llegar a su hora. Suena con las dos campanadas, y sin sonido con el de PACE apagado. En los ajustes de notificaciones de PACE: «Al empezar la jornada» y «Al empezar la jornada, sin sonido», y ningún otro con ese nombre.', nuevo: 'al día' },
+    { t: 'Con avisos puestos, instala una actualización desde Play y no abras PACE: el de mañana debe salir.', nuevo: 'al día' },
+    { t: 'Con ahorro de batería y con «No molestar»: repite el paso 1.' },
+    { t: 'Borra todos tus datos con el aviso de entrada encendido: al día siguiente no debe salir.', nuevo: 'al día' },
+    { t: 'Con el aviso de entrada encendido, abre PACE pasada la medianoche (a las 0:10) y ciérrala: el aviso de esa misma mañana sale igual.', nuevo: 'nuevo' },
+    { t: 'Con los avisos de PACE negados, enciende «Avísame a mi hora de entrada»: el interruptor se ve apagado y debajo sale la nota de los ajustes de Android. Actívalos allí, vuelve a PACE y mira si al día siguiente avisa sin tocar nada más.', nuevo: 'nuevo' },
+  ],
+  iphone: [
+    { t: 'Foco de 2 minutos, al fondo y bloqueado: ¿suena la campana de PACE o el tono de iOS? El tono de iOS significa que el archivo no está en el paquete.' },
+    { t: 'Lo mismo con el interruptor lateral en silencio: solo debe vibrar.' },
+    { t: 'Vuelve a PACE justo al acabar el bloque: ¿una campana o dos?' },
+    { t: 'Aviso de entrada: enciéndelo, sal enseguida de PACE y mira al día siguiente si llega. Suena con las dos campanadas, y sin sonido si el de PACE está apagado.', nuevo: 'al día' },
+    { t: 'Niega el permiso al encenderlo: el interruptor de «Tu semana» se ve apagado y debajo dice «Los avisos de PACE están desactivados en los ajustes del iPhone».', nuevo: 'al día' },
+    { t: 'Borra todos tus datos con el aviso de entrada encendido: al día siguiente no debe salir.', nuevo: 'nuevo' },
+  ],
+};
 var CLAVE = 'pace.montado.avisos-novena.v1';
 function leer() { try { return JSON.parse(localStorage.getItem(CLAVE) || '{}') || {}; } catch (e) { return {}; } }
 function guardar(v) { try { localStorage.setItem(CLAVE, JSON.stringify(v)); } catch (e) {} }

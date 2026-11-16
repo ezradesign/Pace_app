@@ -1,4 +1,4 @@
-# Dónde me quedo · avisos de la novena (16 nov. 2026, cuarta parada: espero los pasos de Fable)
+# Dónde me quedo · avisos de la novena (16 nov. 2026): hecho, falta el «júntalo»
 
 Rama `claude/avisos-novena-16nov-cdf66e`, subida. Parada con el uso de 5 h al 98 % (vuelve a cero a las
 00:40 del 17 nov., hora de Madrid). `verify` en verde en cada commit; mínimo de pruebas en 1641.
@@ -23,10 +23,10 @@ copia-ida-vuelta e importar-licencia (18) tras el 2. **Falta repasar las vecinas
 
 ## Falta
 
-9b. Página «Montado» (`docs/proposals/avisos-novena-16nov/index.html`): escrita, con la lista de pasos
-   vacía (`PASOS` en su script). Los pasos de Fable para un móvil no están en el repo: pedidos a la
-   coordinadora (16 nov.). Al llegar, ponerlos al día con lo montado, publicarla e informe corto.
-   Vecinas de todo (11 archivos) corriendo al parar.
+Nada de lo encargado. Página «Montado» publicada: https://claude.ai/artifact/F1thKAvbpuoeykFZao125K
+(`docs/proposals/avisos-novena-16nov/index.html`), con los pasos de Fable para un móvil puestos al día también en
+`pasos-movil.md`. Queda el «júntalo» de Ez (la coordinadora) y probarlo en un móvil. Al juntar: `MINIMO_PRUEBAS`
+1644 e `i18nClaves` 1219 en esta rama, a sumar con lo que traigan las otras.
 
 Herramienta de mutantes (en el scratchpad de esta sesión): aplica un cambio, compila, corre la prueba en el 8875
 y lo deshace. El `node_modules` del worktree es un enlace: quitarlo con `rmdir` sin `/s`.
