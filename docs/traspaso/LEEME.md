@@ -4,6 +4,12 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de noviembre de 2026, 10:20, v0.204.0 en `main` y los cuatro arreglos de S3 y S4 en su rama.
 
+## 16 nov., tarde (cuenta 5iWBf): la 0.207.0, juntada. Manda sobre lo de abajo
+
+- **Ez (literal): «Júntalas»** para lo pequeño (`claude/pequenas-v1-15nov-39e6cb`, con «A+B» de la copia y el 404 y /beta de la auditoría externa del 16 nov., comprobada en `docs/audits/externa-16nov/comprobado.md`) y la segunda tanda (`claude/tanda2-v1-16nov-ea1aa2`). Uniones 77a3ed6b y 9b4328d6; choques solo en el censo de claves (1218), el mínimo de pruebas (1624) y las filas de decisiones. La barrida de plurales nueva cazó «hace {n} días», que nunca vale 1 (va a `SIN_SINGULAR`). Bump a 0.207.0.
+- **La suite de la 0.207.0 destapó dos cosas, arregladas en la misma versión:** «Tus datos» a 1280 × 940 con la fila de compra pedía scroll (16 px; 22 a 1440 × 900 en castellano) porque el umbral que la pliega no contaba la línea de la copia (+47 en `umbralBajo`); y la roja de Hidrátate que caía desde la 0.204.0 era el censo, que leía el fondo translúcido del vaso lleno como un botón azul. Filas nuevas arriba en decisiones. Suite entera repetida tras los dos arreglos: **1665 en verde, 2 saltadas a propósito y ninguna roja** (40 min). La auditoría de avisos para Fable, puesta al día con la 0.207.0 en `docs/audits/fable-15nov/encargo-avisos.md`: Ez la pega cuando la 0.207.0 esté en GitHub.
+- **Esperan a Ez:** las letras de las cuatro maquetas (VaVZj6cpDbHPiC25ALZHqQ, todo A recomendado) y escoger las tomas en inglés de la voz («Para oír» de JvtkcA2htQF8ByWtMGu9oU); la voz va en `claude/voz-cuerpo-15nov-21e284` (choca con `main` en `app/i18n/strings/settings.js` al juntar). Hallazgo para la siguiente tanda: el atajo «Foco» del icono instalado corta una pausa en marcha sin preguntar (`app/main.jsx:96`).
+
 ## 15 nov., 12:30 (cuenta 5iWBf, 5 h al 94 %; Ez: «Puedes llevar esta sesión hasta el 100%»). Manda sobre lo de abajo
 
 - **`main` = 0.205.0** con GitHub en verde; sobre ella, solo documentos y las capturas de /beta (publicadas en pacegrass.app, comprobado). Play: la prueba cerrada en revisión de Google. TestFlight: la 205000 subida, falta darla al grupo «Testers iPhone».

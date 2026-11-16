@@ -107,7 +107,10 @@ function censo(page, raizSel) {
       vistos++;
       if (de(s.color)) malos.push('letra ' + de(s.color) + ': ' + n.textContent.trim().slice(0, 40));
       const b = el.closest('button');
-      if (b && de(getComputedStyle(b).backgroundColor)) malos.push('botón ' + de(getComputedStyle(b).backgroundColor) + ': ' + b.textContent.trim().slice(0, 40));
+      /* Un fondo casi transparente (el vaso lleno de Hidrátate, `--hydrate-soft` a 0,12) es un tinte, no un botón de
+         color: sin mirar la transparencia se leía como el azul de agua y la prueba caía cuando medía con el vaso ya lleno. */
+      const fondo = b ? getComputedStyle(b).backgroundColor : '', alfa = (fondo.match(/[\d.]+/g) || [])[3];
+      if (b && (alfa === undefined || Number(alfa) >= 0.5) && de(fondo)) malos.push('botón ' + de(fondo) + ': ' + b.textContent.trim().slice(0, 40));
     }
     return { vistos, malos: [...new Set(malos)] };
   }, { raizSel, mods: MODULOS });
@@ -153,9 +156,8 @@ test.describe('en crema, la letra y los botones de color van en el hondo', () =>
     const vasos = page.getByRole('dialog', { name: /Hidrátate/ });
     expect(await colorDe(vasos.getByRole('button', { name: 'Un vaso más', exact: true }), 'backgroundColor')).toBe(await tokenRgb(page, '--hydrate-deep'));
     await vasos.getByRole('button', { name: 'Un vaso más', exact: true }).click();
-    /* Tras el toque, el botón pasa unos milisegundos por su color de pulsado: con la máquina cargada el
-       censo lo cogía a medias y caía en la suite entera (0.204.0 a 0.206.0), y solo pasaba 10 de 10.
-       Se espera a que se asiente; un color malo que se queda sigue fallando. */
+    /* Tras el toque, el vaso se llena en 200 ms: se espera a que se asiente. Lo que hacía caer esta prueba con
+       la máquina cargada (0.204.0 a 0.207.0) era el censo, que leía el fondo translúcido del vaso como un botón azul. */
     await expect.poll(async () => (await censo(page, '[data-pace-modal-backdrop]')).malos, { timeout: 3000 }).toEqual([]);
   });
 

@@ -99,9 +99,10 @@ test('m贸vil: 芦Copias, borrar y PACE completo禄 abre la hoja de Tus datos, 芦鈥
 });
 
 /* En el ordenador se pliega igual por debajo de 860 px de alto (Ez, 3A del 27 oct.;
-   ajustes-avisos.spec.js); en una pantalla alta, la secci贸n va entera. */
+   ajustes-avisos.spec.js); en una pantalla alta, la secci贸n va entera. Alta es 1000: en la web sin
+   instalar, la l铆nea de la 煤ltima copia (16 nov.) pliega la secci贸n a 900. */
 test('ordenador alto: Tus datos va entera y sin enlace', async ({ page, context }) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.setViewportSize({ width: 1440, height: 1000 });
   await sembrar(context);
   await irAlArtefacto(page);
   await abrir(page, 'es');
