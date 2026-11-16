@@ -3956,6 +3956,12 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.data.reset': 'Borrar todos mis datos',
   'settings.data.rescate': 'Descargar la copia de rescate',
   'settings.data.rescate.title': 'Lo que no se pudo leer al arrancar, tal cual estaba',
+
+  'settings.copia.nunca': 'Aún no has guardado ninguna copia.',
+  'settings.copia.hoy': 'Última copia: hoy.',
+  'settings.copia.ayer': 'Última copia: ayer.',
+  'settings.copia.hace': 'Última copia: hace {n} días.',
+  'settings.copia.safari': 'Sin instalar, Safari puede borrar lo guardado si pasas una semana sin abrir PACE.',
   'settings.license': 'Licencia',
   'settings.license.soon': 'pronto',
   'settings.foot': 'Todo vive en este navegador y no se sincroniza con otros.',
@@ -4059,6 +4065,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.data.reset': 'Delete all my data',
   'settings.data.rescate': 'Download a recovery copy',
   'settings.data.rescate.title': 'What could not be read at startup, exactly as it was',
+  'settings.copia.nunca': 'You haven’t saved a copy yet.',
+  'settings.copia.hoy': 'Last copy: today.',
+  'settings.copia.ayer': 'Last copy: yesterday.',
+  'settings.copia.hace': 'Last copy: {n} days ago.',
+  'settings.copia.safari': 'If PACE isn’t installed, Safari may erase your data after a week without opening it.',
   'settings.license': 'License',
   'settings.license.soon': 'soon',
   'settings.foot': "Everything lives in this browser and doesn't sync with others.",
@@ -4910,6 +4921,12 @@ Object.assign(window.PACE_STRINGS.es, {
   'sobre.novedades.titulo': 'Qué hay de nuevo',
   'sobre.carta.tipo': 'Carta',
   'sobre.carta.abrir': 'Abrir la carta',
+
+  'sobre.copia': 'Guarda una copia',
+  'sobre.copia.nueva': 'Guarda una copia, sin leer',
+  'sobre.copia.tipo': 'Tus datos',
+  'sobre.copia.titulo': 'Guarda una copia',
+  'sobre.copia.donde': 'Se hace en Ajustes, en «Tus datos». Instalada, PACE no se borra.',
   'lunes.titulo': 'La carta del lunes',
   'lunes.sobre': 'Los lunes, PACE completo te escribe tu semana: lo que te ayudó, lo que se mueve y por qué.',
   'lunes.ver': 'Ver PACE completo',
@@ -4926,6 +4943,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'sobre.novedades.titulo': 'What’s new',
   'sobre.carta.tipo': 'Letter',
   'sobre.carta.abrir': 'Open the letter',
+  'sobre.copia': 'Save a copy',
+  'sobre.copia.nueva': 'Save a copy, unread',
+  'sobre.copia.tipo': 'Your data',
+  'sobre.copia.titulo': 'Save a copy',
+  'sobre.copia.donde': 'You’ll find it in Settings, under “Your data”. Installed, PACE isn’t erased.',
   'lunes.titulo': 'The Monday letter',
   'lunes.sobre': 'On Mondays, PACE Complete writes you your week: what helped, what changes and why.',
   'lunes.ver': 'See PACE Complete',
@@ -7615,7 +7637,7 @@ const defaultState = {
   licencia: null,
 
   premiumAvisoPrueba: null, novedadesVistas: null,
-  lunesVisto: null,
+  lunesVisto: null, ultimaCopia: null, copiaAvisoVisto: null,
 
 
   focusMode: 'foco',
@@ -43456,6 +43478,90 @@ Object.assign(window, { usePaceTraerCopia, paceOlvidarPasajero });
 ;Object.assign(window, { paceOlvidarPasajero, paceDiaDeLaCopia, paceCopiaMasNueva, usePaceTraerCopia });
 })();
 </script>
+  <!-- La copia recordada (Ez, A+B del 16 nov.): la línea de «Tus datos» y el aviso del sobre. Antes de TweaksData.jsx. -->
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   LA COPIA DE «TUS DATOS», RECORDADA (Ez, «A+B», 16 nov. 2026; auditoría externa del 10 nov., 2.T6)
+   ===================================================================================
+   Sin cuentas, la copia es lo único que salva tu historia y tu código si cambias de móvil, y Safari
+   borra lo guardado de una web que no se visita en siete días (salvo instalada). Por eso, SOLO EN LA
+   WEB SIN INSTALAR:
+     A · bajo «Exportar una copia», una línea con cuándo fue la última y el aviso de Safari
+         (TweaksData.jsx: una línea pequeña pegada a la fila, fuera del botón; no tapa nada);
+     B · en el sobre de arriba, «Guarda una copia», como mucho una vez al mes: cuando hace 30 días o
+         más de la última copia (o, sin ninguna, desde que empezaste) y del último aviso. Leída al abrir
+         la hoja, sigue en ella, leída, el resto del día (como la línea de los lunes) y luego se va.
+   Sin copia nunca hecha se dice así, sin inventar una fecha. `ultimaCopia` (ms) la pone exportar;
+   `copiaAvisoVisto` es el día (YYYY-MM-DD) en que se leyó el aviso, y '*' lo apaga (lo siembra la suite,
+   como `novedadesVistas`). Carga después de shell/Sobre.jsx y antes de TweaksData.jsx. */
+
+const PACE_COPIA_CADA_DIAS = 30;
+
+
+
+function paceWebSinInstalar() {
+  try {
+    if (window.Capacitor || typeof paceEsNativo === 'function' && paceEsNativo()) return false;
+    if (navigator.standalone === true) return false;
+    return !!(window.matchMedia && window.matchMedia('(display-mode: browser)').matches);
+  } catch (e) {return false;}
+}
+
+
+function paceCopiaDias(ms) {
+  if (typeof ms !== 'number' || !isFinite(ms)) return null;
+  const a = new Date(ms);a.setHours(0, 0, 0, 0);
+  const h = new Date();h.setHours(0, 0, 0, 0);
+  return Math.max(0, Math.round((h.getTime() - a.getTime()) / 86400000));
+}
+
+
+function paceCopiaFecha(s, t, tn) {
+  const d = paceCopiaDias(s && s.ultimaCopia);
+  if (d === null) return t('settings.copia.nunca');
+  if (d === 0) return t('settings.copia.hoy');
+  if (d === 1) return t('settings.copia.ayer');
+  return tn('settings.copia.hace', { n: d });
+}
+
+
+function paceCopiaAvisoToca(s) {
+  try {
+    if (!s || s.firstSeen == null || s.copiaAvisoVisto === '*' || !paceWebSinInstalar()) return false;
+    const hoy = todayISO();
+    if (s.copiaAvisoVisto === hoy) return true;
+    const desde = paceCopiaDias(typeof s.ultimaCopia === 'number' ? s.ultimaCopia : s.firstSeen);
+    if (desde === null || desde < PACE_COPIA_CADA_DIAS) return false;
+    if (typeof s.copiaAvisoVisto === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s.copiaAvisoVisto)) {
+      const visto = paceCopiaDias(parseLocalDateKey(s.copiaAvisoVisto).getTime());
+      if (visto !== null && visto < PACE_COPIA_CADA_DIAS) return false;
+    }
+    return true;
+  } catch (e) {return false;}
+}
+
+if (typeof paceSobreApuntar === 'function') {
+  paceSobreApuntar({ clave: 'copia', de: (s, t, tn, lang) => {
+      if (!paceCopiaAvisoToca(s)) return null;
+      const hoy = todayISO();
+      const sinLeer = s.copiaAvisoVisto !== hoy;
+      return {
+        sinLeer: sinLeer, titulo: t(sinLeer ? 'sobre.copia.nueva' : 'sobre.copia'), fecha: hoy, tipo: t('sobre.copia.tipo'),
+        cuando: paceFechaCorta(hoy, lang, { day: 'numeric', month: 'short' }),
+        tituloHoja: t('sobre.copia.titulo'), lineas: [paceCopiaFecha(s, t, tn), t('sobre.copia.donde')],
+        leer: () => {if (getState().copiaAvisoVisto !== hoy) setState({ copiaAvisoVisto: hoy });}
+      };
+    } });
+}
+
+Object.assign(window, { paceWebSinInstalar, paceCopiaDias, paceCopiaFecha, paceCopiaAvisoToca, PACE_COPIA_CADA_DIAS });
+;Object.assign(window, { paceWebSinInstalar, paceCopiaDias, paceCopiaFecha, paceCopiaAvisoToca });
+})();
+</script>
   <script>
 ;(function () {
 
@@ -43525,7 +43631,11 @@ function paceDescargarCopia(enMemoria, alAbrir) {
   try {
     let raw = '{}';
     if (!enMemoria) {try {raw = localStorage.getItem('pace.state.v2') || '{}';} catch (e) {}}
-    let parsed = enMemoria || null;
+
+
+
+    const ahora = Date.now();
+    let parsed = enMemoria ? Object.assign({}, enMemoria, { ultimaCopia: ahora }) : null;
     if (!parsed) {try {parsed = JSON.parse(raw);} catch (e) {}}
 
 
@@ -43549,7 +43659,13 @@ function paceDescargarCopia(enMemoria, alAbrir) {
 
     const rescate = typeof paceLeerRescate === 'function' ? paceLeerRescate() : null;
     if (rescate) payload.rescate = rescate;
-    return paceBajarJSON(payload, 'pace-backup-' + paceDiaArchivo() + '.json', alAbrir);
+    const salida = paceBajarJSON(payload, 'pace-backup-' + paceDiaArchivo() + '.json', alAbrir);
+    if (enMemoria) {
+      Promise.resolve(salida).then((como) => {
+        if (como === 'descargada' || como === 'compartida') {try {setState({ ultimaCopia: ahora });} catch (e) {}}
+      });
+    }
+    return salida;
   } catch (e) {return false;}
 }
 
@@ -43575,7 +43691,8 @@ function paceConLogroDeLaCopia(s) {
 }
 
 function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
-  const { t, lang } = useT();
+  const { t, tn, lang } = useT();
+  const [st] = usePace();
   const [msg, setMsg] = useStateTD(null);
 
 
@@ -43633,6 +43750,11 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
     React.createElement(AjustesAccion, { onClick: exportJSON, title: t('settings.data.export.title'), derecha: React.createElement(DownloadIcon, null) },
     t('settings.data.export')
     ),
+
+
+    typeof paceWebSinInstalar === 'function' && paceWebSinInstalar() &&
+    React.createElement("div", { className: "pace-aj-copia", "data-pace-aj-copia": true }, paceCopiaFecha(st, t, tn) + ' ' + t('settings.copia.safari')),
+
     React.createElement(AjustesAccion, { onClick: traer.elegir, title: t('settings.data.import.title'), derecha: React.createElement(UploadIcon, null) },
     t('settings.data.import')
     ),
@@ -43993,6 +44115,8 @@ if (!_paceAjustesCss) {
     .pace-aj-accion > span:last-child { color: var(--ink-3); display: inline-flex; align-items: center; }
     .pace-aj-sub-accion { font-family: var(--font-display); font-style: italic; }
     .pace-aj-accion:has(.pace-aj-sub-accion) { min-height: 40px; }
+    /* La copia recordada (TweaksData.copia.jsx): la línea pequeña de «Exportar una copia», fuera del botón. */
+    .pace-aj-copia { font-family: var(--font-display); font-style: italic; font-size: 12px; line-height: 1.3; color: var(--ink-3); margin: -4px 26px 7px 0; letter-spacing: .1px; }
     .pace-aj-msg { font-size: 10.5px; font-family: var(--font-display); font-style: italic; text-align: center; margin: 6px 0; letter-spacing: .1px; }
     .pace-aj-pie { display: flex; justify-content: space-between; gap: 10px; font-size: 10.5px; color: var(--ink-3); letter-spacing: .2px; margin-top: 12px; }
     .pace-aj-pie a { color: var(--ink-3); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 1px; }

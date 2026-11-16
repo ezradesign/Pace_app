@@ -65,6 +65,10 @@ th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);verti
 th{font-weight:500;color:var(--ink);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
 td{color:var(--ink-2)}
 .tabla{overflow-x:auto;margin:12px 0}
+.fotos{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:14px 0}
+.fotos figure{margin:0;min-width:0}
+.fotos img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:8px}
+.fotos figcaption{font-size:13px;color:var(--ink-3);margin-top:6px}
 </style>
 
 <main>
@@ -72,7 +76,7 @@ td{color:var(--ink-2)}
   <h1>Lo pequeño de antes de v1</h1>
   <p class="lead">Los arreglos de tu lista que no piden elegir nada, montados en una rama. Casi nada cambia a la vista, y donde cambia, se dice abajo.</p>
   <p>Es el paso 9 de «Lo que queda hasta v1». Salen de la cola de las auditorías de Fable (filas 4, 10, 16, 17, 20 a 24). Lo que pide maqueta (el constructor de rutinas y la nota del fin de la semana de prueba) y los cambios de lado dentro de un ejercicio (van con la voz de Mueve y Estira) no están aquí.</p>
-  <p class="montado"><strong>Montados los cinco</strong> en la rama <code>claude/pequenas-v1-15nov-39e6cb</code>, cada uno con su prueba y <code>verify</code> en verde. Falta tu «júntalo». Hay <strong>una pregunta</strong> al final: si PACE recomienda instalarla y recuerda la copia.</p>
+  <p class="montado"><strong>Montados los seis</strong> en la rama <code>claude/pequenas-v1-15nov-39e6cb</code>, cada uno con su prueba y <code>verify</code> en verde. Falta tu «júntalo». La pregunta que quedaba, si PACE recomienda instalarla y recuerda la copia, la contestaste con «A+B»: montadas las dos (punto 6).</p>
 
   <h2>1 · Los buscadores encuentran PACE con un nombre limpio</h2>
   <p>La pestaña y los buscadores leían «PACE · Foco · Cuerpo — v0.206.0». Ahora la versión no sale (sigue al pie de la barra lateral), y la raíz lleva la frase de la landing como descripción. <code>robots.txt</code> y <code>sitemap.xml</code> existen de verdad: hasta hoy esas dos direcciones devolvían la app.</p>
@@ -122,27 +126,22 @@ td{color:var(--ink-2)}
     <tr><td>Que PACE abra a los 3 s con una wifi mala</td><td>En el móvil, con PACE instalada y una red lenta (o el modo avión puesto a medias).</td></tr>
     <tr><td>Que Safari conceda el almacenamiento persistente</td><td>En Safari, en el Mac o el iPhone sin instalar (no se puede probar en Windows).</td></tr>
     <tr><td>La instalación con fotos</td><td>En Chrome, en pacegrass.app tras juntar: el botón de instalar enseña las capturas.</td></tr>
+    <tr><td>Que la línea de la copia y el aviso del sobre salgan en Safari sin instalar, y no con PACE en la pantalla de inicio</td><td>En el iPhone: en Safari, Ajustes › Tus datos; luego desde el icono de la pantalla de inicio. Aquí se prueba en Chromium, fingiendo la instalación.</td></tr>
   </table></div>
 
-  <h2>La pregunta: ¿PACE recomienda instalarla y recuerda la copia?</h2>
-  <div class="pregunta">
-    <p>La auditoría pedía, además, recomendar instalar PACE (instalada, Safari no borra nada) y recordar de vez en cuando que guardes una copia. Eso se ve, así que no lo he montado. Tres formas:</p>
+  <h2>6 · La copia recordada: A y B, como elegiste</h2>
+  <p>Tu respuesta (16 nov.): «A+B». Las dos, solo en la web sin instalar; ni en las apps ni con PACE instalada.</p>
+  <ul>
+    <li><strong>A · En «Tus datos»</strong>, en una línea pequeña bajo «Exportar una copia»: cuándo fue la última copia y el aviso de Safari. Sin copia nunca hecha lo dice así, sin inventar una fecha. Al exportar, pasa a «Última copia: hoy.», y la copia lleva esa fecha dentro.</li>
+    <li><strong>B · En el sobre</strong>, «Guarda una copia», como mucho una vez al mes: a los 30 días de la última copia (o de empezar con PACE, si no hay ninguna) y del último aviso. Se da por leída al abrir la hoja, sigue en ella ese día y luego se va. No tapa nada: es el icono del sobre, en su sitio de la barra.</li>
+  </ul>
+  <div class="fotos">
+    <figure><img src="fotos/a-sin-copia.png" alt="Tus datos a 360 por 640: bajo Exportar una copia, «Aún no has guardado ninguna copia. Sin instalar, Safari puede borrar lo guardado si pasas una semana sin abrir PACE.»" width="360" height="640" loading="lazy"><figcaption>A, sin ninguna copia</figcaption></figure>
+    <figure><img src="fotos/a-hace-40.png" alt="Tus datos con «Última copia: hace 40 días.» bajo Exportar una copia" width="360" height="640" loading="lazy"><figcaption>A, con una copia de hace 40 días</figcaption></figure>
+    <figure><img src="fotos/b-barra.png" alt="La home a 360 por 640 con el sobre cerrado en la barra de arriba, junto a Estadísticas" width="360" height="640" loading="lazy"><figcaption>B, el sobre cerrado en la barra</figcaption></figure>
+    <figure><img src="fotos/b-hoja.png" alt="La hoja del sobre con «Guarda una copia»: Aún no has guardado ninguna copia. Se hace en Ajustes, en Tus datos. Instalada, PACE no se borra." width="360" height="640" loading="lazy"><figcaption>B, la hoja del sobre</figcaption></figure>
   </div>
-  <div class="opciones">
-    <div class="opcion rec"><span class="letra">A</span><span class="rec-t">Recomendada</span>
-      <p>Una línea en «Tus datos», debajo de «Exportar una copia», que solo sale en la web sin instalar y dice cuándo fue tu última copia.</p>
-      <div class="fila">Exportar una copia<br><span class="nueva">Última copia: hace 40 días. Sin instalar, Safari puede borrar lo guardado si pasas una semana sin abrir PACE.</span></div>
-      <p class="nota">No tapa nada ni sale sola: está donde se buscan las copias. Antes de montarla se mide a 360 × 640, porque «Tus datos» no puede pedir scroll.</p>
-    </div>
-    <div class="opcion"><span class="letra">B</span>
-      <p>Lo mismo en el sobre de novedades, una vez al mes como mucho y solo en la web sin instalar.</p>
-      <div class="fila"><b>Guarda una copia</b><br>Hace 40 días de la última. Instalada, PACE no se borra.</div>
-      <p class="nota">Llega a quien no entra en Ajustes, pero el sobre es para lo nuevo de PACE.</p>
-    </div>
-    <div class="opcion"><span class="letra">C</span>
-      <p>Nada más. Con el almacenamiento persistente que ya está montado basta, y la copia sigue siendo cosa tuya.</p>
-      <p class="nota">Lo más tranquilo, pero quien cambia de móvil sin copia lo pierde todo.</p>
-    </div>
-  </div>
-  <p class="nota">Rama <code>claude/pequenas-v1-15nov-39e6cb</code> · cinco commits, uno por punto · las reglas nuevas, arriba en <code>DECISIONES_TECNICAS_VIGENTES.md</code>.</p>
+  <p><strong>Medido:</strong> «Tus datos» no pide scroll con la línea a 360 × 640 y 360 × 740, en castellano y en inglés, también con la letra al 115 %. Al tope de la hoja le sobran todavía 260 px en el caso más justo (castellano, 360 × 640, letra al 115 %).</p>
+
+  <p class="nota">Rama <code>claude/pequenas-v1-15nov-39e6cb</code> · un commit por punto · las reglas nuevas, arriba en <code>DECISIONES_TECNICAS_VIGENTES.md</code>.</p>
 </main>
