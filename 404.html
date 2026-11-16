@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>No encontrada · PACE</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/icons/icon-192.png">
+<!-- PACE · LA PÁGINA QUE NO EXISTE (auditoría externa del 16 nov. 2026)
+     Sin un 404.html arriba del todo, Cloudflare Pages toma la web por una app de una página y
+     sirve index.html (la app entera, más de 2 MB) con un 200 en cualquier ruta que no existe. Con
+     él, sirve esta página con su 404. La publica scripts/web-dist.js y la vigila verify (tanda web).
+     La letra, los colores y la vaca son los de /beta y /premium (app/tokens.css). Sin JavaScript se
+     leen los dos idiomas; con él, el del navegador o el elegido en las otras páginas. -->
+<style>
+  @font-face { font-family: 'Cormorant Garamond'; font-style: italic; font-weight: 500; font-display: swap; src: url('/fonts/cormorantgaramond-500-italic.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter Tight'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/intertight-400-normal.woff2') format('woff2'); }
+  :root {
+    --paper: #F2EDE0; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858; --line-2: #B8AD8E; --focus: #3E5A3A; --cta: #50624D;
+    --display: 'Cormorant Garamond', Georgia, serif; --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #1d1a14; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995; --line-2: #5f5544; --focus: #7A9A6D; --cta: #8E9D88; }
+    img { filter: invert(1); }
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; min-height: 100vh; background: var(--paper); color: var(--ink); font-family: var(--ui); font-size: 16px; line-height: 1.6; }
+  main { max-width: 640px; margin: 0 auto; padding: 32px 16px 56px; }
+  img { height: 60px; width: auto; display: block; margin-bottom: 40px; }
+  .kicker { font: 500 11px/1.4 var(--ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 10px; }
+  h1 { font: italic 500 clamp(38px, 10vw, 60px)/1.04 var(--display); letter-spacing: -.01em; margin: 0 0 16px; text-wrap: balance; }
+  p { color: var(--ink-2); margin: 0 0 24px; max-width: 32em; }
+  .boton { display: inline-flex; align-items: center; min-height: 46px; padding: 9px 26px; border-radius: 999px; font: italic 500 18px/1.2 var(--display); text-decoration: none; background: var(--cta); color: var(--paper); border: 1px solid var(--cta); }
+  .boton:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .otro { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line-2); }
+  html[data-idioma] .otro { display: none; }
+  html[data-idioma="en"] [data-es] { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <a href="/" aria-label="Abrir PACE"><img src="/premium/vaca.webp" alt="PACE" width="91" height="60"></a>
+  <div data-es lang="es">
+    <p class="kicker">PACE · 404</p>
+    <h1>Esta página no existe.</h1>
+    <p>Puede que el enlace esté mal escrito o que la página se haya movido. Lo tuyo sigue en PACE.</p>
+    <a class="boton" href="/">Ir a PACE</a>
+  </div>
+  <div class="otro" data-en lang="en">
+    <p class="kicker">PACE · 404</p>
+    <h1>This page doesn’t exist.</h1>
+    <p>The link may be mistyped, or the page may have moved. Your things are still in PACE.</p>
+    <a class="boton" href="/">Go to PACE</a>
+  </div>
+</main>
+<script>
+(function () {
+  /* El idioma de las otras páginas: el que se eligió en ellas o en la app, o el del navegador. */
+  var lang = /^es\b/i.test(navigator.language || '') ? 'es' : 'en';
+  try {
+    var g = localStorage.getItem('pace.landing.lang') || localStorage.getItem('pace.beta.lang');
+    var app = JSON.parse(localStorage.getItem('pace.state.v2') || 'null');
+    if (app && (app.lang === 'es' || app.lang === 'en')) lang = app.lang;
+    else if (g === 'es' || g === 'en') lang = g;
+  } catch (e) {}
+  var raiz = document.documentElement;
+  raiz.setAttribute('data-idioma', lang);
+  raiz.lang = lang;
+  if (lang === 'en') {
+    document.title = 'Not found · PACE';
+    document.querySelector('[data-en]').classList.remove('otro');
+  }
+})();
+</script>
+</body>
+</html>

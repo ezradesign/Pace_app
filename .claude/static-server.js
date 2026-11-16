@@ -40,6 +40,17 @@ http.createServer(function (req, res) {
   if (file.indexOf(ROOT) !== 0) { res.writeHead(403); return res.end('Forbidden'); }
   fs.stat(file, function (err, stat) {
     if (err || !stat.isFile()) {
+      /* Como Cloudflare Pages con un 404.html arriba del todo: esa página, con su 404 (la página
+         que no existe, auditoría externa del 16 nov. 2026). Sin ella, un 404 de texto. /api/ no:
+         en la web son funciones de Cloudflare y nunca caen en 404.html; aquí no existen y siguen
+         con el 404 corto de siempre (un fetch que no lee un cuerpo largo, como los de /premium,
+         deja la petición abierta y la página nunca llega a «networkidle»). */
+      var noHay = path.join(ROOT, '404.html');
+      if (url.indexOf('/api/') !== 0 && fs.existsSync(noHay)) {
+        var cuerpo = fs.readFileSync(noHay);
+        res.writeHead(404, { 'Content-Type': MIME['.html'], 'Content-Length': cuerpo.length, 'Cache-Control': 'no-store' });
+        return res.end(cuerpo);
+      }
       res.writeHead(404, { 'Content-Type': 'text/plain' });
       return res.end('Not found: ' + url);
     }

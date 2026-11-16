@@ -12,7 +12,8 @@
 
 Object.assign(window.PACE_STRINGS.es, {
     'break.tag':                     'Ciclo completado',
-    'break.title':                   'Pausa bien hecha',
+    /* Antes de hacer la pausa, no «Pausa bien hecha»: el mismo título que con jornada (auditoría de Fable, F3). */
+    'break.title':                   'Tu pausa',
     'break.subtitle':                'Has cerrado un bloque. Elige tu pausa.',
     'break.breathe.label':           'Respira',
     'break.breathe.desc':            '2 min para volver al centro',
@@ -51,7 +52,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
 Object.assign(window.PACE_STRINGS.en, {
     'break.tag':                     'Cycle complete',
-    'break.title':                   'Well-earned break',
+    'break.title':                   'Your break',
     'break.subtitle':                'You’ve finished a Focus block. Choose your break.',
     'break.breathe.label':           'Breathe',
     'break.breathe.desc':            '2 min to pause and breathe',

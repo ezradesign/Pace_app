@@ -153,7 +153,7 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
           <BreakPlato color={colorProp} glifo={breakGlifo(prop.modulo, rutinaProp)} datos={{ 'data-pace-break-prop': '' }}
             motivo={prop.porque === 'sitting' ? tn('break.prop.sitting', { n: prop.datos.n }) : t('break.prop.' + prop.porque)}
             nombre={nombreProp || (prop.modulo === 'water' ? t('break.water.label') : null)}
-            ctx={rutinaProp ? <><b>{rutinaProp.min}</b><u>{t('lib.min')}</u><em>{t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label')}</em></> : null}>
+            ctx={rutinaProp ? <><b>{routineCifraMin(rutinaProp, state.restBetweenSets)}</b><u>{t('lib.min')}</u><em>{t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label')}</em></> : null}>
             <div className="pace-break-acciones" style={{ marginTop: 12 }}>
               <button type="button" className="pace-break-pildora pace-break-llena" style={{ '--cd': letraDe(colorProp) }} onClick={() => elegirPropuesta(prop)}>
                 {t(prop.modulo === 'water' ? 'hydrate.more' : 'break.prop.start')}

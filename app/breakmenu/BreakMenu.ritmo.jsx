@@ -81,7 +81,7 @@ function BreakAntes({ lda, onChoose, estilo }) {
     <button type="button" data-pace-break-antes={r.id} className="pace-break-agua" style={estilo} onClick={() => onChoose(lda.modulo, r)}>
       <span className="pace-break-glifo" style={{ '--c': BREAK_COLOR[lda.modulo] }}>{Glifo ? <Glifo /> : null}</span>
       <b>{nombre}</b>
-      <span className="pace-break-mas">· {tn('break.antes', { n: r.min })}</span>
+      <span className="pace-break-mas">· {tn('break.antes', { n: routineCifraMin(r, getState().restBetweenSets) })}</span>
       <i aria-hidden="true">›</i>
     </button>
   );
@@ -109,7 +109,7 @@ function BreakMenuRitmo({ open, onClose, onChoose, onSeguir, onPropuesta, prop, 
         ctx: <><b>{pausa ? pausa.dur : ''}</b><u>{t('lib.min')}</u>{pausa && pausa.agua && <em>{t('break.ritmo.conAgua')}</em>}</> }
     : { color: BREAK_COLOR[prop.modulo], boton: BREAK_COLOR[prop.modulo], glifo: breakGlifo(prop.modulo, rutina),
         nombre: dos ? ritmoPlatos(pausa, t, lang) : nombre,
-        ctx: rutina ? <><b>{dos ? pausa.dur : rutina.min}</b><u>{t('lib.min')}</u>
+        ctx: rutina ? <><b>{dos ? pausa.dur : routineCifraMin(rutina, getState().restBetweenSets)}</b><u>{t('lib.min')}</u>
           <em>{dos ? tn('ritmo.y', { a: ritmoModulo(pausa.platos[0].modulo, t), b: ritmoModulo(pausa.platos[1].modulo, t) })
             : t('break.' + (prop.modulo === 'extra' ? 'stretch' : prop.modulo) + '.label')}</em>
           {pausa && pausa.agua && <em>{t('break.ritmo.agua')}</em>}</> : null };

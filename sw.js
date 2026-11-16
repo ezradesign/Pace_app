@@ -363,6 +363,22 @@ self.addEventListener('notificationclick', (event) => {
   );
 });
 
+/* Lo que tarda la red en una navegación antes de dar la copia guardada (2.T2). */
+const PACE_RED_TOPE_MS = 3000;
+
+/* La copia de una navegación: la suya, y el respaldo a la app solo para las rutas de la app. Antes
+   cualquier navegacion sin red ni copia propia recibia la de la raiz: la privacidad, /premium o una
+   ruta que no existe se abrian como la app, con su direccion (auditoria del 21 oct. de 2026).
+   Devuelve la respuesta o null. */
+function copiaDeNavegacion(request) {
+  return caches.match(request).then((cached) => {
+    if (cached) return cached;
+    const ruta = new URL(request.url).pathname;
+    if (ruta === '/' || ruta === '/index.html') return caches.match('/').then((app) => app || null);
+    return null;
+  });
+}
+
 /* s89 (A-3 auditoria): navegaciones HTML pasan a network-first (con fallback
    a cache si no hay red) para que las actualizaciones lleguen sin esperar al
    re-chequeo del SW. El resto de assets sigue cache-first. */
@@ -387,27 +403,32 @@ self.addEventListener('fetch', (event) => {
      la lista cerrada o abierta según el día en que se visitó por primera vez. */
   if (new URL(event.request.url).pathname.indexOf('/api/') === 0) return;
   if (event.request.mode === 'navigate') {
-    event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          if (response && response.status === 200 && response.type !== 'opaque') {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-          }
-          return response;
-        })
-        .catch(() =>
-          caches.match(event.request).then((cached) => {
-            if (cached) return cached;
-            /* El respaldo a la app, solo para las rutas de la app. Antes cualquier navegacion sin
-               red ni copia propia recibia la de la raiz: la privacidad, /premium o una ruta que no
-               existe se abrian como la app, con su direccion (auditoria del 21 oct. de 2026). */
-            const ruta = new URL(event.request.url).pathname;
-            if (ruta === '/' || ruta === '/index.html') return caches.match('/').then((app) => app || Response.error());
-            return Response.error();
-          })
-        )
-    );
+    let guardada = Promise.resolve();
+    const red = fetch(event.request)
+      .then((response) => {
+        if (response && response.status === 200 && response.type !== 'opaque') {
+          const clone = response.clone();
+          guardada = caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+        }
+        return response;
+      });
+    /* CON UNA WIFI MALA, LA COPIA A LOS 3 S (auditoría externa del 10 nov., 2.T2). La red no tenía
+       tope: con una conexión que ni llega ni falla, PACE instalada se quedaba en blanco hasta que el
+       navegador se rendía. Si a los PACE_RED_TOPE_MS la red no ha contestado y hay copia, se da la
+       copia; la respuesta de la red, cuando llega, se guarda para la vez siguiente (`waitUntil`). Sin
+       copia, se sigue esperando a la red: un error a los 3 s no ayuda a nadie. */
+    event.waitUntil(red.then(() => guardada, () => {}));
+    event.respondWith(new Promise((resolver) => {
+      let dada = false;
+      const dar = (r) => { if (!dada) { dada = true; resolver(r); } };
+      const tope = setTimeout(() => {
+        copiaDeNavegacion(event.request).then((copia) => { if (copia) dar(copia); }, () => {});
+      }, PACE_RED_TOPE_MS);
+      red.then((response) => { clearTimeout(tope); dar(response); }, () => {
+        clearTimeout(tope);
+        copiaDeNavegacion(event.request).then((copia) => dar(copia || Response.error()), () => dar(Response.error()));
+      });
+    }));
     return;
   }
   event.respondWith(

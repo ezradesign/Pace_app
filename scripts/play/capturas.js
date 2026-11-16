@@ -1,6 +1,6 @@
 /* PACE · LAS CAPTURAS DE GOOGLE PLAY
  * ==================================
- * Uso: node scripts/play/capturas.js [puerto]      (después de `node build-standalone.js`)
+ * Uso: node scripts/play/capturas.js [puerto] [--solo=N]      (después de `node build-standalone.js`)
  *
  * Abre el `index.html` compilado como un móvil de 360 × 640 a 3× (1080 × 1920, lo que pide
  * Play), en castellano y en inglés, llega a cada pantalla como lo haría alguien y saca:
@@ -27,6 +27,9 @@ const PUERTO = Number(process.argv.slice(2).find((a) => /^\d+$/.test(a)) || 8793
    que Play acepta en apaisado), sin título, en capturas-ordenador/<idioma>/. */
 const ORDENADOR = process.argv.includes('--ordenador');
 const BETA_OSCURO = process.argv.includes('--beta-oscuro');
+/* `--solo=6` (o `--solo=1,6`): solo esas escenas, sin tocar las demás. Para rehacer una captura
+   cuyo texto cambió sin mover las otras, que se rehacen juntas al final (SUBIDAS.md). */
+const SOLO = ((process.argv.find((a) => /^--solo=/.test(a)) || '').slice(7)).split(',').filter(Boolean).map(Number);
 const DE_BETA = ['jornada', 'respira', 'logros'];
 const BASE = 'http://localhost:' + PUERTO;
 const SALIDA = path.join(ROOT, 'docs', 'launch', 'google-play');
@@ -81,7 +84,7 @@ const ESCENAS = [
     semilla: (l) => base(l, 'crema', { achievements: Object.fromEntries(LOGROS.map((id, i) => [id, { unlockedAt: JUEVES_9.getTime() - (LOGROS.length - i) * 86400000 }])) }),
     llegar: (page) => clic(page, B.logros),
     titulo: { es: 'Logros para explorar', en: 'Achievements to explore' },
-    sub: { es: 'Sellos de libreta de campo, sin rachas.', en: 'Field-notebook stamps, no streaks.' } },
+    sub: { es: 'Sellos de libreta de campo, sin rachas que castigan.', en: 'Field-notebook stamps, no streaks that punish you.' } },
 ];
 
 async function clic(page, nombre) {
@@ -177,6 +180,7 @@ async function main() {
       for (const dir of dirs) fs.mkdirSync(path.join(SALIDA, dir, lang), { recursive: true });
       for (const esc of ESCENAS) {
         if (BETA_OSCURO && !DE_BETA.includes(esc.id)) continue;
+        if (SOLO.length && !SOLO.includes(esc.n)) continue;
         const semilla = Object.assign(esc.semilla(lang), BETA_OSCURO ? { palette: 'oscuro' } : {});
         const ctx = await navegador.newContext({
           viewport: ORDENADOR ? { width: 1280, height: 720 } : { width: 360, height: 640 }, deviceScaleFactor: ORDENADOR ? 1.5 : 3,

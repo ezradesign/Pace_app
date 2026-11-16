@@ -141,6 +141,8 @@ if (!_paceAjustesCss) {
     .pace-aj-accion > span:last-child { color: var(--ink-3); display: inline-flex; align-items: center; }
     .pace-aj-sub-accion { font-family: var(--font-display); font-style: italic; }
     .pace-aj-accion:has(.pace-aj-sub-accion) { min-height: 40px; }
+    /* La copia recordada (TweaksData.copia.jsx): la línea pequeña de «Exportar una copia», fuera del botón. */
+    .pace-aj-copia { font-family: var(--font-display); font-style: italic; font-size: 12px; line-height: 1.3; color: var(--ink-3); margin: -4px 26px 7px 0; letter-spacing: .1px; }
     .pace-aj-msg { font-size: 10.5px; font-family: var(--font-display); font-style: italic; text-align: center; margin: 6px 0; letter-spacing: .1px; }
     .pace-aj-pie { display: flex; justify-content: space-between; gap: 10px; font-size: 10.5px; color: var(--ink-3); letter-spacing: .2px; margin-top: 12px; }
     .pace-aj-pie a { color: var(--ink-3); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 1px; }

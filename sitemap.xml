@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PACE · las páginas públicas de pacegrass.app que pueden salir en un buscador. Una página con
+     `noindex` no va aquí; una nueva que deba salir, sí. Lo vigila `verify` (tanda web). -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://pacegrass.app/</loc></url>
+  <url><loc>https://pacegrass.app/premium/</loc></url>
+  <url><loc>https://pacegrass.app/beta/</loc></url>
+  <url><loc>https://pacegrass.app/privacy</loc></url>
+  <url><loc>https://pacegrass.app/safety</loc></url>
+</urlset>

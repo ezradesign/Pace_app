@@ -144,6 +144,11 @@ Tell me what breaks or what you would miss: take a screenshot of PACE and the iP
 
 **Rehechas las seis el 15 nov. 2026 sobre la 0.205.0**, en español y en inglés, con `scripts/play/capturas.js` (ahora busca los botones sin mirar mayúsculas: en inglés el botón es «Start Focus»), y con ellas las de /beta y la landing en claro (`beta/*.webp`, desde `capturas/`) y en oscuro (`--beta-oscuro`). Lo de abajo es la medida del 6 nov.
 
+**`6-logros`, rehecha otra vez el 15 nov. (tarde)**, solo ella (`node scripts/play/capturas.js --solo=6` y `--solo=6 --beta-oscuro`):
+su subtítulo decía «sin rachas» y hay logros de días seguidos; ahora dice «Sellos de libreta de campo, sin rachas que castigan.»
+(«no streaks that punish you.»), como la ficha. **Al subir la siguiente beta, cambia la 6 en Play, en español y en inglés.**
+Las cinco de antes valen.
+
 Medido el 6 nov. 2026: se rehicieron las seis con `scripts/play/capturas.js` sobre la 0.190.0 (en una carpeta aparte) y se
 compararon píxel a píxel con las de `capturas-sin-marco/`. Las de `capturas/` son la misma pantalla con su título encima, así
 que valen lo mismo. Español e inglés van juntos.

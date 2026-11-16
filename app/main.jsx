@@ -82,7 +82,7 @@ function PaceApp() {
   // escucha `pace:open-onboarding` para re-abrirse) — aquí solo se monta,
   // ver el bloque de overlays del return.
 
-  // Deep links de shortcuts PWA (s102): /?go=focus|breathe|move|hydrate abre
+  // Deep links de shortcuts PWA (s102): /?go=focus|breathe|move|stretch|hydrate abre
   // el módulo al arrancar (manifest.webmanifest → shortcuts). Se consume una
   // sola vez y se limpia la URL (replaceState) para que recargar no
   // re-dispare. 'focus' solo asegura el modo foco: el home YA es el Pomodoro
@@ -91,7 +91,7 @@ function PaceApp() {
     let go = null;
     try { go = new URLSearchParams(window.location.search).get('go'); } catch (e) {}
     if (!go) return;
-    if (go === 'breathe' || go === 'move') abrirBiblioteca(go);
+    if (go === 'breathe' || go === 'move' || go === 'stretch') abrirBiblioteca(go === 'stretch' ? 'extra' : go);   // Estira es 'extra' (ids cruzados)
     else if (go === 'hydrate') setOpenHydrate(true);
     else if (go === 'focus') set({ focusMode: 'foco' });
     try { window.history.replaceState(null, '', window.location.pathname); } catch (e) {}

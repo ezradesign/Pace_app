@@ -228,12 +228,14 @@ function paceAndroidAvisoAjustarPausa() {
   var quiere = a.fondo && p && p.endsAt > ahora && a.permiso === 'granted' ? p : null;
   if (quiere) {
     if (a.pausaPuesto === quiere.endsAt) return null;
-    return paceAndroidPedir('LocalNotifications', 'schedule', { notifications: [{
-      id: PACE_AVISO_PAUSA_ID, title: quiere.title, body: quiere.body,
-      schedule: { at: new Date(quiere.endsAt).toISOString(), allowWhileIdle: true },
-      isExactNotification: a.exacta === 'granted',
-      channelId: paceAndroidSonidoOn() ? PACE_AVISO_CANAL_PAUSA : PACE_AVISO_CANAL_PAUSA_MUDO,
-    }] }).then(function () {
+    return paceAndroidQuitarLlegado(PACE_AVISO_PAUSA_ID, a.pausaPuesto, false).then(function () {
+      return paceAndroidPedir('LocalNotifications', 'schedule', { notifications: [{
+        id: PACE_AVISO_PAUSA_ID, title: quiere.title, body: quiere.body,
+        schedule: { at: new Date(quiere.endsAt).toISOString(), allowWhileIdle: true },
+        isExactNotification: a.exacta === 'granted',
+        channelId: paceAndroidSonidoOn() ? PACE_AVISO_CANAL_PAUSA : PACE_AVISO_CANAL_PAUSA_MUDO,
+      }] });
+    }).then(function () {
       a.pausaPuesto = quiere.endsAt;
       a.pausaFallo = null;
       paceAndroidAvisoGuardar();
@@ -277,18 +279,32 @@ function paceAndroidCanales() {
     .then(function () { return par(PACE_AVISO_CANAL_PAUSA, PACE_AVISO_CANAL_PAUSA_MUDO, 'notify.canal.pausa', PACE_AVISO_SONIDO_PAUSA); });
 }
 
+/* EL DEL BLOQUE SIGUIENTE NO PISA AL ANTERIOR (cola de las auditorías de Fable, fila 17). El
+   complemento avisa con `setOnlyAlertOnce(true)` y el mismo id: si el aviso del bloque anterior
+   seguía en la bandeja, el del siguiente lo SUSTITUÍA sin sonar ni asomar, y como la campana de ese
+   bloque es de Android, no sonaba nada. Antes de pedir el de otro bloque (u otra pausa) se quita de
+   la bandeja el que ya llegó; lo que aún no ha llegado no se toca aquí: lo cambia el `schedule`.
+   Si quitarlo falla, se pide igual. */
+function paceAndroidQuitarLlegado(id, puesto, quizas) {
+  if (!quizas && (puesto === null || puesto > Date.now())) return Promise.resolve();
+  return paceAndroidPedir('LocalNotifications', 'removeDeliveredNotifications', { notifications: [{ id: id }] })
+    .then(null, function () {});
+}
+
 function paceAndroidAvisoAjustarFin(quiere) {
   var a = _paceAvisoAndroid, ahora = Date.now();
   if (quiere) {
     if (a.puesto === quiere.endsAt) return null;
     var textos = paceNativoTextosFin(quiere);
-    return paceAndroidPedir('LocalNotifications', 'schedule', { notifications: [{
-      id: PACE_AVISO_FOCO_ID, title: textos.title, body: textos.body,
-      /* el formato exacto que lee el complemento: ISO en UTC con milisegundos */
-      schedule: { at: new Date(quiere.endsAt).toISOString(), allowWhileIdle: true },
-      isExactNotification: a.exacta === 'granted',
-      channelId: paceAndroidSonidoOn() ? PACE_AVISO_CANAL_FIN : PACE_AVISO_CANAL_FIN_MUDO,
-    }] }).then(function () {
+    return paceAndroidQuitarLlegado(PACE_AVISO_FOCO_ID, a.puesto, a.quizas).then(function () {
+      return paceAndroidPedir('LocalNotifications', 'schedule', { notifications: [{
+        id: PACE_AVISO_FOCO_ID, title: textos.title, body: textos.body,
+        /* el formato exacto que lee el complemento: ISO en UTC con milisegundos */
+        schedule: { at: new Date(quiere.endsAt).toISOString(), allowWhileIdle: true },
+        isExactNotification: a.exacta === 'granted',
+        channelId: paceAndroidSonidoOn() ? PACE_AVISO_CANAL_FIN : PACE_AVISO_CANAL_FIN_MUDO,
+      }] });
+    }).then(function () {
       a.puesto = quiere.endsAt;
       a.quizas = false;
       a.fallo = null;

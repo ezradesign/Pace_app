@@ -1,0 +1,60 @@
+{
+  "id": "/",
+  "name": "PACE",
+  "short_name": "Pace",
+  "description": "Micro-breaks for focus, breathing, mobility and water through your day. All on your device, no accounts.",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F2EDE0",
+  "theme_color": "#F2EDE0",
+  "categories": ["health", "productivity", "lifestyle"],
+  "launch_handler": { "client_mode": ["focus-existing", "auto"] },
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [
+    { "src": "/beta/jornada-en.webp", "sizes": "540x960", "type": "image/webp", "form_factor": "narrow", "label": "Your workday in PACE: the Focus ring and the breaks of the day" },
+    { "src": "/beta/respira-en.webp", "sizes": "540x960", "type": "image/webp", "form_factor": "narrow", "label": "Breathe: a guided technique with voice cues" },
+    { "src": "/beta/logros-en.webp", "sizes": "540x960", "type": "image/webp", "form_factor": "narrow", "label": "Achievements: field-notebook stamps, no streaks that punish you" },
+    { "src": "/premium/app-escritorio-en-claro.webp", "sizes": "1440x900", "type": "image/webp", "form_factor": "wide", "label": "The PACE screen: the Focus ring and the «At your pace» day" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Focus",
+      "description": "Go to the Pomodoro",
+      "url": "/?go=focus",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Breathe",
+      "description": "Open the breathing library",
+      "url": "/?go=breathe",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Move",
+      "description": "Open the standing routines",
+      "url": "/?go=move",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Stretch",
+      "description": "Open the mobility library",
+      "url": "/?go=stretch",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Hydrate",
+      "description": "Open your water log",
+      "url": "/?go=hydrate",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ]
+}

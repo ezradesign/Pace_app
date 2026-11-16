@@ -69,8 +69,10 @@ test('estado-5b · exportar desde Ajustes y desde el aviso da el mismo estado, e
   await abrirTusDatos(page);
   const deAjustes = await bajar(page.locator('[data-pace-tweaks-panel]').getByRole('button', { name: 'Exportar una copia' }));
   expect(deAjustes.state.water.today, 'Ajustes exportó lo guardado y no lo que se ve').toBe(2);
-  /* Abrir Ajustes gana un logro («explore.tweaks») entre una copia y otra; lo demás es lo mismo. */
-  const sinLogros = ({ achievements, achievementQueue, ...resto }) => resto;
+  /* Abrir Ajustes gana un logro («explore.tweaks») entre una copia y otra, y cada copia lleva su fecha
+     (`ultimaCopia`, que las dos ponen); lo demás es lo mismo. */
+  const sinLogros = ({ achievements, achievementQueue, ultimaCopia, ...resto }) => resto;
+  expect(typeof delAviso.state.ultimaCopia, 'la copia del aviso no lleva su fecha').toBe('number');
   expect(sinLogros(deAjustes.state)).toEqual(sinLogros(delAviso.state));
 });
 
