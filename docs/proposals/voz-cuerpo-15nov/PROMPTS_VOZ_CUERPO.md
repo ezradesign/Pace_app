@@ -98,8 +98,8 @@ cuenco o la madera de hoy.
 
 1. **sulafat en castellano**: la voz y el idioma de fábrica, lo que oye casi todo el mundo. Hecha (15 nov.).
 2. **bradford en castellano**. Hecha (15 nov.; de las dos tomas que dio Genspark, la 2).
-3. **sulafat en inglés**. Hecha (16 nov.; Genspark dio dos versiones de cada toma: escoge Ez en la página, y en los números van juntas, el «one» de la 2 y lo demás de la 1).
-4. **bradford en inglés**. Hecha (16 nov.; dos versiones de cada toma, escoge Ez en la página).
+3. **sulafat en inglés**. Hecha (16 nov.; de las dos versiones de cada toma, Ez eligió las recomendadas: cuenta, avisos y lados de la 2, y en los números las dos juntas, el «one» de la 2 y lo demás de la 1).
+4. **bradford en inglés**. Hecha (16 nov.; de las dos versiones de cada toma, Ez eligió las recomendadas: números y cuenta de la 2, avisos y lados de la 1).
 
 ## Con qué hacerlas
 

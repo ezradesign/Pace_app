@@ -1,13 +1,14 @@
-/* «Para escoger: el inglés»: las dos versiones de cada toma, una junto a otra. Cada palabra suena como en la
-   app (Sound.voz.cuerpo.js): el trozo a..b de su toma, con su volumen y un fundido de 5 ms a cada lado. La
-   tabla es tomas-en/datos.js; las versiones montadas apuntan a voz/ (las tomas de la app) y las otras a
-   tomas-en/. Cada toma se carga al tocarla por primera vez. Lo que suena se para al tocar otra cosa. */
+/* «El inglés, elegido»: las tomas en inglés que eligió Ez (16 nov. 2026: «me quedo con todas tus
+   recomendaciones»), tal como suenan en la app (Sound.voz.cuerpo.js): el trozo a..b de su toma, con su volumen y
+   un fundido de 5 ms a cada lado. La tabla es la de la app (datos.js, que es app/ui/Sound.voz.cuerpo.datos.js)
+   y las tomas, las mismas (voz/, que es app/move/voz/). Cada toma se carga al tocarla por primera vez. Lo que
+   suena se para al tocar otra cosa. */
 (function () {
   'use strict';
   var raiz = document.querySelector('[data-oir-en]');
-  var D = window.PACE_TOMAS_EN;
+  var D = (window.PACE_VOZ_CUERPO || {}).en;
   if (!raiz) return;
-  if (!D) { raiz.innerHTML = '<p class="nota">No se ha podido cargar la tabla de las tomas en inglés.</p>'; return; }
+  if (!D) { raiz.innerHTML = '<p class="nota">No hay tomas en inglés en la tabla.</p>'; return; }
   var NUM = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen',
     'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty', 'twenty-one', 'twenty-two',
     'twenty-three', 'twenty-four', 'twenty-five'];
@@ -18,27 +19,21 @@
     ['avisos', 'Avisos', [['colocate', 'Get set'], ['siguiente', 'Next'], ['ya', 'Go'], ['ultimo', 'Last step']]],
     ['lados', 'Lados y descanso', [['izquierda', 'Left'], ['derecha', 'Right'], ['cambia', 'Switch sides'], ['descansa', 'Rest']]]
   ];
-  /* Por qué la recomendada, medido en las dos: el tono de cada palabra (cuánto varía de una a otra, en
-     semitonos), si cae al final, lo que dura y su tope. */
-  var PORQUE = {
+  /* Qué versión es y por qué se recomendó, medido en las dos: el tono de cada palabra (cuánto varía de una a
+     otra, en semitonos), si cae al final, lo que dura y su tope. */
+  var ELEGIDA = {
     sulafat: {
-      numeros: 'Recomiendo la 1 con el «one» de la 2, y es lo que suena en la app: la 2 se corta en el «twenty-one» y el «one» de la 1 dura 1,9 s, más de lo que cabe entre dos repeticiones.',
-      cuenta: 'Recomiendo la 2: los tres números en el mismo tono (varía 0,3 semitonos; en la 1, 1,8) y casi igual de largos.',
-      avisos: 'Recomiendo la 2: las cuatro órdenes en un tono mucho más igual (0,7 semitonos frente a 4,5).',
-      lados: 'Recomiendo la 2: más pareja de tono (0,8 semitonos frente a 2,5) y de volumen.'
+      numeros: ['la 1 con el «one» de la 2', 'la 2 se corta en el «twenty-one» y el «one» de la 1 dura 1,9 s, más de lo que cabe entre dos repeticiones.'],
+      cuenta: ['la 2', 'los tres números en el mismo tono (varía 0,3 semitonos; en la 1, 1,8) y casi igual de largos.'],
+      avisos: ['la 2', 'las cuatro órdenes en un tono mucho más igual (0,7 semitonos frente a 4,5).'],
+      lados: ['la 2', 'más pareja de tono (0,8 semitonos frente a 2,5) y de volumen.']
     },
     bradford: {
-      numeros: 'Recomiendo la 2: el tono varía menos de un número a otro (2,5 semitonos frente a 2,9) y cae menos al final de cada uno.',
-      cuenta: 'Recomiendo la 2: cada número se queda en su tono; en la 1 caen unos 3 semitonos, y el prompt pedía que no cayeran.',
-      avisos: 'Recomiendo la 1: las cuatro órdenes en un tono mucho más igual (1,6 semitonos frente a 4,1).',
-      lados: 'Recomiendo la 1, por poco: algo más pareja de tono (3,8 semitonos frente a 4,3). Por lo demás, casi iguales.'
+      numeros: ['la 2', 'el tono varía menos de un número a otro (2,5 semitonos frente a 2,9) y cae menos al final de cada uno.'],
+      cuenta: ['la 2', 'cada número se queda en su tono; en la 1 caen unos 3 semitonos, y el prompt pedía que no cayeran.'],
+      avisos: ['la 1', 'las cuatro órdenes en un tono mucho más igual (1,6 semitonos frente a 4,1).'],
+      lados: ['la 1', 'algo más pareja de tono (3,8 semitonos frente a 4,3); por lo demás, casi iguales.']
     }
-  };
-  /* Lo que no va en una versión: una palabra que pasa de su tope, o una toma que se queda corta. */
-  var LARGAS = { 'sulafat.numeros.v1.n1': true };
-  var AVISOS = {
-    'sulafat.numeros.v1': 'Su «one» dura 1,9 s: no cabe entre dos repeticiones.',
-    'sulafat.numeros.v2': 'Se corta en el «twenty-one»: faltan del 22 al 25.'
   };
 
   var ctx = null, tomas = {}, botones = {}, vivos = [], relojes = [];
@@ -57,7 +52,7 @@
   }
   function toma(archivo) {
     if (!tomas[archivo]) {
-      tomas[archivo] = fetch(archivo).then(function (r) {
+      tomas[archivo] = fetch('voz/' + archivo).then(function (r) {
         if (!r.ok) throw new Error(r.status);
         return r.arrayBuffer();
       }).then(function (datos) {
@@ -138,46 +133,28 @@
     caja.appendChild(cab);
     caja.appendChild(estado);
     GRUPOS.forEach(function (gr) {
-      var t = D[voz][gr[0]];
-      if (!t) return;
+      var palabras = gr[2].filter(function (p) { return D[voz][p[0]]; });
+      if (!palabras.length) return;
+      var lista = palabras.map(function (p) { return [voz + '.' + p[0], D[voz][p[0]]]; });
       var g = el('div', 'oir-grupo');
       var gc = el('div', 'oir-cab');
       gc.appendChild(el('span', '', gr[1]));
+      gc.appendChild(boton('oir-btn', 'Oír seguidas', function () { tocar(estado, lista); }));
       g.appendChild(gc);
-      var par = el('div', 'oir-par');
-      [1, 2].forEach(function (ver) {
-        var m = t['v' + ver] || {};
-        var base = voz + '.' + gr[0] + '.v' + ver;
-        var palabras = gr[2].filter(function (p) { return m[p[0]]; });
-        var col = el('div', 'oir-ver' + (t.rec === ver ? ' rec' : ''));
-        var vt = el('div', 'oir-vtit');
-        vt.appendChild(el('span', 'oir-vnom', 'Versión ' + ver));
-        if (t.rec === ver) vt.appendChild(el('span', 'oir-tag', 'Recomendada'));
-        vt.appendChild(boton('oir-btn', 'Oír seguidas', function () {
-          tocar(estado, palabras.map(function (p) { return [base + '.' + p[0], m[p[0]]]; }));
-        }));
-        col.appendChild(vt);
-        var fila = el('div', 'oir-botones');
-        palabras.forEach(function (p) {
-          var id = base + '.' + p[0];
-          var b = boton('palabra' + (LARGAS[id] ? ' larga' : ''), p[1], function () { tocar(estado, [[id, m[p[0]]]]); });
-          (botones[id] = botones[id] || []).push(b);
-          fila.appendChild(b);
-        });
-        col.appendChild(fila);
-        if (AVISOS[base]) col.appendChild(el('p', 'oir-aviso', AVISOS[base]));
-        par.appendChild(col);
+      var fila = el('div', 'oir-botones');
+      lista.forEach(function (p, i) {
+        var b = boton('palabra', palabras[i][1], function () { tocar(estado, [p]); });
+        (botones[p[0]] = botones[p[0]] || []).push(b);
+        fila.appendChild(b);
       });
-      g.appendChild(par);
-      var pq = el('p', 'oir-porque', PORQUE[voz][gr[0]]);
-      if (t.montada) {
-        var mont = t.montada;
-        pq.appendChild(document.createTextNode(' '));
-        pq.appendChild(boton('oir-btn', 'Oír la montada', function () {
-          tocar(estado, gr[2].filter(function (p) { return mont[p[0]]; }).map(function (p) { return [voz + '.montada.' + p[0], mont[p[0]]]; }));
-        }));
+      g.appendChild(fila);
+      var el1 = (ELEGIDA[voz] || {})[gr[0]];
+      if (el1) {
+        var pq = el('p', 'oir-porque');
+        pq.appendChild(el('span', 'oir-tag', 'Elegida'));
+        pq.appendChild(document.createTextNode(' ' + el1[0].charAt(0).toUpperCase() + el1[0].slice(1) + ', la recomendada: ' + el1[1]));
+        g.appendChild(pq);
       }
-      g.appendChild(pq);
       caja.appendChild(g);
     });
     raiz.appendChild(caja);

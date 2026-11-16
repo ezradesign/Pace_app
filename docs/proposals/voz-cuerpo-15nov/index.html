@@ -104,18 +104,8 @@ details[open] summary{border-bottom:1px solid var(--line);margin-bottom:10px}
 .palabra{font:400 15px var(--ui);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:6px 13px;min-height:40px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .palabra.suena{border-color:var(--olive);color:var(--olive);background:var(--olive-soft)}
 .oir-btn{font:500 13px var(--ui);color:var(--olive);background:transparent;border:1px solid var(--olive);border-radius:999px;padding:6px 13px;min-height:36px;cursor:pointer;letter-spacing:0;text-transform:none;white-space:nowrap}
-.oir-par{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.oir-ver{border:1px solid var(--line);border-radius:8px;padding:8px;min-width:0}
-.oir-ver.rec{border-color:var(--olive);background:var(--olive-soft)}
-.oir-vtit{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin-bottom:8px}
-.oir-vnom{font-size:14px;color:var(--ink)}
 .oir-tag{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--olive)}
-.oir-ver .oir-botones{gap:5px}
-.oir-ver .palabra{font-size:14px;padding:5px 10px;min-height:38px}
-.palabra.larga{border-style:dashed;border-color:var(--terra)}
-.oir-aviso{font-size:13px;color:var(--terra);margin:8px 0 0}
 .oir-porque{font-size:14px;color:var(--ink-2);margin:10px 0 0}
-.oir-porque .oir-btn{display:block;margin-top:8px}
 @media (prefers-reduced-motion: reduce){*{scroll-behavior:auto}}
 </style>
 
@@ -134,7 +124,7 @@ details[open] summary{border-bottom:1px solid var(--line);margin-bottom:10px}
       <li><strong>El guion que corta tus tomas</strong>, con su prueba, y los prompts por tomas: abajo y en <code>PROMPTS_VOZ_CUERPO.md</code>.</li>
       <li><strong>Seis pruebas nuevas</strong>, vistas caer contra un fallo puesto a propósito, y las 32 del runner y de Ajustes que ya había, en verde.</li>
     </ul>
-    <p>Suenan <strong>tus tomas de castellano</strong>, sulafat y bradford: escúchalas en <a href="#para-oir">«Para oír»</a>, justo debajo. <strong>Del inglés, escoge</strong> entre las dos versiones de cada toma en <a href="#para-oir-en">«Para escoger: el inglés»</a>; mientras, en la app suena la que recomiendo. Falta oírlo y sentirlo en el móvil, y que GitHub compile las dos apps con el complemento al juntar.</p>
+    <p>Suenan <strong>tus tomas de castellano</strong>, sulafat y bradford: escúchalas en <a href="#para-oir">«Para oír»</a>, justo debajo. Y <strong>las de inglés que elegiste</strong>, en <a href="#para-oir-en">«El inglés, elegido»</a>. Falta oírlo y sentirlo en el móvil, y que GitHub compile las dos apps con el complemento al juntar.</p>
   </div>
 
     <h2 id="para-oir">Para oír</h2>
@@ -147,12 +137,10 @@ details[open] summary{border-bottom:1px solid var(--line);margin-bottom:10px}
   <div class="oir" data-oir></div>
   <noscript><p class="nota">Esta parte necesita JavaScript para sonar.</p></noscript>
 
-  <h2 id="para-oir-en">Para escoger: el inglés</h2>
-  <p>Genspark dio <strong>dos versiones de cada toma</strong>, y aquí están una junto a otra, cortadas por el guion como las de castellano. La marcada es la que recomiendo por lo que se puede medir, y es la que ya suena en la app en inglés. Si prefieres la otra en alguna, dime cuál, voz y toma («bradford, avisos: la 2»), y se cambia.</p>
+  <h2 id="para-oir-en">El inglés, elegido</h2>
+  <p>De las dos versiones que dio Genspark de cada toma <strong>elegiste todas las que recomendé</strong> (16 nov.), y son las que suenan en la app en inglés. Cada botón suena el trozo exacto que sonará en la app, y debajo de cada toma queda qué versión es y por qué se recomendó.</p>
   <div class="resumen">
-    <p><strong>Cortan limpias las dos versiones de todo, menos los números de sulafat.</strong> La versión 2 se corta en el «twenty-one» (faltan del 22 al 25), y en la 1 el «one» dura 1,9 s, más de lo que cabe entre dos repeticiones. Por eso en la app suena la 1 con el «one» de la 2: se juntan sin recodificar y nada pasa de su tope. Ninguna otra palabra pasa del suyo, así que no hace falta repetir nada. En inglés, sulafat pesa 0,78 MB y bradford 0,54 MB, y las dos se guardan al instalar.</p>
-    <p>Si el «one» montado no te convence, se repite solo esa palabra: el archivo se llama <code>sulafat-en-repite-one.mp3</code>, con este prompt.</p>
-    <div class="prompt"><h4>Una palabra repetida · <code>sulafat-en-repite-one.mp3</code> <button class="copiar" type="button">Copiar</button></h4><pre>Say it in English, in a calm, warm and steady voice, like a movement teacher guiding a quiet session in a small room. Soft but clear, never whispered, never sung, never cheerful or energetic. One single word, no breath before it, no pause before it, in a neutral, even tone, well under one second: One.</pre></div>
+    <p><strong>Los números de sulafat son de las dos versiones:</strong> la 2 se corta en el «twenty-one» y en la 1 el «one» dura 1,9 s, así que suena la 1 con el «one» de la 2, juntadas sin recodificar. Ninguna palabra pasa de su tope. En inglés, sulafat pesa 0,78 MB y bradford 0,54 MB, y las dos se guardan al instalar.</p>
   </div>
   <div class="oir" data-oir-en></div>
   <noscript><p class="nota">Esta parte necesita JavaScript para sonar.</p></noscript>
@@ -614,7 +602,6 @@ Descansa.</pre></div>
   if (!raiz.children.length) raiz.innerHTML = '<p class="nota">No hay tomas cortadas todavía.</p>';
 })();
 </script>
-<script src="tomas-en/datos.js"></script>
 <script src="oir-en.js"></script>
 
 <script>
