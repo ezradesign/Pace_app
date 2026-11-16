@@ -52,10 +52,7 @@ https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 y https://claude.ai/artifact/E
 lo pendiente, «Lo que queda hasta v1» (`docs/traspaso/pendiente/pendiente.html`): UkETeVK2Ee97N8kSvupwC8 y LtUEUn4yjYXjyq4AqJEtqV. Ez se pierde
 con mucho abierto: a «¿qué toca?», una sola cosa.
 
-- **La versión de prueba: la 0.191.1 NO se sube (Ez, 11 nov.: «estamos esperando a tener una versión sólida y buena para subir»).** Cuando la haya, el camino es este, con su número: `subidas-play\PACE-0.191.1.aab`, a la prueba interna y
-  de ahí a la cerrada, con las notas y el párrafo «A tu ritmo» de `ficha.md`, una pantalla por mensaje; en TestFlight, la 191001
-  ya subida, al grupo «Testers iPhone» con su «Qué probar». Notas y capturas, en `docs/launch/google-play/SUBIDAS.md`: `6-logros` y `3-respira` están viejas y las seis se rehacen una sola
-  vez, con la jornada dentro. El logo se queda como está por ahora (Ez, 4 nov.), aunque «EVEN» se lea «FVFN» (`app/ui/pace-logo.png`).
+- **La versión de prueba es la 0.205.0** (subida el 15 nov.): en revisión en la prueba cerrada de Play y en TestFlight (205000; falta darla al grupo «Testers iPhone» con el «Qué probar» de `docs/launch/google-play/SUBIDAS.md`). La 0.206.0 entra como actualización cuando Google apruebe la 0.205.0. Antes del mensaje de WhatsApp (`docs/launch/google-play/mensaje-testers-whatsapp.md`), Ez la prueba en su Android y su iPhone. Las seis capturas de Play, rehechas el 15 nov. El logo se queda como está por ahora (Ez, 4 nov.), aunque «EVEN» se lea «FVFN» (`app/ui/pace-logo.png`).
 - **La 0.194.0, juntada con los «Júntalo» de Ez (8 nov.)**: el contraste (1B 2B 3B), volver tras horas fuera (E1 A, V1 A,
   V2 A), el día de v1 (1B 2A 3B 4A, con «Borrar todo» que dice que el código se queda) y siete arreglos de la caza de la semana.
   Si Play se sube el lunes con la 0.191.1, esta llega como actualización. Detalle, en el relevo de `docs/traspaso/LEEME.md`.
