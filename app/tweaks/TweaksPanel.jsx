@@ -361,6 +361,7 @@ function TweaksPanel({ open, onClose }) {
             { v: 45, name: t('settings.rest.45') },
           ]} />
         </AjustesFila>
+        <TweaksVibrar state={state} set={set} />
         {/* Objetivo de hidratación (s89): el state (water.goal) siempre lo
             soportó; esto solo expone la UI. */}
         <AjustesFila id="water" nombre={t('settings.water')} sub={t('settings.water.sub')} modulo="hydrate">

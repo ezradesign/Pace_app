@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.207.0';
+const PACE_VERSION = 'v0.208.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -78,6 +78,7 @@ const defaultState = {
   restBetweenSets: 30,
   // «Auto» de Mueve y Estira (Ez, 1A del 25 oct.): apagado, cada paso espera a «›».
   cuerpoAuto: true,
+  vibrar: 'sinSonido',   // «Vibrar» en Mueve y Estira (Ez, 6A del 15 nov.): 'no' · 'sinSonido' (de fábrica) · 'siempre'
 
   // Aviso de fin de Pomodoro vía notificación del navegador (s102 · PWA).
   // B1.2 (s108): ON por defecto (opt-out en Ajustes). El permiso del navegador

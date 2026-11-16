@@ -97,7 +97,8 @@ function TweaksAudioBlock({ state, set }) {
       </AjustesFila>
       {/* Las dos voces hablan castellano e inglés (Sound.voz.jsx): la palabra sale
           en el idioma de la app, así que la fila es la misma en los dos. */}
-      <AjustesFila id="signal" nombre={t('settings.signal')} atenuada={apagado}>
+      {/* «En Respira, Mueve y Estira» (Ez, 4A del 15 nov. 2026): la misma fila manda también en el runner. */}
+      <AjustesFila id="signal" nombre={t('settings.signal')} sub={t('settings.signal.nota')} atenuada={apagado}>
         <AjustesPildoras aria={t('settings.signal')} valor={senal} onChange={ponerSenal} apagado={apagado} opciones={[
           { v: 'tono', name: t('settings.signal.tone') },
           { v: 'sulafat', name: t('settings.signal.clear') },
@@ -120,4 +121,25 @@ function TweaksAudioBlock({ state, set }) {
   );
 }
 
-Object.assign(window, { TweaksAudioBlock, paceEscucharSenal });
+/* «VIBRAR» (Ez, 6A del 15 nov. 2026): en Sesiones, junto al descanso de Mueve, porque solo vibra el runner de
+   Mueve y Estira. Tres opciones en una fila y de fábrica «Sin sonido»: con sonido, vibrar repetiría la madera;
+   sin sonido, es lo único que marca el ritmo. Solo sale donde se puede vibrar (vibra.js): no en el iPhone por
+   la web ni en un ordenador. Medido a 360 × 640: con la línea de «Marca la fase», 577 px de los 584 del panel. */
+function TweaksVibrar({ state, set }) {
+  const { t } = useT();
+  let posible = false;
+  try { posible = typeof window.paceVibraPosible === 'function' && window.paceVibraPosible(); } catch (e) { posible = false; }
+  if (!posible) return null;
+  const valor = typeof window.paceVibraModo === 'function' ? window.paceVibraModo(state) : 'sinSonido';
+  return (
+    <AjustesFila id="vibrar" nombre={t('settings.vibrar')} sub={t('settings.vibrar.sub')} modulo="move">
+      <AjustesPildoras aria={t('settings.vibrar')} valor={valor} onChange={(v) => set({ vibrar: v })} opciones={[
+        { v: 'no', name: t('settings.vibrar.no') },
+        { v: 'sinSonido', name: t('settings.vibrar.sinSonido') },
+        { v: 'siempre', name: t('settings.vibrar.siempre') },
+      ]} />
+    </AjustesFila>
+  );
+}
+
+Object.assign(window, { TweaksAudioBlock, paceEscucharSenal, TweaksVibrar });

@@ -4,6 +4,12 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de noviembre de 2026, 10:20, v0.204.0 en `main` y los cuatro arreglos de S3 y S4 en su rama.
 
+## 16 nov., noche (cuenta 5iWBf): la 0.208.0, con la voz. Manda sobre lo de abajo
+
+- **Ez (literal): «Junta lo de la voz».** `claude/voz-cuerpo-15nov-21e284` ya traía `main` dentro (b81a2e91); unión sin choques, `verify`, bump a 0.208.0 y build. Suite entera: 1668 en verde, 2 saltadas a propósito y 5 rojas con la máquina muy cargada (1 h 12 min, con otras sesiones pasando pruebas), que pasan las cinco 3 de 3 solas.
+- **Ez (16 nov.):** «Puedes llevar todas las sesiones hasta el 100% ahora mismo no tenemos más cuentas» (las sesiones no paran al 85 %; commit y push tras cada paso); v1 sale con el calendario «en pruebas»; las cuatro maquetas, 1A, 2 A+B+C, 3B y la 4 otra vuelta; las tomas en inglés, las recomendadas; los arreglos menores, 1A «pero valorando que nada modifique las líneas o se superponga o cambie el formato», 2.1 A y 2.3 A; y abrir la sesión del calendario a la vista (antes de elegir el día) y en el iPhone (EventKit, solo escritura).
+- **Sesiones vivas:** avisos-novena (nueve arreglos hechos, falta su página con los pasos de Fable para el móvil), maquetas-4, menores-valorar (monta la 1A cuando la voz esté en `main`: ya lo está) y calendario-vista. Nada se junta sin el «júntalo» de Ez.
+
 ## 16 nov., tarde (cuenta 5iWBf): la 0.207.0, juntada. Manda sobre lo de abajo
 
 - **Ez (literal): «Júntalas»** para lo pequeño (`claude/pequenas-v1-15nov-39e6cb`, con «A+B» de la copia y el 404 y /beta de la auditoría externa del 16 nov., comprobada en `docs/audits/externa-16nov/comprobado.md`) y la segunda tanda (`claude/tanda2-v1-16nov-ea1aa2`). Uniones 77a3ed6b y 9b4328d6; choques solo en el censo de claves (1218), el mínimo de pruebas (1624) y las filas de decisiones. La barrida de plurales nueva cazó «hace {n} días», que nunca vale 1 (va a `SIN_SINGULAR`). Bump a 0.207.0.
