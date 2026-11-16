@@ -1,0 +1,140 @@
+<title>Tanda 2 antes de v1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de papel y tinta, como las otras páginas «Montado»: cada punto con lo que pasaba y
+   lo que pasa ahora, y la ventana de PACE pintada en pequeño. Terracota = antes; oliva = ahora. */
+:root{
+  --paper:#F2EDE0;--card:#FBF8F1;
+  --ink:#1F1C17;--ink-2:#4A453C;--ink-3:#77705F;
+  --line:#C9C0A8;
+  --olive:#3E5A3A;--olive-soft:rgba(62,90,58,.12);
+  --terra:#A85E43;--terra-soft:rgba(168,94,67,.12);
+  --display:'EB Garamond',Georgia,'Times New Roman',serif;
+  --ui:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+main{max-width:880px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 72px}
+h1,h2,h3{font-family:var(--display);font-style:italic;font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(32px,6vw,44px)}
+h2{font-size:clamp(23px,4vw,28px);margin:44px 0 10px;padding-top:22px;border-top:1px solid var(--line)}
+p,li{color:var(--ink-2);max-width:68ch}
+p{margin:0 0 12px}
+ul{margin:0 0 12px;padding-left:20px}
+li{margin-bottom:6px}
+strong{color:var(--ink);font-weight:500}
+code{font-size:.88em;background:var(--olive-soft);padding:1px 5px;border-radius:4px;color:var(--ink);overflow-wrap:anywhere}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.lead{font-family:var(--display);font-size:21px;color:var(--ink);max-width:62ch;margin-top:14px}
+.par{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin:14px 0}
+.lado{min-width:0}
+.lado .t{font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.antes .t{color:var(--terra)}.ahora .t{color:var(--olive)}
+.ventana{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.ventana h3{font-size:20px;margin-bottom:8px}
+.ventana p{font-size:14px;margin-bottom:8px}
+.antes .ventana mark{background:var(--terra-soft);color:var(--ink);padding:0 2px;border-radius:3px}
+.ahora .ventana mark{background:var(--olive-soft);color:var(--ink);padding:0 2px;border-radius:3px}
+.botones{display:flex;gap:10px;justify-content:flex-end;margin-top:12px;font-size:14px;flex-wrap:wrap}
+.botones span{padding:6px 14px;border-radius:999px;border:1px solid var(--line);color:var(--ink-2)}
+.botones span.si{background:var(--olive-soft);border-color:var(--olive);color:var(--ink)}
+.nota{font-size:13px;color:var(--ink-3)}
+.montado{background:var(--olive-soft);border-radius:10px;padding:12px 16px;margin:18px 0 0;color:var(--ink);max-width:68ch}
+.cifras{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:14px 0;max-width:68ch}
+.cifras div{border-top:1px solid var(--line);padding-top:8px;min-width:0}
+.cifras b{display:block;font-family:var(--display);font-size:30px;font-weight:400;color:var(--ink);font-variant-numeric:tabular-nums}
+.cifras span{font-size:13px;color:var(--ink-3)}
+.tabla{overflow-x:auto;margin:12px 0}
+table{border-collapse:collapse;font-size:14px;min-width:420px}
+th,td{text-align:left;padding:7px 12px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:500;color:var(--ink-3);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+td{color:var(--ink-2)}
+</style>
+
+<main>
+  <div class="eyebrow">Montado · 16 de noviembre de 2026 · rama claude/tanda2-v1-16nov-ea1aa2</div>
+  <h1>Tanda 2 antes de v1</h1>
+  <p class="lead">Cuatro arreglos que no piden elegir nada. Lo único que se ve distinto son dos frases que ahora dicen «1» en singular.</p>
+
+  <h2>Las cifras de 1, en singular</h2>
+  <p>PACE ya decía «1 día» o «1 minuto» en casi todas partes, pero nadie lo vigilaba. Ahora una comprobación lee todas las frases con una cifra delante de una palabra en plural, en español y en inglés, y no deja pasar ninguna sin su singular o sin el motivo por el que esa cifra nunca vale 1. Así salieron dos sitios donde podía salir mal:</p>
+  <div class="par">
+    <div class="lado antes">
+      <div class="t">Antes</div>
+      <div class="ventana">
+        <h3>¿Cambiar tus datos por los de la copia?</h3>
+        <p>La copia trae <mark>1 logros</mark> y 42 min de foco. Lo que hay ahora en PACE se sustituye por la copia…</p>
+        <div class="botones"><span>Cancelar</span><span class="si">Importar</span></div>
+      </div>
+    </div>
+    <div class="lado ahora">
+      <div class="t">Ahora</div>
+      <div class="ventana">
+        <h3>¿Cambiar tus datos por los de la copia?</h3>
+        <p>La copia trae <mark>1 logro</mark> y 42 min de foco. Lo que hay ahora en PACE se sustituye por la copia…</p>
+        <div class="botones"><span>Cancelar</span><span class="si">Importar</span></div>
+      </div>
+    </div>
+  </div>
+  <p>En inglés, «1 achievements» pasa a «1 achievement». Y la carta del lunes de una semana con una sola pausa decía «1 de 1 pausas hechas»; ahora dice <strong>«1 de 1 pausa hecha»</strong>. Las tres frases nuevas están calcadas de su plural; ningún plural que ya estaba bien cambia.</p>
+  <div class="cifras">
+    <div><b>63</b><span>frases con cifra y plural, revisadas</span></div>
+    <div><b>25</b><span>ya tenían su singular, y PACE lo usa</span></div>
+    <div><b>38</b><span>con una cifra que nunca vale 1, cada una con su porqué</span></div>
+  </div>
+  <p class="nota">Ejemplos de porqué: la meta de agua va de 4 a 12, «Qué te ayuda» sale con 10 Focos o más, el tope de rutinas propias es 10.</p>
+
+  <h2>Salir de una pausa empezada</h2>
+  <p>Esto <strong>ya estaba montado</strong> desde tu 2A del 8 de noviembre: con una Pausa o una Larga en marcha o parada, la barra de arriba pregunta «¿Dejar la pausa?» y dice lo que llevas. Lo comprobé otra vez: sus 10 pruebas pasan y, quitando la pregunta, caen 7. No hacía falta tocar nada. La línea de STATE que lo daba por pendiente estaba vieja y ya se ha quitado.</p>
+  <p class="nota">Un caso aparte, fuera de la barra: abrir PACE desde el atajo «Foco» del icono instalado con una pausa en marcha la corta sin preguntar. No lo he tocado.</p>
+
+  <h2>Lo que tienen las testers</h2>
+  <p>Las testers tienen la 0.191.1 y la 0.174.0, así que lo que les llegue será una actualización. Para probarla con un estado de verdad, saqué de git el PACE de cada una de esas versiones y lo usé como una tester durante dos días: dos Focos, tres vasos, un «Sí» a «¿Te ayudó?», una rutina propia, la semana puesta y tres días de jornada apuntados.</p>
+  <p>Con eso, la versión de hoy se abre el lunes siguiente y comprueba lo siguiente:</p>
+  <ul>
+    <li>No sale la bienvenida: PACE sabe que ya la usabas.</li>
+    <li>Siguen los minutos de foco, los logros, la historia (el miércoles pasa a ella al cambiar de día), la semana, la rutina propia, el «¿Te ayudó?» y el código de PACE completo.</li>
+    <li>Siguen todos los apuntes de antes, y la carta del lunes sale con los tres días que apuntó la versión vieja.</li>
+    <li>Tras contestar la carta y recargar, todo sigue ahí. Es el momento en que un fallo de este tipo borraría los datos.</li>
+  </ul>
+  <p class="montado">No salió ningún fallo. Las dos pruebas caen si la carga pierde la semana, si los apuntes arrancan vacíos o si el cambio de día no guarda el miércoles.</p>
+
+  <h2>El orden de los textos por dentro</h2>
+  <p>Tres deudas de la auditoría (D-1, D-2 y D-3), sin ningún cambio a la vista:</p>
+  <ul>
+    <li>Dos textos en inglés de Respira estaban escritos en dos sitios con palabras distintas («Ocean inhale» y «Oceanic inhale»). Se queda el que se ve, «Oceanic», en un solo sitio.</li>
+    <li>Dos parejas de textos de los Caminos decían exactamente lo mismo («Hecho hoy» y «Saltar»). Queda uno de cada.</li>
+    <li>Los textos de los Caminos estaban repartidos en dos grupos con nombres casi iguales. Ahora están en uno. Los nombres que guardan tus Caminos no se tocan.</li>
+  </ul>
+  <p class="nota">Una comprobación nueva no deja que vuelva ninguna de las tres cosas, y avisa si el código pide un texto de los Caminos que no existe. Los Caminos están ocultos hasta v1, así que un fallo ahí no lo vería nadie.</p>
+
+  <h2>Lo que no se ha probado</h2>
+  <ul>
+    <li>La suite entera no se ha corrido: solo las pruebas vecinas de cada punto, 10 + 58 + 40 + 19, todas en verde. Se corre al juntar.</li>
+    <li>El estado viejo sale de usar esas versiones aquí, no del móvil de una tester.</li>
+    <li>Los textos de los Caminos se comprobaron en el código y con las pruebas que abren los Caminos, no mirándolos.</li>
+  </ul>
+
+  <h2>Para juntar</h2>
+  <div class="tabla">
+    <table>
+      <tr><th>Commit</th><th>Qué</th></tr>
+      <tr><td><code>a7519a67</code></td><td>Plurales y su comprobación</td></tr>
+      <tr><td><code>343f8b42</code></td><td>D-1 y D-2</td></tr>
+      <tr><td><code>ef7e078c</code></td><td>Actualización desde la 0.191.1 y la 0.174.0</td></tr>
+      <tr><td><code>736d4775</code></td><td>D-3</td></tr>
+    </table>
+  </div>
+  <p class="nota">Al juntar chocan dos números con las ramas de la voz y de lo pequeño, y hay que sumarlos: las claves de texto (1208 en esta rama, contra las 1207 de main) y el mínimo de pruebas (1594, contra las 1589 de main).</p>
+</main>

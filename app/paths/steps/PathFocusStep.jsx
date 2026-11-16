@@ -90,7 +90,7 @@ function PathFocusStep({ step, onExit }) {
     <React.Fragment>
       <button data-pace-path-btn onClick={toggle} style={pfBtn('var(--focus)', 'var(--focus-soft)')}><PaceConIcono texto={pauseLabel} /></button>
       <button data-pace-path-btn onClick={reset} style={pfBtn('var(--breathe)', 'var(--breathe-soft)')}>{t('focus.restart')}</button>
-      <button data-pace-path-btn onClick={() => onExit('skip')} style={pfBtn('var(--ink-3)', 'var(--paper-3)')}>{t('path.runner.skip')}</button>
+      <button data-pace-path-btn onClick={() => onExit('skip')} style={pfBtn('var(--ink-3)', 'var(--paper-3)')}>{t('paths.runner.skip')}</button>
     </React.Fragment>
   );
 

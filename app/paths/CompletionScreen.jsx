@@ -93,7 +93,7 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
   /* Meta editorial: "IV pasos · 24 min" (romano = mismo lenguaje que el
      recorrido y el kicker de las TransitionCards). Sin minutos si 0. */
   const stepsLabel = totalSteps > 0
-    ? tn('path.runner.complete.steps', { n: CS_ROMAN[totalSteps - 1] || totalSteps })
+    ? tn('paths.runner.complete.steps', { n: CS_ROMAN[totalSteps - 1] || totalSteps })
     : '';
   const metaLine = [stepsLabel, elapsed > 0 ? elapsed + ' min' : null]
     .filter(Boolean).join(' · ');
@@ -144,7 +144,7 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
           fontSize: 11, letterSpacing: '0.28em', textTransform: 'uppercase',
           color: 'var(--ink-3)', margin: '0 0 14px',
         }}>
-          {t('path.runner.complete.title')}
+          {t('paths.runner.complete.title')}
         </p>
         <h2 style={{
           fontFamily: 'var(--font-display)',
@@ -189,7 +189,7 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
       {totalSteps > 0 && (
         <div style={{ maxWidth: 340, width: '100%', margin: '0 0 6px' }}>
           <div style={csKickerStyle}>
-            {t('path.runner.complete.recorrido')}
+            {t('paths.runner.complete.recorrido')}
           </div>
           <ul style={{
             listStyle: 'none', padding: 0, margin: 0,
@@ -238,7 +238,7 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
           gap: 10, margin: '4px 0 2px',
         }}>
           <div style={{ ...csKickerStyle, marginBottom: 2 }}>
-            {t('path.runner.complete.achievements')}
+            {t('paths.runner.complete.achievements')}
           </div>
           {achievementsDuring.map(function(a) {
             return (
@@ -281,7 +281,7 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
             fontSize: 13, letterSpacing: '0.12em',
           }}
         >
-          {t('path.runner.complete.back')}
+          {t('paths.runner.complete.back')}
         </button>
         <button
           onClick={function() { onBack(); if (typeof startPath === 'function') startPath(snapshot.pathId); }}
