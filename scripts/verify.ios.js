@@ -113,8 +113,11 @@ function chequeaCampanaAviso(ctx) {
   if (dosIguales && pausa && dosIguales.equals(pausa)) malas.push('el fin de la pausa suena igual que el fin del Foco');
   if (web.indexOf("var PACE_IOS_AVISO_SONIDO = '" + campana.ARCHIVO + "';") === -1 || !/aviso\.sound = sonido/.test(web)) malas.push('app/ui/ios.js ya no programa el aviso con la campana de PACE');
   if (web.indexOf("var PACE_IOS_AVISO_SONIDO_PAUSA = '" + campana.PAUSA + "';") === -1 || !/paceIosAvisoSonido\(PACE_IOS_AVISO_SONIDO_PAUSA\)/.test(web)) malas.push('app/ui/ios.js ya no programa el fin de la pausa con su sonido');
+  /* El aviso a tu hora de entrada, con las dos campanadas de la pausa (Ez, 16 nov.; novena pasada, nº 6). */
+  var entrada = texto('app/ui/nativo.entrada.js');
+  if (entrada.indexOf("var PACE_ENTRADA_SONIDO_IOS = '" + campana.PAUSA + "';") === -1 || entrada.indexOf('if (sonido) n.sound = PACE_ENTRADA_SONIDO_IOS;') === -1) malas.push('app/ui/nativo.entrada.js ya no programa el aviso de entrada con ' + campana.PAUSA);
   if (malas.length) malas.forEach(function (m) { ctx.falla('ios: ' + m); });
-  else ctx.ok('ios: el aviso de fin de Foco suena con la campana de PACE y el de fin de pausa con el suyo (' + campana.ARCHIVO + ' y ' + campana.PAUSA + ', las recetas de Sound.jsx de hoy)');
+  else ctx.ok('ios: el aviso de fin de Foco suena con la campana de PACE, y el de fin de pausa y el de entrada con las dos campanadas (' + campana.ARCHIVO + ' y ' + campana.PAUSA + ', las recetas de Sound.jsx de hoy)');
 }
 
 /* La ventana de Apple para valorar PACE (Ez, 4A del 28 oct.), con las reglas de la de Android

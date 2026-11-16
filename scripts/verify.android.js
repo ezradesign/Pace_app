@@ -118,8 +118,17 @@ function chequeaSonidoPausa(ctx) {
       web.indexOf('importance: 3, sound: sonido') === -1) {
     malas.push('app/ui/android.avisos.js ya no crea los canales del fin del Foco y de la pausa con su sonido');
   }
+  /* El aviso a tu hora de entrada, con las dos campanadas de la pausa (Ez, 16 nov.: «Dos campanadas»;
+     novena pasada externa, nº 6 y 7): su canal nombra el mismo .wav, y con el sonido apagado va por el
+     mudo, de importancia baja. Un canal nuevo, porque `pace_entrada` ya existia sin sonido. */
+  var entrada = (leer('app/ui/nativo.entrada.js') || '').toString();
+  if (entrada.indexOf("var PACE_ENTRADA_SONIDO = '" + base(campana.PAUSA_ANDROID) + "';") === -1 ||
+      entrada.indexOf('importance: 3, sound: PACE_ENTRADA_SONIDO') === -1) malas.push('app/ui/nativo.entrada.js ya no crea el canal del aviso de entrada con ' + base(campana.PAUSA_ANDROID));
+  if (!/PACE_ENTRADA_CANAL_MUDO, name: [^\n]*importance: 2 \}/.test(entrada)) malas.push('el canal mudo del aviso de entrada ya no es de importancia baja, y sonaria con el tono del movil');
+  if (entrada.indexOf('n.channelId = sonido ? PACE_ENTRADA_CANAL : PACE_ENTRADA_CANAL_MUDO;') === -1) malas.push('el aviso de entrada ya no elige su canal por el sonido de Ajustes');
+  if (/var PACE_ENTRADA_CANAL = 'pace_entrada';/.test(entrada)) malas.push('el aviso de entrada vuelve a pace_entrada, que en los moviles de la 0.206.0 y la 0.207.0 ya existe sin sonido');
   if (malas.length) malas.forEach(function (m) { ctx.falla('android: ' + m); });
-  else ctx.ok('android: el fin del Foco y el de la pausa avisan por sus canales, con ' + base(campana.CAMPANA_ANDROID) + ' y ' + base(campana.PAUSA_ANDROID) + ' (los mismos .wav que los del iPhone), o mudos si el sonido esta apagado');
+  else ctx.ok('android: el fin del Foco, el de la pausa y el aviso de entrada avisan por sus canales, con ' + base(campana.CAMPANA_ANDROID) + ' y ' + base(campana.PAUSA_ANDROID) + ' (los mismos .wav que los del iPhone), o mudos si el sonido esta apagado');
 }
 
 /* La ventana de Google Play para valorar PACE (Ez, 15 oct., reseñas punto 6): una sola vez, tras la

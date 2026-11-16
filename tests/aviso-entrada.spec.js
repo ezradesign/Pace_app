@@ -20,8 +20,8 @@ const { sembrar, irAlArtefacto, aceptarAvisosPace, abrirTusDatos, CLAVE_ESTADO }
 const SEMANA = ['jornada', 'jornada', 'jornada', 'jornada', 'media', 'libre', 'libre'];
 const HORARIO = { inicio: 540, comida: 840, comidaDur: 60, salida: 1020 };
 
-async function comoAndroid(context) {
-  await context.addInitScript(() => {
+async function comoAndroid(context, plataforma) {
+  await context.addInitScript((plataforma) => {
     /* `oyentes`: para mandar PACE al fondo como lo haría Android (`alFondo`). `cancelFalla`: cuántos
        `cancel` del aviso de entrada fallan (lo siembra `window.__cancelFalla`, que va antes). */
     const nativo = window.__nativo = { llamadas: [], oyentes: {}, cancelFalla: window.__cancelFalla || 0 };
@@ -32,7 +32,7 @@ async function comoAndroid(context) {
       if (typeof window.__apuntaNodo === 'function' && ids.length) window.__apuntaNodo(metodo + ' ' + ids.join(','));
     };
     window.Capacitor = {
-      getPlatform: () => 'android',
+      getPlatform: () => plataforma || 'android',
       isNativePlatform: () => true,
       Plugins: {
         App: {
@@ -45,6 +45,7 @@ async function comoAndroid(context) {
           checkExactNotificationSetting: () => Promise.resolve({ exact_alarm: window.__exacta || 'granted' }),
           changeExactNotificationSetting: () => Promise.resolve({ exact_alarm: 'granted' }),
           createChannel: (op) => { apunta('createChannel', op); return Promise.resolve(); },
+          deleteChannel: (op) => { apunta('deleteChannel', op); return Promise.resolve(); },
           schedule: (op) => { apunta('schedule', op); return Promise.resolve({ notifications: op.notifications.map((n) => ({ id: n.id })) }); },
           cancel: (op) => {
             apunta('cancel', op);
@@ -55,7 +56,7 @@ async function comoAndroid(context) {
         PaceAvisoFijo: { poner: () => Promise.resolve(), quitar: () => Promise.resolve() },
       },
     };
-  });
+  }, plataforma || 'android');
 }
 
 /* Los avisos que no son de fin de Foco, del aviso fijo ni de fin de pausa (ids 1, 2 y 3) que PACE
@@ -85,9 +86,9 @@ async function llamadasEntrada(page) {
 const alFondo = (page) => page.evaluate(() => (window.__nativo.oyentes.appStateChange || []).forEach((cb) => cb({ isActive: false })));
 const olvidarLlamadas = (page) => page.evaluate(() => { window.__nativo.llamadas = []; });
 
-async function abrir(page, context, ritmo, cuando) {
-  await sembrar(context, { soundOn: false, ritmo });
-  await comoAndroid(context);
+async function abrir(page, context, ritmo, cuando, extra) {
+  await sembrar(context, Object.assign({ soundOn: false, ritmo }, extra && extra.estado));
+  await comoAndroid(context, extra && extra.plataforma);
   await page.clock.install({ time: cuando });
   await irAlArtefacto(page);
 }
@@ -106,7 +107,7 @@ test('encendido: los días de jornada y media de la semana que sigue, desde mañ
   expect(avisos[1].title).toBe('Hoy, como cada viernes');
   expect(avisos[1].body).toMatch(/^Media jornada de 9:00 a \d+:\d\d\. Tu día ya está preparado\.$/);
   expect(avisos.map((a) => a.id)).toEqual([10, 11, 14, 15, 16]);
-  expect(avisos[0].channelId).toBe('pace_entrada');
+  expect(avisos[0].channelId, 'con el sonido apagado, por el canal mudo').toBe('pace_entrada_mudo');
   expect(avisos[0].schedule.allowWhileIdle).toBe(true);
   for (const a of avisos) expect(a.body + a.title, 'el aviso no puede reprochar nada').not.toMatch(/echamos|racha|seguidos/i);
 });
@@ -228,6 +229,39 @@ for (const [exacta, esperado] of [['granted', true], ['denied', false]]) {
     const avisos = await avisosPuestos(page);
     expect(avisos.length, 'GUARD: no puso ninguno').toBe(5);
     for (const a of avisos) expect(a.isExactNotification, 'el aviso del ' + a.id).toBe(esperado);
+  });
+}
+
+/* Novena pasada externa, nº 6 y 7, con la letra de Ez (16 nov.: «Dos campanadas»): sonaba con el
+   tono del móvil en Android aunque el sonido de PACE estuviera apagado, y mudo en el iPhone. */
+const ENCENDIDO = { semanaTipo: SEMANA, horario: HORARIO, avisoEntrada: true };
+const MIERCOLES = new Date('2026-11-18T20:00:00+01:00');
+const canales = (page) => page.evaluate(() => window.__nativo.llamadas.filter((l) => l.metodo === 'createChannel' || l.metodo === 'deleteChannel')
+  .filter((l) => /entrada/.test(l.opts.id)).map((l) => l.metodo === 'deleteChannel' ? 'borra ' + l.opts.id
+    : l.opts.id + ' ' + l.opts.importance + ' ' + (l.opts.sound || 'sin sonido')));
+
+test('nº 6 y 7 · Android: con el sonido encendido, las dos campanadas por su canal nuevo; el de antes se borra', async ({ page, context }) => {
+  await abrir(page, context, ENCENDIDO, MIERCOLES, { estado: { soundOn: true } });
+  const avisos = await avisosPuestos(page);
+  expect(avisos.length, 'GUARD').toBe(5);
+  for (const a of avisos) expect(a.channelId, 'el aviso del ' + a.id).toBe('pace_entrada_campanas');
+  expect(await canales(page)).toEqual(['pace_entrada_campanas 3 pausa_aviso.wav', 'pace_entrada_mudo 2 sin sonido', 'borra pace_entrada']);
+});
+
+test('nº 7 · Android: con el sonido de PACE apagado, por el canal mudo', async ({ page, context }) => {
+  await abrir(page, context, ENCENDIDO, MIERCOLES, { estado: { soundOn: false } });
+  const avisos = await avisosPuestos(page);
+  expect(avisos.length, 'GUARD').toBe(5);
+  for (const a of avisos) expect(a.channelId, 'el aviso del ' + a.id).toBe('pace_entrada_mudo');
+});
+
+for (const [soundOn, esperado] of [[true, 'pausa-aviso.wav'], [false, undefined]]) {
+  test('nº 6 · iPhone: con el sonido ' + (soundOn ? 'encendido, las dos campanadas' : 'apagado, sin sonido'), async ({ page, context }) => {
+    await abrir(page, context, ENCENDIDO, MIERCOLES, { estado: { soundOn }, plataforma: 'ios' });
+    const avisos = await avisosPuestos(page);
+    expect(avisos.length, 'GUARD').toBe(5);
+    for (const a of avisos) expect(a.sound, 'el aviso del ' + a.id).toBe(esperado);
+    expect(avisos[0].channelId, 'el iPhone no tiene canales').toBeUndefined();
   });
 }
 

@@ -27,7 +27,19 @@
 
 var PACE_ENTRADA_PRIMER_ID = 10;   // del 10 al 16: un aviso por cada uno de los siete días siguientes
 var PACE_ENTRADA_DIAS = 7;
-var PACE_ENTRADA_CANAL = 'pace_entrada';
+/* CON LAS DOS CAMPANADAS DE LA PAUSA (Ez, 16 nov. 2026: «Dos campanadas»; novena pasada externa,
+   nº 6 y 7). Hasta ahora sonaba con el tono de avisos del móvil en Android, aunque el sonido de PACE
+   estuviera apagado, y mudo en el iPhone. Ahora suena con `pausa.end`, el mismo .wav del fin de la
+   pausa (`res/raw/pausa_aviso.wav` en Android, `pausa-aviso.wav` en el iPhone), y con el sonido
+   apagado en Ajustes no suena: en Android, por su canal mudo; en el iPhone, sin `sound`.
+   CANALES NUEVOS: Android no deja cambiar el sonido de un canal creado, y `pace_entrada` (0.206.0 y
+   0.207.0) ya existe sin sonido en quien encendió el aviso. Se borra al poner los nuevos, para que
+   en los ajustes de Android no salgan dos «Al empezar la jornada». */
+var PACE_ENTRADA_CANAL = 'pace_entrada_campanas';
+var PACE_ENTRADA_CANAL_MUDO = 'pace_entrada_mudo';
+var PACE_ENTRADA_CANAL_VIEJO = 'pace_entrada';
+var PACE_ENTRADA_SONIDO = 'pausa_aviso.wav';
+var PACE_ENTRADA_SONIDO_IOS = 'pausa-aviso.wav';
 
 /* Un texto de la app en su idioma, con sus {variables}: lo que el sistema enseña fuera de PACE. */
 function paceEntradaTexto(s, clave, vars) {
@@ -108,14 +120,28 @@ function paceEntradaPoner() {
    quieto, sin alarma exacta Android puede dejarlo para la siguiente ventana de mantenimiento y llegar
    mucho más tarde que la hora de entrada. Exacta solo si «Alarmas y recordatorios» ya está
    concedido, como el aviso del Foco (android.avisos.js): sin él, el complemento la pone inexacta. */
-function paceEntradaNotificacion(a, android, exacta) {
+function paceEntradaNotificacion(a, android, exacta, sonido) {
   var n = { id: a.id, title: a.title, body: a.body };
   if (android) {
     n.schedule = { at: new Date(a.at).toISOString(), allowWhileIdle: true };
     n.isExactNotification = exacta === 'granted';
-    n.channelId = PACE_ENTRADA_CANAL;
-  } else n.schedule = { at: new Date(a.at) };
+    n.channelId = sonido ? PACE_ENTRADA_CANAL : PACE_ENTRADA_CANAL_MUDO;
+  } else {
+    n.schedule = { at: new Date(a.at) };
+    if (sonido) n.sound = PACE_ENTRADA_SONIDO_IOS;
+  }
   return n;
+}
+
+/* Los dos canales, como los del Foco y la pausa (android.avisos.js): el sonoro nombra el .wav de
+   res/raw y el mudo va con importancia baja, porque sin `sound` el complemento le deja el sonido de
+   siempre del móvil. Crear uno que ya existe solo le cambia el nombre (el idioma). */
+function paceEntradaCanales(ln, s) {
+  if (typeof ln.createChannel !== 'function') return Promise.resolve();
+  var desc = paceEntradaTexto(s, 'notify.canal.entrada.desc');
+  var crear = function (op) { return Promise.resolve(ln.createChannel(op)).catch(function () {}); };
+  return crear({ id: PACE_ENTRADA_CANAL, name: paceEntradaTexto(s, 'notify.canal.entrada'), description: desc, importance: 3, sound: PACE_ENTRADA_SONIDO })
+    .then(function () { return crear({ id: PACE_ENTRADA_CANAL_MUDO, name: paceEntradaTexto(s, 'notify.canal.entrada.mudo'), description: desc, importance: 2 }); });
 }
 
 /* «Alarmas y recordatorios», mirado ahora (se puede haber cambiado en los ajustes de Android). */
@@ -144,7 +170,8 @@ function paceEntradaPonerYa() {
       .then(function () { return android && permiso === 'granted' ? paceEntradaExacta() : null; })
       .then(function (e) { exacta = e; });
   return mirar.then(function () {
-    var lista = permiso === 'granted' ? avisos.map(function (a) { return paceEntradaNotificacion(a, android, exacta); }) : [];
+    var sonido = !!(s && s.soundOn);
+    var lista = permiso === 'granted' ? avisos.map(function (a) { return paceEntradaNotificacion(a, android, exacta, sonido); }) : [];
     var firma = JSON.stringify(lista);
     if (puestos && puestos.firma === firma && (_paceEntrada.yaPuso || !lista.length)) return null;
     var ids = lista.map(function (n) { return n.id; });
@@ -152,16 +179,20 @@ function paceEntradaPonerYa() {
     for (var i = 0; i < PACE_ENTRADA_DIAS; i++) {
       if (ids.indexOf(PACE_ENTRADA_PRIMER_ID + i) < 0) sobran.push({ id: PACE_ENTRADA_PRIMER_ID + i });
     }
-    var canal = lista.length && android && typeof ln.createChannel === 'function'
-      ? Promise.resolve(ln.createChannel({ id: PACE_ENTRADA_CANAL, name: paceEntradaTexto(s, 'notify.canal.entrada'),
-          description: paceEntradaTexto(s, 'notify.canal.entrada.desc'), importance: 3 })).catch(function () {})
-      : Promise.resolve();
+    var canal = lista.length && android ? paceEntradaCanales(ln, s) : Promise.resolve();
     return canal.then(function () {
       return lista.length ? ln.schedule({ notifications: lista }) : null;
     }).then(function () {
       _paceEntrada.yaPuso = true;
       return sobran.length ? ln.cancel({ notifications: sobran }) : null;
-    }).then(function () { paceEntradaGuardar(firma, ids); });
+    }).then(function () {
+      paceEntradaGuardar(firma, ids);
+      /* El canal de antes, ya sin ningún aviso que lo nombre. */
+      if (lista.length && android && typeof ln.deleteChannel === 'function') {
+        return Promise.resolve(ln.deleteChannel({ id: PACE_ENTRADA_CANAL_VIEJO })).catch(function () {});
+      }
+      return null;
+    });
   }).catch(function () { return null; });
 }
 
