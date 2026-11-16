@@ -226,21 +226,21 @@ function CustomBuilder({ editId, onClose, onGuardada }) {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 14 }}>
           {steps.map((s, idx) => (
-            <div key={`${s.name}-${idx}`} style={customBuilderStyles.stepRow}>
+            <div key={`${s.name}-${idx}`} className="pace-cb-paso" data-pace-cb-paso style={customBuilderStyles.stepRow}>
               <span style={customBuilderStyles.stepGlyph}>
                 <ExerciseGlyph id={s.name} size={24} />
               </span>
-              <span style={customBuilderStyles.stepName}>{tEx(s.name)}</span>
-              <span style={customBuilderStyles.controles}>
-              <span style={customBuilderStyles.durGroup}>
-                <button onClick={() => nudgeDur(idx, -limits.durStep)} disabled={s.dur <= limits.minDur} aria-label="−5 s" style={customBuilderStyles.iconBtn}>−</button>
-                <span style={customBuilderStyles.durValue}>{segundos(s)}</span>
-                <button onClick={() => nudgeDur(idx, limits.durStep)} disabled={s.dur >= limits.maxDur} aria-label="+5 s" style={customBuilderStyles.iconBtn}>+</button>
+              <span className="pace-cb-nombre" style={customBuilderStyles.stepName}>{tEx(s.name)}</span>
+              <span className="pace-cb-ctrl" style={customBuilderStyles.controles}>
+              <span className="pace-cb-dur" style={customBuilderStyles.durGroup}>
+                <button className="pace-cb-btn" onClick={() => nudgeDur(idx, -limits.durStep)} disabled={s.dur <= limits.minDur} aria-label="−5 s" style={customBuilderStyles.iconBtn}>−</button>
+                <span className="pace-cb-valor" style={customBuilderStyles.durValue}>{segundos(s)}</span>
+                <button className="pace-cb-btn" onClick={() => nudgeDur(idx, limits.durStep)} disabled={s.dur >= limits.maxDur} aria-label="+5 s" style={customBuilderStyles.iconBtn}>+</button>
               </span>
-              <span style={{ display: 'inline-flex', gap: 2 }}>
-                <button onClick={() => moveStep(idx, -1)} disabled={idx === 0} title={t('custom.step.up')} aria-label={t('custom.step.up')} style={customBuilderStyles.iconBtn}>↑</button>
-                <button onClick={() => moveStep(idx, 1)} disabled={idx === steps.length - 1} title={t('custom.step.down')} aria-label={t('custom.step.down')} style={customBuilderStyles.iconBtn}>↓</button>
-                <button onClick={() => removeStep(idx)} title={t('custom.step.remove')} aria-label={t('custom.step.remove')} style={customBuilderStyles.iconBtn}>×</button>
+              <span className="pace-cb-orden" style={{ display: 'inline-flex', gap: 2 }}>
+                <button className="pace-cb-btn" onClick={() => moveStep(idx, -1)} disabled={idx === 0} title={t('custom.step.up')} aria-label={t('custom.step.up')} style={customBuilderStyles.iconBtn}>↑</button>
+                <button className="pace-cb-btn" onClick={() => moveStep(idx, 1)} disabled={idx === steps.length - 1} title={t('custom.step.down')} aria-label={t('custom.step.down')} style={customBuilderStyles.iconBtn}>↓</button>
+                <button className="pace-cb-btn pace-cb-quitar" data-pace-cb-quitar onClick={() => removeStep(idx)} title={t('custom.step.remove')} aria-label={t('custom.step.remove')} style={customBuilderStyles.iconBtn}>×</button>
               </span>
               </span>
             </div>
@@ -387,5 +387,30 @@ const customBuilderStyles = {
     display: 'grid', placeItems: 'center',
   },
 };
+
+/* LOS BOTONES DE UN PASO, PARA EL DEDO (Ez, 1A del 16 nov. 2026; auditoría fable-9nov, fila 25).
+   En el móvil o con pantalla táctil miden 40 × 40 con 10 px entre ellos, en vez de 24 × 24 con 2.
+   A 360 px la fila deja 264 px y seis botones de 40 no caben en una línea, así que la «×» sube a la
+   línea del nombre, lejos de las flechas (ordenar ya no roza borrar), y abajo van el tiempo a la
+   izquierda y el orden a la derecha. `display: contents` en los dos envoltorios deja a los botones
+   colocarse en la fila sin otro JSX para el móvil. Con ratón y pantalla ancha, como antes. Lo vigila
+   tests/constructor-dedo.spec.js. */
+(function paceConstructorDedoCss() {
+  if (typeof document === 'undefined' || document.getElementById('pace-cb-dedo-css')) return;
+  const s = document.createElement('style');
+  s.id = 'pace-cb-dedo-css';
+  s.textContent = `
+@media (max-width: 640px), (pointer: coarse) {
+  .pace-cb-ctrl, .pace-cb-orden { display: contents !important; }
+  .pace-cb-paso { column-gap: 10px !important; row-gap: 8px !important; }
+  .pace-cb-nombre { flex: 0 0 calc(100% - 96px) !important; }
+  .pace-cb-quitar { order: 2; }
+  .pace-cb-dur { order: 3; margin-right: auto; gap: 4px !important; }
+  .pace-cb-orden > .pace-cb-btn:not(.pace-cb-quitar) { order: 4; }
+  .pace-cb-btn { width: 40px !important; height: 40px !important; font-size: 17px !important; border-radius: 10px !important; }
+  .pace-cb-valor { font-size: 13px !important; min-width: 40px !important; }
+}`;
+  document.head.appendChild(s);
+})();
 
 Object.assign(window, { CustomBuilder });

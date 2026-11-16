@@ -105,10 +105,18 @@ function PremiumInvitacion() {
       }
       /* Sin otro diálogo delante: si lo hay, se mira otra vez al minuto. */
       const v1 = window.pacePasoV1PorAvisar ? window.pacePasoV1PorAvisar() : null;
-      if (!v1 || document.querySelector('[role="dialog"]')) return;
-      window.pacePasoV1Avisado();
-      setAbierta({ nombre: null, pasoV1: v1 });
-      setModo('pasov1');
+      if (v1 && !document.querySelector('[role="dialog"]')) {
+        window.pacePasoV1Avisado();
+        setAbierta({ nombre: null, pasoV1: v1 });
+        setModo('pasov1');
+        return;
+      }
+      /* Y al acabar la semana, su nota, una vez (ui/PremiumFinPrueba.jsx). */
+      const fin = window.premiumFinPorAvisar ? window.premiumFinPorAvisar() : null;
+      if (!fin) return;
+      window.pacePasoV1FinVisto();
+      setAbierta({ nombre: null, fin: fin });
+      setModo('fin');
     };
     const primero = setTimeout(() => { empezado = true; mirar(); }, 1500);
     const cada = setInterval(mirar, 60 * 1000);
@@ -169,6 +177,7 @@ function PremiumInvitacion() {
 
   if (modo === 'prueba') return <PremiumAvisoPrueba datos={abierta.prueba} cerrar={cerrar} />;
   if (modo === 'pasov1') return <PremiumPasoV1 datos={abierta.pasoV1} cerrar={cerrar} />;
+  if (modo === 'fin') return <PremiumFinPrueba datos={abierta.fin} cerrar={cerrar} />;
 
   const titulo = modo === 'ok' ? t(mensual ? 'premium.ok.title.monthly' : 'premium.ok.title') : (abierta.nombre || t('premium.name'));
   const tienda = modo === 'invita' && !!(window.paceTiendaAbierta && window.paceTiendaAbierta());
@@ -393,4 +402,5 @@ function PremiumAvisoPrueba({ datos, cerrar }) {
   );
 }
 
-Object.assign(window, { PremiumInvitacion, PremiumAvisoPrueba, PremiumPasoV1, PaceCandado, paceAbrirPremium, PREMIUM_INCLUYE });
+Object.assign(window, { PremiumInvitacion, PremiumAvisoPrueba, PremiumPasoV1, PaceCandado, paceAbrirPremium, PREMIUM_INCLUYE,
+  premiumPasoV1Rutina, premiumInvitacionStyles });

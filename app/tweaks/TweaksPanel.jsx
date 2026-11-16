@@ -140,7 +140,10 @@ function TweaksPanel({ open, onClose }) {
      se pliega 34 px antes: donde antes cabía sin scroll, sigue cabiendo. Igual con la línea de la última
      copia (TweaksData.copia.jsx, Ez «A+B» del 16 nov.), que solo sale en la web sin instalar y mide 47 px:
      sin contarla, a 1280 × 940 con la fila sobraban 16 px y a 1440 × 900 en castellano, 22. */
+  /* Durante la semana de prueba, la compra va en la línea pequeña de la fila de la prueba (Ez, 3B
+     del 16 nov.): la fila crece lo que mide esa línea. */
   const umbralBajo = () => 860 + (typeof premiumPlanEnAjustes === 'function' && premiumPlanEnAjustes() ? 34 : 0)
+    + (typeof premiumPlanEnPrueba === 'function' && premiumPlanEnPrueba() ? 26 : 0)
     + (typeof paceWebSinInstalar === 'function' && paceWebSinInstalar() ? 47 : 0);
   const [bajo, setBajo] = useStateTW(() => paceLienzoAlto() < umbralBajo());
   useEffectTW(() => {
