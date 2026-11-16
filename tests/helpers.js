@@ -32,6 +32,9 @@ const SEMILLA = {
   ritmo: { libre: true },
   /* Las novedades del sobre apagadas: sin esto la barra llevaría un sobre en cada prueba (Ez, 5 nov. 2026). */
   novedadesVistas: '*',
+  /* Y «Guarda una copia» del sobre (Ez, B del 16 nov. 2026), que con `firstSeen: 1` saldría en cada prueba
+     de la web: lo prueba tests/copia-recordada.spec.js, que lo enciende. */
+  copiaAvisoVisto: '*',
 };
 
 /**

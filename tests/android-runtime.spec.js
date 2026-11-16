@@ -9,7 +9,8 @@
  *   · Los eventos se guardan con el adaptador web (IndexedDB del WebView), no
  *     con el inerte: sin ellos, las estadisticas y «A tu ritmo» no aprenden.
  *   · Pide almacenamiento persistente, para que Chromium no vacie ese
- *     IndexedDB si el movil se queda sin espacio. En la web no se pide.
+ *     IndexedDB si el movil se queda sin espacio. En la web tambien (salvo
+ *     Firefox, que lo pregunta): Safari borra lo guardado sin visitas.
  *
  * Cada prueba tiene su control en web, para que un espia que no mide nada no
  * salga verde.
@@ -95,8 +96,20 @@ test('en Android se pide almacenamiento persistente', async ({ page, context }) 
   expect(await page.evaluate(() => window.__persistencias)).toBe(1);
 });
 
-test('en la web no se pide almacenamiento persistente', async ({ page, context }) => {
+/* Desde el 15 nov. 2026 se pide también en la web: Safari borra lo guardado de una web sin visitas en
+   siete días (auditoría externa del 10 nov., T10). Solo Firefox, que lo pregunta con un aviso, se queda fuera. */
+test('en la web también se pide almacenamiento persistente', async ({ page, context }) => {
   await espiarPersistencia(context);
+  await irAlArtefacto(page);
+  await esperarInit(page);
+  expect(await page.evaluate(() => window.__persistencias)).toBe(1);
+});
+
+test('en Firefox no se pide: allí sale un aviso encima de la app', async ({ page, context }) => {
+  await espiarPersistencia(context);
+  await context.addInitScript(() => {
+    Object.defineProperty(navigator, 'userAgent', { configurable: true, get: () => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0' });
+  });
   await irAlArtefacto(page);
   await esperarInit(page);
   expect(await page.evaluate(() => window.__persistencias)).toBe(0);

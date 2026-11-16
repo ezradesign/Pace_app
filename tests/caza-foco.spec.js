@@ -115,7 +115,7 @@ test('foco-3 · un bloque que terminó hoy con PACE cerrado cuenta al volver, y 
   await numero(page).waitFor({ state: 'visible' });
   await context.clock.runFor(2000);
 
-  await expect(page.locator('[data-pace-modal-backdrop]').getByText('Pausa bien hecha', { exact: true })).toBeVisible();
+  await expect(page.locator('[data-pace-modal-backdrop]').getByText('Tu pausa', { exact: true })).toBeVisible();
   await expect.poll(() => page.evaluate(() => getState().cycle)).toBe(1);
   expect(await page.evaluate(() => getState().totalFocusMin)).toBe(25);
   await expect.poll(() => focosContados(page)).toBe(1);

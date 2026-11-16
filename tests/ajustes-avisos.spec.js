@@ -51,10 +51,11 @@ for (const v of [{ width: 1536, height: 710 }, { width: 1366, height: 768 }, { w
   }
 }
 
-test('CONTROL · en una pantalla alta (1440 × 900, en inglés) la sección va entera y sin scroll', async ({ page, context }) => {
+/* 1000 de alto y no 900: en la web sin instalar, la línea de la última copia (Ez, «A+B» del 16 nov.) hace que a 900 la sección se pliegue. */
+test('CONTROL · en una pantalla alta (1440 × 1000, en inglés) la sección va entera y sin scroll', async ({ page, context }) => {
   await sembrar(context, { lang: 'en' });
   await comoNavegadorReal(context);
-  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.setViewportSize({ width: 1440, height: 1000 });
   await irAlArtefacto(page);
   await page.getByRole('button', { name: ABRIR.en }).click();
   await expect(page.locator(PANEL).getByRole('button', { name: EXPORTAR.en })).toBeVisible();

@@ -72,9 +72,21 @@ function customMinutos(steps) {
   return Math.max(1, Math.ceil(seg / 60));
 }
 
+/* El nombre de una rutina propia que se guarda sin nombre, en el idioma de la app: era «Rutina
+   propia» también en inglés (auditoría externa del 10 nov., 2.T5). Se guarda tal cual, como si lo
+   hubiera escrito quien la hizo. */
+function customNombreSinNombre() {
+  try {
+    const lang = (getState() || {}).lang === 'en' ? 'en' : 'es';
+    const v = window.PACE_STRINGS && window.PACE_STRINGS[lang] && window.PACE_STRINGS[lang]['custom.code'];
+    if (v) return v;
+  } catch (e) {}
+  return 'Rutina propia';
+}
+
 /* Normaliza el borrador del constructor a los límites. */
 function sanitizeCustomRoutine(draft) {
-  const name = String(draft.name || '').trim().slice(0, CUSTOM_LIMITS.maxNameLen) || 'Rutina propia';
+  const name = String(draft.name || '').trim().slice(0, CUSTOM_LIMITS.maxNameLen) || customNombreSinNombre();
   const steps = (Array.isArray(draft.steps) ? draft.steps : [])
     .slice(0, CUSTOM_LIMITS.maxSteps)
     .map(s => ({

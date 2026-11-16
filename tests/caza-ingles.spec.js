@@ -150,9 +150,10 @@ test('ingles-5 · Estadísticas › Year dice «1 day» en singular', async ({ p
 test('ingles-6 · la pestaña sigue al idioma y la PWA se llama PACE', async ({ page, context }) => {
   await sembrar(context, EN);
   await irAlArtefacto(page);
-  await expect(page).toHaveTitle(/^PACE · Focus · Body — v\d+\.\d+\.\d+$/);
+  /* Sin « — vX.Y.Z»: lo que se publica lleva el nombre limpio (tests/pestana-cuenta.spec.js). */
+  await expect(page).toHaveTitle('PACE · Focus · Body');
   await page.evaluate(() => setState({ lang: 'es' }));
-  await expect(page).toHaveTitle(/^PACE · Foco · Cuerpo — v\d+\.\d+\.\d+$/);
+  await expect(page).toHaveTitle('PACE · Foco · Cuerpo');
   const manifest = await page.evaluate(() => fetch('/manifest.webmanifest').then((r) => r.json()));
   expect(manifest.name).toBe('PACE');
 });

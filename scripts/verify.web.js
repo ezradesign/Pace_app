@@ -25,7 +25,7 @@ var os = require('os');
 var path = require('path');
 
 var NECESARIOS = ['index.html', 'sw.js', '_headers', 'calendario.html', 'premium/index.html', 'beta/index.html', 'gracias/index.html', 'recuperar/index.html', 'desistir/index.html',
-                  'privacy.html', 'safety.html', 'manifest.webmanifest'];
+                  'privacy.html', 'safety.html', 'manifest.webmanifest', 'manifest.en.webmanifest', 'robots.txt', 'sitemap.xml', '404.html'];
 /* Lo que está en la raíz y no se publica a propósito: el de desarrollo y el export. */
 var NO_SE_PUBLICA = ['PACE.html', 'PACE_standalone.html'];
 /* Carpetas que se generan (fuera de git) y no son páginas de la web. */
@@ -97,6 +97,68 @@ function tandaWeb(ctx) {
     if (sinDecidir.length) ctx.falla('web: página(s) en la raíz que no se publican ni están en NO_SE_PUBLICA: ' + sinDecidir.join(', ') +
       ' -- si es de la web, a WEB_ARCHIVOS o WEB_CARPETAS de scripts/web-dist.js');
     else ctx.ok(paginas.length + ' páginas en la raíz: cada una se publica o está apartada a propósito');
+
+    /* Los buscadores (auditoría del 10 nov., X2b y X2c): el título de la raíz sin la versión y con su
+       descripción, y cada dirección del mapa es una página de dist/ que no lleva `noindex`. */
+    var raiz = fs.readFileSync(path.join(tmp, 'index.html'), 'utf8');
+    var titulo = (raiz.match(/<title>([^<]*)<\/title>/) || [])[1] || '';
+    if (!titulo || /v\d+\.\d+/.test(titulo)) ctx.falla('web: el <title> de index.html lleva la versión o no está («' + titulo + '») -- los buscadores leen ese nombre; el build la quita (paso 8b de build-standalone.js)');
+    else if (!/<meta name="description" content="[^"]{50,}"/.test(raiz)) ctx.falla('web: index.html sin <meta name="description"> -- los buscadores inventan la suya');
+    else ctx.ok('la raíz se llama «' + titulo + '», sin la versión, y lleva su descripción');
+    var mapa = fs.readFileSync(path.join(tmp, 'sitemap.xml'), 'utf8');
+    var locs = [], rl = /<loc>https:\/\/pacegrass\.app(\/[^<]*)<\/loc>/g, xl;
+    while ((xl = rl.exec(mapa))) locs.push(xl[1]);
+    var malas = locs.filter(function (r) {
+      var a = archivoDeRuta(r, hay);
+      return !a || /<meta name="robots" content="[^"]*noindex/.test(fs.readFileSync(path.join(tmp, a), 'utf8'));
+    });
+    if (!locs.length || malas.length) ctx.falla('web: sitemap.xml ' + (locs.length ? 'lleva direcciones que no existen o llevan noindex: ' + malas.join(', ') : 'sin direcciones de pacegrass.app'));
+    else if (!/^Sitemap: https:\/\/pacegrass\.app\/sitemap\.xml\r?$/m.test(fs.readFileSync(path.join(tmp, 'robots.txt'), 'utf8'))) ctx.falla('web: robots.txt no dice dónde está el mapa');
+    else ctx.ok('robots.txt y sitemap.xml propios: ' + locs.length + ' páginas en el mapa, todas en dist/ y sin noindex');
+
+    /* Los dos manifiestos (auditoría externa del 10 nov., 2.T5 y T12): la misma app (id, inicio, ámbito,
+       iconos y las direcciones de los atajos) en los dos idiomas, y las capturas de la instalación, en
+       dist/ y de los dos tamaños (móvil y ordenador). Una captura que no está tumba la instalación con fotos. */
+    try {
+      var mEs = JSON.parse(fs.readFileSync(path.join(tmp, 'manifest.webmanifest'), 'utf8'));
+      var mEn = JSON.parse(fs.readFileSync(path.join(tmp, 'manifest.en.webmanifest'), 'utf8'));
+      var igual = function (m) { return JSON.stringify([m.id, m.start_url, m.scope, m.icons, (m.shortcuts || []).map(function (a) { return a.url; })]); };
+      var malM = [];
+      if (mEs.lang !== 'es' || mEn.lang !== 'en') malM.push('el idioma de cada manifiesto');
+      if (igual(mEs) !== igual(mEn)) malM.push('id, inicio, ámbito, iconos o atajos distintos');
+      [mEs, mEn].forEach(function (m) {
+        var caps = m.screenshots || [];
+        if (!caps.some(function (c) { return c.form_factor === 'narrow'; }) || !caps.some(function (c) { return c.form_factor === 'wide'; })) malM.push(m.lang + ': sin capturas de móvil y de ordenador');
+        caps.forEach(function (c) { if (!archivoDeRuta(c.src, hay)) malM.push(m.lang + ': ' + c.src + ' no está en dist/'); });
+      });
+      if (malM.length) ctx.falla('web: manifiestos -- ' + malM.join('; '));
+      else ctx.ok('los dos manifiestos (es y en) son la misma app y sus ' + (mEs.screenshots.length + mEn.screenshots.length) + ' capturas están en dist/');
+    } catch (e) { ctx.falla('web: no se pueden leer los manifiestos de dist/ (' + e.message + ')'); }
+
+    /* Lo que no existe (auditoría externa del 16 nov.): sin un 404.html arriba del todo, Cloudflare Pages
+       sirve la app entera con un 200 en cualquier ruta. Tiene que ser una página suya, no la app, y llevar
+       a la raíz. */
+    var noHay = hay.has('404.html') ? fs.readFileSync(path.join(tmp, '404.html'), 'utf8') : '';
+    if (!noHay) ctx.falla('web: dist/ sin 404.html -- Cloudflare serviría la app con un 200 en lo que no existe');
+    else if (/serviceWorker\.register|ReactDOM/.test(noHay) || !/href="\/"/.test(noHay)) ctx.falla('web: 404.html es la app o no lleva a la raíz');
+    else ctx.ok('404.html arriba del todo: lo que no existe recibe su página y un 404, no la app');
+
+    /* /beta, con los enlaces que ya funcionan encendidos en el HTML (auditoría externa del 16 nov.): sin
+       JavaScript decía «El grupo abre muy pronto» con el grupo abierto (encenderEnlacesBeta, web-dist.js). */
+    try {
+      var beta = fs.readFileSync(path.join(tmp, 'beta', 'index.html'), 'utf8');
+      var bloque = beta.match(/<script type="application\/json" data-enlaces>([\s\S]*?)<\/script>/);
+      var enl = JSON.parse(bloque[1]), apagados = [];
+      Object.keys(enl).forEach(function (k) {
+        var e = enl[k];
+        if (!e || e.pendiente || !/^https:\/\//.test(e.url || '')) return;
+        var a = (beta.match(new RegExp('<a [^>]*data-enlace="' + k + '"[^>]*>')) || [''])[0];
+        var p = (beta.match(new RegExp('<p [^>]*data-pronto="' + k + '"[^>]*>')) || [''])[0];
+        if (a.indexOf('href="' + e.url + '"') < 0 || / hidden[\s>]/.test(a) || !/ hidden[\s>]/.test(p)) apagados.push(k);
+      });
+      if (apagados.length) ctx.falla('web: /beta publica apagados enlaces que ya funcionan: ' + apagados.join(', ') + ' -- sin JavaScript dice que llegan pronto');
+      else ctx.ok('/beta sale con sus enlaces encendidos en el HTML, también sin JavaScript');
+    } catch (e) { ctx.falla('web: no se puede leer el bloque data-enlaces de /beta en dist/ (' + e.message + ')'); }
 
     /* De la app (index.html) solo se mira la landing, entre sus marcas: el resto es la app compilada, que
        pide sus piezas por el precache. La landing vive ahí desde el 9 nov. y sus capturas y enlaces no se

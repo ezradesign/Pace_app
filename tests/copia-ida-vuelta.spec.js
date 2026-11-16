@@ -99,8 +99,9 @@ test('exportar, borrar todo y traer la copia deja la cuenta igual: estado y regi
   await esperarInit(page);
 
   const B = await exportar(page);
-  /* Lo que cambia con razón: cuándo se hizo cada copia. */
-  const sinMomento = (c) => Object.assign({}, c, { exportedAt: null, events: Object.assign({}, c.events, { exportedAt: null }) });
+  /* Lo que cambia con razón: cuándo se hizo cada copia (también la que lleva el estado, `ultimaCopia`). */
+  const sinMomento = (c) => Object.assign({}, c, { exportedAt: null, events: Object.assign({}, c.events, { exportedAt: null }),
+    state: Object.assign({}, c.state, { ultimaCopia: null }) });
   expect(diferencias(sinMomento(A).state, sinMomento(B).state), 'el estado cambió en el viaje').toEqual([]);
   expect(diferencias(sinMomento(A).events, sinMomento(B).events), 'el registro cambió en el viaje').toEqual([]);
   expect(errores, 'errores en el viaje').toEqual([]);

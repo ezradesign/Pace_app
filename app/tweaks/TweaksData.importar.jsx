@@ -182,7 +182,9 @@ function usePaceTraerCopia(decir, capa) {
       />
       <AjustesAviso abierto={!!pidiendoImportar} capa={capa} titulo={t('settings.import.titulo')} si={t('settings.import.si')}
         onSi={importarDeVerdad} onNo={() => setPidiendoImportar(null)}>
-        {p ? tn(p.dia ? 'settings.import.cuerpo.dia' : 'settings.import.cuerpo', { dia: p.dia, logros: p.logros, foco: p.foco }) : null}
+        {p ? tn(p.logros === 1
+          ? (p.dia ? 'settings.import.cuerpo.dia.uno' : 'settings.import.cuerpo.uno')
+          : (p.dia ? 'settings.import.cuerpo.dia' : 'settings.import.cuerpo'), { dia: p.dia, logros: p.logros, foco: p.foco }) : null}
         {p && p.nueva ? <span data-pace-copia-nueva style={{ display: 'block', marginTop: 10 }}>{t('settings.import.nueva')}</span> : null}
       </AjustesAviso>
       <AjustesAviso abierto={avisoParcial} capa={capa} titulo={t('settings.import.parcial.titulo')} si={t('guardar.entendido')}

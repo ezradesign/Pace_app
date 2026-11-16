@@ -105,7 +105,7 @@ function PathRunner() {
         className="path-runner-overlay"
         role="dialog"
         aria-modal="true"
-        aria-label={t('path.runner.complete.title')}
+        aria-label={t('paths.runner.complete.title')}
       >
         <CompletionScreen
           snapshot={justCompleted}

@@ -21,7 +21,7 @@ const { leerContenedor } = require('./eventos.helpers');
 
 const ARRANQUE = new Date('2026-10-07T10:00:00+02:00');
 const cta = (p) => p.locator('[data-pace-cta]');
-const pausaAbierta = (p) => p.locator('[data-pace-modal-backdrop]').getByText('Pausa bien hecha', { exact: true });
+const pausaAbierta = (p) => p.locator('[data-pace-modal-backdrop]').getByText('Tu pausa', { exact: true });
 
 async function focosContados(page) {
   const c = await leerContenedor(page);

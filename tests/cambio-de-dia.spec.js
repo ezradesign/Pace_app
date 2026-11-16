@@ -189,7 +189,7 @@ test('la medianoche pasa con un Foco en marcha: el bloque sigue y sus minutos va
 
   /* 00:15: termina, abre la pausa y cuenta en el jueves, como contaba antes. */
   await page.clock.fastForward(10 * 60 * 1000);
-  await expect(page.locator('[data-pace-modal-backdrop]').last().getByText('Pausa bien hecha', { exact: true })).toBeVisible();
+  await expect(page.locator('[data-pace-modal-backdrop]').last().getByText('Tu pausa', { exact: true })).toBeVisible();
   const s = await page.evaluate(() => {
     const st = getState();
     return { jueves: st.weeklyStats.focusMinutes[3], miercoles: st.weeklyStats.focusMinutes[2], ciclo: st.cycle, agua: st.water.today };

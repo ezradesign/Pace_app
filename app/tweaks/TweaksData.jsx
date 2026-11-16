@@ -65,7 +65,11 @@ function paceDescargarCopia(enMemoria, alAbrir) {
   try {
     let raw = '{}';
     if (!enMemoria) { try { raw = localStorage.getItem('pace.state.v2') || '{}'; } catch (e) {} }
-    let parsed = enMemoria || null;
+    /* Desde la app (Ajustes y el aviso de «no deja guardar»), la copia lleva su fecha (`ultimaCopia`) y,
+       si sale, se apunta en PACE: la línea de «Tus datos» y el aviso del sobre la leen
+       (TweaksData.copia.jsx). Si no sale, no se apunta nada. La pantalla de error no la toca. */
+    const ahora = Date.now();
+    let parsed = enMemoria ? Object.assign({}, enMemoria, { ultimaCopia: ahora }) : null;
     if (!parsed) { try { parsed = JSON.parse(raw); } catch (e) {} }
     /* s169 — LA SECCION DE EVENTOS ENTRA EN EL BACKUP. `privacy.html`
        promete exportar «todo tu estado» e importarlo en otro dispositivo, y
@@ -89,7 +93,13 @@ function paceDescargarCopia(enMemoria, alAbrir) {
        que se pueda recuperar; el import la ignora. */
     const rescate = typeof paceLeerRescate === 'function' ? paceLeerRescate() : null;
     if (rescate) payload.rescate = rescate;
-    return paceBajarJSON(payload, 'pace-backup-' + paceDiaArchivo() + '.json', alAbrir);
+    const salida = paceBajarJSON(payload, 'pace-backup-' + paceDiaArchivo() + '.json', alAbrir);
+    if (enMemoria) {
+      Promise.resolve(salida).then((como) => {
+        if (como === 'descargada' || como === 'compartida') { try { setState({ ultimaCopia: ahora }); } catch (e) {} }
+      });
+    }
+    return salida;
   } catch (e) { return false; }
 }
 
@@ -115,7 +125,8 @@ function paceConLogroDeLaCopia(s) {
 }
 
 function TweaksDataSection({ onReset, isWeb }) {
-  const { t, lang } = useT();
+  const { t, tn, lang } = useT();
+  const [st] = usePace();   // la fecha de la última copia, al día en cuanto sale una
   const [msg, setMsg] = useStateTD(null); // {kind, text} para feedback Export/Import
 
   /* Un aviso no lo borra el temporizador de otro anterior: en las apps, el de la hoja abierta
@@ -173,6 +184,11 @@ function TweaksDataSection({ onReset, isWeb }) {
       <AjustesAccion onClick={exportJSON} title={t('settings.data.export.title')} derecha={<DownloadIcon />}>
         {t('settings.data.export')}
       </AjustesAccion>
+      {/* En la web sin instalar, cuándo fue la última copia y el aviso de Safari (Ez, A del 16 nov.). Fuera
+          del botón, pegada a él: dentro cambiaba su nombre («Exportar una copia») para el lector de pantalla. */}
+      {typeof paceWebSinInstalar === 'function' && paceWebSinInstalar() && (
+        <div className="pace-aj-copia" data-pace-aj-copia>{paceCopiaFecha(st, t, tn) + ' ' + t('settings.copia.safari')}</div>
+      )}
       <AjustesAccion onClick={traer.elegir} title={t('settings.data.import.title')} derecha={<UploadIcon />}>
         {t('settings.data.import')}
       </AjustesAccion>

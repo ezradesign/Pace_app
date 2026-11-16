@@ -2,25 +2,12 @@
    Split de strings-content.js (s92, F6): el patch EN final de contenido se
    troceó por módulo visual (content/breathe + move + extra) al superar las
    ~470 líneas. Solo EN: en ES los componentes usan los strings del dato.
-   Carga después de strings/* — augmenta window.PACE_STRINGS.en. Este archivo
-   preserva el override silencioso de 2 keys breathe.phase.* (D-1): las dos
-   oceánicas. «inhala.mas» repite aquí el «Inhale more» de sessions.js, y no
-   puede volver a decir otra cosa: el español dice «Inhala más».
+   Carga después de strings/* — augmenta window.PACE_STRINGS.en con claves que
+   strings/* no tiene. Las etiquetas de fase (breathe.phase.*) viven solo en
+   strings/sessions.js: aquí se repetían y dos lo pisaban sin decirlo (D-1), y
+   verify (verify.claves.js) falla si content/* vuelve a redefinir una clave.
 */
 Object.assign(window.PACE_STRINGS.en, {
-
-  // ── Breathe — etiquetas de fase ─────────────────────────────────
-  'breathe.phase.inhala':            'Inhale',
-  'breathe.phase.exhala':            'Exhale',
-  'breathe.phase.sosten':            'Hold',
-  'breathe.phase.inhala.mas':        'Inhale more',
-  'breathe.phase.inhala.oceanica':   'Oceanic inhale',
-  'breathe.phase.exhala.oceanica':   'Oceanic exhale',
-  'breathe.phase.inhala.izq':        'Inhale left',
-  'breathe.phase.inhala.dcha':       'Inhale right',
-  'breathe.phase.exhala.dcha':       'Exhale right',
-  'breathe.phase.exhala.izq':        'Exhale left',
-  'breathe.phase.respira':           'Breathe',
 
   // ── Breathe — categorías ─────────────────────────────────────────
   'breathe.cat.energia.label':           'Energy',
