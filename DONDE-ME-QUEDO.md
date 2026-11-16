@@ -1,4 +1,4 @@
-# Dónde me quedo · avisos de la novena (16 nov. 2026, tercera parada, límite de la cuenta)
+# Dónde me quedo · avisos de la novena (16 nov. 2026, cuarta parada: espero los pasos de Fable)
 
 Rama `claude/avisos-novena-16nov-cdf66e`, subida. Parada con el uso de 5 h al 98 % (vuelve a cero a las
 00:40 del 17 nov., hora de Madrid). `verify` en verde en cada commit; mínimo de pruebas en 1641.
@@ -13,7 +13,9 @@ Rama `claude/avisos-novena-16nov-cdf66e`, subida. Parada con el uso de 5 h al 98
 | 484c1494 | 4 · nº 6 y 7: dos campanadas, `pace_entrada_campanas` / `pace_entrada_mudo`, `pace_entrada` borrado; iPhone `pausa-aviso.wav` | 5 · 4 mutantes + guardas en verify.android/ios |
 | 481020c5 | 5 · nº 8: nota de Ajustes en «Tu semana»; el permiso se pide al encender | 2 · 3 mutantes |
 | 9356a66e | 6 · nº 9 y 1: MY_PACKAGE_REPLACED fundido en el receptor; verify.android exige los permisos del complemento | 6 mutantes de faltanEnComplemento/faltanEnPace |
-| (este) | 7 · nº 10: de 0:00 a 4:00 cuenta también hoy | 3 · 1 mutante |
+| 27f48424 | 7 · nº 10: de 0:00 a 4:00 cuenta también hoy | 3 · 1 mutante |
+| 420db758 | 8 · atajo «Foco» (`paceAtajoFoco`, TopBar.jsx): pregunta en la pausa del día | 3 en aro-modo-identidad · 2 mutantes |
+| fce17918 | 9a · dos filas nuevas arriba en las decisiones; la del 15 nov. marcada | — |
 
 Vecinas (android-nativo, android-avisos, pausa-aviso, aviso-no-pisa: 64) en verde tras el punto 1; importar-borrar,
 copia-ida-vuelta e importar-licencia (18) tras el 2. **Falta repasar las vecinas al final** (las de arriba, más
@@ -21,12 +23,10 @@ copia-ida-vuelta e importar-licencia (18) tras el 2. **Falta repasar las vecinas
 
 ## Falta
 
-8. Atajo «Foco» del icono (`app/main.jsx:96`, `?go=focus`): preguntar con el aviso de la barra de arriba
-   (`topbar.pausa.*`) al dejar una pausa empezada.
-9. Fila arriba en `DECISIONES_TECNICAS_VIGENTES.md` (y marcar lo que cambia de la fila del 15 nov. del aviso de
-   entrada: ya no «quita los siete y pone», y el permiso se pide al encender). Página «Montado» en
-   `docs/proposals/avisos-novena-16nov/` con los pasos de Fable para un móvil (Android 14 del 1 al 9, iPhone del
-   1 al 5) **que no están en el repo**: pedírselos a la coordinadora. Publicarla e informe corto.
+9b. Página «Montado» (`docs/proposals/avisos-novena-16nov/index.html`): escrita, con la lista de pasos
+   vacía (`PASOS` en su script). Los pasos de Fable para un móvil no están en el repo: pedidos a la
+   coordinadora (16 nov.). Al llegar, ponerlos al día con lo montado, publicarla e informe corto.
+   Vecinas de todo (11 archivos) corriendo al parar.
 
 Herramienta de mutantes (en el scratchpad de esta sesión): aplica un cambio, compila, corre la prueba en el 8875
 y lo deshace. El `node_modules` del worktree es un enlace: quitarlo con `rmdir` sin `/s`.

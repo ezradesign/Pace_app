@@ -1,0 +1,153 @@
+<title>Avisos del móvil</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de papel y tinta, como las páginas «Montado»: lo montado arriba, cada arreglo con lo
+   que notarás, y abajo la lista para probar en un móvil, con casillas. Oliva = hecho; terracota = lo
+   que solo se sabe en un móvil. */
+:root{
+  --paper:#F2EDE0;--card:#FBF8F1;
+  --ink:#1F1C17;--ink-2:#4A453C;--ink-3:#77705F;
+  --line:#C9C0A8;
+  --olive:#3E5A3A;--olive-soft:rgba(62,90,58,.12);
+  --terra:#A85E43;--terra-soft:rgba(168,94,67,.12);
+  --display:'EB Garamond',Georgia,'Times New Roman',serif;
+  --ui:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+main{max-width:880px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 72px}
+h1,h2,h3{font-family:var(--display);font-style:italic;font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(32px,6vw,44px)}
+h2{font-size:clamp(23px,4vw,28px);margin:44px 0 10px;padding-top:22px;border-top:1px solid var(--line)}
+h3{font-size:20px;margin:22px 0 6px}
+p{margin:0 0 12px;color:var(--ink-2);max-width:68ch}
+strong{color:var(--ink);font-weight:500}
+code{font-size:.88em;background:var(--card);border:1px solid var(--line);border-radius:4px;padding:0 4px;overflow-wrap:anywhere}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.lead{font-family:var(--display);font-size:21px;color:var(--ink);max-width:62ch;margin-top:14px}
+.montado{background:var(--olive-soft);border-radius:10px;padding:12px 16px;margin:18px 0 0;color:var(--ink);max-width:68ch}
+.arreglos{display:grid;gap:12px;margin:14px 0}
+.arreglo{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.arreglo h3{margin:0 0 6px}
+.arreglo p{font-size:15px;margin-bottom:6px}
+.arreglo .n{font-family:var(--ui);font-style:normal;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--olive);display:block;margin-bottom:4px}
+.arreglo .ojo{font-size:13px;color:var(--ink-3);margin:0}
+.nota{font-size:13px;color:var(--ink-3)}
+.fila-semana{background:var(--paper);border-top:1px solid var(--line);padding:12px 0 0;margin:10px 0 4px;max-width:340px}
+.fila-semana .l{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.fila-semana .f{font-family:var(--display);font-style:italic;font-size:16px;color:var(--ink-2)}
+.fila-semana .f b{font-weight:500;color:var(--ink)}
+.sw{width:40px;height:24px;border-radius:999px;background:var(--line);position:relative;flex:0 0 auto}
+.sw::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--card)}
+.fila-semana .nt{font-size:10.5px;color:var(--ink-3);line-height:1.45;margin-top:-2px}
+.movil{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin:14px 0}
+.lista{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.lista h3{margin:0 0 8px;color:var(--terra)}
+.lista ol{margin:0;padding-left:0;list-style:none;display:grid;gap:10px;counter-reset:paso}
+.lista li{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:start;font-size:15px;color:var(--ink-2)}
+.lista input{margin:4px 0 0;width:16px;height:16px;accent-color:var(--olive)}
+.lista label{cursor:pointer}
+.lista .nuevo{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--olive);margin-left:4px}
+.lista li.hecho label{color:var(--ink-3);text-decoration:line-through}
+input:focus-visible,a:focus-visible{outline:2px solid var(--olive);outline-offset:2px}
+</style>
+
+<main>
+  <div class="eyebrow">PACE · la novena pasada externa, comprobada · 16 nov. 2026</div>
+  <h1>Avisos del móvil</h1>
+  <p class="lead">Los siete fallos ciertos que encontró Fable en los avisos del móvil, el atajo «Foco» del icono y una guarda para el que resultó falso, montados en su rama.</p>
+  <p>El aviso de la mañana sale con las dos campanadas, como elegiste. Casi todo lo demás no se ve: son avisos que ya no se pierden por el camino. Lo único que cambia a la vista es una nota en «Tu semana».</p>
+  <p class="montado"><strong>Montado</strong> en la rama <code>claude/avisos-novena-16nov-cdf66e</code>, un arreglo por commit, cada uno con su prueba, y cada prueba falla si el arreglo se quita. <code>verify</code> en verde. Falta tu «júntalo» y probarlo en un móvil (abajo, la lista).</p>
+
+  <h2>Lo montado</h2>
+  <div class="arreglos">
+    <div class="arreglo">
+      <h3><span class="n">Nº 6 y 7 · tu letra: «Dos campanadas»</span>El aviso de la mañana suena con las dos campanadas</h3>
+      <p>Las mismas del fin de la pausa, en Android y en el iPhone. Con el sonido de PACE apagado en Ajustes, sale sin sonido. Antes sonaba con el tono del móvil en Android aunque el sonido estuviera apagado, y en el iPhone no sonaba nada.</p>
+      <p class="ojo">En los ajustes de Android, «Al empezar la jornada» pasa a ser dos canales, con sonido y sin él, como «Fin de la pausa». El de antes se borra solo.</p>
+    </div>
+    <div class="arreglo">
+      <h3><span class="n">Nº 3 y 12</span>El aviso de la mañana ya no se queda sin poner</h3>
+      <p>Cada vez que PACE se iba al fondo, quitaba los avisos de la semana y los volvía a poner. Si el móvil congelaba PACE justo en medio, esa mañana no avisaba. Ahora pone primero y quita después solo los días que sobran, y si nada ha cambiado no toca nada.</p>
+    </div>
+    <div class="arreglo">
+      <h3><span class="n">Nº 4</span>«Borrar todo» e importar una copia quitan los avisos de la mañana</h3>
+      <p>Antes seguían saliendo una semana después de borrarlo todo. Si la copia que importas trae el aviso encendido, vuelve a ponerse solo.</p>
+    </div>
+    <div class="arreglo">
+      <h3><span class="n">Nº 5</span>A su hora, si «Alarmas y recordatorios» está dado</h3>
+      <p>Igual que el aviso del Foco. Sin ese permiso, Android puede retrasarlo tras una noche con el móvil quieto. PACE no lo pide por su cuenta: la línea «Avisos a su hora ›» del primer Foco sigue siendo la única puerta.</p>
+    </div>
+    <div class="arreglo">
+      <h3><span class="n">Nº 8</span>Sin permiso de avisos, «Tu semana» lo dice</h3>
+      <p>Funciona como la fila de avisos de Ajustes. Al encender «Avísame a mi hora de entrada», PACE pide el permiso en ese momento (antes lo pedía al guardar, con la hoja ya cerrada). Si está negado, el interruptor se ve apagado y debajo sale la misma nota de Ajustes:</p>
+      <div class="fila-semana" aria-label="Así se ve la línea en «Tu semana»">
+        <div class="l"><span class="f"><b>Avísame</b> a mi hora de entrada</span><span class="sw" aria-hidden="true"></span></div>
+        <div class="nt">Los avisos de PACE están desactivados en los ajustes de Android.</div>
+      </div>
+      <p class="ojo">La nota dice dónde se activa, pero no lleva hasta allí: ni el complemento de avisos ni Ajustes pueden abrir esa pantalla. Si das el permiso después, el aviso empieza a salir sin volver a tocar nada. Con la nota, «Tu semana» sigue cabiendo a 360 × 640.</p>
+    </div>
+    <div class="arreglo">
+      <h3><span class="n">Nº 9</span>Los avisos vuelven tras una actualización</h3>
+      <p>Al actualizar PACE desde Play, Android puede quitar las alarmas puestas, y el complemento solo las reponía al reiniciar el móvil. Ahora también las repone al actualizarse PACE.</p>
+      <p class="ojo">Eso solo se comprueba en un móvil con una actualización de Play de verdad (paso 9 de Android, abajo).</p>
+    </div>
+    <div class="arreglo">
+      <h3><span class="n">Nº 10</span>Abrir PACE de madrugada no quita el aviso de esa mañana</h3>
+      <p>Abrir PACE a las 0:10 contaba como «ya la abriste antes de tu hora» y quitaba el aviso de ese día. Hasta las 4:00 sigue contando como la noche anterior.</p>
+    </div>
+    <div class="arreglo">
+      <h3><span class="n">Nº 1 · era falso, que no lo sea mañana</span>Los permisos del complemento, vigilados</h3>
+      <p>La alarma exacta, los avisos y el arranque los declara el complemento de avisos, no PACE, y hoy están. <code>verify</code> falla si una versión nueva del complemento deja de declararlos.</p>
+    </div>
+    <div class="arreglo">
+      <h3><span class="n">De la segunda tanda</span>El atajo «Foco» del icono pregunta antes de cortar la pausa</h3>
+      <p>Con la pausa del día de «A tu ritmo» en marcha, abrir PACE desde el atajo «Foco» del icono la cortaba sin preguntar. Ahora sale la misma ventana que en la barra de arriba, «¿Dejar la pausa?», con lo que llevas, también en el móvil.</p>
+      <p class="ojo">Una pausa corta o larga suelta no se guarda al cerrar PACE, y con PACE ya abierta el atajo solo la trae delante. Por eso el caso real es la pausa del día.</p>
+    </div>
+  </div>
+  <p class="nota">Lo que se acepta tal cual (nº 11, 13 y 14 de la revisión): un cambio de huso se corrige al abrir PACE, lo que se guarda justo antes de que Android cierre PACE se mira en el móvil, y un canal silenciado a mano se trata después de v1.</p>
+
+  <h2 id="movil">Solo se sabe en un móvil</h2>
+  <p>Los pasos de la revisión de Fable, puestos al día con lo montado. Las casillas son para ir marcando y solo se guardan en este navegador.</p>
+  <div class="movil" data-pace-pasos></div>
+</main>
+
+<script>
+/* Los pasos, con su casilla. Lo marcado vive solo en este navegador (localStorage, con try). */
+var PASOS = { android: [], iphone: [] };
+var CLAVE = 'pace.montado.avisos-novena.v1';
+function leer() { try { return JSON.parse(localStorage.getItem(CLAVE) || '{}') || {}; } catch (e) { return {}; } }
+function guardar(v) { try { localStorage.setItem(CLAVE, JSON.stringify(v)); } catch (e) {} }
+function pintar() {
+  var caja = document.querySelector('[data-pace-pasos]'), hechos = leer();
+  caja.innerHTML = '';
+  [['android', 'En un Android 14'], ['iphone', 'En un iPhone']].forEach(function (par) {
+    var sec = document.createElement('section'); sec.className = 'lista';
+    var h = document.createElement('h3'); h.textContent = par[1]; sec.appendChild(h);
+    var ol = document.createElement('ol');
+    PASOS[par[0]].forEach(function (p, i) {
+      var id = par[0] + '-' + (i + 1), li = document.createElement('li');
+      var cb = document.createElement('input'); cb.type = 'checkbox'; cb.id = id; cb.checked = !!hechos[id];
+      var lb = document.createElement('label'); lb.htmlFor = id; lb.textContent = (i + 1) + '. ' + p.t;
+      if (p.nuevo) { var s = document.createElement('span'); s.className = 'nuevo'; s.textContent = p.nuevo; lb.appendChild(s); }
+      if (cb.checked) li.className = 'hecho';
+      cb.addEventListener('change', function () { var v = leer(); v[id] = cb.checked; guardar(v); li.className = cb.checked ? 'hecho' : ''; });
+      li.appendChild(cb); li.appendChild(lb); ol.appendChild(li);
+    });
+    sec.appendChild(ol); caja.appendChild(sec);
+  });
+}
+pintar();
+</script>
