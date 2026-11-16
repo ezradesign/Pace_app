@@ -113,7 +113,7 @@ test('voz-4 · Ajustes: «En Respira, Mueve y Estira» bajo «Marca la fase», y
 
 /* Las tomas que grabó Ez, tal como las dejó scripts/voz-cuerpo-tomas.js: cada voz e idioma de la tabla trae
    sus 36 palabras, cada una con su archivo, dentro de su trozo y sin pasar de su tope; y en la app, cada voz
-   en castellano se descodifica y suena (`paceVozCuerpoIntenta` solo dice que sí con la toma ya descodificada
+   e idioma se descodifica y suena (`paceVozCuerpoIntenta` solo dice que sí con la toma ya descodificada
    y el audio en marcha). */
 test('voz-5 · las tomas grabadas: las 36 palabras con su archivo y su tope, y en la app suenan', async ({ page, context }) => {
   const fs = require('fs'); const path = require('path'); const vm = require('vm');
@@ -142,8 +142,8 @@ test('voz-5 · las tomas grabadas: las 36 palabras con su archivo y su tope, y e
   await sembrar(context, { soundOn: true, voiceOn: true, voice: 'sulafat', lang: 'es' });
   await irAlArtefacto(page);
   await page.mouse.click(2, 700);
-  for (const [, voz] of voces.filter((v) => v[0] === 'es')) {
-    await page.evaluate((v) => window.setState({ voice: v }), voz);
-    await expect.poll(() => page.evaluate(() => window.paceVozCuerpoIntenta('c3', 1)), { timeout: 15000, message: voz }).toBe(true);
+  for (const [idioma, voz] of voces) {
+    await page.evaluate((v) => window.setState({ lang: v[0], voice: v[1] }), [idioma, voz]);
+    await expect.poll(() => page.evaluate(() => window.paceVozCuerpoIntenta('c3', 1)), { timeout: 15000, message: idioma + '/' + voz }).toBe(true);
   }
 });
