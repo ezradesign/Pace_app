@@ -143,6 +143,22 @@ function tandaWeb(ctx) {
     else if (/serviceWorker\.register|ReactDOM/.test(noHay) || !/href="\/"/.test(noHay)) ctx.falla('web: 404.html es la app o no lleva a la raíz');
     else ctx.ok('404.html arriba del todo: lo que no existe recibe su página y un 404, no la app');
 
+    /* /beta, con los enlaces que ya funcionan encendidos en el HTML (auditoría externa del 16 nov.): sin
+       JavaScript decía «El grupo abre muy pronto» con el grupo abierto (encenderEnlacesBeta, web-dist.js). */
+    try {
+      var beta = fs.readFileSync(path.join(tmp, 'beta', 'index.html'), 'utf8');
+      var bloque = beta.match(/<script type="application\/json" data-enlaces>([\s\S]*?)<\/script>/);
+      var enl = JSON.parse(bloque[1]), apagados = [];
+      Object.keys(enl).forEach(function (k) {
+        var e = enl[k];
+        if (!e || e.pendiente || !/^https:\/\//.test(e.url || '')) return;
+        var a = (beta.match(new RegExp('<a [^>]*data-enlace="' + k + '"[^>]*>')) || [''])[0];
+        var p = (beta.match(new RegExp('<p [^>]*data-pronto="' + k + '"[^>]*>')) || [''])[0];
+        if (a.indexOf('href="' + e.url + '"') < 0 || / hidden[\s>]/.test(a) || !/ hidden[\s>]/.test(p)) apagados.push(k);
+      });
+      if (apagados.length) ctx.falla('web: /beta publica apagados enlaces que ya funcionan: ' + apagados.join(', ') + ' -- sin JavaScript dice que llegan pronto');
+      else ctx.ok('/beta sale con sus enlaces encendidos en el HTML, también sin JavaScript');
+    } catch (e) { ctx.falla('web: no se puede leer el bloque data-enlaces de /beta en dist/ (' + e.message + ')'); }
 
     /* De la app (index.html) solo se mira la landing, entre sus marcas: el resto es la app compilada, que
        pide sus piezas por el precache. La landing vive ahí desde el 9 nov. y sus capturas y enlaces no se

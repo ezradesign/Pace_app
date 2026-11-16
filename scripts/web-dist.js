@@ -43,8 +43,33 @@ function listaWeb() {
   return lista;
 }
 
+/* /BETA, CON LOS ENLACES YA ENCENDIDOS EN EL HTML (auditoría externa del 16 nov. 2026). Los enlaces viven
+   solo en su bloque `data-enlaces`, y el script de la página enseña el botón de cada uno que ya funciona
+   y esconde su «pronto». Sin JavaScript (un buscador, la vista previa de un enlace, algún navegador
+   dentro de una app) se leía «El grupo abre muy pronto» aunque el grupo estuviera abierto. Aquí se hace
+   lo mismo que el script, al publicar: el botón con su dirección y sin `hidden`, y su «pronto» con
+   `hidden`. Con JavaScript se ve igual que antes (el script lo vuelve a hacer y no cambia nada). Si el
+   bloque falta o no se lee, lanza: mejor un build rojo que una /beta que dice lo que no es. */
+function encenderEnlacesBeta(html) {
+  const m = html.match(/<script type="application\/json" data-enlaces>([\s\S]*?)<\/script>/);
+  if (!m) throw new Error('beta/index.html sin su bloque data-enlaces');
+  const enlaces = JSON.parse(m[1]);
+  const attr = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+  for (const clave of Object.keys(enlaces)) {
+    const e = enlaces[clave];
+    if (!e || e.pendiente || !/^https:\/\//.test(e.url || '')) continue;
+    const boton = new RegExp('<a [^>]*data-enlace="' + clave + '"[^>]*>');
+    const pronto = new RegExp('<p [^>]*data-pronto="' + clave + '"[^>]*>');
+    if (!boton.test(html) || !pronto.test(html)) throw new Error('beta/index.html: el enlace «' + clave + '» no tiene su botón y su «pronto»');
+    html = html.replace(boton, (tag) => tag.replace(/ href="[^"]*"/, ' href="' + attr(e.url) + '"').replace(/ hidden(?=[\s>])/, ''));
+    html = html.replace(pronto, (tag) => (/ hidden(?=[\s>])/.test(tag) ? tag : tag.replace(/>$/, ' hidden>')));
+  }
+  return html;
+}
+
 function montarWeb(out) {
-  return www.copiarTodo(listaWeb(), out || OUT);
+  return www.copiarTodo(listaWeb(), out || OUT, (rel, contenido) =>
+    (rel === 'beta/index.html' ? Buffer.from(encenderEnlacesBeta(contenido.toString('utf8')), 'utf8') : contenido));
 }
 
 if (require.main === module) {
@@ -52,4 +77,4 @@ if (require.main === module) {
   console.log('dist/: ' + r.archivos + ' archivos, ' + (r.bytes / 1048576).toFixed(1) + ' MB');
 }
 
-module.exports = { listaWeb, montarWeb };
+module.exports = { listaWeb, montarWeb, encenderEnlacesBeta };

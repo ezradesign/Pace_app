@@ -181,7 +181,8 @@ solo esta la app, sin los documentos, las pruebas ni las fotos de trabajo.
   sin un `404.html` arriba del todo, toma la web por una app de una página y servía `index.html` (la
   app entera, más de 2 MB) con un 200 en cualquier ruta. `web-dist.js` lo publica, `verify` falla si
   falta, y `.claude/static-server.js` hace lo mismo en local (salvo `/api/`, que en la web son funciones).
-
+- /beta se publica con sus enlaces que ya funcionan encendidos en el HTML (`encenderEnlacesBeta`, en
+  `web-dist.js`): sin JavaScript decía que el grupo «abre muy pronto». `verify` lo mira en `dist/`.
 
 ---
 

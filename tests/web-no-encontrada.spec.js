@@ -6,12 +6,17 @@
  *      `404.html` se publica (scripts/web-dist.js) y el servidor de las pruebas hace lo mismo que
  *      Cloudflare con él. Lo que existe sigue igual: la app, las páginas sueltas y todo lo que precarga
  *      `sw.js` (una sola 404 tira su instalación).
+ *  2 · /beta decía «El grupo abre muy pronto» en el HTML de partida y solo su script enseñaba el botón:
+ *      sin JavaScript (buscadores, vistas previas de enlaces) no se podía apuntar nadie. Ahora el HTML
+ *      que se publica sale con los enlaces que ya funcionan encendidos (`encenderEnlacesBeta`), y con
+ *      JavaScript se ve igual que antes.
  */
 'use strict';
 
 const fs = require('fs');
 const path = require('path');
 const { test, expect } = require('@playwright/test');
+const { encenderEnlacesBeta } = require('../scripts/web-dist.js');
 
 const ROOT = path.join(__dirname, '..');
 
@@ -60,4 +65,37 @@ test('web-404-3 · lo que existe sigue con su 200: la app, las páginas sueltas 
     return r.filter(([, s]) => s !== 200).map(([u, s]) => u + ' → ' + s);
   }, paginas.concat(filas));
   expect(malas, 'rutas que existen y ya no dan 200').toEqual([]);
+});
+
+test('web-beta · sin JavaScript, /beta enseña los enlaces que ya funcionan, y con él se ve igual que antes', async ({ browser, page }) => {
+  const fuente = fs.readFileSync(path.join(ROOT, 'beta', 'index.html'), 'utf8');
+  const publicada = encenderEnlacesBeta(fuente);
+  const enlaces = JSON.parse(fuente.match(/<script type="application\/json" data-enlaces>([\s\S]*?)<\/script>/)[1]);
+  const vivos = Object.keys(enlaces).filter((k) => !enlaces[k].pendiente && /^https:\/\//.test(enlaces[k].url));
+  expect(vivos.length, 'GUARD: ningún enlace funciona todavía; la prueba no mide nada').toBeGreaterThan(0);
+
+  const estado = (p) => p.evaluate(() => Array.from(document.querySelectorAll('[data-enlace], [data-pronto]')).map((el) =>
+    (el.getAttribute('data-enlace') ? 'boton ' + el.getAttribute('data-enlace') + ' ' + el.getAttribute('href') : 'pronto ' + el.getAttribute('data-pronto'))
+    + (el.hidden ? ' oculto' : ' visible')));
+
+  const sinJs = await browser.newContext({ javaScriptEnabled: false });
+  const p = await sinJs.newPage();
+  await p.goto('/beta/');
+  /* CONTROL: la fuente, sin JavaScript, dice «muy pronto» (es lo que veía un buscador). */
+  await expect(p.getByText('El grupo abre muy pronto.')).toBeVisible();
+  await p.setContent(publicada);
+  for (const k of vivos) {
+    await expect(p.locator('[data-enlace="' + k + '"]'), k + ': el botón sigue oculto sin JavaScript').toBeVisible();
+    await expect(p.locator('[data-enlace="' + k + '"]')).toHaveAttribute('href', enlaces[k].url);
+    await expect(p.locator('[data-pronto="' + k + '"]'), k + ': sigue diciendo que llega pronto').toBeHidden();
+  }
+  await expect(p.getByText('El grupo abre muy pronto.')).toBeHidden();
+  await sinJs.close();
+
+  /* Con JavaScript, la publicada y la fuente acaban igual. */
+  await page.goto('/beta/');
+  const antes = await estado(page);
+  await page.setContent(publicada);
+  await page.waitForTimeout(200);
+  expect(await estado(page), 'con JavaScript, /beta se ve distinta').toEqual(antes);
 });
