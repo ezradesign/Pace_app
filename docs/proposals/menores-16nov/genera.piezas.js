@@ -164,6 +164,14 @@ async function jornadaHastaElCierre(page, foto, pintarA) {
     const ultimo = /Para cerrar/.test(v);
     if (ultimo) {
       m.ventana = v.replace(/\s+/g, ' ').trim();
+      if (pintarA === 'montada') {
+        /* La 2.1 A ya montada (la app compilada con ella): la home tras «Ahora no», de verdad. */
+        await ventana(page).getByRole('button', { name: 'Ahora no', exact: true }).click();
+        await page.clock.fastForward(12000); await page.waitForTimeout(800);
+        m.montada = await leer(page);
+        await foto('2-montada');
+        return m;
+      }
       await foto('2-ventana');
       await ventana(page).getByRole('button', { name: 'Ahora no', exact: true }).click();
       await page.waitForTimeout(600);
@@ -176,7 +184,7 @@ async function jornadaHastaElCierre(page, foto, pintarA) {
     await ventana(page).getByRole('button', { name: 'Ahora no', exact: true }).click();
     await page.waitForTimeout(600);
     m['pausa' + (b + 1)] = await leer(page);
-    if (b === 0 && m.pintarA) {
+    if (b === 0 && pintarA === true) {
       /* La A: la pausa abierta de siempre, con lo que diría el cierre. Se pinta y se sale. */
       await page.clock.fastForward(12000); await page.waitForTimeout(500);
       await pintarCierreA(page, m.empezada.cierre);

@@ -133,6 +133,26 @@ async function escena5(browser) {
   medidas.opcion1 = await O1.medir(abrir, browser, foto);
 }
 
+/* ---------- 6 · Lo montado: la 2.1 A y la 2.3 A con la app compilada con ellas ----------
+   Escena aparte: las 1 a 5 fotografían la 0.207.0, y esta, la rama con lo montado. */
+
+async function escena6(browser) {
+  console.log('6 · lo montado');
+  const HOY = '2026-11-18';
+  const estado = { ritmo: { horario: { inicio: 540, comida: 840, comidaDur: 60, salida: 1020 },
+    dia: { fecha: HOY, opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} } } };
+  const { context, page } = await abrir(browser, { estado, hora: new Date(HOY + 'T15:10:00+01:00').getTime() });
+  medidas.montado = { cierre: (await P.jornadaHastaElCierre(page, async (n) => { if (n === '2-montada') await foto(page, n); }, 'montada')).montada };
+  await context.close();
+  /* Lo mismo en el ordenador, a 1280 × 800: el panel ancho con el cierre como «Ahora». */
+  const e = await abrir(browser, { estado, hora: new Date(HOY + 'T15:10:00+01:00').getTime(), ancho: 1280, alto: 800 });
+  await P.jornadaHastaElCierre(e.page, async (n) => { if (n === '2-montada') await foto(e.page, '2-montada-1280'); }, 'montada');
+  await e.context.close();
+  const d = await abrir(browser, { ancho: 1280, alto: 800 });
+  medidas.montado.dePie = await P.medirDePie(d.page);
+  await d.context.close();
+}
+
 (async () => {
   fs.mkdirSync(FOTOS, { recursive: true });
   const solo = (process.argv[2] || '1,2,3,4,5').split(',');
@@ -145,6 +165,7 @@ async function escena5(browser) {
     if (solo.includes('3')) await escena3(browser);
     if (solo.includes('4')) await escena4(browser);
     if (solo.includes('5')) await escena5(browser);
+    if (solo.includes('6')) await escena6(browser);
   } finally {
     await browser.close();
     srv.kill();

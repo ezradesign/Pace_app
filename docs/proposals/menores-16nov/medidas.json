@@ -1679,5 +1679,838 @@
         ]
       }
     }
+  },
+  "montado": {
+    "cierre": {
+      "aro": "Para cerrar",
+      "cta": "Hacer la pausa",
+      "seguir": "Cerrar la jornada",
+      "panel": "Jornada entera · de 9:00 a 17:00 · hoy de 15:10 a 16:551 h 40 min de foco · 1 pausa · 1 de 8 vasosCambiarAl calendarioJunto a la mesaSin material, a veces pared o mesaHoy voy por libre15:55Piernas sin pasossaltadaAhora16:50Diafragmática5 min · RespiraJornada enteraDe 9:00 a 17:00 · hoy de 15:10 a 16:55CambiarHoy voy por libreVer todoAhora16:50Diafragmática5 min · Para cerrar, despacioOtra",
+      "terminado": true,
+      "pausa": "cierre",
+      "cierre": {
+        "desde": 1010,
+        "dur": 5,
+        "plato": "Diafragmática"
+      }
+    },
+    "dePie": {
+      "completo-10": {
+        "pausasPorDia": 11,
+        "sentadasPct": 44,
+        "maxSeguidas": 1,
+        "diasSegunMaxSeguidas": {
+          "1": 20
+        },
+        "largasConEstiraSentada": 0,
+        "peor": {
+          "dia": "2026-11-16",
+          "max": 1,
+          "linea": [
+            {
+              "hora": "9:30",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            },
+            {
+              "hora": "10:05",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "hora": "10:40",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 432",
+                "Espalda de pie"
+              ]
+            },
+            {
+              "hora": "11:25",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            },
+            {
+              "hora": "12:00",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Cadena posterior"
+              ]
+            },
+            {
+              "hora": "12:35",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 6·6",
+                "Brazos libres"
+              ]
+            },
+            {
+              "hora": "13:20",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y muñecas"
+              ]
+            },
+            {
+              "hora": "13:55",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "comida": "14:00"
+            },
+            {
+              "hora": "15:30",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y antebrazos"
+              ]
+            },
+            {
+              "hora": "16:05",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Hombros"
+              ]
+            },
+            {
+              "hora": "16:40",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Escritorio express"
+              ]
+            }
+          ]
+        }
+      },
+      "completo-15": {
+        "pausasPorDia": 11,
+        "sentadasPct": 44,
+        "maxSeguidas": 1,
+        "diasSegunMaxSeguidas": {
+          "1": 20
+        },
+        "largasConEstiraSentada": 0,
+        "peor": {
+          "dia": "2026-11-16",
+          "max": 1,
+          "linea": [
+            {
+              "hora": "9:30",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            },
+            {
+              "hora": "10:05",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "hora": "10:40",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 432",
+                "Espalda de pie"
+              ]
+            },
+            {
+              "hora": "11:25",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            },
+            {
+              "hora": "12:00",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Cadena posterior"
+              ]
+            },
+            {
+              "hora": "12:35",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 6·6",
+                "Brazos libres"
+              ]
+            },
+            {
+              "hora": "13:20",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y muñecas"
+              ]
+            },
+            {
+              "hora": "13:55",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "comida": "14:00"
+            },
+            {
+              "hora": "15:30",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y antebrazos"
+              ]
+            },
+            {
+              "hora": "16:05",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Hombros"
+              ]
+            },
+            {
+              "hora": "16:40",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Escritorio express"
+              ]
+            }
+          ]
+        }
+      },
+      "completo-25": {
+        "pausasPorDia": 12,
+        "sentadasPct": 40,
+        "maxSeguidas": 1,
+        "diasSegunMaxSeguidas": {
+          "1": 20
+        },
+        "largasConEstiraSentada": 0,
+        "peor": {
+          "dia": "2026-11-16",
+          "max": 1,
+          "linea": [
+            {
+              "hora": "9:25",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            },
+            {
+              "hora": "9:55",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "hora": "10:25",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 432",
+                "Espalda de pie"
+              ]
+            },
+            {
+              "hora": "11:05",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            },
+            {
+              "hora": "11:35",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Cadena posterior"
+              ]
+            },
+            {
+              "hora": "12:05",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 6·6",
+                "Brazos libres"
+              ]
+            },
+            {
+              "hora": "12:45",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y muñecas"
+              ]
+            },
+            {
+              "hora": "13:15",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "hora": "13:45",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Exhalación 4·6",
+                "Hombros"
+              ]
+            },
+            {
+              "comida": "14:00"
+            },
+            {
+              "hora": "15:25",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y antebrazos"
+              ]
+            },
+            {
+              "hora": "15:55",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Espalda de oficina"
+              ]
+            },
+            {
+              "hora": "16:25",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Glúteos en la silla"
+              ]
+            }
+          ]
+        }
+      },
+      "completo-45": {
+        "pausasPorDia": 7,
+        "sentadasPct": 42,
+        "maxSeguidas": 1,
+        "diasSegunMaxSeguidas": {
+          "1": 20
+        },
+        "largasConEstiraSentada": 0,
+        "peor": {
+          "dia": "2026-11-16",
+          "max": 1,
+          "linea": [
+            {
+              "hora": "9:45",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            },
+            {
+              "hora": "10:35",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "hora": "11:25",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 432",
+                "Espalda de pie"
+              ]
+            },
+            {
+              "hora": "12:25",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            },
+            {
+              "hora": "13:15",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Cadena posterior"
+              ]
+            },
+            {
+              "comida": "14:00"
+            },
+            {
+              "hora": "15:45",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y muñecas"
+              ]
+            },
+            {
+              "hora": "16:20",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Brazos libres"
+              ]
+            }
+          ]
+        }
+      },
+      "gratis-10": {
+        "pausasPorDia": 11,
+        "sentadasPct": 36,
+        "maxSeguidas": 1,
+        "diasSegunMaxSeguidas": {
+          "1": 20
+        },
+        "largasConEstiraSentada": 0,
+        "peor": {
+          "dia": "2026-11-16",
+          "max": 1,
+          "linea": [
+            {
+              "hora": "9:30",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            },
+            {
+              "hora": "10:05",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "hora": "10:40",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 6·6",
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "hora": "11:25",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            },
+            {
+              "hora": "12:00",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Brazos libres"
+              ]
+            },
+            {
+              "hora": "12:35",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Exhalación 4·6",
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "hora": "13:20",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y muñecas"
+              ]
+            },
+            {
+              "hora": "13:55",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "comida": "14:00"
+            },
+            {
+              "hora": "15:30",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Tronco sentado"
+              ]
+            },
+            {
+              "hora": "16:05",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            },
+            {
+              "hora": "16:40",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            }
+          ]
+        }
+      },
+      "gratis-15": {
+        "pausasPorDia": 11,
+        "sentadasPct": 36,
+        "maxSeguidas": 1,
+        "diasSegunMaxSeguidas": {
+          "1": 20
+        },
+        "largasConEstiraSentada": 0,
+        "peor": {
+          "dia": "2026-11-16",
+          "max": 1,
+          "linea": [
+            {
+              "hora": "9:30",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            },
+            {
+              "hora": "10:05",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "hora": "10:40",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 6·6",
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "hora": "11:25",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            },
+            {
+              "hora": "12:00",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Brazos libres"
+              ]
+            },
+            {
+              "hora": "12:35",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Exhalación 4·6",
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "hora": "13:20",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y muñecas"
+              ]
+            },
+            {
+              "hora": "13:55",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "comida": "14:00"
+            },
+            {
+              "hora": "15:30",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Tronco sentado"
+              ]
+            },
+            {
+              "hora": "16:05",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            },
+            {
+              "hora": "16:40",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            }
+          ]
+        }
+      },
+      "gratis-25": {
+        "pausasPorDia": 12,
+        "sentadasPct": 33,
+        "maxSeguidas": 1,
+        "diasSegunMaxSeguidas": {
+          "1": 20
+        },
+        "largasConEstiraSentada": 0,
+        "peor": {
+          "dia": "2026-11-16",
+          "max": 1,
+          "linea": [
+            {
+              "hora": "9:25",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            },
+            {
+              "hora": "9:55",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "hora": "10:25",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 6·6",
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "hora": "11:05",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            },
+            {
+              "hora": "11:35",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Brazos libres"
+              ]
+            },
+            {
+              "hora": "12:05",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Exhalación 4·6",
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "hora": "12:45",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y muñecas"
+              ]
+            },
+            {
+              "hora": "13:15",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "hora": "13:45",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 5·5",
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "comida": "14:00"
+            },
+            {
+              "hora": "15:25",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Tronco sentado"
+              ]
+            },
+            {
+              "hora": "15:55",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "hora": "16:25",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            }
+          ]
+        }
+      },
+      "gratis-45": {
+        "pausasPorDia": 7,
+        "sentadasPct": 31,
+        "maxSeguidas": 1,
+        "diasSegunMaxSeguidas": {
+          "1": 20
+        },
+        "largasConEstiraSentada": 0,
+        "peor": {
+          "dia": "2026-11-16",
+          "max": 1,
+          "linea": [
+            {
+              "hora": "9:45",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            },
+            {
+              "hora": "10:35",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "hora": "11:25",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 6·6",
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "hora": "12:25",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            },
+            {
+              "hora": "13:15",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Brazos libres"
+              ]
+            },
+            {
+              "comida": "14:00"
+            },
+            {
+              "hora": "15:45",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y muñecas"
+              ]
+            },
+            {
+              "hora": "16:20",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            }
+          ]
+        }
+      }
+    }
   }
 }
