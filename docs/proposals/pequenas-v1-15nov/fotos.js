@@ -63,6 +63,15 @@ async function main() {
     await foto(navegador, 'b-hoja.png', { firstSeen: empezo, copiaAvisoVisto: null }, async (page) => {
       await page.locator('[data-pace-sobre-de="copia"]').click();
     });
+    /* La página de lo que no existe (auditoría externa del 16 nov.), tal como la sirve el 404. */
+    const ctx = await navegador.newContext({ viewport: { width: 360, height: 640 }, deviceScaleFactor: 2, locale: 'es-ES' });
+    const page = await ctx.newPage();
+    await page.goto(BASE + '/esta-ruta-no-existe-xyz');
+    await page.evaluate(() => document.fonts.ready);
+    await page.waitForTimeout(400);
+    await page.screenshot({ path: path.join(SALIDA, 'c-404.png') });
+    await ctx.close();
+    console.log('c-404.png');
     await navegador.close();
   } finally {
     servidor.kill();

@@ -76,7 +76,7 @@ td{color:var(--ink-2)}
   <h1>Lo pequeño de antes de v1</h1>
   <p class="lead">Los arreglos de tu lista que no piden elegir nada, montados en una rama. Casi nada cambia a la vista, y donde cambia, se dice abajo.</p>
   <p>Es el paso 9 de «Lo que queda hasta v1». Salen de la cola de las auditorías de Fable (filas 4, 10, 16, 17, 20 a 24). Lo que pide maqueta (el constructor de rutinas y la nota del fin de la semana de prueba) y los cambios de lado dentro de un ejercicio (van con la voz de Mueve y Estira) no están aquí.</p>
-  <p class="montado"><strong>Montados los seis</strong> en la rama <code>claude/pequenas-v1-15nov-39e6cb</code>, cada uno con su prueba y <code>verify</code> en verde. Falta tu «júntalo». La pregunta que quedaba, si PACE recomienda instalarla y recuerda la copia, la contestaste con «A+B»: montadas las dos (punto 6).</p>
+  <p class="montado"><strong>Montados los ocho</strong> en la rama <code>claude/pequenas-v1-15nov-39e6cb</code>, cada uno con su prueba y <code>verify</code> en verde. Falta tu «júntalo». La pregunta que quedaba, si PACE recomienda instalarla y recuerda la copia, la contestaste con «A+B»: montadas las dos (punto 6).</p>
 
   <h2>1 · Los buscadores encuentran PACE con un nombre limpio</h2>
   <p>La pestaña y los buscadores leían «PACE · Foco · Cuerpo — v0.206.0». Ahora la versión no sale (sigue al pie de la barra lateral), y la raíz lleva la frase de la landing como descripción. <code>robots.txt</code> y <code>sitemap.xml</code> existen de verdad: hasta hoy esas dos direcciones devolvían la app.</p>
@@ -119,6 +119,16 @@ td{color:var(--ink-2)}
     <li><strong>Las fotos al instalar:</strong> el manifiesto trae capturas, y Chrome enseña la instalación con fotos. Son las ya publicadas: las tres de /beta en el móvil y la del ordenador de /premium, cada idioma con las suyas.</li>
   </ul>
 
+  <h2>7 · Lo que no existe da su página, no la app entera</h2>
+  <p>De la revisión externa que trajiste el 16 nov. En pacegrass.app, una dirección que no existe (<code>/esta-ruta-no-existe-xyz</code>, <code>/legal/condiciones/</code>) devolvía la app entera, 2,2 MB, como si todo fuera bien. Pasa porque Cloudflare, sin una página «no encontrada», toma la web por una app de una sola página. Ahora la tiene: dice que esa página no existe, en castellano o en inglés, con «Ir a PACE», y el navegador y los buscadores reciben su 404.</p>
+  <div class="fotos">
+    <figure><img src="fotos/c-404.png" alt="La página de lo que no existe a 360 px: la vaca, «PACE · 404», «Esta página no existe.», una línea y el botón «Ir a PACE»" width="360" height="640" loading="lazy"><figcaption>La página, a 360 px</figcaption></figure>
+  </div>
+  <p class="nota">Todo lo que sí existe sigue igual: la raíz con sus dos caras, los enlaces con <code>?go=</code>, /premium, /beta, /gracias, /recuperar, /desistir, lo legal y cada archivo que la app guarda para abrir sin red (se prueba uno a uno).</p>
+
+  <h2>8 · /beta se lee también sin JavaScript</h2>
+  <p>La página de los testers decía «El grupo abre muy pronto» hasta que su script ponía el botón. Un buscador, la vista previa de un enlace en WhatsApp o LinkedIn, o algún navegador dentro de una app no corren ese script, y veían que no se podía apuntar nadie. Ahora la página sale publicada con los botones que ya funcionan (el grupo y Google Play) y el «muy pronto» solo donde de verdad falta: el iPhone. Con JavaScript se ve igual que antes.</p>
+
   <h2>Lo que no se pudo probar aquí</h2>
   <div class="tabla"><table>
     <tr><th>Qué</th><th>Dónde se mira</th></tr>
@@ -126,6 +136,7 @@ td{color:var(--ink-2)}
     <tr><td>Que PACE abra a los 3 s con una wifi mala</td><td>En el móvil, con PACE instalada y una red lenta (o el modo avión puesto a medias).</td></tr>
     <tr><td>Que Safari conceda el almacenamiento persistente</td><td>En Safari, en el Mac o el iPhone sin instalar (no se puede probar en Windows).</td></tr>
     <tr><td>La instalación con fotos</td><td>En Chrome, en pacegrass.app tras juntar: el botón de instalar enseña las capturas.</td></tr>
+    <tr><td>El 404 de Cloudflare</td><td>En pacegrass.app tras juntar: <code>/esta-ruta-no-existe-xyz</code> enseña la página y da 404, y <code>/robots.txt</code> da sus reglas. Aquí se prueba con un servidor que hace lo mismo.</td></tr>
     <tr><td>Que la línea de la copia y el aviso del sobre salgan en Safari sin instalar, y no con PACE en la pantalla de inicio</td><td>En el iPhone: en Safari, Ajustes › Tus datos; luego desde el icono de la pantalla de inicio. Aquí se prueba en Chromium, fingiendo la instalación.</td></tr>
   </table></div>
 
