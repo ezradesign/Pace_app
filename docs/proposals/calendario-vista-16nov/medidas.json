@@ -193,7 +193,7 @@
   "dentro": true,
   "alto": 14,
   "toque": [
-   128,
+   71,
    44
   ],
   "lineas": [
@@ -260,7 +260,7 @@
   "dentro": true,
   "alto": 14,
   "toque": [
-   128,
+   71,
    44
   ],
   "lineas": [
@@ -315,7 +315,7 @@
   "dentro": true,
   "alto": 14,
   "toque": [
-   128,
+   71,
    44
   ],
   "lineas": [
@@ -327,10 +327,10 @@
   "aro": 331,
   "tarjeta": 118,
   "pisa": [],
-  "dentro": false,
+  "dentro": true,
   "alto": 14,
   "toque": [
-   144,
+   79,
    44
   ],
   "lineas": [
@@ -449,7 +449,7 @@
   "dentro": true,
   "alto": 14,
   "toque": [
-   118,
+   71,
    44
   ],
   "lineas": [
@@ -461,10 +461,10 @@
   "aro": 331,
   "tarjeta": 144,
   "pisa": [],
-  "dentro": false,
+  "dentro": true,
   "alto": 14,
   "toque": [
-   133,
+   78,
    44
   ],
   "lineas": [
