@@ -282,6 +282,88 @@ async function escena4b(browser) {
   }
 }
 
+/* ---------- Montado: 1A, 2 A+B+C y 3B, la app de verdad sin nada pintado ---------- */
+
+/* Como `abrir`, pero con el reloj parado: la hoja del fin de la prueba no se mira hasta runFor, y
+   así se llega antes al sobre o a la biblioteca, o se abre la tienda antes de que salga la hoja. */
+async function abrirParado(browser, { estado, hora, alto, lang }) {
+  const context = await browser.newContext({
+    viewport: { width: 360, height: alto || 640 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true,
+    locale: 'es-ES', timezoneId: 'Europe/Madrid', colorScheme: 'light',
+    storageState: { cookies: [], origins: [{ origin: BASE, localStorage: [{ name: 'pace-cara', value: 'app' }] }] },
+  });
+  await context.addInitScript(() => {
+    Object.defineProperty(window, 'PREMIUM_ABIERTO_HASTA_V1', { configurable: true, get: () => false, set: () => {} });
+  });
+  await context.addInitScript(([e]) => {
+    if (!localStorage.getItem('pace.state.v2')) localStorage.setItem('pace.state.v2', JSON.stringify(e));
+  }, [Object.assign({}, SEMILLA, lang ? { lang } : {}, estado || {})]);
+  const page = await context.newPage();
+  await page.clock.install({ time: hora });
+  await page.clock.pauseAt(hora + 200);
+  page.on('pageerror', (e) => console.log('  [pageerror]', e.message));
+  await page.goto(BASE + '/index.html');
+  await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
+  await page.evaluate(() => document.fonts.ready);
+  await page.evaluate(() => { if (window.PACE_TIENDA_WEB) window.PACE_TIENDA_WEB.enlaces = { vida: '/index.html#tienda-vida', mes: null }; });
+  await page.clock.runFor(800);
+  return { context, page };
+}
+
+async function escenaMontado(browser) {
+  console.log('M · montado');
+  medidas.M = {};
+  /* 1A · el constructor de verdad. */
+  let r = await abrir(browser, { alto: 640 });
+  await hastaElConstructor(r.page);
+  medidas.M['1A-640'] = await P.medirConstructor(r.page);
+  await P.verPasos(r.page);
+  await foto(r.page, 'm-1a-640');
+  await r.context.close();
+
+  /* 2B · la hoja al abrir PACE el día después. */
+  r = await abrirParado(browser, { estado: ACABADA, hora: JUEVES26 });
+  await r.page.clock.runFor(2500);
+  await r.page.locator('[data-pace-premium-hoja="fin"]').waitFor();
+  await r.page.waitForTimeout(400);
+  medidas.M['2B-640'] = Object.assign(await P.ocultoDe(r.page, '[data-pace-premium-hoja="fin"]'), await P.pisados(r.page, '[data-pace-premium-hoja] button'));
+  await foto(r.page, 'm-2b-640');
+  /* … y después, el sobre con la nota ya leída. */
+  await r.page.getByRole('button', { name: 'Entendido' }).click();
+  await r.page.waitForTimeout(500);
+  await r.page.locator('[data-pace-sobre]').filter({ visible: true }).first().click();
+  await r.page.waitForTimeout(600);
+  await foto(r.page, 'm-2a-leida-640');
+  await r.context.close();
+
+  /* 2A · el sobre cerrado, si la hoja no llegó a salir. */
+  r = await abrirParado(browser, { estado: ACABADA, hora: JUEVES26 });
+  await foto(r.page, 'm-2a-icono-640');
+  await r.page.locator('[data-pace-sobre]').filter({ visible: true }).first().click();
+  await r.page.waitForTimeout(600);
+  await foto(r.page, 'm-2a-hoja-640');
+  await r.context.close();
+
+  /* 2C · la línea en Estira. */
+  r = await abrirParado(browser, { estado: ACABADA, hora: JUEVES26 });
+  await r.page.locator('[data-pace-activitybar-chip]', { hasText: 'Estira' }).filter({ visible: true }).first().click();
+  await r.page.waitForTimeout(900);
+  await foto(r.page, 'm-2c-640');
+  await r.context.close();
+
+  /* 3B · «Tus datos» durante la semana, a 640 y con la letra al 115 %. */
+  for (const h of [640, 740]) {
+    const x = await abrir(browser, { estado: EN_PRUEBA, v1: true, alto: h });
+    await hastaTusDatos(x.page);
+    const normal = await P.ocultoDe(x.page, '[data-pace-tweaks-panel]');
+    if (h === 640) await foto(x.page, 'm-3b-640');
+    await P.letraGrande(x.page, '[data-pace-tweaks-panel]', true);
+    await x.page.waitForTimeout(500);
+    medidas.M['3B-' + h] = { normal, grande: await P.ocultoDe(x.page, '[data-pace-tweaks-panel]'), filas: await P.filasDatos(x.page) };
+    await x.context.close();
+  }
+}
+
 (async () => {
   fs.mkdirSync(FOTOS, { recursive: true });
   const srv = spawn(process.execPath, [path.join(RAIZ, '.claude', 'static-server.js')], { cwd: RAIZ, env: Object.assign({}, process.env, { PORT: String(PUERTO) }), stdio: 'ignore' });
@@ -289,7 +371,7 @@ async function escena4b(browser) {
   const browser = await chromium.launch();
   const solo = process.argv[2];
   try {
-    const escenas = { 1: escena1, 2: escena2, 3: escena3, 4: escena4, '4b': escena4b };
+    const escenas = { 1: escena1, 2: escena2, 3: escena3, 4: escena4, '4b': escena4b, M: escenaMontado };
     for (const [k, f] of Object.entries(escenas)) {
       if (solo && solo.split(',').indexOf(k) === -1) continue;
       await f(browser);
