@@ -117,9 +117,12 @@ function paceEntradaPonerYa() {
   if (!ln || typeof ln.cancel !== 'function' || typeof ln.schedule !== 'function') return null;
   var s = getState();
   /* Quien nunca ha tocado el interruptor no tiene nada puesto: ni se quita ni se pone nada, y el
-     complemento solo oye a PACE por sus avisos de siempre (lo cuentan android-nativo y ios-avisos). */
-  if (typeof ((s && s.ritmo) || {}).avisoEntrada !== 'boolean') return null;
-  var avisos = paceEntradaAvisos(s, Date.now());
+     complemento solo oye a PACE por sus avisos de siempre (lo cuentan android-nativo y ios-avisos).
+     Salvo que lo guardado diga que hay avisos puestos: una copia importada sin `avisoEntrada` (nº 4). */
+  var tocado = typeof ((s && s.ritmo) || {}).avisoEntrada === 'boolean';
+  var puestos = paceEntradaLeer();
+  if (!tocado && !(puestos && puestos.ids.length)) return null;
+  var avisos = tocado ? paceEntradaAvisos(s, Date.now()) : [];
   var android = pacePlataformaNativa() === 'android';
   /* El permiso se mira cada vez: el que guarda la app puede no haber llegado aún al abrir. */
   var permiso = null;
@@ -129,8 +132,7 @@ function paceEntradaPonerYa() {
   return mirar.then(function () {
     var lista = permiso === 'granted' ? avisos.map(function (a) { return paceEntradaNotificacion(a, android); }) : [];
     var firma = JSON.stringify(lista);
-    var antes = paceEntradaLeer();
-    if (antes && antes.firma === firma && (_paceEntrada.yaPuso || !lista.length)) return null;
+    if (puestos && puestos.firma === firma && (_paceEntrada.yaPuso || !lista.length)) return null;
     var ids = lista.map(function (n) { return n.id; });
     var sobran = [];
     for (var i = 0; i < PACE_ENTRADA_DIAS; i++) {
@@ -147,6 +149,28 @@ function paceEntradaPonerYa() {
       return sobran.length ? ln.cancel({ notifications: sobran }) : null;
     }).then(function () { paceEntradaGuardar(firma, ids); });
   }).catch(function () { return null; });
+}
+
+/* «BORRAR TODO» E IMPORTAR UNA COPIA QUITAN LOS SIETE (novena pasada externa, nº 4). Tras recargar,
+   el estado nuevo no trae `avisoEntrada` y PACE no tocaba nada: los avisos puestos seguían saliendo
+   una semana. «Borrar todo» se lleva también lo guardado de `pace.entrada.puesto`, así que se quitan
+   antes de recargar, sin mirar qué hay puesto. Como mucho espera `PACE_ENTRADA_TOPE_MS`: si el
+   sistema no contesta, se recarga igual. Si la copia trae el aviso encendido, se vuelve a poner al
+   abrir. */
+var PACE_ENTRADA_TOPE_MS = 1500;
+function paceEntradaQuitar() {
+  if (typeof paceEsNativo !== 'function' || !paceEsNativo()) return Promise.resolve(null);
+  var quitar = function () {
+    var ln = paceNativoPlugin('LocalNotifications');
+    if (!ln || typeof ln.cancel !== 'function') return null;
+    var ids = [];
+    for (var i = 0; i < PACE_ENTRADA_DIAS; i++) ids.push({ id: PACE_ENTRADA_PRIMER_ID + i });
+    return Promise.resolve(ln.cancel({ notifications: ids })).then(function () {
+      try { localStorage.removeItem(PACE_ENTRADA_CLAVE); } catch (e) {}
+    }).catch(function () { return null; });
+  };
+  _paceEntrada.cola = _paceEntrada.cola.then(quitar, quitar);
+  return Promise.race([_paceEntrada.cola, new Promise(function (ok) { setTimeout(ok, PACE_ENTRADA_TOPE_MS); })]);
 }
 
 /* Al guardar «Tu semana» con el interruptor encendido: pide el permiso de avisos si aún no está
@@ -173,4 +197,4 @@ function paceEntradaEncender() {
   else window.addEventListener('load', function () { setTimeout(arrancar, 0); });
 })();
 
-Object.assign(window, { paceEntradaAvisos, paceEntradaPoner, paceEntradaEncender });
+Object.assign(window, { paceEntradaAvisos, paceEntradaPoner, paceEntradaEncender, paceEntradaQuitar });

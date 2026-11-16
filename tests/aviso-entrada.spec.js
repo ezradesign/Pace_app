@@ -15,7 +15,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto } = require('./helpers');
+const { sembrar, irAlArtefacto, aceptarAvisosPace, abrirTusDatos, CLAVE_ESTADO } = require('./helpers');
 
 const SEMANA = ['jornada', 'jornada', 'jornada', 'jornada', 'media', 'libre', 'libre'];
 const HORARIO = { inicio: 540, comida: 840, comidaDur: 60, salida: 1020 };
@@ -25,7 +25,12 @@ async function comoAndroid(context) {
     /* `oyentes`: para mandar PACE al fondo como lo haría Android (`alFondo`). `cancelFalla`: cuántos
        `cancel` del aviso de entrada fallan (lo siembra `window.__cancelFalla`, que va antes). */
     const nativo = window.__nativo = { llamadas: [], oyentes: {}, cancelFalla: window.__cancelFalla || 0 };
-    const apunta = (metodo, opts) => nativo.llamadas.push({ metodo, opts: opts === undefined ? null : JSON.parse(JSON.stringify(opts)) });
+    const apunta = (metodo, opts) => {
+      nativo.llamadas.push({ metodo, opts: opts === undefined ? null : JSON.parse(JSON.stringify(opts)) });
+      /* Lo del aviso de entrada también a la prueba, que lo oye a través de las recargas (`oirEntrada`). */
+      const ids = ((opts && opts.notifications) || []).map((n) => n.id).filter((id) => id >= 10);
+      if (typeof window.__apuntaNodo === 'function' && ids.length) window.__apuntaNodo(metodo + ' ' + ids.join(','));
+    };
     window.Capacitor = {
       getPlatform: () => 'android',
       isNativePlatform: () => true,
@@ -141,6 +146,77 @@ test('nº 12 · si quitar falla, se vuelve a intentar la vez siguiente', async (
   await olvidarLlamadas(page);
   await alFondo(page);
   expect(await llamadasEntrada(page), 'el sábado y el domingo pueden seguir puestos y no se reintentó').toEqual(['schedule 10,11,14,15,16', 'cancel 12,13']);
+});
+
+/* Novena pasada externa, nº 4: tras «Borrar todo» o importar una copia sin `avisoEntrada`, PACE
+   no tocaba nada al recargar y los avisos ya puestos seguían saliendo una semana. */
+const TODOS = 'cancel 10,11,12,13,14,15,16';
+async function oirEntrada(page) {
+  const oido = [];
+  await page.exposeFunction('__apuntaNodo', (linea) => { oido.push(linea); });
+  return oido;
+}
+/* Una sola vez: tras «Borrar todo» falta la clave y `sembrar` la volvería a escribir. */
+async function sembrarUnaVez(context, ritmo) {
+  await context.addInitScript(([clave, estado]) => {
+    if (localStorage.getItem('__sembrado')) return;
+    localStorage.setItem('__sembrado', '1');
+    localStorage.setItem(clave, JSON.stringify(estado));
+  }, [CLAVE_ESTADO, { firstSeen: 1, lang: 'es', langAuto: false, palette: 'crema', soundOn: false, ritmo }]);
+}
+const despuesDe = (oido, i) => oido.slice(i);
+
+test('nº 4 · «Borrar todo» quita los siete avisos de entrada antes de recargar', async ({ page, context }) => {
+  const oido = await oirEntrada(page);
+  await sembrarUnaVez(context, { semanaTipo: SEMANA, horario: HORARIO, avisoEntrada: true });
+  await comoAndroid(context);
+  await page.clock.install({ time: new Date('2026-11-18T20:00:00+01:00') });
+  await irAlArtefacto(page);
+  await expect.poll(() => oido.join(' | '), { message: 'GUARD: al abrir no puso los avisos' }).toContain('schedule 10,11,14,15,16');
+  const desde = oido.length;
+  await aceptarAvisosPace(page);
+  await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  await abrirTusDatos(page);
+  const recarga = page.waitForEvent('load');
+  await page.getByRole('button', { name: 'Borrar todos mis datos' }).click();
+  await recarga;
+  await page.locator('[data-pace-dial-number]').waitFor({ state: 'attached' });
+  await page.waitForTimeout(600);
+  expect(await page.evaluate(() => (getState().ritmo || {}).avisoEntrada), 'GUARD: no se borró').toBeUndefined();
+  expect(despuesDe(oido, desde), 'los avisos de entrada siguen puestos tras borrar').toContain(TODOS);
+  expect(despuesDe(oido, desde).filter((l) => l.indexOf('schedule') === 0), 'tras borrar volvió a poner avisos').toEqual([]);
+});
+
+test('nº 4 · importar una copia sin el aviso quita los siete', async ({ page, context }) => {
+  const oido = await oirEntrada(page);
+  await sembrarUnaVez(context, { semanaTipo: SEMANA, horario: HORARIO, avisoEntrada: true });
+  await comoAndroid(context);
+  await page.clock.install({ time: new Date('2026-11-18T20:00:00+01:00') });
+  await irAlArtefacto(page);
+  await expect.poll(() => oido.join(' | '), { message: 'GUARD: al abrir no puso los avisos' }).toContain('schedule 10,11,14,15,16');
+  const desde = oido.length;
+  await aceptarAvisosPace(page);
+  await page.getByRole('button', { name: 'Abrir ajustes' }).click();
+  await abrirTusDatos(page);
+  const recarga = page.waitForEvent('load');
+  await page.locator('input[type="file"][data-pace-traer-copia]').setInputFiles({
+    name: 'pace-backup-20261116.json', mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify({ app: 'PACE', state: { firstSeen: 1, lang: 'es', langAuto: false, palette: 'crema', ritmo: { libre: true }, totalFocusMin: 42 } })),
+  });
+  await recarga;
+  await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
+  await page.waitForTimeout(600);
+  expect(await page.evaluate(() => getState().totalFocusMin), 'GUARD: la copia no entró').toBe(42);
+  expect(despuesDe(oido, desde), 'los avisos de entrada siguen puestos tras importar').toContain(TODOS);
+  expect(despuesDe(oido, desde).filter((l) => l.indexOf('schedule') === 0), 'tras importar volvió a poner avisos').toEqual([]);
+});
+
+test('nº 4 · sin `avisoEntrada` pero con avisos puestos según lo guardado, los quita al abrir', async ({ page, context }) => {
+  await context.addInitScript(() => {
+    localStorage.setItem('pace.entrada.puesto', JSON.stringify({ firma: '[{"id":10}]', ids: [10, 11] }));
+  });
+  await abrir(page, context, { semanaTipo: SEMANA, horario: HORARIO }, new Date('2026-11-18T20:00:00+01:00'));
+  expect(await llamadasEntrada(page)).toEqual([TODOS]);
 });
 
 test('apagado de fábrica: no pone ninguno', async ({ page, context }) => {

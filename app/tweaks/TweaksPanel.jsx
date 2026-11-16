@@ -120,7 +120,8 @@ function TweaksPanel({ open, onClose }) {
     const alFallar = pidiendoBorrar && pidiendoBorrar.alFallar;
     setPidiendoBorrar(null);
     paceEventsWipeAll((r) => {
-      if (r && r.legacyWritten) location.reload();
+      /* En las apps, los avisos de entrada se van antes de recargar (ui/nativo.entrada.js). */
+      if (r && r.legacyWritten) paceEntradaQuitar().then(() => location.reload());
       else if (typeof alFallar === 'function') alFallar();
     });
   };
