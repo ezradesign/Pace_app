@@ -7,7 +7,7 @@ const vis = (page, sel) => page.locator(sel).filter({ visible: true });
 /* El reloj quieto y movido a mano: lo que se fotografía es un segundo exacto. */
 async function quieto(page) {
   const ahora = await page.evaluate(() => Date.now());
-  await page.clock.pauseAt(ahora + 50);
+  await page.clock.pauseAt(ahora + 1000);
 }
 async function avanzar(page, segundos) {
   for (let i = 0; i < segundos; i++) {

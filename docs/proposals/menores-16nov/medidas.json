@@ -923,5 +923,761 @@
         ]
       }
     }
+  },
+  "opcion1": {
+    "pasos": [
+      {
+        "rutina": "move.shoulder.circles",
+        "paso": "Círculos de brazos",
+        "a": [
+          "Atrás",
+          "Otro brazo",
+          "Atrás"
+        ],
+        "b": [
+          "Brazo 1 · adelante",
+          "Brazo 1 · atrás",
+          "Brazo 2 · adelante",
+          "Brazo 2 · atrás"
+        ],
+        "tallas": {
+          "360×640": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 150,
+              "nombreY": 235,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 150,
+              "nombreY": 235,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 79,
+            "A": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 150,
+              "nombreY": 235,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×740": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 232,
+              "nombreY": 319,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 232,
+              "nombreY": 319,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 79,
+            "A": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 232,
+              "nombreY": 319,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×640, letra al 115 %": {
+            "hoy": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 134,
+              "nombreY": 223,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 134,
+              "nombreY": 223,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "corre": 94,
+            "A": {
+              "pila": 77,
+              "lineas": 3,
+              "dibujo": 134,
+              "nombreY": 223,
+              "rotulo": 17,
+              "scroll": 0
+            }
+          }
+        }
+      },
+      {
+        "rutina": "move.hamstrings.standing",
+        "paso": "Círculos de tobillo",
+        "a": [
+          "Al revés",
+          "Otro pie",
+          "Al revés"
+        ],
+        "b": [
+          "Pie 1",
+          "Pie 1 · al revés",
+          "Pie 2",
+          "Pie 2 · al revés"
+        ],
+        "tallas": {
+          "360×640": {
+            "hoy": {
+              "pila": 67,
+              "lineas": 2,
+              "dibujo": 141,
+              "nombreY": 226,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 67,
+              "lineas": 2,
+              "dibujo": 141,
+              "nombreY": 226,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 73,
+            "A": {
+              "pila": 67,
+              "lineas": 2,
+              "dibujo": 141,
+              "nombreY": 226,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×740": {
+            "hoy": {
+              "pila": 67,
+              "lineas": 2,
+              "dibujo": 204,
+              "nombreY": 291,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 67,
+              "lineas": 2,
+              "dibujo": 204,
+              "nombreY": 291,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 73,
+            "A": {
+              "pila": 67,
+              "lineas": 2,
+              "dibujo": 204,
+              "nombreY": 291,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×640, letra al 115 %": {
+            "hoy": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 147,
+              "nombreY": 237,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 147,
+              "nombreY": 237,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "corre": 77,
+            "A": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 147,
+              "nombreY": 237,
+              "rotulo": 17,
+              "scroll": 0
+            }
+          }
+        }
+      },
+      {
+        "rutina": "move.wrists",
+        "paso": "Círculos de muñeca",
+        "a": [
+          "Al revés"
+        ],
+        "b": [
+          "Un sentido",
+          "Al revés"
+        ],
+        "tallas": {
+          "360×640": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 144,
+              "nombreY": 229,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 144,
+              "nombreY": 229,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 58,
+            "A": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 144,
+              "nombreY": 229,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×740": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 226,
+              "nombreY": 313,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 226,
+              "nombreY": 313,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 58,
+            "A": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 226,
+              "nombreY": 313,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×640, letra al 115 %": {
+            "hoy": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 127,
+              "nombreY": 216,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 127,
+              "nombreY": 216,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "corre": 65,
+            "A": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 127,
+              "nombreY": 216,
+              "rotulo": 17,
+              "scroll": 0
+            }
+          }
+        }
+      },
+      {
+        "rutina": "move.desk.quick",
+        "paso": "Giro sentado",
+        "a": [
+          "Al otro lado"
+        ],
+        "b": [
+          "Un lado",
+          "Al otro lado"
+        ],
+        "tallas": {
+          "360×640": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 169,
+              "nombreY": 254,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 169,
+              "nombreY": 254,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 84,
+            "A": {
+              "pila": 67,
+              "lineas": 3,
+              "dibujo": 147,
+              "nombreY": 232,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×740": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 232,
+              "nombreY": 319,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 232,
+              "nombreY": 319,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 84,
+            "A": {
+              "pila": 67,
+              "lineas": 3,
+              "dibujo": 210,
+              "nombreY": 297,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×640, letra al 115 %": {
+            "hoy": {
+              "pila": 77,
+              "lineas": 3,
+              "dibujo": 134,
+              "nombreY": 223,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 77,
+              "lineas": 3,
+              "dibujo": 134,
+              "nombreY": 223,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "corre": 75,
+            "A": {
+              "pila": 77,
+              "lineas": 3,
+              "dibujo": 134,
+              "nombreY": 223,
+              "rotulo": 17,
+              "scroll": 0
+            }
+          }
+        }
+      },
+      {
+        "rutina": "move.desk.quick",
+        "paso": "Círculos de tobillo",
+        "a": [
+          "Otro pie"
+        ],
+        "b": [
+          "Pie 1",
+          "Pie 2"
+        ],
+        "tallas": {
+          "360×640": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 169,
+              "nombreY": 254,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 169,
+              "nombreY": 254,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 72,
+            "A": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 169,
+              "nombreY": 254,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×740": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 232,
+              "nombreY": 319,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 232,
+              "nombreY": 319,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 72,
+            "A": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 232,
+              "nombreY": 319,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×640, letra al 115 %": {
+            "hoy": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 154,
+              "nombreY": 243,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 154,
+              "nombreY": 243,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "corre": 85,
+            "A": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 154,
+              "nombreY": 243,
+              "rotulo": 17,
+              "scroll": 0
+            }
+          }
+        }
+      },
+      {
+        "rutina": "extra.pausa.suelo",
+        "paso": "Gateo con rodillas",
+        "a": [
+          "Atrás"
+        ],
+        "b": [
+          "Adelante",
+          "Atrás"
+        ],
+        "tallas": {
+          "360×640": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 163,
+              "nombreY": 248,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 163,
+              "nombreY": 248,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 26,
+            "A": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 163,
+              "nombreY": 248,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×740": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 226,
+              "nombreY": 313,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 226,
+              "nombreY": 313,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 26,
+            "A": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 226,
+              "nombreY": 313,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×640, letra al 115 %": {
+            "hoy": {
+              "pila": 52,
+              "lineas": 2,
+              "dibujo": 127,
+              "nombreY": 220,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 52,
+              "lineas": 2,
+              "dibujo": 127,
+              "nombreY": 220,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "corre": 78,
+            "A": {
+              "pila": 77,
+              "lineas": 3,
+              "dibujo": 147,
+              "nombreY": 237,
+              "rotulo": 17,
+              "scroll": 0
+            }
+          }
+        }
+      },
+      {
+        "rutina": "extra.pausa.suelo",
+        "paso": "Desliza el talón",
+        "a": [
+          "Otra pierna"
+        ],
+        "b": [
+          "Pierna 1",
+          "Pierna 2"
+        ],
+        "tallas": {
+          "360×640": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 163,
+              "nombreY": 248,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 163,
+              "nombreY": 248,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 73,
+            "A": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 163,
+              "nombreY": 248,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×740": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 226,
+              "nombreY": 313,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 226,
+              "nombreY": 313,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 73,
+            "A": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 226,
+              "nombreY": 313,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×640, letra al 115 %": {
+            "hoy": {
+              "pila": 52,
+              "lineas": 2,
+              "dibujo": 152,
+              "nombreY": 242,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 52,
+              "lineas": 2,
+              "dibujo": 152,
+              "nombreY": 242,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "corre": 90,
+            "A": {
+              "pila": 77,
+              "lineas": 3,
+              "dibujo": 127,
+              "nombreY": 216,
+              "rotulo": 17,
+              "scroll": 0
+            }
+          }
+        }
+      }
+    ],
+    "duraciones": {
+      "move.shoulder.circles": {
+        "nombre": "Brazos libres",
+        "declarado": 2,
+        "fichaHoy": "2–3",
+        "fichaC": "2–3",
+        "segHoy": [
+          139,
+          139
+        ],
+        "segC": [
+          149,
+          149
+        ],
+        "partidos": [
+          "Círculos de brazos"
+        ]
+      },
+      "move.hamstrings.standing": {
+        "nombre": "Piernas en pausa",
+        "declarado": 3,
+        "fichaHoy": "2–3",
+        "fichaC": "2–3",
+        "segHoy": [
+          128,
+          128
+        ],
+        "segC": [
+          138,
+          138
+        ],
+        "partidos": [
+          "Círculos de tobillo"
+        ]
+      },
+      "move.wrists": {
+        "nombre": "Manos y muñecas",
+        "declarado": 2,
+        "fichaHoy": "1–2",
+        "fichaC": "1–2",
+        "segHoy": [
+          115,
+          115
+        ],
+        "segC": [
+          115,
+          115
+        ],
+        "partidos": []
+      },
+      "move.desk.quick": {
+        "nombre": "Escritorio express",
+        "declarado": 2,
+        "fichaHoy": "2–3",
+        "fichaC": "2–3",
+        "segHoy": [
+          157,
+          157
+        ],
+        "segC": [
+          177,
+          177
+        ],
+        "partidos": [
+          "Giro sentado",
+          "Círculos de tobillo"
+        ]
+      },
+      "extra.pausa.suelo": {
+        "nombre": "Fuerza en suelo",
+        "declarado": 3,
+        "fichaHoy": "2–3",
+        "fichaC": "3–4",
+        "segHoy": [
+          173,
+          173
+        ],
+        "segC": [
+          183,
+          183
+        ],
+        "partidos": [
+          "Desliza el talón"
+        ]
+      }
+    }
   }
 }

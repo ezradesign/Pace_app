@@ -22,6 +22,7 @@ const { spawn } = require('child_process');
 const RAIZ = path.resolve(__dirname, '..', '..', '..');
 const { chromium } = require(path.join(RAIZ, 'node_modules', 'playwright'));
 const P = require('./genera.piezas');
+const O1 = require('./genera.opcion1');
 
 const FOTOS = path.join(__dirname, 'fotos');
 const PUERTO = 8885;
@@ -74,7 +75,7 @@ async function escena1(browser) {
   /* La A otra vez en la repetición 9, el cambio de brazo. */
   await P.pintarRotulo(page, '');
   await P.avanzar(page, 16);
-  medidas.a9 = await P.pintarPalabra(page, 'Otro brazo, adelante', true);
+  medidas.a9 = await P.pintarPalabra(page, 'Otro brazo', true);
   await foto(page, '1-a9');
   await context.close();
 
@@ -125,9 +126,16 @@ async function escena4(browser) {
   await context.close();
 }
 
+/* ---------- 5 · La 1 valorada: A, B y C medidas en los siete pasos ---------- */
+
+async function escena5(browser) {
+  console.log('5 · la 1, medida');
+  medidas.opcion1 = await O1.medir(abrir, browser, foto);
+}
+
 (async () => {
   fs.mkdirSync(FOTOS, { recursive: true });
-  const solo = (process.argv[2] || '1,2,3,4').split(',');
+  const solo = (process.argv[2] || '1,2,3,4,5').split(',');
   const srv = spawn(process.execPath, [path.join(RAIZ, '.claude', 'static-server.js')], { cwd: RAIZ, env: Object.assign({}, process.env, { PORT: String(PUERTO) }), stdio: 'ignore' });
   await new Promise((r) => setTimeout(r, 800));
   const browser = await chromium.launch();
@@ -136,6 +144,7 @@ async function escena4(browser) {
     if (solo.includes('2')) await escena2(browser);
     if (solo.includes('3')) await escena3(browser);
     if (solo.includes('4')) await escena4(browser);
+    if (solo.includes('5')) await escena5(browser);
   } finally {
     await browser.close();
     srv.kill();
