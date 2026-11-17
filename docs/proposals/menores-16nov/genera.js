@@ -153,6 +153,38 @@ async function escena6(browser) {
   await d.context.close();
 }
 
+/* ---------- 7 · La 1A elegida, medida con la condición de Ez (nada gana líneas ni cambia) ---------- */
+
+async function escena7(browser) {
+  console.log('7 · la 1A, palabras cortas');
+  medidas.aCorta = await require('./genera.a-corta').medir(abrir, browser);
+}
+
+/* ---------- 9 · La 1A montada: la app compilada con ella, sin nada pintado encima ----------
+   «Círculos de tobillo» de Piernas en pausa justo tras el cambio de pie (repetición 9) y «Giro sentado»
+   tras el de lado (11 s), a 360 × 640. */
+
+async function escena9(browser) {
+  console.log('9 · la 1A montada');
+  for (const [id, seg, nombre] of [['move.hamstrings.standing', 17, '1-montada-tobillo'], ['move.desk.quick', 11, '1-montada-giro']]) {
+    const { context, page } = await abrir(browser, {});
+    await P.lanzarRutina(page, id);
+    const paso = id === 'move.desk.quick' ? 'Giro sentado' : 'Círculos de tobillo';
+    for (let k = 0; k < 400; k++) {
+      const ok = await page.evaluate((n) => {
+        const q = (s) => [...document.querySelectorAll(s)].find((e) => e.getBoundingClientRect().width > 0);
+        const r = q('[data-pace-v1-raiz]'); const h = q('[data-pace-v1-name]');
+        return !!r && r.getAttribute('data-pace-v1-fase') === 'work' && !!h && h.textContent === n;
+      }, paso);
+      if (ok) break;
+      await page.clock.runFor(1000); await page.waitForTimeout(20);
+    }
+    await P.avanzar(page, seg);
+    await foto(page, nombre);
+    await context.close();
+  }
+}
+
 (async () => {
   fs.mkdirSync(FOTOS, { recursive: true });
   const solo = (process.argv[2] || '1,2,3,4,5').split(',');
@@ -166,6 +198,9 @@ async function escena6(browser) {
     if (solo.includes('4')) await escena4(browser);
     if (solo.includes('5')) await escena5(browser);
     if (solo.includes('6')) await escena6(browser);
+    if (solo.includes('7')) await escena7(browser);
+    if (solo.includes('9')) await escena9(browser);
+    if (solo.includes('8')) { console.log('8 · la 1A, alternativa para los tres que no caben'); medidas.aCortaAlternativas = await require('./genera.a-corta').medirAlternativas(abrir, browser); }
   } finally {
     await browser.close();
     srv.kill();

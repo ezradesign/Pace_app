@@ -2512,5 +2512,2364 @@
         }
       }
     }
-  }
+  },
+  "aCorta": [
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "id": "move.shoulder.circles",
+      "i": 0,
+      "lang": "es",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 150,
+        "texto": "De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. Luego, el otro."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Atrás",
+            "Otro brazo"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 150,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Atrás",
+            "Cambia"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 150,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "id": "move.shoulder.circles",
+      "i": 0,
+      "lang": "es",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232,
+        "texto": "De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. Luego, el otro."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Atrás",
+            "Otro brazo"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Atrás",
+            "Cambia"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "id": "move.shoulder.circles",
+      "i": 0,
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 134,
+        "texto": "De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. Luego, el otro."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Atrás",
+            "Otro brazo"
+          ],
+          "lineas": [
+            3,
+            3
+          ],
+          "pila": 77,
+          "dibujo": 134,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": false
+        },
+        {
+          "palabras": [
+            "Atrás",
+            "Cambia"
+          ],
+          "lineas": [
+            3,
+            3
+          ],
+          "pila": 77,
+          "dibujo": 134,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": false
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "id": "move.shoulder.circles",
+      "i": 0,
+      "lang": "en",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 169,
+        "texto": "Standing, arm straight: eight slow circles, four forward and four back. Then the other arm."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Back",
+            "Other arm"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Back",
+            "Switch"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "id": "move.shoulder.circles",
+      "i": 0,
+      "lang": "en",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232,
+        "texto": "Standing, arm straight: eight slow circles, four forward and four back. Then the other arm."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Back",
+            "Other arm"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Back",
+            "Switch"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "id": "move.shoulder.circles",
+      "i": 0,
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 52,
+        "dibujo": 134,
+        "texto": "Standing, arm straight: eight slow circles, four forward and four back. Then the other arm."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Back",
+            "Other arm"
+          ],
+          "lineas": [
+            3,
+            3
+          ],
+          "pila": 77,
+          "dibujo": 154,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": false
+        },
+        {
+          "palabras": [
+            "Back",
+            "Switch"
+          ],
+          "lineas": [
+            3,
+            3
+          ],
+          "pila": 77,
+          "dibujo": 154,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": false
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Piernas en pausa",
+      "id": "move.hamstrings.standing",
+      "i": 2,
+      "lang": "es",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 67,
+        "dibujo": 141,
+        "texto": "Círculos con el tobillo: cuatro en cada sentido con un pie, y luego con el otro."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al revés",
+            "Otro pie"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 67,
+          "dibujo": 141,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Al revés",
+            "Cambia"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 67,
+          "dibujo": 141,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Piernas en pausa",
+      "id": "move.hamstrings.standing",
+      "i": 2,
+      "lang": "es",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 67,
+        "dibujo": 204,
+        "texto": "Círculos con el tobillo: cuatro en cada sentido con un pie, y luego con el otro."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al revés",
+            "Otro pie"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 67,
+          "dibujo": 204,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Al revés",
+            "Cambia"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 67,
+          "dibujo": 204,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Piernas en pausa",
+      "id": "move.hamstrings.standing",
+      "i": 2,
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 147,
+        "texto": "Círculos con el tobillo: cuatro en cada sentido con un pie, y luego con el otro."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al revés",
+            "Otro pie"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 77,
+          "dibujo": 147,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Al revés",
+            "Cambia"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 77,
+          "dibujo": 147,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Piernas en pausa",
+      "id": "move.hamstrings.standing",
+      "i": 2,
+      "lang": "en",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163,
+        "texto": "Ankle circles: four each way with one foot, then with the other."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Reverse",
+            "Other foot"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 163,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Reverse",
+            "Switch"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 163,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Piernas en pausa",
+      "id": "move.hamstrings.standing",
+      "i": 2,
+      "lang": "en",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226,
+        "texto": "Ankle circles: four each way with one foot, then with the other."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Reverse",
+            "Other foot"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 226,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Reverse",
+            "Switch"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 226,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Piernas en pausa",
+      "id": "move.hamstrings.standing",
+      "i": 2,
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 147,
+        "texto": "Ankle circles: four each way with one foot, then with the other."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Reverse",
+            "Other foot"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 77,
+          "dibujo": 147,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Reverse",
+            "Switch"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 77,
+          "dibujo": 147,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Manos y muñecas",
+      "id": "move.wrists",
+      "i": 1,
+      "lang": "es",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 144,
+        "texto": "Círculos pequeños con las manos, despacio: cuatro en cada sentido."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al revés"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 144,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Manos y muñecas",
+      "id": "move.wrists",
+      "i": 1,
+      "lang": "es",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226,
+        "texto": "Círculos pequeños con las manos, despacio: cuatro en cada sentido."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al revés"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 226,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Manos y muñecas",
+      "id": "move.wrists",
+      "i": 1,
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 127,
+        "texto": "Círculos pequeños con las manos, despacio: cuatro en cada sentido."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al revés"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 77,
+          "dibujo": 127,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Manos y muñecas",
+      "id": "move.wrists",
+      "i": 1,
+      "lang": "en",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163,
+        "texto": "Small, slow circles with your hands: four in each direction."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Reverse"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 163,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Manos y muñecas",
+      "id": "move.wrists",
+      "i": 1,
+      "lang": "en",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226,
+        "texto": "Small, slow circles with your hands: four in each direction."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Reverse"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 226,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Manos y muñecas",
+      "id": "move.wrists",
+      "i": 1,
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 147,
+        "texto": "Small, slow circles with your hands: four in each direction."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Reverse"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 77,
+          "dibujo": 147,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 1,
+      "lang": "es",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 169,
+        "texto": "Círculos pequeños con las manos, despacio: cuatro en cada sentido."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al revés"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 1,
+      "lang": "es",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232,
+        "texto": "Círculos pequeños con las manos, despacio: cuatro en cada sentido."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al revés"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 1,
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 154,
+        "texto": "Círculos pequeños con las manos, despacio: cuatro en cada sentido."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al revés"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 77,
+          "dibujo": 154,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 1,
+      "lang": "en",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 169,
+        "texto": "Small, slow circles with your hands: four in each direction."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Reverse"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 1,
+      "lang": "en",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232,
+        "texto": "Small, slow circles with your hands: four in each direction."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Reverse"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 1,
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 154,
+        "texto": "Small, slow circles with your hands: four in each direction."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Reverse"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 77,
+          "dibujo": 154,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Giro sentado · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 2,
+      "lang": "es",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 169,
+        "texto": "Gira el tronco hacia el respaldo, con una mano apoyada en él, sin tirar. Luego, al otro lado."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al otro lado"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 67,
+          "dibujo": 147,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": false
+        },
+        {
+          "palabras": [
+            "Otro lado"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Cambia"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Giro sentado · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 2,
+      "lang": "es",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232,
+        "texto": "Gira el tronco hacia el respaldo, con una mano apoyada en él, sin tirar. Luego, al otro lado."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al otro lado"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 67,
+          "dibujo": 210,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": false
+        },
+        {
+          "palabras": [
+            "Otro lado"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Cambia"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Giro sentado · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 2,
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 3,
+        "pila": 77,
+        "dibujo": 134,
+        "texto": "Gira el tronco hacia el respaldo, con una mano apoyada en él, sin tirar. Luego, al otro lado."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al otro lado"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 134,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Otro lado"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 134,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Cambia"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 134,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Giro sentado · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 2,
+      "lang": "en",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 169,
+        "texto": "Turn your trunk toward the backrest, one hand resting on it, no pulling. Then the other side."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Other side"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Switch"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Giro sentado · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 2,
+      "lang": "en",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232,
+        "texto": "Turn your trunk toward the backrest, one hand resting on it, no pulling. Then the other side."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Other side"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Switch"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Giro sentado · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 2,
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 3,
+        "pila": 77,
+        "dibujo": 154,
+        "texto": "Turn your trunk toward the backrest, one hand resting on it, no pulling. Then the other side."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Other side"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 154,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Switch"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 154,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 3,
+      "lang": "es",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 169,
+        "texto": "Bajo la mesa, levanta un pie y dibuja círculos con el tobillo. Cambia a mitad."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Otro pie"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Cambia"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 3,
+      "lang": "es",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232,
+        "texto": "Bajo la mesa, levanta un pie y dibuja círculos con el tobillo. Cambia a mitad."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Otro pie"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Cambia"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 3,
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 154,
+        "texto": "Bajo la mesa, levanta un pie y dibuja círculos con el tobillo. Cambia a mitad."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Otro pie"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 77,
+          "dibujo": 154,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Cambia"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 77,
+          "dibujo": 154,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 3,
+      "lang": "en",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 169,
+        "texto": "Under the desk, lift one foot and draw circles with your ankle. Switch halfway."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Other foot"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Switch"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 3,
+      "lang": "en",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232,
+        "texto": "Under the desk, lift one foot and draw circles with your ankle. Switch halfway."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Other foot"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Switch"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 3,
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 154,
+        "texto": "Under the desk, lift one foot and draw circles with your ankle. Switch halfway."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Other foot"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 77,
+          "dibujo": 154,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Switch"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 77,
+          "dibujo": 154,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 4,
+      "lang": "es",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163,
+        "texto": "Cuatro pasos cortos adelante, despacio, mano y rodilla contrarias. Luego, cuatro atrás."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Atrás"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 163,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 4,
+      "lang": "es",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226,
+        "texto": "Cuatro pasos cortos adelante, despacio, mano y rodilla contrarias. Luego, cuatro atrás."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Atrás"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 226,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 4,
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 52,
+        "dibujo": 127,
+        "texto": "Cuatro pasos cortos adelante, despacio, mano y rodilla contrarias. Luego, cuatro atrás."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Atrás"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 147,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": false
+        }
+      ]
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 4,
+      "lang": "en",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163,
+        "texto": "Crawl four short steps forward, slowly, moving opposite hand and knee. Then four back."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Back"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 163,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 4,
+      "lang": "en",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226,
+        "texto": "Crawl four short steps forward, slowly, moving opposite hand and knee. Then four back."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Back"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 226,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 4,
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 3,
+        "pila": 77,
+        "dibujo": 147,
+        "texto": "Crawl four short steps forward, slowly, moving opposite hand and knee. Then four back."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Back"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 147,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 3,
+      "lang": "es",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163,
+        "texto": "Desliza un talón por el suelo sin mover la pelvis, y vuelve. Tres con cada pierna."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Otra pierna"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 163,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Cambia"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 163,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 3,
+      "lang": "es",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226,
+        "texto": "Desliza un talón por el suelo sin mover la pelvis, y vuelve. Tres con cada pierna."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Otra pierna"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 226,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Cambia"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 226,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 3,
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 52,
+        "dibujo": 152,
+        "texto": "Desliza un talón por el suelo sin mover la pelvis, y vuelve. Tres con cada pierna."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Otra pierna"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 127,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": false
+        },
+        {
+          "palabras": [
+            "Cambia"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 127,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": false
+        }
+      ]
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 3,
+      "lang": "en",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163,
+        "texto": "Slide one heel along the floor without moving your pelvis, then back. Three with each leg."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Other leg"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 163,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Switch"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 163,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 3,
+      "lang": "en",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226,
+        "texto": "Slide one heel along the floor without moving your pelvis, then back. Three with each leg."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Other leg"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 226,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Switch"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 226,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 3,
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 147,
+        "texto": "Slide one heel along the floor without moving your pelvis, then back. Three with each leg."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Other leg"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 147,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": false
+        },
+        {
+          "palabras": [
+            "Switch"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 147,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": false
+        }
+      ]
+    }
+  ],
+  "aCortaAlternativas": [
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "lang": "es",
+      "talla": "640",
+      "texto": "De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 150
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 150
+      },
+      "conPalabra": {
+        "palabras": [
+          "Atrás",
+          "Otro brazo"
+        ],
+        "lineas": [
+          2,
+          2
+        ],
+        "pila": 45,
+        "dibujo": 150,
+        "scroll": 0,
+        "pisa": -6
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "lang": "es",
+      "talla": "740",
+      "texto": "De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232
+      },
+      "conPalabra": {
+        "palabras": [
+          "Atrás",
+          "Otro brazo"
+        ],
+        "lineas": [
+          2,
+          2
+        ],
+        "pila": 45,
+        "dibujo": 232,
+        "scroll": 0,
+        "pisa": -7
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "texto": "De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 134
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 134
+      },
+      "conPalabra": {
+        "palabras": [
+          "Atrás",
+          "Otro brazo"
+        ],
+        "lineas": [
+          2,
+          2
+        ],
+        "pila": 77,
+        "dibujo": 134,
+        "scroll": 0,
+        "pisa": -4
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "lang": "en",
+      "talla": "640",
+      "texto": "Standing, arm straight: eight slow circles, four forward and four back.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 169
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 169
+      },
+      "conPalabra": {
+        "palabras": [
+          "Back",
+          "Other arm"
+        ],
+        "lineas": [
+          2,
+          2
+        ],
+        "pila": 45,
+        "dibujo": 169,
+        "scroll": 0,
+        "pisa": -6
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "lang": "en",
+      "talla": "740",
+      "texto": "Standing, arm straight: eight slow circles, four forward and four back.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232
+      },
+      "conPalabra": {
+        "palabras": [
+          "Back",
+          "Other arm"
+        ],
+        "lineas": [
+          2,
+          2
+        ],
+        "pila": 45,
+        "dibujo": 232,
+        "scroll": 0,
+        "pisa": -7
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "texto": "Standing, arm straight: eight slow circles, four forward and four back.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 52,
+        "dibujo": 134
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 52,
+        "dibujo": 134
+      },
+      "conPalabra": {
+        "palabras": [
+          "Back",
+          "Other arm"
+        ],
+        "lineas": [
+          2,
+          2
+        ],
+        "pila": 52,
+        "dibujo": 134,
+        "scroll": 0,
+        "pisa": -6
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "lang": "es",
+      "talla": "640",
+      "texto": "Cuatro pasos cortos adelante y cuatro atrás, despacio, mano y rodilla contrarias.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163
+      },
+      "conPalabra": {
+        "palabras": [
+          "Atrás"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 45,
+        "dibujo": 163,
+        "scroll": 0,
+        "pisa": -6
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "lang": "es",
+      "talla": "740",
+      "texto": "Cuatro pasos cortos adelante y cuatro atrás, despacio, mano y rodilla contrarias.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226
+      },
+      "conPalabra": {
+        "palabras": [
+          "Atrás"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 45,
+        "dibujo": 226,
+        "scroll": 0,
+        "pisa": -7
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "texto": "Cuatro pasos cortos adelante y cuatro atrás, despacio, mano y rodilla contrarias.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 52,
+        "dibujo": 127
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 52,
+        "dibujo": 127
+      },
+      "conPalabra": {
+        "palabras": [
+          "Atrás"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 52,
+        "dibujo": 127,
+        "scroll": 0,
+        "pisa": -6
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "lang": "en",
+      "talla": "640",
+      "texto": "Crawl four short steps forward, slowly, moving opposite hand and knee. Then four back.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163
+      },
+      "conPalabra": {
+        "palabras": [
+          "Back"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 45,
+        "dibujo": 163,
+        "scroll": 0,
+        "pisa": -6
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "lang": "en",
+      "talla": "740",
+      "texto": "Crawl four short steps forward, slowly, moving opposite hand and knee. Then four back.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226
+      },
+      "conPalabra": {
+        "palabras": [
+          "Back"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 45,
+        "dibujo": 226,
+        "scroll": 0,
+        "pisa": -7
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "texto": "Crawl four short steps forward, slowly, moving opposite hand and knee. Then four back.",
+      "hoy": {
+        "lineas": 3,
+        "pila": 77,
+        "dibujo": 147
+      },
+      "sinPalabra": {
+        "lineas": 3,
+        "pila": 77,
+        "dibujo": 147
+      },
+      "conPalabra": {
+        "palabras": [
+          "Back"
+        ],
+        "lineas": [
+          3
+        ],
+        "pila": 77,
+        "dibujo": 147,
+        "scroll": 0,
+        "pisa": -4
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "lang": "es",
+      "talla": "640",
+      "texto": "Desliza un talón por el suelo sin mover la pelvis, y vuelve.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163
+      },
+      "conPalabra": {
+        "palabras": [
+          "Otra pierna"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 45,
+        "dibujo": 163,
+        "scroll": 0,
+        "pisa": -6
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "lang": "es",
+      "talla": "740",
+      "texto": "Desliza un talón por el suelo sin mover la pelvis, y vuelve.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226
+      },
+      "conPalabra": {
+        "palabras": [
+          "Otra pierna"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 45,
+        "dibujo": 226,
+        "scroll": 0,
+        "pisa": -7
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "texto": "Desliza un talón por el suelo sin mover la pelvis, y vuelve.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 52,
+        "dibujo": 152
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 52,
+        "dibujo": 152
+      },
+      "conPalabra": {
+        "palabras": [
+          "Otra pierna"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 52,
+        "dibujo": 152,
+        "scroll": 0,
+        "pisa": -4
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "lang": "en",
+      "talla": "640",
+      "texto": "Slide one heel along the floor without moving your pelvis, then back.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163
+      },
+      "conPalabra": {
+        "palabras": [
+          "Other leg"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 45,
+        "dibujo": 163,
+        "scroll": 0,
+        "pisa": -6
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "lang": "en",
+      "talla": "740",
+      "texto": "Slide one heel along the floor without moving your pelvis, then back.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226
+      },
+      "conPalabra": {
+        "palabras": [
+          "Other leg"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 45,
+        "dibujo": 226,
+        "scroll": 0,
+        "pisa": -7
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "texto": "Slide one heel along the floor without moving your pelvis, then back.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 147
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 147
+      },
+      "conPalabra": {
+        "palabras": [
+          "Other leg"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 77,
+        "dibujo": 147,
+        "scroll": 0,
+        "pisa": -4
+      },
+      "cumple": true
+    }
+  ]
 }
