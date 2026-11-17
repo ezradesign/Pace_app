@@ -160,3 +160,16 @@ test('fila-4 · la serie se decide entera: o todos los números con voz o todos 
   expect(r.larga.every(Boolean)).toBe(true);
   expect(r.cuenta.every(Boolean)).toBe(true);
 });
+
+test('fila-5 · una palabra no entra encima de un cuenco', async ({ page, context }) => {
+  await prepararVoz(page, context);
+  const r = await page.evaluate(() => {
+    window.__reloj = 4000;
+    window.playSound('move.rest');
+    window.paceVozCuerpoIntenta('siguiente');
+    const l = window.__llamadas[window.__llamadas.length - 1];
+    return { dijo: l.r, ini: l.f >= 0 ? window.__fuentes[l.f].t : null };
+  });
+  expect(r.dijo, '«Siguiente» no suena').toBe(true);
+  expect(r.ini - 4000, '«Siguiente» entra encima del cuenco').toBeGreaterThanOrEqual(0.5);
+});

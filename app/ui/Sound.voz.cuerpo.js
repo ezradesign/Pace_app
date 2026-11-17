@@ -50,6 +50,19 @@ function paceVozCuerpoPrecarga() {
   } catch (e) { /* sin voz suenan los cuencos */ }
 }
 
+/* LOS CUENCOS Y LAS MADERAS TAMBIÉN OCUPAN LA FILA: cuando una palabra no está o no cabe, suena su tono, y
+   la palabra que viene detrás no puede entrar encima. Lo que tapa cada uno, en segundos (Sound.jsx): la
+   madera, su golpe; el cuenco, el golpe y lo primero de su cola, no toda, que tarda segundos en irse y
+   haría llegar tarde a «Descansa». playSound llama aquí cuando suena el tono de Mueve o Estira. */
+var PACE_VOZ_CUERPO_TAPA = { 'move.rep': 0.12, 'move.warn': 0.12, 'move.go': 0.4, 'move.start': 0.6, 'move.rest': 0.8, 'move.side': 1 };
+function paceVozCuerpoOcupa(nombre) {
+  try {
+    var tapa = PACE_VOZ_CUERPO_TAPA[nombre];
+    var ctx = tapa && typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;
+    if (ctx) _paceVozCuerpoLibre = Math.max(_paceVozCuerpoLibre, ctx.currentTime + tapa + PACE_VOZ_CUERPO_HUECO);
+  } catch (e) { /* sin fila, la palabra entra cuando le toca */ }
+}
+
 /* Lo que ocupa una palabra con su hueco. ¿Cabe en `max`? */
 function paceVozCuerpoCabe(e, max) {
   return !!e && (e.b - e.a) + PACE_VOZ_CUERPO_HUECO <= max;
@@ -106,4 +119,4 @@ function paceVozCuerpoIntenta(palabra, max, op) {
   }
 }
 
-Object.assign(window, { paceVozCuerpoPrecarga: paceVozCuerpoPrecarga, paceVozCuerpoIntenta: paceVozCuerpoIntenta });
+Object.assign(window, { paceVozCuerpoPrecarga: paceVozCuerpoPrecarga, paceVozCuerpoIntenta: paceVozCuerpoIntenta, paceVozCuerpoOcupa: paceVozCuerpoOcupa });

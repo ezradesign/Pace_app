@@ -23473,6 +23473,7 @@ function playSound(name) {
     if (typeof window.paceVozIntenta === 'function' &&
     window.paceVozIntenta(name, args[0], function () {try {sintetiza();} catch (e) {}})) return;
     sintetiza();
+    if (typeof window.paceVozCuerpoOcupa === 'function') window.paceVozCuerpoOcupa(name);
   } catch (e) {
 
   }
@@ -24063,6 +24064,19 @@ function paceVozCuerpoPrecarga() {
 }
 
 
+
+
+
+var PACE_VOZ_CUERPO_TAPA = { 'move.rep': 0.12, 'move.warn': 0.12, 'move.go': 0.4, 'move.start': 0.6, 'move.rest': 0.8, 'move.side': 1 };
+function paceVozCuerpoOcupa(nombre) {
+  try {
+    var tapa = PACE_VOZ_CUERPO_TAPA[nombre];
+    var ctx = tapa && typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;
+    if (ctx) _paceVozCuerpoLibre = Math.max(_paceVozCuerpoLibre, ctx.currentTime + tapa + PACE_VOZ_CUERPO_HUECO);
+  } catch (e) {}
+}
+
+
 function paceVozCuerpoCabe(e, max) {
   return !!e && e.b - e.a + PACE_VOZ_CUERPO_HUECO <= max;
 }
@@ -24118,8 +24132,8 @@ function paceVozCuerpoIntenta(palabra, max, op) {
   }
 }
 
-Object.assign(window, { paceVozCuerpoPrecarga: paceVozCuerpoPrecarga, paceVozCuerpoIntenta: paceVozCuerpoIntenta });
-;Object.assign(window, { PACE_VOZ_CUERPO_HUECO, PACE_VOZ_CUERPO_TRAS_SERIE, PACE_VOZ_CUERPO_ESPERA, _paceVozCuerpoTomas, _paceVozCuerpoLibre, paceVozCuerpoJuego, paceVozCuerpoPrecarga, paceVozCuerpoCabe, paceVozCuerpoIntenta });
+Object.assign(window, { paceVozCuerpoPrecarga: paceVozCuerpoPrecarga, paceVozCuerpoIntenta: paceVozCuerpoIntenta, paceVozCuerpoOcupa: paceVozCuerpoOcupa });
+;Object.assign(window, { PACE_VOZ_CUERPO_HUECO, PACE_VOZ_CUERPO_TRAS_SERIE, PACE_VOZ_CUERPO_ESPERA, _paceVozCuerpoTomas, _paceVozCuerpoLibre, paceVozCuerpoJuego, paceVozCuerpoPrecarga, PACE_VOZ_CUERPO_TAPA, paceVozCuerpoOcupa, paceVozCuerpoCabe, paceVozCuerpoIntenta });
 })();
 </script>
   <script>

@@ -374,6 +374,7 @@ function playSound(name) {
     if (typeof window.paceVozIntenta === 'function' &&
         window.paceVozIntenta(name, args[0], function () { try { sintetiza(); } catch (e) {} })) return;
     sintetiza();
+    if (typeof window.paceVozCuerpoOcupa === 'function') window.paceVozCuerpoOcupa(name);   // la palabra que siga no entra encima del tono
   } catch (e) {
     /* Silencio total: el sonido nunca debe romper la app. */
   }
