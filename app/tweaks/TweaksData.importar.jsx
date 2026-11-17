@@ -148,6 +148,9 @@ function usePaceTraerCopia(decir, capa) {
        fallaba por cuota o por almacenamiento bloqueado, la UI decia «importado» y recargaba. */
     paceEventsStoreBarrier('import', writeLegacy, incoming, eventsSection).then((r) => {
       if (!r || !r.legacyWritten) { decir('err', 'settings.msg.import.storage.err'); return; }
+      /* En las apps, los avisos de entrada se quitan ya: si la copia los trae, vuelven al abrir
+         (ui/nativo.entrada.js); la recarga, más abajo, espera 900 ms o a cerrar un aviso. */
+      paceEntradaQuitar();
       /* El estado entró, pero `legacyWritten` no dice si entró el registro de sesiones: la
          barrera lo da también cuando el almacén falló al reemplazarlo (`interrupted`; al
          arrancar, el marcador lo deja vacío) o cuando este navegador no tiene dónde

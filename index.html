@@ -2298,6 +2298,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'notify.entrada.jornada': 'Jornada de {inicio} a {salida}. Tu día ya está preparado.',
   'notify.entrada.media': 'Media jornada de {inicio} a {salida}. Tu día ya está preparado.',
   'notify.canal.entrada': 'Al empezar la jornada',
+  'notify.canal.entrada.mudo': 'Al empezar la jornada, sin sonido',
   'notify.canal.entrada.desc': 'Un aviso a tu hora de entrada, los días de jornada.',
 
 
@@ -2486,6 +2487,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'notify.entrada.jornada': 'Full day, {inicio} to {salida}. Your day is ready.',
   'notify.entrada.media': 'Half day, {inicio} to {salida}. Your day is ready.',
   'notify.canal.entrada': 'Start of your day',
+  'notify.canal.entrada.mudo': 'Start of your day, silent',
   'notify.canal.entrada.desc': 'A reminder at your start time, on workdays.',
   'red.parte.titulo': 'This section couldn’t load',
   'red.parte.texto': 'The rest of PACE keeps working and your data is safe. You can close it and carry on, or reload to try again.',
@@ -20146,10 +20148,11 @@ Object.assign(window, {
      · APAGADO DE FÁBRICA. Sin `avisoEntrada === true`, no se pone nada.
      · SOLO LOS DÍAS DE JORNADA O MEDIA de la semana guardada, a su hora de entrada; los días
        libres, nada («PACE te deja en paz»), y sin semana guardada tampoco.
-     · DESDE MAÑANA, SIEMPRE. Cada vez que PACE se abre o se va al fondo, se quitan los avisos y
-       se ponen los de los siete días siguientes, empezando por mañana. Así, si hoy abriste PACE
+     · DESDE MAÑANA, SIEMPRE. Cada vez que PACE se abre o se va al fondo, se ponen los de los
+       siete días siguientes, empezando por mañana, y se quitan los demás. Así, si hoy abriste PACE
        antes de tu hora, el de hoy ya no sale, y «Hoy es distinto» no deja un aviso colgado. Y si
        dejas de abrir PACE, deja de avisar al cabo de una semana: nada de «te echamos de menos».
+       Salvo de madrugada: abrir PACE antes de las 4:00 no cuenta como abrirla antes de tu hora.
      · LAS PALABRAS DE LA TARJETA DE LA MAÑANA: «Hoy, como cada jueves» y «Jornada de 9:00 a
        17:00. Tu día ya está preparado.», en el idioma de la app al ponerlo.
 
@@ -20161,7 +20164,19 @@ Object.assign(window, {
 
 var PACE_ENTRADA_PRIMER_ID = 10;
 var PACE_ENTRADA_DIAS = 7;
-var PACE_ENTRADA_CANAL = 'pace_entrada';
+
+
+
+
+
+
+
+
+var PACE_ENTRADA_CANAL = 'pace_entrada_campanas';
+var PACE_ENTRADA_CANAL_MUDO = 'pace_entrada_mudo';
+var PACE_ENTRADA_CANAL_VIEJO = 'pace_entrada';
+var PACE_ENTRADA_SONIDO = 'pausa_aviso.wav';
+var PACE_ENTRADA_SONIDO_IOS = 'pausa-aviso.wav';
 
 
 function paceEntradaTexto(s, clave, vars) {
@@ -20174,6 +20189,11 @@ function paceEntradaTexto(s, clave, vars) {
 
 
 
+
+
+
+
+var PACE_ENTRADA_MADRUGADA = 4;
 function paceEntradaAvisos(s, ahora) {
   var out = [];
   try {
@@ -20185,17 +20205,20 @@ function paceEntradaAvisos(s, ahora) {
     if (!h) return out;
     var hoy = new Date(ahora);
     var dias = String(paceEntradaTexto(s, 'ritmo.dias')).split(',');
-    for (var d = 1; d <= PACE_ENTRADA_DIAS; d++) {
-      var dia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + d);
+    var primero = hoy.getHours() < PACE_ENTRADA_MADRUGADA ? 0 : 1;
+    for (var i = 0; i < PACE_ENTRADA_DIAS; i++) {
+      var dia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + primero + i);
       var n = (dia.getDay() + 6) % 7;
       var tipo = semana[n];
       if (tipo !== 'jornada' && tipo !== 'media') continue;
       var desde = tipo === 'media' ? h.media.inicio : h.inicio;
       var hasta = tipo === 'media' ? h.media.salida : h.salida;
       if (!(desde >= 0) || !(hasta > desde)) continue;
+      var at = new Date(dia.getFullYear(), dia.getMonth(), dia.getDate(), Math.floor(desde / 60), desde % 60).getTime();
+      if (at <= ahora) continue;
       out.push({
-        id: PACE_ENTRADA_PRIMER_ID + d - 1,
-        at: new Date(dia.getFullYear(), dia.getMonth(), dia.getDate(), Math.floor(desde / 60), desde % 60).getTime(),
+        id: PACE_ENTRADA_PRIMER_ID + i,
+        at: at,
         title: paceEntradaTexto(s, 'ritmo.manana.titulo', { dia: dias[n] || '' }),
         body: paceEntradaTexto(s, 'notify.entrada.' + tipo, { inicio: ritmoHora(desde), salida: ritmoHora(hasta) })
       });
@@ -20207,46 +20230,137 @@ function paceEntradaAvisos(s, ahora) {
 
 
 
-var _paceEntrada = { cola: Promise.resolve() };
+
+
+
+
+
+
+var PACE_ENTRADA_CLAVE = 'pace.entrada.puesto';
+var _paceEntrada = { cola: Promise.resolve(), yaPuso: false };
+
+
+function paceEntradaLeer() {
+  try {
+    var v = JSON.parse(localStorage.getItem(PACE_ENTRADA_CLAVE) || 'null');
+    return v && typeof v.firma === 'string' && Array.isArray(v.ids) ? v : null;
+  } catch (e) {return null;}
+}
+
+
+function paceEntradaGuardar(firma, ids) {
+  try {localStorage.setItem(PACE_ENTRADA_CLAVE, JSON.stringify({ firma: firma, ids: ids }));} catch (e) {paceAvisarNoGuarda(e);}
+}
+
+
+
 function paceEntradaPoner() {
   if (typeof paceEsNativo !== 'function' || !paceEsNativo()) return Promise.resolve(null);
   _paceEntrada.cola = _paceEntrada.cola.then(paceEntradaPonerYa, paceEntradaPonerYa);
   return _paceEntrada.cola;
 }
 
+
+
+
+
+
+function paceEntradaNotificacion(a, android, exacta, sonido) {
+  var n = { id: a.id, title: a.title, body: a.body };
+  if (android) {
+    n.schedule = { at: new Date(a.at).toISOString(), allowWhileIdle: true };
+    n.isExactNotification = exacta === 'granted';
+    n.channelId = sonido ? PACE_ENTRADA_CANAL : PACE_ENTRADA_CANAL_MUDO;
+  } else {
+    n.schedule = { at: new Date(a.at) };
+    if (sonido) n.sound = PACE_ENTRADA_SONIDO_IOS;
+  }
+  return n;
+}
+
+
+
+
+function paceEntradaCanales(ln, s) {
+  if (typeof ln.createChannel !== 'function') return Promise.resolve();
+  var desc = paceEntradaTexto(s, 'notify.canal.entrada.desc');
+  var crear = function (op) {return Promise.resolve(ln.createChannel(op)).catch(function () {});};
+  return crear({ id: PACE_ENTRADA_CANAL, name: paceEntradaTexto(s, 'notify.canal.entrada'), description: desc, importance: 3, sound: PACE_ENTRADA_SONIDO }).
+  then(function () {return crear({ id: PACE_ENTRADA_CANAL_MUDO, name: paceEntradaTexto(s, 'notify.canal.entrada.mudo'), description: desc, importance: 2 });});
+}
+
+
+function paceEntradaExacta() {
+  if (typeof paceAndroidAvisoExactoMirar !== 'function') return Promise.resolve('denied');
+  return Promise.resolve(paceAndroidAvisoExactoMirar()).then(null, function () {return 'denied';});
+}
+
 function paceEntradaPonerYa() {
   var ln = paceNativoPlugin('LocalNotifications');
   if (!ln || typeof ln.cancel !== 'function' || typeof ln.schedule !== 'function') return null;
-  var ids = [];
-  for (var i = 0; i < PACE_ENTRADA_DIAS; i++) ids.push({ id: PACE_ENTRADA_PRIMER_ID + i });
   var s = getState();
 
 
-  if (typeof (s && s.ritmo || {}).avisoEntrada !== 'boolean') return null;
-  var avisos = paceEntradaAvisos(s, Date.now());
+
+  var tocado = typeof (s && s.ritmo || {}).avisoEntrada === 'boolean';
+  var puestos = paceEntradaLeer();
+  if (!tocado && !(puestos && puestos.ids.length)) return null;
+  var avisos = tocado ? paceEntradaAvisos(s, Date.now()) : [];
   var android = pacePlataformaNativa() === 'android';
 
-  var permiso = null;
-  return Promise.resolve(ln.cancel({ notifications: ids })).catch(function () {}).then(function () {
-    if (!avisos.length) return null;
-    return Promise.resolve(typeof ln.checkPermissions === 'function' ? ln.checkPermissions() : { display: paceNativoAvisoPermiso() }).
-    then(function (r) {permiso = r && r.display;}, function () {permiso = null;});
-  }).then(function () {
-    if (!avisos.length || permiso !== 'granted') return null;
-    var canal = android && typeof ln.createChannel === 'function' ?
-    Promise.resolve(ln.createChannel({ id: PACE_ENTRADA_CANAL, name: paceEntradaTexto(s, 'notify.canal.entrada'),
-      description: paceEntradaTexto(s, 'notify.canal.entrada.desc'), importance: 3 })).catch(function () {}) :
-    Promise.resolve();
+  var permiso = null,exacta = null;
+  var mirar = !avisos.length ? Promise.resolve() :
+  Promise.resolve(typeof ln.checkPermissions === 'function' ? ln.checkPermissions() : { display: paceNativoAvisoPermiso() }).
+  then(function (r) {permiso = r && r.display;}, function () {permiso = null;}).
+  then(function () {return android && permiso === 'granted' ? paceEntradaExacta() : null;}).
+  then(function (e) {exacta = e;});
+  return mirar.then(function () {
+    var sonido = !!(s && s.soundOn);
+    var lista = permiso === 'granted' ? avisos.map(function (a) {return paceEntradaNotificacion(a, android, exacta, sonido);}) : [];
+    var firma = JSON.stringify(lista);
+    if (puestos && puestos.firma === firma && (_paceEntrada.yaPuso || !lista.length)) return null;
+    var ids = lista.map(function (n) {return n.id;});
+    var sobran = [];
+    for (var i = 0; i < PACE_ENTRADA_DIAS; i++) {
+      if (ids.indexOf(PACE_ENTRADA_PRIMER_ID + i) < 0) sobran.push({ id: PACE_ENTRADA_PRIMER_ID + i });
+    }
+    var canal = lista.length && android ? paceEntradaCanales(ln, s) : Promise.resolve();
     return canal.then(function () {
-      return ln.schedule({ notifications: avisos.map(function (a) {
-          var n = { id: a.id, title: a.title, body: a.body };
+      return lista.length ? ln.schedule({ notifications: lista }) : null;
+    }).then(function () {
+      _paceEntrada.yaPuso = true;
+      return sobran.length ? ln.cancel({ notifications: sobran }) : null;
+    }).then(function () {
+      paceEntradaGuardar(firma, ids);
 
-          if (android) {n.schedule = { at: new Date(a.at).toISOString(), allowWhileIdle: true };n.channelId = PACE_ENTRADA_CANAL;} else
-          n.schedule = { at: new Date(a.at) };
-          return n;
-        }) });
+      if (lista.length && android && typeof ln.deleteChannel === 'function') {
+        return Promise.resolve(ln.deleteChannel({ id: PACE_ENTRADA_CANAL_VIEJO })).catch(function () {});
+      }
+      return null;
     });
   }).catch(function () {return null;});
+}
+
+
+
+
+
+
+
+var PACE_ENTRADA_TOPE_MS = 1500;
+function paceEntradaQuitar() {
+  if (typeof paceEsNativo !== 'function' || !paceEsNativo()) return Promise.resolve(null);
+  var quitar = function () {
+    var ln = paceNativoPlugin('LocalNotifications');
+    if (!ln || typeof ln.cancel !== 'function') return null;
+    var ids = [];
+    for (var i = 0; i < PACE_ENTRADA_DIAS; i++) ids.push({ id: PACE_ENTRADA_PRIMER_ID + i });
+    return Promise.resolve(ln.cancel({ notifications: ids })).then(function () {
+      try {localStorage.removeItem(PACE_ENTRADA_CLAVE);} catch (e) {}
+    }).catch(function () {return null;});
+  };
+  _paceEntrada.cola = _paceEntrada.cola.then(quitar, quitar);
+  return Promise.race([_paceEntrada.cola, new Promise(function (ok) {setTimeout(ok, PACE_ENTRADA_TOPE_MS);})]);
 }
 
 
@@ -20273,8 +20387,8 @@ function paceEntradaEncender() {
   window.addEventListener('load', function () {setTimeout(arrancar, 0);});
 })();
 
-Object.assign(window, { paceEntradaAvisos, paceEntradaPoner, paceEntradaEncender });
-;Object.assign(window, { PACE_ENTRADA_PRIMER_ID, PACE_ENTRADA_DIAS, PACE_ENTRADA_CANAL, paceEntradaTexto, paceEntradaAvisos, _paceEntrada, paceEntradaPoner, paceEntradaPonerYa, paceEntradaEncender });
+Object.assign(window, { paceEntradaAvisos, paceEntradaPoner, paceEntradaEncender, paceEntradaQuitar });
+;Object.assign(window, { PACE_ENTRADA_PRIMER_ID, PACE_ENTRADA_DIAS, PACE_ENTRADA_CANAL, PACE_ENTRADA_CANAL_MUDO, PACE_ENTRADA_CANAL_VIEJO, PACE_ENTRADA_SONIDO, PACE_ENTRADA_SONIDO_IOS, paceEntradaTexto, PACE_ENTRADA_MADRUGADA, paceEntradaAvisos, PACE_ENTRADA_CLAVE, _paceEntrada, paceEntradaLeer, paceEntradaGuardar, paceEntradaPoner, paceEntradaNotificacion, paceEntradaCanales, paceEntradaExacta, paceEntradaPonerYa, PACE_ENTRADA_TOPE_MS, paceEntradaQuitar, paceEntradaEncender });
 })();
 </script>
   <!-- valoracion: la ventana de la tienda para valorar PACE, una vez, tras la quinta pausa
@@ -43669,6 +43783,9 @@ function usePaceTraerCopia(decir, capa) {
       if (!r || !r.legacyWritten) {decir('err', 'settings.msg.import.storage.err');return;}
 
 
+      paceEntradaQuitar();
+
+
 
 
 
@@ -44921,7 +45038,8 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
     const alFallar = pidiendoBorrar && pidiendoBorrar.alFallar;
     setPidiendoBorrar(null);
     paceEventsWipeAll((r) => {
-      if (r && r.legacyWritten) location.reload();else
+
+      if (r && r.legacyWritten) paceEntradaQuitar().then(() => location.reload());else
       if (typeof alFallar === 'function') alFallar();
     });
   };
@@ -51148,13 +51266,17 @@ function RitmoSemanaRaiz() {
 
 
 
-function RitmoSemanaAviso(_ref3) {let { on, onChange } = _ref3;
+
+
+
+function RitmoSemanaAviso(_ref3) {let { on, onChange, nota } = _ref3;
   const { t } = useT();
   return (
     React.createElement("div", { "data-pace-semana-aviso": true, style: ritmoSemanaStyles.aviso },
     React.createElement("span", { style: ritmoSemanaStyles.avisoFrase }, React.createElement("b", { style: ritmoSemanaStyles.nombre }, t('ritmo.st.aviso.verbo')), " ", t('ritmo.st.aviso.resto')),
     React.createElement("button", { type: "button", role: "switch", "aria-checked": on ? 'true' : 'false', className: "pace-aj-sw",
-      "aria-label": t('ritmo.st.aviso.verbo') + ' ' + t('ritmo.st.aviso.resto'), onClick: () => onChange(!on) })
+      "aria-label": t('ritmo.st.aviso.verbo') + ' ' + t('ritmo.st.aviso.resto'), onClick: () => onChange(!on) }),
+    nota && React.createElement("div", { className: "pace-aj-nota", "data-pace-semana-aviso-nota": true, style: ritmoSemanaStyles.avisoNota }, nota)
     ));
 
 }
@@ -51165,12 +51287,31 @@ function RitmoSemanaHoja(_ref4) {let { onClose } = _ref4;
   const b = useRitmoSemanaBorrador(state);
   const movil = typeof paceEsNativo === 'function' && paceEsNativo();
   const [aviso, setAviso] = useStateRST(() => !!(state && state.ritmo && state.ritmo.avisoEntrada === true));
+
+
+
+
+
+  const [permiso, setPermiso] = useStateRST(() => movil ? paceNativoAvisoPermiso() : 'granted');
+  useEffectRST(() => {
+    if (!movil) return undefined;
+    const mirar = () => setPermiso(paceNativoAvisoPermiso());
+    window.addEventListener('pace:avisos-nativo', mirar);
+    return () => window.removeEventListener('pace:avisos-nativo', mirar);
+  }, [movil]);
+  const bloqueado = movil && permiso === 'denied';
+  const ponerAviso = (v) => {
+    setAviso(v);
+    if (!v || permiso === 'granted' || permiso === 'denied') return;
+    try {Promise.resolve(paceNativoAvisoPedir()).then(() => setPermiso(paceNativoAvisoPermiso()), () => {});} catch (e) {}
+  };
   const guardar = (tipo) => {
     ritmoGuardarSemana(tipo, b.horas);
     if (movil) {
       ritmoGuardar(() => ({ avisoEntrada: aviso }));
 
-      try {if (aviso && tipo) paceEntradaEncender();else paceEntradaPoner();} catch (e) {}
+
+      try {if (aviso && tipo && !bloqueado) paceEntradaEncender();else paceEntradaPoner();} catch (e) {}
     }
     onClose();
   };
@@ -51178,7 +51319,8 @@ function RitmoSemanaHoja(_ref4) {let { onClose } = _ref4;
     React.createElement(Modal, { open: true, onClose: onClose, maxWidth: 460, tagLabel: t('ritmo.nombre'), title: t('ritmo.st.titulo'), subtitle: t('ritmo.st.sub') },
     React.createElement("div", { "data-pace-semana-hoja": true, style: { display: 'flex', flexDirection: 'column', gap: 18 } },
     React.createElement(RitmoSemanaEditor, { dias: b.dias, onDias: b.setDias, horario: b.horario, onHora: b.onHora }),
-    movil && React.createElement(RitmoSemanaAviso, { on: aviso, onChange: setAviso }),
+    movil && React.createElement(RitmoSemanaAviso, { on: aviso && !bloqueado, onChange: () => ponerAviso(!aviso),
+      nota: aviso && bloqueado ? t('settings.notify.blocked.' + pacePlataformaNativa()) : null }),
 
     typeof RitmoAprendido === 'function' && React.createElement(RitmoAprendido, { state: state }),
     React.createElement("div", { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 } },
@@ -51218,7 +51360,8 @@ const ritmoSemanaStyles = {
     background: 'var(--paper-2)', border: '1px solid rgba(62,90,58,.35)', color: 'var(--focus)',
     fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 18
   },
-  aviso: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: -6, paddingTop: 12, borderTop: '1px solid var(--paper-3)' },
+  aviso: { display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0 12px', marginTop: -6, paddingTop: 12, borderTop: '1px solid var(--paper-3)' },
+  avisoNota: { flexBasis: '100%', margin: '-2px 0 0', textAlign: 'left' },
   avisoFrase: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, lineHeight: 1.35, color: 'var(--ink-2)', textAlign: 'left' },
   saltar: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 14, color: 'var(--ink-3)', background: 'transparent', border: 'none', padding: '8px 10px', cursor: 'pointer' }
 };
@@ -53394,7 +53537,7 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
      onOpenTweaks   -- abre TweaksPanel
 */
 
-const { useState: useStateTB } = React;
+const { useState: useStateTB, useEffect: useEffectTB } = React;
 
 function TopBar(_ref) {let { onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks } = _ref;
   const [state, set] = usePace();
@@ -53409,6 +53552,14 @@ function TopBar(_ref) {let { onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTw
     if (foco || lleva != null) {setPendiente({ v, lleva });return;}
     set({ focusMode: v });
   };
+
+
+
+  useEffectTB(() => {
+    const alPedir = (e) => {const v = e && e.detail && e.detail.v;if (v) elegirModo(v);};
+    window.addEventListener('pace:elegir-modo', alPedir);
+    return () => window.removeEventListener('pace:elegir-modo', alPedir);
+  }, [state.focusMode]);
   const pregunta = topBarPregunta(pendiente, t, tn);
   const modes = [
   { v: 'foco', label: t('topbar.mode.focus') },
@@ -53492,6 +53643,17 @@ function TopBar(_ref) {let { onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTw
 
 
 
+
+function paceAtajoFoco(vez) {
+  const n = vez || 0;
+  const s = typeof getState === 'function' ? getState() : null;
+  if (s && s.focusMode !== 'foco' && pacePausaLleva() == null && n < 10) {setTimeout(() => paceAtajoFoco(n + 1), 50);return;}
+  try {window.dispatchEvent(new CustomEvent('pace:elegir-modo', { detail: { v: 'foco' } }));} catch (e) {}
+}
+
+
+
+
 function topBarPregunta(p, t, tn) {
   if (!p) return null;
   if (p.lleva == null) {
@@ -53522,8 +53684,8 @@ const topBarStyles = {
   }
 };
 
-Object.assign(window, { TopBar });
-;Object.assign(window, { TopBar, topBarPregunta });
+Object.assign(window, { TopBar, paceAtajoFoco });
+;Object.assign(window, { TopBar, paceAtajoFoco, topBarPregunta });
 })();
 </script>
   <script>
@@ -54013,13 +54175,14 @@ function PaceApp() {
 
 
 
+
   useEffectMain(() => {
     let go = null;
     try {go = new URLSearchParams(window.location.search).get('go');} catch (e) {}
     if (!go) return;
     if (go === 'breathe' || go === 'move' || go === 'stretch') abrirBiblioteca(go === 'stretch' ? 'extra' : go);else
     if (go === 'hydrate') setOpenHydrate(true);else
-    if (go === 'focus') set({ focusMode: 'foco' });
+    if (go === 'focus') paceAtajoFoco();
     try {window.history.replaceState(null, '', window.location.pathname);} catch (e) {}
   }, []);
 

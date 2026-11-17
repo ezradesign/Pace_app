@@ -103,14 +103,18 @@ function RitmoSemanaRaiz() {
 
 /* EL AVISO A TU HORA DE ENTRADA (Ez, 1A del 15 nov. 2026): una línea con su interruptor debajo de
    las horas que lo deciden, solo en la app del móvil (en la web no puede avisar con PACE cerrado).
-   Apagado de fábrica; se guarda con «Guardar mi semana», y lo pone ui/nativo.entrada.js. */
-function RitmoSemanaAviso({ on, onChange }) {
+   Apagado de fábrica; se guarda con «Guardar mi semana», y lo pone ui/nativo.entrada.js.
+   SIN PERMISO DE AVISOS, LO DICE (novena pasada externa, nº 8): debajo, la nota de la fila de avisos
+   de Ajustes, con sus palabras («Los avisos de PACE están desactivados en los ajustes de Android»),
+   que es donde se activa: ni el complemento ni Ajustes tienen cómo abrir esa pantalla. */
+function RitmoSemanaAviso({ on, onChange, nota }) {
   const { t } = useT();
   return (
     <div data-pace-semana-aviso style={ritmoSemanaStyles.aviso}>
       <span style={ritmoSemanaStyles.avisoFrase}><b style={ritmoSemanaStyles.nombre}>{t('ritmo.st.aviso.verbo')}</b> {t('ritmo.st.aviso.resto')}</span>
       <button type="button" role="switch" aria-checked={on ? 'true' : 'false'} className="pace-aj-sw"
         aria-label={t('ritmo.st.aviso.verbo') + ' ' + t('ritmo.st.aviso.resto')} onClick={() => onChange(!on)} />
+      {nota && <div className="pace-aj-nota" data-pace-semana-aviso-nota style={ritmoSemanaStyles.avisoNota}>{nota}</div>}
     </div>
   );
 }
@@ -121,12 +125,31 @@ function RitmoSemanaHoja({ onClose }) {
   const b = useRitmoSemanaBorrador(state);
   const movil = typeof paceEsNativo === 'function' && paceEsNativo();
   const [aviso, setAviso] = useStateRST(() => !!(state && state.ritmo && state.ritmo.avisoEntrada === true));
+  /* EL PERMISO, COMO EN LA FILA DE AVISOS DE AJUSTES (TweaksPanel.jsx): encender el interruptor lo pide
+     aquí, dentro del toque (la hoja se cierra al guardar, y la respuesta llegaría con nadie mirando); si
+     queda negado, el interruptor se ve apagado y la nota lo dice. Se guarda lo que quieres, como
+     `notifyFocusEnd`: en cuanto el permiso llegue, avisa. Al volver de los ajustes del móvil,
+     `pace:avisos-nativo` trae el permiso nuevo. */
+  const [permiso, setPermiso] = useStateRST(() => (movil ? paceNativoAvisoPermiso() : 'granted'));
+  useEffectRST(() => {
+    if (!movil) return undefined;
+    const mirar = () => setPermiso(paceNativoAvisoPermiso());
+    window.addEventListener('pace:avisos-nativo', mirar);
+    return () => window.removeEventListener('pace:avisos-nativo', mirar);
+  }, [movil]);
+  const bloqueado = movil && permiso === 'denied';
+  const ponerAviso = (v) => {
+    setAviso(v);
+    if (!v || permiso === 'granted' || permiso === 'denied') return;
+    try { Promise.resolve(paceNativoAvisoPedir()).then(() => setPermiso(paceNativoAvisoPermiso()), () => {}); } catch (e) {}
+  };
   const guardar = (tipo) => {
     ritmoGuardarSemana(tipo, b.horas);
     if (movil) {
       ritmoGuardar(() => ({ avisoEntrada: aviso }));
-      /* Encenderlo pide el permiso de avisos dentro de este toque; sin semana no hay aviso. */
-      try { if (aviso && tipo) paceEntradaEncender(); else paceEntradaPoner(); } catch (e) {}
+      /* Si aún no se ha contestado, encenderlo pide el permiso dentro de este toque; negado, no se vuelve
+         a pedir (Android enseñaría otra vez su ventana). Sin semana no hay aviso. */
+      try { if (aviso && tipo && !bloqueado) paceEntradaEncender(); else paceEntradaPoner(); } catch (e) {}
     }
     onClose();
   };
@@ -134,7 +157,8 @@ function RitmoSemanaHoja({ onClose }) {
     <Modal open onClose={onClose} maxWidth={460} tagLabel={t('ritmo.nombre')} title={t('ritmo.st.titulo')} subtitle={t('ritmo.st.sub')}>
       <div data-pace-semana-hoja style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
         <RitmoSemanaEditor dias={b.dias} onDias={b.setDias} horario={b.horario} onHora={b.onHora} />
-        {movil && <RitmoSemanaAviso on={aviso} onChange={setAviso} />}
+        {movil && <RitmoSemanaAviso on={aviso && !bloqueado} onChange={() => ponerAviso(!aviso)}
+          nota={aviso && bloqueado ? t('settings.notify.blocked.' + pacePlataformaNativa()) : null} />}
         {/* Lo que el motor de la semana ha aprendido, con su «Olvidar» (RitmoCarta.jsx). */}
         {typeof RitmoAprendido === 'function' && <RitmoAprendido state={state} />}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
@@ -174,7 +198,8 @@ const ritmoSemanaStyles = {
     background: 'var(--paper-2)', border: '1px solid rgba(62,90,58,.35)', color: 'var(--focus)',
     fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 18,
   },
-  aviso: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: -6, paddingTop: 12, borderTop: '1px solid var(--paper-3)' },
+  aviso: { display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0 12px', marginTop: -6, paddingTop: 12, borderTop: '1px solid var(--paper-3)' },
+  avisoNota: { flexBasis: '100%', margin: '-2px 0 0', textAlign: 'left' },
   avisoFrase: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, lineHeight: 1.35, color: 'var(--ink-2)', textAlign: 'left' },
   saltar: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 14, color: 'var(--ink-3)', background: 'transparent', border: 'none', padding: '8px 10px', cursor: 'pointer' },
 };
