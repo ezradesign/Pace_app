@@ -80,8 +80,11 @@ function useV1Vuelta(paused, setPaused) {
     }, 1000);
     return () => clearTimeout(to);
   }, [cuenta]);
-  const pausar = () => { setCuenta(null); setPaused(true); };
-  const reanudar = () => { setCuenta(null); setPaused(false); };
+  /* Pausar, y `reanudar` (que es lo que hace cada salto a mano: anterior, siguiente, saltar, «Con una
+     basta»), callan la voz; salir, también. Si no, la palabra seguía y las de los pasos saltados se apilaban. */
+  React.useEffect(() => () => v1VozCalla(), []);
+  const pausar = () => { v1VozCalla(); setCuenta(null); setPaused(true); };
+  const reanudar = () => { v1VozCalla(); setCuenta(null); setPaused(false); };
   /* El botón del centro y Espacio: pausan; en pausa, empiezan el 3, 2, 1; durante él, lo paran. */
   const alternar = () => {
     if (!paused) pausar();

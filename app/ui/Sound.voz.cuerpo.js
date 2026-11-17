@@ -27,6 +27,7 @@ var PACE_VOZ_CUERPO_TRAS_SERIE = 0.35;
 var PACE_VOZ_CUERPO_ESPERA = 2;
 var _paceVozCuerpoTomas = {};   // idioma.voz → { archivo: { buffer } }
 var _paceVozCuerpoLibre = 0;    // cuándo acaba (en el reloj del contexto) la palabra que suena
+var _paceVozCuerpoVivas = [];   // lo que suena o espera en la fila: [{ s, g }], para callarlo
 
 function paceVozCuerpoJuego() {
   var idioma = typeof paceVozIdioma === 'function' ? paceVozIdioma() : 'es';
@@ -111,7 +112,12 @@ function paceVozCuerpoIntenta(palabra, max, op) {
     g.connect(ctx.destination);
     s.start(t0, e.a);
     s.stop(t0 + dur + 0.01);
-    s.onended = function () { try { g.disconnect(); } catch (er) {} };
+    var viva = { s: s, g: g };
+    _paceVozCuerpoVivas.push(viva);
+    s.onended = function () {
+      try { g.disconnect(); } catch (er) {}
+      _paceVozCuerpoVivas = _paceVozCuerpoVivas.filter(function (v) { return v !== viva; });
+    };
     _paceVozCuerpoLibre = t0 + dur + (op && op.ultima ? PACE_VOZ_CUERPO_TRAS_SERIE : PACE_VOZ_CUERPO_HUECO);
     return true;
   } catch (err) {
@@ -119,4 +125,25 @@ function paceVozCuerpoIntenta(palabra, max, op) {
   }
 }
 
-Object.assign(window, { paceVozCuerpoPrecarga: paceVozCuerpoPrecarga, paceVozCuerpoIntenta: paceVozCuerpoIntenta, paceVozCuerpoOcupa: paceVozCuerpoOcupa });
+/* AL PAUSAR, SALTAR O SALIR, la voz se calla: lo que suena sale con un fundido corto, lo que esperaba en la
+   fila ya no suena, y la fila queda vacía. Si no, al pausar la palabra seguía, y al saltar se apilaban las
+   de los pasos que pasaban (el runner llama aquí desde useV1Vuelta, MoveSessionV1.parts.jsx). */
+function paceVozCuerpoCalla() {
+  try {
+    var ctx = typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;
+    var ahora = ctx ? ctx.currentTime : 0;
+    _paceVozCuerpoVivas.forEach(function (v) {
+      try {
+        v.g.gain.cancelScheduledValues(ahora);
+        v.g.gain.setValueAtTime(v.g.gain.value, ahora);
+        v.g.gain.linearRampToValueAtTime(0, ahora + 0.02);
+        v.s.stop(ahora + 0.03);
+      } catch (e) { /* ya acabó */ }
+    });
+  } catch (err) { /* nada que callar */ }
+  _paceVozCuerpoVivas = [];
+  _paceVozCuerpoLibre = 0;
+}
+
+Object.assign(window, { paceVozCuerpoPrecarga: paceVozCuerpoPrecarga, paceVozCuerpoIntenta: paceVozCuerpoIntenta,
+  paceVozCuerpoOcupa: paceVozCuerpoOcupa, paceVozCuerpoCalla: paceVozCuerpoCalla });

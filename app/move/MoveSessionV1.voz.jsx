@@ -53,9 +53,14 @@ function v1VozGo(step, side) {
 
 function v1VozLado() { return { voz: 'cambia' }; }
 
+/* Al pausar, saltar o salir, lo que dice la voz se calla y su fila se vacía (Sound.voz.cuerpo.js). */
+function v1VozCalla() {
+  try { if (typeof window.paceVozCuerpoCalla === 'function') window.paceVozCuerpoCalla(); } catch (e) { /* sin voz, nada */ }
+}
+
 /* La voz de la rutina se descodifica al abrirla, antes de la cuenta de entrada, como en Respira. */
 function v1VozPrecarga() {
   try { if (typeof window.paceVozCuerpoPrecarga === 'function') window.paceVozCuerpoPrecarga(); } catch (e) { /* sin voz, cuencos */ }
 }
 
-Object.assign(window, { v1VozCuenta, v1VozRep, v1VozEntrada, v1VozGo, v1VozLado, v1VozPrecarga });
+Object.assign(window, { v1VozCuenta, v1VozRep, v1VozEntrada, v1VozGo, v1VozLado, v1VozCalla, v1VozPrecarga });

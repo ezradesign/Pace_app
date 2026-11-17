@@ -173,3 +173,27 @@ test('fila-5 · una palabra no entra encima de un cuenco', async ({ page, contex
   expect(r.dijo, '«Siguiente» no suena').toBe(true);
   expect(r.ini - 4000, '«Siguiente» entra encima del cuenco').toBeGreaterThanOrEqual(0.5);
 });
+
+test('fila-6 · pausar y saltar callan lo que suena y vacían la fila', async ({ page, context }) => {
+  test.setTimeout(90000);
+  await prepararVoz(page, context);
+  await abrirRutina(page, 'Mueve', 'extra.calves');
+  for (let i = 0; i < 120; i++) {
+    await page.clock.runFor(1000);
+    if ((await fase(page)) === 'work' && (await page.evaluate(() => window.__llamadas.some((l) => /^n\d+$/.test(l.p) && l.f >= 0)))) break;
+  }
+  /* Una palabra larga suena (como si acabara de entrar) y, a la mitad, se pausa o se salta. */
+  const callada = async (accion, vacia) => {
+    const antes = await page.evaluate(() => { window.paceVozCuerpoIntenta('cambia'); return window.__fuentes.length - 1; });
+    await page.clock.runFor(200);
+    await accion();
+    const r = await page.evaluate((k) => ({ ahora: window.__ctx.currentTime, paradas: window.__fuentes[k].paradas }), antes);
+    expect(Math.min(...r.paradas.slice(1), Infinity) - r.ahora, 'sigue sonando').toBeLessThan(0.06);
+    if (!vacia) return;
+    /* En la pausa, la fila queda vacía: la siguiente palabra entra ya. (Al saltar entra la del paso nuevo.) */
+    const ini = await page.evaluate(() => { window.paceVozCuerpoIntenta('siguiente'); const f = window.__fuentes[window.__fuentes.length - 1]; return f.t - window.__ctx.currentTime; });
+    expect(ini, 'la fila no se vació').toBeLessThan(0.1);
+  };
+  await callada(() => page.click('[data-pace-v1-btn="pausa"]'), true);
+  await callada(() => page.click('[data-pace-v1-btn="next"]'), false);
+});

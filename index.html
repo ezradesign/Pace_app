@@ -24040,6 +24040,7 @@ var PACE_VOZ_CUERPO_TRAS_SERIE = 0.35;
 var PACE_VOZ_CUERPO_ESPERA = 2;
 var _paceVozCuerpoTomas = {};
 var _paceVozCuerpoLibre = 0;
+var _paceVozCuerpoVivas = [];
 
 function paceVozCuerpoJuego() {
   var idioma = typeof paceVozIdioma === 'function' ? paceVozIdioma() : 'es';
@@ -24124,7 +24125,12 @@ function paceVozCuerpoIntenta(palabra, max, op) {
     g.connect(ctx.destination);
     s.start(t0, e.a);
     s.stop(t0 + dur + 0.01);
-    s.onended = function () {try {g.disconnect();} catch (er) {}};
+    var viva = { s: s, g: g };
+    _paceVozCuerpoVivas.push(viva);
+    s.onended = function () {
+      try {g.disconnect();} catch (er) {}
+      _paceVozCuerpoVivas = _paceVozCuerpoVivas.filter(function (v) {return v !== viva;});
+    };
     _paceVozCuerpoLibre = t0 + dur + (op && op.ultima ? PACE_VOZ_CUERPO_TRAS_SERIE : PACE_VOZ_CUERPO_HUECO);
     return true;
   } catch (err) {
@@ -24132,8 +24138,29 @@ function paceVozCuerpoIntenta(palabra, max, op) {
   }
 }
 
-Object.assign(window, { paceVozCuerpoPrecarga: paceVozCuerpoPrecarga, paceVozCuerpoIntenta: paceVozCuerpoIntenta, paceVozCuerpoOcupa: paceVozCuerpoOcupa });
-;Object.assign(window, { PACE_VOZ_CUERPO_HUECO, PACE_VOZ_CUERPO_TRAS_SERIE, PACE_VOZ_CUERPO_ESPERA, _paceVozCuerpoTomas, _paceVozCuerpoLibre, paceVozCuerpoJuego, paceVozCuerpoPrecarga, PACE_VOZ_CUERPO_TAPA, paceVozCuerpoOcupa, paceVozCuerpoCabe, paceVozCuerpoIntenta });
+
+
+
+function paceVozCuerpoCalla() {
+  try {
+    var ctx = typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;
+    var ahora = ctx ? ctx.currentTime : 0;
+    _paceVozCuerpoVivas.forEach(function (v) {
+      try {
+        v.g.gain.cancelScheduledValues(ahora);
+        v.g.gain.setValueAtTime(v.g.gain.value, ahora);
+        v.g.gain.linearRampToValueAtTime(0, ahora + 0.02);
+        v.s.stop(ahora + 0.03);
+      } catch (e) {}
+    });
+  } catch (err) {}
+  _paceVozCuerpoVivas = [];
+  _paceVozCuerpoLibre = 0;
+}
+
+Object.assign(window, { paceVozCuerpoPrecarga: paceVozCuerpoPrecarga, paceVozCuerpoIntenta: paceVozCuerpoIntenta,
+  paceVozCuerpoOcupa: paceVozCuerpoOcupa, paceVozCuerpoCalla: paceVozCuerpoCalla });
+;Object.assign(window, { PACE_VOZ_CUERPO_HUECO, PACE_VOZ_CUERPO_TRAS_SERIE, PACE_VOZ_CUERPO_ESPERA, _paceVozCuerpoTomas, _paceVozCuerpoLibre, _paceVozCuerpoVivas, paceVozCuerpoJuego, paceVozCuerpoPrecarga, PACE_VOZ_CUERPO_TAPA, paceVozCuerpoOcupa, paceVozCuerpoCabe, paceVozCuerpoIntenta, paceVozCuerpoCalla });
 })();
 </script>
   <script>
@@ -37034,12 +37061,17 @@ function v1VozGo(step, side) {
 function v1VozLado() {return { voz: 'cambia' };}
 
 
+function v1VozCalla() {
+  try {if (typeof window.paceVozCuerpoCalla === 'function') window.paceVozCuerpoCalla();} catch (e) {}
+}
+
+
 function v1VozPrecarga() {
   try {if (typeof window.paceVozCuerpoPrecarga === 'function') window.paceVozCuerpoPrecarga();} catch (e) {}
 }
 
-Object.assign(window, { v1VozCuenta, v1VozRep, v1VozEntrada, v1VozGo, v1VozLado, v1VozPrecarga });
-;Object.assign(window, { V1_VOZ_CUENTA, v1VozCuenta, v1VozRep, v1VozEntrada, v1VozGo, v1VozLado, v1VozPrecarga });
+Object.assign(window, { v1VozCuenta, v1VozRep, v1VozEntrada, v1VozGo, v1VozLado, v1VozCalla, v1VozPrecarga });
+;Object.assign(window, { V1_VOZ_CUENTA, v1VozCuenta, v1VozRep, v1VozEntrada, v1VozGo, v1VozLado, v1VozCalla, v1VozPrecarga });
 })();
 </script>
   <!-- El mando de tres y el cuerpo del runner (opción A del runner guiado): antes de su consumidor. -->
@@ -37666,8 +37698,11 @@ function useV1Vuelta(paused, setPaused) {
     }, 1000);
     return () => clearTimeout(to);
   }, [cuenta]);
-  const pausar = () => {setCuenta(null);setPaused(true);};
-  const reanudar = () => {setCuenta(null);setPaused(false);};
+
+
+  React.useEffect(() => () => v1VozCalla(), []);
+  const pausar = () => {v1VozCalla();setCuenta(null);setPaused(true);};
+  const reanudar = () => {v1VozCalla();setCuenta(null);setPaused(false);};
 
   const alternar = () => {
     if (!paused) pausar();else
