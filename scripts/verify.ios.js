@@ -86,6 +86,52 @@ function chequeaIos(ctx) {
   chequeaTienda(ctx, icono.archivo);
   chequeaComplementos(ctx);
   chequeaCampanaAviso(ctx);
+  chequeaCalendario(ctx);
+}
+
+/* EL CALENDARIO DEL IPHONE (Ez, 4A del 16 nov. 2026): el complemento de Android, que en el iPhone
+   habla con EventKit, con el permiso completo, y una pieza propia (PaceCalendario.swift) para la
+   marca de este iPhone. Lo que falla sin que nada falle aqui: el complemento fuera de
+   ios.includePlugins (GitHub regenera Package.swift con `ios:sync` y lo quita: la web recibe null y
+   no sale el calendario), una frase del permiso que falta (Apple rechaza la subida) o un .lproj que
+   no esta en el proyecto (la pregunta saldria en castellano en un iPhone en ingles). */
+function chequeaCalendario(ctx) {
+  var malas = [];
+  var cfg = {};
+  try { cfg = JSON.parse(texto('capacitor.config.json')); } catch (e) {}
+  var plugins = (cfg.ios && cfg.ios.includePlugins) || [];
+  if (plugins.indexOf('@ebarooni/capacitor-calendar') === -1) malas.push('el complemento del calendario no va en ios.includePlugins: ios:sync lo quitaria de la app');
+  var spm = texto('ios/App/CapApp-SPM/Package.swift');
+  if (!/\.package\(name: "EbarooniCapacitorCalendar", path: "\.\.\/\.\.\/\.\.\/node_modules\/@ebarooni\/capacitor-calendar"\)/.test(spm) ||
+      !/\.product\(name: "EbarooniCapacitorCalendar", package: "EbarooniCapacitorCalendar"\)/.test(spm)) {
+    malas.push('ios/App/CapApp-SPM/Package.swift no lleva el complemento del calendario');
+  }
+  var plist = texto(APP + 'Info.plist');
+  ['NSCalendarsFullAccessUsageDescription', 'NSCalendarsUsageDescription'].forEach(function (k) {
+    if (!new RegExp('<key>' + k + '</key>\\s*<string>[^<]{20,}</string>').test(plist)) malas.push('Info.plist no explica ' + k + ': Apple rechaza la subida');
+    ['es', 'en'].forEach(function (l) {
+      if (!new RegExp('"' + k + '" = "[^"]{20,}";').test(texto(APP + l + '.lproj/InfoPlist.strings'))) malas.push(l + '.lproj/InfoPlist.strings no dice ' + k);
+    });
+  });
+  var proyecto = texto('ios/App/App.xcodeproj/project.pbxproj');
+  /* En la fase de recursos, no solo declarado: si no, no va dentro de la app. */
+  var recursos = proyecto.split('/* Begin PBXResourcesBuildPhase section */')[1] || '';
+  recursos = recursos.split('/* End PBXResourcesBuildPhase section */')[0];
+  if (!/InfoPlist\.strings in Resources/.test(recursos) || !/path = en\.lproj\/InfoPlist\.strings/.test(proyecto) || !/path = es\.lproj\/InfoPlist\.strings/.test(proyecto)) {
+    malas.push('InfoPlist.strings no esta en el proyecto de Xcode: la pregunta del calendario saldria en castellano en un iPhone en ingles');
+  }
+  var pieza = texto(APP + 'PaceCalendario.swift');
+  if (!/public let jsName = "PaceCalendario"/.test(pieza) || !/@objc func instalado\(/.test(pieza) || !/kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly/.test(pieza)) {
+    malas.push('PaceCalendario.swift ya no da la marca de este iPhone desde el llavero, solo de este dispositivo (instalado)');
+  }
+  var web = texto('app/ui/ios.calendario.js');
+  if (!/paceIosPedir\('PaceCalendario', 'instalado'\)/.test(web)) malas.push('app/ui/ios.calendario.js ya no pide la marca de este iPhone');
+  if (!/paceIosLlamar\('CapacitorCalendar', 'requestFullCalendarAccess'\)/.test(web)) {
+    malas.push('app/ui/ios.calendario.js ya no pide el permiso completo (Ez, 4A): con el de solo anadir, PACE no lee reuniones ni cambia lo suyo');
+  }
+  if (!/paceMovilIos\(\) \? paceIosInstalado\(\)/.test(texto('app/ui/nativo.calendario.js'))) malas.push('app/ui/nativo.calendario.js ya no da la marca del iPhone en el iPhone');
+  if (malas.length) malas.forEach(function (m) { ctx.falla('ios: ' + m); });
+  else ctx.ok('ios: el calendario del iPhone va con el complemento, el permiso completo explicado en castellano y en ingles, y la marca de este iPhone (PaceCalendario)');
 }
 
 /* El aviso de fin de Foco suena con la campana de PACE (Ez, D-10 B del 11 nov.). Lo que falla
@@ -237,6 +283,8 @@ var NO_CUBRE_IOS = [
     'en un iPhone con TestFlight',
   'ios: de la valoracion se mira que la pieza este en el proyecto y registrada, no que Apple ensene la ventana ' +
     '(tiene su tope y no lo dice) -- eso, en un iPhone con TestFlight',
+  'ios: del calendario se mira que el complemento, la pieza y las frases esten; que iOS ensene la pregunta con la frase de PACE, ' +
+    'que el dia salga en Calendario y que la marca del llavero no viaje en una copia, en un iPhone con TestFlight',
 ];
 
 module.exports = { chequeaIos: chequeaIos, NO_CUBRE_IOS: NO_CUBRE_IOS };

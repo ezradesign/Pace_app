@@ -1,0 +1,80 @@
+<title>Calendario en el iPhone</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una lista para seguir con el iPhone en la mano: cada paso con lo que tocas y lo que debes ver. */
+:root{
+  --paper:#F2EDE0;--card:#FBF8F1;
+  --ink:#1F1C17;--ink-2:#4A453C;--ink-3:#77705F;
+  --line:#C9C0A8;
+  --olive:#3E5A3A;--olive-soft:rgba(62,90,58,.12);
+  --terra:#A85E43;--terra-soft:rgba(168,94,67,.12);
+  --display:'EB Garamond',Georgia,'Times New Roman',serif;
+  --ui:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+main{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 72px}
+h1,h2{font-family:var(--display);font-style:italic;font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(32px,6vw,42px)}
+h2{font-size:clamp(22px,4vw,26px);margin:36px 0 10px;padding-top:18px;border-top:1px solid var(--line)}
+p{color:var(--ink-2);margin:0 0 12px;max-width:62ch}
+strong{color:var(--ink);font-weight:500}
+a{color:var(--olive)}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.lead{font-family:var(--display);font-size:20px;color:var(--ink);margin-top:14px}
+ol.pasos{list-style:none;counter-reset:paso;margin:0;padding:0;display:grid;gap:12px}
+ol.pasos li{counter-increment:paso;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px 12px 50px;position:relative;color:var(--ink-2)}
+ol.pasos li::before{content:counter(paso);position:absolute;left:14px;top:12px;width:24px;height:24px;border-radius:50%;background:var(--olive-soft);color:var(--olive);font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:center}
+.ves{display:block;margin-top:6px;color:var(--olive)}
+.ves::before{content:"Debes ver: ";font-weight:500}
+.aviso{background:var(--terra-soft);border-radius:10px;padding:12px 14px;color:var(--ink);margin:14px 0}
+</style>
+
+<main>
+  <div class="eyebrow">PACE · el calendario del iPhone · 17 nov. 2026</div>
+  <h1>Probar el calendario en el iPhone</h1>
+  <p class="lead">Unos 20 minutos, con la versión de TestFlight que lleve el calendario: te avisan de cuál cuando se junte con <code>main</code>.</p>
+  <p>Lo que aquí no se puede mirar: la pregunta de iOS, los eventos en Calendario y el aviso de cada pausa. Si algo no sale como dice, una captura y el número del paso basta.</p>
+
+  <h2>Antes</h2>
+  <ol class="pasos">
+    <li>En la app <strong>Calendario</strong> del iPhone, crea para hoy una reunión de prueba de una hora, más tarde que ahora (por ejemplo, «Prueba PACE», de 12:00 a 13:00).</li>
+  </ol>
+
+  <h2>Conectar</h2>
+  <ol class="pasos" style="counter-reset:paso 1">
+    <li>Abre PACE. En la tarjeta «¿Cuánto trabajas hoy?», toca <strong>«Al calendario»</strong>, a la derecha de la línea del día.<span class="ves">«Tu día en el calendario», con «Calendario del iPhone» y el botón «Conectar».</span></li>
+    <li>Toca <strong>«Conectar»</strong>.<span class="ves">La pregunta de iOS con la frase de PACE: «PACE lee a qué horas tienes reuniones para poner tus pausas alrededor, y añade tu día a tu calendario. No guarda títulos ni personas.» Elige dar acceso total.</span></li>
+    <li>Mira la hoja.<span class="ves">«Conectado: cuando elijas cuánto trabajas, tu día irá solo a tu calendario. Hoy tienes 1 reunión: las opciones ya la rodean.»</span></li>
+    <li>Toca <strong>«Listo»</strong>.<span class="ves">La tarjeta dice «Conectado».</span></li>
+  </ol>
+
+  <h2>Tu día en Calendario</h2>
+  <ol class="pasos" style="counter-reset:paso 5">
+    <li>Toca <strong>«Preparar jornada»</strong> y elige cuánto trabajas. Espera un minuto con PACE abierto.</li>
+    <li>Abre <strong>Calendario</strong>.<span class="ves">Los bloques de hoy con su pausa en el título, ninguno encima de tu reunión. Abre uno: se muestra como disponible y lleva un aviso al empezar.</span></li>
+    <li>Vuelve a PACE, toca <strong>«Cambiar»</strong> y mueve la hora de salida. Espera un minuto con PACE abierto.<span class="ves">En Calendario el día cambia, sin eventos repetidos.</span></li>
+    <li>Si te pilla una pausa con el iPhone a mano:<span class="ves">el aviso de Calendario al empezar la pausa.</span></li>
+  </ol>
+
+  <h2>Desconectar y decir que no</h2>
+  <ol class="pasos" style="counter-reset:paso 9">
+    <li>En PACE, abre «Al calendario» (en el día elegido, en «Ver todo») y toca <strong>«Desconectar»</strong> y luego <strong>«Quitarlo»</strong>.<span class="ves">Lo que quedaba de hoy desaparece de Calendario. Tu reunión de prueba sigue ahí.</span></li>
+    <li>En los <strong>Ajustes del iPhone › PACE › Calendarios</strong>, quita el acceso. Vuelve a PACE, abre «Al calendario» y toca «Conectar».<span class="ves">PACE dice que no tiene permiso, que puedes darlo en Ajustes del iPhone › PACE › Calendarios, o usar «Otro calendario». La fila «Otro calendario» sigue ahí.</span></li>
+    <li>Borra la reunión de prueba de Calendario.</li>
+  </ol>
+
+  <p class="aviso"><strong>Si tienes a mano</strong> un iPhone con el idioma en inglés, la pregunta del paso 3 sale en inglés. Y si alguno tiene iOS 16, la pregunta es la de antes, sin «acceso total»: también vale.</p>
+  <p>Lo montado, con sus fotos: <a href="https://claude.ai/artifact/Cp7RUbjtX21ZDzZeHYQ7JT">El calendario a la vista, montado</a>.</p>
+</main>

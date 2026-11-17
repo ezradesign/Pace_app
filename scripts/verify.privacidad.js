@@ -39,6 +39,8 @@ var DICE_NO = [/ninguna página de PACE cuenta sus visitas/, /no PACE page count
 var DICE_ANO = [/se borra solo al año de apuntarte/, /a year after you sign up/];
 var DICE_CON_NOMBRE = [/En el calendario del móvil, por ahora, cada pausa va con su nombre/, /In your phone's calendar, for now, each break keeps its name/];
 var DICE_PRIVADO_MOVIL = [/no lee qué pausa es\. También en el calendario del móvil\./, /cannot read which break it is\. Also in your phone's calendar\./];
+/* En el iPhone, EventKit no sabe de privado (Ez, 4A del 16 nov.): lo de PACE va libre, no privado. */
+var DICE_IPHONE_NO_PRIVADO = [/En el del\s+iPhone va como libre, pero no como privado/, /In your iPhone calendar it goes as free, but not as private/];
 var JAVA = path.join('android', 'app', 'src', 'main', 'java', 'com', 'ezradesign', 'pace');
 /* Lo único de fuera que una página publicada puede cargar, y dónde: hoy, nada. La analítica de
    Cloudflare, si vuelve, solo en /premium (y privacy.html tiene que decirlo, arriba). */
@@ -114,8 +116,17 @@ function tandaPrivacidad(ctx) {
       /put\(CalendarContract\.Events\.ACCESS_LEVEL, CalendarContract\.Events\.ACCESS_PRIVATE\)/.test(pieza)],
     ['MainActivity registra PaceCalendario', /registerPlugin\(PaceCalendario\.class\)/.test(actividad)],
     ['android.calendario.js le pide «privado»', /paceAndroidPedir\('PaceCalendario', 'privado'/.test(puente)],
-    ['PACE lo llama al crear y al cambiar', (destinos.match(/return paceAndroidCalendarioPrivado\(id\)/g) || []).length === 2],
+    ['PACE lo llama al crear y al cambiar', (destinos.match(/return paceMovilCalendarioPrivado\(id\)/g) || []).length === 2],
+    ['la capa común se lo pasa a Android', /paceAndroidCalendarioPrivado\(id\)/.test(sinComentarios(leer(path.join('app', 'ui', 'nativo.calendario.js'))))],
   ];
+  /* El iPhone escribe en su calendario (ios.calendario.js) y no puede marcarlo privado: privacy.html
+     tiene que decirlo en los dos idiomas, o prometería lo que el iPhone no hace. */
+  var iphone = /paceIosPedir\('CapacitorCalendar', 'createEvent'/.test(sinComentarios(leer(path.join('app', 'ui', 'ios.calendario.js'))));
+  if (iphone && !DICE_IPHONE_NO_PRIVADO.every(function (re) { return re.test(privacy); })) {
+    ctx.falla('PACE escribe en el calendario del iPhone, que no deja marcarlo privado, y privacy.html no lo dice en los dos idiomas.');
+  } else if (iphone) {
+    ctx.ok('en el calendario del iPhone lo de PACE va libre pero no privado, y privacy.html lo dice');
+  }
   var faltan = piezas.filter(function (p) { return !p[1]; }).map(function (p) { return p[0]; });
   var conNombre = DICE_CON_NOMBRE.some(function (re) { return re.test(privacy); });
   var privadoDicho = DICE_PRIVADO_MOVIL.every(function (re) { return re.test(privacy); });
