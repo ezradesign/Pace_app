@@ -4,6 +4,12 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de noviembre de 2026, 10:20, v0.204.0 en `main` y los cuatro arreglos de S3 y S4 en su rama.
 
+## 17 nov. (cuenta 5iWBf): la 0.209.0. Manda sobre lo de abajo
+
+- **Ez (literal): «Júntalas»** para los avisos de la novena (`claude/avisos-novena-16nov-cdf66e`) y las maquetas 1A, 2 A+B+C y 3B (`claude/maquetas-4-16nov-90bbca`; la 4, «Déjala así»). Uniones af3ce9e4 y 95628082; choques en el censo (1236), el mínimo de pruebas (1668) y las decisiones, y un `DONDE-ME-QUEDO.md` suelto en la raíz que no debe estar en `main` (quitado). La suite destapó que «Tus datos» pedía scroll a 1280 × 940 en la semana de prueba: `umbralBajo` pasa a base 890 (la línea de «Marca la fase» de la voz) y la línea de la prueba a 40. Segunda suite: 1707 en verde, 2 saltadas y 2 rojas de carga que pasan solas.
+- **Ez oyó dos fallos de la voz** («Descansa» se monta y los números se descolocan) y trajo el análisis de Fable: comprobado (`b - fin` = 0,12 s en todas las palabras y la fila se libera en `fin` + 0,05). Arreglo en `claude/voz-cuerpo-cola-17nov` (seis commits), con las vecinas por acabar.
+- **Ramas listas o casi:** el calendario con todo A (`claude/calendario-vista-16nov-ee4f9e`, página Cp7RUbjtX21ZDzZeHYQ7JT), los arreglos menores con 1A, 2.1 A, 2.2, 2.3 A y `CONTENT.md` (`claude/menores-valorar-16nov-87ef7b`; falta el sí de Ez al texto de tres pasos) y los textos largos (`claude/textos-largos-17nov-5fb6a3`, tres letras de Ez). El encargo de la décima de Fable, en `docs/audits/fable-17nov/encargo-decima.md`.
+
 ## 16 nov., noche (cuenta 5iWBf): la 0.208.0, con la voz. Manda sobre lo de abajo
 
 - **Ez (literal): «Junta lo de la voz».** `claude/voz-cuerpo-15nov-21e284` ya traía `main` dentro (b81a2e91); unión sin choques, `verify`, bump a 0.208.0 y build. Suite entera: 1668 en verde, 2 saltadas a propósito y 5 rojas con la máquina muy cargada (1 h 12 min, con otras sesiones pasando pruebas), que pasan las cinco 3 de 3 solas.
