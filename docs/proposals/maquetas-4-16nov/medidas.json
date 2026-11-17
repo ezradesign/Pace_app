@@ -1,0 +1,655 @@
+{
+ "1": {
+  "hoy-640": {
+   "boton": "24 × 24",
+   "zona": "24 × 24",
+   "hueco": 2,
+   "fila": 84,
+   "pasos": 354,
+   "scroll": 113,
+   "guardarSinBajar": false
+  },
+  "A-640": {
+   "boton": "40 × 40",
+   "zona": "40 × 40",
+   "hueco": 10,
+   "fila": 106,
+   "pasos": 442,
+   "scroll": 201,
+   "guardarSinBajar": false
+  },
+  "B-640": {
+   "boton": "44 × 44",
+   "zona": "44 × 44",
+   "hueco": 10,
+   "fila": 114,
+   "pasos": 474,
+   "scroll": 233,
+   "guardarSinBajar": false
+  },
+  "C-640": {
+   "boton": "32 × 32",
+   "zona": "38 × 44",
+   "hueco": 6,
+   "fila": 92,
+   "pasos": 386,
+   "scroll": 145,
+   "guardarSinBajar": true
+  },
+  "hoy-740": {
+   "boton": "24 × 24",
+   "zona": "24 × 24",
+   "hueco": 2,
+   "fila": 84,
+   "pasos": 354,
+   "scroll": 13,
+   "guardarSinBajar": true
+  },
+  "A-740": {
+   "boton": "40 × 40",
+   "zona": "40 × 40",
+   "hueco": 10,
+   "fila": 106,
+   "pasos": 442,
+   "scroll": 101,
+   "guardarSinBajar": false
+  },
+  "B-740": {
+   "boton": "44 × 44",
+   "zona": "44 × 44",
+   "hueco": 10,
+   "fila": 114,
+   "pasos": 474,
+   "scroll": 133,
+   "guardarSinBajar": false
+  },
+  "C-740": {
+   "boton": "32 × 32",
+   "zona": "38 × 44",
+   "hueco": 6,
+   "fila": 92,
+   "pasos": 386,
+   "scroll": 45,
+   "guardarSinBajar": true
+  }
+ },
+ "2": {
+  "A-icono-640": {
+   "botones": 5,
+   "mal": []
+  },
+  "A-hoja-640": {
+   "oculto": 0,
+   "alto": 187,
+   "arriba": 416
+  },
+  "A-icono-740": {
+   "botones": 5,
+   "mal": []
+  },
+  "A-hoja-740": {
+   "oculto": 0,
+   "alto": 187,
+   "arriba": 516
+  },
+  "B-640": {
+   "oculto": 0,
+   "alto": 423,
+   "arriba": 180,
+   "botones": 2,
+   "mal": []
+  },
+  "B-740": {
+   "oculto": 0,
+   "alto": 423,
+   "arriba": 280,
+   "botones": 2,
+   "mal": []
+  },
+  "C-antes-640": {
+   "cabecera": 69,
+   "primeraTarjetaA": 166
+  },
+  "C-640": {
+   "cabecera": 117,
+   "primeraTarjetaA": 214
+  },
+  "C-antes-740": {
+   "cabecera": 69,
+   "primeraTarjetaA": 166
+  },
+  "C-740": {
+   "cabecera": 117,
+   "primeraTarjetaA": 214
+  }
+ },
+ "3": {
+  "hoy-640": {
+   "normal": {
+    "oculto": 0,
+    "alto": 260,
+    "arriba": 380
+   },
+   "grande": {
+    "oculto": 0,
+    "alto": 268,
+    "arriba": 372
+   },
+   "filas": [
+    "Exportar una copia (34 px)",
+    "Importar una copia (34 px)",
+    "Borrar todos mis datos | › (34 px)",
+    "PACE completo | Prueba hasta el 24 de noviembre (34 px)"
+   ]
+  },
+  "A-640": {
+   "normal": {
+    "oculto": 0,
+    "alto": 294,
+    "arriba": 346
+   },
+   "grande": {
+    "oculto": 0,
+    "alto": 302,
+    "arriba": 338
+   },
+   "filas": [
+    "Exportar una copia (34 px)",
+    "Importar una copia (34 px)",
+    "Borrar todos mis datos | › (34 px)",
+    "PACE completo | Prueba hasta el 24 de noviembre (34 px)",
+    "Tenerlo para siempre | 19,99 € (34 px)"
+   ]
+  },
+  "B-640": {
+   "normal": {
+    "oculto": 0,
+    "alto": 266,
+    "arriba": 374
+   },
+   "grande": {
+    "oculto": 0,
+    "alto": 293,
+    "arriba": 347
+   },
+   "filas": [
+    "Exportar una copia (34 px)",
+    "Importar una copia (34 px)",
+    "Borrar todos mis datos | › (34 px)",
+    "PACE completo | Tenerlo para siempre · 19,99 € › | Prueba hasta el 24 de noviembre (59 px)"
+   ]
+  },
+  "C-640": {
+   "normal": {
+    "oculto": 0,
+    "alto": 266,
+    "arriba": 374
+   },
+   "grande": {
+    "oculto": 0,
+    "alto": 276,
+    "arriba": 364
+   },
+   "filas": [
+    "Exportar una copia (34 px)",
+    "Importar una copia (34 px)",
+    "Borrar todos mis datos | › (34 px)",
+    "Tenerlo para siempre | Prueba de PACE completo hasta el 24 de noviembre | 19,99 € (42 px)"
+   ]
+  },
+  "hoy-740": {
+   "normal": {
+    "oculto": 0,
+    "alto": 260,
+    "arriba": 480
+   },
+   "grande": {
+    "oculto": 0,
+    "alto": 268,
+    "arriba": 472
+   },
+   "filas": [
+    "Exportar una copia (34 px)",
+    "Importar una copia (34 px)",
+    "Borrar todos mis datos | › (34 px)",
+    "PACE completo | Prueba hasta el 24 de noviembre (34 px)"
+   ]
+  },
+  "A-740": {
+   "normal": {
+    "oculto": 0,
+    "alto": 294,
+    "arriba": 446
+   },
+   "grande": {
+    "oculto": 0,
+    "alto": 302,
+    "arriba": 438
+   },
+   "filas": [
+    "Exportar una copia (34 px)",
+    "Importar una copia (34 px)",
+    "Borrar todos mis datos | › (34 px)",
+    "PACE completo | Prueba hasta el 24 de noviembre (34 px)",
+    "Tenerlo para siempre | 19,99 € (34 px)"
+   ]
+  },
+  "B-740": {
+   "normal": {
+    "oculto": 0,
+    "alto": 266,
+    "arriba": 474
+   },
+   "grande": {
+    "oculto": 0,
+    "alto": 293,
+    "arriba": 447
+   },
+   "filas": [
+    "Exportar una copia (34 px)",
+    "Importar una copia (34 px)",
+    "Borrar todos mis datos | › (34 px)",
+    "PACE completo | Tenerlo para siempre · 19,99 € › | Prueba hasta el 24 de noviembre (59 px)"
+   ]
+  },
+  "C-740": {
+   "normal": {
+    "oculto": 0,
+    "alto": 266,
+    "arriba": 474
+   },
+   "grande": {
+    "oculto": 0,
+    "alto": 276,
+    "arriba": 464
+   },
+   "filas": [
+    "Exportar una copia (34 px)",
+    "Importar una copia (34 px)",
+    "Borrar todos mis datos | › (34 px)",
+    "Tenerlo para siempre | Prueba de PACE completo hasta el 24 de noviembre | 19,99 € (42 px)"
+   ]
+  }
+ },
+ "4": {
+  "hoy-640": {
+   "home": {
+    "scroll": 0,
+    "aro": 312,
+    "panel": "405–639",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 12,
+    "mal": []
+   },
+   "grande": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "432–628",
+    "fuera": []
+   }
+  },
+  "A-640": {
+   "home": {
+    "scroll": 0,
+    "aro": 312,
+    "panel": "405–639",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 15,
+    "mal": []
+   },
+   "conSobre": {
+    "botones": 8,
+    "mal": []
+   },
+   "grande": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "432–628",
+    "fuera": []
+   }
+  },
+  "B-640": {
+   "home": {
+    "scroll": 0,
+    "aro": 325,
+    "panel": "412–639",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 14,
+    "mal": []
+   },
+   "grande": {
+    "scroll": 84,
+    "aro": 331,
+    "panel": "425–724",
+    "fuera": [
+     "OTRA",
+     "Abrir Respira",
+     "Abrir Estira",
+     "Abrir Mueve"
+    ]
+   }
+  },
+  "C-640": {
+   "home": {
+    "scroll": 0,
+    "aro": 312,
+    "panel": "405–639",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 24,
+    "mal": []
+   }
+  },
+  "hoy-740": {
+   "home": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "471–712",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 12,
+    "mal": []
+   },
+   "grande": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "469–727",
+    "fuera": []
+   }
+  },
+  "A-740": {
+   "home": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "471–712",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 15,
+    "mal": []
+   },
+   "conSobre": {
+    "botones": 8,
+    "mal": []
+   },
+   "grande": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "469–727",
+    "fuera": []
+   }
+  },
+  "B-740": {
+   "home": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "454–740",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 15,
+    "mal": []
+   },
+   "grande": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "472–722",
+    "fuera": []
+   }
+  },
+  "C-740": {
+   "home": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "471–712",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 24,
+    "mal": []
+   }
+  }
+ },
+ "4b": {
+  "D-640": {
+   "home": {
+    "scroll": 0,
+    "aro": 318,
+    "panel": "408–640",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 20,
+    "mal": []
+   },
+   "grande": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "435–623",
+    "fuera": []
+   },
+   "grandeToques": {
+    "botones": 16,
+    "mal": []
+   }
+  },
+  "D-640-foco": {
+   "home": {
+    "scroll": 0,
+    "aro": 318,
+    "panel": "408–640",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 20,
+    "mal": []
+   }
+  },
+  "E-640": {
+   "home": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "421–629",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 15,
+    "mal": [
+     "Hoy voy por libre pisa Abrir Mueve"
+    ]
+   },
+   "grande": {
+    "scroll": 1,
+    "aro": 328,
+    "panel": "424–640",
+    "fuera": []
+   },
+   "grandeToques": {
+    "botones": 12,
+    "mal": [
+     "Hoy voy por libre pisa Abrir Mueve"
+    ]
+   }
+  },
+  "E-640-foco": {
+   "home": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "421–629",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 15,
+    "mal": [
+     "Hoy voy por libre pisa Abrir Mueve"
+    ]
+   }
+  },
+  "F-640": {
+   "home": {
+    "scroll": 0,
+    "aro": 312,
+    "panel": "405–639",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 16,
+    "mal": []
+   },
+   "grande": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "432–628",
+    "fuera": []
+   },
+   "grandeToques": {
+    "botones": 12,
+    "mal": []
+   }
+  },
+  "F-640-foco": {
+   "home": {
+    "scroll": 0,
+    "aro": 312,
+    "panel": "405–639",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 16,
+    "mal": []
+   }
+  },
+  "D-740": {
+   "home": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "471–710",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 20,
+    "mal": []
+   },
+   "grande": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "472–723",
+    "fuera": []
+   },
+   "grandeToques": {
+    "botones": 17,
+    "mal": []
+   }
+  },
+  "E-740": {
+   "home": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "461–727",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 16,
+    "mal": [
+     "Hoy voy por libre pisa Abrir Mueve"
+    ]
+   },
+   "grande": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "461–740",
+    "fuera": []
+   },
+   "grandeToques": {
+    "botones": 13,
+    "mal": [
+     "Hoy voy por libre pisa Abrir Mueve"
+    ]
+   }
+  },
+  "F-740": {
+   "home": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "471–712",
+    "fuera": []
+   },
+   "toques": {
+    "botones": 16,
+    "mal": []
+   },
+   "grande": {
+    "scroll": 0,
+    "aro": 331,
+    "panel": "469–727",
+    "fuera": []
+   },
+   "grandeToques": {
+    "botones": 13,
+    "mal": []
+   }
+  }
+ },
+ "M": {
+  "1A-640": {
+   "boton": "40 × 40",
+   "zona": "40 × 40",
+   "hueco": 10,
+   "fila": 106,
+   "pasos": 442,
+   "scroll": 201,
+   "guardarSinBajar": false
+  },
+  "2B-640": {
+   "oculto": 0,
+   "alto": 416,
+   "arriba": 187,
+   "botones": 2,
+   "mal": []
+  },
+  "3B-640": {
+   "normal": {
+    "oculto": 0,
+    "alto": 300,
+    "arriba": 340
+   },
+   "grande": {
+    "oculto": 0,
+    "alto": 350,
+    "arriba": 290
+   },
+   "filas": [
+    "Exportar una copia (34 px)",
+    "Importar una copia (34 px)",
+    "Borrar todos mis datos | › (34 px)",
+    "PACE completo | Tenerlo para siempre · 19,99 € › | Prueba hasta el 24 de noviembre (59 px)"
+   ]
+  },
+  "3B-740": {
+   "normal": {
+    "oculto": 0,
+    "alto": 300,
+    "arriba": 440
+   },
+   "grande": {
+    "oculto": 0,
+    "alto": 350,
+    "arriba": 390
+   },
+   "filas": [
+    "Exportar una copia (34 px)",
+    "Importar una copia (34 px)",
+    "Borrar todos mis datos | › (34 px)",
+    "PACE completo | Tenerlo para siempre · 19,99 € › | Prueba hasta el 24 de noviembre (59 px)"
+   ]
+  }
+ }
+}

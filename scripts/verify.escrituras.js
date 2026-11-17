@@ -40,6 +40,8 @@ var CENSO = {
   'app/ui/SessionClock.jsx': 1,
   'app/ui/android.avisos.js': 1,
   'app/ui/ios.js': 1,
+  /* La firma de lo que se puso (novena pasada externa, nº 3): solo en las apps, sin landing. */
+  'app/ui/nativo.entrada.js': 1,
 };
 
 /* Las que NO van en un `try`, a propósito: si fallan, tiene que saberse. */

@@ -228,6 +228,8 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
         {enlaceTuyas}
       </div>
       <p className="pace-lib-sub">{subtitle}</p>
+      {/* Al acabar la semana de prueba, si la nota no se vio aún (ui/PremiumFinPrueba.jsx). */}
+      {typeof PaceFinPruebaLinea !== 'undefined' && <PaceFinPruebaLinea abierta={open && !enPausa} />}
     </div>
   );
 

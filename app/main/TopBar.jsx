@@ -28,7 +28,7 @@
      onOpenTweaks   -- abre TweaksPanel
 */
 
-const { useState: useStateTB } = React;
+const { useState: useStateTB, useEffect: useEffectTB } = React;
 
 function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
   const [state, set] = usePace();
@@ -43,6 +43,14 @@ function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
     if (foco || lleva != null) { setPendiente({ v, lleva }); return; }
     set({ focusMode: v });
   };
+  /* EL ATAJO «FOCO» DEL ICONO (`?go=focus`, main.jsx) PREGUNTA IGUAL (segunda tanda antes de v1, 16 nov.
+     2026): ponía el modo Foco sin más y cortaba la pausa en marcha. Lo pide con `pace:elegir-modo`, y
+     esta barra, que también está en el móvil aunque sin las pestañas, saca la misma ventana. */
+  useEffectTB(() => {
+    const alPedir = (e) => { const v = e && e.detail && e.detail.v; if (v) elegirModo(v); };
+    window.addEventListener('pace:elegir-modo', alPedir);
+    return () => window.removeEventListener('pace:elegir-modo', alPedir);
+  }, [state.focusMode]);
   const pregunta = topBarPregunta(pendiente, t, tn);
   const modes = [
     { v: 'foco', label: t('topbar.mode.focus') },
@@ -123,6 +131,17 @@ function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
   );
 }
 
+/* EL ATAJO «FOCO» DEL ICONO (main.jsx, `?go=focus`). Lo que sigue vivo al abrir PACE de nuevo es la
+   pausa del día de «A tu ritmo» (una corta o una larga sueltas no se guardan, y con PACE ya abierta el
+   atajo solo la trae delante, `focus-existing`), y FocusTimer la cuenta unos renders después del
+   arranque: se espera a que conste, como mucho medio segundo, antes de pedir el Foco a la barra. */
+function paceAtajoFoco(vez) {
+  const n = vez || 0;
+  const s = typeof getState === 'function' ? getState() : null;
+  if (s && s.focusMode !== 'foco' && pacePausaLleva() == null && n < 10) { setTimeout(() => paceAtajoFoco(n + 1), 50); return; }
+  try { window.dispatchEvent(new CustomEvent('pace:elegir-modo', { detail: { v: 'foco' } })); } catch (e) {}
+}
+
 /* Los textos de la pregunta. Con un Foco, los de siempre. Con una pausa, «¿Dejar la pausa?» si se
    vuelve al Foco y, entre la corta y la larga, el título de siempre; los minutos que lleva solo
    desde el primero entero, para no decir «0 minutos». */
@@ -156,4 +175,4 @@ const topBarStyles = {
   }
 };
 
-Object.assign(window, { TopBar });
+Object.assign(window, { TopBar, paceAtajoFoco });

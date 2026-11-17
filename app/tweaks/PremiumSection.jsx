@@ -33,12 +33,26 @@ function premiumFechaTexto(datos, lang) {
    (sin eso, de 860 a 893 px de alto el panel pedía scroll). El precio lo da la tienda, nunca las
    traducciones. Con la tienda cerrada, como antes. Devuelve el plan de por vida, o null. */
 function premiumPlanEnAjustes(lang) {
+  if (window.pacePruebaV1Hasta && window.pacePruebaV1Hasta()) return null;
+  return premiumPlanVida(lang);
+}
+
+/* El plan de por vida si se puede comprar desde aquí, haya o no semana de prueba. */
+function premiumPlanVida(lang) {
   if (!(window.paceLicenciaPermitida && window.paceLicenciaPermitida())) return null;
   const est = window.paceLicenciaEstado ? window.paceLicenciaEstado() : { estado: 'ninguno' };
   if (est.estado === 'vigente' || est.estado === 'caducado') return null;
-  if (window.pacePruebaV1Hasta && window.pacePruebaV1Hasta()) return null;
   if (!(window.paceTiendaAbierta && window.paceTiendaAbierta())) return null;
   return (window.paceTiendaPlanes(lang) || []).find((p) => p.plan === 'vida') || null;
+}
+
+/* «TENERLO PARA SIEMPRE» DURANTE LA SEMANA DE PRUEBA (Ez, 3B del 16 nov. 2026; S2 A del 11 nov.:
+   «enseñarlo con maqueta antes»). La fila de la prueba sigue diciendo hasta cuándo, y bajo
+   «PACE completo», en su línea pequeña, «Tenerlo para siempre · 19,99 € ›». Tocarla abre la
+   invitación, con la compra y «Tengo un código». Solo con la tienda abierta; si no, como antes.
+   La línea mide unos 25 px y TweaksPanel la cuenta al plegar la sección. */
+function premiumPlanEnPrueba(lang) {
+  return window.pacePruebaV1Hasta && window.pacePruebaV1Hasta() ? premiumPlanVida(lang) : null;
 }
 
 function PremiumSection() {
@@ -88,8 +102,13 @@ function PremiumSection() {
   const prueba = window.pacePruebaV1Hasta ? window.pacePruebaV1Hasta() : null;
   if (prueba) {
     const f = new Date(prueba).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long' });
+    const vidaYa = premiumPlanEnPrueba(lang);
+    const sub = vidaYa ? (
+      <span data-pace-aj-comprar-prueba={vidaYa.plan}>{t('premium.settings.vida')} · {vidaYa.precio} <span aria-hidden="true">›</span></span>
+    ) : null;
+    const abrir = vidaYa ? () => paceAbrirPremium({}) : permitida ? () => paceAbrirPremium({ modo: 'codigo' }) : undefined;
     return (
-      <AjustesAccion onClick={permitida ? () => paceAbrirPremium({ modo: 'codigo' }) : undefined}
+      <AjustesAccion onClick={abrir} sub={sub}
         derecha={<span data-pace-licencia-estado data-pace-licencia-prueba style={{ color: 'var(--focus)' }}>{tn('premium.settings.prueba', { fecha: f })}</span>}>
         {t('premium.name')}
       </AjustesAccion>
@@ -137,4 +156,4 @@ function PremiumSection() {
   );
 }
 
-Object.assign(window, { PremiumSection, premiumPlanEnAjustes });
+Object.assign(window, { PremiumSection, premiumPlanEnAjustes, premiumPlanVida, premiumPlanEnPrueba });

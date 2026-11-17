@@ -90,6 +90,46 @@ test('2A · con una pausa empezada, «Foco» pregunta antes, y «Seguir con la p
   await expect(dejar(page)).toContainText('Llevas 1 minuto de pausa.');
 });
 
+/* EL ATAJO «FOCO» DEL ICONO (segunda tanda antes de v1, 16 nov. 2026): `?go=focus` ponía el modo Foco
+   al abrir y cortaba sin preguntar la pausa que sigue viva tras abrir PACE de nuevo, la del día de
+   «A tu ritmo» (una corta o una larga sueltas no se guardan al recargar; y con PACE ya abierta el
+   atajo solo la trae delante, `focus-existing`). Ahora sale la misma ventana que en la barra, también
+   en el móvil, donde la barra está sin sus pestañas. */
+for (const ancho of [1280, 360]) {
+  test('el atajo «Foco» del icono, en la pausa del día, pregunta antes de cortarla (' + ancho + ' px)', async ({ page, context }) => {
+    await sembrar(context, { soundOn: false, ritmo: { dia: { fecha: '2026-10-07', opcion: 'jornada', desde: 600, cicloBase: 0, cambios: {} } } });
+    await context.clock.install({ time: ARRANQUE });
+    await irAlArtefacto(page);
+    await page.getByRole('button', { name: 'Empezar jornada', exact: true }).filter({ visible: true }).first().click();
+    const fin = await page.evaluate(() => JSON.parse(localStorage.getItem('pace.timer.v1')).endsAt);
+    await context.clock.fastForward(fin - await page.evaluate(() => Date.now()) + 1000);
+    await page.locator('[data-pace-break-shortcut]').first().waitFor({ state: 'attached' });
+    await page.getByRole('button', { name: 'Ahora no', exact: true }).click();
+    await context.clock.fastForward(2 * 60 * 1000);
+    await context.clock.runFor(1000);
+    expect(await page.evaluate(() => getState().focusMode), 'GUARD: el aro cuenta la pausa del día').toBe('pausa');
+    await page.setViewportSize({ width: ancho, height: ancho === 360 ? 640 : 720 });
+    await page.goto('/index.html?go=focus');
+    await numero(page).waitFor();
+    await context.clock.runFor(600);   // lo que el atajo espera, como mucho, a que FocusTimer cuente la pausa
+    await expect(dejar(page), 'el atajo cortaba la pausa sin preguntar').toBeVisible();
+    await expect(dejar(page)).toContainText('Llevas 2 minutos de pausa.');
+    await dejar(page).getByRole('button', { name: 'Seguir con la pausa', exact: true }).click();
+    await expect(dejar(page)).toHaveCount(0);
+    expect(await page.evaluate(() => getState().focusMode), 'la pausa se cortó').toBe('pausa');
+  });
+}
+
+test('CONTROL · el atajo «Foco» sin nada empezado pone el Foco sin preguntar', async ({ page, context }) => {
+  await abrir(page, context, 25);
+  await modo(page, 'Pausa').click();
+  await page.goto('/index.html?go=focus');
+  await expect(numero(page)).toBeVisible();
+  await context.clock.runFor(600);
+  await expect.poll(() => page.evaluate(() => getState().focusMode)).toBe('foco');
+  await expect(dejar(page)).toHaveCount(0);
+});
+
 test('2A · en inglés, la misma pregunta', async ({ page, context }) => {
   await sembrar(context, { soundOn: false, lang: 'en' });
   await context.clock.install({ time: ARRANQUE });
