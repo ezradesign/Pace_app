@@ -69,6 +69,7 @@ var diaV1 = require('./verify.dia-v1.js');
 /* Ningún «1 logros»: una cifra delante de un plural tiene su singular o su motivo. */
 var plurales = require('./verify.plurales.js');
 var claves = require('./verify.claves.js');   // D-1 y D-2 no vuelven
+var pseudo = require('./verify.pseudo.js');   // los textos largos, solo en las pruebas
 
 /* --------------------------------------------------------------------------
    Identificadores de PLATAFORMA. Un nombre sin ligar que este aqui es del
@@ -461,6 +462,7 @@ function main() {
   diaV1.tandaDiaV1({ ROOT: ROOT, babel: babel, falla: falla, ok: ok, info: info }, declarados);
   plurales.tandaPlurales({ ROOT: ROOT, babel: babel, falla: falla, ok: ok, info: info }, declarados);
   claves.tandaClaves({ ROOT: ROOT, babel: babel, falla: falla, ok: ok, info: info }, declarados);
+  pseudo.tandaPseudo({ ROOT: ROOT, falla: falla, ok: ok, info: info });
   tandaVersion();
 
   console.log('\n--- lo que este verify NO cubre ---');
