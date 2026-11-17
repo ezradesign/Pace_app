@@ -3148,6 +3148,11 @@ Object.assign(window.PACE_STRINGS.es, {
   'session.placeCountdown': 'para empezar',
   'session.sideLeft': 'Izquierda',
   'session.sideRight': 'Derecha',
+
+
+  'move.cambio.alReves': 'Al revés',
+  'move.cambio.otroPie': 'Otro pie',
+  'move.cambio.otroLado': 'Otro lado',
   'session.sideChange': 'Cambia de lado',
   'session.sideNext': 'Ahora: {side}',
   'session.skip': 'Saltar',
@@ -3312,6 +3317,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'session.placeCountdown': 'to start',
   'session.sideLeft': 'Left',
   'session.sideRight': 'Right',
+  'move.cambio.alReves': 'Reverse',
+  'move.cambio.otroPie': 'Other foot',
+  'move.cambio.otroLado': 'Other side',
   'session.sideChange': 'Switch sides',
   'session.sideNext': 'Now: {side}',
   'session.skip': 'Skip',
@@ -35074,8 +35082,11 @@ var MOVE_ROUTINES = {
           care: 'Si la lumbar molesta, sube menos o termina.' } },
 
 
+
+
       { name: 'Desliza el talón', mode: 'reps', reps: 6, dur: 24,
         tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+        cambios: [{ en: 3, que: 'lado' }],
         instruction: {
           setup: 'Boca arriba, rodillas dobladas, sin aplastar la zona lumbar contra el suelo.',
           action: 'Desliza un talón por el suelo sin mover la pelvis, y vuelve. Tres con cada pierna.',
@@ -35084,6 +35095,7 @@ var MOVE_ROUTINES = {
 
       { name: 'Gateo con rodillas', mode: 'reps', reps: 8, dur: 24,
         tempo: { down: 1, hold: 0, up: 2 }, completion: { mode: 'guided' },
+        cambios: [{ en: 4, que: 'sentido' }],
         instruction: {
           setup: 'A cuatro apoyos: manos bajo los hombros, rodillas bajo las caderas.',
           action: 'Cuatro pasos cortos adelante, despacio, mano y rodilla contrarias. Luego, cuatro atrás.',
@@ -36687,6 +36699,81 @@ Object.assign(window, { v1VozCuenta, v1VozRep, v1VozEntrada, v1VozGo, v1VozLado,
 ;Object.assign(window, { v1VozCuenta, v1VozRep, v1VozEntrada, v1VozGo, v1VozLado, v1VozPrecarga });
 })();
 </script>
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function v1CambioSeg(step, c) {
+  return step.mode === 'reps' ? c.en * v1RepSeconds(step) : c.en;
+}
+
+
+function v1CambiosPasados(step, elapsed) {
+  const cs = step && Array.isArray(step.cambios) ? step.cambios : [];
+  return cs.filter((c) => elapsed >= v1CambioSeg(step, c));
+}
+
+
+function v1CambioAhora(step, elapsed) {
+  const cs = step && Array.isArray(step.cambios) ? step.cambios : [];
+  return cs.find((c) => v1CambioSeg(step, c) === elapsed) || null;
+}
+
+
+function v1CambioSonido(c) {
+  return c && c.que === 'lado' && typeof v1VozLado === 'function' ? v1VozLado() : undefined;
+}
+
+
+function v1CambiosVivos(step, auto) {
+  return !!(step && step.cambios) && (auto || step.mode !== 'reps');
+}
+
+
+function v1CambioPalabra(step, elapsed, t, auto) {
+  if (!v1CambiosVivos(step, auto)) return null;
+  const pasados = v1CambiosPasados(step, elapsed);
+  const ultimo = pasados[pasados.length - 1];
+  return ultimo && ultimo.dice ? t('move.cambio.' + ultimo.dice) : null;
+}
+
+
+function v1CambiosPalabras(step, t) {
+  const cs = step && Array.isArray(step.cambios) ? step.cambios : [];
+  return cs.filter((c) => c.dice).map((c) => t('move.cambio.' + c.dice)).filter((w, i, a) => a.indexOf(w) === i);
+}
+
+
+function v1CambioLado(step, elapsed, auto) {
+  if (!v1CambiosVivos(step, auto)) return null;
+  return v1CambiosPasados(step, elapsed).filter((c) => c.que === 'lado').length % 2;
+}
+
+Object.assign(window, { v1CambioSeg, v1CambiosPasados, v1CambioAhora, v1CambioSonido, v1CambiosVivos, v1CambioPalabra, v1CambiosPalabras, v1CambioLado });
+;Object.assign(window, { v1CambioSeg, v1CambiosPasados, v1CambioAhora, v1CambioSonido, v1CambiosVivos, v1CambioPalabra, v1CambiosPalabras, v1CambioLado });
+})();
+</script>
   <!-- El mando de tres y el cuerpo del runner (opción A del runner guiado): antes de su consumidor. -->
   <script>
 ;(function () {
@@ -36801,6 +36888,8 @@ function v1Reservas(routine, t, tn, tStep, tInstr) {
       pon(cues, { lead: t('session.sideLeft'), text: action });
       pon(cues, { lead: t('session.sideRight'), text: action });
     }
+
+    if (action && typeof v1CambiosPalabras === 'function') v1CambiosPalabras(st, t).forEach((w) => pon(cues, { lead: w, text: action }));
     const care = st.mode !== 'rest' ? tInstr(i, 'care') : null;
     if (care) pon(colas, { care });
 
@@ -36969,7 +37058,7 @@ function CuerpoV1(p) {
     justo ? { 'data-pace-v1-justo': '' } : {}),
     React.createElement("div", _extends({ ref: cuerpoRef, "data-pace-v1-body": true, className: "pace-v1" }, p.paused ? { 'data-pace-v1-en-pausa': '' } : {}),
     React.createElement("div", { ref: glifoRef, "data-pace-v1-glyph": true, className: "pace-v1-glifo", style: { width: aro, height: aro } },
-    React.createElement(StepGlyph, { stepName: step.name, accent: stepAccent, accentSoft: stepAccentSoft, size: glifo, side: v1LadoGlifo(step, p.phase, side) }),
+    React.createElement(StepGlyph, { stepName: step.name, accent: stepAccent, accentSoft: stepAccentSoft, size: glifo, side: p.ladoCambio != null ? p.ladoCambio : v1LadoGlifo(step, p.phase, side) }),
     React.createElement(AroV1, { fraccion: p.fraccion, accent: stepAccent, px: aro })
     ),
     React.createElement("div", { "data-pace-v1-kicker": true, style: { color: stepAccent } }, p.kicker || null),
@@ -37649,7 +37738,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
         darSerie(v1RepTarget(step));try {playSound('move.rep', v1VozRep(v1RepTarget(step), repSec, true));} catch (e) {}
         advanceStep();
       } else if (suena && elapsed % repSec === 0) {
-        try {playSound('move.rep', v1VozRep(elapsed / repSec, repSec));} catch (e) {}
+        const cb = v1CambioAhora(step, elapsed);try {if (cb) playSound('move.side', v1CambioSonido(cb));else playSound('move.rep', v1VozRep(elapsed / repSec, repSec));} catch (e) {}
       }
       return;
     }
@@ -37658,6 +37747,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
 
     if (suena && effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) {try {playSound('move.warn', v1VozCuenta(effDur - elapsed));} catch (e) {}}
+    if (suena && step.mode === 'timed' && v1CambioAhora(step, elapsed)) {try {playSound('move.side', v1CambioSonido(v1CambioAhora(step, elapsed)));} catch (e) {}}
     if (elapsed >= effDur) {
       if (!auto) {
 
@@ -37838,7 +37928,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   const careText = inWork && !isRest ? tInstr(stepIdx, 'care') : undefined;
   const sideLead = inWork && step.mode === 'perSide' ?
   t(side === 0 ? 'session.sideLeft' : 'session.sideRight') :
-  null;
+  inWork ? v1CambioPalabra(step, elapsed, t, auto) : null;
 
 
 
@@ -37862,7 +37952,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
         textos: { prev: t('move.prev'), pause: t('session.pause'), resume: t('session.resume') }, autoAbajo: autoAbajo ? autoBoton : null }),
       hint: t('session.hint') },
 
-    React.createElement(CuerpoV1, { routine: routine, stepIdx: stepIdx, step: step, side: side, phase: phase, elapsed: elapsed, paused: paused,
+    React.createElement(CuerpoV1, { routine: routine, stepIdx: stepIdx, step: step, side: side, phase: phase, elapsed: elapsed, paused: paused, ladoCambio: inWork ? v1CambioLado(step, elapsed, auto) : null,
       accent: accent, stepAccent: stepAccent, stepAccentSoft: stepAccentSoft, lang: lang,
       t: t, tn: tn, tStep: tStep, tInstr: tInstr,
       kicker: kicker, cueText: cueText, sideLead: sideLead, careText: careText,
@@ -37946,8 +38036,13 @@ const EXTRA_ROUTINES = {
       desc: 'Círculos, la pared y el giro del hombro.', min: 2,
       position: ['standing'], equipment: ['wall'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
+
+
+
+
       { name: 'Círculos de brazos', mode: 'reps', reps: 16, dur: 64,
         tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+        cambios: [{ en: 4, que: 'sentido' }, { en: 8, que: 'lado' }, { en: 12, que: 'sentido' }],
         instruction: {
           action: 'De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. Luego, el otro.',
           care: 'Empieza pequeño. Haz el círculo más grande solo si el tronco sigue quieto.' } },
@@ -37981,6 +38076,7 @@ const EXTRA_ROUTINES = {
           care: 'Suave: no es un ejercicio de fuerza.' } },
       { name: 'Círculos de muñeca', mode: 'reps', reps: 8, dur: 32,
         tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+        cambios: [{ en: 4, que: 'sentido', dice: 'alReves' }],
         instruction: {
           setup: 'Sentado, antebrazos cómodos.',
           action: 'Círculos pequeños con las manos, despacio: cuatro en cada sentido.',
@@ -38035,6 +38131,7 @@ const EXTRA_ROUTINES = {
           care: 'Sin rebotes. Sal despacio.' } },
       { name: 'Círculos de tobillo', mode: 'reps', reps: 16, dur: 32,
         tempo: { down: 1, hold: 0, up: 1 }, completion: { mode: 'guided' },
+        cambios: [{ en: 4, que: 'sentido', dice: 'alReves' }, { en: 8, que: 'lado', dice: 'otroPie' }, { en: 12, que: 'sentido', dice: 'alReves' }],
         instruction: {
           setup: 'Siéntate y levanta un poco un pie.',
           action: 'Círculos con el tobillo: cuatro en cada sentido con un pie, y luego con el otro.',
@@ -38084,15 +38181,18 @@ const EXTRA_ROUTINES = {
 
       { name: 'Círculos de muñeca', mode: 'reps', reps: 8, dur: 32,
         tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+        cambios: [{ en: 4, que: 'sentido', dice: 'alReves' }],
         instruction: {
           setup: 'Sentado, antebrazos cómodos.',
           action: 'Círculos pequeños con las manos, despacio: cuatro en cada sentido.',
           care: 'Sin apretar los puños ni buscar el máximo.' } },
       { name: 'Giro sentado', mode: 'timed', dur: 20,
+        cambios: [{ en: 10, que: 'lado', dice: 'otroLado' }],
         instruction: {
           action: 'Gira el tronco hacia el respaldo, con una mano apoyada en él, sin tirar. Luego, al otro lado.',
           care: 'Gira solo hasta donde vaya suelto. El giro nace del tronco, no del cuello.' } },
       { name: 'Círculos de tobillo', mode: 'timed', dur: 20,
+        cambios: [{ en: 10, que: 'lado', dice: 'otroPie' }],
         instruction: {
           action: 'Bajo la mesa, levanta un pie y dibuja círculos con el tobillo. Cambia a mitad.',
           care: 'Círculos lentos y cómodos, sin forzar ni mover toda la pierna.' } },

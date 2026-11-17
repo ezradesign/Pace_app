@@ -178,6 +178,11 @@ Object.assign(window.PACE_STRINGS.es, {
     'session.placeCountdown':          'para empezar',
     'session.sideLeft':                'Izquierda',
     'session.sideRight':               'Derecha',
+    /* La palabra que abre el texto en cada tramo de un paso con cambios (Ez, 1A del 16 nov. 2026):
+       cortas a propósito, para que ningún texto pase a más líneas (MoveSessionV1.cambios.jsx). */
+    'move.cambio.alReves':             'Al revés',
+    'move.cambio.otroPie':             'Otro pie',
+    'move.cambio.otroLado':            'Otro lado',
     'session.sideChange':              'Cambia de lado',
     'session.sideNext':                'Ahora: {side}',
     'session.skip':                    'Saltar',
@@ -342,6 +347,9 @@ Object.assign(window.PACE_STRINGS.en, {
     'session.placeCountdown':          'to start',
     'session.sideLeft':                'Left',
     'session.sideRight':               'Right',
+    'move.cambio.alReves':             'Reverse',
+    'move.cambio.otroPie':             'Other foot',
+    'move.cambio.otroLado':            'Other side',
     'session.sideChange':              'Switch sides',
     'session.sideNext':                'Now: {side}',
     'session.skip':                    'Skip',

@@ -141,8 +141,11 @@ var MOVE_ROUTINES = {
               care: 'Si la lumbar molesta, sube menos o termina.' } },
           /* La zona lumbar guarda su curva: aplastarla contra el suelo o estirar la pierna a toda
              costa son justo lo que no se pide. El recorrido lo pone la pelvis quieta. */
+          /* `cambios` (Ez, 1A del 16 nov.; MoveSessionV1.cambios.jsx): aquí, solo la señal en el cambio.
+             Con la letra al 115 % la palabra no cabe sin pasar a tres líneas. */
           { name: 'Desliza el talón', mode: 'reps', reps: 6, dur: 24,
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+            cambios: [{ en: 3, que: 'lado' }],
             instruction: {
               setup: 'Boca arriba, rodillas dobladas, sin aplastar la zona lumbar contra el suelo.',
               action: 'Desliza un talón por el suelo sin mover la pelvis, y vuelve. Tres con cada pierna.',
@@ -151,6 +154,7 @@ var MOVE_ROUTINES = {
              Con «4» la cuenta acababa a mitad de camino. */
           { name: 'Gateo con rodillas', mode: 'reps', reps: 8, dur: 24,
             tempo: { down: 1, hold: 0, up: 2 }, completion: { mode: 'guided' },
+            cambios: [{ en: 4, que: 'sentido' }],
             instruction: {
               setup: 'A cuatro apoyos: manos bajo los hombros, rodillas bajo las caderas.',
               action: 'Cuatro pasos cortos adelante, despacio, mano y rodilla contrarias. Luego, cuatro atrás.',

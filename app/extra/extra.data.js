@@ -56,8 +56,13 @@ const EXTRA_ROUTINES = {
         desc: 'Círculos, la pared y el giro del hombro.', min: 2,
         position: ['standing'], equipment: ['wall'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
+          /* `cambios` (Ez, 1A del 16 nov. 2026; MoveSessionV1.cambios.jsx): dónde cambia el paso de
+             sentido o de lado, en repeticiones hechas (o en segundos, con reloj), y `dice`, la palabra
+             que abre el texto en ese tramo. Este va sin palabra: con la letra al 115 % no cabe sin
+             pasar a tres líneas, y Ez no quiere que nada cambie de líneas. */
           { name: 'Círculos de brazos', mode: 'reps', reps: 16, dur: 64,
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+            cambios: [{ en: 4, que: 'sentido' }, { en: 8, que: 'lado' }, { en: 12, que: 'sentido' }],
             instruction: {
               action: 'De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. Luego, el otro.',
               care: 'Empieza pequeño. Haz el círculo más grande solo si el tronco sigue quieto.' } },
@@ -91,6 +96,7 @@ const EXTRA_ROUTINES = {
               care: 'Suave: no es un ejercicio de fuerza.' } },
           { name: 'Círculos de muñeca', mode: 'reps', reps: 8, dur: 32,
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+            cambios: [{ en: 4, que: 'sentido', dice: 'alReves' }],
             instruction: {
               setup: 'Sentado, antebrazos cómodos.',
               action: 'Círculos pequeños con las manos, despacio: cuatro en cada sentido.',
@@ -145,6 +151,7 @@ const EXTRA_ROUTINES = {
               care: 'Sin rebotes. Sal despacio.' } },
           { name: 'Círculos de tobillo', mode: 'reps', reps: 16, dur: 32,
             tempo: { down: 1, hold: 0, up: 1 }, completion: { mode: 'guided' },
+            cambios: [{ en: 4, que: 'sentido', dice: 'alReves' }, { en: 8, que: 'lado', dice: 'otroPie' }, { en: 12, que: 'sentido', dice: 'alReves' }],
             instruction: {
               setup: 'Siéntate y levanta un poco un pie.',
               action: 'Círculos con el tobillo: cuatro en cada sentido con un pie, y luego con el otro.',
@@ -194,15 +201,18 @@ const EXTRA_ROUTINES = {
           /* Diez por sentido no caben en 20 s si se hacen despacio: cuatro por sentido. */
           { name: 'Círculos de muñeca', mode: 'reps', reps: 8, dur: 32,
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+            cambios: [{ en: 4, que: 'sentido', dice: 'alReves' }],
             instruction: {
               setup: 'Sentado, antebrazos cómodos.',
               action: 'Círculos pequeños con las manos, despacio: cuatro en cada sentido.',
               care: 'Sin apretar los puños ni buscar el máximo.' } },
           { name: 'Giro sentado', mode: 'timed', dur: 20,
+            cambios: [{ en: 10, que: 'lado', dice: 'otroLado' }],
             instruction: {
               action: 'Gira el tronco hacia el respaldo, con una mano apoyada en él, sin tirar. Luego, al otro lado.',
               care: 'Gira solo hasta donde vaya suelto. El giro nace del tronco, no del cuello.' } },
           { name: 'Círculos de tobillo', mode: 'timed', dur: 20,
+            cambios: [{ en: 10, que: 'lado', dice: 'otroPie' }],
             instruction: {
               action: 'Bajo la mesa, levanta un pie y dibuja círculos con el tobillo. Cambia a mitad.',
               care: 'Círculos lentos y cómodos, sin forzar ni mover toda la pierna.' } },
