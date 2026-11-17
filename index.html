@@ -4199,6 +4199,17 @@ Object.assign(window.PACE_STRINGS.es, {
   'premium.pasov1.mod.move': 'Mueve',
   'premium.pasov1.mod.extra': 'Estira',
   'premium.pasov1.propias': 'Tus rutinas propias se quedan guardadas; desde el {fecha} se abren con PACE completo.',
+  'premium.fin.titulo': 'Acabó tu semana de prueba',
+  'premium.fin.cuerpo': 'Desde hoy, lo que lleva candado es de PACE completo.',
+  'premium.fin.tuyas': 'Estas siguen siendo tuyas para siempre, porque ya las hiciste:',
+  'premium.fin.propias': 'Tus rutinas propias siguen guardadas y se abren con PACE completo.',
+  'premium.fin.sobre.gratis': 'Desde hoy, lo que lleva candado es de PACE completo. Lo gratis sigue gratis.',
+  'premium.fin.sobre.una': 'Se queda tuya para siempre {lista}, porque ya la hiciste.',
+  'premium.fin.sobre.varias': 'Se quedan tuyas para siempre {lista}, porque ya las hiciste.',
+  'premium.fin.sobre.mas': '{lista} y {n} más',
+  'premium.fin.y': 'y',
+  'premium.fin.ver': 'Ver PACE completo',
+  'premium.fin.linea': 'Tu semana de prueba acabó el {fecha}: lo que lleva candado ya es de PACE completo.',
   'premium.v1.despues': 'Pronto podrás tenerlo aquí.'
 });
 
@@ -4273,6 +4284,17 @@ Object.assign(window.PACE_STRINGS.en, {
   'premium.pasov1.mod.move': 'Move',
   'premium.pasov1.mod.extra': 'Stretch',
   'premium.pasov1.propias': 'Your own routines stay saved; from {fecha}, they open with PACE Complete.',
+  'premium.fin.titulo': 'Your trial week has ended',
+  'premium.fin.cuerpo': 'From today, anything with a padlock is part of PACE Complete.',
+  'premium.fin.tuyas': 'These stay yours for good, because you have already done them:',
+  'premium.fin.propias': 'Your own routines stay saved and open with PACE Complete.',
+  'premium.fin.sobre.gratis': 'From today, anything with a padlock is part of PACE Complete. What is free stays free.',
+  'premium.fin.sobre.una': '{lista} stays yours for good, because you have already done it.',
+  'premium.fin.sobre.varias': '{lista} stay yours for good, because you have already done them.',
+  'premium.fin.sobre.mas': '{lista} and {n} more',
+  'premium.fin.y': 'and',
+  'premium.fin.ver': 'See PACE Complete',
+  'premium.fin.linea': 'Your trial week ended on {fecha}: anything with a padlock is now part of PACE Complete.',
   'premium.v1.despues': 'You’ll be able to get it here soon.'
 });
 })();
@@ -18111,6 +18133,35 @@ function pacePasoV1Avisado() {
 
 
 
+var PACE_FIN_PRUEBA_EN_SOBRE = 7 * 86400000;
+
+
+function pacePasoV1Acabada() {
+  var r = pacePasoV1Leer();
+  if (!r || !r.previo || typeof r.hasta !== 'number' || Date.now() < r.hasta) return null;
+  if (window.hasPremiumEntitlement && window.hasPremiumEntitlement()) return null;
+  return r;
+}
+
+
+function pacePasoV1FinPorVer() {
+  var r = pacePasoV1Acabada();
+  return r && typeof r.finVisto !== 'number' ? r : null;
+}
+
+function pacePasoV1FinVisto() {
+  var r = pacePasoV1Leer();
+  if (r && typeof r.finVisto !== 'number') setState({ pasoV1: Object.assign({}, r, { finVisto: Date.now() }) });
+}
+
+
+
+
+
+
+
+
+
 
 
 function pacePasoV1Conservar(actual, entrante) {
@@ -18129,9 +18180,10 @@ try {pacePasoV1();} catch (e) {}
 
 Object.assign(window, {
   PACE_PASO_V1_DIAS, pacePasoV1, pacePasoV1Leer, pacePasoV1Rutinas, pacePruebaV1Vigente, pacePruebaV1Hasta, pacePasoV1Conserva,
-  pacePasoV1PorAvisar, pacePasoV1Avisado, pacePasoV1Conservar
+  pacePasoV1PorAvisar, pacePasoV1Avisado, pacePasoV1Conservar,
+  PACE_FIN_PRUEBA_EN_SOBRE, pacePasoV1Acabada, pacePasoV1FinPorVer, pacePasoV1FinVisto
 });
-;Object.assign(window, { PACE_PASO_V1_DIAS, _pacePasoV1, pacePasoV1Leer, pacePasoV1UsabaPace, pacePasoV1EsDePago, pacePasoV1Rutinas, pacePasoV1Acabadas, pacePasoV1Sesiones, pacePasoV1Catalogo, pacePasoV1, pacePruebaV1Vigente, pacePruebaV1Hasta, pacePasoV1Conserva, pacePasoV1PorAvisar, pacePasoV1Avisado, pacePasoV1Conservar });
+;Object.assign(window, { PACE_PASO_V1_DIAS, _pacePasoV1, pacePasoV1Leer, pacePasoV1UsabaPace, pacePasoV1EsDePago, pacePasoV1Rutinas, pacePasoV1Acabadas, pacePasoV1Sesiones, pacePasoV1Catalogo, pacePasoV1, pacePruebaV1Vigente, pacePruebaV1Hasta, pacePasoV1Conserva, pacePasoV1PorAvisar, pacePasoV1Avisado, PACE_FIN_PRUEBA_EN_SOBRE, pacePasoV1Acabada, pacePasoV1FinPorVer, pacePasoV1FinVisto, pacePasoV1Conservar });
 })();
 </script>
   <!-- El resumen del día de «A tu ritmo» (ritmo.day.closed): el primer paso del motor de
@@ -24969,10 +25021,18 @@ function PremiumInvitacion() {
       }
 
       const v1 = window.pacePasoV1PorAvisar ? window.pacePasoV1PorAvisar() : null;
-      if (!v1 || document.querySelector('[role="dialog"]')) return;
-      window.pacePasoV1Avisado();
-      setAbierta({ nombre: null, pasoV1: v1 });
-      setModo('pasov1');
+      if (v1 && !document.querySelector('[role="dialog"]')) {
+        window.pacePasoV1Avisado();
+        setAbierta({ nombre: null, pasoV1: v1 });
+        setModo('pasov1');
+        return;
+      }
+
+      const fin = window.premiumFinPorAvisar ? window.premiumFinPorAvisar() : null;
+      if (!fin) return;
+      window.pacePasoV1FinVisto();
+      setAbierta({ nombre: null, fin: fin });
+      setModo('fin');
     };
     const primero = setTimeout(() => {empezado = true;mirar();}, 1500);
     const cada = setInterval(mirar, 60 * 1000);
@@ -25033,6 +25093,7 @@ function PremiumInvitacion() {
 
   if (modo === 'prueba') return React.createElement(PremiumAvisoPrueba, { datos: abierta.prueba, cerrar: cerrar });
   if (modo === 'pasov1') return React.createElement(PremiumPasoV1, { datos: abierta.pasoV1, cerrar: cerrar });
+  if (modo === 'fin') return React.createElement(PremiumFinPrueba, { datos: abierta.fin, cerrar: cerrar });
 
   const titulo = modo === 'ok' ? t(mensual ? 'premium.ok.title.monthly' : 'premium.ok.title') : abierta.nombre || t('premium.name');
   const tienda = modo === 'invita' && !!(window.paceTiendaAbierta && window.paceTiendaAbierta());
@@ -25257,8 +25318,141 @@ function PremiumAvisoPrueba(_ref3) {let { datos, cerrar } = _ref3;
 
 }
 
-Object.assign(window, { PremiumInvitacion, PremiumAvisoPrueba, PremiumPasoV1, PaceCandado, paceAbrirPremium, PREMIUM_INCLUYE });
+Object.assign(window, { PremiumInvitacion, PremiumAvisoPrueba, PremiumPasoV1, PaceCandado, paceAbrirPremium, PREMIUM_INCLUYE,
+  premiumPasoV1Rutina, premiumInvitacionStyles });
 ;Object.assign(window, { premiumPruebaPorAvisar, PaceCandado, paceAbrirPremium, PremiumInvitacion, premiumEnlaceRecuperar, premiumPasoV1Rutina, PremiumPasoV1, PremiumAvisoPrueba });
+})();
+</script>
+  <!-- La nota del fin de la semana de prueba de v1: la hoja y la línea de la biblioteca. -->
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   CUANDO ACABA LA SEMANA DE PRUEBA DE v1 (Ez, 2 A+B+C del 16 nov. 2026)
+   =====================================================================
+   Quien ya usaba PACE tuvo su semana de PACE completo el día de v1 (state-paso-v1.js). Al acabar,
+   lo de pago lleva candado, y nadie debe encontrárselo sin aviso (auditoría fable-9nov, fila 18).
+   La nota sale en tres sitios, y la marca común `pasoV1.finVisto` hace que no se repita:
+
+     · B · la hoja, una vez, al abrir PACE (la abre PremiumInvitacion, como la del día de v1, y nunca
+       con una sesión ni otro diálogo delante). Lo que se queda, lo gratis y «Entendido»; debajo,
+       callado, «Tenerlo para siempre · 19,99 €» solo con la tienda abierta.
+     · C · la línea bajo el subtítulo de la biblioteca, si la hoja no llegó a salir: la primera vez
+       que se abre Respira, Estira o Mueve. Se queda mientras esa biblioteca sigue abierta.
+     · A · el sobre de arriba (app/shell/Sobre.finPrueba.js): cerrado si nadie la vio; leída, una
+       semana más.
+
+   Este archivo pinta la hoja y la línea. `var`/`function` y `window.*`: un `const` no cruza la IIFE
+   del artefacto. */
+
+const { useState: useStateFIN, useEffect: useEffectFIN } = React;
+
+
+function premiumFinRutinas(datos) {
+  const orden = ['breathe', 'move', 'extra'];
+  const de = window.premiumPasoV1Rutina;
+  return (Array.isArray(datos && datos.rutinas) ? datos.rutinas : []).map((id) => de ? de(id) : null).filter(Boolean).
+  sort((a, b) => orden.indexOf(a.mod) - orden.indexOf(b.mod));
+}
+
+function premiumFinNombre(r, t, lang) {
+  if (lang !== 'en') return r.routine.name;
+  const v = t(r.id + '.name');
+  return v === r.id + '.name' ? r.routine.name : v;
+}
+
+
+function premiumFinLista(nombres, t, tn, lang) {
+  const c = lang === 'en' ? ['“', '”'] : ['«', '»'];
+  const q = nombres.map((n) => c[0] + n + c[1]);
+  if (q.length > 3) return tn('premium.fin.sobre.mas', { lista: q.slice(0, 2).join(', '), n: q.length - 2 });
+  if (q.length === 1) return q[0];
+  return q.slice(0, -1).join(', ') + ' ' + t('premium.fin.y') + ' ' + q[q.length - 1];
+}
+
+
+
+function premiumFinPorAvisar() {
+  const r = window.pacePasoV1FinPorVer ? window.pacePasoV1FinPorVer() : null;
+  if (!r || document.querySelector('[data-pace-session-root], [role="dialog"]')) return null;
+  return r;
+}
+
+
+function PremiumFinPrueba(_ref) {let { datos, cerrar } = _ref;
+  const { t, tn, lang } = useT();
+  const S = window.premiumInvitacionStyles;
+  const todas = premiumFinRutinas(datos);
+  const vistas = todas.length > 6 ? todas.slice(0, 5) : todas;
+  const s = typeof getState === 'function' ? getState() : null;
+  const propias = !!(s && Array.isArray(s.customRoutines) && s.customRoutines.length);
+  const vida = typeof window.premiumPlanVida === 'function' ? window.premiumPlanVida(lang) : null;
+  const titulo = t('premium.fin.titulo');
+  return (
+    React.createElement(Modal, { open: true, onClose: cerrar, maxWidth: 440, ariaLabel: titulo },
+    React.createElement("div", { "data-pace-premium-hoja": "fin" },
+    React.createElement(PremiumSeal, null),
+    React.createElement("h2", { style: S.titulo }, titulo),
+    React.createElement("p", { style: S.sub }, t('premium.fin.cuerpo')),
+    vistas.length > 0 &&
+    React.createElement(React.Fragment, null,
+    React.createElement("p", { style: S.tuyas }, t('premium.fin.tuyas')),
+    React.createElement("ul", { "data-pace-fin-tuyas": true, style: S.lista },
+    vistas.map((r) =>
+    React.createElement("li", { key: r.id, "data-pace-fin-rutina": r.id, style: S.item },
+    React.createElement("span", null, premiumFinNombre(r, t, lang)),
+    React.createElement("span", { style: S.detalle }, t('premium.pasov1.mod.' + r.mod))
+    )
+    )
+    ),
+    todas.length > vistas.length && React.createElement("p", { style: S.mas }, tn('premium.pasov1.mas', { n: todas.length - vistas.length }))
+    ),
+
+    propias && React.createElement("p", { "data-pace-fin-propias": true, style: S.tuyas }, t('premium.fin.propias')),
+    React.createElement("p", { style: S.v1 }, t('premium.pasov1.gratis')),
+    React.createElement(Button, { onClick: cerrar, style: S.ancho }, t('premium.pasov1.vale')),
+    vida &&
+    React.createElement("button", { type: "button", "data-pace-fin-comprar": true, onClick: () => {cerrar();paceAbrirPremium({});}, style: S.enlace },
+    t('premium.settings.vida'), " \xB7 ", vida.precio, " ", React.createElement("span", { "aria-hidden": "true" }, "\u203A")
+    )
+
+    )
+    ));
+
+}
+
+
+
+function PaceFinPruebaLinea(_ref2) {let { abierta } = _ref2;
+  const { t, tn, lang } = useT();
+  const [r, setR] = useStateFIN(null);
+  useEffectFIN(() => {
+    if (!abierta) {setR(null);return;}
+    const x = window.pacePasoV1FinPorVer ? window.pacePasoV1FinPorVer() : null;
+    if (x) {setR(x);window.pacePasoV1FinVisto();}
+  }, [abierta]);
+  if (!r) return null;
+  const fecha = new Date(r.hasta).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long' });
+  return (
+    React.createElement("p", { "data-pace-fin-linea": true, style: premiumFinStyles.linea },
+    tn('premium.fin.linea', { fecha }), ' ',
+    React.createElement("button", { type: "button", "data-pace-fin-ver": true, onClick: () => paceAbrirPremium({}), style: premiumFinStyles.ver },
+    t('premium.fin.ver'), " ", React.createElement("span", { "aria-hidden": "true" }, "\u203A")
+    )
+    ));
+
+}
+
+const premiumFinStyles = {
+  linea: { margin: '10px 0 0', fontFamily: 'var(--font-ui)', fontStyle: 'normal', fontSize: 13, lineHeight: 1.45, color: 'var(--ink-2)' },
+  ver: { font: 'inherit', color: 'var(--ink)', background: 'none', border: 0, padding: '2px 0', cursor: 'pointer',
+    textDecoration: 'underline', textUnderlineOffset: 3 }
+};
+
+Object.assign(window, { PremiumFinPrueba, PaceFinPruebaLinea, premiumFinPorAvisar, premiumFinRutinas, premiumFinNombre, premiumFinLista });
+;Object.assign(window, { premiumFinRutinas, premiumFinNombre, premiumFinLista, premiumFinPorAvisar, PremiumFinPrueba, PaceFinPruebaLinea });
 })();
 </script>
   <!-- Aviso de versión nueva del SW (s102 · PWA). Escucha el anuncio del
@@ -29736,6 +29930,43 @@ Object.assign(window, { paceNovedadActual });
 ;Object.assign(window, { paceNovedadActual });
 })();
 </script>
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   EL SOBRE: LA NOTA DEL FIN DE LA SEMANA DE PRUEBA (Ez, 2A del 16 nov. 2026)
+   ==========================================================================
+   Una fuente más del sobre (Sobre.jsx), en el móvil y en el ordenador. Cerrada mientras la nota no
+   se ha visto en ningún sitio (`pasoV1.finVisto`, state-paso-v1.js); leída, se queda una semana y
+   se va. Abrir la hoja del sobre la da por vista, y entonces ni la hoja de PACE ni la línea de la
+   biblioteca vuelven a salir. El resto de la nota, en ui/PremiumFinPrueba.jsx. */
+
+if (typeof paceSobreApuntar === 'function') {
+  paceSobreApuntar({ clave: 'finPrueba', de: (s, t, tn, lang) => {
+      const r = window.pacePasoV1Acabada ? window.pacePasoV1Acabada() : null;
+      if (!r) return null;
+      const visto = typeof r.finVisto === 'number' ? r.finVisto : null;
+      if (visto !== null && Date.now() - visto > window.PACE_FIN_PRUEBA_EN_SOBRE) return null;
+      const fecha = toISODate(new Date(r.hasta));
+      const nombres = window.premiumFinRutinas ? window.premiumFinRutinas(r).map((x) => window.premiumFinNombre(x, t, lang)) : [];
+      const lineas = [t('premium.fin.sobre.gratis')];
+      if (nombres.length) {
+        lineas.push(tn(nombres.length === 1 ? 'premium.fin.sobre.una' : 'premium.fin.sobre.varias',
+        { lista: window.premiumFinLista(nombres, t, tn, lang) }));
+      }
+      return {
+        sinLeer: visto === null, titulo: t('premium.fin.titulo'), fecha: fecha, tipo: t('premium.name'),
+        cuando: paceFechaCorta(fecha, lang, { weekday: 'long', day: 'numeric', month: 'short' }),
+        tituloHoja: t('premium.fin.titulo'), lineas: lineas,
+        leer: () => {if (window.pacePasoV1FinVisto) window.pacePasoV1FinVisto();},
+        abrir: () => paceAbrirPremium({}), enlace: t('premium.fin.ver')
+      };
+    } });
+}
+})();
+</script>
 
   <!-- visualId + alias (B2.2 · s110): resolveVisualId enruta los duplicados
        de nombre al glifo canónico. ANTES de exercise-glyphs (su consumidor). -->
@@ -32194,7 +32425,9 @@ function LibraryShell(_ref)
   React.createElement("h2", null, title),
   enlaceTuyas
   ),
-  React.createElement("p", { className: "pace-lib-sub" }, subtitle)
+  React.createElement("p", { className: "pace-lib-sub" }, subtitle),
+
+  typeof PaceFinPruebaLinea !== 'undefined' && React.createElement(PaceFinPruebaLinea, { abierta: open && !enPausa })
   );
 
 
@@ -39521,21 +39754,21 @@ function CustomBuilder(_ref) {let { editId, onClose, onGuardada } = _ref;
 
     React.createElement("div", { style: { display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 14 } },
     steps.map((s, idx) =>
-    React.createElement("div", { key: `${s.name}-${idx}`, style: customBuilderStyles.stepRow },
+    React.createElement("div", { key: `${s.name}-${idx}`, className: "pace-cb-paso", "data-pace-cb-paso": true, style: customBuilderStyles.stepRow },
     React.createElement("span", { style: customBuilderStyles.stepGlyph },
     React.createElement(ExerciseGlyph, { id: s.name, size: 24 })
     ),
-    React.createElement("span", { style: customBuilderStyles.stepName }, tEx(s.name)),
-    React.createElement("span", { style: customBuilderStyles.controles },
-    React.createElement("span", { style: customBuilderStyles.durGroup },
-    React.createElement("button", { onClick: () => nudgeDur(idx, -limits.durStep), disabled: s.dur <= limits.minDur, "aria-label": "\u22125 s", style: customBuilderStyles.iconBtn }, "\u2212"),
-    React.createElement("span", { style: customBuilderStyles.durValue }, segundos(s)),
-    React.createElement("button", { onClick: () => nudgeDur(idx, limits.durStep), disabled: s.dur >= limits.maxDur, "aria-label": "+5 s", style: customBuilderStyles.iconBtn }, "+")
+    React.createElement("span", { className: "pace-cb-nombre", style: customBuilderStyles.stepName }, tEx(s.name)),
+    React.createElement("span", { className: "pace-cb-ctrl", style: customBuilderStyles.controles },
+    React.createElement("span", { className: "pace-cb-dur", style: customBuilderStyles.durGroup },
+    React.createElement("button", { className: "pace-cb-btn", onClick: () => nudgeDur(idx, -limits.durStep), disabled: s.dur <= limits.minDur, "aria-label": "\u22125 s", style: customBuilderStyles.iconBtn }, "\u2212"),
+    React.createElement("span", { className: "pace-cb-valor", style: customBuilderStyles.durValue }, segundos(s)),
+    React.createElement("button", { className: "pace-cb-btn", onClick: () => nudgeDur(idx, limits.durStep), disabled: s.dur >= limits.maxDur, "aria-label": "+5 s", style: customBuilderStyles.iconBtn }, "+")
     ),
-    React.createElement("span", { style: { display: 'inline-flex', gap: 2 } },
-    React.createElement("button", { onClick: () => moveStep(idx, -1), disabled: idx === 0, title: t('custom.step.up'), "aria-label": t('custom.step.up'), style: customBuilderStyles.iconBtn }, "\u2191"),
-    React.createElement("button", { onClick: () => moveStep(idx, 1), disabled: idx === steps.length - 1, title: t('custom.step.down'), "aria-label": t('custom.step.down'), style: customBuilderStyles.iconBtn }, "\u2193"),
-    React.createElement("button", { onClick: () => removeStep(idx), title: t('custom.step.remove'), "aria-label": t('custom.step.remove'), style: customBuilderStyles.iconBtn }, "\xD7")
+    React.createElement("span", { className: "pace-cb-orden", style: { display: 'inline-flex', gap: 2 } },
+    React.createElement("button", { className: "pace-cb-btn", onClick: () => moveStep(idx, -1), disabled: idx === 0, title: t('custom.step.up'), "aria-label": t('custom.step.up'), style: customBuilderStyles.iconBtn }, "\u2191"),
+    React.createElement("button", { className: "pace-cb-btn", onClick: () => moveStep(idx, 1), disabled: idx === steps.length - 1, title: t('custom.step.down'), "aria-label": t('custom.step.down'), style: customBuilderStyles.iconBtn }, "\u2193"),
+    React.createElement("button", { className: "pace-cb-btn pace-cb-quitar", "data-pace-cb-quitar": true, onClick: () => removeStep(idx), title: t('custom.step.remove'), "aria-label": t('custom.step.remove'), style: customBuilderStyles.iconBtn }, "\xD7")
     )
     )
     )
@@ -39682,6 +39915,31 @@ const customBuilderStyles = {
     display: 'grid', placeItems: 'center'
   }
 };
+
+
+
+
+
+
+
+
+(function paceConstructorDedoCss() {
+  if (typeof document === 'undefined' || document.getElementById('pace-cb-dedo-css')) return;
+  const s = document.createElement('style');
+  s.id = 'pace-cb-dedo-css';
+  s.textContent = `
+@media (max-width: 640px), (pointer: coarse) {
+  .pace-cb-ctrl, .pace-cb-orden { display: contents !important; }
+  .pace-cb-paso { column-gap: 10px !important; row-gap: 8px !important; }
+  .pace-cb-nombre { flex: 0 0 calc(100% - 96px) !important; }
+  .pace-cb-quitar { order: 2; }
+  .pace-cb-dur { order: 3; margin-right: auto; gap: 4px !important; }
+  .pace-cb-orden > .pace-cb-btn:not(.pace-cb-quitar) { order: 4; }
+  .pace-cb-btn { width: 40px !important; height: 40px !important; font-size: 17px !important; border-radius: 10px !important; }
+  .pace-cb-valor { font-size: 13px !important; min-width: 40px !important; }
+}`;
+  document.head.appendChild(s);
+})();
 
 Object.assign(window, { CustomBuilder });
 ;Object.assign(window, { customPasosDeHoy, CustomBuilder, CustomAviso });
@@ -44216,12 +44474,26 @@ function premiumFechaTexto(datos, lang) {
 
 
 function premiumPlanEnAjustes(lang) {
+  if (window.pacePruebaV1Hasta && window.pacePruebaV1Hasta()) return null;
+  return premiumPlanVida(lang);
+}
+
+
+function premiumPlanVida(lang) {
   if (!(window.paceLicenciaPermitida && window.paceLicenciaPermitida())) return null;
   const est = window.paceLicenciaEstado ? window.paceLicenciaEstado() : { estado: 'ninguno' };
   if (est.estado === 'vigente' || est.estado === 'caducado') return null;
-  if (window.pacePruebaV1Hasta && window.pacePruebaV1Hasta()) return null;
   if (!(window.paceTiendaAbierta && window.paceTiendaAbierta())) return null;
   return (window.paceTiendaPlanes(lang) || []).find((p) => p.plan === 'vida') || null;
+}
+
+
+
+
+
+
+function premiumPlanEnPrueba(lang) {
+  return window.pacePruebaV1Hasta && window.pacePruebaV1Hasta() ? premiumPlanVida(lang) : null;
 }
 
 function PremiumSection() {
@@ -44271,8 +44543,13 @@ function PremiumSection() {
   const prueba = window.pacePruebaV1Hasta ? window.pacePruebaV1Hasta() : null;
   if (prueba) {
     const f = new Date(prueba).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long' });
+    const vidaYa = premiumPlanEnPrueba(lang);
+    const sub = vidaYa ?
+    React.createElement("span", { "data-pace-aj-comprar-prueba": vidaYa.plan }, t('premium.settings.vida'), " \xB7 ", vidaYa.precio, " ", React.createElement("span", { "aria-hidden": "true" }, "\u203A")) :
+    null;
+    const abrir = vidaYa ? () => paceAbrirPremium({}) : permitida ? () => paceAbrirPremium({ modo: 'codigo' }) : undefined;
     return (
-      React.createElement(AjustesAccion, { onClick: permitida ? () => paceAbrirPremium({ modo: 'codigo' }) : undefined,
+      React.createElement(AjustesAccion, { onClick: abrir, sub: sub,
         derecha: React.createElement("span", { "data-pace-licencia-estado": true, "data-pace-licencia-prueba": true, style: { color: 'var(--focus)' } }, tn('premium.settings.prueba', { fecha: f })) },
       t('premium.name')
       ));
@@ -44320,8 +44597,8 @@ function PremiumSection() {
 
 }
 
-Object.assign(window, { PremiumSection, premiumPlanEnAjustes });
-;Object.assign(window, { premiumFechaTexto, premiumPlanEnAjustes, PremiumSection });
+Object.assign(window, { PremiumSection, premiumPlanEnAjustes, premiumPlanVida, premiumPlanEnPrueba });
+;Object.assign(window, { premiumFechaTexto, premiumPlanEnAjustes, premiumPlanVida, premiumPlanEnPrueba, PremiumSection });
 })();
 </script>
   <!-- TweaksPanel.support (s163): estilo SIN UI del panel -- `tweaksStyles`, la
@@ -45059,7 +45336,10 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
 
 
 
+
+
   const umbralBajo = () => 860 + (typeof premiumPlanEnAjustes === 'function' && premiumPlanEnAjustes() ? 34 : 0) + (
+  typeof premiumPlanEnPrueba === 'function' && premiumPlanEnPrueba() ? 26 : 0) + (
   typeof paceWebSinInstalar === 'function' && paceWebSinInstalar() ? 47 : 0);
   const [bajo, setBajo] = useStateTW(() => paceLienzoAlto() < umbralBajo());
   useEffectTW(() => {
