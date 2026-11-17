@@ -24035,6 +24035,9 @@ Object.assign(window, { PACE_VOZ_CUERPO: PACE_VOZ_CUERPO });
 
 
 
+
+
+
 var PACE_VOZ_CUERPO_HUECO = 0.15;
 var PACE_VOZ_CUERPO_TRAS_SERIE = 0.35;
 var PACE_VOZ_CUERPO_ESPERA = 2;
@@ -24104,12 +24107,12 @@ function paceVozCuerpoIntenta(palabra, max, op) {
     if (!toma || !toma.buffer) return false;
     var ctx = typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;
     if (!ctx) return false;
-    if (ctx.state === 'suspended') {try {ctx.resume();} catch (er) {}}
-    if (ctx.state !== 'running') return false;
+    if (ctx.state === 'closed') return false;
+    if (ctx.state !== 'running') {try {ctx.resume();} catch (er) {}}
     var ahora = ctx.currentTime;
     if (aSuHora && _paceVozCuerpoLibre > ahora) return false;
     var t0 = Math.max(ahora, _paceVozCuerpoLibre);
-    if (t0 - ahora > PACE_VOZ_CUERPO_ESPERA) return true;
+    if (t0 - ahora > PACE_VOZ_CUERPO_ESPERA) return false;
     var dur = Math.min(e.b, toma.buffer.duration) - e.a;
     if (!(dur > 0.02)) return false;
     var vol = typeof e.vol === 'number' ? e.vol : 1;

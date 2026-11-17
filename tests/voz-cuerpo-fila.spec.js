@@ -197,3 +197,29 @@ test('fila-6 · pausar y saltar callan lo que suena y vacían la fila', async ({
   await callada(() => page.click('[data-pace-v1-btn="pausa"]'), true);
   await callada(() => page.click('[data-pace-v1-btn="next"]'), false);
 });
+
+test('fila-7 · una palabra que no puede esperar no se tira en silencio: dice que no y suena el tono', async ({ page, context }) => {
+  await prepararVoz(page, context);
+  const r = await page.evaluate(() => {
+    window.__reloj = 5000;
+    return ['cambia', 'ultimo', 'descansa', 'siguiente'].map((p) => {
+      const n = window.__fuentes.length; const dijo = window.paceVozCuerpoIntenta(p);
+      return { p, dijo, suena: window.__fuentes.length > n };
+    });
+  });
+  for (const x of r) expect(x.dijo && !x.suena, '«' + x.p + '» dice que suena y no suena').toBe(false);
+});
+
+test('fila-8 · con el contexto suspendido (al volver del fondo), la palabra se programa igual', async ({ page, context }) => {
+  await prepararVoz(page, context);
+  const r = await page.evaluate(() => {
+    window.__reloj = 6000;
+    window.__ctx.state = 'suspended';
+    const op = window.v1VozCuenta(3);
+    const n = window.__fuentes.length;
+    const dijo = window.paceVozCuerpoIntenta(op.voz, op.max, op);
+    return { dijo, ini: window.__fuentes.length > n ? window.__fuentes[n].t : null };
+  });
+  expect(r.dijo, 'al volver del fondo, la primera palabra se tira').toBe(true);
+  expect(r.ini - 6000).toBeLessThan(0.1);
+});

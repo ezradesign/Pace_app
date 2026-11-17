@@ -6,13 +6,16 @@
    se suena SOLO ese trozo, con un fundido de 5 ms a cada lado y el volumen que la iguala con Respira.
 
    CUANDO NO PUEDE, DEVUELVE false Y SUENA EL CUENCO O LA MADERA DE SIEMPRE: sin la palabra en la tabla (una
-   voz o un idioma sin grabar), sin descodificar todavía, sin Web Audio en marcha, o si la palabra no cabe
-   en lo que dura su momento (`max`). Solo Web Audio, sin `<audio>` de reserva: la rutina empieza con un
-   toque, así que el contexto ya corre, y un `<audio>` no sabe sonar un trozo con precisión.
+   voz o un idioma sin grabar), sin descodificar todavía, sin Web Audio, si la palabra no cabe en lo que
+   dura su momento (`max`) o si tendría que esperar demasiado en la fila. Nunca dice que sí sin sonar: una
+   palabra tirada en silencio deja la rutina muda. Solo Web Audio, sin `<audio>` de reserva: la rutina
+   empieza con un toque, así que el contexto ya corre, y un `<audio>` no sabe sonar un trozo con precisión.
+   Con el contexto suspendido (al volver del fondo) la palabra se programa igual: suena cuando arranca.
 
    LA COLA: la última repetición se dice entera y lo que viene después («Descansa», «Siguiente») espera a
-   que acabe la palabra, en vez de pisarla. Si tuviera que esperar más de 2 s, se deja: llegaría tarde. (La
-   palabra más larga ocupa 1,4 s y, tras la última repetición, deja 0,35: con menos, «Último paso» se perdía.)
+   que acabe la palabra, en vez de pisarla. Si tuviera que esperar más de 2 s, llegaría tarde: suena su tono.
+   (La palabra más larga ocupa 1,4 s y, tras la última repetición, deja 0,35: con menos, «Último paso» no
+   sonaba.)
 
    LO QUE OCUPA UNA PALABRA es su trozo entero, de `a` a `b`, porque eso es lo que suena (la cola de la última
    sílaba va de `fin` a `b`), más un hueco antes de la siguiente: 0,15 s, como Respira, y 0,35 s tras la
@@ -91,12 +94,12 @@ function paceVozCuerpoIntenta(palabra, max, op) {
     if (!toma || !toma.buffer) return false;
     var ctx = typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;
     if (!ctx) return false;
-    if (ctx.state === 'suspended') { try { ctx.resume(); } catch (er) {} }
-    if (ctx.state !== 'running') return false;
+    if (ctx.state === 'closed') return false;
+    if (ctx.state !== 'running') { try { ctx.resume(); } catch (er) {} }   // suspendido o interrumpido: arranca y suena
     var ahora = ctx.currentTime;
     if (aSuHora && _paceVozCuerpoLibre > ahora) return false;
     var t0 = Math.max(ahora, _paceVozCuerpoLibre);
-    if (t0 - ahora > PACE_VOZ_CUERPO_ESPERA) return true;   // llegaría tarde: se deja, sin tono encima
+    if (t0 - ahora > PACE_VOZ_CUERPO_ESPERA) return false;   // llegaría tarde: su tono, no el silencio
     var dur = Math.min(e.b, toma.buffer.duration) - e.a;
     if (!(dur > 0.02)) return false;
     var vol = typeof e.vol === 'number' ? e.vol : 1;
