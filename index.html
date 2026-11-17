@@ -7575,7 +7575,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.208.0';
+const PACE_VERSION = 'v0.209.0';
 
 
 
@@ -45338,8 +45338,11 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
 
 
 
-  const umbralBajo = () => 860 + (typeof premiumPlanEnAjustes === 'function' && premiumPlanEnAjustes() ? 34 : 0) + (
-  typeof premiumPlanEnPrueba === 'function' && premiumPlanEnPrueba() ? 26 : 0) + (
+
+
+
+  const umbralBajo = () => 890 + (typeof premiumPlanEnAjustes === 'function' && premiumPlanEnAjustes() ? 34 : 0) + (
+  typeof premiumPlanEnPrueba === 'function' && premiumPlanEnPrueba() ? 40 : 0) + (
   typeof paceWebSinInstalar === 'function' && paceWebSinInstalar() ? 47 : 0);
   const [bajo, setBajo] = useStateTW(() => paceLienzoAlto() < umbralBajo());
   useEffectTW(() => {
