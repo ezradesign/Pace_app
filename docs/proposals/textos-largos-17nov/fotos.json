@@ -3,14 +3,14 @@
  "stats-largos-antes": [
   {
    "tipo": "se sale de su caja",
-   "texto": "⟦ÉÉSTÁÁDÍSTÍÍÇÁÁS⟧ ⟦Rhhýthhm⟧ ⟦Méétríçáás súúáávés",
-   "px": 111,
+   "texto": "ESTADÍSTICAS HOY Ritmo ya Métricas suaves. Sin ans",
+   "px": 47,
    "donde": "modal-head=true"
   },
   {
    "tipo": "scroll de lado",
-   "texto": "× ⟦ÉÉSTÁÁDÍSTÍÍÇÁÁS⟧ ⟦Rhhýthhm⟧ ⟦Méétríç",
-   "px": 87,
+   "texto": "× ESTADÍSTICAS HOY Ritmo ya Métricas sua",
+   "px": 23,
    "donde": "modal-card=true"
   }
  ],
@@ -40,30 +40,22 @@
  "pausa-largos": [
   {
    "tipo": "se sale de su caja",
-   "texto": "⟦Híídrátáátéé⟧ ⟦Rééspíráá⟧ ⟦Múéévétéé⟧",
-   "px": 47,
+   "texto": "Hidrátate ya Respira ya Muévete ya",
+   "px": 33,
    "donde": "break-otras=true"
   },
   {
    "tipo": "scroll de lado",
-   "texto": "× ⟦ÇÍÍÇLÓÓ ÇÓMPLÉÉTÁÁDÓÓ⟧ ⟦Ýóóúr brééáák",
-   "px": 23,
+   "texto": "× CICLO COMPLETADO AHORA Tu pausa ya Has",
+   "px": 9,
    "donde": "modal-card=true"
-  }
- ],
- "pregunta-largos": [
-  {
-   "tipo": "scroll",
-   "texto": "⟦MÍÍÑ⟧ 15 25 35 45 ⟦ÓÓTHÉÉR⟧ ⟦MÁÁÑÚÁÁL F",
-   "px": 28,
-   "donde": "home-body=true"
   }
  ],
  "ajustes-largos": [
   {
    "tipo": "scroll",
-   "texto": "⟦Sééttííñgs⟧ × ⟦ÁÁPPÉÁÁRÁÑÇÉÉ⟧ ⟦Víísítáá",
-   "px": 200,
+   "texto": "Ajustes ya × VER YA Visita guiada aquí ›",
+   "px": 163,
    "donde": "tweaks-panel=true"
   }
  ]

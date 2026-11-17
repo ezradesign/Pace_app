@@ -23,13 +23,16 @@ const ORIGEN = 'http://localhost:' + PUERTO;
 const FOTOS = path.join(__dirname, 'fotos');
 const TAMANOS = [[360, 640], [360, 740], [1280, 800]];
 
+/* `legible`: el castellano alargado con palabras de verdad, para las fotos que Ez tiene que leer (las letras
+   inventadas de `largos` le impedían juzgar, 17 nov.). Las medidas de `medidas.json` siguen con `largos`. */
 async function abrir(b, modo, w, h, e) {
-  const lang = modo === 'es' ? 'es' : 'en';
+  const lang = modo === 'es' || modo === 'legible' ? 'es' : 'en';
   const movil = w < 768;
   const ctx = await b.newContext({ viewport: { width: w, height: h }, locale: lang === 'es' ? 'es-ES' : 'en-GB', timezoneId: 'Europe/Madrid',
     isMobile: movil, hasTouch: movil, serviceWorkers: 'block', deviceScaleFactor: 2,
     storageState: { cookies: [], origins: [{ origin: ORIGEN, localStorage: [{ name: 'pace-cara', value: 'app' }] }] } });
   if (modo === 'largos') await instalarTextosLargos(ctx);
+  if (modo === 'legible') await instalarTextosLargos(ctx, { legible: true });
   await ctx.addInitScript((s) => { if (!localStorage.getItem('pace.state.v2')) localStorage.setItem('pace.state.v2', JSON.stringify(s)); },
     Object.assign({}, SEMILLA, { lang, sidebarCollapsed: true }, e.semilla));
   if (e.antes) await e.antes(ctx);
@@ -103,7 +106,7 @@ async function foto(b, nombre, modo, w, h, id, momento, o) {
   if (!process.env.FOTOS_SOLO) fs.writeFileSync(path.join(__dirname, 'medidas.json'), JSON.stringify(todo, null, 1));
 
   /* Cómo se ven los textos largos: la pantalla entera. */
-  await foto(b, 'largos-home-360', 'largos', 360, 740, 'home-jornada', 'la home');
+  await foto(b, 'largos-home-360', 'legible', 360, 740, 'home-jornada', 'la home');
 
   /* Pregunta 3 · la cabecera de Estadísticas con los textos largos: antes (las pestañas sin poder encoger),
      lo montado (todas con «…») y las dos opciones, pintadas solo en la foto. Hasta la fila de las pestañas:
@@ -117,16 +120,16 @@ async function foto(b, nombre, modo, w, h, id, momento, o) {
   const recuadro = (color) => new Function('const t = document.querySelector(\'[data-pace-stats-tabs]\').getBoundingClientRect();' +
     'window.__marca({ left: t.left - 3, top: t.top - 3, width: t.width + 6, height: t.height + 6 }, { color: \'' + color + '\', discontinua: true });');
   const conCss = (css) => new Function('const s = document.createElement(\'style\'); s.textContent = ' + JSON.stringify(css) + '; document.head.appendChild(s);');
-  await foto(b, 'stats-largos-antes', 'largos', 360, 640, 'estadisticas', 'pestaña today', {
+  await foto(b, 'stats-largos-antes', 'legible', 360, 640, 'estadisticas', 'pestaña today', {
     antes: conCss('[data-pace-stats-tabs],[data-pace-stats-tab]{min-width:auto!important}'), recorte: cabecera, marcas: recuadro('terra'),
   });
-  await foto(b, 'stats-largos-despues', 'largos', 360, 640, 'estadisticas', 'pestaña today', { recorte: cabecera, marcas: recuadro('terra') });
+  await foto(b, 'stats-largos-despues', 'legible', 360, 640, 'estadisticas', 'pestaña today', { recorte: cabecera, marcas: recuadro('terra') });
   /* A: la pestaña elegida no encoge nunca; las demás, con «…». */
-  await foto(b, 'stats-largos-a', 'largos', 360, 640, 'estadisticas', 'pestaña today', {
+  await foto(b, 'stats-largos-a', 'legible', 360, 640, 'estadisticas', 'pestaña today', {
     antes: conCss('[data-pace-stats-tab][aria-pressed="true"]{flex-shrink:0!important}'), recorte: cabecera, marcas: recuadro('olivo'),
   });
   /* B: ninguna encoge; la fila se desliza de lado, sin barra, como los filtros de la biblioteca. */
-  await foto(b, 'stats-largos-b', 'largos', 360, 640, 'estadisticas', 'pestaña today', {
+  await foto(b, 'stats-largos-b', 'legible', 360, 640, 'estadisticas', 'pestaña today', {
     antes: conCss('[data-pace-stats-tabs]{overflow-x:auto!important;scrollbar-width:none}[data-pace-stats-tab]{flex-shrink:0!important}'),
     recorte: cabecera, marcas: recuadro('olivo'),
   });
@@ -199,16 +202,12 @@ async function foto(b, nombre, modo, w, h, id, momento, o) {
     antes: () => { const s = document.createElement('style'); s.textContent = '.pace-break-otras{flex-wrap:wrap!important}'; document.head.appendChild(s); },
     recorte: pie, marcas: new Function('(' + guias + ')(true)'),
   });
-  await foto(b, 'pausa-largos', 'largos', 360, 640, 'pausa', 'por libre', {
+  await foto(b, 'pausa-largos', 'legible', 360, 640, 'pausa', 'por libre', {
     recorte: pie, marcas: new Function('(' + guias + ')(false)'),
   });
 
   /* Lo que solo pasa con los textos largos. */
-  await foto(b, 'pregunta-largos', 'largos', 360, 640, 'tarjeta-dia', 'la pregunta del día', {
-    recorte: () => { const r = document.querySelector('[data-pace-activitybar]').getBoundingClientRect(); return { x: 0, y: r.top - 30, width: innerWidth, height: innerHeight - (r.top - 30) }; },
-    marcas: () => window.__marca({ left: 0, top: innerHeight - 3, width: innerWidth, height: 3 }, { color: 'terra' }),
-  });
-  await foto(b, 'ajustes-largos', 'largos', 360, 640, 'ajustes', 'ajustes', {
+  await foto(b, 'ajustes-largos', 'legible', 360, 640, 'ajustes', 'ajustes', {
     marcas: () => window.__marca({ left: 0, top: innerHeight - 3, width: innerWidth, height: 3 }, { color: 'terra' }),
   });
   fs.writeFileSync(path.join(__dirname, 'fotos.json'), JSON.stringify(porFoto, null, 1));

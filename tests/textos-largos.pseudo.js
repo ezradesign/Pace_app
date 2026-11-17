@@ -54,20 +54,45 @@ function textosLargosEnLaPagina(opciones) {
     return '⟦' + partes.map(function (p, i) { return i % 2 ? p : alargarTrozo(p); }).join('') + '⟧';
   }
 
+  /* LEGIBLE, SOLO PARA LAS FOTOS DE LAS PÁGINAS DE EZ (`{ legible: true }`): el texto del idioma de la
+     app, alargado un 35 % con palabras de verdad al final («…, a tu ritmo», «ya»), sin acentos inventados
+     ni marcas. Las letras inventadas le impedían juzgar las opciones (Ez, 17 nov.). No caza textos sin
+     traducir: la prueba sigue con el modo de arriba. */
+  var LARGAS = [', a tu ritmo', ' y sin prisa', ' durante la jornada', ', poco a poco', ' cada día'];
+  var CORTAS = [' ya', ' hoy', ' aquí', ' ahora', ' juntos'];
+  function alargarLegible(s) {
+    if (!s || !/\p{L}/u.test(s)) return s;
+    /* Las listas por comas («L,M,X», los meses) se quedan como están: el código las parte. */
+    if (/^[^,\s{}]+(,[^,\s{}]+)+$/.test(s)) return s;
+    var m = /([.!?…:]+)$/.exec(s), cuerpo = m ? s.slice(0, -m[1].length) : s, fin = m ? m[1] : '';
+    var objetivo = Math.round(Array.from(s).length * 1.35), extra = '', n = 0;
+    var largo = function () { return Array.from(cuerpo + extra + fin).length; };
+    while (objetivo - largo() > 6) extra += LARGAS[n++ % LARGAS.length];
+    var falta = objetivo - largo();
+    if (falta > 0) extra += CORTAS.find(function (c) { return c.length >= falta; }) || CORTAS[CORTAS.length - 1];
+    return cuerpo + extra + fin;
+  }
+
   var crudo = null, envuelto = null, cache = {};
-  function largoDe(clave) {
+  function largoDe(clave, lang) {
     var es = crudo.es && crudo.es[clave], en = crudo.en && crudo.en[clave];
+    if (opciones && opciones.legible) {
+      var propio = lang === 'es' ? es : en;
+      var kl = lang + '\u0000' + clave + '\u0000' + propio;
+      if (!(kl in cache)) cache[kl] = alargarLegible(propio);
+      return cache[kl];
+    }
     var base = typeof es === 'string' && typeof en === 'string' ? (Array.from(es).length >= Array.from(en).length ? es : en)
       : (typeof en === 'string' ? en : es);
     var k = clave + '\u0000' + base;
     if (!(k in cache)) cache[k] = alargar(base);
     return cache[k];
   }
-  function envolverIdioma(obj) {
+  function envolverIdioma(obj, lang) {
     return new Proxy(obj, {
       get: function (t, clave) {
         var v = t[clave];
-        return typeof v === 'string' && typeof clave === 'string' ? largoDe(clave) : v;
+        return typeof v === 'string' && typeof clave === 'string' ? largoDe(clave, lang) : v;
       },
     });
   }
@@ -78,7 +103,7 @@ function textosLargosEnLaPagina(opciones) {
       get: function (t, l) {
         var o = t[l];
         if (!o || typeof o !== 'object' || (l !== 'es' && l !== 'en')) return o;
-        if (!idiomas[l] || idiomas[l].obj !== o) idiomas[l] = { obj: o, px: envolverIdioma(o) };
+        if (!idiomas[l] || idiomas[l].obj !== o) idiomas[l] = { obj: o, px: envolverIdioma(o, l) };
         return idiomas[l].px;
       },
     });
@@ -88,7 +113,7 @@ function textosLargosEnLaPagina(opciones) {
     get: function () { return envuelto; },
     set: function (v) { crudo = v; envuelto = envolver(v); },
   });
-  window.__paceTextosLargos = { alargar: alargar };
+  window.__paceTextosLargos = { alargar: alargar, alargarLegible: alargarLegible };
 }
 
 /** Pone los textos largos en cada página del contexto. */

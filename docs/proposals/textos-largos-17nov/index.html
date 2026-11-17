@@ -35,6 +35,7 @@ code{font-size:.88em;background:var(--card);border:1px solid var(--line);border-
 .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
 .lead{font-family:var(--display);font-size:21px;color:var(--ink);max-width:62ch;margin-top:14px}
 .nota{font-size:13px;color:var(--ink-3)}
+.aviso{background:var(--terra-soft);color:var(--ink);border-radius:10px;padding:10px 14px;margin:14px 0 0;max-width:68ch;font-size:15px}
 .montado{background:var(--olive-soft);border-radius:10px;padding:12px 16px;margin:18px 0 0;color:var(--ink);max-width:68ch}
 .tabla{overflow-x:auto;margin:14px 0;border:1px solid var(--line);border-radius:10px;background:var(--card)}
 table{border-collapse:collapse;width:100%;min-width:640px;font-size:14px}
@@ -66,14 +67,16 @@ li{margin-bottom:6px}
 <main>
   <div class="eyebrow">PACE · antes de que los testers vean PACE en inglés · 17 nov. 2026</div>
   <h1>Textos largos</h1>
+  <p class="aviso">Los textos de algunas fotos (la home de «Cómo se ha mirado», la pregunta 3 y «Solo con un texto más largo») están alargados a propósito, con palabras como «ya» o «a tu ritmo»: en la app no salen así. Las de las preguntas 1 y 2 son la app tal cual, en castellano.</p>
   <p class="lead">Una prueba que alarga cada texto de PACE un 30 % para ver qué se rompe antes de que lo vea nadie. En inglés y en castellano de verdad salen dos cosas que piden tu letra; con los textos más largos, cuatro más, y una de ellas (las pestañas de Estadísticas) también pide la tuya.</p>
   <p>Nada de esto cambia lo que ves hoy: el arreglo montado solo actúa cuando un texto no cabe, y en castellano y en inglés cabe.</p>
 
   <h2>Cómo se ha mirado</h2>
   <p>La prueba se inventa un idioma: cada texto de PACE, en el más largo de sus dos idiomas, con acentos en las vocales, alguna doblada y entre <strong>⟦ ⟧</strong>. «Empezar foco» sale «⟦Émpéézáár fóócó⟧». Así se ve qué se corta y, de paso, qué texto no pasa por las traducciones: el que sale sin las marcas se quedaría en castellano con PACE en inglés.</p>
+  <p>Para las fotos de esta página uso otra versión que se lee: el castellano de la app con un 35 % más de palabras de verdad al final («Empezar jornada aquí», «Elige tu pausa, a tu ritmo ya»). Mide parecido, pero no igual: las cifras de las fotos son algo menores que las de la tabla, que son las de la prueba.</p>
   <p>Recorre 17 pantallas (la home con y sin jornada, la tarjeta del día, la ventana de la pausa, el runner de Mueve y Estira, Respira, Ajustes y «Tus datos», el sobre, las tres bibliotecas, logros, estadísticas, la hoja de compra y la bienvenida) a 360 × 640, 360 × 740 y 1280 × 800, y las mira tres veces: con los textos largos, en inglés y en castellano. En cada una busca texto cortado sin puntos suspensivos, textos que se pisan o se tapan, filas que se salen de su caja, botones que salen de la ventana, scroll donde no debe haberlo (la home, Ajustes, «Tus datos») y scroll de lado.</p>
-  <figure class="sola"><img src="fotos/largos-home-360.png" alt="La home con la jornada a 360 por 740 con los textos largos: todos los textos con acentos, más largos y entre corchetes dobles" loading="lazy"><figcaption>La home con la jornada, con los textos largos, a 360 × 740: cabe entera</figcaption></figure>
-  <p class="nota">Ese idioma no llega nunca a la app: vive en las pruebas, y <code>npm run verify</code> falla si asoma en lo que se publica.</p>
+  <figure class="sola"><img src="fotos/largos-home-360.png" alt="La home con la jornada a 360 por 740 con el castellano alargado: Empezar jornada aquí, Cambiar ya, Ver todo ya" loading="lazy"><figcaption>La home con la jornada, con el castellano alargado de las fotos, a 360 × 740: cabe entera.</figcaption></figure>
+  <p class="nota">Ninguna de las dos versiones llega nunca a la app: vive en las pruebas, y <code>npm run verify</code> falla si asoma en lo que se publica.</p>
 
   <h2>Lo hallado</h2>
   <div class="tabla"><table>
@@ -110,10 +113,10 @@ li{margin-bottom:6px}
   <p><strong>A</strong>: en el móvil, el hueco entre las tres baja de 16 a 10 px. Sigue en una línea, del mismo tamaño, y cabe centrada. <strong>B</strong>: si no caben, parten en dos líneas; en castellano, a 360, ya saldrían en dos, con «Muévete» debajo.</p>
 
   <h2>3 · Las pestañas de Estadísticas, si un día no caben</h2>
-  <p>Con un texto más largo, las cinco pestañas no podían encoger y empujaban la hoja entera hacia un lado: se podía arrastrar 87 px. Lo monté para que encogieran con puntos suspensivos, pero así encogen todas a la vez y no se lee ninguna, tampoco la que tienes elegida. En castellano y en inglés no pasa nada de esto: a 360 de ancho les sobran 41 px. Es para cuando llegue un idioma más largo.</p>
+  <p>Con un texto más largo, las cinco pestañas no podían encoger y empujaban la hoja entera hacia un lado: se podía arrastrar 23 px en la foto (87 con la prueba). Lo monté para que encogieran con puntos suspensivos, pero así encogen todas a la vez y se leen a medias, también la que tienes elegida. En castellano y en inglés no pasa nada de esto: a 360 de ancho les sobran 41 px. Es para cuando llegue un idioma más largo.</p>
   <div class="par cuatro">
-    <div class="lado hoy"><div class="t">Antes, con textos largos</div><figure><img src="fotos/stats-largos-antes.png" alt="Estadísticas con los textos largos sin arreglo: las pestañas se salen por la derecha" loading="lazy"></figure><figcaption>Se salen de la hoja, que se puede arrastrar 87 px de lado.</figcaption></div>
-    <div class="lado hoy"><div class="t">Montado ahora · todas con «…»</div><figure><img src="fotos/stats-largos-despues.png" alt="Lo montado: las cinco pestañas encogen con puntos suspensivos y no se lee ninguna" loading="lazy"></figure><figcaption>Caben, pero no se lee ninguna: «Tóó…», «Séém…».</figcaption></div>
+    <div class="lado hoy"><div class="t">Antes, con textos largos</div><figure><img src="fotos/stats-largos-antes.png" alt="Estadísticas con el castellano alargado y sin arreglo: las pestañas se salen por la derecha" loading="lazy"></figure><figcaption>Se salen de la hoja, que se puede arrastrar 23 px de lado.</figcaption></div>
+    <div class="lado hoy"><div class="t">Montado ahora · todas con «…»</div><figure><img src="fotos/stats-largos-despues.png" alt="Lo montado: las cinco pestañas encogen con puntos suspensivos: Hoy…, Seman…, Mes…, Año…, Qué te ayud…" loading="lazy"></figure><figcaption>Caben, pero todas a medias: «Hoy…», «Seman…», «Qué te ayud…».</figcaption></div>
     <div class="lado luego"><div class="t">A · la elegida, entera</div><figure><img src="fotos/stats-largos-a.png" alt="Opción A: la pestaña elegida se lee entera y las demás encogen con puntos suspensivos" loading="lazy"></figure><figcaption>Siempre sabes dónde estás; las otras cuatro, cortadas.</figcaption></div>
     <div class="lado luego"><div class="t">B · se deslizan de lado <span class="rec">(recomendada)</span></div><figure><img src="fotos/stats-largos-b.png" alt="Opción B: las pestañas se leen enteras y la fila se desliza de lado; la quinta queda fuera, a la derecha" loading="lazy"></figure><figcaption>Todas enteras; la quinta queda fuera, a la derecha, y se llega deslizando.</figcaption></div>
   </div>
@@ -122,13 +125,12 @@ li{margin-bottom:6px}
   <h2>Solo con un texto más largo</h2>
   <p>No pide nada hoy; queda vigilado por la prueba, que se pone en rojo si crece.</p>
   <div class="par">
-    <div class="lado"><div class="t">La pregunta del día · 28 px</div><figure><img src="fotos/pregunta-largos.png" alt="La pregunta del día con los textos largos a 360 por 640: la home pide 28 px de scroll" loading="lazy"></figure><figcaption>La raya de abajo es el borde de la pantalla: la home pide 28 px más.</figcaption></div>
-    <div class="lado"><div class="t">Ajustes · 200 px</div><figure><img src="fotos/ajustes-largos.png" alt="Ajustes con los textos largos a 360 por 640: el panel pide 200 px de scroll" loading="lazy"></figure><figcaption>La raya de abajo es el borde de la pantalla: pide 200 px más.</figcaption></div>
-    <div class="lado"><div class="t">La pausa · 23 px de lado</div><figure><img src="fotos/pausa-largos.png" alt="La ventana de la pausa con los textos largos: la fila de las otras tres puertas se sale por la derecha" loading="lazy"></figure><figcaption>«Muévete» se sale 47 px de su caja y la ventana se mueve 23 px de lado.</figcaption></div>
+    <div class="lado"><div class="t">Ajustes · 163 px</div><figure><img src="fotos/ajustes-largos.png" alt="Ajustes con el castellano alargado a 360 por 640: el panel pide 163 px de scroll" loading="lazy"></figure><figcaption>La raya de abajo es el borde de la pantalla: pide 163 px más (200 con la prueba).</figcaption></div>
+    <div class="lado"><div class="t">La pausa · 9 px de lado</div><figure><img src="fotos/pausa-largos.png" alt="La ventana de la pausa con el castellano alargado: la fila de las otras tres puertas se sale por la derecha" loading="lazy"></figure><figcaption>«Muévete ya» se sale 33 px de su caja y la ventana se mueve 9 px de lado (23 con la prueba).</figcaption></div>
   </div>
   <ul>
-    <li><strong>La tarjeta del día</strong> (la pregunta), a 360 × 640: la home pediría 28 px. En inglés, con la letra del móvil al 115 %, ya se sabía que pide 17. Esa tarjeta la está pensando la rama del calendario: no la toco.</li>
-    <li><strong>Ajustes</strong> va justo ya en castellano: con un idioma un 30 % más largo pediría 200 px a 360 × 640. Si algún día llega otro idioma, habrá que pensarlo en dos pantallas.</li>
+    <li><strong>La tarjeta del día</strong> (la pregunta), a 360 × 640: con la prueba, la home pediría 28 px; con el castellano alargado de las fotos, cabe justo. En inglés, con la letra del móvil al 115 %, ya se sabía que pide 17. Esa tarjeta la está pensando la rama del calendario: no la toco.</li>
+    <li><strong>Ajustes</strong> va justo ya en castellano: con un idioma un 30 % más largo pediría entre 160 y 200 px a 360 × 640. Si algún día llega otro idioma, habrá que pensarlo en dos pantallas.</li>
     <li><strong>La fila de la pausa</strong>, la de la pregunta 2: con la A le sobran 7 px en castellano; con un texto un 30 % más largo seguiría sin caber, y solo la B lo aguanta.</li>
   </ul>
 
