@@ -19,7 +19,7 @@ function v1VozCuenta(n) {
    con el tono no suena nada en la última, como siempre: en ese momento ya suena el cuenco del paso. */
 function v1VozRep(n, repSec, ultima) {
   if (!(n >= 1 && n <= 25 && n === Math.floor(n))) return ultima ? { soloVoz: true } : null;
-  return ultima ? { voz: 'n' + n, soloVoz: true } : { voz: 'n' + n, max: repSec };
+  return ultima ? { voz: 'n' + n, soloVoz: true, ultima: true } : { voz: 'n' + n, max: repSec };
 }
 
 /* Al entrar en un paso: «Descansa»; «Último paso» en el último con ejercicio (si la rutina tiene más de

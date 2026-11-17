@@ -11,12 +11,20 @@
    toque, así que el contexto ya corre, y un `<audio>` no sabe sonar un trozo con precisión.
 
    LA COLA: la última repetición se dice entera y lo que viene después («Descansa», «Siguiente») espera a
-   que acabe la palabra, en vez de pisarla. Si tuviera que esperar más de 1,2 s, se deja: llegaría tarde.
+   que acabe la palabra, en vez de pisarla. Si tuviera que esperar más de 2 s, se deja: llegaría tarde. (La
+   palabra más larga ocupa 1,4 s y, tras la última repetición, deja 0,35: con menos, «Último paso» se perdía.)
+
+   LO QUE OCUPA UNA PALABRA es su trozo entero, de `a` a `b`, porque eso es lo que suena (la cola de la última
+   sílaba va de `fin` a `b`), más un hueco antes de la siguiente: 0,15 s, como Respira, y 0,35 s tras la
+   última repetición, para que «Descansa» no se lea pegado al número (Ez lo oyó montado el 16 nov.). Con eso
+   se mide también si cabe en su momento: medirlo con la palabra sola dejaba que cada número empujara al
+   siguiente.
 
    `var`/`function` a propósito: un `const` top-level no cruza la IIFE del artefacto. */
 
-var PACE_VOZ_CUERPO_MARGEN = 0.15;
-var PACE_VOZ_CUERPO_ESPERA = 1.2;
+var PACE_VOZ_CUERPO_HUECO = 0.15;
+var PACE_VOZ_CUERPO_TRAS_SERIE = 0.35;
+var PACE_VOZ_CUERPO_ESPERA = 2;
 var _paceVozCuerpoTomas = {};   // idioma.voz → { archivo: { buffer } }
 var _paceVozCuerpoLibre = 0;    // cuándo acaba (en el reloj del contexto) la palabra que suena
 
@@ -43,14 +51,15 @@ function paceVozCuerpoPrecarga() {
 }
 
 /* Suena la palabra `palabra` (n1…n25, c3…c1, colocate, siguiente, ya, ultimo, izquierda, derecha, cambia,
-   descansa) si está y cabe en `max` segundos. true = suena o ya está en la cola. */
-function paceVozCuerpoIntenta(palabra, max) {
+   descansa) si está y cabe en `max` segundos. `op` es lo que pasa el runner (MoveSessionV1.voz.jsx):
+   `ultima`, la última repetición de una serie. true = suena o ya está en la cola. */
+function paceVozCuerpoIntenta(palabra, max, op) {
   try {
     if (typeof paceVozEncendida === 'function' && !paceVozEncendida()) return false;
     var j = paceVozCuerpoJuego();
     var e = j.palabras[palabra];
     if (!e) return false;
-    if (typeof max === 'number' && (e.fin - e.ini) + PACE_VOZ_CUERPO_MARGEN > max) return false;
+    if (typeof max === 'number' && (e.b - e.a) + PACE_VOZ_CUERPO_HUECO > max) return false;
     paceVozCuerpoPrecarga();
     var toma = (_paceVozCuerpoTomas[j.clave] || {})[e.archivo];
     if (!toma || !toma.buffer) return false;
@@ -77,7 +86,7 @@ function paceVozCuerpoIntenta(palabra, max) {
     s.start(t0, e.a);
     s.stop(t0 + dur + 0.01);
     s.onended = function () { try { g.disconnect(); } catch (er) {} };
-    _paceVozCuerpoLibre = t0 + (e.fin - e.a) + 0.05;
+    _paceVozCuerpoLibre = t0 + dur + (op && op.ultima ? PACE_VOZ_CUERPO_TRAS_SERIE : PACE_VOZ_CUERPO_HUECO);
     return true;
   } catch (err) {
     return false;

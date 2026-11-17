@@ -351,7 +351,7 @@ function playSound(name) {
     var op = args[0] && typeof args[0] === 'object' ? args[0] : null;
     if (name.indexOf('move.') === 0 && !(op && op.soloVoz) && typeof window.paceVibra === 'function') window.paceVibra(name, s);
     if (!s || !s.soundOn) return;
-    if (op && op.voz && typeof window.paceVozCuerpoIntenta === 'function' && window.paceVozCuerpoIntenta(op.voz, op.max)) return;
+    if (op && op.voz && typeof window.paceVozCuerpoIntenta === 'function' && window.paceVozCuerpoIntenta(op.voz, op.max, op)) return;
     if (op && op.soloVoz) return;
     /* s175 · LA VOZ VA PRIMERO, y sólo si CABE en la fase. `paceVozIntenta`
        recibe los segundos de esta fase y contesta de forma SÍNCRONA: devuelve
