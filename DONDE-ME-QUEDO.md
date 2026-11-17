@@ -2,7 +2,7 @@
 
 Rama `claude/maquetas-4-16nov-90bbca` (worktree `maqueta-jornada-40d7ea`), con `main` 0.207.0 juntado (origin/main ya
 va por 0.208.0: falta juntarlo, lo hace la coordinadora).
-Página: https://claude.ai/artifact/VaVZj6cpDbHPiC25ALZHqQ (versión 4; fuente `docs/proposals/maquetas-4-16nov/`).
+Página: https://claude.ai/artifact/VaVZj6cpDbHPiC25ALZHqQ (versión 5; fuente `docs/proposals/maquetas-4-16nov/`).
 
 ## Hecho
 - Paso 1: la 4, otra vuelta (D «Por tu cuenta» en la fila «Ahora», recomendada; E en la línea de horas; F en la fila
@@ -16,7 +16,11 @@ Página: https://claude.ai/artifact/VaVZj6cpDbHPiC25ALZHqQ (versión 4; fuente `
 - Suite entera en el 8865 con un worker: 1637 de 1640. `lienzo` y `ritmo-reloj` pasan solas (carga). `paso-v1` era de
   verdad: adelanta una semana y le salía la hoja nueva del fin de la prueba; ahora la cierra. `verify` en verde.
 
+- La 4 se queda como está, por decisión de Ez (17 nov., «Déjala así»): las bibliotecas siguen en el cajón y la home
+  no cambia; la D no le valió porque quita el ejercicio que toca. No se monta nada. Página en la versión 5: las dos
+  vueltas de la 4, plegadas al final.
+
 ## Falta
-- La letra de Ez para la 4 (D, E o F; recomendada D).
+- Juntar la rama (la coordinadora).
 - Al juntar con main: chocan el censo i18n y MINIMO_PRUEBAS (se suman) y las filas de arriba de DECISIONES.
 - No tocar main.
