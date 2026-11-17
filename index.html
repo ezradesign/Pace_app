@@ -5095,7 +5095,12 @@ Object.assign(window.PACE_STRINGS.es, {
   'cal.sindia.archivo.listo.app': 'Se compartirá en cuanto elijas tu día',
   'cal.sindia.archivo.hecho': 'Hecho: en cuanto elijas cuánto trabajas, tendrás el archivo.',
   'cal.btn.alelegir': 'Al elegir',
-  'cal.btn.alelegir.cancelar': 'Cancelar'
+  'cal.btn.alelegir.cancelar': 'Cancelar',
+
+  'cal.dest.iphone': 'Calendario del iPhone',
+  'cal.dest.iphone.sub': 'El de Calendario, con tus cuentas de iCloud, Google u Outlook',
+  'cal.error.permiso.ios': 'PACE no tiene permiso para el calendario. Puedes darlo en Ajustes del iPhone › PACE › Calendarios, o usar «Otro calendario».',
+  'cal.solo.nota.iphone': 'PACE ya no tiene permiso para el calendario del iPhone. Puedes darlo en Ajustes del iPhone › PACE › Calendarios.'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -5207,7 +5212,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'cal.sindia.archivo.listo.app': 'It will be shared as soon as you choose your day',
   'cal.sindia.archivo.hecho': 'Done: you’ll get the file as soon as you choose how long you’re working.',
   'cal.btn.alelegir': 'When I choose',
-  'cal.btn.alelegir.cancelar': 'Cancel'
+  'cal.btn.alelegir.cancelar': 'Cancel',
+  'cal.dest.iphone': 'iPhone calendar',
+  'cal.dest.iphone.sub': 'The one in Calendar, with your iCloud, Google or Outlook accounts',
+  'cal.error.permiso.ios': 'PACE has no permission for the calendar. You can grant it in the iPhone’s Settings › PACE › Calendars, or use «Another calendar».',
+  'cal.solo.nota.iphone': 'PACE no longer has access to your iPhone calendar. You can grant it in the iPhone’s Settings › PACE › Calendars.'
 });
 })();
 </script>
@@ -13188,7 +13197,7 @@ var _calendarioAndroidListo = null;
 
 function calendarioAndroidListo() {
   if (_calendarioAndroidListo) return _calendarioAndroidListo;
-  var pedir = typeof paceAndroidInstalado === 'function' ? paceAndroidInstalado() : Promise.resolve(null);
+  var pedir = typeof paceMovilInstalado === 'function' ? paceMovilInstalado() : Promise.resolve(null);
   _calendarioAndroidListo = pedir.then(null, function () {return null;}).then(function (instalado) {
     var guardada = null;
     try {guardada = localStorage.getItem(CALENDARIO_ANDROID_INSTALADO);} catch (e) {}
@@ -13206,33 +13215,33 @@ function calendarioAndroidListo() {
 
 
 function calendarioAndroidEventos(desde, hasta, propio) {
-  return calendarioAndroidListo().then(function () {return paceAndroidCalendarioEventos(desde, hasta, propio);});
+  return calendarioAndroidListo().then(function () {return paceMovilCalendarioEventos(desde, hasta, propio);});
 }
 
 
 
 function calendarioAndroidCrear(calendarioId, ev) {
-  return paceAndroidCalendarioCrear(calendarioId, ev).then(function (id) {
+  return paceMovilCalendarioCrear(calendarioId, ev).then(function (id) {
     calendarioAndroidApuntar(id, ev);
-    return paceAndroidCalendarioPrivado(id).then(function () {return id;});
+    return paceMovilCalendarioPrivado(id).then(function () {return id;});
   });
 }
 
 
 
 function calendarioAndroidCambiar(id, ev) {
-  return paceAndroidCalendarioCambiar(id, ev).then(function (r) {
+  return paceMovilCalendarioCambiar(id, ev).then(function (r) {
     calendarioAndroidApuntar(id, ev);
-    return paceAndroidCalendarioPrivado(id).then(function () {return r;});
+    return paceMovilCalendarioPrivado(id).then(function () {return r;});
   });
 }
 
 function calendarioAndroidBorrar(id) {
-  return paceAndroidCalendarioBorrar(id).then(function (r) {calendarioAndroidOlvidar(id);return r;});
+  return paceMovilCalendarioBorrar(id).then(function (r) {calendarioAndroidOlvidar(id);return r;});
 }
 
 function calendarioDestinos() {
-  var android = typeof paceAndroidCalendario === 'function' && paceAndroidCalendario();
+  var android = typeof paceMovilCalendario === 'function' && paceMovilCalendario();
   return CALENDARIO_DESTINOS.filter(function (d) {
     if (d === 'android') return android;
     if (d === 'archivo') return true;
@@ -13269,7 +13278,7 @@ function calendarioGuardarOcupado(tramos, fuente, iso) {
 
 function calendarioAcceso(destino) {
   if (destino === 'android') {
-    return paceAndroidCalendarioPermiso().then(function (ok) {if (!ok) throw new Error('permiso');return null;});
+    return paceMovilCalendarioPermiso().then(function (ok) {if (!ok) throw new Error('permiso');return null;});
   }
   var pase = calendarioPaseGuardado(destino);
   if (pase) return Promise.resolve(pase);
@@ -13474,7 +13483,7 @@ function calendarioRefrescarReuniones(forzar) {
     var iso = ritmoHoy();
     var acceso;
     if (c.destino === 'android') {
-      acceso = paceAndroidCalendarioTienePermiso().then(function (ok) {if (!ok) throw new Error('permiso');return null;});
+      acceso = paceMovilCalendarioTienePermiso().then(function (ok) {if (!ok) throw new Error('permiso');return null;});
     } else {
       if (!(calendarioPaseHasta(c.destino) > Date.now())) return Promise.resolve(false);
       acceso = calendarioPaseSinGesto(c.destino).then(function (p) {if (!p) throw new Error('pase');return p;});
@@ -13818,7 +13827,7 @@ function calendarioSoloActivo(s) {
 
 function calendarioAccesoSinGesto(destino) {
   if (destino === 'android') {
-    return paceAndroidCalendarioTienePermiso().then(function (ok) {return ok ? null : false;}, function () {return false;});
+    return paceMovilCalendarioTienePermiso().then(function (ok) {return ok ? null : false;}, function () {return false;});
   }
   return calendarioPaseSinGesto(destino).then(function (p) {return p || false;});
 }
@@ -20099,6 +20108,129 @@ Object.assign(window, {
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
+   ios.calendario.js — EL CALENDARIO DEL IPHONE
+   ============================================================
+   «A tu ritmo» lleva el día al calendario del iPhone con el mismo complemento que en
+   Android (CapacitorCalendar, de @ebarooni/capacitor-calendar), que aquí habla con
+   EventKit: Calendario ya junta las cuentas de iCloud, Google y Outlook de la persona.
+   Ez eligió el permiso completo, como en Android (4A del 16 nov. 2026): con el de solo
+   añadir de iOS 17, PACE no puede leer, cambiar ni borrar ni lo que él mismo puso, así
+   que ni esquivaría reuniones ni mantendría el día. Se pide la primera vez que se pulsa
+   «Conectar», nunca al arrancar; en iOS 16 el complemento pide el permiso de antes.
+
+   Las llamadas son las de android.calendario.js, reducidas a lo que PACE usa, con las
+   mismas reglas: lo que hay que saber si salió va por `paceIosPedir`, que rechaza, y de
+   una reunión solo salen las horas. Dos diferencias:
+
+   - PRIVADO: EventKit no tiene cómo marcar un evento como privado. La pieza propia
+     (ios/App/App/PaceCalendario.swift) contesta que no, y privacy.html lo dice.
+   - LA MARCA DE ESTE IPHONE (`instalado`): la da la pieza propia desde el llavero, «solo
+     este dispositivo»; un iPhone restaurado desde una copia no la trae y la lista de
+     eventos de PACE se olvida (la regla D-8 de Android).
+
+   `var`/`function` a proposito (un `const` no cruza la IIFE del artefacto).
+   ============================================================ */
+
+function paceIosCalendario() {
+  return !!paceIosPlugin('CapacitorCalendar');
+}
+
+
+
+function paceIosCalendarioPermiso() {
+  return paceIosLlamar('CapacitorCalendar', 'requestFullCalendarAccess').then(function (r) {
+    return !!(r && r.result === 'granted');
+  });
+}
+
+
+function paceIosCalendarioTienePermiso() {
+  return paceIosLlamar('CapacitorCalendar', 'checkAllPermissions').then(function (r) {
+    var p = r && r.result || {};
+    return p.readCalendar === 'granted' && p.writeCalendar === 'granted';
+  });
+}
+
+
+
+function paceIosCalendarios() {
+  return Promise.all([
+  paceIosLlamar('CapacitorCalendar', 'listCalendars'),
+  paceIosLlamar('CapacitorCalendar', 'getDefaultCalendar')]
+  ).then(function (rs) {
+    var lista = rs[0] && rs[0].result || [];
+    var pre = rs[1] && rs[1].result ? String(rs[1].result.id) : null;
+    return lista.filter(function (c) {return c && c.allowsContentModifications !== false && !c.isSubscribed;}).
+    map(function (c) {return { id: String(c.id), titulo: c.title || '', cuenta: '' };}).
+    sort(function (a, b) {return (b.id === pre) - (a.id === pre);});
+  });
+}
+
+
+
+
+function paceIosCalendarioEventos(desde, hasta, propio) {
+  return paceIosPedir('CapacitorCalendar', 'listEventsInRange', { from: desde, to: hasta }).then(function (r) {
+    if (!r || !Array.isArray(r.result)) throw new Error('red');
+    return r.result.map(function (e) {
+      var ev = { id: String(e.id), calendario: e.calendarId != null ? String(e.calendarId) : null, inicio: e.startDate, fin: e.endDate,
+        todoElDia: !!e.isAllDay, libre: e.availability === 1, cancelado: e.status === 'canceled' };
+      if (typeof propio === 'function' && propio(ev)) {
+        ev.titulo = e.title || '';ev.texto = e.description || '';ev.aviso = (e.alerts || []).length > 0;
+      }
+      return ev;
+    });
+  });
+}
+
+
+
+var PACE_IOS_LIBRE = 1;
+
+function paceIosCalendarioCrear(calendario, ev) {
+  var o = { title: ev.titulo, description: ev.texto, startDate: ev.inicio, endDate: ev.fin, availability: PACE_IOS_LIBRE, alerts: ev.aviso ? [0] : [] };
+  if (calendario) o.calendarId = String(calendario);
+  return paceIosPedir('CapacitorCalendar', 'createEvent', o).then(function (r) {
+    if (!r || r.id == null) throw new Error('red');
+    return String(r.id);
+  });
+}
+
+function paceIosCalendarioCambiar(id, ev) {
+  return paceIosPedir('CapacitorCalendar', 'modifyEvent', { id: String(id), title: ev.titulo, description: ev.texto,
+    startDate: ev.inicio, endDate: ev.fin, availability: PACE_IOS_LIBRE, alerts: ev.aviso ? [0] : [] });
+}
+
+function paceIosCalendarioBorrar(id) {
+  return paceIosPedir('CapacitorCalendar', 'deleteEvent', { id: String(id) });
+}
+
+
+function paceIosCalendarioPrivado(id) {
+  return paceIosPedir('PaceCalendario', 'privado', { id: String(id) });
+}
+
+
+
+function paceIosInstalado() {
+  return paceIosPedir('PaceCalendario', 'instalado').then(function (r) {
+    return r && typeof r.instalado === 'number' && isFinite(r.instalado) && r.instalado > 0 ? r.instalado : null;
+  }, function () {return null;});
+}
+
+Object.assign(window, {
+  paceIosCalendario, paceIosCalendarioPermiso, paceIosCalendarioTienePermiso, paceIosCalendarios, paceIosCalendarioEventos,
+  paceIosCalendarioCrear, paceIosCalendarioCambiar, paceIosCalendarioBorrar, paceIosCalendarioPrivado, paceIosInstalado
+});
+;Object.assign(window, { paceIosCalendario, paceIosCalendarioPermiso, paceIosCalendarioTienePermiso, paceIosCalendarios, paceIosCalendarioEventos, PACE_IOS_LIBRE, paceIosCalendarioCrear, paceIosCalendarioCambiar, paceIosCalendarioBorrar, paceIosCalendarioPrivado, paceIosInstalado });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
    nativo.js — LA APP DE LAS TIENDAS, SEA ANDROID O IPHONE
    ============================================================
    En las dos tiendas PACE es la misma web dentro de un WebView, y lo que ese
@@ -20228,6 +20360,70 @@ Object.assign(window, {
   paceNativoAvisoPedir, paceNativoFoco, paceNativoPausa, paceNativoTextosFin, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace
 });
 ;Object.assign(window, { pacePlataformaNativa, paceEsNativo, paceNativoPlugin, paceNativoAvisos, paceNativoAvisoPermiso, paceNativoAvisoPedir, paceNativoFoco, paceNativoPausa, paceNativoTextosFin, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   nativo.calendario.js — EL CALENDARIO DEL MÓVIL, EN LOS DOS MÓVILES
+   ============================================================
+   La capa común, como nativo.js, para el calendario del teléfono: en Android pregunta a
+   android.calendario.js y en el iPhone a ios.calendario.js (Ez, 4A del 16 nov. 2026). Los
+   dos hablan con el mismo complemento, CapacitorCalendar, y dan lo mismo, así que «A tu
+   ritmo» (ritmo.calendario.destinos.js, el motor y la hoja) solo llama a `paceMovil*` y no
+   sabe en qué teléfono está.
+
+   EL DESTINO SIGUE LLAMÁNDOSE 'android' en los datos (`ritmo.calendario.destino`,
+   `pace.calendario.android` y su marca de instalación): renombrarlo dejaría sin conexión a
+   quien ya la tiene. Quiere decir «el calendario del móvil»; en el iPhone, la hoja lo llama
+   «Calendario del iPhone» (`calendarioNombreDestino`).
+
+   En la web, en el standalone y en las pruebas sin Capacitor no hay calendario del móvil:
+   `paceMovilCalendario()` es false y lo demás contesta lo que contestaría Android sin él.
+
+   `var`/`function` a propósito (un `const` no cruza la IIFE del artefacto).
+   ============================================================ */
+
+function paceMovilIos() {
+  return typeof pacePlataformaNativa === 'function' && pacePlataformaNativa() === 'ios';
+}
+
+function paceMovilCalendario() {
+  var p = typeof pacePlataformaNativa === 'function' ? pacePlataformaNativa() : null;
+  if (p === 'android') return paceAndroidCalendario();
+  if (p === 'ios') return paceIosCalendario();
+  return false;
+}
+
+function paceMovilCalendarioPermiso() {return paceMovilIos() ? paceIosCalendarioPermiso() : paceAndroidCalendarioPermiso();}
+function paceMovilCalendarioTienePermiso() {return paceMovilIos() ? paceIosCalendarioTienePermiso() : paceAndroidCalendarioTienePermiso();}
+function paceMovilCalendarios() {return paceMovilIos() ? paceIosCalendarios() : paceAndroidCalendarios();}
+
+
+
+function paceMovilCalendarioEventos(desde, hasta, propio) {
+  return paceMovilIos() ? paceIosCalendarioEventos(desde, hasta, propio) : paceAndroidCalendarioEventos(desde, hasta, propio);
+}
+
+function paceMovilCalendarioCrear(calendario, ev) {return paceMovilIos() ? paceIosCalendarioCrear(calendario, ev) : paceAndroidCalendarioCrear(calendario, ev);}
+function paceMovilCalendarioCambiar(id, ev) {return paceMovilIos() ? paceIosCalendarioCambiar(id, ev) : paceAndroidCalendarioCambiar(id, ev);}
+function paceMovilCalendarioBorrar(id) {return paceMovilIos() ? paceIosCalendarioBorrar(id) : paceAndroidCalendarioBorrar(id);}
+
+
+
+function paceMovilCalendarioPrivado(id) {return paceMovilIos() ? paceIosCalendarioPrivado(id) : paceAndroidCalendarioPrivado(id);}
+
+
+function paceMovilInstalado() {return paceMovilIos() ? paceIosInstalado() : paceAndroidInstalado();}
+
+Object.assign(window, {
+  paceMovilCalendario, paceMovilCalendarioPermiso, paceMovilCalendarioTienePermiso, paceMovilCalendarios, paceMovilCalendarioEventos,
+  paceMovilCalendarioCrear, paceMovilCalendarioCambiar, paceMovilCalendarioBorrar, paceMovilCalendarioPrivado, paceMovilInstalado
+});
+;Object.assign(window, { paceMovilIos, paceMovilCalendario, paceMovilCalendarioPermiso, paceMovilCalendarioTienePermiso, paceMovilCalendarios, paceMovilCalendarioEventos, paceMovilCalendarioCrear, paceMovilCalendarioCambiar, paceMovilCalendarioBorrar, paceMovilCalendarioPrivado, paceMovilInstalado });
 })();
 </script>
   <script>
@@ -50780,6 +50976,12 @@ function RitmoCalendarioRaiz(_ref2) {let { plan } = _ref2;
 
 var CAL_ERRORES = ['permiso', 'bloqueada', 'cerrada', 'denegado', 'pase', 'red', 'sin-dia'];
 
+
+
+function calendarioNombreDestino(destino) {
+  return destino === 'android' && typeof pacePlataformaNativa === 'function' && pacePlataformaNativa() === 'ios' ? 'iphone' : destino;
+}
+
 function ritmoCalendarioHecho(destino, r, t, tn) {
   let texto = destino === 'archivo' ? t('cal.hecho.archivo') : r.solo ? t('cal.hecho.solo') : r.n === 1 ? t('cal.hecho.uno') : tn('cal.hecho', { n: r.n });
   if (r.reuniones != null) {
@@ -50837,8 +51039,8 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
   useEffectRC(() => {
     if (!android) return undefined;
     let vivo = true;
-    paceAndroidCalendarioTienePermiso().
-    then((ok) => ok ? paceAndroidCalendarios() : null).
+    paceMovilCalendarioTienePermiso().
+    then((ok) => ok ? paceMovilCalendarios() : null).
     then((l) => {if (vivo && l) setCalendarios(l);});
     return () => {vivo = false;};
   }, [android]);
@@ -50858,7 +51060,7 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
   const fallo = (e) => {
     setTrabajo(null);
     const motivo = e && CAL_ERRORES.indexOf(e.message) !== -1 ? e.message : 'red';
-    setAviso({ tipo: 'error', texto: t('cal.error.' + motivo) });
+    setAviso({ tipo: 'error', texto: t('cal.error.' + motivo + (motivo === 'permiso' && calendarioNombreDestino('android') === 'iphone' ? '.ios' : '')) });
   };
 
 
@@ -50871,7 +51073,7 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
       then((r) => {
         setTrabajo(null);
         setAviso({ tipo: 'ok', texto: ritmoCalendarioConectado(r, t, tn) });
-        if (destino === 'android' && !calendarios) paceAndroidCalendarios().then((l) => {if (l) setCalendarios(l);});
+        if (destino === 'android' && !calendarios) paceMovilCalendarios().then((l) => {if (l) setCalendarios(l);});
       }).
       catch(fallo);
       return;
@@ -50880,7 +51082,7 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
     then((r) => {
       setTrabajo(null);
       setAviso({ tipo: 'ok', texto: ritmoCalendarioHecho(destino, r, t, tn) });
-      if (destino === 'android' && !calendarios) paceAndroidCalendarios().then((l) => {if (l) setCalendarios(l);});
+      if (destino === 'android' && !calendarios) paceMovilCalendarios().then((l) => {if (l) setCalendarios(l);});
     }).
     catch(fallo);
   };
@@ -50933,7 +51135,7 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
         ));
 
     }
-    return t('cal.dest.' + destino + '.sub');
+    return t('cal.dest.' + calendarioNombreDestino(destino) + '.sub');
   };
 
   const accion = (destino) => {
@@ -50974,7 +51176,7 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
   const fila = (destino) =>
   React.createElement("div", { key: destino, className: "pace-rt-cal-dest", "data-pace-cal-destino": destino, "data-pace-cal-solo": solo && destino === solo.destino ? 'si' : undefined },
   React.createElement("div", { style: { minWidth: 0 } },
-  React.createElement("div", { className: "pace-rt-cal-n" }, t('cal.dest.' + destino)),
+  React.createElement("div", { className: "pace-rt-cal-n" }, t('cal.dest.' + calendarioNombreDestino(destino))),
   React.createElement("div", { className: "pace-rt-cal-s" }, sub(destino))
   ),
   accion(destino)
@@ -51026,7 +51228,7 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
   } else if (calendarioSoloPorDetras(solo) || calendarioSoloCaso(solo) === 'fallo') {
     nota =
     React.createElement("div", { className: "pace-rt-cal-aviso", role: "status", "data-pace-cal-aviso": "nota" },
-    t(calendarioSoloPorDetras(solo) ? 'cal.solo.nota.' + solo.destino : 'cal.solo.nota.fallo'),
+    t(calendarioSoloPorDetras(solo) ? 'cal.solo.nota.' + calendarioNombreDestino(solo.destino) : 'cal.solo.nota.fallo'),
     React.createElement("button", { type: "button", className: "pace-rt-enlace", "data-pace-cal-desconectar": true, onClick: () => setPreguntar(true) }, t('cal.btn.desconectar'))
     );
 
@@ -51060,7 +51262,7 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
 }
 
 Object.assign(window, { RitmoAlCalendario, RitmoCalendarioRaiz, RitmoCalendarioHoja, ritmoCalendarioAbrir, useCalendarioSolo });
-;Object.assign(window, { ritmoCalendarioAbrir, useCalendarioSolo, calendarioSoloPorDetras, calendarioSoloCaso, CAL_ENLACE, RitmoAlCalendario, RitmoCalendarioRaiz, CAL_ERRORES, ritmoCalendarioHecho, ritmoCalendarioConectado, ritmoCalendarioHoraMs, ritmoCalendarioSoloSub, RitmoCalendarioHoja });
+;Object.assign(window, { ritmoCalendarioAbrir, useCalendarioSolo, calendarioSoloPorDetras, calendarioSoloCaso, CAL_ENLACE, RitmoAlCalendario, RitmoCalendarioRaiz, CAL_ERRORES, calendarioNombreDestino, ritmoCalendarioHecho, ritmoCalendarioConectado, ritmoCalendarioHoraMs, ritmoCalendarioSoloSub, RitmoCalendarioHoja });
 })();
 </script>
   <script>

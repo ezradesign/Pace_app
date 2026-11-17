@@ -123,6 +123,11 @@ Object.assign(window.PACE_STRINGS.es, {
     'cal.sindia.archivo.hecho':      'Hecho: en cuanto elijas cuánto trabajas, tendrás el archivo.',
     'cal.btn.alelegir':              'Al elegir',
     'cal.btn.alelegir.cancelar':     'Cancelar',
+    /* El calendario del iPhone (Ez, 4A del 16 nov.): el mismo destino que Android, con su nombre y sus Ajustes. */
+    'cal.dest.iphone':               'Calendario del iPhone',
+    'cal.dest.iphone.sub':           'El de Calendario, con tus cuentas de iCloud, Google u Outlook',
+    'cal.error.permiso.ios':         'PACE no tiene permiso para el calendario. Puedes darlo en Ajustes del iPhone › PACE › Calendarios, o usar «Otro calendario».',
+    'cal.solo.nota.iphone':          'PACE ya no tiene permiso para el calendario del iPhone. Puedes darlo en Ajustes del iPhone › PACE › Calendarios.',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -235,4 +240,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'cal.sindia.archivo.hecho':      'Done: you’ll get the file as soon as you choose how long you’re working.',
     'cal.btn.alelegir':              'When I choose',
     'cal.btn.alelegir.cancelar':     'Cancel',
+    'cal.dest.iphone':               'iPhone calendar',
+    'cal.dest.iphone.sub':           'The one in Calendar, with your iCloud, Google or Outlook accounts',
+    'cal.error.permiso.ios':         'PACE has no permission for the calendar. You can grant it in the iPhone’s Settings › PACE › Calendars, or use «Another calendar».',
+    'cal.solo.nota.iphone':          'PACE no longer has access to your iPhone calendar. You can grant it in the iPhone’s Settings › PACE › Calendars.',
 });

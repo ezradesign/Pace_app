@@ -231,9 +231,11 @@ function chequeaListaDelMovil(ctx) {
     fs.readdirSync(path.join(ROOT, rel), { withFileTypes: true }).forEach(function (e) {
       var hijo = rel + '/' + e.name;
       if (e.isDirectory()) return recorrer(hijo);
-      if (!/\.jsx?$/.test(e.name) || hijo === 'app/ui/android.calendario.js') return;
+      /* Los dos puentes y la capa común que elige entre ellos: en el iPhone, el calendario del
+         móvil es el mismo destino y su lista se comprueba igual (Ez, 4A del 16 nov.). */
+      if (!/\.jsx?$/.test(e.name) || ['app/ui/android.calendario.js', 'app/ui/ios.calendario.js', 'app/ui/nativo.calendario.js'].indexOf(hijo) !== -1) return;
       var src = fs.readFileSync(path.join(ROOT, hijo), 'utf8');
-      var n = (src.match(/paceAndroidCalendarioEventos\(/g) || []).length;
+      var n = (src.match(/pace(Android|Ios|Movil)CalendarioEventos\(/g) || []).length;
       if (hijo === 'app/ritmo/ritmo.calendario.destinos.js') n -= 1;
       if (n > 0) fuera.push(hijo);
     });

@@ -87,6 +87,12 @@ function RitmoCalendarioRaiz({ plan }) {
 
 var CAL_ERRORES = ['permiso', 'bloqueada', 'cerrada', 'denegado', 'pase', 'red', 'sin-dia'];
 
+/* EL CALENDARIO DEL MÓVIL EN EL IPHONE (Ez, 4A del 16 nov.): el destino es el mismo, 'android'
+   (nativo.calendario.js), pero la hoja lo llama «Calendario del iPhone» y manda a sus Ajustes. */
+function calendarioNombreDestino(destino) {
+  return destino === 'android' && typeof pacePlataformaNativa === 'function' && pacePlataformaNativa() === 'ios' ? 'iphone' : destino;
+}
+
 function ritmoCalendarioHecho(destino, r, t, tn) {
   let texto = destino === 'archivo' ? t('cal.hecho.archivo') : r.solo ? t('cal.hecho.solo') : r.n === 1 ? t('cal.hecho.uno') : tn('cal.hecho', { n: r.n });
   if (r.reuniones != null) {
@@ -144,8 +150,8 @@ function RitmoCalendarioHoja({ plan, onClose }) {
   useEffectRC(() => {
     if (!android) return undefined;
     let vivo = true;
-    paceAndroidCalendarioTienePermiso()
-      .then((ok) => (ok ? paceAndroidCalendarios() : null))
+    paceMovilCalendarioTienePermiso()
+      .then((ok) => (ok ? paceMovilCalendarios() : null))
       .then((l) => { if (vivo && l) setCalendarios(l); });
     return () => { vivo = false; };
   }, [android]);
@@ -165,7 +171,7 @@ function RitmoCalendarioHoja({ plan, onClose }) {
   const fallo = (e) => {
     setTrabajo(null);
     const motivo = e && CAL_ERRORES.indexOf(e.message) !== -1 ? e.message : 'red';
-    setAviso({ tipo: 'error', texto: t('cal.error.' + motivo) });
+    setAviso({ tipo: 'error', texto: t('cal.error.' + motivo + (motivo === 'permiso' && calendarioNombreDestino('android') === 'iphone' ? '.ios' : '')) });
   };
 
   /* SIN NADA DELANTE del primer paso: la ventana del permiso se abre dentro de este clic. */
@@ -178,7 +184,7 @@ function RitmoCalendarioHoja({ plan, onClose }) {
         .then((r) => {
           setTrabajo(null);
           setAviso({ tipo: 'ok', texto: ritmoCalendarioConectado(r, t, tn) });
-          if (destino === 'android' && !calendarios) paceAndroidCalendarios().then((l) => { if (l) setCalendarios(l); });
+          if (destino === 'android' && !calendarios) paceMovilCalendarios().then((l) => { if (l) setCalendarios(l); });
         })
         .catch(fallo);
       return;
@@ -187,7 +193,7 @@ function RitmoCalendarioHoja({ plan, onClose }) {
       .then((r) => {
         setTrabajo(null);
         setAviso({ tipo: 'ok', texto: ritmoCalendarioHecho(destino, r, t, tn) });
-        if (destino === 'android' && !calendarios) paceAndroidCalendarios().then((l) => { if (l) setCalendarios(l); });
+        if (destino === 'android' && !calendarios) paceMovilCalendarios().then((l) => { if (l) setCalendarios(l); });
       })
       .catch(fallo);
   };
@@ -240,7 +246,7 @@ function RitmoCalendarioHoja({ plan, onClose }) {
         </React.Fragment>
       );
     }
-    return t('cal.dest.' + destino + '.sub');
+    return t('cal.dest.' + calendarioNombreDestino(destino) + '.sub');
   };
 
   const accion = (destino) => {
@@ -281,7 +287,7 @@ function RitmoCalendarioHoja({ plan, onClose }) {
   const fila = (destino) => (
     <div key={destino} className="pace-rt-cal-dest" data-pace-cal-destino={destino} data-pace-cal-solo={solo && destino === solo.destino ? 'si' : undefined}>
       <div style={{ minWidth: 0 }}>
-        <div className="pace-rt-cal-n">{t('cal.dest.' + destino)}</div>
+        <div className="pace-rt-cal-n">{t('cal.dest.' + calendarioNombreDestino(destino))}</div>
         <div className="pace-rt-cal-s">{sub(destino)}</div>
       </div>
       {accion(destino)}
@@ -333,7 +339,7 @@ function RitmoCalendarioHoja({ plan, onClose }) {
   } else if (calendarioSoloPorDetras(solo) || calendarioSoloCaso(solo) === 'fallo') {
     nota = (
       <div className="pace-rt-cal-aviso" role="status" data-pace-cal-aviso="nota">
-        {t(calendarioSoloPorDetras(solo) ? 'cal.solo.nota.' + solo.destino : 'cal.solo.nota.fallo')}
+        {t(calendarioSoloPorDetras(solo) ? 'cal.solo.nota.' + calendarioNombreDestino(solo.destino) : 'cal.solo.nota.fallo')}
         <button type="button" className="pace-rt-enlace" data-pace-cal-desconectar onClick={() => setPreguntar(true)}>{t('cal.btn.desconectar')}</button>
       </div>
     );

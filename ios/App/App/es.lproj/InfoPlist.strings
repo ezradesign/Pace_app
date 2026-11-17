@@ -1,0 +1,3 @@
+/* Lo que dice la pregunta de iOS al pedir el calendario (Ez, 4A del 16 nov. 2026). Info.plist lleva la misma en castellano. */
+"NSCalendarsFullAccessUsageDescription" = "PACE lee a qué horas tienes reuniones para poner tus pausas alrededor, y añade tu día a tu calendario. No guarda títulos ni personas.";
+"NSCalendarsUsageDescription" = "PACE lee a qué horas tienes reuniones para poner tus pausas alrededor, y añade tu día a tu calendario. No guarda títulos ni personas.";

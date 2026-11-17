@@ -100,7 +100,7 @@ function calendarioAndroidOlvidar(id) {
   calendarioAndroidGuardar(propios);
 }
 
-/* ¿Lo puso PACE desde este móvil? Un evento de paceAndroidCalendarioEventos. */
+/* ¿Lo puso PACE desde este móvil? Un evento de paceMovilCalendarioEventos. */
 function calendarioAndroidEsDePace(e) {
   return !!(e && e.id != null && Object.prototype.hasOwnProperty.call(calendarioAndroidPropios(), String(e.id)));
 }
@@ -108,7 +108,7 @@ function calendarioAndroidEsDePace(e) {
 /* LA LISTA ES DE ESTE MÓVIL (Ez, D-8 A del 11 nov. 2026). La copia automática de Google se
    lleva el almacén entero a un Android restaurado, y con él esta lista; allí los ids son de
    otro calendario y pueden nombrar una reunión de verdad, que PACE borraría o cambiaría. Por
-   eso va con la hora en que se instaló PACE en el móvil (`paceAndroidInstalado`): si no casa
+   eso va con la hora en que se instaló PACE en el móvil (`paceMovilInstalado`): si no casa
    (móvil restaurado o PACE reinstalado), si no está (una versión de antes) o si Android no la
    da, la lista se olvida antes de leer el calendario. Se mira una vez por proceso, y todo lo
    que lee el calendario del móvil pasa por `calendarioAndroidEventos` (lo cuenta verify). */
@@ -117,7 +117,7 @@ var _calendarioAndroidListo = null;
 
 function calendarioAndroidListo() {
   if (_calendarioAndroidListo) return _calendarioAndroidListo;
-  var pedir = typeof paceAndroidInstalado === 'function' ? paceAndroidInstalado() : Promise.resolve(null);
+  var pedir = typeof paceMovilInstalado === 'function' ? paceMovilInstalado() : Promise.resolve(null);
   _calendarioAndroidListo = pedir.then(null, function () { return null; }).then(function (instalado) {
     var guardada = null;
     try { guardada = localStorage.getItem(CALENDARIO_ANDROID_INSTALADO); } catch (e) {}
@@ -135,33 +135,33 @@ function calendarioAndroidListo() {
 
 /* Los eventos del calendario del móvil entre `desde` y `hasta`, con la lista ya comprobada. */
 function calendarioAndroidEventos(desde, hasta, propio) {
-  return calendarioAndroidListo().then(function () { return paceAndroidCalendarioEventos(desde, hasta, propio); });
+  return calendarioAndroidListo().then(function () { return paceMovilCalendarioEventos(desde, hasta, propio); });
 }
 
 /* Crear y borrar en el calendario del móvil, apuntándolo. Lo creado se marca privado DESPUÉS
    de apuntarlo: si eso falla, PACE lo reconoce como suyo y lo arregla en la vuelta siguiente. */
 function calendarioAndroidCrear(calendarioId, ev) {
-  return paceAndroidCalendarioCrear(calendarioId, ev).then(function (id) {
+  return paceMovilCalendarioCrear(calendarioId, ev).then(function (id) {
     calendarioAndroidApuntar(id, ev);
-    return paceAndroidCalendarioPrivado(id).then(function () { return id; });
+    return paceMovilCalendarioPrivado(id).then(function () { return id; });
   });
 }
 
 /* Cambiar uno de PACE, apuntándolo y marcándolo privado: lo que se escribió sin marcar pasa a
    privado en su primer cambio, como en Google y en Outlook. */
 function calendarioAndroidCambiar(id, ev) {
-  return paceAndroidCalendarioCambiar(id, ev).then(function (r) {
+  return paceMovilCalendarioCambiar(id, ev).then(function (r) {
     calendarioAndroidApuntar(id, ev);
-    return paceAndroidCalendarioPrivado(id).then(function () { return r; });
+    return paceMovilCalendarioPrivado(id).then(function () { return r; });
   });
 }
 
 function calendarioAndroidBorrar(id) {
-  return paceAndroidCalendarioBorrar(id).then(function (r) { calendarioAndroidOlvidar(id); return r; });
+  return paceMovilCalendarioBorrar(id).then(function (r) { calendarioAndroidOlvidar(id); return r; });
 }
 
 function calendarioDestinos() {
-  var android = typeof paceAndroidCalendario === 'function' && paceAndroidCalendario();
+  var android = typeof paceMovilCalendario === 'function' && paceMovilCalendario();
   return CALENDARIO_DESTINOS.filter(function (d) {
     if (d === 'android') return android;
     if (d === 'archivo') return true;
@@ -198,7 +198,7 @@ function calendarioGuardarOcupado(tramos, fuente, iso) {
 /* Paso 1. Síncrono hasta pedir el permiso. Resuelve con el pase (web) o null. */
 function calendarioAcceso(destino) {
   if (destino === 'android') {
-    return paceAndroidCalendarioPermiso().then(function (ok) { if (!ok) throw new Error('permiso'); return null; });
+    return paceMovilCalendarioPermiso().then(function (ok) { if (!ok) throw new Error('permiso'); return null; });
   }
   var pase = calendarioPaseGuardado(destino);
   if (pase) return Promise.resolve(pase);
@@ -403,7 +403,7 @@ function calendarioRefrescarReuniones(forzar) {
     var iso = ritmoHoy();
     var acceso;
     if (c.destino === 'android') {
-      acceso = paceAndroidCalendarioTienePermiso().then(function (ok) { if (!ok) throw new Error('permiso'); return null; });
+      acceso = paceMovilCalendarioTienePermiso().then(function (ok) { if (!ok) throw new Error('permiso'); return null; });
     } else {
       if (!(calendarioPaseHasta(c.destino) > Date.now())) return Promise.resolve(false);
       acceso = calendarioPaseSinGesto(c.destino).then(function (p) { if (!p) throw new Error('pase'); return p; });

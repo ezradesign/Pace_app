@@ -79,5 +79,6 @@ class PaceViewController: UIViewController {
 class PacePuente: CAPBridgeViewController {
     override open func capacitorDidLoad() {
         bridge?.registerPluginInstance(PaceValoracion())
+        bridge?.registerPluginInstance(PaceCalendario())
     }
 }
