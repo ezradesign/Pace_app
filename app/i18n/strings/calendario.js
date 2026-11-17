@@ -114,6 +114,15 @@ Object.assign(window.PACE_STRINGS.es, {
     'cal.sindia.hecho.solo':         'Conectado: cuando elijas cuánto trabajas, tu día irá solo a tu calendario.',
     'cal.sindia.reuniones':          'Hoy tienes {r} reuniones: las opciones ya las rodean.',
     'cal.sindia.reuniones.una':      'Hoy tienes 1 reunión: las opciones ya la rodean.',
+    /* En la web sin las altas de Google y Microsoft (Ez, 3A del 16 nov.): solo el archivo, dicho claro. */
+    'cal.sindia.web':                'En la web, PACE te da un archivo y tu calendario lo añade. Si cambias el día, descárgalo otra vez.',
+    'cal.sindia.app':                'PACE te da un archivo y tu calendario lo añade. Si cambias el día, compártelo otra vez.',
+    'cal.sindia.archivo':            'Un archivo para tu calendario, en cuanto elijas tu día',
+    'cal.sindia.archivo.listo':      'Se descargará en cuanto elijas tu día',
+    'cal.sindia.archivo.listo.app':  'Se compartirá en cuanto elijas tu día',
+    'cal.sindia.archivo.hecho':      'Hecho: en cuanto elijas cuánto trabajas, tendrás el archivo.',
+    'cal.btn.alelegir':              'Al elegir',
+    'cal.btn.alelegir.cancelar':     'Cancelar',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -218,4 +227,12 @@ Object.assign(window.PACE_STRINGS.en, {
     'cal.sindia.hecho.solo':         'Connected: when you choose how long you’re working, your day goes to your calendar by itself.',
     'cal.sindia.reuniones':          'You have {r} meetings today, and your options already work around them.',
     'cal.sindia.reuniones.una':      'You have 1 meeting today, and your options already work around it.',
+    'cal.sindia.web':                'On the web, PACE gives you a file and your calendar adds it. If your day changes, download it again.',
+    'cal.sindia.app':                'PACE gives you a file and your calendar adds it. If your day changes, share it again.',
+    'cal.sindia.archivo':            'A file for your calendar, as soon as you choose your day',
+    'cal.sindia.archivo.listo':      'It will download as soon as you choose your day',
+    'cal.sindia.archivo.listo.app':  'It will be shared as soon as you choose your day',
+    'cal.sindia.archivo.hecho':      'Done: you’ll get the file as soon as you choose how long you’re working.',
+    'cal.btn.alelegir':              'When I choose',
+    'cal.btn.alelegir.cancelar':     'Cancel',
 });

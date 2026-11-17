@@ -225,6 +225,9 @@ function RitmoCalendarioHoja({ plan, onClose }) {
     if (sinDia && solo && destino === solo.destino) return t(solo.conAcceso ? 'cal.sindia.conectado' : 'cal.sindia.permiso');
     if (sinDia && destino === c.destino && destino !== 'archivo' && calendarioConectadoAhora()) return t('cal.sindia.conectado');
     if (solo && destino === solo.destino) return ritmoCalendarioSoloSub(solo, t, tn);
+    if (sinDia && destino === 'archivo') {
+      return t(c.alElegir !== 'archivo' ? 'cal.sindia.archivo' : compartir ? 'cal.sindia.archivo.listo.app' : 'cal.sindia.archivo.listo');
+    }
     if (destino === 'archivo') return t(compartir ? 'cal.dest.archivo.sub.app' : 'cal.dest.archivo.sub');
     if (destino === 'android' && calendarios && calendarios.length > 1) {
       return (
@@ -241,6 +244,20 @@ function RitmoCalendarioHoja({ plan, onClose }) {
   };
 
   const accion = (destino) => {
+    /* SIN DÍA, EL ARCHIVO ES «AL ELEGIR» (Ez, 3A del 16 nov.): sin día no hay nada que descargar,
+       así que se apunta, y `calendarioAlElegir` lo da en el toque de la loseta. Se deshace aquí. */
+    if (sinDia && destino === 'archivo') {
+      const marcado = c.alElegir === 'archivo';
+      return (
+        <button type="button" className={'pace-rt-cal-btn' + (!marcado && !conectados.length ? ' pace-rt-lleno' : '')} data-pace-cal-alelegir={marcado ? 'si' : 'no'}
+          disabled={!!trabajo} onClick={() => {
+            calendarioGuardarAjustes({ alElegir: marcado ? null : 'archivo' });
+            setAviso(marcado ? null : { tipo: 'ok', texto: t('cal.sindia.archivo.hecho') });
+          }}>
+          {t(marcado ? 'cal.btn.alelegir.cancelar' : 'cal.btn.alelegir')}
+        </button>
+      );
+    }
     /* Sin día y sin permiso vivo (el pase de Google caducó), la fila vuelve a ofrecer «Conectar». */
     if (solo && destino === solo.destino && !(sinDia && !solo.conAcceso)) {
       /* mientras «Reintentar» escribe, el motor está trabajando: el botón sigue en su sitio */
@@ -328,6 +345,8 @@ function RitmoCalendarioHoja({ plan, onClose }) {
         <div className="pace-rt-cal-resumen" data-pace-cal-resumen>{resumen}</div>
         {/* Ya se mantiene solo: lo que se mueva en el calendario vuelve a su sitio (Ez, 12A del 30 oct.). */}
         {solo && !sinDia ? <div className="pace-rt-cal-cambiar" data-pace-cal-cambiar>{t('cal.solo.cambiar')}</div> : null}
+        {/* Sin ningún calendario que conectar (la web sin las altas, Ez 3A): solo el archivo, y se dice. */}
+        {sinDia && !conectados.length ? <div className="pace-rt-cal-cambiar" data-pace-cal-sindia-nota>{t(compartir ? 'cal.sindia.app' : 'cal.sindia.web')}</div> : null}
         {conectados.map(fila)}
         {conectados.length ? (
           <label className="pace-rt-cal-chk">
@@ -336,7 +355,8 @@ function RitmoCalendarioHoja({ plan, onClose }) {
           </label>
         ) : null}
         {casillaMantener}
-        {fila('archivo')}
+        {/* Ya conectado, sin día la hoja enseña solo ese destino: el archivo al elegir sería el día dos veces. */}
+        {sinDia && calendarioConectadoAhora() ? null : fila('archivo')}
         {nota}
         <div className="pace-rt-pie" style={{ justifyContent: 'flex-end' }}>
           <Button variant="primary" onClick={onClose}>{t('ritmo.listo')}</Button>

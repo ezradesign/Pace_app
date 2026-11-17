@@ -114,6 +114,44 @@ test.describe('en el ordenador', () => {
     expect((await ritmo(page)).dia || null, 'abrir la hoja no elige el día').toBe(null);
     expect(errores).toEqual([]);
   });
+
+  /* Ez, 3A: en la web sin las altas solo hay archivo, y la hoja lo dice sin prometer Google. */
+  test('en la web sin las altas, la hoja dice que es un archivo, y «Al elegir» lo descarga en el toque de la loseta', async ({ page, context }) => {
+    const errores = capturarErrores(page);
+    await abrir(page, context);
+    await vis(page, '[data-pace-ritmo-tarjeta-calendario]').click();
+    const hoja = page.locator('[data-pace-cal]');
+    await expect(hoja.locator('[data-pace-cal-destino]')).toHaveCount(1);
+    await expect(hoja.locator('[data-pace-cal-sindia-nota]')).toHaveText(
+      'En la web, PACE te da un archivo y tu calendario lo añade. Si cambias el día, descárgalo otra vez.');
+    await expect(hoja).not.toContainText(/Google|Outlook|Mantenerlo/);
+    const archivo = hoja.locator('[data-pace-cal-destino="archivo"]');
+    await expect(archivo.locator('.pace-rt-cal-s')).toHaveText('Un archivo para tu calendario, en cuanto elijas tu día');
+    await archivo.locator('button').click();
+    await expect(hoja.locator('[data-pace-cal-aviso="ok"]')).toHaveText('Hecho: en cuanto elijas cuánto trabajas, tendrás el archivo.');
+    await expect(archivo.locator('button')).toHaveText('Cancelar');
+    await expect(archivo.locator('.pace-rt-cal-s')).toHaveText('Se descargará en cuanto elijas tu día');
+    expect((await ritmo(page)).calendario.alElegir).toBe('archivo');
+    await page.getByRole('button', { name: 'Listo', exact: true }).click();
+    await expect(vis(page, '[data-pace-ritmo-tarjeta-calendario]'), 'un archivo no es un calendario conectado').toHaveText('Al calendario');
+
+    const descarga = page.waitForEvent('download', { timeout: 5000 });
+    await vis(page, '[data-pace-ritmo-loseta="1h"]').click();
+    expect((await descarga).suggestedFilename()).toBe('pace-2026-11-16.ics');
+    expect(errores).toEqual([]);
+  });
+
+  test('con las altas, la hoja sin día ofrece Google y Outlook con «Conectar» y «Mantenerlo al día solo» en pruebas, sin la frase del archivo', async ({ page, context }) => {
+    await abrir(page, context);
+    await page.evaluate(() => { CALENDARIO_IDS.google = 'id-de-prueba'; CALENDARIO_IDS.microsoft = 'id-de-prueba'; });
+    await vis(page, '[data-pace-ritmo-tarjeta-calendario]').click();
+    const hoja = page.locator('[data-pace-cal]');
+    await expect(hoja.locator('[data-pace-cal-destino="google"] button')).toHaveText('Conectar');
+    await expect(hoja.locator('[data-pace-cal-destino="microsoft"] button')).toHaveText('Conectar');
+    await expect(hoja.locator('[data-pace-cal-mantener]')).toBeChecked();
+    await expect(hoja.locator('label:has([data-pace-cal-mantener]) small')).toContainText('En pruebas');
+    await expect(hoja.locator('[data-pace-cal-sindia-nota]')).toHaveCount(0);
+  });
 });
 
 test.describe('en Android', () => {
