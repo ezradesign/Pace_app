@@ -225,13 +225,18 @@ const statsPanelTabStyles = {
      escritorio, al lado del título (la hoja la estrecha a 360 px). Así la semana, con su
      nota, cabe sin scroll en una ventana de 680 px. */
   container: {
-    display: 'flex', gap: 2, flex: '1 1 100%', marginTop: 'var(--s-5)',
+    display: 'flex', gap: 2, flex: '1 1 100%', minWidth: 0, marginTop: 'var(--s-5)',
     background: 'var(--paper-2)', borderRadius: 'var(--r-sm)', padding: 3,
   },
   /* CADA PESTAÑA TOMA EL ANCHO DE SU NOMBRE (v0.183.0): con «Qué te ayuda» son cinco, y cinco
-     iguales cortaban la última a 360 px; sin PACE completo tres llevan además el candado. */
+     iguales cortaban la última a 360 px; sin PACE completo tres llevan además el candado.
+     SI UN DÍA NO CABEN, ENCOGEN CON PUNTOS SUSPENSIVOS (textos largos, 17 nov. 2026): sin
+     `minWidth: 0` una pestaña no baja de su nombre y la hoja entera se movía de lado (87 px a
+     360 con un texto un 30 % más largo). En castellano y en inglés caben y nada cambia. `clip` y
+     no `hidden`: no recorta en vertical la zona de toque de toques.css. */
   tab: (active) => ({
     flex: '1 1 auto', padding: '7px 4px', border: 'none', borderRadius: 'var(--r-sm)', whiteSpace: 'nowrap',
+    minWidth: 0, overflowX: 'clip', textOverflow: 'ellipsis',
     cursor: 'pointer', fontSize: 12, fontWeight: active ? 600 : 400, letterSpacing: 0.5,
     background: active ? 'var(--paper)' : 'transparent',
     color: active ? 'var(--ink)' : 'var(--ink-3)',

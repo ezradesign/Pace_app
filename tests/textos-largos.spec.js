@@ -43,10 +43,10 @@ const GRUPOS = {
    cuántos px como mucho (lo medido el 17 nov. y un margen para la letra de cada máquina). */
 const CONOCIDOS = [
   /* Ajustes en un móvil que vibra («Vibrar», 0.208.0) y con las notificaciones bloqueadas (el navegador
-     de las pruebas las tiene bloqueadas): 12 px de scroll a 360 × 640. Espera a Ez (página, R1). */
+     de las pruebas las tiene bloqueadas): 12 px de scroll a 360 × 640. Espera a Ez (pregunta 1 de docs/proposals/textos-largos-17nov). */
   { modos: ['en', 'es'], tams: ['360×640'], escena: 'ajustes', tipo: 'scroll', donde: /^tweaks-panel/, tope: 20 },
   /* Las otras tres puertas de la pausa por libre (Hidrátate · Respira · Muévete), en una línea por
-     decisión de Ez (9 oct.): en castellano a 360 miden 291 px en 286. Espera a Ez (página, R2). */
+     decisión de Ez (9 oct.): en castellano a 360 miden 291 px en 286. Espera a Ez (pregunta 2). */
   { modos: ['es'], tams: ['360×640', '360×740'], escena: 'pausa', tipo: 'se sale de su caja', donde: /^break-otras/, tope: 10 },
   /* SOLO CON LOS TEXTOS LARGOS (en la página, «solo con un texto más largo»): */
   /* · esa misma fila: 47 px fuera de su caja y la ventana entera se mueve de lado 23 px; */
@@ -59,9 +59,6 @@ const CONOCIDOS = [
   { modos: ['largos'], tams: ['360×640'], escena: 'ajustes', tipo: 'scroll', donde: /^tweaks-panel/, tope: 240 },
   { modos: ['largos'], tams: ['360×740'], escena: 'ajustes', tipo: 'scroll', donde: /^tweaks-panel/, tope: 140 },
   { modos: ['largos'], tams: ['1280×800'], escena: 'ajustes', tipo: 'scroll', donde: /^tweaks-panel/, tope: 30 },
-  /* · las pestañas de Estadísticas no encogían y la hoja entera se movía de lado 87 px a 360. */
-  { modos: ['largos'], tams: ['360×640', '360×740'], escena: 'estadisticas', tipo: 'scroll de lado', donde: /^modal-card/, tope: 100 },
-  { modos: ['largos'], tams: ['360×640', '360×740'], escena: 'estadisticas', tipo: 'se sale de su caja', donde: /^modal-head/, tope: 160 },
 ];
 
 /* LO QUE SE VE SIN LAS MARCAS Y ESTÁ BIEN: no es un texto de la app, o ya trae sus dos idiomas. */
