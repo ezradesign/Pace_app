@@ -55,6 +55,7 @@ figure{margin:0}
 figure img{display:block;width:100%;max-width:360px;height:auto;border:1px solid var(--line);border-radius:6px;background:var(--card)}
 figcaption{font-size:13px;color:var(--ink-3);margin-top:6px}
 .sola{max-width:300px;margin:14px 0}
+.par.cuatro{max-width:760px}
 .pregunta{border-left:3px solid var(--terra);padding:4px 0 4px 14px;margin:22px 0}
 .pregunta p{margin-bottom:6px}
 .rec{color:var(--olive)}
@@ -65,7 +66,7 @@ li{margin-bottom:6px}
 <main>
   <div class="eyebrow">PACE · antes de que los testers vean PACE en inglés · 17 nov. 2026</div>
   <h1>Textos largos</h1>
-  <p class="lead">Una prueba que alarga cada texto de PACE un 30 % para ver qué se rompe antes de que lo vea nadie. En inglés y en castellano de verdad salen dos cosas, que piden tu letra; con los textos más largos, cuatro más, y una ya está arreglada.</p>
+  <p class="lead">Una prueba que alarga cada texto de PACE un 30 % para ver qué se rompe antes de que lo vea nadie. En inglés y en castellano de verdad salen dos cosas que piden tu letra; con los textos más largos, cuatro más, y una de ellas (las pestañas de Estadísticas) también pide la tuya.</p>
   <p>Nada de esto cambia lo que ves hoy: el arreglo montado solo actúa cuando un texto no cabe, y en castellano y en inglés cabe.</p>
 
   <h2>Cómo se ha mirado</h2>
@@ -81,7 +82,7 @@ li{margin-bottom:6px}
       <tr><td>Ajustes, en un móvil que vibra y con los avisos bloqueados</td><td>360 × 640</td><td>Todo el panel: «Vibrar» y la línea «El navegador tiene las notificaciones bloqueadas…»</td><td class="px">12 px de scroll</td><td><span class="chip ya">Sí, en los dos idiomas</span> · pregunta 1</td></tr>
       <tr><td>Ventana de la pausa, por libre</td><td>360 de ancho</td><td>«Hidrátate · Respira · Muévete»</td><td class="px">5 px fuera de su caja</td><td><span class="chip ya">Sí, en castellano</span> · pregunta 2</td></tr>
       <tr><td>Ventana de la pausa, por libre</td><td>360 de ancho</td><td>La misma fila</td><td class="px">47 px fuera; la ventana se mueve 23 px de lado</td><td><span class="chip largo">Solo más largo</span> · pregunta 2</td></tr>
-      <tr><td>Estadísticas</td><td>360 de ancho</td><td>Las pestañas «Hoy · Semana · Mes · Año · Qué te ayuda»</td><td class="px">La hoja se movía 87 px de lado</td><td><span class="chip hecho">Arreglado</span></td></tr>
+      <tr><td>Estadísticas</td><td>360 de ancho</td><td>Las pestañas «Hoy · Semana · Mes · Año · Qué te ayuda»</td><td class="px">La hoja se movía 87 px de lado</td><td><span class="chip largo">Solo más largo</span> · pregunta 3</td></tr>
       <tr><td>La tarjeta del día (la pregunta)</td><td>360 × 640</td><td>«¿Cuánto trabajas hoy?» con sus horas y sus cuatro respuestas</td><td class="px">28 px de scroll en la home</td><td><span class="chip largo">Solo más largo</span></td></tr>
       <tr><td>Ajustes</td><td>360 × 640 · 360 × 740 · 1280 × 800</td><td>Todo el panel</td><td class="px">200 · 100 · 15 px de scroll</td><td><span class="chip largo">Solo más largo</span></td></tr>
       <tr><td>Todas</td><td>Los tres</td><td>Textos sin traducir</td><td class="px">Ninguno</td><td><span class="chip hecho">Bien</span></td></tr>
@@ -90,13 +91,6 @@ li{margin-bottom:6px}
   <p>Lo demás cabe en los tres tamaños y de las tres maneras: la home por libre y con la jornada, el runner de Mueve y Estira, Respira, el sobre, las bibliotecas, logros, la hoja de compra y la bienvenida.</p>
   <p class="nota">Lo que sale sin las marcas y está bien: las fechas, que las escribe el navegador ya en el idioma de la app («9 Nov»); «ES» y «EN» en la bienvenida; y las novedades del sobre, que se escriben a mano en los dos idiomas.</p>
 
-  <h2>Arreglado: las pestañas de Estadísticas</h2>
-  <p>Con un texto más largo, las cinco pestañas no podían encoger y empujaban la hoja entera hacia un lado: se podía arrastrar 87 px. Ahora, si un día no caben, encogen con puntos suspensivos, como ya hacen otros textos de PACE.</p>
-  <div class="par">
-    <div class="lado hoy"><div class="t">Antes, con textos largos</div><figure><img src="fotos/stats-largos-antes.png" alt="Estadísticas con los textos largos antes del arreglo: las pestañas se salen por la derecha" loading="lazy"></figure><figcaption>El recuadro: las pestañas se salen de la hoja, que se puede arrastrar 87 px de lado.</figcaption></div>
-    <div class="lado luego"><div class="t">Con el arreglo</div><figure><img src="fotos/stats-largos-despues.png" alt="Estadísticas con los textos largos y el arreglo: las cinco pestañas caben con puntos suspensivos" loading="lazy"></figure><figcaption>Caben, con puntos suspensivos.</figcaption></div>
-  </div>
-  <p class="nota">En castellano y en inglés no cambia nada: a 360 de ancho les sobran 41 px.</p>
   <h2>1 · Ajustes pide 12 px en el móvil</h2>
   <p>«Vibrar» (nuevo en la 0.208.0) solo sale en un móvil que puede vibrar, y la línea «El navegador tiene las notificaciones bloqueadas para este sitio» solo cuando los avisos de PACE están bloqueados. Cada una por separado cabe; las dos a la vez, a 360 × 640, piden 12 px de scroll, en castellano y en inglés. En la app de Android la frase es más larga («Los avisos de PACE están desactivados en los ajustes de Android»), así que ahí seguramente piden más.</p>
   <div class="par">
@@ -115,6 +109,16 @@ li{margin-bottom:6px}
   </div>
   <p><strong>A</strong>: en el móvil, el hueco entre las tres baja de 16 a 10 px. Sigue en una línea, del mismo tamaño, y cabe centrada. <strong>B</strong>: si no caben, parten en dos líneas; en castellano, a 360, ya saldrían en dos, con «Muévete» debajo.</p>
 
+  <h2>3 · Las pestañas de Estadísticas, si un día no caben</h2>
+  <p>Con un texto más largo, las cinco pestañas no podían encoger y empujaban la hoja entera hacia un lado: se podía arrastrar 87 px. Lo monté para que encogieran con puntos suspensivos, pero así encogen todas a la vez y no se lee ninguna, tampoco la que tienes elegida. En castellano y en inglés no pasa nada de esto: a 360 de ancho les sobran 41 px. Es para cuando llegue un idioma más largo.</p>
+  <div class="par cuatro">
+    <div class="lado hoy"><div class="t">Antes, con textos largos</div><figure><img src="fotos/stats-largos-antes.png" alt="Estadísticas con los textos largos sin arreglo: las pestañas se salen por la derecha" loading="lazy"></figure><figcaption>Se salen de la hoja, que se puede arrastrar 87 px de lado.</figcaption></div>
+    <div class="lado hoy"><div class="t">Montado ahora · todas con «…»</div><figure><img src="fotos/stats-largos-despues.png" alt="Lo montado: las cinco pestañas encogen con puntos suspensivos y no se lee ninguna" loading="lazy"></figure><figcaption>Caben, pero no se lee ninguna: «Tóó…», «Séém…».</figcaption></div>
+    <div class="lado luego"><div class="t">A · la elegida, entera</div><figure><img src="fotos/stats-largos-a.png" alt="Opción A: la pestaña elegida se lee entera y las demás encogen con puntos suspensivos" loading="lazy"></figure><figcaption>Siempre sabes dónde estás; las otras cuatro, cortadas.</figcaption></div>
+    <div class="lado luego"><div class="t">B · se deslizan de lado <span class="rec">(recomendada)</span></div><figure><img src="fotos/stats-largos-b.png" alt="Opción B: las pestañas se leen enteras y la fila se desliza de lado; la quinta queda fuera, a la derecha" loading="lazy"></figure><figcaption>Todas enteras; la quinta queda fuera, a la derecha, y se llega deslizando.</figcaption></div>
+  </div>
+  <p><strong>A</strong>: la pestaña elegida no encoge nunca y las demás encogen con «…». <strong>B</strong>: ninguna encoge; si no caben, la fila se desliza de lado, sin barra, como los filtros de la biblioteca de Mueve y Estira. Recomiendo la B porque los cinco nombres se leen enteros, aunque «Qué te ayuda» quede fuera hasta que deslizas.</p>
+
   <h2>Solo con un texto más largo</h2>
   <p>No pide nada hoy; queda vigilado por la prueba, que se pone en rojo si crece.</p>
   <div class="par">
@@ -130,7 +134,7 @@ li{margin-bottom:6px}
 
   <div class="pregunta">
     <h3>¿Qué letra?</h3>
-    <p>Pregunta 1 (Ajustes): A o B. Pregunta 2 (la pausa): A o B. <span class="rec">Recomendadas: 1A y 2A.</span></p>
-    <p class="nota">Montado y subido en la rama <code>claude/textos-largos-17nov-5fb6a3</code>: la prueba (45 pruebas nuevas, con el idioma largo solo en las pruebas y vigilado por <code>verify</code>) y el arreglo de Estadísticas. Falta tu «júntalo».</p>
+    <p>Pregunta 1 (Ajustes): A o B. Pregunta 2 (la pausa): A o B. Pregunta 3 (Estadísticas): lo montado, A o B. <span class="rec">Recomendadas: 1A, 2A y 3B.</span></p>
+    <p class="nota">Montado y subido en la rama <code>claude/textos-largos-17nov-5fb6a3</code>: la prueba (45 pruebas nuevas, con el idioma largo solo en las pruebas y vigilado por <code>verify</code>) y lo montado de Estadísticas (la pregunta 3: con tu letra lo cambio). Falta tu «júntalo».</p>
   </div>
 </main>

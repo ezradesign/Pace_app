@@ -105,27 +105,30 @@ async function foto(b, nombre, modo, w, h, id, momento, o) {
   /* Cómo se ven los textos largos: la pantalla entera. */
   await foto(b, 'largos-home-360', 'largos', 360, 740, 'home-jornada', 'la home');
 
-  /* Lo montado: la cabecera de Estadísticas, antes (las pestañas sin poder encoger) y con el arreglo. */
+  /* Pregunta 3 · la cabecera de Estadísticas con los textos largos: antes (las pestañas sin poder encoger),
+     lo montado (todas con «…») y las dos opciones, pintadas solo en la foto. Hasta la fila de las pestañas:
+     las tarjetas de debajo, cortadas, despistaban. */
   const cabecera = () => {
     const c = [...document.querySelectorAll('[data-pace-modal-card]')].filter((e) => e.getClientRects().length).pop().getBoundingClientRect();
     const t = document.querySelector('[data-pace-stats-tabs]').getBoundingClientRect();
     const y = Math.max(0, c.top - 8);
-    return { x: 0, y, width: innerWidth, height: t.bottom + 40 - y };
+    return { x: 0, y, width: innerWidth, height: t.bottom + 14 - y };
   };
-  const sinEncoger = () => { const s = document.createElement('style'); s.textContent = '[data-pace-stats-tabs],[data-pace-stats-tab]{min-width:auto!important}'; document.head.appendChild(s); };
+  const recuadro = (color) => new Function('const t = document.querySelector(\'[data-pace-stats-tabs]\').getBoundingClientRect();' +
+    'window.__marca({ left: t.left - 3, top: t.top - 3, width: t.width + 6, height: t.height + 6 }, { color: \'' + color + '\', discontinua: true });');
+  const conCss = (css) => new Function('const s = document.createElement(\'style\'); s.textContent = ' + JSON.stringify(css) + '; document.head.appendChild(s);');
   await foto(b, 'stats-largos-antes', 'largos', 360, 640, 'estadisticas', 'pestaña today', {
-    antes: sinEncoger, recorte: cabecera,
-    marcas: () => {
-      const t = document.querySelector('[data-pace-stats-tabs]').getBoundingClientRect();
-      window.__marca({ left: t.left - 3, top: t.top - 3, width: t.width + 6, height: t.height + 6 }, { color: 'terra', discontinua: true });
-    },
+    antes: conCss('[data-pace-stats-tabs],[data-pace-stats-tab]{min-width:auto!important}'), recorte: cabecera, marcas: recuadro('terra'),
   });
-  await foto(b, 'stats-largos-despues', 'largos', 360, 640, 'estadisticas', 'pestaña today', {
-    recorte: cabecera,
-    marcas: () => {
-      const t = document.querySelector('[data-pace-stats-tabs]').getBoundingClientRect();
-      window.__marca({ left: t.left - 3, top: t.top - 3, width: t.width + 6, height: t.height + 6 }, { color: 'olivo', discontinua: true });
-    },
+  await foto(b, 'stats-largos-despues', 'largos', 360, 640, 'estadisticas', 'pestaña today', { recorte: cabecera, marcas: recuadro('terra') });
+  /* A: la pestaña elegida no encoge nunca; las demás, con «…». */
+  await foto(b, 'stats-largos-a', 'largos', 360, 640, 'estadisticas', 'pestaña today', {
+    antes: conCss('[data-pace-stats-tab][aria-pressed="true"]{flex-shrink:0!important}'), recorte: cabecera, marcas: recuadro('olivo'),
+  });
+  /* B: ninguna encoge; la fila se desliza de lado, sin barra, como los filtros de la biblioteca. */
+  await foto(b, 'stats-largos-b', 'largos', 360, 640, 'estadisticas', 'pestaña today', {
+    antes: conCss('[data-pace-stats-tabs]{overflow-x:auto!important;scrollbar-width:none}[data-pace-stats-tab]{flex-shrink:0!important}'),
+    recorte: cabecera, marcas: recuadro('olivo'),
   });
 
   /* Pregunta 1 · Ajustes a 360×640 con «Vibrar» y las notificaciones bloqueadas: desde «Sesiones» hasta el
