@@ -50,16 +50,28 @@ function paceVozCuerpoPrecarga() {
   } catch (e) { /* sin voz suenan los cuencos */ }
 }
 
+/* Lo que ocupa una palabra con su hueco. ¿Cabe en `max`? */
+function paceVozCuerpoCabe(e, max) {
+  return !!e && (e.b - e.a) + PACE_VOZ_CUERPO_HUECO <= max;
+}
+
 /* Suena la palabra `palabra` (n1…n25, c3…c1, colocate, siguiente, ya, ultimo, izquierda, derecha, cambia,
    descansa) si está y cabe en `max` segundos. `op` es lo que pasa el runner (MoveSessionV1.voz.jsx):
-   `ultima`, la última repetición de una serie. true = suena o ya está en la cola. */
+   `ultima`, la última repetición de una serie, y `serie`, las palabras de su serie. true = suena o ya está
+   en la cola.
+
+   UNA PALABRA CON `max` VA A SU HORA (los números y la cuenta atrás): no hace fila, porque una repetición
+   que empieza tarde se mete en la siguiente. Si la de antes aún suena, madera. Y LA SERIE SE DECIDE ENTERA:
+   si una de sus palabras no cabe, ninguna, para no oír unos números con voz y otros con madera. */
 function paceVozCuerpoIntenta(palabra, max, op) {
   try {
     if (typeof paceVozEncendida === 'function' && !paceVozEncendida()) return false;
     var j = paceVozCuerpoJuego();
     var e = j.palabras[palabra];
     if (!e) return false;
-    if (typeof max === 'number' && (e.b - e.a) + PACE_VOZ_CUERPO_HUECO > max) return false;
+    var aSuHora = typeof max === 'number';
+    if (aSuHora && !paceVozCuerpoCabe(e, max)) return false;
+    if (aSuHora && op && op.serie && !op.serie.every(function (p) { return paceVozCuerpoCabe(j.palabras[p], max); })) return false;
     paceVozCuerpoPrecarga();
     var toma = (_paceVozCuerpoTomas[j.clave] || {})[e.archivo];
     if (!toma || !toma.buffer) return false;
@@ -68,6 +80,7 @@ function paceVozCuerpoIntenta(palabra, max, op) {
     if (ctx.state === 'suspended') { try { ctx.resume(); } catch (er) {} }
     if (ctx.state !== 'running') return false;
     var ahora = ctx.currentTime;
+    if (aSuHora && _paceVozCuerpoLibre > ahora) return false;
     var t0 = Math.max(ahora, _paceVozCuerpoLibre);
     if (t0 - ahora > PACE_VOZ_CUERPO_ESPERA) return true;   // llegaría tarde: se deja, sin tono encima
     var dur = Math.min(e.b, toma.buffer.duration) - e.a;

@@ -122,3 +122,41 @@ test('fila-2 · «Fondos en silla», 12 repeticiones de 4 s y «Descansa» detr�
   await correrRutina(page, 360);
   mirarTiempos(await sonado(page));
 });
+
+test('fila-3 · un número no espera en la fila: si la palabra de antes aún suena, madera', async ({ page, context }) => {
+  await prepararVoz(page, context);
+  const r = await page.evaluate(() => {
+    window.__reloj = 1000;
+    window.paceVozCuerpoIntenta('cambia');
+    window.__reloj = 1000.3;
+    const op = window.v1VozRep(3, 4, false, 12);
+    const dijo = window.paceVozCuerpoIntenta(op.voz, op.max, op);
+    const l = window.__llamadas[window.__llamadas.length - 1];
+    return { dijo, ini: l.f >= 0 ? window.__fuentes[l.f].t : null };
+  });
+  if (r.dijo) expect(r.ini - 1000.3, 'el número sonó tarde, detrás de «Cambia de lado»').toBeLessThan(0.1);
+  expect(r.dijo, 'con «Cambia de lado» sonando, el número va a madera').toBe(false);
+});
+
+test('fila-4 · la serie se decide entera: o todos los números con voz o todos a madera', async ({ page, context }) => {
+  await prepararVoz(page, context);
+  const r = await page.evaluate(() => {
+    const una = (repSec) => {
+      const dichos = [];
+      for (let n = 1; n <= 12; n++) {
+        window.__reloj = 2000 + n * 10 + repSec * 100;
+        const op = window.v1VozRep(n, repSec, false, 12);
+        dichos.push(window.paceVozCuerpoIntenta(op.voz, op.max, op));
+      }
+      return dichos;
+    };
+    /* A 0,9 s por repetición caben unos números de sulafat y otros no: ocupan de 0,61 a 0,83 s, y con su
+       hueco de 0,15, del «tres» y el «ocho» (0,76) al «seis» (0,98). Ninguna rutina va tan rápida (la que
+       más, 2 s); aquí es para ver la regla. */
+    return { corta: una(0.9), larga: una(4), cuenta: [3, 2, 1].map((n) => { window.__reloj = 3000 + (4 - n); const op = window.v1VozCuenta(n); return window.paceVozCuerpoIntenta(op.voz, op.max, op); }) };
+  });
+  expect(new Set(r.corta).size, 'a 0,9 s, unos números con voz y otros a madera: ' + r.corta.join(' ')).toBe(1);
+  expect(r.corta[0]).toBe(false);
+  expect(r.larga.every(Boolean)).toBe(true);
+  expect(r.cuenta.every(Boolean)).toBe(true);
+});

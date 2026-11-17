@@ -8,18 +8,22 @@
 
    Va aparte porque el runner roza las 500 líneas. `function` a propósito: un `const` no cruza la IIFE. */
 
-/* El «tres, dos, uno» del final de cualquier cuenta: van de segundo en segundo, así que la palabra cabe
-   en 1 s o suena la madera. */
+/* El «tres, dos, uno» del final de cualquier cuenta: van de segundo en segundo, así que caben las tres en
+   1 s o suenan las tres a madera (Sound.voz.cuerpo.js decide la serie entera). */
+var V1_VOZ_CUENTA = ['c3', 'c2', 'c1'];
 function v1VozCuenta(n) {
-  return n >= 1 && n <= 3 ? { voz: 'c' + n, max: 1 } : null;
+  return n >= 1 && n <= 3 ? { voz: 'c' + n, max: 1, serie: V1_VOZ_CUENTA } : null;
 }
 
-/* Cada repetición guiada se cuenta al acabarla, con la palabra que quepa en lo que dura una repetición.
-   La última se dice entera y lo que viene después espera a que acabe (la cola de Sound.voz.cuerpo.js);
-   con el tono no suena nada en la última, como siempre: en ese momento ya suena el cuenco del paso. */
-function v1VozRep(n, repSec, ultima) {
+/* Cada repetición guiada se cuenta al acabarla, si caben todos los números de la serie en lo que dura una
+   repetición; si no, la serie entera va a madera. La última se dice entera y lo que viene después espera a
+   que acabe (la cola de Sound.voz.cuerpo.js); con el tono no suena nada en la última, como siempre: en ese
+   momento ya suena el cuenco del paso. Una serie de más de 25 no tiene todos sus números: madera. */
+function v1VozRep(n, repSec, ultima, total) {
   if (!(n >= 1 && n <= 25 && n === Math.floor(n))) return ultima ? { soloVoz: true } : null;
-  return ultima ? { voz: 'n' + n, soloVoz: true, ultima: true } : { voz: 'n' + n, max: repSec };
+  const serie = [];
+  for (let k = 1; k <= (total || n); k++) serie.push('n' + k);
+  return ultima ? { voz: 'n' + n, max: repSec, serie, soloVoz: true, ultima: true } : { voz: 'n' + n, max: repSec, serie };
 }
 
 /* Al entrar en un paso: «Descansa»; «Último paso» en el último con ejercicio (si la rutina tiene más de
