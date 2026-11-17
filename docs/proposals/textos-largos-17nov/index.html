@@ -24,7 +24,7 @@
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
-main{max-width:880px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 72px}
+main{max-width:1160px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 72px}
 h1,h2,h3{font-family:var(--display);font-style:italic;font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
 h1{font-size:clamp(32px,6vw,44px)}
 h2{font-size:clamp(23px,4vw,28px);margin:44px 0 10px;padding-top:22px;border-top:1px solid var(--line)}
@@ -46,12 +46,13 @@ td.px{white-space:nowrap;font-variant-numeric:tabular-nums}
 .ya{background:var(--terra-soft);color:var(--terra)}
 .largo{background:var(--olive-soft);color:var(--ink-2)}
 .hecho{background:var(--olive-soft);color:var(--olive)}
-.par{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin:14px 0}
+/* Las fotos son recortes del móvil a 360 px, a su tamaño: tres por fila cuando caben, una debajo de otra si no. */
+.par{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),360px));margin:16px 0}
 .lado{min-width:0}
-.lado .t{font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;color:var(--ink-3)}
+.lado .t{font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;color:var(--ink-3);min-height:2.9em}
 .hoy .t{color:var(--terra)}.luego .t{color:var(--olive)}
 figure{margin:0}
-figure img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:6px;background:var(--card)}
+figure img{display:block;width:100%;max-width:360px;height:auto;border:1px solid var(--line);border-radius:6px;background:var(--card)}
 figcaption{font-size:13px;color:var(--ink-3);margin-top:6px}
 .sola{max-width:300px;margin:14px 0}
 .pregunta{border-left:3px solid var(--terra);padding:4px 0 4px 14px;margin:22px 0}
@@ -92,39 +93,39 @@ li{margin-bottom:6px}
   <h2>Arreglado: las pestañas de Estadísticas</h2>
   <p>Con un texto más largo, las cinco pestañas no podían encoger y empujaban la hoja entera hacia un lado: se podía arrastrar 87 px. Ahora, si un día no caben, encogen con puntos suspensivos, como ya hacen otros textos de PACE.</p>
   <div class="par">
-    <div class="lado hoy"><div class="t">Antes, con textos largos</div><figure><img src="fotos/stats-largos-antes.png" alt="Estadísticas con los textos largos antes del arreglo: las pestañas se salen por la derecha" loading="lazy"></figure></div>
-    <div class="lado luego"><div class="t">Con el arreglo</div><figure><img src="fotos/stats-largos-despues.png" alt="Estadísticas con los textos largos y el arreglo: las cinco pestañas caben con puntos suspensivos" loading="lazy"></figure></div>
+    <div class="lado hoy"><div class="t">Antes, con textos largos</div><figure><img src="fotos/stats-largos-antes.png" alt="Estadísticas con los textos largos antes del arreglo: las pestañas se salen por la derecha" loading="lazy"></figure><figcaption>El recuadro: las pestañas se salen de la hoja, que se puede arrastrar 87 px de lado.</figcaption></div>
+    <div class="lado luego"><div class="t">Con el arreglo</div><figure><img src="fotos/stats-largos-despues.png" alt="Estadísticas con los textos largos y el arreglo: las cinco pestañas caben con puntos suspensivos" loading="lazy"></figure><figcaption>Caben, con puntos suspensivos.</figcaption></div>
   </div>
   <p class="nota">En castellano y en inglés no cambia nada: a 360 de ancho les sobran 41 px.</p>
   <h2>1 · Ajustes pide 12 px en el móvil</h2>
   <p>«Vibrar» (nuevo en la 0.208.0) solo sale en un móvil que puede vibrar, y la línea «El navegador tiene las notificaciones bloqueadas para este sitio» solo cuando los avisos de PACE están bloqueados. Cada una por separado cabe; las dos a la vez, a 360 × 640, piden 12 px de scroll, en castellano y en inglés. En la app de Android la frase es más larga («Los avisos de PACE están desactivados en los ajustes de Android»), así que ahí seguramente piden más.</p>
   <div class="par">
-    <div class="lado hoy"><div class="t">Hoy · 12 px de scroll</div><figure><img src="fotos/ajustes-hoy.png" alt="Ajustes a 360 por 640 con Vibrar y la línea de notificaciones bloqueadas: el panel pide 12 px de scroll" loading="lazy"></figure></div>
-    <div class="lado luego"><div class="t">A · la nota en la línea pequeña <span class="rec">(recomendada)</span></div><figure><img src="fotos/ajustes-a.png" alt="Opción A: la línea pequeña de Aviso al terminar dice Bloqueado en el navegador, en terracota, y la línea aparte desaparece" loading="lazy"></figure><figcaption>Cabe: 0 px de scroll</figcaption></div>
-    <div class="lado"><div class="t">B · las filas más juntas en pantallas bajas</div><figure><img src="fotos/ajustes-b.png" alt="Opción B: con la pantalla baja, cada fila de Ajustes 3 px más junta" loading="lazy"></figure><figcaption>Cabe: 0 px de scroll</figcaption></div>
+    <div class="lado hoy"><div class="t">Hoy · 12 px de scroll</div><figure><img src="fotos/ajustes-hoy.png" alt="Ajustes a 360 por 640 con Vibrar y la línea de notificaciones bloqueadas: el panel pide 12 px de scroll" loading="lazy"></figure><figcaption>El sombreado: la línea de más. La raya de abajo es el borde de la pantalla: el panel pide 12 px más.</figcaption></div>
+    <div class="lado luego"><div class="t">A · la nota en la línea pequeña <span class="rec">(recomendada)</span></div><figure><img src="fotos/ajustes-a.png" alt="Opción A: la línea pequeña de Aviso al terminar dice Bloqueado en el navegador, en terracota, y la línea aparte desaparece" loading="lazy"></figure><figcaption>El sombreado: la nota, ya en la línea pequeña. Cabe, sin scroll.</figcaption></div>
+    <div class="lado"><div class="t">B · las filas más juntas en pantallas bajas</div><figure><img src="fotos/ajustes-b.png" alt="Opción B: con la pantalla baja, cada fila de Ajustes 3 px más junta" loading="lazy"></figure><figcaption>Cada fila, 3 px más junta. Cabe, sin scroll.</figcaption></div>
   </div>
   <p><strong>A</strong>: la nota deja de tener línea propia y va en la línea pequeña de «Aviso al terminar», en terracota: «Bloqueado en el navegador» (en las apps, «Desactivado en Android» o «en el iPhone»). Es lo mismo que se hizo con «La música, solo en Respira» (9 nov.): en Ajustes, nada nuevo añade alto. <strong>B</strong>: con la pantalla baja, cada fila de Ajustes 3 px más junta; cabe, pero se aprieta todo el panel por una línea que casi nadie verá.</p>
 
   <h2>2 · «Hidrátate · Respira · Muévete» en la pausa</h2>
   <p>Las otras tres puertas de la pausa van en una línea (tu B del 9 oct.). En castellano, a 360 de ancho, miden 291 px en una caja de 286: «Muévete» se mete 5 px en el margen de la ventana y la fila ya no queda centrada. En un móvil de 320 (por debajo de lo que se mide) son 25 px, y la ventana se puede mover un poco de lado; con un texto más largo, 23 px de lado.</p>
   <div class="par">
-    <div class="lado hoy"><div class="t">Hoy · 5 px fuera</div><figure><img src="fotos/pausa-hoy.png" alt="La ventana de la pausa en castellano a 360: Muévete toca el margen derecho" loading="lazy"></figure></div>
-    <div class="lado luego"><div class="t">A · menos hueco entre las tres <span class="rec">(recomendada)</span></div><figure><img src="fotos/pausa-a.png" alt="Opción A: el hueco entre Hidrátate, Respira y Muévete baja de 16 a 10 px y la fila cabe centrada" loading="lazy"></figure><figcaption>Cabe centrada: le sobran 7 px en castellano y 29 en inglés</figcaption></div>
-    <div class="lado"><div class="t">B · dos líneas si no caben</div><figure><img src="fotos/pausa-b.png" alt="Opción B: la fila parte en dos líneas y Muévete baja a la segunda" loading="lazy"></figure><figcaption>En castellano a 360, ya en dos líneas</figcaption></div>
+    <div class="lado hoy"><div class="t">Hoy · 5 px fuera</div><figure><img src="fotos/pausa-hoy.png" alt="La ventana de la pausa en castellano a 360: Muévete toca el margen derecho" loading="lazy"></figure><figcaption>Las rayas son los bordes de la caja de la fila: «Muévete» pasa 5 px (en terracota).</figcaption></div>
+    <div class="lado luego"><div class="t">A · menos hueco entre las tres <span class="rec">(recomendada)</span></div><figure><img src="fotos/pausa-a.png" alt="Opción A: el hueco entre Hidrátate, Respira y Muévete baja de 16 a 10 px y la fila cabe centrada" loading="lazy"></figure><figcaption>Cabe centrada: le sobran 7 px en castellano y 29 en inglés.</figcaption></div>
+    <div class="lado"><div class="t">B · dos líneas si no caben</div><figure><img src="fotos/pausa-b.png" alt="Opción B: la fila parte en dos líneas y Muévete baja a la segunda" loading="lazy"></figure><figcaption>En castellano, a 360, ya sale en dos líneas.</figcaption></div>
   </div>
   <p><strong>A</strong>: en el móvil, el hueco entre las tres baja de 16 a 10 px. Sigue en una línea, del mismo tamaño, y cabe centrada. <strong>B</strong>: si no caben, parten en dos líneas; en castellano, a 360, ya saldrían en dos, con «Muévete» debajo.</p>
 
   <h2>Solo con un texto más largo</h2>
   <p>No pide nada hoy; queda vigilado por la prueba, que se pone en rojo si crece.</p>
   <div class="par">
-    <div class="lado"><div class="t">La pregunta del día · 28 px</div><figure><img src="fotos/pregunta-largos.png" alt="La pregunta del día con los textos largos a 360 por 640: la home pide 28 px de scroll" loading="lazy"></figure></div>
-    <div class="lado"><div class="t">Ajustes · 200 px</div><figure><img src="fotos/ajustes-largos.png" alt="Ajustes con los textos largos a 360 por 640: el panel pide 200 px de scroll" loading="lazy"></figure></div>
-    <div class="lado"><div class="t">La pausa · 23 px de lado</div><figure><img src="fotos/pausa-largos.png" alt="La ventana de la pausa con los textos largos: la fila de las otras tres puertas se sale por la derecha" loading="lazy"></figure></div>
+    <div class="lado"><div class="t">La pregunta del día · 28 px</div><figure><img src="fotos/pregunta-largos.png" alt="La pregunta del día con los textos largos a 360 por 640: la home pide 28 px de scroll" loading="lazy"></figure><figcaption>La raya de abajo es el borde de la pantalla: la home pide 28 px más.</figcaption></div>
+    <div class="lado"><div class="t">Ajustes · 200 px</div><figure><img src="fotos/ajustes-largos.png" alt="Ajustes con los textos largos a 360 por 640: el panel pide 200 px de scroll" loading="lazy"></figure><figcaption>La raya de abajo es el borde de la pantalla: pide 200 px más.</figcaption></div>
+    <div class="lado"><div class="t">La pausa · 23 px de lado</div><figure><img src="fotos/pausa-largos.png" alt="La ventana de la pausa con los textos largos: la fila de las otras tres puertas se sale por la derecha" loading="lazy"></figure><figcaption>«Muévete» se sale 47 px de su caja y la ventana se mueve 23 px de lado.</figcaption></div>
   </div>
   <ul>
     <li><strong>La tarjeta del día</strong> (la pregunta), a 360 × 640: la home pediría 28 px. En inglés, con la letra del móvil al 115 %, ya se sabía que pide 17. Esa tarjeta la está pensando la rama del calendario: no la toco.</li>
     <li><strong>Ajustes</strong> va justo ya en castellano: con un idioma un 30 % más largo pediría 200 px a 360 × 640. Si algún día llega otro idioma, habrá que pensarlo en dos pantallas.</li>
-    <li><strong>La fila de la pausa</strong>, la de la pregunta 2: con la A, también aguanta un texto algo más largo.</li>
+    <li><strong>La fila de la pausa</strong>, la de la pregunta 2: con la A le sobran 7 px en castellano; con un texto un 30 % más largo seguiría sin caber, y solo la B lo aguanta.</li>
   </ul>
 
   <div class="pregunta">

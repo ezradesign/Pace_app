@@ -42,18 +42,37 @@ async function abrir(b, modo, w, h, e) {
   return { ctx, page };
 }
 
-/* Una foto de un momento de una escena; `antes` recibe la página justo antes de la foto. Lo que
-   se mide en ese momento (con la opción puesta) queda en `fotos.json`. */
+/* Una foto de un momento de una escena. `o.antes` pone la opción (CSS o DOM, solo en la foto),
+   `o.recorte` devuelve la zona que importa (en px de la página) y `o.marcas` dibuja encima qué mirar,
+   con `window.__marca` (rayas y guías, sin texto: lo explica el pie de cada foto). Lo que se mide en ese momento, con la opción puesta, queda en `fotos.json`. */
 const porFoto = {};
-async function foto(b, nombre, modo, w, h, id, momento, antes) {
+function marcaEnLaPagina() {
+  window.__marca = (r, o) => {
+    const d = document.createElement('div');
+    const c = o.color === 'olivo' ? '#3E5A3A' : o.color === 'tinta' ? '#77705F' : '#A85E43';
+    const tinte = o.color === 'olivo' ? 'rgba(62,90,58,.16)' : 'rgba(168,94,67,.16)';
+    d.style.cssText = 'position:fixed;z-index:2147483647;pointer-events:none;box-sizing:border-box;' +
+      'left:' + r.left + 'px;top:' + r.top + 'px;width:' + r.width + 'px;height:' + r.height + 'px;' +
+      (o.linea ? 'border-left:1.5px dashed ' + c + ';'
+        /* Una línea de letra pequeña se sombrea, con una barra a la izquierda: un borde la tacharía. */
+        : o.relleno ? 'background:' + tinte + ';border-left:3px solid ' + c + ';border-radius:2px;'
+        : 'border:2px ' + (o.discontinua ? 'dashed ' : 'solid ') + c + ';border-radius:6px;');
+    document.body.appendChild(d);
+  };
+}
+async function foto(b, nombre, modo, w, h, id, momento, o) {
+  o = o || {};
   const e = ESCENAS.find((x) => x.id === id);
   const { ctx, page } = await abrir(b, modo, w, h, e);
   let hecha = false;
   await e.llegar(page, async (m, raiz, sinScroll) => {
     if (hecha || m !== momento) return;
-    if (antes) { await page.evaluate(antes); await page.waitForTimeout(400); }
+    if (o.antes) { await page.evaluate(o.antes); await page.waitForTimeout(500); }
     porFoto[nombre] = await page.evaluate(medirTextos, { raiz, sinScroll, pseudo: modo === 'largos' });
-    await page.screenshot({ path: path.join(FOTOS, nombre + '.png') });
+    await page.evaluate(marcaEnLaPagina);
+    if (o.marcas) await page.evaluate(o.marcas);
+    const clip = o.recorte ? await page.evaluate(o.recorte) : null;
+    await page.screenshot({ path: path.join(FOTOS, nombre + '.png'), clip: clip || undefined });
     hecha = true;
   });
   await ctx.close();
@@ -65,7 +84,8 @@ async function foto(b, nombre, modo, w, h, id, momento, antes) {
   fs.mkdirSync(FOTOS, { recursive: true });
   const b = await chromium.launch();
   const todo = [];
-  for (const modo of ['largos', 'en', 'es']) {
+  /* `FOTOS_SOLO=1`: solo las fotos, sin volver a medir todo (unos 10 min). */
+  for (const modo of process.env.FOTOS_SOLO ? [] : ['largos', 'en', 'es']) {
     for (const [w, h] of TAMANOS) {
       for (const e of ESCENAS) {
         const { ctx, page } = await abrir(b, modo, w, h, e);
@@ -80,43 +100,114 @@ async function foto(b, nombre, modo, w, h, id, momento, antes) {
       process.stderr.write(modo + ' ' + w + '×' + h + '\n');
     }
   }
-  fs.writeFileSync(path.join(__dirname, 'medidas.json'), JSON.stringify(todo, null, 1));
+  if (!process.env.FOTOS_SOLO) fs.writeFileSync(path.join(__dirname, 'medidas.json'), JSON.stringify(todo, null, 1));
 
-  /* Cómo se ven los textos largos. */
+  /* Cómo se ven los textos largos: la pantalla entera. */
   await foto(b, 'largos-home-360', 'largos', 360, 740, 'home-jornada', 'la home');
-  /* Lo montado: las pestañas de Estadísticas, antes (sin poder encoger) y con el arreglo. */
+
+  /* Lo montado: la cabecera de Estadísticas, antes (las pestañas sin poder encoger) y con el arreglo. */
+  const cabecera = () => {
+    const c = [...document.querySelectorAll('[data-pace-modal-card]')].filter((e) => e.getClientRects().length).pop().getBoundingClientRect();
+    const t = document.querySelector('[data-pace-stats-tabs]').getBoundingClientRect();
+    const y = Math.max(0, c.top - 8);
+    return { x: 0, y, width: innerWidth, height: t.bottom + 40 - y };
+  };
   const sinEncoger = () => { const s = document.createElement('style'); s.textContent = '[data-pace-stats-tabs],[data-pace-stats-tab]{min-width:auto!important}'; document.head.appendChild(s); };
-  await foto(b, 'stats-largos-antes', 'largos', 360, 640, 'estadisticas', 'pestaña today', sinEncoger);
-  await foto(b, 'stats-largos-despues', 'largos', 360, 640, 'estadisticas', 'pestaña today');
-  /* R1 · Ajustes a 360×640 con «Vibrar» y las notificaciones bloqueadas, y sus dos opciones. */
-  await foto(b, 'ajustes-hoy', 'es', 360, 640, 'ajustes', 'ajustes');
-  /* A: la nota de «bloqueadas» pasa a la línea pequeña de «Aviso al terminar», sin línea propia. */
-  await foto(b, 'ajustes-a', 'es', 360, 640, 'ajustes', 'ajustes', () => {
-    const fila = document.querySelector('[data-pace-aj-fila="notify"]');
-    const nota = [...document.querySelectorAll('[data-pace-tweaks-panel] .pace-aj-nota')].find((e) => /bloqueadas/.test(e.textContent));
-    const sub = fila && [...fila.querySelectorAll('*')].reverse().find((e) => /pestaña está detrás/.test(e.textContent));
-    if (nota) nota.style.display = 'none';
-    if (sub) sub.innerHTML = '<span style="color:#A85E43">Bloqueado en el navegador</span>';
-    window.__opcion = 'A';
+  await foto(b, 'stats-largos-antes', 'largos', 360, 640, 'estadisticas', 'pestaña today', {
+    antes: sinEncoger, recorte: cabecera,
+    marcas: () => {
+      const t = document.querySelector('[data-pace-stats-tabs]').getBoundingClientRect();
+      window.__marca({ left: t.left - 3, top: t.top - 3, width: t.width + 6, height: t.height + 6 }, { color: 'terra', discontinua: true });
+    },
   });
-  /* B: con la pantalla baja, cada fila 3 px más junta. */
-  await foto(b, 'ajustes-b', 'es', 360, 640, 'ajustes', 'ajustes', () => {
-    const s = document.createElement('style');
-    s.textContent = '@media (max-height: 660px){[data-pace-tweaks-panel] .pace-aj-fila{min-height:31px!important;padding:1px 0!important}}';
-    document.head.appendChild(s);
+  await foto(b, 'stats-largos-despues', 'largos', 360, 640, 'estadisticas', 'pestaña today', {
+    recorte: cabecera,
+    marcas: () => {
+      const t = document.querySelector('[data-pace-stats-tabs]').getBoundingClientRect();
+      window.__marca({ left: t.left - 3, top: t.top - 3, width: t.width + 6, height: t.height + 6 }, { color: 'olivo', discontinua: true });
+    },
   });
-  /* R2 · las otras tres puertas de la pausa, en castellano a 360, y sus dos opciones. */
-  await foto(b, 'pausa-hoy', 'es', 360, 640, 'pausa', 'por libre');
-  await foto(b, 'pausa-a', 'es', 360, 640, 'pausa', 'por libre', () => {
-    const s = document.createElement('style'); s.textContent = '@media (max-width: 400px){.pace-break-otras{column-gap:10px!important}}'; document.head.appendChild(s);
+
+  /* Pregunta 1 · Ajustes a 360×640 con «Vibrar» y las notificaciones bloqueadas: desde «Sesiones» hasta el
+     borde de la pantalla, que es donde se ve lo que no cabe. */
+  const sesiones = () => {
+    const t = [...document.querySelectorAll('[data-pace-tweaks-panel] .pace-aj-sec-titulo')][2].getBoundingClientRect();
+    return { x: 0, y: t.top - 14, width: innerWidth, height: innerHeight - (t.top - 14) };
+  };
+  await foto(b, 'ajustes-hoy', 'es', 360, 640, 'ajustes', 'ajustes', {
+    recorte: sesiones,
+    marcas: () => {
+      const n = [...document.querySelectorAll('[data-pace-tweaks-panel] .pace-aj-nota')].find((e) => /bloqueadas/.test(e.textContent)).getBoundingClientRect();
+      window.__marca({ left: n.left - 4, top: n.top - 2, width: n.width + 10, height: n.height + 4 }, { color: 'terra', relleno: true });
+      window.__marca({ left: 0, top: innerHeight - 3, width: innerWidth, height: 3 }, { color: 'terra' });
+    },
   });
-  await foto(b, 'pausa-b', 'es', 360, 640, 'pausa', 'por libre', () => {
-    const s = document.createElement('style'); s.textContent = '.pace-break-otras{flex-wrap:wrap!important}'; document.head.appendChild(s);
+  await foto(b, 'ajustes-a', 'es', 360, 640, 'ajustes', 'ajustes', {
+    antes: () => {
+      const fila = document.querySelector('[data-pace-aj-fila="notify"]');
+      const nota = [...document.querySelectorAll('[data-pace-tweaks-panel] .pace-aj-nota')].find((e) => /bloqueadas/.test(e.textContent));
+      const sub = fila && [...fila.querySelectorAll('*')].reverse().find((e) => /pestaña está detrás/.test(e.textContent));
+      if (nota) nota.style.display = 'none';
+      if (sub) sub.innerHTML = '<span data-opcion-a style="color:#A85E43">Bloqueado en el navegador</span>';
+    },
+    recorte: sesiones,
+    marcas: () => {
+      const n = document.querySelector('[data-opcion-a]').getBoundingClientRect();
+      window.__marca({ left: n.left - 4, top: n.top - 2, width: n.width + 10, height: n.height + 4 }, { color: 'olivo', relleno: true });
+      window.__marca({ left: 0, top: innerHeight - 3, width: innerWidth, height: 3 }, { color: 'olivo' });
+    },
   });
-  await foto(b, 'pausa-largos', 'largos', 360, 640, 'pausa', 'por libre');
+  await foto(b, 'ajustes-b', 'es', 360, 640, 'ajustes', 'ajustes', {
+    antes: () => {
+      const s = document.createElement('style');
+      s.textContent = '@media (max-height: 660px){[data-pace-tweaks-panel] .pace-aj-fila{min-height:31px!important;padding:1px 0!important}}';
+      document.head.appendChild(s);
+    },
+    recorte: sesiones,
+    marcas: () => {
+      window.__marca({ left: 0, top: innerHeight - 3, width: innerWidth, height: 3 }, { color: 'olivo' });
+    },
+  });
+
+  /* Pregunta 2 · las otras tres puertas de la pausa, en castellano a 360: la parte de abajo de la ventana,
+     con dos guías donde acaba la caja de la fila. */
+  const pie = () => {
+    const c = [...document.querySelectorAll('[data-pace-modal-card]')].filter((e) => e.getClientRects().length).pop().getBoundingClientRect();
+    const f = document.querySelector('[data-pace-break-otras]').getBoundingClientRect();
+    return { x: 0, y: f.top - 14, width: innerWidth, height: c.bottom + 10 - (f.top - 14) };
+  };
+  const guias = (bien) => {
+    const f = document.querySelector('[data-pace-break-otras]');
+    const r = f.getBoundingClientRect();
+    window.__marca({ left: r.left, top: r.top - 14, width: 2, height: r.height + 28 }, { color: 'tinta', linea: true });
+    window.__marca({ left: r.right - 1, top: r.top - 14, width: 2, height: r.height + 28 }, { color: 'tinta', linea: true });
+    const ultimo = [...f.children].pop().getBoundingClientRect();
+    const fuera = ultimo.right - r.right;
+    if (!bien && fuera > 1) window.__marca({ left: r.right, top: ultimo.top + 6, width: fuera, height: ultimo.height - 12 }, { color: 'terra' });
+  };
+  await foto(b, 'pausa-hoy', 'es', 360, 640, 'pausa', 'por libre', {
+    recorte: pie, marcas: new Function('(' + guias + ')(false)'),
+  });
+  await foto(b, 'pausa-a', 'es', 360, 640, 'pausa', 'por libre', {
+    antes: () => { const s = document.createElement('style'); s.textContent = '@media (max-width: 400px){.pace-break-otras{column-gap:10px!important}}'; document.head.appendChild(s); },
+    recorte: pie, marcas: new Function('(' + guias + ')(true)'),
+  });
+  await foto(b, 'pausa-b', 'es', 360, 640, 'pausa', 'por libre', {
+    antes: () => { const s = document.createElement('style'); s.textContent = '.pace-break-otras{flex-wrap:wrap!important}'; document.head.appendChild(s); },
+    recorte: pie, marcas: new Function('(' + guias + ')(true)'),
+  });
+  await foto(b, 'pausa-largos', 'largos', 360, 640, 'pausa', 'por libre', {
+    recorte: pie, marcas: new Function('(' + guias + ')(false)'),
+  });
+
   /* Lo que solo pasa con los textos largos. */
-  await foto(b, 'pregunta-largos', 'largos', 360, 640, 'tarjeta-dia', 'la pregunta del día');
-  await foto(b, 'ajustes-largos', 'largos', 360, 640, 'ajustes', 'ajustes');
+  await foto(b, 'pregunta-largos', 'largos', 360, 640, 'tarjeta-dia', 'la pregunta del día', {
+    recorte: () => { const r = document.querySelector('[data-pace-activitybar]').getBoundingClientRect(); return { x: 0, y: r.top - 30, width: innerWidth, height: innerHeight - (r.top - 30) }; },
+    marcas: () => window.__marca({ left: 0, top: innerHeight - 3, width: innerWidth, height: 3 }, { color: 'terra' }),
+  });
+  await foto(b, 'ajustes-largos', 'largos', 360, 640, 'ajustes', 'ajustes', {
+    marcas: () => window.__marca({ left: 0, top: innerHeight - 3, width: innerWidth, height: 3 }, { color: 'terra' }),
+  });
   fs.writeFileSync(path.join(__dirname, 'fotos.json'), JSON.stringify(porFoto, null, 1));
   await b.close();
 })();
