@@ -312,6 +312,64 @@ function calendarioLlevar(destino, opciones) {
   });
 }
 
+/* CONECTAR ANTES DE ELEGIR EL DÍA (Ez, 2A del 16 nov. 2026): «Al calendario» en la tarjeta
+   «¿Cuánto trabajas hoy?» abre la hoja sin día, y «Conectar» hace aquí los pasos 1 y 2 (el
+   permiso, dentro del clic, y las reuniones de hoy, para que las opciones ya las rodeen) y
+   guarda el destino. El paso 3 llega al elegir: con «Mantenerlo al día solo», lo escribe el
+   motor; sin él, `calendarioAlElegir`, una vez. Resuelve con { reuniones, solo }. */
+function calendarioConectar(destino, opciones) {
+  var o = opciones || {};
+  var iso = ritmoHoy();
+  var solo = !!o.mantener && (typeof puedeMantenerCalendario !== 'function' || puedeMantenerCalendario());
+  var acceso;
+  try { acceso = calendarioAcceso(destino); } catch (e) { return Promise.reject(e); }
+  var leidas = null;
+  return acceso.then(function (pase) {
+    if (!o.reuniones) return null;
+    return calendarioLeer(destino, pase, iso).then(function (lista) {
+      leidas = lista.length;
+      calendarioGuardarOcupado(calendarioTramos(lista, iso), destino, iso);
+      calendarioLecturaApuntar(iso, true);
+    }, function (e) { calendarioLecturaApuntar(iso, false); throw e; });
+  }).then(function () {
+    calendarioGuardarAjustes({ destino: destino, reuniones: !!o.reuniones, calendarioId: o.calendarioId || null, fecha: iso,
+                               mantener: solo, alElegir: solo ? null : destino });
+    _calendarioRefresco.ultimo = Date.now();
+    return { reuniones: leidas, solo: solo };
+  });
+}
+
+/* ¿Hay un calendario conectado que recibirá el día al elegirlo, y con permiso vivo? Es lo que
+   dice el enlace de la tarjeta («Calendario conectado»). En la web, el pase de Google dura una
+   hora y el de Microsoft un día: sin él, el enlace vuelve a decir «Al calendario». */
+function calendarioConectadoAhora() {
+  try {
+    var c = ritmoDe(getState()).calendario || {};
+    if (!calendarioConectado(c.destino) || calendarioDestinos().indexOf(c.destino) === -1) return false;
+    if (!c.mantener && c.alElegir !== c.destino) return false;
+    if (c.mantener && !(typeof calendarioSoloActivo === 'function' && calendarioSoloActivo())) return false;
+    if (c.destino === 'android') return !(typeof _calSolo === 'object' && _calSolo.sinAcceso);
+    return calendarioPaseHasta(c.destino) > Date.now() + 60000;
+  } catch (e) { return false; }
+}
+
+/* AL ELEGIR (lo llama ritmoElegir, dentro del toque de la loseta): lo que se pidió en la hoja sin
+   día y el motor no hace solo. El archivo se descarga, o se comparte en las apps, en ese mismo
+   toque, que el navegador no bloquea; un calendario conectado sin «Mantenerlo al día solo» recibe
+   el día una vez, solo si el permiso sigue vivo: elegir no abre nunca la ventana de Google. */
+function calendarioAlElegir() {
+  try {
+    var c = ritmoDe(getState()).calendario || {};
+    var d = c.alElegir;
+    if (!d || calendarioDestinos().indexOf(d) === -1) return;
+    if (typeof calendarioSoloActivo === 'function' && calendarioSoloActivo()) return;
+    if (d !== 'archivo' && d !== 'android' && !calendarioPaseGuardado(d)) return;
+    var x = calendarioTextos();
+    calendarioLlevar(d, { reuniones: d !== 'archivo' && c.reuniones !== false, calendarioId: c.calendarioId || null, t: x.t, tn: x.tn, lang: x.lang })
+      .catch(function () {});
+  } catch (e) {}
+}
+
 /* El archivo: descarga en la web; en las apps (Android y iPhone), el menú de compartir. */
 function calendarioBajarIcs(texto, nombre) {
   if (typeof paceNativoGuardarArchivo === 'function' && paceNativoGuardarArchivo(nombre, texto)) return;
@@ -337,7 +395,10 @@ function calendarioRefrescarReuniones(forzar) {
     if (!forzar && Date.now() - _calendarioRefresco.ultimo < 5 * 60 * 1000) return Promise.resolve(false);
     var R = ritmoDe(getState());
     var c = R.calendario || {};
-    if (!calendarioConectado(c.destino) || !c.reuniones || R.libre || !R.dia) return Promise.resolve(false);
+    if (!calendarioConectado(c.destino) || !c.reuniones) return Promise.resolve(false);
+    /* Sin día elegido solo si la persona conectó desde la tarjeta: así las opciones ya rodean
+       las reuniones de hoy antes de elegir (Ez, 2A del 16 nov.). */
+    if ((R.libre || !R.dia) && !(c.mantener || c.alElegir === c.destino)) return Promise.resolve(false);
     if (calendarioDestinos().indexOf(c.destino) === -1) return Promise.resolve(false);
     var iso = ritmoHoy();
     var acceso;
@@ -380,6 +441,7 @@ try { calendarioArrancar(); } catch (e) {}
 
 Object.assign(window, {
   CALENDARIO_DESTINOS, calendarioDestinos, calendarioConectado, calendarioLlevar, calendarioRefrescarReuniones, calendarioReunionesEstado,
+  calendarioConectar, calendarioConectadoAhora, calendarioAlElegir,
   calendarioGuardarOcupado, calendarioBajarIcs, calendarioRefrescoCortar,
   calendarioAndroidEsDePace, calendarioAndroidEventos, calendarioAndroidApuntar, calendarioAndroidCrear, calendarioAndroidCambiar, calendarioAndroidBorrar,
 });

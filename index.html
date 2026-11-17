@@ -5075,7 +5075,18 @@ Object.assign(window.PACE_STRINGS.es, {
   'cal.enlace.fallo': 'No se pudo poner al día',
   'cal.solo.fallo': 'No se pudo · lo intenta otra vez a las {h}',
   'cal.solo.nota.fallo': 'No se pudo hablar con tu calendario. PACE lo vuelve a intentar cada 5 minutos.',
-  'cal.btn.reintentar': 'Reintentar'
+  'cal.btn.reintentar': 'Reintentar',
+
+
+  'cal.enlace.conectado': 'Calendario conectado',
+  'cal.enlace.conectado.corto': 'Conectado',
+  'cal.sindia.resumen': 'Cuando elijas cuánto trabajas, tu día irá a tu calendario: cada bloque con su pausa.',
+  'cal.sindia.conectado': 'Conectado · tu día irá aquí al elegirlo',
+  'cal.sindia.permiso': 'Vuelve a dar permiso para seguir',
+  'cal.sindia.hecho': 'Conectado: cuando elijas cuánto trabajas, tu día irá a tu calendario.',
+  'cal.sindia.hecho.solo': 'Conectado: cuando elijas cuánto trabajas, tu día irá solo a tu calendario.',
+  'cal.sindia.reuniones': 'Hoy tienes {r} reuniones: las opciones ya las rodean.',
+  'cal.sindia.reuniones.una': 'Hoy tienes 1 reunión: las opciones ya la rodean.'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -5170,7 +5181,16 @@ Object.assign(window.PACE_STRINGS.en, {
   'cal.enlace.fallo': 'Calendar not updated',
   'cal.solo.fallo': 'Could not update · trying again at {h}',
   'cal.solo.nota.fallo': 'Could not reach your calendar. PACE tries again every 5 minutes.',
-  'cal.btn.reintentar': 'Try again'
+  'cal.btn.reintentar': 'Try again',
+  'cal.enlace.conectado': 'Calendar connected',
+  'cal.enlace.conectado.corto': 'Connected',
+  'cal.sindia.resumen': 'When you choose how long you’re working, your day goes to your calendar, every block with its break.',
+  'cal.sindia.conectado': 'Connected · your day goes here when you choose it',
+  'cal.sindia.permiso': 'Give permission again to keep going',
+  'cal.sindia.hecho': 'Connected: when you choose how long you’re working, your day goes to your calendar.',
+  'cal.sindia.hecho.solo': 'Connected: when you choose how long you’re working, your day goes to your calendar by itself.',
+  'cal.sindia.reuniones': 'You have {r} meetings today, and your options already work around them.',
+  'cal.sindia.reuniones.una': 'You have 1 meeting today, and your options already work around it.'
 });
 })();
 </script>
@@ -13347,6 +13367,64 @@ function calendarioLlevar(destino, opciones) {
 }
 
 
+
+
+
+
+function calendarioConectar(destino, opciones) {
+  var o = opciones || {};
+  var iso = ritmoHoy();
+  var solo = !!o.mantener && (typeof puedeMantenerCalendario !== 'function' || puedeMantenerCalendario());
+  var acceso;
+  try {acceso = calendarioAcceso(destino);} catch (e) {return Promise.reject(e);}
+  var leidas = null;
+  return acceso.then(function (pase) {
+    if (!o.reuniones) return null;
+    return calendarioLeer(destino, pase, iso).then(function (lista) {
+      leidas = lista.length;
+      calendarioGuardarOcupado(calendarioTramos(lista, iso), destino, iso);
+      calendarioLecturaApuntar(iso, true);
+    }, function (e) {calendarioLecturaApuntar(iso, false);throw e;});
+  }).then(function () {
+    calendarioGuardarAjustes({ destino: destino, reuniones: !!o.reuniones, calendarioId: o.calendarioId || null, fecha: iso,
+      mantener: solo, alElegir: solo ? null : destino });
+    _calendarioRefresco.ultimo = Date.now();
+    return { reuniones: leidas, solo: solo };
+  });
+}
+
+
+
+
+function calendarioConectadoAhora() {
+  try {
+    var c = ritmoDe(getState()).calendario || {};
+    if (!calendarioConectado(c.destino) || calendarioDestinos().indexOf(c.destino) === -1) return false;
+    if (!c.mantener && c.alElegir !== c.destino) return false;
+    if (c.mantener && !(typeof calendarioSoloActivo === 'function' && calendarioSoloActivo())) return false;
+    if (c.destino === 'android') return !(typeof _calSolo === 'object' && _calSolo.sinAcceso);
+    return calendarioPaseHasta(c.destino) > Date.now() + 60000;
+  } catch (e) {return false;}
+}
+
+
+
+
+
+function calendarioAlElegir() {
+  try {
+    var c = ritmoDe(getState()).calendario || {};
+    var d = c.alElegir;
+    if (!d || calendarioDestinos().indexOf(d) === -1) return;
+    if (typeof calendarioSoloActivo === 'function' && calendarioSoloActivo()) return;
+    if (d !== 'archivo' && d !== 'android' && !calendarioPaseGuardado(d)) return;
+    var x = calendarioTextos();
+    calendarioLlevar(d, { reuniones: d !== 'archivo' && c.reuniones !== false, calendarioId: c.calendarioId || null, t: x.t, tn: x.tn, lang: x.lang }).
+    catch(function () {});
+  } catch (e) {}
+}
+
+
 function calendarioBajarIcs(texto, nombre) {
   if (typeof paceNativoGuardarArchivo === 'function' && paceNativoGuardarArchivo(nombre, texto)) return;
   var blob = new Blob([texto], { type: 'text/calendar;charset=utf-8' });
@@ -13371,7 +13449,10 @@ function calendarioRefrescarReuniones(forzar) {
     if (!forzar && Date.now() - _calendarioRefresco.ultimo < 5 * 60 * 1000) return Promise.resolve(false);
     var R = ritmoDe(getState());
     var c = R.calendario || {};
-    if (!calendarioConectado(c.destino) || !c.reuniones || R.libre || !R.dia) return Promise.resolve(false);
+    if (!calendarioConectado(c.destino) || !c.reuniones) return Promise.resolve(false);
+
+
+    if ((R.libre || !R.dia) && !(c.mantener || c.alElegir === c.destino)) return Promise.resolve(false);
     if (calendarioDestinos().indexOf(c.destino) === -1) return Promise.resolve(false);
     var iso = ritmoHoy();
     var acceso;
@@ -13414,10 +13495,11 @@ try {calendarioArrancar();} catch (e) {}
 
 Object.assign(window, {
   CALENDARIO_DESTINOS, calendarioDestinos, calendarioConectado, calendarioLlevar, calendarioRefrescarReuniones, calendarioReunionesEstado,
+  calendarioConectar, calendarioConectadoAhora, calendarioAlElegir,
   calendarioGuardarOcupado, calendarioBajarIcs, calendarioRefrescoCortar,
   calendarioAndroidEsDePace, calendarioAndroidEventos, calendarioAndroidApuntar, calendarioAndroidCrear, calendarioAndroidCambiar, calendarioAndroidBorrar
 });
-;Object.assign(window, { CALENDARIO_DESTINOS, _calendarioRefresco, _calendarioLectura, calendarioLecturaApuntar, calendarioReunionesEstado, CALENDARIO_ANDROID_CLAVE, CALENDARIO_ANDROID_OLVIDO, calendarioAndroidPropios, calendarioAndroidGuardar, calendarioAndroidApuntar, calendarioAndroidOlvidar, calendarioAndroidEsDePace, CALENDARIO_ANDROID_INSTALADO, _calendarioAndroidListo, calendarioAndroidListo, calendarioAndroidEventos, calendarioAndroidCrear, calendarioAndroidCambiar, calendarioAndroidBorrar, calendarioDestinos, calendarioConectado, calendarioDiaMs, calendarioGuardarAjustes, calendarioGuardarOcupado, calendarioAcceso, calendarioLeer, calendarioEscribirAndroid, calendarioEscribirWeb, calendarioEventosDeHoy, calendarioLlevar, calendarioBajarIcs, calendarioRefrescoCortar, calendarioRefrescarReuniones, calendarioArrancar });
+;Object.assign(window, { CALENDARIO_DESTINOS, _calendarioRefresco, _calendarioLectura, calendarioLecturaApuntar, calendarioReunionesEstado, CALENDARIO_ANDROID_CLAVE, CALENDARIO_ANDROID_OLVIDO, calendarioAndroidPropios, calendarioAndroidGuardar, calendarioAndroidApuntar, calendarioAndroidOlvidar, calendarioAndroidEsDePace, CALENDARIO_ANDROID_INSTALADO, _calendarioAndroidListo, calendarioAndroidListo, calendarioAndroidEventos, calendarioAndroidCrear, calendarioAndroidCambiar, calendarioAndroidBorrar, calendarioDestinos, calendarioConectado, calendarioDiaMs, calendarioGuardarAjustes, calendarioGuardarOcupado, calendarioAcceso, calendarioLeer, calendarioEscribirAndroid, calendarioEscribirWeb, calendarioEventosDeHoy, calendarioLlevar, calendarioConectar, calendarioConectadoAhora, calendarioAlElegir, calendarioBajarIcs, calendarioRefrescoCortar, calendarioRefrescarReuniones, calendarioArrancar });
 })();
 </script>
   <!-- El calendario que se mantiene solo (14 oct. 2026): lo puro (qué tiene que haber y qué
@@ -14403,6 +14485,7 @@ function ritmoElegir(opcion) {
   if (corre) Object.assign(dia, { desde: corre.desde, primerBloque: corre.min, pasado: [] });
   ritmoGuardar(function () {return { libre: null, dia: dia };});
   ritmoSincronizar();
+  if (typeof calendarioAlElegir === 'function') calendarioAlElegir();
 }
 
 
@@ -50672,7 +50755,9 @@ function RitmoCalendarioRaiz(_ref2) {let { plan } = _ref2;
     window.addEventListener('pace:ritmo-calendario', abrir);
     return () => window.removeEventListener('pace:ritmo-calendario', abrir);
   }, []);
-  if (!abierta || !plan) return null;
+
+
+  if (!abierta) return null;
   return ReactDOM.createPortal(React.createElement(RitmoCalendarioHoja, { plan: plan, onClose: () => setAbierta(false) }), document.body);
 }
 
@@ -50683,6 +50768,16 @@ function ritmoCalendarioHecho(destino, r, t, tn) {
   if (r.reuniones != null) {
     texto += ' ' + (r.reuniones === 0 ? t('cal.hecho.reuniones.ninguna') :
     r.reuniones === 1 ? t('cal.hecho.reuniones.una') : tn('cal.hecho.reuniones', { r: r.reuniones }));
+  }
+  return texto;
+}
+
+
+function ritmoCalendarioConectado(r, t, tn) {
+  let texto = t(r.solo ? 'cal.sindia.hecho.solo' : 'cal.sindia.hecho');
+  if (r.reuniones != null) {
+    texto += ' ' + (r.reuniones === 0 ? t('cal.hecho.reuniones.ninguna') :
+    r.reuniones === 1 ? t('cal.sindia.reuniones.una') : tn('cal.sindia.reuniones', { r: r.reuniones }));
   }
   return texto;
 }
@@ -50731,10 +50826,12 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
     return () => {vivo = false;};
   }, [android]);
 
-  const evs = calendarioEventos(plan.m, ritmoAhoraExacto(), t, tn, lang);
-  let resumen = !evs.length ? t('cal.resumen.nada') :
+
+  const sinDia = !plan;
+  const evs = sinDia ? [] : calendarioEventos(plan.m, ritmoAhoraExacto(), t, tn, lang);
+  let resumen = sinDia ? t('cal.sindia.resumen') : !evs.length ? t('cal.resumen.nada') :
   tn(evs.length === 1 ? 'cal.resumen.uno' : 'cal.resumen', { n: evs.length, a: ritmoHora(evs[0].desde), b: ritmoHora(evs[evs.length - 1].hasta) });
-  if (solo) {
+  if (solo && !sinDia) {
     const q = solo.quedan;
     resumen = calendarioSoloPorDetras(solo) || calendarioSoloCaso(solo) === 'fallo' ?
     solo.alDia ? tn('cal.solo.resumen.pendiente', { h: ritmoCalendarioHoraMs(solo.alDia) }) : t('cal.solo.resumen.pendiente.sin') :
@@ -50752,6 +50849,16 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
     setAviso(null);
     setTrabajo(destino);
     const conectado = calendarioConectado(destino);
+    if (sinDia) {
+      calendarioConectar(destino, { reuniones, mantener: puede && mantener, calendarioId: calId || null }).
+      then((r) => {
+        setTrabajo(null);
+        setAviso({ tipo: 'ok', texto: ritmoCalendarioConectado(r, t, tn) });
+        if (destino === 'android' && !calendarios) paceAndroidCalendarios().then((l) => {if (l) setCalendarios(l);});
+      }).
+      catch(fallo);
+      return;
+    }
     calendarioLlevar(destino, { reuniones: conectado && reuniones, mantener: conectado && puede && mantener, calendarioId: calId || null, t, tn, lang }).
     then((r) => {
       setTrabajo(null);
@@ -50786,10 +50893,13 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
 
   const boton = (destino) => {
     if (destino === 'archivo') return t(compartir ? 'cal.btn.compartir' : 'cal.btn.descargar');
+    if (sinDia) return t('cal.btn.conectar');
     if (destino === 'android') return t('cal.btn.anadir');
     return t(calendarioPaseGuardado(destino) ? 'cal.btn.anadir' : 'cal.btn.conectar');
   };
   const sub = (destino) => {
+    if (sinDia && solo && destino === solo.destino) return t(solo.conAcceso ? 'cal.sindia.conectado' : 'cal.sindia.permiso');
+    if (sinDia && destino === c.destino && destino !== 'archivo' && calendarioConectadoAhora()) return t('cal.sindia.conectado');
     if (solo && destino === solo.destino) return ritmoCalendarioSoloSub(solo, t, tn);
     if (destino === 'archivo') return t(compartir ? 'cal.dest.archivo.sub.app' : 'cal.dest.archivo.sub');
     if (destino === 'android' && calendarios && calendarios.length > 1) {
@@ -50807,7 +50917,8 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
   };
 
   const accion = (destino) => {
-    if (solo && destino === solo.destino) {
+
+    if (solo && destino === solo.destino && !(sinDia && !solo.conAcceso)) {
 
       const reintentar = calendarioSoloCaso(solo) === 'fallo' || trabajo === 'poner' && !calendarioSoloPorDetras(solo);
       return calendarioSoloPorDetras(solo) || reintentar ?
@@ -50820,7 +50931,7 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
     }
     return (
       React.createElement("button", { type: "button", className: 'pace-rt-cal-btn' + (destino !== 'archivo' ? ' pace-rt-lleno' : ''),
-        disabled: !!trabajo || !evs.length, onClick: () => llevar(destino) },
+        disabled: !!trabajo || !evs.length && !(sinDia && destino !== 'archivo'), onClick: () => llevar(destino) },
       trabajo === destino ? t('cal.trabajando') : boton(destino)
       ));
 
@@ -50892,7 +51003,7 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
     React.createElement("div", { "data-pace-ritmo": true, "data-pace-cal": true, style: { textAlign: 'left' } },
     React.createElement("div", { className: "pace-rt-cal-resumen", "data-pace-cal-resumen": true }, resumen),
 
-    solo ? React.createElement("div", { className: "pace-rt-cal-cambiar", "data-pace-cal-cambiar": true }, t('cal.solo.cambiar')) : null,
+    solo && !sinDia ? React.createElement("div", { className: "pace-rt-cal-cambiar", "data-pace-cal-cambiar": true }, t('cal.solo.cambiar')) : null,
     conectados.map(fila),
     conectados.length ?
     React.createElement("label", { className: "pace-rt-cal-chk" },
@@ -50911,8 +51022,76 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
 
 }
 
-Object.assign(window, { RitmoAlCalendario, RitmoCalendarioRaiz, RitmoCalendarioHoja, ritmoCalendarioAbrir });
-;Object.assign(window, { ritmoCalendarioAbrir, useCalendarioSolo, calendarioSoloPorDetras, calendarioSoloCaso, CAL_ENLACE, RitmoAlCalendario, RitmoCalendarioRaiz, CAL_ERRORES, ritmoCalendarioHecho, ritmoCalendarioHoraMs, ritmoCalendarioSoloSub, RitmoCalendarioHoja });
+Object.assign(window, { RitmoAlCalendario, RitmoCalendarioRaiz, RitmoCalendarioHoja, ritmoCalendarioAbrir, useCalendarioSolo });
+;Object.assign(window, { ritmoCalendarioAbrir, useCalendarioSolo, calendarioSoloPorDetras, calendarioSoloCaso, CAL_ENLACE, RitmoAlCalendario, RitmoCalendarioRaiz, CAL_ERRORES, ritmoCalendarioHecho, ritmoCalendarioConectado, ritmoCalendarioHoraMs, ritmoCalendarioSoloSub, RitmoCalendarioHoja });
+})();
+</script>
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(function () {
+  if (document.getElementById('pace-ritmo-cal-tarjeta-css')) return;
+  const s = document.createElement('style');
+  s.id = 'pace-ritmo-cal-tarjeta-css';
+  s.textContent = `
+.pace-rt-cal-ir { display: inline-flex; align-items: center; gap: 6px; background: none; border: none; cursor: pointer;
+  padding: 6px 0; margin: -6px 0; white-space: nowrap; }
+.pace-rt-cal-ir svg { flex: 0 0 auto; }
+.pace-rt-cal-ir:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; border-radius: 2px; }
+.pace-rt-esq-fila { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+.pace-rt-esq-fila .pace-rt-esquema { flex: 1 1 auto; min-width: 0; margin-top: 0; }
+.pace-rt-esq-fila .pace-rt-cal-ir { flex: 0 0 auto; font-size: 13px; line-height: 14px; padding: 15px 0; margin: -15px 0; }
+@media (max-height: 700px) { .pace-rt-esq-fila { margin-top: 4px; } }
+`;
+  document.head.appendChild(s);
+})();
+
+
+function RitmoCalendarioIcono() {
+  return (
+    React.createElement("svg", { width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", stroke: "currentColor", strokeWidth: "1.1", strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true" },
+    React.createElement("rect", { x: "1.2", y: "2.2", width: "9.6", height: "8.6", rx: "1.6" }), React.createElement("path", { d: "M1.2 4.9h9.6" }), React.createElement("path", { d: "M3.9 1v2.3M8.1 1v2.3" })
+    ));
+
+}
+
+
+
+function RitmoCalendarioTarjeta(_ref) {let { corto } = _ref;
+  const { t } = useT();
+  usePace();
+  useCalendarioSolo();
+  const conectado = typeof calendarioConectadoAhora === 'function' && calendarioConectadoAhora();
+  const texto = !conectado ? t('cal.enlace') : t(corto ? 'cal.enlace.conectado.corto' : 'cal.enlace.conectado');
+  return (
+    React.createElement("button", { type: "button", className: "pace-rt-enlace pace-rt-fuerte pace-rt-cal-ir", "data-pace-ritmo-tarjeta-calendario": true,
+      "data-pace-cal-estado": conectado ? 'conectado' : 'no', onClick: ritmoCalendarioAbrir },
+    React.createElement(RitmoCalendarioIcono, null), React.createElement("span", null, texto)
+    ));
+
+}
+
+Object.assign(window, { RitmoCalendarioTarjeta, RitmoCalendarioIcono });
+;Object.assign(window, { RitmoCalendarioIcono, RitmoCalendarioTarjeta });
 })();
 </script>
   <script>
@@ -50990,6 +51169,7 @@ function RitmoTarjeta() {
     React.createElement("div", { className: "pace-rt-tarjeta-cab" },
     React.createElement("div", { className: "pace-rt-tarjeta-t", "data-pace-ritmo-tarjeta-titulo": true }, titulo),
     React.createElement("div", { className: "pace-rt-tarjeta-enlaces" },
+    React.createElement(RitmoCalendarioTarjeta, null),
     React.createElement("button", { className: "pace-rt-enlace", "data-pace-ritmo-ajustar": true, onClick: ritmoAbrirPregunta }, t('ritmo.tarjeta.ajustar')),
     conCaminos &&
     React.createElement("button", { className: "pace-rt-enlace", "data-pace-ritmo-caminos": true, onClick: abrirCaminos }, t('paths.library.viewAll'))
@@ -51017,7 +51197,9 @@ function RitmoTarjeta() {
     ),
 
     React.createElement("div", { className: "pace-rt-tm-t", "data-pace-ritmo-tarjeta-titulo": true }, titulo),
-    React.createElement(RitmoEsquema, null),
+
+
+    React.createElement("div", { className: "pace-rt-esq-fila" }, React.createElement(RitmoEsquema, null), React.createElement(RitmoCalendarioTarjeta, { corto: true })),
     React.createElement("div", { className: "pace-rt-tm-pie" },
     React.createElement("span", { className: "pace-rt-tm-nota" }, nota),
 
@@ -51031,7 +51213,9 @@ function RitmoTarjeta() {
     )
     )
     )
-    )
+    ),
+
+    React.createElement(RitmoCalendarioRaiz, { plan: null })
     ));
 
 }

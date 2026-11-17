@@ -103,6 +103,17 @@ Object.assign(window.PACE_STRINGS.es, {
     'cal.solo.fallo':                'No se pudo · lo intenta otra vez a las {h}',
     'cal.solo.nota.fallo':           'No se pudo hablar con tu calendario. PACE lo vuelve a intentar cada 5 minutos.',
     'cal.btn.reintentar':            'Reintentar',
+    /* El calendario a la vista (Ez, 1A y 2A del 16 nov.): el enlace de «¿Cuánto trabajas hoy?» y la
+       hoja antes de elegir el día (RitmoCalendario.tarjeta.jsx). */
+    'cal.enlace.conectado':          'Calendario conectado',
+    'cal.enlace.conectado.corto':    'Conectado',
+    'cal.sindia.resumen':            'Cuando elijas cuánto trabajas, tu día irá a tu calendario: cada bloque con su pausa.',
+    'cal.sindia.conectado':          'Conectado · tu día irá aquí al elegirlo',
+    'cal.sindia.permiso':            'Vuelve a dar permiso para seguir',
+    'cal.sindia.hecho':              'Conectado: cuando elijas cuánto trabajas, tu día irá a tu calendario.',
+    'cal.sindia.hecho.solo':         'Conectado: cuando elijas cuánto trabajas, tu día irá solo a tu calendario.',
+    'cal.sindia.reuniones':          'Hoy tienes {r} reuniones: las opciones ya las rodean.',
+    'cal.sindia.reuniones.una':      'Hoy tienes 1 reunión: las opciones ya la rodean.',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -198,4 +209,13 @@ Object.assign(window.PACE_STRINGS.en, {
     'cal.solo.fallo':                'Could not update · trying again at {h}',
     'cal.solo.nota.fallo':           'Could not reach your calendar. PACE tries again every 5 minutes.',
     'cal.btn.reintentar':            'Try again',
+    'cal.enlace.conectado':          'Calendar connected',
+    'cal.enlace.conectado.corto':    'Connected',
+    'cal.sindia.resumen':            'When you choose how long you’re working, your day goes to your calendar, every block with its break.',
+    'cal.sindia.conectado':          'Connected · your day goes here when you choose it',
+    'cal.sindia.permiso':            'Give permission again to keep going',
+    'cal.sindia.hecho':              'Connected: when you choose how long you’re working, your day goes to your calendar.',
+    'cal.sindia.hecho.solo':         'Connected: when you choose how long you’re working, your day goes to your calendar by itself.',
+    'cal.sindia.reuniones':          'You have {r} meetings today, and your options already work around them.',
+    'cal.sindia.reuniones.una':      'You have 1 meeting today, and your options already work around it.',
 });

@@ -79,7 +79,9 @@ function RitmoCalendarioRaiz({ plan }) {
     window.addEventListener('pace:ritmo-calendario', abrir);
     return () => window.removeEventListener('pace:ritmo-calendario', abrir);
   }, []);
-  if (!abierta || !plan) return null;
+  /* Sin día también (Ez, 2A del 16 nov.): desde la tarjeta «¿Cuánto trabajas hoy?», para conectar
+     antes de elegir. La hoja lo sabe por `plan` null. */
+  if (!abierta) return null;
   return ReactDOM.createPortal(<RitmoCalendarioHoja plan={plan} onClose={() => setAbierta(false)} />, document.body);
 }
 
@@ -90,6 +92,16 @@ function ritmoCalendarioHecho(destino, r, t, tn) {
   if (r.reuniones != null) {
     texto += ' ' + (r.reuniones === 0 ? t('cal.hecho.reuniones.ninguna')
       : r.reuniones === 1 ? t('cal.hecho.reuniones.una') : tn('cal.hecho.reuniones', { r: r.reuniones }));
+  }
+  return texto;
+}
+
+/* Lo que dice la hoja sin día al conectar: adónde irá el día y, si se leyeron, las reuniones. */
+function ritmoCalendarioConectado(r, t, tn) {
+  let texto = t(r.solo ? 'cal.sindia.hecho.solo' : 'cal.sindia.hecho');
+  if (r.reuniones != null) {
+    texto += ' ' + (r.reuniones === 0 ? t('cal.hecho.reuniones.ninguna')
+      : r.reuniones === 1 ? t('cal.sindia.reuniones.una') : tn('cal.sindia.reuniones', { r: r.reuniones }));
   }
   return texto;
 }
@@ -138,10 +150,12 @@ function RitmoCalendarioHoja({ plan, onClose }) {
     return () => { vivo = false; };
   }, [android]);
 
-  const evs = calendarioEventos(plan.m, ritmoAhoraExacto(), t, tn, lang);
-  let resumen = !evs.length ? t('cal.resumen.nada')
+  /* SIN DÍA (desde la tarjeta): «Conectar» da el permiso y lee las reuniones, y el día llega al elegir. */
+  const sinDia = !plan;
+  const evs = sinDia ? [] : calendarioEventos(plan.m, ritmoAhoraExacto(), t, tn, lang);
+  let resumen = sinDia ? t('cal.sindia.resumen') : !evs.length ? t('cal.resumen.nada')
     : tn(evs.length === 1 ? 'cal.resumen.uno' : 'cal.resumen', { n: evs.length, a: ritmoHora(evs[0].desde), b: ritmoHora(evs[evs.length - 1].hasta) });
-  if (solo) {
+  if (solo && !sinDia) {
     const q = solo.quedan;
     resumen = calendarioSoloPorDetras(solo) || calendarioSoloCaso(solo) === 'fallo'
       ? (solo.alDia ? tn('cal.solo.resumen.pendiente', { h: ritmoCalendarioHoraMs(solo.alDia) }) : t('cal.solo.resumen.pendiente.sin'))
@@ -159,6 +173,16 @@ function RitmoCalendarioHoja({ plan, onClose }) {
     setAviso(null);
     setTrabajo(destino);
     const conectado = calendarioConectado(destino);
+    if (sinDia) {
+      calendarioConectar(destino, { reuniones, mantener: puede && mantener, calendarioId: calId || null })
+        .then((r) => {
+          setTrabajo(null);
+          setAviso({ tipo: 'ok', texto: ritmoCalendarioConectado(r, t, tn) });
+          if (destino === 'android' && !calendarios) paceAndroidCalendarios().then((l) => { if (l) setCalendarios(l); });
+        })
+        .catch(fallo);
+      return;
+    }
     calendarioLlevar(destino, { reuniones: conectado && reuniones, mantener: conectado && puede && mantener, calendarioId: calId || null, t, tn, lang })
       .then((r) => {
         setTrabajo(null);
@@ -193,10 +217,13 @@ function RitmoCalendarioHoja({ plan, onClose }) {
 
   const boton = (destino) => {
     if (destino === 'archivo') return t(compartir ? 'cal.btn.compartir' : 'cal.btn.descargar');
+    if (sinDia) return t('cal.btn.conectar');
     if (destino === 'android') return t('cal.btn.anadir');
     return t(calendarioPaseGuardado(destino) ? 'cal.btn.anadir' : 'cal.btn.conectar');
   };
   const sub = (destino) => {
+    if (sinDia && solo && destino === solo.destino) return t(solo.conAcceso ? 'cal.sindia.conectado' : 'cal.sindia.permiso');
+    if (sinDia && destino === c.destino && destino !== 'archivo' && calendarioConectadoAhora()) return t('cal.sindia.conectado');
     if (solo && destino === solo.destino) return ritmoCalendarioSoloSub(solo, t, tn);
     if (destino === 'archivo') return t(compartir ? 'cal.dest.archivo.sub.app' : 'cal.dest.archivo.sub');
     if (destino === 'android' && calendarios && calendarios.length > 1) {
@@ -214,7 +241,8 @@ function RitmoCalendarioHoja({ plan, onClose }) {
   };
 
   const accion = (destino) => {
-    if (solo && destino === solo.destino) {
+    /* Sin día y sin permiso vivo (el pase de Google caducó), la fila vuelve a ofrecer «Conectar». */
+    if (solo && destino === solo.destino && !(sinDia && !solo.conAcceso)) {
       /* mientras «Reintentar» escribe, el motor está trabajando: el botón sigue en su sitio */
       const reintentar = calendarioSoloCaso(solo) === 'fallo' || (trabajo === 'poner' && !calendarioSoloPorDetras(solo));
       return calendarioSoloPorDetras(solo) || reintentar
@@ -227,7 +255,7 @@ function RitmoCalendarioHoja({ plan, onClose }) {
     }
     return (
       <button type="button" className={'pace-rt-cal-btn' + (destino !== 'archivo' ? ' pace-rt-lleno' : '')}
-        disabled={!!trabajo || !evs.length} onClick={() => llevar(destino)}>
+        disabled={!!trabajo || (!evs.length && !(sinDia && destino !== 'archivo'))} onClick={() => llevar(destino)}>
         {trabajo === destino ? t('cal.trabajando') : boton(destino)}
       </button>
     );
@@ -299,7 +327,7 @@ function RitmoCalendarioHoja({ plan, onClose }) {
       <div data-pace-ritmo data-pace-cal style={{ textAlign: 'left' }}>
         <div className="pace-rt-cal-resumen" data-pace-cal-resumen>{resumen}</div>
         {/* Ya se mantiene solo: lo que se mueva en el calendario vuelve a su sitio (Ez, 12A del 30 oct.). */}
-        {solo ? <div className="pace-rt-cal-cambiar" data-pace-cal-cambiar>{t('cal.solo.cambiar')}</div> : null}
+        {solo && !sinDia ? <div className="pace-rt-cal-cambiar" data-pace-cal-cambiar>{t('cal.solo.cambiar')}</div> : null}
         {conectados.map(fila)}
         {conectados.length ? (
           <label className="pace-rt-cal-chk">
@@ -318,4 +346,4 @@ function RitmoCalendarioHoja({ plan, onClose }) {
   );
 }
 
-Object.assign(window, { RitmoAlCalendario, RitmoCalendarioRaiz, RitmoCalendarioHoja, ritmoCalendarioAbrir });
+Object.assign(window, { RitmoAlCalendario, RitmoCalendarioRaiz, RitmoCalendarioHoja, ritmoCalendarioAbrir, useCalendarioSolo });
