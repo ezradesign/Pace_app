@@ -1,0 +1,69 @@
+{
+ "largos-home-360": [],
+ "stats-largos-antes": [
+  {
+   "tipo": "se sale de su caja",
+   "texto": "⟦ÉÉSTÁÁDÍSTÍÍÇÁÁS⟧ ⟦Rhhýthhm⟧ ⟦Méétríçáás súúáávés",
+   "px": 111,
+   "donde": "modal-head=true"
+  },
+  {
+   "tipo": "scroll de lado",
+   "texto": "× ⟦ÉÉSTÁÁDÍSTÍÍÇÁÁS⟧ ⟦Rhhýthhm⟧ ⟦Méétríç",
+   "px": 87,
+   "donde": "modal-card=true"
+  }
+ ],
+ "stats-largos-despues": [],
+ "ajustes-hoy": [
+  {
+   "tipo": "scroll",
+   "texto": "Ajustes × VER Visita guiada › Idioma Aut",
+   "px": 12,
+   "donde": "tweaks-panel=true"
+  }
+ ],
+ "ajustes-a": [],
+ "ajustes-b": [],
+ "pausa-hoy": [
+  {
+   "tipo": "se sale de su caja",
+   "texto": "Hidrátate Respira Muévete",
+   "px": 5,
+   "donde": "break-otras=true"
+  }
+ ],
+ "pausa-a": [],
+ "pausa-b": [],
+ "pausa-largos": [
+  {
+   "tipo": "se sale de su caja",
+   "texto": "⟦Híídrátáátéé⟧ ⟦Rééspíráá⟧ ⟦Múéévétéé⟧",
+   "px": 47,
+   "donde": "break-otras=true"
+  },
+  {
+   "tipo": "scroll de lado",
+   "texto": "× ⟦ÇÍÍÇLÓÓ ÇÓMPLÉÉTÁÁDÓÓ⟧ ⟦Ýóóúr brééáák",
+   "px": 23,
+   "donde": "modal-card=true"
+  }
+ ],
+ "pregunta-largos": [
+  {
+   "tipo": "scroll",
+   "texto": "⟦MÍÍÑ⟧ 15 25 35 45 ⟦ÓÓTHÉÉR⟧ ⟦MÁÁÑÚÁÁL F",
+   "px": 28,
+   "donde": "home-body=true"
+  }
+ ],
+ "runner-largos": [],
+ "ajustes-largos": [
+  {
+   "tipo": "scroll",
+   "texto": "⟦Sééttííñgs⟧ × ⟦ÁÁPPÉÁÁRÁÑÇÉÉ⟧ ⟦Víísítáá",
+   "px": 200,
+   "donde": "tweaks-panel=true"
+  }
+ ]
+}

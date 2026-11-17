@@ -1,0 +1,1983 @@
+[
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "home-libre",
+  "nombre": "La home por libre",
+  "momento": "la home",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "home-jornada",
+  "nombre": "La home con la jornada",
+  "momento": "la home",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "tarjeta-dia",
+  "nombre": "La tarjeta del día",
+  "momento": "la pregunta del día",
+  "fallos": [
+   {
+    "tipo": "scroll",
+    "texto": "⟦MÍÍÑ⟧ 15 25 35 45 ⟦ÓÓTHÉÉR⟧ ⟦MÁÁÑÚÁÁL F",
+    "px": 28,
+    "donde": "home-body=true"
+   }
+  ]
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "pausa",
+  "nombre": "La ventana de la pausa",
+  "momento": "por libre",
+  "fallos": [
+   {
+    "tipo": "se sale de su caja",
+    "texto": "⟦Híídrátáátéé⟧ ⟦Rééspíráá⟧ ⟦Múéévétéé⟧",
+    "px": 47,
+    "donde": "break-otras=true"
+   },
+   {
+    "tipo": "scroll de lado",
+    "texto": "× ⟦ÇÍÍÇLÓÓ ÇÓMPLÉÉTÁÁDÓÓ⟧ ⟦Ýóóúr brééáák",
+    "px": 23,
+    "donde": "modal-card=true"
+   }
+  ]
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "pausa-jornada",
+  "nombre": "La ventana de la pausa, con la jornada",
+  "momento": "con la jornada",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "runner-mueve",
+  "nombre": "El runner de Mueve",
+  "momento": "colócate",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "runner-mueve",
+  "nombre": "El runner de Mueve",
+  "momento": "el ejercicio",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "runner-estira",
+  "nombre": "El runner de Estira",
+  "momento": "colócate",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "runner-estira",
+  "nombre": "El runner de Estira",
+  "momento": "el ejercicio",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "respira",
+  "nombre": "Respira",
+  "momento": "la sesión",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "ajustes",
+  "nombre": "Ajustes y «Tus datos»",
+  "momento": "ajustes",
+  "fallos": [
+   {
+    "tipo": "scroll",
+    "texto": "⟦Sééttííñgs⟧ × ⟦ÁÁPPÉÁÁRÁÑÇÉÉ⟧ ⟦Víísítáá",
+    "px": 200,
+    "donde": "tweaks-panel=true"
+   }
+  ]
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "ajustes",
+  "nombre": "Ajustes y «Tus datos»",
+  "momento": "«Tus datos» abierta",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "sobre",
+  "nombre": "El sobre",
+  "momento": "la hoja del sobre",
+  "fallos": [
+   {
+    "tipo": "sin traducir",
+    "texto": "9 Nov",
+    "px": 0,
+    "donde": "sobre-item=novedades"
+   },
+   {
+    "tipo": "sin traducir",
+    "texto": "Took your break your own way? Say so: “I did it my own way”, next to “",
+    "px": 0,
+    "donde": "sobre-item=novedades"
+   }
+  ]
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "biblioteca-mueve",
+  "nombre": "La biblioteca de Mueve",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "biblioteca-estira",
+  "nombre": "La biblioteca de Estira",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "biblioteca-respira",
+  "nombre": "La biblioteca de Respira",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "logros",
+  "nombre": "Logros",
+  "momento": "los logros",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña today",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña week",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña month",
+  "fallos": [
+   {
+    "tipo": "sin traducir",
+    "texto": "October 2026",
+    "px": 0,
+    "donde": "month-view=true"
+   }
+  ]
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña year",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña ayuda",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "compra",
+  "nombre": "La hoja de compra",
+  "momento": "la invitación con la tienda",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "bienvenida",
+  "nombre": "La bienvenida",
+  "momento": "hola",
+  "fallos": [
+   {
+    "tipo": "sin traducir",
+    "texto": "ES",
+    "px": 0,
+    "donde": "toque=true"
+   },
+   {
+    "tipo": "sin traducir",
+    "texto": "EN",
+    "px": 0,
+    "donde": "toque=true"
+   }
+  ]
+ },
+ {
+  "modo": "largos",
+  "tam": "360×640",
+  "escena": "bienvenida",
+  "nombre": "La bienvenida",
+  "momento": "tu semana",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "home-libre",
+  "nombre": "La home por libre",
+  "momento": "la home",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "home-jornada",
+  "nombre": "La home con la jornada",
+  "momento": "la home",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "tarjeta-dia",
+  "nombre": "La tarjeta del día",
+  "momento": "la pregunta del día",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "pausa",
+  "nombre": "La ventana de la pausa",
+  "momento": "por libre",
+  "fallos": [
+   {
+    "tipo": "se sale de su caja",
+    "texto": "⟦Híídrátáátéé⟧ ⟦Rééspíráá⟧ ⟦Múéévétéé⟧",
+    "px": 47,
+    "donde": "break-otras=true"
+   },
+   {
+    "tipo": "scroll de lado",
+    "texto": "× ⟦ÇÍÍÇLÓÓ ÇÓMPLÉÉTÁÁDÓÓ⟧ ⟦Ýóóúr brééáák",
+    "px": 23,
+    "donde": "modal-card=true"
+   }
+  ]
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "pausa-jornada",
+  "nombre": "La ventana de la pausa, con la jornada",
+  "momento": "con la jornada",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "runner-mueve",
+  "nombre": "El runner de Mueve",
+  "momento": "colócate",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "runner-mueve",
+  "nombre": "El runner de Mueve",
+  "momento": "el ejercicio",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "runner-estira",
+  "nombre": "El runner de Estira",
+  "momento": "colócate",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "runner-estira",
+  "nombre": "El runner de Estira",
+  "momento": "el ejercicio",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "respira",
+  "nombre": "Respira",
+  "momento": "la sesión",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "ajustes",
+  "nombre": "Ajustes y «Tus datos»",
+  "momento": "ajustes",
+  "fallos": [
+   {
+    "tipo": "scroll",
+    "texto": "⟦Sééttííñgs⟧ × ⟦ÁÁPPÉÁÁRÁÑÇÉÉ⟧ ⟦Víísítáá",
+    "px": 100,
+    "donde": "tweaks-panel=true"
+   }
+  ]
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "ajustes",
+  "nombre": "Ajustes y «Tus datos»",
+  "momento": "«Tus datos» abierta",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "sobre",
+  "nombre": "El sobre",
+  "momento": "la hoja del sobre",
+  "fallos": [
+   {
+    "tipo": "sin traducir",
+    "texto": "9 Nov",
+    "px": 0,
+    "donde": "sobre-item=novedades"
+   },
+   {
+    "tipo": "sin traducir",
+    "texto": "Took your break your own way? Say so: “I did it my own way”, next to “",
+    "px": 0,
+    "donde": "sobre-item=novedades"
+   }
+  ]
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "biblioteca-mueve",
+  "nombre": "La biblioteca de Mueve",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "biblioteca-estira",
+  "nombre": "La biblioteca de Estira",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "biblioteca-respira",
+  "nombre": "La biblioteca de Respira",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "logros",
+  "nombre": "Logros",
+  "momento": "los logros",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña today",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña week",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña month",
+  "fallos": [
+   {
+    "tipo": "sin traducir",
+    "texto": "October 2026",
+    "px": 0,
+    "donde": "month-view=true"
+   }
+  ]
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña year",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña ayuda",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "compra",
+  "nombre": "La hoja de compra",
+  "momento": "la invitación con la tienda",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "bienvenida",
+  "nombre": "La bienvenida",
+  "momento": "hola",
+  "fallos": [
+   {
+    "tipo": "sin traducir",
+    "texto": "ES",
+    "px": 0,
+    "donde": "toque=true"
+   },
+   {
+    "tipo": "sin traducir",
+    "texto": "EN",
+    "px": 0,
+    "donde": "toque=true"
+   }
+  ]
+ },
+ {
+  "modo": "largos",
+  "tam": "360×740",
+  "escena": "bienvenida",
+  "nombre": "La bienvenida",
+  "momento": "tu semana",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "home-libre",
+  "nombre": "La home por libre",
+  "momento": "la home",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "home-jornada",
+  "nombre": "La home con la jornada",
+  "momento": "la home",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "tarjeta-dia",
+  "nombre": "La tarjeta del día",
+  "momento": "la pregunta del día",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "pausa",
+  "nombre": "La ventana de la pausa",
+  "momento": "por libre",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "pausa-jornada",
+  "nombre": "La ventana de la pausa, con la jornada",
+  "momento": "con la jornada",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "runner-mueve",
+  "nombre": "El runner de Mueve",
+  "momento": "colócate",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "runner-mueve",
+  "nombre": "El runner de Mueve",
+  "momento": "el ejercicio",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "runner-estira",
+  "nombre": "El runner de Estira",
+  "momento": "colócate",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "runner-estira",
+  "nombre": "El runner de Estira",
+  "momento": "el ejercicio",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "respira",
+  "nombre": "Respira",
+  "momento": "la sesión",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "ajustes",
+  "nombre": "Ajustes y «Tus datos»",
+  "momento": "ajustes",
+  "fallos": [
+   {
+    "tipo": "scroll",
+    "texto": "⟦Sééttííñgs⟧ × ⟦ÁÁPPÉÁÁRÁÑÇÉÉ⟧ ⟦Víísítáá",
+    "px": 15,
+    "donde": "tweaks-panel=true"
+   }
+  ]
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "ajustes",
+  "nombre": "Ajustes y «Tus datos»",
+  "momento": "«Tus datos» abierta",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "sobre",
+  "nombre": "El sobre",
+  "momento": "la hoja del sobre",
+  "fallos": [
+   {
+    "tipo": "sin traducir",
+    "texto": "9 Nov",
+    "px": 0,
+    "donde": "sobre-item=novedades"
+   },
+   {
+    "tipo": "sin traducir",
+    "texto": "Took your break your own way? Say so: “I did it my own way”, next to “",
+    "px": 0,
+    "donde": "sobre-item=novedades"
+   }
+  ]
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "biblioteca-mueve",
+  "nombre": "La biblioteca de Mueve",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "biblioteca-estira",
+  "nombre": "La biblioteca de Estira",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "biblioteca-respira",
+  "nombre": "La biblioteca de Respira",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "logros",
+  "nombre": "Logros",
+  "momento": "los logros",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña today",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña week",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña month",
+  "fallos": [
+   {
+    "tipo": "sin traducir",
+    "texto": "October 2026",
+    "px": 0,
+    "donde": "month-view=true"
+   }
+  ]
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña year",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña ayuda",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "compra",
+  "nombre": "La hoja de compra",
+  "momento": "la invitación con la tienda",
+  "fallos": []
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "bienvenida",
+  "nombre": "La bienvenida",
+  "momento": "hola",
+  "fallos": [
+   {
+    "tipo": "sin traducir",
+    "texto": "ES",
+    "px": 0,
+    "donde": "toque=true"
+   },
+   {
+    "tipo": "sin traducir",
+    "texto": "EN",
+    "px": 0,
+    "donde": "toque=true"
+   }
+  ]
+ },
+ {
+  "modo": "largos",
+  "tam": "1280×800",
+  "escena": "bienvenida",
+  "nombre": "La bienvenida",
+  "momento": "tu semana",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "home-libre",
+  "nombre": "La home por libre",
+  "momento": "la home",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "home-jornada",
+  "nombre": "La home con la jornada",
+  "momento": "la home",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "tarjeta-dia",
+  "nombre": "La tarjeta del día",
+  "momento": "la pregunta del día",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "pausa",
+  "nombre": "La ventana de la pausa",
+  "momento": "por libre",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "pausa-jornada",
+  "nombre": "La ventana de la pausa, con la jornada",
+  "momento": "con la jornada",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "runner-mueve",
+  "nombre": "El runner de Mueve",
+  "momento": "colócate",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "runner-mueve",
+  "nombre": "El runner de Mueve",
+  "momento": "el ejercicio",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "runner-estira",
+  "nombre": "El runner de Estira",
+  "momento": "colócate",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "runner-estira",
+  "nombre": "El runner de Estira",
+  "momento": "el ejercicio",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "respira",
+  "nombre": "Respira",
+  "momento": "la sesión",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "ajustes",
+  "nombre": "Ajustes y «Tus datos»",
+  "momento": "ajustes",
+  "fallos": [
+   {
+    "tipo": "scroll",
+    "texto": "Settings × APPEARANCE Guided tour › Lang",
+    "px": 12,
+    "donde": "tweaks-panel=true"
+   }
+  ]
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "ajustes",
+  "nombre": "Ajustes y «Tus datos»",
+  "momento": "«Tus datos» abierta",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "sobre",
+  "nombre": "El sobre",
+  "momento": "la hoja del sobre",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "biblioteca-mueve",
+  "nombre": "La biblioteca de Mueve",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "biblioteca-estira",
+  "nombre": "La biblioteca de Estira",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "biblioteca-respira",
+  "nombre": "La biblioteca de Respira",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "logros",
+  "nombre": "Logros",
+  "momento": "los logros",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña today",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña week",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña month",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña year",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña ayuda",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "compra",
+  "nombre": "La hoja de compra",
+  "momento": "la invitación con la tienda",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "bienvenida",
+  "nombre": "La bienvenida",
+  "momento": "hola",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×640",
+  "escena": "bienvenida",
+  "nombre": "La bienvenida",
+  "momento": "tu semana",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "home-libre",
+  "nombre": "La home por libre",
+  "momento": "la home",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "home-jornada",
+  "nombre": "La home con la jornada",
+  "momento": "la home",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "tarjeta-dia",
+  "nombre": "La tarjeta del día",
+  "momento": "la pregunta del día",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "pausa",
+  "nombre": "La ventana de la pausa",
+  "momento": "por libre",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "pausa-jornada",
+  "nombre": "La ventana de la pausa, con la jornada",
+  "momento": "con la jornada",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "runner-mueve",
+  "nombre": "El runner de Mueve",
+  "momento": "colócate",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "runner-mueve",
+  "nombre": "El runner de Mueve",
+  "momento": "el ejercicio",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "runner-estira",
+  "nombre": "El runner de Estira",
+  "momento": "colócate",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "runner-estira",
+  "nombre": "El runner de Estira",
+  "momento": "el ejercicio",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "respira",
+  "nombre": "Respira",
+  "momento": "la sesión",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "ajustes",
+  "nombre": "Ajustes y «Tus datos»",
+  "momento": "ajustes",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "ajustes",
+  "nombre": "Ajustes y «Tus datos»",
+  "momento": "«Tus datos» abierta",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "sobre",
+  "nombre": "El sobre",
+  "momento": "la hoja del sobre",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "biblioteca-mueve",
+  "nombre": "La biblioteca de Mueve",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "biblioteca-estira",
+  "nombre": "La biblioteca de Estira",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "biblioteca-respira",
+  "nombre": "La biblioteca de Respira",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "logros",
+  "nombre": "Logros",
+  "momento": "los logros",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña today",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña week",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña month",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña year",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña ayuda",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "compra",
+  "nombre": "La hoja de compra",
+  "momento": "la invitación con la tienda",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "bienvenida",
+  "nombre": "La bienvenida",
+  "momento": "hola",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "360×740",
+  "escena": "bienvenida",
+  "nombre": "La bienvenida",
+  "momento": "tu semana",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "home-libre",
+  "nombre": "La home por libre",
+  "momento": "la home",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "home-jornada",
+  "nombre": "La home con la jornada",
+  "momento": "la home",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "tarjeta-dia",
+  "nombre": "La tarjeta del día",
+  "momento": "la pregunta del día",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "pausa",
+  "nombre": "La ventana de la pausa",
+  "momento": "por libre",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "pausa-jornada",
+  "nombre": "La ventana de la pausa, con la jornada",
+  "momento": "con la jornada",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "runner-mueve",
+  "nombre": "El runner de Mueve",
+  "momento": "colócate",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "runner-mueve",
+  "nombre": "El runner de Mueve",
+  "momento": "el ejercicio",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "runner-estira",
+  "nombre": "El runner de Estira",
+  "momento": "colócate",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "runner-estira",
+  "nombre": "El runner de Estira",
+  "momento": "el ejercicio",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "respira",
+  "nombre": "Respira",
+  "momento": "la sesión",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "ajustes",
+  "nombre": "Ajustes y «Tus datos»",
+  "momento": "ajustes",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "ajustes",
+  "nombre": "Ajustes y «Tus datos»",
+  "momento": "«Tus datos» abierta",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "sobre",
+  "nombre": "El sobre",
+  "momento": "la hoja del sobre",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "biblioteca-mueve",
+  "nombre": "La biblioteca de Mueve",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "biblioteca-estira",
+  "nombre": "La biblioteca de Estira",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "biblioteca-respira",
+  "nombre": "La biblioteca de Respira",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "logros",
+  "nombre": "Logros",
+  "momento": "los logros",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña today",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña week",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña month",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña year",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña ayuda",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "compra",
+  "nombre": "La hoja de compra",
+  "momento": "la invitación con la tienda",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "bienvenida",
+  "nombre": "La bienvenida",
+  "momento": "hola",
+  "fallos": []
+ },
+ {
+  "modo": "en",
+  "tam": "1280×800",
+  "escena": "bienvenida",
+  "nombre": "La bienvenida",
+  "momento": "tu semana",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "home-libre",
+  "nombre": "La home por libre",
+  "momento": "la home",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "home-jornada",
+  "nombre": "La home con la jornada",
+  "momento": "la home",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "tarjeta-dia",
+  "nombre": "La tarjeta del día",
+  "momento": "la pregunta del día",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "pausa",
+  "nombre": "La ventana de la pausa",
+  "momento": "por libre",
+  "fallos": [
+   {
+    "tipo": "se sale de su caja",
+    "texto": "Hidrátate Respira Muévete",
+    "px": 5,
+    "donde": "break-otras=true"
+   }
+  ]
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "pausa-jornada",
+  "nombre": "La ventana de la pausa, con la jornada",
+  "momento": "con la jornada",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "runner-mueve",
+  "nombre": "El runner de Mueve",
+  "momento": "colócate",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "runner-mueve",
+  "nombre": "El runner de Mueve",
+  "momento": "el ejercicio",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "runner-estira",
+  "nombre": "El runner de Estira",
+  "momento": "colócate",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "runner-estira",
+  "nombre": "El runner de Estira",
+  "momento": "el ejercicio",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "respira",
+  "nombre": "Respira",
+  "momento": "la sesión",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "ajustes",
+  "nombre": "Ajustes y «Tus datos»",
+  "momento": "ajustes",
+  "fallos": [
+   {
+    "tipo": "scroll",
+    "texto": "Ajustes × VER Visita guiada › Idioma Aut",
+    "px": 12,
+    "donde": "tweaks-panel=true"
+   }
+  ]
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "ajustes",
+  "nombre": "Ajustes y «Tus datos»",
+  "momento": "«Tus datos» abierta",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "sobre",
+  "nombre": "El sobre",
+  "momento": "la hoja del sobre",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "biblioteca-mueve",
+  "nombre": "La biblioteca de Mueve",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "biblioteca-estira",
+  "nombre": "La biblioteca de Estira",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "biblioteca-respira",
+  "nombre": "La biblioteca de Respira",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "logros",
+  "nombre": "Logros",
+  "momento": "los logros",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña today",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña week",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña month",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña year",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña ayuda",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "compra",
+  "nombre": "La hoja de compra",
+  "momento": "la invitación con la tienda",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "bienvenida",
+  "nombre": "La bienvenida",
+  "momento": "hola",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×640",
+  "escena": "bienvenida",
+  "nombre": "La bienvenida",
+  "momento": "tu semana",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "home-libre",
+  "nombre": "La home por libre",
+  "momento": "la home",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "home-jornada",
+  "nombre": "La home con la jornada",
+  "momento": "la home",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "tarjeta-dia",
+  "nombre": "La tarjeta del día",
+  "momento": "la pregunta del día",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "pausa",
+  "nombre": "La ventana de la pausa",
+  "momento": "por libre",
+  "fallos": [
+   {
+    "tipo": "se sale de su caja",
+    "texto": "Hidrátate Respira Muévete",
+    "px": 5,
+    "donde": "break-otras=true"
+   }
+  ]
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "pausa-jornada",
+  "nombre": "La ventana de la pausa, con la jornada",
+  "momento": "con la jornada",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "runner-mueve",
+  "nombre": "El runner de Mueve",
+  "momento": "colócate",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "runner-mueve",
+  "nombre": "El runner de Mueve",
+  "momento": "el ejercicio",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "runner-estira",
+  "nombre": "El runner de Estira",
+  "momento": "colócate",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "runner-estira",
+  "nombre": "El runner de Estira",
+  "momento": "el ejercicio",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "respira",
+  "nombre": "Respira",
+  "momento": "la sesión",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "ajustes",
+  "nombre": "Ajustes y «Tus datos»",
+  "momento": "ajustes",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "ajustes",
+  "nombre": "Ajustes y «Tus datos»",
+  "momento": "«Tus datos» abierta",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "sobre",
+  "nombre": "El sobre",
+  "momento": "la hoja del sobre",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "biblioteca-mueve",
+  "nombre": "La biblioteca de Mueve",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "biblioteca-estira",
+  "nombre": "La biblioteca de Estira",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "biblioteca-respira",
+  "nombre": "La biblioteca de Respira",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "logros",
+  "nombre": "Logros",
+  "momento": "los logros",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña today",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña week",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña month",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña year",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña ayuda",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "compra",
+  "nombre": "La hoja de compra",
+  "momento": "la invitación con la tienda",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "bienvenida",
+  "nombre": "La bienvenida",
+  "momento": "hola",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "360×740",
+  "escena": "bienvenida",
+  "nombre": "La bienvenida",
+  "momento": "tu semana",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "home-libre",
+  "nombre": "La home por libre",
+  "momento": "la home",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "home-jornada",
+  "nombre": "La home con la jornada",
+  "momento": "la home",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "tarjeta-dia",
+  "nombre": "La tarjeta del día",
+  "momento": "la pregunta del día",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "pausa",
+  "nombre": "La ventana de la pausa",
+  "momento": "por libre",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "pausa-jornada",
+  "nombre": "La ventana de la pausa, con la jornada",
+  "momento": "con la jornada",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "runner-mueve",
+  "nombre": "El runner de Mueve",
+  "momento": "colócate",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "runner-mueve",
+  "nombre": "El runner de Mueve",
+  "momento": "el ejercicio",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "runner-estira",
+  "nombre": "El runner de Estira",
+  "momento": "colócate",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "runner-estira",
+  "nombre": "El runner de Estira",
+  "momento": "el ejercicio",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "respira",
+  "nombre": "Respira",
+  "momento": "la sesión",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "ajustes",
+  "nombre": "Ajustes y «Tus datos»",
+  "momento": "ajustes",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "ajustes",
+  "nombre": "Ajustes y «Tus datos»",
+  "momento": "«Tus datos» abierta",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "sobre",
+  "nombre": "El sobre",
+  "momento": "la hoja del sobre",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "biblioteca-mueve",
+  "nombre": "La biblioteca de Mueve",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "biblioteca-estira",
+  "nombre": "La biblioteca de Estira",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "biblioteca-respira",
+  "nombre": "La biblioteca de Respira",
+  "momento": "la biblioteca",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "logros",
+  "nombre": "Logros",
+  "momento": "los logros",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña today",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña week",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña month",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña year",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "estadisticas",
+  "nombre": "Estadísticas",
+  "momento": "pestaña ayuda",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "compra",
+  "nombre": "La hoja de compra",
+  "momento": "la invitación con la tienda",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "bienvenida",
+  "nombre": "La bienvenida",
+  "momento": "hola",
+  "fallos": []
+ },
+ {
+  "modo": "es",
+  "tam": "1280×800",
+  "escena": "bienvenida",
+  "nombre": "La bienvenida",
+  "momento": "tu semana",
+  "fallos": []
+ }
+]

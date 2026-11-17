@@ -118,7 +118,10 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 - Al volver los Caminos (después de v1), tres casos de la auditoría del 21 oct.: un paso de cuerpo dentro de un Camino
   borra la rutina a medias de otra (`olvidarCuerpoGuardada` con `inPath`), «¿Salir del Camino?» no suspende la sesión
   de debajo, y esa confirmación no encierra el Tab ni usa `usePaceDialogo`.
-- Pseudolocalización. Los plurales, D-1 a D-3 y la actualización desde la 0.191.1 y la 0.174.0, con sus pruebas (tanda 2, 16 nov.).
+- Los plurales, D-1 a D-3 y la actualización desde la 0.191.1 y la 0.174.0, con sus pruebas (tanda 2, 16 nov.). La
+  pseudolocalización, hecha en `claude/textos-largos-17nov-5fb6a3` (17 nov.): `tests/textos-largos.spec.js`, el arreglo de
+  las pestañas de Estadísticas y dos preguntas para Ez (Ajustes, 12 px a 360×640; la fila de la pausa en castellano),
+  en la página QWaU4nFeXFHAo1Qufx9eqd (`docs/proposals/textos-largos-17nov/`).
 
 El detalle de lo hecho está en `CHANGELOG.md`, en el relevo (`docs/traspaso/relevo-coordinadora-22oct.md`) y en
 `git log -- STATE.md`. El `STATE.md` de antes de s200, con el mapa de archivos, en `docs/archive/STATE_HASTA_S200.md`.
