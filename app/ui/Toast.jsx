@@ -43,11 +43,18 @@ function toastHuecoDelAro() {
    si mientras dura se abría una biblioteca, «Antes de empezar» o una sesión, se pintaba encima
    de su título. Mientras haya una ventana, una sesión o un diálogo (Ajustes incluido), no se ve. */
 const TOAST_TAPADO = 'html:has([data-pace-modal-backdrop], [data-pace-session-root], [role="dialog"])';
+/* Y EN EL MÓVIL, TAMPOCO ENCIMA DEL CAJÓN (recorrido de tester, 18 nov. 2026): el panel lateral es ahí
+   un cajón a pantalla completa en z 60, y el sello del aro se pintaba encima, sobre la fila de los vasos.
+   La barra solo está montada abierta (Sidebar devuelve null plegada); en el escritorio va al lado del aro. */
+const TOAST_CAJON = 'html:has([data-pace-sidebar])';
 if (!document.getElementById('pace-toast-css')) {
   const st = document.createElement('style');
   st.id = 'pace-toast-css';
   st.textContent = '[data-pace-sello-en-aro] [data-pace-dial-subtitle] { visibility: hidden; }'
-    + TOAST_TAPADO + ' [data-pace-sello-aro], ' + TOAST_TAPADO + ' [data-pace-toast] { visibility: hidden; }';
+    + TOAST_TAPADO + ' [data-pace-sello-aro], ' + TOAST_TAPADO + ' [data-pace-toast] { visibility: hidden; }'
+    + (typeof PACE_CORTE_MOVIL === 'string'
+      ? '@media ' + PACE_CORTE_MOVIL + ' { ' + TOAST_CAJON + ' [data-pace-sello-aro], ' + TOAST_CAJON + ' [data-pace-toast] { visibility: hidden; } }'
+      : '');
   document.head.appendChild(st);
 }
 

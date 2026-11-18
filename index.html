@@ -25091,11 +25091,18 @@ function toastHuecoDelAro() {
 
 
 const TOAST_TAPADO = 'html:has([data-pace-modal-backdrop], [data-pace-session-root], [role="dialog"])';
+
+
+
+const TOAST_CAJON = 'html:has([data-pace-sidebar])';
 if (!document.getElementById('pace-toast-css')) {
   const st = document.createElement('style');
   st.id = 'pace-toast-css';
   st.textContent = '[data-pace-sello-en-aro] [data-pace-dial-subtitle] { visibility: hidden; }' +
-  TOAST_TAPADO + ' [data-pace-sello-aro], ' + TOAST_TAPADO + ' [data-pace-toast] { visibility: hidden; }';
+  TOAST_TAPADO + ' [data-pace-sello-aro], ' + TOAST_TAPADO + ' [data-pace-toast] { visibility: hidden; }' + (
+  typeof PACE_CORTE_MOVIL === 'string' ?
+  '@media ' + PACE_CORTE_MOVIL + ' { ' + TOAST_CAJON + ' [data-pace-sello-aro], ' + TOAST_CAJON + ' [data-pace-toast] { visibility: hidden; } }' :
+  '');
   document.head.appendChild(st);
 }
 
