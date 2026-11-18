@@ -4,6 +4,18 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de noviembre de 2026, 10:20, v0.204.0 en `main` y los cuatro arreglos de S3 y S4 en su rama.
 
+## AL RELEVO (18 nov., 14:30, cuenta 5iWBf con las 5 h al 97 % y la semana al 80 %): empieza aquí; manda sobre lo de abajo
+
+- **`main` = 0.210.0 con GitHub en verde entero** (CI, Android e iPhone, que compiló el calendario de Apple). **Ninguna sesión trabajando**; nada sin subir.
+- **Esperan letra de Ez:** el cobro en las tiendas (`claude/cobro-tiendas-17nov-2b41f7`, página JhA4axkRcfnVA75ggFYW7J, cinco preguntas, todo A recomendado; solo diseño) y los arreglos del recorrido de tester nuevo (`claude/arreglos-tester-18nov`, 06479fb5: siete fallos montados con su prueba y 11 preguntas, todo A; página A3Dc4VmgwvjkW7t6v4ZU8r; antes de juntar, la suite entera en la rama). Ez excluyó de ese recorrido «con el día servido, la home pierde Respira, Estira, Mueve e Hidrátate»: se queda como está.
+- **En espera por Ez:** los textos largos (`claude/textos-largos-17nov-5fb6a3`). **Falta su sí** al texto de tres pasos de la 1A de los arreglos menores (`claude/menores-valorar-16nov-87ef7b`).
+- **Lo de Ez:** la aprobación de Google de la cerrada (después, la 0.210.0 como actualización), probar en sus móviles (pasos en F1thKAvbpuoeykFZao125K y Cp7RUbjtX21ZDzZeHYQ7JT), los testers, las altas de Play, Apple, Google Cloud y Microsoft, «Avísame», ChatGPT del cobro y la décima de Fable (`docs/audits/fable-17nov/encargo-decima.md`, a poner al día con la 0.210.0).
+- **Reglas de uso de Ez:** las sesiones llegan al 100 % con commit y push tras cada paso; al 95 %, relevo a la otra cuenta. Las páginas de esta cuenta dan 404 en la otra: se publican de nuevo desde su carpeta de `docs/proposals/` y se apunta el par en `docs/traspaso/archivos/hoja-ids-cuentas.js`.
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (18 nov., 14:30)» de arriba del todo de docs/traspaso/LEEME.md, y sigue como coordinadora. main está en la 0.210.0 con GitHub en verde. Publica en esta cuenta las páginas del cobro en las tiendas y de los arreglos del recorrido, apunta sus pares y tráeme sus preguntas para que elija. Haz pocas vueltas.
+```
+
 ## 17 nov., tarde (cuenta 5iWBf): la 0.210.0. Manda sobre lo de abajo
 
 - **Ez (literal): «Solo el calendario»** y luego **«y si la voz arreglada, lo de los textos largos dejalo en stanby»**. Uniones 832fa7e3 (calendario, sin choques) y 98015a4f (`claude/voz-cuerpo-cola-17nov`; choque en el mínimo de pruebas, 1684, y en las decisiones). La primera suite se paró al llegar la voz (su servidor se quedó en el 8805: la buena fue por el 8815). Suite entera: **1726 en verde, 2 saltadas y 3 rojas de carga** que pasan solas 12 de 12.
