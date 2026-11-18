@@ -17,10 +17,11 @@ actividades con el día servido (se queda como está). Recorrido: https://claude
 - «Pausa terminada» horas después: la V1 A de Ez (7 nov.) lo pide (tests/abierta-horas.spec.js, «de 8:10 a
   12:10 el aro dice Pausa terminada»). Deshecho; va a la página como opinión.
 
+## Página
+- «Montado y para elegir»: https://claude.ai/artifact/A3Dc4VmgwvjkW7t6v4ZU8r (fuente: index.html y fotos/). Once
+  preguntas, recomendadas todas en A. Las maquetas, pintadas sobre la app con conduce.js (semilla + cambios en
+  la página); las fotos rec-*, del recorrido.
+
 ## Falta
-- La página «Montado y para elegir» (docs/proposals/arreglos-tester-18nov/index.html) con las opiniones
-  pintadas sobre la app: sellos (cuándo y cuántos), «Preparar jornada» en un toque, Estadísticas con las no
-  hechas, «Pausa terminada», la jornada cerrada con dos botones, el runner que aún cuenta el descanso en
-  «Paso X de N» (tras el arreglo 5, es el único), «Hombros: sin mover hoy», lo de ayer, y los textos (inglés
-  «Day complete», «I did it my own way», bienvenida, Ajustes, Ver todo, nombres, calendario web).
-- Suite entera sin pasar (solo las vecinas con --workers=1 en el puerto 8915).
+- Las letras de Ez y su «júntalo».
+- La suite entera en la rama antes de juntar (solo se pasaron las vecinas con --workers=1 en el puerto 8915).
