@@ -27,6 +27,14 @@ actividades con el día servido (se queda como está). Recorrido: https://claude
 «no hecha», sin minutos. La 4: ajustar tests/abierta-horas.spec.js (V1 A del 7 nov.). La 11: queda para la pasada de textos.
 Una por commit con su prueba vista caer; al final, la suite entera con PACE_E2E_PORT=8915 y su cifra en la página.
 
+## Letras montadas (18 nov.)
+- 3B fdd3315d · 4A 809f1dc0 (ajusta abierta-horas) · 5A b25d2a40 · 6A 54c72e8c · 7A 170b2fa4 («{zona}: aún sin mover»:
+  con «hoy» tres zonas partían la ventana a 360 px) · 9A 126f7c86. MINIMO_PRUEBAS 1701, censo 1259.
+
 ## Falta
-- Montar las letras (ver la lista de commits: lo que no esté, falta).
-- La suite entera en la rama y la página «Montado» con fotos de lo nuevo.
+- 2A «Preparar jornada» en un toque · 1A sellos juntos con una campanita · 8A lo de ayer · 10A (textos de la
+  casa: carta del lunes y catálogo en la bienvenida; las líneas de «Marca la fase» y «Suena detrás»; «6 vasos en
+  la jornada» y el contexto sin borde en «Ver todo»; el calendario de la web «Descarga…» solo en la web; «Hoy,
+  lunes» la primera semana (también el aviso de entrada); «hecha» en la fila de la pausa ya hecha). Varias pruebas
+  dicen esos textos: ponerlas al día primero (vistas caer). CONTENT.md:345 aún dice «sin mover hoy».
+- La suite entera con PACE_E2E_PORT=8915 y la página «Montado» con su cifra y fotos de lo nuevo.
