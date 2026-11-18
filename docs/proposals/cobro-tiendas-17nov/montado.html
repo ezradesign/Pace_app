@@ -1,0 +1,149 @@
+<title>Cobro en las apps, montado</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* La página «Montado» de siempre: una columna de papel y tinta, lo montado con la hoja pintada en
+   pequeño, cómo se probó y las dos listas de lo que hace Ez. Oliva = hecho; terracota = falta. */
+:root{
+  --paper:#F2EDE0;--card:#FBF8F1;
+  --ink:#1F1C17;--ink-2:#4A453C;--ink-3:#77705F;
+  --line:#C9C0A8;
+  --olive:#3E5A3A;--olive-soft:rgba(62,90,58,.12);
+  --terra:#A85E43;--terra-soft:rgba(168,94,67,.12);
+  --display:'EB Garamond',Georgia,'Times New Roman',serif;
+  --ui:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+main{max-width:880px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 72px}
+h1,h2,h3{font-family:var(--display);font-style:italic;font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(32px,6vw,44px)}
+h2{font-size:clamp(23px,4vw,28px);margin:44px 0 10px;padding-top:22px;border-top:1px solid var(--line)}
+h3{font-size:21px;margin:26px 0 8px}
+p,li{color:var(--ink-2);max-width:68ch}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 14px;padding-left:22px}
+li{margin-bottom:6px}
+strong{color:var(--ink);font-weight:500}
+code{font-size:.88em;background:var(--olive-soft);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+a{color:var(--olive)}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.lead{font-family:var(--display);font-size:21px;color:var(--ink);max-width:62ch;margin-top:14px}
+.montado{background:var(--olive-soft);border-radius:10px;padding:12px 16px;margin:18px 0 0;color:var(--ink);max-width:68ch}
+.aviso{background:var(--terra-soft);border-radius:10px;padding:12px 16px;margin:16px 0;color:var(--ink);max-width:68ch;font-size:15px}
+.par{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin:14px 0}
+.lado{min-width:0}
+.lado .t{font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;color:var(--olive)}
+.hoja{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;max-width:360px}
+.hoja h4{font-family:var(--display);font-style:italic;font-weight:400;font-size:22px;margin:0 0 6px}
+.hoja p{font-size:13px;margin-bottom:8px}
+.btn{display:block;text-align:center;padding:9px 12px;border-radius:999px;border:1px solid var(--line);font-size:14px;color:var(--ink-2);margin-top:8px}
+.btn.si{background:var(--olive-soft);border-color:var(--olive);color:var(--ink)}
+.letra{font-size:12px;color:var(--ink-3);margin:6px 2px 0;line-height:1.4;text-align:center}
+.pie{font-size:12px;color:var(--ink-3);text-align:center;margin-top:12px}
+.filas{display:grid;gap:8px;max-width:420px}
+.fila{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:14px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.fila span:last-child{color:var(--ink-3)}
+.tabla{overflow-x:auto;margin:14px 0}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line);color:var(--ink-2)}
+th{font-weight:500;color:var(--ink);font-size:13px}
+td.si{color:var(--olive)}td.no{color:var(--terra)}
+.nota{font-size:13px;color:var(--ink-3)}
+</style>
+
+<main>
+  <div class="eyebrow">PACE · cobrar en Google Play y en el iPhone · montado el 18 nov. 2026</div>
+  <h1>Cobro en las apps, montado</h1>
+  <p class="lead">La compra de PACE completo en Google Play y en el iPhone ya está dentro de PACE, apagada. El día que tengas tus altas, quedan dos datos y probarla de verdad.</p>
+  <p class="montado"><strong>Con tus letras del 18 nov.:</strong> código propio (la 1, a mi juicio: la más estable y segura), montado ya y apagado (2A), «Tengo un código» que abre el canje de la tienda (3A), las condiciones estándar de Apple en el iPhone (4A) y sin «Compartir en familia» (5A, al crear el producto). En la rama <code>claude/cobro-tiendas-montaje-18nov</code>; falta tu «júntalo». <strong>Nada se puede encender sin tus altas</strong>: la comprobación de antes de subir (<code>verify</code>) se pone en rojo.</p>
+
+  <h2>Por qué código propio</h2>
+  <p>La pieza libre de Capgo está viva, pero en la última semana arregló fallos justo en lo que PACE usaría (la prueba de la mensual no se aplicaba, una compra se podía perder con la ventana de Google abierta) y empieza a pasarse a Capacitor 9. El código propio solo depende de Google y de Apple, que avisan con dos años, y deja comprobar en el móvil la firma de cada compra. Todo el razonamiento y las fuentes, en <a href="https://claude.ai/artifact/JhA4axkRcfnVA75ggFYW7J">la página de las opciones</a>.</p>
+
+  <h2>Lo que hay ya, apagado</h2>
+  <div class="par">
+    <div class="lado"><div class="t">La hoja de compra, en Android</div>
+      <div class="hoja">
+        <h4>PACE completo</h4>
+        <p>19,99 € una vez, o 2,99 € al mes con 7 días gratis.</p>
+        <span class="btn si">Probar 7 días gratis</span>
+        <p class="letra">Después, 2,99 € al mes. Se renueva cada mes hasta que canceles en Google Play.</p>
+        <span class="btn">Ahora no</span>
+        <p class="letra">Prefiero pagarlo una vez, 19,99 € · Tengo un código</p>
+        <p class="pie">Condiciones · Privacidad · Restaurar compras</p>
+      </div>
+    </div>
+    <div class="lado"><div class="t">Ajustes, con la prueba (iPhone)</div>
+      <div class="filas">
+        <div class="fila"><span>PACE completo</span><span>Prueba gratis · hasta el 25 nov.</span></div>
+        <div class="fila"><span>Gestionar la suscripción</span><span>App Store ›</span></div>
+        <div class="fila"><span>Restaurar compras</span><span>›</span></div>
+      </div>
+      <p class="nota" style="margin-top:10px">Con el de por vida: «Para siempre», sin «Gestionar». Sin comprar: «Tenerlo para siempre · 19,99 €», «Tengo un código» y «Restaurar compras». Las fechas, de ejemplo.</p>
+    </div>
+  </div>
+  <ul>
+    <li><strong>Comprar</strong> en Google Play y en Apple: la mensual con su prueba de 7 días solo si la tienda dice que te toca (si ya la usaste, «2,99 € al mes», sin «gratis»), el de por vida y el pago pendiente (Google deja pagar en efectivo en algunos países: no abre nada hasta que lo confirma).</li>
+    <li><strong>Lo que dice después</strong>, de verdad: «para siempre» solo con el de por vida; con la prueba, «Tu prueba gratis acaba el …; si cancelas antes en Ajustes, no se cobra nada»; si los precios no cargan, «No se pudieron cargar los precios» con «Reintentar» (antes habría dicho «Pronto podrás tenerlo aquí»).</li>
+    <li><strong>En las apps no sale</strong> «Te avisamos dos días antes de que acabe la prueba» (tu D-11 A). En la web sigue igual.</li>
+    <li><strong>Restaurar</strong>: al abrir PACE se pregunta a la tienda y lo comprado vuelve solo en un móvil nuevo; además, «Restaurar compras» al pie de la hoja y en Ajustes. Si no hay nada: «No hay compras de PACE en esta cuenta de Google» (o de Apple).</li>
+    <li><strong>«Tengo un código»</strong> abre el canje de la tienda: la ventana de Apple en el iPhone y Google Play en Android. Lo canjeado llega a PACE solo, también si se canjea desde la tienda.</li>
+    <li><strong>Seguro sin servidor</strong>: Android solo cree una compra con la firma de Google comprobada con la clave de tu Play Console, y la confirma (si no, Google la devuelve a los 3 días); el iPhone solo cree lo que firma Apple y no está devuelto. Una devolución cierra PACE completo la siguiente vez que pregunta.</li>
+    <li><strong>Sin conexión</strong>, vale lo último que dijo la tienda: el de por vida sigue; la mensual, hasta su fin y unos días más. La copia de «Tus datos» no lleva la compra a otro móvil.</li>
+  </ul>
+  <p class="nota">En Android, Ajustes dice «Mensual» sin fecha (solo justo después de empezar la prueba dice hasta cuándo): Google no da en el móvil cuándo se renueva ni cuándo acaba la prueba. En el iPhone sí salen las fechas.</p>
+
+  <h2>Cómo se ha probado</h2>
+  <div class="tabla"><table>
+    <thead><tr><th>Qué</th><th>Resultado</th></tr></thead>
+    <tbody>
+      <tr><td>Once pruebas con una tienda de mentira que contesta como Google y Apple (apagada, con y sin prueba, de por vida, pendiente, precios que fallan, restaurar, código, sin conexión, copia de otro móvil, iPhone)</td><td class="si">11 en verde; con cuatro fallos metidos a propósito, caen las cuatro que tocan</td></tr>
+      <tr><td><code>verify</code>: encender una tienda sin tu alta, sin la clave de Play o antes de v1; la prueba de 7 días dada por supuesta; el aviso de dos días en las apps; las piezas sin comprobar firma o devoluciones</td><td class="si">En verde; los seis cambios a propósito, en rojo</td></tr>
+      <tr><td>Las pruebas vecinas (compra, PACE completo, día de v1, Ajustes, importar, Android e iPhone), una a una en el puerto 8925</td><td id="vecinas">PENDIENTE</td></tr>
+      <tr><td>Compilar la pieza de Android en GitHub</td><td id="android">PENDIENTE</td></tr>
+      <tr><td>Compilar la pieza del iPhone en GitHub (simulador)</td><td id="ios">PENDIENTE</td></tr>
+      <tr><td>Comprar de verdad con Google y con Apple</td><td class="no">Sin probar: hace falta tu alta en cada tienda</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Lo que haces tú</h2>
+  <h3>En Play Console, con el perfil de pagos</h3>
+  <ol>
+    <li>Enlazar el perfil de pagos a tu cuenta de desarrollador.</li>
+    <li>Un producto único: «PACE completo para siempre», id <code>pace_completo_vida</code>, 19,99 €.</li>
+    <li>Una suscripción: «PACE completo», id <code>pace_completo_mes</code>, con su plan base <code>mensual</code> (se renueva cada mes, 2,99 €) y la oferta <code>prueba-7-dias</code> (7 días gratis, solo para quien nunca la tuvo).</li>
+    <li><strong>La clave de licencia</strong>: en «Monetizar con Play › Configuración de la monetización», la «clave pública RSA codificada en Base64». No es secreta: pásasela a la coordinadora. Sin ella, la app no cree ninguna compra.</li>
+    <li>En «Pruebas de licencia», tu Gmail y una segunda cuenta, con «responder con normalidad».</li>
+    <li>Los códigos de los testers: una promoción del producto para siempre, unos 20 códigos de un solo uso (caben 500 cada tres meses). Se mandan el día de v1.</li>
+    <li>La ficha: «Contiene compras en la aplicación», el párrafo de PACE completo y la seguridad de los datos.</li>
+  </ol>
+  <h3>En App Store Connect, con el acuerdo de apps de pago</h3>
+  <ol>
+    <li>El acuerdo de apps de pago, con banco, impuestos (W-8BEN), el programa para pequeñas empresas y la dirección visible en la UE.</li>
+    <li>Una compra no consumible: «PACE completo para siempre», id <code>pace_completo_vida</code>, 19,99 €, con textos en castellano e inglés y una captura. <strong>«Compartir en familia», apagado</strong> (5A).</li>
+    <li>Un grupo de suscripciones «PACE completo» con <code>pace_completo_mes</code>: 1 mes, 2,99 €, y una oferta de introducción gratis de 1 semana.</li>
+    <li>En «Usuarios y acceso › Sandbox», una cuenta de prueba con un correo que no use ya Apple.</li>
+    <li>Los códigos de los testers: códigos de oferta gratis y de un solo uso en la compra para siempre (lote mínimo de 500; mandas solo los que hagan falta). Solo valen en la versión de la App Store: se mandan el día de v1.</li>
+    <li>La ficha: en la descripción, el enlace a las condiciones estándar de Apple (apple.com/legal/internet-services/itunes/dev/stdeula); la dirección de la privacidad; y «Privacidad de la app» repasada.</li>
+    <li>En la revisión de v1, las dos compras van con la versión, con una nota de dónde están: Ajustes › PACE completo, o tocar una rutina con candado.</li>
+  </ol>
+  <p class="aviso">Cuando las tengas, dile a la coordinadora <strong>el día de cada alta y la clave de Play</strong>. Con eso empieza la sesión 3.</p>
+
+  <h2>Lo que queda para la sesión 3, con tus altas</h2>
+  <ul>
+    <li>Apuntar tus altas y la clave, y hacer una versión de prueba con la compra encendida solo para ti. Hoy <code>verify</code> no deja encender nada antes de v1: entonces se le enseña esa versión de prueba.</li>
+    <li>Que compres de prueba en tu Android (tester con licencia, no se cobra) y en tu iPhone (TestFlight, gratis), y arreglar lo que salga.</li>
+    <li>Dos cosas pequeñas de la auditoría que esperan a la tienda: que «Privacidad», en las apps, abra una página sin camino a la compra de la web (sexta, nº 14), y que /premium diga que en el iPhone las devoluciones las decide Apple.</li>
+  </ul>
+</main>
