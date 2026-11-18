@@ -45,4 +45,5 @@ Una por commit con su prueba vista caer; al final, la suite entera con PACE_E2E_
   que queda de hoy y ábrelo con tu calendario» solo en la web (cal.resumen; en la app sigue «Se añade»); «Hoy,
   lunes» la primera semana (ritmo.manana.titulo; también el aviso de entrada); «hecha» en la fila de la pausa ya
   hecha. CONTENT.md:345 aún dice «sin mover hoy».
-- La página «Montado» con la cifra de la suite y fotos de lo nuevo.
+- Hecho: suite entera (1724 verdes, 2 saltadas, 23 rojas: 14 del runner arregladas en 38f0d434 y 9 que pasan
+  solas) y la página «Montado» con su cifra y fotos de lo nuevo (versión 2, misma URL).

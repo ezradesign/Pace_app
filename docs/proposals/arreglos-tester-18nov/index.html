@@ -69,6 +69,37 @@ a{color:var(--olive)}
   <p>Todo está en la rama <code>claude/arreglos-tester-18nov</code>, desde la 0.210.0, con <code>verify</code> en verde. He pasado las pruebas vecinas de cada arreglo; la suite entera, no. Falta tu «júntalo». El recorrido de origen: <a href="https://claude.ai/artifact/T8J9vT4s5aodPFLd1k3iYM">Tres días de tester</a>.</p>
   <p class="queda"><strong>Se queda como está</strong>, como dijiste: con el día servido, la home se centra en lo que toca ahora, y Respira, Estira, Mueve e Hidrátate siguen en el cajón y con «Hoy voy por libre».</p>
 
+  <h2>Montado con tus letras</h2>
+  <p>Contestaste «1A + 2A + 3b atenuadas y no hecha las dos + 4A + 5A + 6A + 7A + 8A + 9A + 10A + 11A». Montado en la misma rama, una por commit y con su prueba:</p>
+  <ol class="montado">
+    <li><b>3 · Estadísticas › Hoy:</b> las pausas que no se hicieron salen atenuadas y con «no hecha» («not done»), sin minutos.</li>
+    <li><b>4 · «Pausa terminada»</b> los 15 minutos siguientes a la pausa; después, la línea de siempre. La prueba de tu V1 que lo pedía a las 12:10 pide ahora lo contrario. La del portátil cerrado sigue igual, porque ahí la pausa empieza al volver y acaba de terminar.</li>
+    <li><b>5 · La jornada cerrada</b> lleva solo «Seguir por libre», el del aro; la tarjeta se queda con «Cambiar».</li>
+    <li><b>6 · El runner</b> cuenta los pasos sin el descanso («Paso 1 de 4») y, en el descanso, dice «Descanso». En los dos runners.</li>
+    <li><b>7 · «Hombros: aún sin mover».</b> Sin el «hoy» de la A: con «aún» y «hoy», Hombros, Espalda y Caderas partían en dos líneas la ventana de la pausa a 360 px, que una prueba vigila. Dice lo mismo y mide lo que medía.</li>
+    <li><b>9 · En inglés:</b> «Workday over», «Keep going» y «I already did one».</li>
+    <li><b>10 · Textos de la casa, la primera parte.</b> En la bienvenida, «cada lunes, tu semana ajustada» y «con los ejercicios de PACE». En Ajustes, «La voz que cuenta las fases» y «Lo que suena al respirar». Lo de «mientras respiras» de la A partía la línea, y Ajustes pedía 29 px de scroll a 360 × 640. En inglés, «The voice for each phase» y «What plays as you breathe», por lo mismo.</li>
+  </ol>
+  <p class="nota"><strong>Sin montar aún</strong> (se acabó el uso de la semana; está apuntado en <code>DONDE-ME-QUEDO.md</code> con dónde tocar):</p>
+  <ul class="nota">
+    <li>La 2. Pide además poner «Hoy es distinto» en la tarjeta corta, que hoy no lo tiene, sin romper la home sin scroll.</li>
+    <li>La 1 (los sellos juntos) y la 8 (lo de ayer).</li>
+    <li>De la 10: «6 vasos en la jornada» y el contexto sin borde en «Ver todo», el calendario de la web, «Hoy, lunes» la primera semana y «hecha» en la fila de la pausa ya hecha.</li>
+    <li>La 11 queda para la próxima pasada de textos, como dice su A.</li>
+  </ul>
+  <p><strong>La suite entera en la rama</strong> (con <code>PACE_E2E_PORT=8915</code>, 1 h 30 min) dio 1724 pruebas en verde, 2 saltadas a propósito y 23 en rojo:</p>
+  <ul class="nota">
+    <li>14 eran del runner. Sus pruebas leían el número de paso de la cabecera, que con la 6 ya no cuenta los descansos. Ahora lo leen de un atributo con el índice real; arreglado en <code>38f0d434</code>, y las 29 de esos archivos pasan.</li>
+    <li>Las otras 9 pasan al repetirlas solas: 7 de Chromium (34 de 34 en sus archivos) y 2 del iPhone en WebKit (64 en verde).</li>
+  </ul>
+  <p><code>verify</code>, en verde.</p>
+  <div class="par">
+    <figure><img src="fotos/nuevo-stats.webp" alt="Estadísticas con las no hechas atenuadas y con no hecha" loading="lazy"><figcaption><b>3 · montada</b>Escritorio express, hecha; las demás, atenuadas y «no hecha».</figcaption></figure>
+    <figure><img src="fotos/nuevo-jornada-cerrada.webp" alt="Jornada cerrada con un solo botón" loading="lazy"><figcaption><b>5 · montada</b>«Seguir por libre» en el aro; la tarjeta, con «Cambiar».</figcaption></figure>
+    <figure><img src="fotos/nuevo-runner.webp" alt="Runner con Paso 1 de 4" loading="lazy"><figcaption><b>6 · montada</b>«Paso 1 de 4», como «Prepárate» y el cierre.</figcaption></figure>
+    <figure><img src="fotos/nuevo-aun-sin-mover.webp" alt="Hombros: aún sin mover" loading="lazy"><figcaption><b>7 · montada</b>«Hombros: aún sin mover».</figcaption></figure>
+  </div>
+
   <h2>Montado</h2>
   <ol class="montado">
     <li><b>Estadísticas › Hoy dice lo que hiciste en cada pausa.</b> La pausa cambiada con «Otra» por Escritorio express salía como «Manos y muñecas · hecha». Ahora manda lo que se guardó al hacerla, también si «Otra» cambió de Mueve a Estira.</li>
@@ -83,6 +114,7 @@ a{color:var(--olive)}
   <p class="nota">«Pausa terminada» horas después no era un fallo. Tu V1 A del 7 nov. lo pide así, y una prueba lo vigila (pestaña de fondo de 8:10 a 12:10: el aro dice «Pausa terminada»). Lo deshice; es la pregunta 4.</p>
 
   <h2>Para elegir</h2>
+  <p class="nota">Contestado el 18 nov.: todo A salvo la 3, que fue la B con «no hecha». Se queda aquí como referencia de lo que se pintó.</p>
 
   <h3>1 · Los sellos: cuándo salen y cuántos suenan</h3>
   <p>Hoy esperan a que acabe un Foco y salen uno detrás de otro con su campanita. Tras la primera pausa suenan cuatro en diez segundos, y alguno llega horas tarde (Curiosidad, ganado a las 9:43, a las 16:58).</p>

@@ -69,3 +69,19 @@
 {"cmd":"js","code":"(()=>{const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n,o=[];while(n=w.nextNode()){if(/PASO|Paso/.test(n.nodeValue))o.push(n.nodeValue)}return o})()"}
 {"cmd":"js","code":"(()=>{const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n,c=0;while(n=w.nextNode()){if(n.nodeValue===`Paso 1 de 5`){n.nodeValue=`Paso 1 de 4`;c++}}return c})()"}
 {"cmd":"foto","n":"run-a"}
+{"cmd":"abrir","t":"2026-11-24T17:40:00+01:00","perfil":"n1","limpio":true,"semilla":{"firstSeen":1,"lang":"es","langAuto":false,"palette":"crema","novedadesVistas":"*","copiaAvisoVisto":"*","soundOn":false,"_historyMigrated":true,"achievements":{"first.step":{"unlockedAt":1}},"cycle":2,"lastActiveDay":"Tue Nov 24 2026","ritmo":{"dia":{"fecha":"2026-11-24","opcion":"jornada","desde":540,"cicloBase":0,"cambios":{},"estados":{"1":"cuenta","2":"hecha"},"platos":{"2":["move.desk.quick"]}}}}}
+{"cmd":"espera","ms":1500}
+{"cmd":"foto","n":"nuevo-jornada-cerrada"}
+{"cmd":"toca","nombre":"Ver estadísticas","espera":1200,"force":true}
+{"cmd":"foto","n":"nuevo-stats"}
+{"cmd":"abrir","t":"2026-11-23T08:55:00+01:00","perfil":"n2","limpio":true,"semilla":{"firstSeen":1,"lang":"es","langAuto":false,"palette":"crema","novedadesVistas":"*","copiaAvisoVisto":"*","soundOn":false,"_historyMigrated":true,"achievements":{"first.step":{"unlockedAt":1}},"cycle":0,"lastActiveDay":"Mon Nov 23 2026","ritmo":{"dia":{"fecha":"2026-11-23","opcion":"jornada","desde":540,"cicloBase":0,"cambios":{}}}}}
+{"cmd":"espera","ms":1500}
+{"cmd":"foto","n":"nuevo-aun-sin-mover"}
+{"cmd":"abrir","t":"2026-11-23T11:20:00+01:00","perfil":"n3","limpio":true,"semilla":{"firstSeen":1,"lang":"es","langAuto":false,"palette":"crema","novedadesVistas":"*","copiaAvisoVisto":"*","soundOn":false,"_historyMigrated":true,"achievements":{"first.step":{"unlockedAt":1}},"ritmo":{"libre":true}}}
+{"cmd":"espera","ms":1200}
+{"cmd":"toca","nombre":"^Estira","force":true,"espera":1200}
+{"cmd":"toca","rol":"heading","nombre":"^Espalda de pie$","force":true,"espera":1200}
+{"cmd":"toca","nombre":"^Empezar$","n":-1,"force":true,"espera":1200}
+{"cmd":"toca","nombre":"Empezar ahora","force":true,"espera":1500}
+{"cmd":"foto","n":"nuevo-runner"}
+{"cmd":"cerrar"}
