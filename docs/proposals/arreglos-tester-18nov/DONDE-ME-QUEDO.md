@@ -22,6 +22,11 @@ actividades con el día servido (se queda como está). Recorrido: https://claude
   preguntas, recomendadas todas en A. Las maquetas, pintadas sobre la app con conduce.js (semilla + cambios en
   la página); las fotos rec-*, del recorrido.
 
+## Las letras de Ez (18 nov., literal)
+«1A + 2A + 3b atenuadas y no hecha las dos + 4A + 5A + 6A + 7A + 8A + 9A + 10A + 11A». La 3: atenuadas Y con
+«no hecha», sin minutos. La 4: ajustar tests/abierta-horas.spec.js (V1 A del 7 nov.). La 11: queda para la pasada de textos.
+Una por commit con su prueba vista caer; al final, la suite entera con PACE_E2E_PORT=8915 y su cifra en la página.
+
 ## Falta
-- Las letras de Ez y su «júntalo».
-- La suite entera en la rama antes de juntar (solo se pasaron las vecinas con --workers=1 en el puerto 8915).
+- Montar las letras (ver la lista de commits: lo que no esté, falta).
+- La suite entera en la rama y la página «Montado» con fotos de lo nuevo.
