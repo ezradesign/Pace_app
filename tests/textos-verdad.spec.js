@@ -36,3 +36,20 @@ test('los logros no dicen «Pomodoro», «9am», «SIT», «sin pausa» ni «pac
   });
   expect(malas).toEqual([]);
 });
+test('cada rutina de cuerpo que dice cuántos pasos o movimientos tiene, dice los que tiene (es y en)', async ({ page, context }) => {
+  await abrir(page, context);
+  const malas = await page.evaluate(() => {
+    const out = [];
+    const grupos = [window.MOVE_ROUTINES, window.EXTRA_ROUTINES];
+    const en = (window.PACE_STRINGS && window.PACE_STRINGS.en) || {};
+    for (const lib of grupos) for (const g of Object.values(lib || {})) for (const r of (g.items || [])) {
+      const n = (r.steps || []).filter((s) => s.mode !== 'rest').length;
+      for (const [lang, d] of [['es', r.desc], ['en', en[r.id + '.desc']]]) {
+        const m = /(\d+) (?:pasos|movimientos|ejercicios|movements|steps|exercises|hip movements)\b/.exec(d || '');
+        if (m && Number(m[1]) !== n) out.push(r.id + ' (' + lang + '): «' + d + '» y tiene ' + n);
+      }
+    }
+    return out;
+  });
+  expect(malas).toEqual([]);
+});

@@ -165,7 +165,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.neck.3.s2.instruction.care':         'Tilt with control, without pulling with your hand or lifting your shoulder.',
 
   'move.desk.quick.name':                'Desk Express',
-  'move.desk.quick.desc':                'Without standing up. 6 movements in the chair.',
+  'move.desk.quick.desc':                'Without standing up. 5 movements in the chair.',
   'move.desk.quick.code':                'Desk',
   'move.desk.quick.s0.name':             'Shrug + round',
   'move.desk.quick.s0.instruction.setup':  'Sit tall, feet flat, arms loose.',

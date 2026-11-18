@@ -182,7 +182,7 @@ const EXTRA_ROUTINES = {
       { id: 'move.desk.quick', tag: 'SIT', code: 'Escritorio', name: 'Escritorio express',
         intensity: 'gentle', level: 'accessible',
         position: ['seated'], equipment: [], requiresFloor: false,
-        desc: 'Sin levantarse. 6 movimientos en la silla.', min: 2,
+        desc: 'Sin levantarse. 5 movimientos en la silla.', min: 2,
         /* Cada gesto con su colocación o su cuidado, como el resto del catálogo. «Barbilla
            atrás 5 veces» era un reloj de 20 s: son 5 repeticiones de 4 s, los mismos 20. */
         steps: [
