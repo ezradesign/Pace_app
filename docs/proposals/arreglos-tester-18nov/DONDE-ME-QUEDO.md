@@ -29,12 +29,20 @@ Una por commit con su prueba vista caer; al final, la suite entera con PACE_E2E_
 
 ## Letras montadas (18 nov.)
 - 3B fdd3315d · 4A 809f1dc0 (ajusta abierta-horas) · 5A b25d2a40 · 6A 54c72e8c · 7A 170b2fa4 («{zona}: aún sin mover»:
-  con «hoy» tres zonas partían la ventana a 360 px) · 9A 126f7c86. MINIMO_PRUEBAS 1701, censo 1259.
+  con «hoy» tres zonas partían la ventana a 360 px) · 9A 126f7c86 · 10A, primera parte, b355be74 (bienvenida y
+  líneas de Ajustes; «Lo que suena al respirar», «The voice for each phase» y «What plays as you breathe», más
+  cortas que la A porque partían la línea y Ajustes pedía scroll a 360 × 640). MINIMO_PRUEBAS 1702, censo 1259.
 
-## Falta
-- 2A «Preparar jornada» en un toque · 1A sellos juntos con una campanita · 8A lo de ayer · 10A (textos de la
-  casa: carta del lunes y catálogo en la bienvenida; las líneas de «Marca la fase» y «Suena detrás»; «6 vasos en
-  la jornada» y el contexto sin borde en «Ver todo»; el calendario de la web «Descarga…» solo en la web; «Hoy,
-  lunes» la primera semana (también el aviso de entrada); «hecha» en la fila de la pausa ya hecha). Varias pruebas
-  dicen esos textos: ponerlas al día primero (vistas caer). CONTENT.md:345 aún dice «sin mover hoy».
-- La suite entera con PACE_E2E_PORT=8915 y la página «Montado» con su cifra y fotos de lo nuevo.
+## Falta (por orden)
+- 2A «Preparar jornada» en un toque: el botón de la tarjeta corta (RitmoTarjeta.jsx, data-pace-ritmo-comienza)
+  llama a ritmoComenzarHabitual si hay día habitual; y hace falta «Hoy es distinto» en la tarjeta corta, que hoy
+  no está (la A lo daba por hecho). Cuidado con la home sin scroll a 360 × 640 y con las pruebas que pulsan
+  comienza y esperan la pregunta: inicio-modulos, home-sin-scroll, ios-calendario.safari, home-fila-recogida.
+- 1A sellos: juntos, una campanita, «3 sellos nuevos · Primer paso y dos más»; al ganarlos salvo en un Foco; si
+  esperaron más de 15 min, sin sonido (ToastHost en app/ui/Toast.jsx y la cola de state-core.toast.jsx).
+- 8A lo de ayer: la frase de la serie cuando la elige lo de ayer («Piernas: ayer no las moviste»; ritmo.series.js).
+- 10A, el resto: «6 vasos en la jornada» y el contexto sin borde en «Ver todo»; el calendario de la web «Descarga lo
+  que queda de hoy y ábrelo con tu calendario» solo en la web (cal.resumen; en la app sigue «Se añade»); «Hoy,
+  lunes» la primera semana (ritmo.manana.titulo; también el aviso de entrada); «hecha» en la fila de la pausa ya
+  hecha. CONTENT.md:345 aún dice «sin mover hoy».
+- La página «Montado» con la cifra de la suite y fotos de lo nuevo.
