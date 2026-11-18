@@ -200,7 +200,9 @@ function CuerpoV1(p) {
      la barra va fuera del cuerpo, y una variable puesta solo en el cuerpo no le llegaba (sus
      márgenes salían a cero y la barra quedaba pegada al mando). */
   return (
-    <div data-pace-v1-raiz data-pace-v1-fase={step.mode === 'rest' ? 'rest' : p.phase} className="pace-v1-raiz" style={{ '--v1-acento': stepAccent }}
+    /* data-pace-v1-paso: el índice del paso, descansos incluidos. La cabecera ya no lo dice (cuenta solo los
+       ejercicios, Ez 6A del 18 nov.), y las pruebas lo leen de aquí. */
+    <div data-pace-v1-raiz data-pace-v1-paso={stepIdx} data-pace-v1-fase={step.mode === 'rest' ? 'rest' : p.phase} className="pace-v1-raiz" style={{ '--v1-acento': stepAccent }}
       {...(justo ? { 'data-pace-v1-justo': '' } : {})}>
       <div ref={cuerpoRef} data-pace-v1-body className="pace-v1" {...(p.paused ? { 'data-pace-v1-en-pausa': '' } : {})}>
         <div ref={glifoRef} data-pace-v1-glyph className="pace-v1-glifo" style={{ width: aro, height: aro }}>

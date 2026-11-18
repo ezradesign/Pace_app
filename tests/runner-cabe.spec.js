@@ -25,7 +25,7 @@ async function abrirRutina(page, biblioteca, id) {
   });
   await page.locator('[data-pace-v1-raiz]').first().waitFor({ timeout: 20000 });
 }
-const pasoActual = async (page) => +(await page.getByText(/^(Paso|Step) \d+ (de|of) \d+$/).first().textContent()).match(/(?:Paso|Step) (\d+)/)[1] - 1;
+const pasoActual = async (page) => +(await page.locator('[data-pace-v1-raiz]').getAttribute('data-pace-v1-paso'));   /* el índice, descansos incluidos: la cabecera solo cuenta ejercicios (6A) */
 
 const NUMEROS = { cinco: 5, seis: 6, siete: 7, ocho: 8, nueve: 9, diez: 10, doce: 12, quince: 15,
   five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, twelve: 12, fifteen: 15 };

@@ -31,10 +31,7 @@ async function abrirRutina(page, biblioteca, id) {
 const fase = (page) => page.locator('[data-pace-v1-raiz]').getAttribute('data-pace-v1-fase');
 const cue = async (page) => (await page.locator('[data-pace-v1-cue]').textContent()).trim();
 /* El paso en curso sale de «Paso n de N», en la cabecera. */
-const pasoActual = async (page) => {
-  const m = (await page.getByText(/^(Paso|Step) \d+ (de|of) \d+$/).first().textContent()).match(/(?:Paso|Step) (\d+)/);
-  return +m[1] - 1;
-};
+const pasoActual = async (page) => +(await page.locator('[data-pace-v1-raiz]').getAttribute('data-pace-v1-paso'));   /* el índice, descansos incluidos: la cabecera solo cuenta ejercicios (6A) */
 async function irAlPaso(page, idx) {
   for (let i = 0; i < 40 && (await pasoActual(page)) < idx; i++) {
     await page.locator('[data-pace-v1-btn="next"]').click();
