@@ -154,6 +154,13 @@ function ritmoPlatosVistos(it, n, dia) {
   return out.concat(libres.filter(Boolean));
 }
 
+/* ¿Es un plato de la pausa abierta que dice «Dos horas: sal de la silla»? Respira no empieza ahí con
+   «Siéntate cómodo» (recorrido de tester, 18 nov. 2026): BreatheSession dice «De pie o sentado». */
+function ritmoPausaDeLevantarse(routineId) {
+  var a = routineId ? ritmoPausaAbierta() : null;
+  return !!(a && a.it.frase && a.it.frase.k === 'larga' && a.platos.some(function (pl) { return pl.id === routineId; }));
+}
+
 /* LOS MINUTOS DE UNA PAUSA HECHA SON LOS QUE HICISTE (Ez, 7A del 11 nov. 2026; revisión de ChatGPT,
    punto 7). Estadísticas › Hoy, la línea y la hoja decían «hecha · 5 min», los minutos del hueco del
    plan, aunque la rutina durara 2. Ahora suman los de las sesiones de esa pausa (`dia.sesiones`), con
@@ -302,7 +309,7 @@ function ritmoPausaCerrarConElDia() {
 }
 
 Object.assign(window, {
-  ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta, ritmoPlatosVistos,
+  ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta, ritmoPlatosVistos, ritmoPausaDeLevantarse,
   ritmoSesionesHoy, ritmoMinutosHechos, ritmoMetaHecha, RITMO_MODULO_SESION,
   ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia, ritmoParadaHasta,
 });

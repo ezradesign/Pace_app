@@ -121,6 +121,8 @@ Object.assign(window.PACE_STRINGS.es, {
 
     // Breathe (sesión)
     'breathe.prepCopy':                'Siéntate cómodo. Respira natural.',
+    /* En la pausa larga de «Dos horas: sal de la silla» (recorrido de tester, 18 nov. 2026). */
+    'breathe.prepCopy.dePie':          'De pie o sentado. Respira natural.',
     'breathe.doneCopy':                'Has dedicado un rato a respirar.',
 
     // Libraries (compartido)
@@ -337,6 +339,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
     // Breathe (session)
     'breathe.prepCopy':                'Sit comfortably. Breathe naturally.',
+    'breathe.prepCopy.dePie':          'Standing or sitting. Breathe naturally.',
     'breathe.doneCopy':                'You took a moment to breathe.',
 
     // Libraries (shared)

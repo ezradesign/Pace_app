@@ -64,3 +64,21 @@ test('«Prepárate» cuenta los pasos como el cierre: sin el descanso', async ({
   expect(r.todos, 'GUARD: Espalda de pie lleva un descanso entre sus pasos').toBeGreaterThan(r.ejercicios);
   expect(r.copia).toContain(r.ejercicios + ' pasos');
 });
+test('en la pausa larga de «Dos horas: sal de la silla», Respira no empieza con «Siéntate cómodo»', async ({ page, context }) => {
+  /* Martes 24 nov. a las 11:17: tres bloques hechos y la pausa larga abierta. */
+  const MARTES = new Date('2026-11-24T11:17:00+01:00');
+  await sembrar(context, { cycle: 3, lastActiveDay: 'Tue Nov 24 2026', soundOn: false,
+    ritmo: { dia: { fecha: '2026-11-24', opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {}, pausa: 3,
+      estados: { 1: 'hecha', 2: 'saltada' } } } });
+  await page.clock.install({ time: MARTES });
+  await irAlArtefacto(page);
+  const pausa = await page.evaluate(() => { const a = ritmoPausaAbierta(); return a && { k: a.it.frase && a.it.frase.k, platos: a.platos.map((p) => p.modulo) }; });
+  expect(pausa, 'GUARD: la pausa abierta es la larga de las dos horas, con Respira').toEqual(expect.objectContaining({ k: 'larga' }));
+  expect(pausa.platos, 'GUARD: lleva Respira').toContain('respira');
+  /* la pausa de la barra, «Ahora, Exhalación 4·6…», abre su primer plato */
+  await page.getByRole('button', { name: /^Ahora, / }).click();
+  await expect(page.locator('[data-pace-session-root]'), 'GUARD: empieza Respira').toHaveCount(1);
+  const texto = await page.locator('[data-pace-session-root]').innerText();
+  expect(texto).not.toContain('Siéntate cómodo');
+  expect(texto).toContain('De pie o sentado');
+});

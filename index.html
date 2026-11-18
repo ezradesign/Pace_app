@@ -2636,6 +2636,8 @@ Object.assign(window.PACE_STRINGS.es, {
 
 
   'breathe.prepCopy': 'Siéntate cómodo. Respira natural.',
+
+  'breathe.prepCopy.dePie': 'De pie o sentado. Respira natural.',
   'breathe.doneCopy': 'Has dedicado un rato a respirar.',
 
 
@@ -2852,6 +2854,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
   'breathe.prepCopy': 'Sit comfortably. Breathe naturally.',
+  'breathe.prepCopy.dePie': 'Standing or sitting. Breathe naturally.',
   'breathe.doneCopy': 'You took a moment to breathe.',
 
 
@@ -15328,6 +15331,13 @@ function ritmoPlatosVistos(it, n, dia) {
 
 
 
+function ritmoPausaDeLevantarse(routineId) {
+  var a = routineId ? ritmoPausaAbierta() : null;
+  return !!(a && a.it.frase && a.it.frase.k === 'larga' && a.platos.some(function (pl) {return pl.id === routineId;}));
+}
+
+
+
 
 
 
@@ -15474,11 +15484,11 @@ function ritmoPausaCerrarConElDia() {
 }
 
 Object.assign(window, {
-  ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta, ritmoPlatosVistos,
+  ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta, ritmoPlatosVistos, ritmoPausaDeLevantarse,
   ritmoSesionesHoy, ritmoMinutosHechos, ritmoMetaHecha, RITMO_MODULO_SESION,
   ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia, ritmoParadaHasta
 });
-;Object.assign(window, { ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, RITMO_METAS_DE_FIN, ritmoSigueCierre, ritmoPausaHecha, ritmoModuloDeRutina, ritmoPlatosVistos, ritmoSesionesHoy, RITMO_MODULO_SESION, ritmoMinutosHechos, ritmoMetaHecha, ritmoPausaPorTuCuenta, ritmoSinPausa, ritmoPausaEmpieza, ritmoParadaHasta, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia });
+;Object.assign(window, { ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, RITMO_METAS_DE_FIN, ritmoSigueCierre, ritmoPausaHecha, ritmoModuloDeRutina, ritmoPlatosVistos, ritmoPausaDeLevantarse, ritmoSesionesHoy, RITMO_MODULO_SESION, ritmoMinutosHechos, ritmoMetaHecha, ritmoPausaPorTuCuenta, ritmoSinPausa, ritmoPausaEmpieza, ritmoParadaHasta, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia });
 })();
 </script>
   <!-- Las pausas con bloques cortos (22 oct. 2026): la invitación, «a mi ritmo» o tras cada bloque, y sin día. -->
@@ -35416,7 +35426,7 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
         onExit: onExit,
         accent: "var(--breathe)",
         prepCount: prepCount,
-        copy: t('breathe.prepCopy'),
+        copy: t(typeof ritmoPausaDeLevantarse === 'function' && ritmoPausaDeLevantarse(routine && routine.id) ? 'breathe.prepCopy.dePie' : 'breathe.prepCopy'),
         onSkip: () => {setPaused(false);setPrepCount(0);setStage('active');playPhaseSound(sequence[0].label, sequence[0].duration);},
         atmosphere: atmo }
       ));
