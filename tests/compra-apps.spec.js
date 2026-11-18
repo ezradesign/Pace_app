@@ -233,9 +233,10 @@ test('una copia de otro móvil no trae su compra', async ({ page, context }) => 
   const r = await page.evaluate(async () => {
     const entrante = { tiendaUltima: { canal: 'play', at: Date.now(), compras: [{ plan: 'vida' }] } };
     const e = await window.paceConservarAlImportar({}, entrante);
-    return e.tiendaUltima;
+    return 'tiendaUltima' in e ? e.tiendaUltima : 'sin clave';
   });
-  expect(r).toBe(null);
+  /* Sin compra en este móvil, la clave ni se escribe: así una copia que va y vuelve deja el estado igual. */
+  expect(r).toBe('sin clave');
 });
 
 test('iPhone: la tienda de Apple, sus condiciones estándar (4A) y «App Store» para gestionar', async ({ page, context }) => {

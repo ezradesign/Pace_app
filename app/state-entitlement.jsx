@@ -264,8 +264,13 @@ function paceConservarAlImportar(actual, entrante) {
   return Promise.resolve(licencia).then((e) => {
     let x = e;
     try { x = window.pacePasoV1Conservar ? window.pacePasoV1Conservar(actual, e) : e; } catch (err) { x = e; }
-    /* Lo último que dijo la tienda de ESTE móvil se queda: la copia de otro no trae su compra. */
-    return x && typeof x === 'object' ? Object.assign({}, x, { tiendaUltima: (actual && actual.tiendaUltima) || null }) : x;
+    /* Lo último que dijo la tienda de ESTE móvil se queda: la copia de otro no trae su compra. Si este
+       móvil no tenía nada, la clave no se escribe (ni la de la copia ni un `null`): una copia que va y
+       vuelve deja el estado igual (tests/copia-ida-vuelta.spec.js). */
+    if (!x || typeof x !== 'object') return x;
+    const y = Object.assign({}, x);
+    if (actual && actual.tiendaUltima) y.tiendaUltima = actual.tiendaUltima; else delete y.tiendaUltima;
+    return y;
   });
 }
 

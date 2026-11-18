@@ -4210,7 +4210,37 @@ Object.assign(window.PACE_STRINGS.es, {
   'premium.fin.y': 'y',
   'premium.fin.ver': 'Ver PACE completo',
   'premium.fin.linea': 'Tu semana de prueba acabó el {fecha}: lo que lleva candado ya es de PACE completo.',
-  'premium.v1.despues': 'Pronto podrás tenerlo aquí.'
+  'premium.v1.despues': 'Pronto podrás tenerlo aquí.',
+
+
+  'premium.onb.precios.sin': '{vida} una vez, o {mes} al mes.',
+  'premium.onb.mes': '{mes} al mes',
+  'premium.donde.play': 'Google Play',
+  'premium.donde.apple': 'tu cuenta de Apple',
+  'premium.tienda.play': 'Google',
+  'premium.tienda.apple': 'Apple',
+  'premium.tienda.renueva': 'Después, {mes} al mes. Se renueva cada mes hasta que canceles en {donde}.',
+  'premium.tienda.renueva.sin': 'Se renueva cada mes hasta que canceles en {donde}.',
+  'premium.tienda.condiciones': 'Condiciones',
+  'premium.tienda.privacidad': 'Privacidad',
+  'premium.tienda.restaurar': 'Restaurar compras',
+  'premium.tienda.cargando': 'Cargando los precios…',
+  'premium.tienda.error': 'No se pudieron cargar los precios.',
+  'premium.tienda.reintentar': 'Reintentar',
+  'premium.compra.fallo': 'La compra no se ha completado.',
+  'premium.compra.pendiente.titulo': 'Tu pago está pendiente',
+  'premium.compra.pendiente': 'PACE completo se abrirá cuando {tienda} lo confirme.',
+  'premium.ok.prueba': 'Tu prueba gratis acaba el {fecha}. Si cancelas antes en Ajustes › Gestionar la suscripción, no se cobra nada.',
+  'premium.ok.mes': 'Se renueva cada mes; lo cancelas cuando quieras en Ajustes.',
+  'premium.restaurar.vida': 'Hemos encontrado tu compra: PACE completo, para siempre.',
+  'premium.restaurar.mes': 'Hemos encontrado tu suscripción a PACE completo.',
+  'premium.restaurar.no': 'No hay compras de PACE en esta cuenta de {tienda}.',
+  'premium.restaurar.error': 'No se ha podido preguntar a {tienda}. Prueba con conexión.',
+  'premium.settings.mes': 'Mensual',
+  'premium.settings.mes.renueva': 'Mensual · se renueva el {fecha}',
+  'premium.settings.mes.cancelada': 'Cancelada · hasta el {fecha}',
+  'premium.settings.mes.prueba': 'Prueba gratis · hasta el {fecha}',
+  'premium.settings.manage.apple': 'App Store'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -4295,7 +4325,35 @@ Object.assign(window.PACE_STRINGS.en, {
   'premium.fin.y': 'and',
   'premium.fin.ver': 'See PACE Complete',
   'premium.fin.linea': 'Your trial week ended on {fecha}: anything with a padlock is now part of PACE Complete.',
-  'premium.v1.despues': 'You’ll be able to get it here soon.'
+  'premium.v1.despues': 'You’ll be able to get it here soon.',
+  'premium.onb.precios.sin': '{vida} once, or {mes} a month.',
+  'premium.onb.mes': '{mes} a month',
+  'premium.donde.play': 'Google Play',
+  'premium.donde.apple': 'your Apple account',
+  'premium.tienda.play': 'Google',
+  'premium.tienda.apple': 'Apple',
+  'premium.tienda.renueva': 'Then {mes} a month. It renews every month until you cancel in {donde}.',
+  'premium.tienda.renueva.sin': 'It renews every month until you cancel in {donde}.',
+  'premium.tienda.condiciones': 'Terms',
+  'premium.tienda.privacidad': 'Privacy',
+  'premium.tienda.restaurar': 'Restore purchases',
+  'premium.tienda.cargando': 'Loading prices…',
+  'premium.tienda.error': 'Prices couldn’t be loaded.',
+  'premium.tienda.reintentar': 'Try again',
+  'premium.compra.fallo': 'The purchase didn’t go through.',
+  'premium.compra.pendiente.titulo': 'Your payment is pending',
+  'premium.compra.pendiente': 'PACE Complete will open once {tienda} confirms it.',
+  'premium.ok.prueba': 'Your free trial ends on {fecha}. Cancel before then in Settings › Manage subscription and you won’t be charged.',
+  'premium.ok.mes': 'It renews every month; cancel any time in Settings.',
+  'premium.restaurar.vida': 'We found your purchase: PACE Complete, for life.',
+  'premium.restaurar.mes': 'We found your PACE Complete subscription.',
+  'premium.restaurar.no': 'There are no PACE purchases on this {tienda} account.',
+  'premium.restaurar.error': 'Couldn’t reach {tienda}. Try again when you’re online.',
+  'premium.settings.mes': 'Monthly',
+  'premium.settings.mes.renueva': 'Monthly · renews on {fecha}',
+  'premium.settings.mes.cancelada': 'Cancelled · until {fecha}',
+  'premium.settings.mes.prueba': 'Free trial · until {fecha}',
+  'premium.settings.manage.apple': 'App Store'
 });
 })();
 </script>
@@ -7621,7 +7679,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.210.0';
+const PACE_VERSION = 'v0.211.0';
 
 
 
@@ -9865,24 +9923,22 @@ Object.assign(window, {
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
    ============================================================
-   PACE completo se compra en dos tiendas: en la web, Stripe en su modo «vende
-   por ti»; en Android, Google Play Billing (Ez, 15 oct. 2026). Cada tienda es un
+   PACE completo se compra en tres tiendas: en la web, Stripe en su modo «vende
+   por ti»; en Android, Google Play, y en el iPhone, Apple (state-compra.apps.js). Cada tienda es un
    ADAPTADOR con la misma forma, y fuera de `state-entitlement.jsx` nadie habla
    con ellos: la app pregunta al guard (`paceTiendaAbierta`, `paceTiendaPlanes`,
    `paceComprar`, `paceGestionarCompra`) y el guard elige la tienda del canal en
    el que está. Así, enchufar una tienda no toca ni la bienvenida ni la
    invitación.
 
-   HOY LAS DOS ESTÁN VACÍAS: `listo()` dice que no y nada enseña un botón de
-   compra. La tienda de la web ofrece SOLO LOS PLANES QUE TIENEN ENLACE (Ez, 5 nov.
+   HOY NINGUNA VENDE: `listo()` dice que no y nada enseña un botón de compra (las
+   de las apps, apagadas hasta las altas de Ez y v1: state-compra.apps.js). La tienda de la web ofrece SOLO LOS PLANES QUE TIENEN ENLACE (Ez, 5 nov.
    2026: hasta v1, solo el de por vida y solo en la web): con `enlaces.vida` puesto
    y `enlaces.mes` en `null`, la tienda está lista y vende un plan. El mensual y
    su código de Stripe se quedan: vuelve con v1 en cuanto `enlaces.mes` tenga un
    valor, sin tocar nada más. Ninguna tienda enseña un plan sin enlace, y `precios()`
    (lo que costará después, para la bienvenida de «abierto hasta v1») sigue
-   diciendo los dos. La de Play se rellena en `paceTiendaPlay` cuando la app lleve
-   el complemento de Play Billing, y hasta entonces ni Android ni el iPhone
-   tienen nada que comprar: ni botón, ni enlace a /premium.
+   diciendo los dos. Ni Android ni el iPhone enlazan nunca a /premium.
 
    LA FORMA DE UNA TIENDA:
      listo()        -> true si en este canal ya se puede comprar.
@@ -9903,8 +9959,8 @@ Object.assign(window, {
      gestionar()    -> abre donde se cancela la suscripción: la página de Stripe
                        o las suscripciones de Google Play.
 
-   EN EL IPHONE, LA TIENDA LLEGA CON V1 (Ez, 22 oct. 2026: el iPhone, dentro de v1). Hasta que se monte
-   la compra de Apple su canal es 'ninguno', igual que la de Play espera el alta de Ez.
+   EN EL IPHONE, LA TIENDA LLEGA CON V1 (Ez, 22 oct. 2026: el iPhone, dentro de v1): su canal es
+   'apple', con la misma forma que la de Play.
 
    `var`/`function` a propósito: un `const` no cruza la IIFE del artefacto. Carga
    después de state-licencia y antes de state-entitlement, y lee `paceEsNativo`
@@ -9971,18 +10027,6 @@ var paceTiendaWeb = {
   }
 };
 
-
-var paceTiendaPlay = {
-  listo: function () {return false;},
-  planes: function () {return [];},
-  precios: function () {return [];},
-  comprar: function () {return Promise.resolve({ ok: false, motivo: 'cerrada' });},
-  vigente: function () {return false;},
-
-  puedeGestionar: function () {return false;},
-  gestionar: function () {return false;}
-};
-
 var paceTiendaNinguna = {
   listo: function () {return false;},
   planes: function () {return [];},
@@ -9997,7 +10041,7 @@ var paceTiendaNinguna = {
 function paceTiendaCanal() {
   var p = typeof pacePlataformaNativa === 'function' ? pacePlataformaNativa() : null;
   if (p === 'android') return 'play';
-  if (p) return 'ninguno';
+  if (p === 'ios') return 'apple';
   return 'web';
 }
 
@@ -10005,7 +10049,8 @@ function paceTiendaCanal() {
 function paceTiendaDelCanal() {
   var c = paceTiendaCanal();
   if (c === 'web') return window.paceTiendaWeb || paceTiendaWeb;
-  if (c === 'play') return window.paceTiendaPlay || paceTiendaPlay;
+  if (c === 'play') return window.paceTiendaPlay || paceTiendaNinguna;
+  if (c === 'apple') return window.paceTiendaApple || paceTiendaNinguna;
   return paceTiendaNinguna;
 }
 
@@ -10021,9 +10066,248 @@ function paceTiendaPrecioTexto(plan, lang) {
 }
 
 Object.assign(window, {
-  PACE_TIENDA_WEB, paceTiendaWeb, paceTiendaPlay, paceTiendaCanal, paceTiendaDelCanal, paceTiendaPrecioTexto
+  PACE_TIENDA_WEB, paceTiendaWeb, paceTiendaNinguna, paceTiendaCanal, paceTiendaDelCanal, paceTiendaPrecioTexto
 });
-;Object.assign(window, { PACE_TIENDA_WEB, PACE_TIENDA_PLANES, paceTiendaWebCompra, paceTiendaWebLista, paceTiendaWeb, paceTiendaPlay, paceTiendaNinguna, paceTiendaCanal, paceTiendaDelCanal, paceTiendaPrecioTexto });
+;Object.assign(window, { PACE_TIENDA_WEB, PACE_TIENDA_PLANES, paceTiendaWebCompra, paceTiendaWebLista, paceTiendaWeb, paceTiendaNinguna, paceTiendaCanal, paceTiendaDelCanal, paceTiendaPrecioTexto });
+})();
+</script>
+  <!-- Las tiendas de las apps (Google Play y Apple), apagadas hasta las altas de Ez y v1. -->
+  <script>
+;(function () {
+/* PACE · state-compra.apps.js — LAS TIENDAS DE LAS APPS: GOOGLE PLAY Y APPLE
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+   ============================================================
+   En las apps se cobra directo con Google y con Apple, sin servicio de terceros (Ez, D-9 A del
+   11 nov. 2026), con código propio: `PaceCompras.java` y `PaceCompras.swift` (Ez dejó la
+   herramienta a juicio de la sesión el 18 nov., «la más estable y segura»; la pieza libre de
+   Capgo arreglaba aún fallos de compras perdidas). Las dos tiendas tienen la forma de
+   `state-compra.js` y solo les habla el guard (`state-entitlement.jsx`).
+
+   APAGADAS HASTA LAS ALTAS DE EZ Y v1. Con `encendida` en false la pieza nativa ni se llama:
+   ni precios, ni botones, ni «Restaurar». scripts/verify.compras.js falla si una se enciende
+   sin su alta apuntada con su fecha (el perfil de pagos de Play, el acuerdo de apps de pago de
+   Apple), sin la clave de licencia de Play o con PACE completo aún abierto para todos.
+
+   LO QUE SABE LA TIENDA MANDA. Al arrancar (y al volver a la app) se le pregunta qué hay
+   comprado; la respuesta se queda en memoria y, con su fecha, en `tiendaUltima`, para cuando la
+   tienda no conteste (sin conexión y sin su memoria): el de por vida sigue, y la mensual vale
+   hasta su fin (o un mes desde esa respuesta, si la tienda no lo dice) y `margenMes` más, como
+   el código mensual de la web (auditoría externa, sexta nº 13). Con red, la tienda pisa lo
+   guardado: una devolución cierra PACE completo en la siguiente pregunta. Al importar una
+   copia, lo guardado de este móvil se queda (`paceConservarAlImportar`): la copia de otro
+   móvil no trae su compra.
+
+   SEGURIDAD SIN SERVIDOR. Android solo cree una compra con la firma de Google comprobada con
+   la clave de licencia de Play Console (`play.clave`, pública), y nunca una pendiente; el
+   iPhone, solo las transacciones que StoreKit 2 da por verificadas y sin revocar. Lo hace la
+   pieza nativa; aquí solo llega lo que pasó.
+
+   LA PIEZA (`Capacitor.Plugins.PaceCompras`), igual en las dos:
+     productos({ ids, planBase, oferta }) -> { productos: [{ plan, texto, importe, moneda, pruebaDias? }] }
+     compras({ ids, clave })              -> { compras: [{ plan, desde, hasta?, renueva?, prueba?, pendiente? }] }
+     comprar({ plan, ids, planBase, oferta, clave }) -> { estado: 'comprado'|'pendiente'|'cancelado'|'error', compra? }
+     restaurar({ ids, clave })            -> lo mismo que compras (en el iPhone, tras AppStore.sync)
+     gestionar({ ids })  ·  canjear()     -> abren la página de la tienda
+     evento 'compras' { compras }         -> lo comprado fuera de la app (códigos, un pago que se confirma)
+
+   `var`/`function` a propósito: un `const` no cruza la IIFE del artefacto. Carga después de
+   state-compra.js y antes del guard; lee la pieza al llamarse, nunca al evaluarse. */
+
+var PACE_TIENDA_APPS = {
+  play: { encendida: false, alta: null, clave: null },
+  apple: { encendida: false, alta: null },
+  ids: { vida: 'pace_completo_vida', mes: 'pace_completo_mes' },
+  planBase: 'mensual',
+  oferta: 'prueba-7-dias',
+  margenMes: 3 * 86400000
+};
+
+var PACE_TIENDA_MES_SIN_FIN = 31 * 86400000;
+var _paceTiendaApps = {};
+
+function paceTiendaAppDatos(canal) {
+  if (!_paceTiendaApps[canal]) _paceTiendaApps[canal] = { estado: 'cerrada', planes: [], compras: null, oyente: false, ultima: 0 };
+  return _paceTiendaApps[canal];
+}
+
+function paceTiendaAppPieza(canal) {
+  var conf = PACE_TIENDA_APPS[canal];
+  if (!conf || conf.encendida !== true) return null;
+  if (typeof paceTiendaCanal !== 'function' || paceTiendaCanal() !== canal) return null;
+  return typeof paceNativoPlugin === 'function' ? paceNativoPlugin('PaceCompras') : null;
+}
+
+function paceTiendaAppPedido(canal) {
+  return { ids: PACE_TIENDA_APPS.ids, planBase: PACE_TIENDA_APPS.planBase, oferta: PACE_TIENDA_APPS.oferta,
+    clave: canal === 'play' ? PACE_TIENDA_APPS.play.clave : null };
+}
+
+function paceTiendaAppAviso() {
+  try {window.dispatchEvent(new CustomEvent('pace:tienda'));} catch (e) {}
+}
+
+
+function paceTiendaAppLimpia(lista) {
+  return (Array.isArray(lista) ? lista : []).filter(function (c) {
+    return c && (c.plan === 'vida' || c.plan === 'mes') && (c.hasta == null || typeof c.hasta === 'number');
+  }).map(function (c) {
+    return { plan: c.plan, desde: typeof c.desde === 'number' ? c.desde : null, hasta: typeof c.hasta === 'number' ? c.hasta : null,
+      renueva: c.renueva !== false, prueba: c.prueba === true, pendiente: c.pendiente === true };
+  });
+}
+
+function paceTiendaAppGuardar(canal, compras) {
+  var d = paceTiendaAppDatos(canal);
+  d.compras = compras;
+  try {
+    var hechas = compras.filter(function (c) {return !c.pendiente;});
+    setState({ tiendaUltima: { canal: canal, at: Date.now(), compras: hechas } });
+  } catch (e) {}
+  paceTiendaAppAviso();
+}
+
+
+function paceTiendaAppGuardada(canal) {
+  var s = typeof getState === 'function' ? getState() : null;
+  var u = s && s.tiendaUltima;
+  if (!u || u.canal !== canal || typeof u.at !== 'number') return [];
+  return paceTiendaAppLimpia(u.compras).map(function (c) {return Object.assign(c, { at: u.at });});
+}
+
+
+function paceTiendaAppVale(c, guardada) {
+  if (!c || c.pendiente) return false;
+  if (c.plan === 'vida') return true;
+  if (!guardada) return c.hasta == null || Date.now() < c.hasta;
+  var fin = c.hasta != null ? c.hasta : (c.at || 0) + PACE_TIENDA_MES_SIN_FIN;
+  return Date.now() < fin + PACE_TIENDA_APPS.margenMes;
+}
+
+function paceTiendaAppVigentes(canal) {
+  var d = paceTiendaAppDatos(canal);
+  var guardada = d.compras === null;
+  var lista = guardada ? paceTiendaAppGuardada(canal) : d.compras;
+  return lista.filter(function (c) {return paceTiendaAppVale(c, guardada);});
+}
+
+
+
+function paceTiendaAppCargar(canal) {
+  var pieza = paceTiendaAppPieza(canal);
+  var d = paceTiendaAppDatos(canal);
+  if (!pieza) {d.estado = 'cerrada';return Promise.resolve(d.estado);}
+  d.estado = 'cargando';
+  d.ultima = Date.now();
+  if (!d.oyente && typeof pieza.addListener === 'function') {
+    d.oyente = true;
+    try {pieza.addListener('compras', function (r) {paceTiendaAppGuardar(canal, paceTiendaAppLimpia(r && r.compras));});} catch (e) {}
+  }
+
+  setTimeout(paceTiendaAppAviso, 0);
+  var pedido = paceTiendaAppPedido(canal);
+  var compras = Promise.resolve().then(function () {return pieza.compras(pedido);}).then(function (r) {
+    paceTiendaAppGuardar(canal, paceTiendaAppLimpia(r && r.compras));
+  }, function () {});
+  var productos = Promise.resolve().then(function () {return pieza.productos(pedido);}).then(function (r) {
+    var planes = (r && r.productos || []).filter(function (p) {return p && (p.plan === 'vida' || p.plan === 'mes') && typeof p.texto === 'string';}).
+    map(function (p) {
+      var plan = { plan: p.plan, texto: p.texto, importe: Number(p.importe) || 0, moneda: p.moneda || '' };
+      if (p.plan === 'mes' && Number(p.pruebaDias) > 0) plan.pruebaDias = Number(p.pruebaDias);
+      return plan;
+    });
+    d.planes = planes;
+    d.estado = planes.length ? 'lista' : 'error';
+  }, function () {d.planes = [];d.estado = 'error';});
+  return Promise.all([compras, productos]).then(function () {paceTiendaAppAviso();return d.estado;});
+}
+
+function paceTiendaAppAsegurar(canal) {
+  var d = paceTiendaAppDatos(canal);
+  if (d.estado === 'cerrada' && paceTiendaAppPieza(canal)) paceTiendaAppCargar(canal);
+  return d;
+}
+
+function paceTiendaApp(canal) {
+  var tienda = {
+    estado: function () {return paceTiendaAppAsegurar(canal).estado;},
+    listo: function () {return paceTiendaAppAsegurar(canal).estado === 'lista';},
+    planes: function () {return tienda.listo() ? paceTiendaAppDatos(canal).planes.slice() : [];},
+    precios: function () {return tienda.planes();},
+    reintentar: function () {return paceTiendaAppCargar(canal);},
+    comprar: function (plan) {
+      var pieza = paceTiendaAppPieza(canal);
+      var p = tienda.planes().find(function (x) {return x.plan === plan;});
+      if (!pieza || !p) return Promise.resolve({ ok: false, motivo: 'cerrada' });
+      var pedido = Object.assign({ plan: plan }, paceTiendaAppPedido(canal));
+      if (plan === 'mes' && !p.pruebaDias) pedido.oferta = null;
+      return Promise.resolve().then(function () {return pieza.comprar(pedido);}).then(function (r) {
+        var estado = r && r.estado;
+        if (estado === 'pendiente') return { ok: false, motivo: 'pendiente', plan: plan };
+        if (estado === 'cancelado') return { ok: false, motivo: 'cancelada', plan: plan };
+        var hecha = estado === 'comprado' ? paceTiendaAppLimpia([r.compra])[0] : null;
+        if (!hecha || hecha.pendiente) return { ok: false, motivo: 'error', plan: plan };
+        var ya = (paceTiendaAppDatos(canal).compras || []).filter(function (c) {return c.plan !== hecha.plan;});
+        paceTiendaAppGuardar(canal, ya.concat([hecha]));
+        return { ok: true, plan: hecha.plan, prueba: hecha.prueba && hecha.hasta ? { hasta: hecha.hasta } : null };
+      }, function () {return { ok: false, motivo: 'error', plan: plan };});
+    },
+    vigente: function () {
+      paceTiendaAppAsegurar(canal);
+      return paceTiendaAppVigentes(canal).length > 0;
+    },
+
+    compra: function () {
+      var v = paceTiendaAppVigentes(canal);
+      return v.find(function (c) {return c.plan === 'vida';}) || v[0] || null;
+    },
+    puedeRestaurar: function () {return !!paceTiendaAppPieza(canal);},
+    restaurar: function () {
+      var pieza = paceTiendaAppPieza(canal);
+      if (!pieza) return Promise.resolve({ ok: false, motivo: 'cerrada' });
+      return Promise.resolve().then(function () {return pieza.restaurar(paceTiendaAppPedido(canal));}).then(function (r) {
+        paceTiendaAppGuardar(canal, paceTiendaAppLimpia(r && r.compras));
+        var c = tienda.compra();
+        return { ok: true, plan: c ? c.plan : null };
+      }, function () {return { ok: false, motivo: 'error' };});
+    },
+    puedeGestionar: function () {var c = tienda.compra();return !!(c && c.plan === 'mes' && paceTiendaAppPieza(canal));},
+    gestionar: function () {
+      var pieza = paceTiendaAppPieza(canal);
+      if (!pieza) return false;
+      try {Promise.resolve(pieza.gestionar({ ids: PACE_TIENDA_APPS.ids })).catch(function () {});} catch (e) {return false;}
+      return true;
+    },
+    puedeCanjear: function () {return tienda.listo();},
+    canjear: function () {
+      var pieza = paceTiendaAppPieza(canal);
+      if (!pieza) return false;
+      try {Promise.resolve(pieza.canjear()).catch(function () {});} catch (e) {return false;}
+      return true;
+    }
+  };
+  return tienda;
+}
+
+var paceTiendaPlay = paceTiendaApp('play');
+var paceTiendaApple = paceTiendaApp('apple');
+
+
+
+try {
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState !== 'visible') return;
+    ['play', 'apple'].forEach(function (canal) {
+      var d = paceTiendaAppDatos(canal);
+      if (d.estado !== 'cargando' && Date.now() - d.ultima > 60000 && paceTiendaAppPieza(canal)) paceTiendaAppCargar(canal);
+    });
+  });
+} catch (e) {}
+
+Object.assign(window, {
+  PACE_TIENDA_APPS, paceTiendaApp, paceTiendaPlay, paceTiendaApple, paceTiendaAppCargar, paceTiendaAppVale
+});
+;Object.assign(window, { PACE_TIENDA_APPS, PACE_TIENDA_MES_SIN_FIN, _paceTiendaApps, paceTiendaAppDatos, paceTiendaAppPieza, paceTiendaAppPedido, paceTiendaAppAviso, paceTiendaAppLimpia, paceTiendaAppGuardar, paceTiendaAppGuardada, paceTiendaAppVale, paceTiendaAppVigentes, paceTiendaAppCargar, paceTiendaAppAsegurar, paceTiendaApp, paceTiendaPlay, paceTiendaApple });
 })();
 </script>
   <!-- Guard central de entitlement (s95): canAccessRoutine/canAccessPath.
@@ -10247,12 +10531,63 @@ function paceGestionarCompra() {
 
 
 
+function paceTiendaEstado() {
+  const tienda = tiendaDelCanal();
+  if (!tienda) return 'cerrada';
+  if (typeof tienda.estado === 'function') return tienda.estado();
+  return tienda.listo() ? 'lista' : 'cerrada';
+}
+
+function paceTiendaReintentar() {
+  const tienda = tiendaDelCanal();
+  return tienda && tienda.reintentar ? Promise.resolve(tienda.reintentar()) : Promise.resolve('cerrada');
+}
+
+function paceTiendaPuedeRestaurar() {
+  const tienda = tiendaDelCanal();
+  return !!(tienda && tienda.puedeRestaurar && tienda.puedeRestaurar());
+}
+
+
+function paceRestaurarCompras() {
+  const tienda = tiendaDelCanal();
+  if (!tienda || !tienda.restaurar) return Promise.resolve({ ok: false, motivo: 'cerrada' });
+  return tienda.restaurar().then((r) => r || { ok: false, motivo: 'error' }, () => ({ ok: false, motivo: 'error' }));
+}
+
+function paceTiendaPuedeCanjear() {
+  const tienda = tiendaDelCanal();
+  return !!(tienda && tienda.puedeCanjear && tienda.puedeCanjear());
+}
+
+function paceTiendaCanjear() {
+  const tienda = tiendaDelCanal();
+  return !!(tienda && tienda.canjear && tienda.canjear());
+}
+
+
+function paceCompraEstado() {
+  const tienda = tiendaDelCanal();
+  return tienda && tienda.compra && tienda.compra() || null;
+}
+
+
+
+
 
 
 function paceConservarAlImportar(actual, entrante) {
   const licencia = window.paceLicenciaConservar ? window.paceLicenciaConservar(actual, entrante) : Promise.resolve(entrante);
   return Promise.resolve(licencia).then((e) => {
-    try {return window.pacePasoV1Conservar ? window.pacePasoV1Conservar(actual, e) : e;} catch (x) {return e;}
+    let x = e;
+    try {x = window.pacePasoV1Conservar ? window.pacePasoV1Conservar(actual, e) : e;} catch (err) {x = e;}
+
+
+
+    if (!x || typeof x !== 'object') return x;
+    const y = Object.assign({}, x);
+    if (actual && actual.tiendaUltima) y.tiendaUltima = actual.tiendaUltima;else delete y.tiendaUltima;
+    return y;
   });
 }
 
@@ -10265,9 +10600,10 @@ function tieneCompraVigente() {
 Object.assign(window, {
   canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, puedeVariar, puedeCrearRutinas, PREMIUM_ABIERTO_HASTA_V1, paceAbiertoAhora,
   paceTiendaAbierta, paceTiendaPlanes, paceTiendaPrecios, paceBienvenidaCompleto, paceComprar, paceGestionarCompra, paceTiendaPuedeGestionar, tieneCompraVigente,
+  paceTiendaEstado, paceTiendaReintentar, paceTiendaPuedeRestaurar, paceRestaurarCompras, paceTiendaPuedeCanjear, paceTiendaCanjear, paceCompraEstado,
   paceConservarAlImportar, PACE_TEXTOS_V1, paceTextoV1
 });
-;Object.assign(window, { resolveAnyRoutine, tieneLicenciaPremium, paceTextoV1, paceAbiertoAhora, canAccessRoutine, canAccessPath, hasPremiumEntitlement, puedeMantenerCalendario, puedeCrearRutinas, puedeAprender, puedeVariar, tiendaDelCanal, paceTiendaAbierta, paceTiendaPlanes, paceTiendaPrecios, paceBienvenidaCompleto, paceComprar, paceTiendaPuedeGestionar, paceGestionarCompra, paceConservarAlImportar, tieneCompraVigente });
+;Object.assign(window, { resolveAnyRoutine, tieneLicenciaPremium, paceTextoV1, paceAbiertoAhora, canAccessRoutine, canAccessPath, hasPremiumEntitlement, puedeMantenerCalendario, puedeCrearRutinas, puedeAprender, puedeVariar, tiendaDelCanal, paceTiendaAbierta, paceTiendaPlanes, paceTiendaPrecios, paceBienvenidaCompleto, paceComprar, paceTiendaPuedeGestionar, paceGestionarCompra, paceTiendaEstado, paceTiendaReintentar, paceTiendaPuedeRestaurar, paceRestaurarCompras, paceTiendaPuedeCanjear, paceTiendaCanjear, paceCompraEstado, paceConservarAlImportar, tieneCompraVigente });
 })();
 </script>
   <script>
@@ -25289,6 +25625,155 @@ Object.assign(window, { ToastHost, toastTapado, paceSelloPendiente });
 
 
 
+const { useState: useStatePT, useEffect: useEffectPT } = React;
+
+const PACE_CONDICIONES_TIENDA = {
+  apple: 'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/',
+  play: 'https://play.google.com/about/play-terms/'
+};
+
+function premiumTiendaCanal() {
+  return window.paceTiendaCanal ? window.paceTiendaCanal() : 'web';
+}
+
+
+function usePaceTienda() {
+  const [, setVuelta] = useStatePT(0);
+  useEffectPT(() => {
+    const otra = () => setVuelta((n) => n + 1);
+    window.addEventListener('pace:tienda', otra);
+    return () => window.removeEventListener('pace:tienda', otra);
+  }, []);
+}
+
+
+function PremiumTiendaRenueva(_ref) {let { mes } = _ref;
+  const { t, tn } = useT();
+  const canal = premiumTiendaCanal();
+  if (!mes || canal === 'web') return null;
+  const clave = mes.pruebaDias ? 'premium.tienda.renueva' : 'premium.tienda.renueva.sin';
+  return (
+    React.createElement("p", { "data-pace-premium-renueva": true, style: premiumTiendaStyles.renueva },
+    tn(clave, { mes: mes.precio, donde: t('premium.donde.' + canal) })
+    ));
+
+}
+
+
+function PremiumTiendaPie(_ref2) {let { alRestaurar } = _ref2;
+  const { t, tn } = useT();
+  const [aviso, setAviso] = useStatePT(null);
+  const [buscando, setBuscando] = useStatePT(false);
+  const canal = premiumTiendaCanal();
+  if (canal === 'web') return null;
+  const tienda = t('premium.tienda.' + canal);
+  const privacidad = typeof paceNativoEnlace === 'function' ? paceNativoEnlace('/privacy') : '/privacy';
+  const restaurar = () => {
+    if (buscando) return;
+    setBuscando(true);setAviso(null);
+    window.paceRestaurarCompras().then((r) => {
+      setBuscando(false);
+      if (r && r.ok && r.plan) alRestaurar(r);else
+      setAviso(r && r.ok ? 'no' : 'error');
+    });
+  };
+  return (
+    React.createElement(React.Fragment, null,
+    React.createElement("p", { "data-pace-premium-pie": true, style: premiumTiendaStyles.pie },
+    React.createElement("a", { href: PACE_CONDICIONES_TIENDA[canal], target: "_blank", rel: "noopener", "data-pace-premium-condiciones": true, style: premiumTiendaStyles.enlace },
+    t('premium.tienda.condiciones')
+    ),
+    React.createElement("span", { "aria-hidden": "true" }, " \xB7 "),
+    React.createElement("a", { href: privacidad, target: "_blank", rel: "noopener", "data-pace-premium-privacidad": true, style: premiumTiendaStyles.enlace },
+    t('premium.tienda.privacidad')
+    ),
+    React.createElement("span", { "aria-hidden": "true" }, " \xB7 "),
+    React.createElement("button", { type: "button", "data-pace-premium-restaurar": true, disabled: buscando, onClick: restaurar, style: premiumTiendaStyles.boton },
+    t('premium.tienda.restaurar')
+    )
+    ),
+    aviso && React.createElement("p", { role: "status", "data-pace-premium-restaurado": aviso, style: premiumTiendaStyles.estado }, tn('premium.restaurar.' + aviso, { tienda }))
+    ));
+
+}
+
+
+function PremiumTiendaCarga(_ref3) {let { estado } = _ref3;
+  const { t } = useT();
+  const [otra, setOtra] = useStatePT(false);
+  if (estado === 'cargando' || otra) {
+    return React.createElement("p", { "data-pace-premium-tienda": "cargando", style: premiumTiendaStyles.estado }, t('premium.tienda.cargando'));
+  }
+  return (
+    React.createElement("div", { "data-pace-premium-tienda": "error", style: premiumTiendaStyles.error },
+    React.createElement("p", { style: { margin: 0 } }, t('premium.tienda.error')),
+    React.createElement("button", { type: "button", "data-pace-premium-reintentar": true, style: premiumTiendaStyles.boton,
+      onClick: () => {setOtra(true);window.paceTiendaReintentar().then(() => setOtra(false));} },
+    t('premium.tienda.reintentar')
+    )
+    ));
+
+}
+
+
+function premiumResultadoTexto(r, t, tn, lang) {
+  if (r.restaurada) return t(r.plan === 'mes' ? 'premium.restaurar.mes' : 'premium.restaurar.vida');
+  if (r.prueba && typeof r.prueba.hasta === 'number') {
+    const fecha = new Date(r.prueba.hasta).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long' });
+    return tn('premium.ok.prueba', { fecha });
+  }
+  return t(r.plan === 'mes' ? 'premium.ok.mes' : 'premium.ok.other');
+}
+
+
+function PremiumPendiente(_ref4) {let { cerrar } = _ref4;
+  const { t, tn } = useT();
+  const titulo = t('premium.compra.pendiente.titulo');
+  return (
+    React.createElement(Modal, { open: true, onClose: cerrar, maxWidth: 440, ariaLabel: titulo },
+    React.createElement("div", { "data-pace-premium-hoja": "pendiente" },
+    React.createElement(PremiumSeal, null),
+    React.createElement("h2", { style: premiumInvitacionStyles.titulo }, titulo),
+    React.createElement("p", { style: premiumInvitacionStyles.sub }, tn('premium.compra.pendiente', { tienda: t('premium.tienda.' + premiumTiendaCanal()) })),
+    React.createElement(Button, { onClick: cerrar, style: premiumInvitacionStyles.ancho }, t('premium.ok.continue'))
+    )
+    ));
+
+}
+
+const premiumTiendaStyles = {
+  renueva: { fontSize: 12, color: 'var(--ink-3)', margin: '10px 0 2px', textAlign: 'center', lineHeight: 1.45 },
+  pie: { fontSize: 12, color: 'var(--ink-3)', margin: '12px 0 0', textAlign: 'center', lineHeight: 2 },
+  enlace: { color: 'var(--ink-2)', textDecoration: 'underline', textUnderlineOffset: 2 },
+  boton: { background: 'none', border: 0, padding: '4px 2px', cursor: 'pointer', font: 'inherit', fontSize: 12,
+    color: 'var(--ink-2)', textDecoration: 'underline', textUnderlineOffset: 2 },
+  estado: { fontSize: 13, color: 'var(--ink-2)', margin: '8px 0 12px', textAlign: 'center' },
+  error: { fontSize: 13, color: 'var(--ink-2)', margin: '0 0 14px', display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }
+};
+
+Object.assign(window, { PACE_CONDICIONES_TIENDA, usePaceTienda, PremiumTiendaRenueva, PremiumTiendaPie, PremiumTiendaCarga,
+  premiumResultadoTexto, PremiumPendiente, premiumTiendaStyles });
+;Object.assign(window, { premiumTiendaCanal, usePaceTienda, PremiumTiendaRenueva, PremiumTiendaPie, PremiumTiendaCarga, premiumResultadoTexto, PremiumPendiente });
+})();
+</script>
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -25364,7 +25849,9 @@ function PremiumInvitacion() {
   const [comprobando, setComprobando] = useStatePI(false);
   const [tester, setTester] = useStatePI(false);
   const [mensual, setMensual] = useStatePI(false);
+  const [resultado, setResultado] = useStatePI(null);
   const campoRef = useRefPI(null);
+  usePaceTienda();
   const abiertaRef = useRefPI(null);
   abiertaRef.current = abierta;
 
@@ -25407,8 +25894,15 @@ function PremiumInvitacion() {
       const d = e && e.detail || {};
       const conCodigo = d.modo === 'codigo' && window.paceLicenciaPermitida && window.paceLicenciaPermitida();
       setAbierta({ nombre: d.nombre || null });
-      setModo(conCodigo ? 'codigo' : 'invita');
       setTexto('');setError(null);setComprobando(false);
+
+      if (d.resultado) {
+        setResultado(d.resultado);setTester(false);setMensual(d.resultado.plan === 'mes');
+        setModo(d.resultado.motivo === 'pendiente' ? 'pendiente' : 'ok');
+        return;
+      }
+      setResultado(null);
+      setModo(conCodigo ? 'codigo' : 'invita');
     };
     window.addEventListener('pace:open-premium', abrir);
     return () => window.removeEventListener('pace:open-premium', abrir);
@@ -25424,7 +25918,15 @@ function PremiumInvitacion() {
   const cerrar = () => setAbierta(null);
   const permitida = !!(window.paceLicenciaPermitida && window.paceLicenciaPermitida());
 
+  const canal = window.paceTiendaCanal ? window.paceTiendaCanal() : 'web';
+  const nativo = canal !== 'web';
+  const hechoTienda = (r) => {
+    setResultado(r);setTester(false);setMensual(r.plan === 'mes');
+    setModo(r.motivo === 'pendiente' ? 'pendiente' : 'ok');
+  };
+
   const hecho = (datos) => {
+    setResultado(null);
     setTester(!!(datos && datos.tester != null));
     setMensual(!!(datos && window.paceLicenciaEsMensual && window.paceLicenciaEsMensual(datos)));
     setModo('ok');
@@ -25448,28 +25950,39 @@ function PremiumInvitacion() {
     paceComprar(plan).then((r) => {
       setComprobando(false);
       if (r && r.ok && r.fuera) cerrar();else
+      if (r && r.ok && r.plan) hechoTienda(r);else
       if (r && r.ok) hecho(r.datos);else
-      if (r && r.motivo === 'error') setError('compra');
+      if (r && r.motivo === 'pendiente') hechoTienda(r);else
+      if (r && r.motivo === 'error') setError(nativo ? 'fallo' : 'compra');
     });
   };
 
   if (modo === 'prueba') return React.createElement(PremiumAvisoPrueba, { datos: abierta.prueba, cerrar: cerrar });
   if (modo === 'pasov1') return React.createElement(PremiumPasoV1, { datos: abierta.pasoV1, cerrar: cerrar });
   if (modo === 'fin') return React.createElement(PremiumFinPrueba, { datos: abierta.fin, cerrar: cerrar });
+  if (modo === 'pendiente') return React.createElement(PremiumPendiente, { cerrar: cerrar });
 
   const titulo = modo === 'ok' ? t(mensual ? 'premium.ok.title.monthly' : 'premium.ok.title') : abierta.nombre || t('premium.name');
   const tienda = modo === 'invita' && !!(window.paceTiendaAbierta && window.paceTiendaAbierta());
   const planes = tienda ? paceTiendaPlanes(lang) : [];
   const mes = planes.find((p) => p.plan === 'mes') || null;
   const vida = planes.find((p) => p.plan === 'vida') || null;
-  const dias = mes && mes.pruebaDias || 7;
+
+  const dias = mes && mes.pruebaDias || 0;
   const soloVida = !mes && !!vida;
-  const tengo = permitida &&
+  const estadoTienda = nativo && modo === 'invita' && !tienda && window.paceTiendaEstado ? window.paceTiendaEstado() : 'cerrada';
+
+  const tengo = permitida ?
   React.createElement("button", { type: "button", "data-pace-premium-tengo": true, onClick: () => setModo('codigo'),
     style: { ...premiumInvitacionStyles.enlace, ...(tienda ? { marginTop: 6 } : null) } },
   t('premium.code.have')
-  );
-
+  ) :
+  nativo && tienda && window.paceTiendaPuedeCanjear && window.paceTiendaPuedeCanjear() ?
+  React.createElement("button", { type: "button", "data-pace-premium-canjear": true, onClick: () => window.paceTiendaCanjear(),
+    style: { ...premiumInvitacionStyles.enlace, marginTop: 6 } },
+  t('premium.code.have')
+  ) :
+  null;
 
   return (
     React.createElement(Modal, { open: true, onClose: cerrar, maxWidth: 440, ariaLabel: titulo },
@@ -25479,7 +25992,9 @@ function PremiumInvitacion() {
 
     modo === 'ok' ?
     React.createElement(React.Fragment, null,
-    React.createElement("p", { style: premiumInvitacionStyles.sub }, t(tester ? 'premium.ok.tester' : 'premium.ok.other')),
+    React.createElement("p", { "data-pace-premium-resultado": true, style: premiumInvitacionStyles.sub },
+    resultado ? premiumResultadoTexto(resultado, t, tn, lang) : t(tester ? 'premium.ok.tester' : 'premium.ok.other')
+    ),
     React.createElement(Button, { onClick: cerrar, style: premiumInvitacionStyles.ancho }, t('premium.ok.continue'))
     ) :
 
@@ -25520,16 +26035,18 @@ function PremiumInvitacion() {
     tienda && (mes || vida) ?
     React.createElement(React.Fragment, null,
     mes && vida &&
-    React.createElement("p", { "data-pace-premium-precios": true, style: premiumInvitacionStyles.v1 }, tn('premium.onb.precios', { vida: vida.precio, mes: mes.precio, dias })),
+    React.createElement("p", { "data-pace-premium-precios": true, style: premiumInvitacionStyles.v1 }, tn(dias ? 'premium.onb.precios' : 'premium.onb.precios.sin', { vida: vida.precio, mes: mes.precio, dias })),
 
     soloVida &&
     React.createElement("p", { "data-pace-premium-precios": true, style: premiumInvitacionStyles.v1 }, tn('premium.onb.vida.sola', { vida: vida.precio })),
 
-    error === 'compra' && React.createElement("p", { role: "alert", "data-pace-premium-error": "compra", style: premiumInvitacionStyles.error }, t('premium.compra.error')),
+    (error === 'compra' || error === 'fallo') &&
+    React.createElement("p", { role: "alert", "data-pace-premium-error": error, style: premiumInvitacionStyles.error }, t(error === 'fallo' ? 'premium.compra.fallo' : 'premium.compra.error')),
+
     React.createElement("div", { style: premiumInvitacionStyles.par },
     mes &&
-    React.createElement(Button, { disabled: comprobando, onClick: () => comprar('mes'), style: premiumInvitacionStyles.mitad },
-    tn('premium.onb.probar', { dias })
+    React.createElement(Button, { "data-pace-premium-mes": true, disabled: comprobando, onClick: () => comprar('mes'), style: premiumInvitacionStyles.mitad },
+    dias ? tn('premium.onb.probar', { dias }) : tn('premium.onb.mes', { mes: mes.precio })
     ),
 
     soloVida &&
@@ -25539,16 +26056,20 @@ function PremiumInvitacion() {
 
     React.createElement(Button, { variant: "secondary", onClick: cerrar, style: premiumInvitacionStyles.mitad }, t('premium.later'))
     ),
-    mes && React.createElement("p", { style: premiumInvitacionStyles.aviso }, t('premium.onb.aviso')),
+    mes && !nativo && React.createElement("p", { "data-pace-premium-aviso": true, style: premiumInvitacionStyles.aviso }, t('premium.onb.aviso')),
+    React.createElement(PremiumTiendaRenueva, { mes: mes }),
     mes && vida &&
     React.createElement("button", { type: "button", "data-pace-premium-vida": true, disabled: comprobando, onClick: () => comprar('vida'), style: premiumInvitacionStyles.fantasma },
     tn('premium.onb.vida', { vida: vida.precio })
     ),
 
-    tengo
+    tengo,
+    nativo && React.createElement(PremiumTiendaPie, { alRestaurar: (r) => hechoTienda({ ok: true, plan: r.plan, restaurada: true }) })
     ) :
 
     React.createElement(React.Fragment, null,
+    estadoTienda === 'cargando' || estadoTienda === 'error' ?
+    React.createElement(PremiumTiendaCarga, { estado: estadoTienda }) :
     React.createElement("p", { "data-pace-premium-v1": true, style: premiumInvitacionStyles.v1 }, t(paceTextoV1('premium.v1'))),
     React.createElement(Button, { variant: "secondary", onClick: cerrar, style: premiumInvitacionStyles.ancho }, t('premium.later')),
     tengo
@@ -44831,6 +45352,9 @@ Object.assign(window, { TweaksDataSection, paceDescargarCopia, paceDescargarResc
 
 
 
+
+
+
 function premiumFechaTexto(datos, lang) {
   const fin = typeof datos.expiresAt === 'number' ? new Date(datos.expiresAt) :
   typeof datos.expiresAt === 'string' && typeof parseLocalDateKey === 'function' ? parseLocalDateKey(datos.expiresAt) : null;
@@ -44853,8 +45377,10 @@ function premiumPlanEnAjustes(lang) {
 }
 
 
+
 function premiumPlanVida(lang) {
-  if (!(window.paceLicenciaPermitida && window.paceLicenciaPermitida())) return null;
+  const nativo = !!(window.paceTiendaCanal && window.paceTiendaCanal() !== 'web');
+  if (!nativo && !(window.paceLicenciaPermitida && window.paceLicenciaPermitida())) return null;
   const est = window.paceLicenciaEstado ? window.paceLicenciaEstado() : { estado: 'ninguno' };
   if (est.estado === 'vigente' || est.estado === 'caducado') return null;
   if (!(window.paceTiendaAbierta && window.paceTiendaAbierta())) return null;
@@ -44870,18 +45396,53 @@ function premiumPlanEnPrueba(lang) {
   return window.pacePruebaV1Hasta && window.pacePruebaV1Hasta() ? premiumPlanVida(lang) : null;
 }
 
+
+function premiumCompraTexto(compra, t, tn, lang) {
+  if (compra.plan === 'vida') return t('premium.settings.forever');
+  if (typeof compra.hasta !== 'number') return t('premium.settings.mes');
+  const fecha = new Date(compra.hasta).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long' });
+  if (compra.prueba) return tn('premium.settings.mes.prueba', { fecha });
+  return tn(compra.renueva === false ? 'premium.settings.mes.cancelada' : 'premium.settings.mes.renueva', { fecha });
+}
+
+
+
+function PremiumRestaurarFila() {
+  const { t, tn } = useT();
+  const [aviso, setAviso] = React.useState(null);
+  const [buscando, setBuscando] = React.useState(false);
+  const tienda = t('premium.tienda.' + (window.paceTiendaCanal ? window.paceTiendaCanal() : 'play'));
+  const restaurar = () => {
+    if (buscando) return;
+    setBuscando(true);setAviso(null);
+    window.paceRestaurarCompras().then((r) => {
+      setBuscando(false);
+      setAviso(r && r.ok ? r.plan ? null : 'no' : 'error');
+    });
+  };
+  return (
+    React.createElement(AjustesAccion, { suave: true, onClick: restaurar, derecha: "\u203A",
+      sub: aviso ? React.createElement("span", { "data-pace-aj-restaurado": aviso }, tn('premium.restaurar.' + aviso, { tienda })) : null },
+    React.createElement("span", { "data-pace-aj-restaurar": true }, t('premium.tienda.restaurar'))
+    ));
+
+}
+
 function PremiumSection() {
   const { t, tn, lang } = useT();
   usePace();
+  usePaceTienda();
   const est = window.paceLicenciaEstado ? window.paceLicenciaEstado() : { estado: 'ninguno', motivo: null, datos: null };
   const permitida = !!(window.paceLicenciaPermitida && window.paceLicenciaPermitida());
-  const mensual = !!(est.datos && window.paceLicenciaEsMensual && window.paceLicenciaEsMensual(est.datos));
+  const compra = window.paceCompraEstado ? window.paceCompraEstado() : null;
+  const mensual = !!(est.datos && window.paceLicenciaEsMensual && window.paceLicenciaEsMensual(est.datos)) || !!(compra && compra.plan === 'mes');
   const canal = window.paceTiendaCanal ? window.paceTiendaCanal() : 'web';
   const gestionar = mensual && window.paceTiendaPuedeGestionar && window.paceTiendaPuedeGestionar() ?
-  React.createElement(AjustesAccion, { suave: true, onClick: () => window.paceGestionarCompra(), derecha: t('premium.settings.manage.' + (canal === 'play' ? 'play' : 'web')) + ' ›' },
+  React.createElement(AjustesAccion, { suave: true, onClick: () => window.paceGestionarCompra(), derecha: t('premium.settings.manage.' + (canal === 'web' ? 'web' : canal)) + ' ›' },
   t('premium.settings.manage')
   ) :
   null;
+  const restaurar = canal !== 'web' && window.paceTiendaPuedeRestaurar && window.paceTiendaPuedeRestaurar() ? React.createElement(PremiumRestaurarFila, null) : null;
 
 
 
@@ -44893,6 +45454,17 @@ function PremiumSection() {
   ) :
   null;
 
+  if (compra) {
+    return (
+      React.createElement(React.Fragment, null,
+      React.createElement(AjustesAccion, { derecha: React.createElement("span", { "data-pace-licencia-estado": true, "data-pace-compra-estado": compra.plan, style: { color: 'var(--focus)' } }, premiumCompraTexto(compra, t, tn, lang)) },
+      t('premium.name')
+      ),
+      gestionar,
+      restaurar
+      ));
+
+  }
   if (est.estado === 'vigente') {
     const datos = est.datos;
     const f = premiumFechaTexto(datos, lang);
@@ -44951,9 +45523,11 @@ function PremiumSection() {
         derecha: React.createElement("span", { "data-pace-aj-comprar": vida.plan }, vida.precio) },
       t('premium.settings.vida')
       ),
-      React.createElement(AjustesAccion, { suave: true, onClick: () => paceAbrirPremium({ modo: 'codigo' }), derecha: t('premium.settings.enter') },
-      t('premium.code.have')
-      )
+      React.createElement(AjustesAccion, { suave: true, onClick: () => canal === 'web' ? paceAbrirPremium({ modo: 'codigo' }) : window.paceTiendaCanjear(),
+        derecha: canal === 'web' ? t('premium.settings.enter') : '›' },
+      React.createElement("span", { "data-pace-aj-codigo": true }, t('premium.code.have'))
+      ),
+      restaurar
       ));
 
   }
@@ -44965,14 +45539,17 @@ function PremiumSection() {
 
   }
   return (
+    React.createElement(React.Fragment, null,
     React.createElement(AjustesAccion, { suave: true, derecha: t('settings.license.soon') },
     t('premium.name')
+    ),
+    restaurar
     ));
 
 }
 
-Object.assign(window, { PremiumSection, premiumPlanEnAjustes, premiumPlanVida, premiumPlanEnPrueba });
-;Object.assign(window, { premiumFechaTexto, premiumPlanEnAjustes, premiumPlanVida, premiumPlanEnPrueba, PremiumSection });
+Object.assign(window, { PremiumSection, premiumPlanEnAjustes, premiumPlanVida, premiumPlanEnPrueba, premiumCompraTexto, PremiumRestaurarFila });
+;Object.assign(window, { premiumFechaTexto, premiumPlanEnAjustes, premiumPlanVida, premiumPlanEnPrueba, premiumCompraTexto, PremiumRestaurarFila, PremiumSection });
 })();
 </script>
   <!-- TweaksPanel.support (s163): estilo SIN UI del panel -- `tweaksStyles`, la
@@ -48944,8 +49521,11 @@ function OnbCompletoPaso(_ref) {let { modo, onFin } = _ref;
   const planes = abierto ? paceTiendaPrecios(lang) : paceTiendaPlanes(lang);
   const mes = planes.find((p) => p.plan === 'mes') || null;
   const vida = planes.find((p) => p.plan === 'vida') || null;
-  const dias = mes && mes.pruebaDias || 7;
+  const dias = mes && mes.pruebaDias || 0;
   const soloVida = !abierto && !mes && !!vida;
+
+
+  const nativo = !!(window.paceTiendaCanal && window.paceTiendaCanal() !== 'web');
   const todoAbierto = abierto || window.PREMIUM_ABIERTO_HASTA_V1 === true;
 
   return (
@@ -48962,7 +49542,7 @@ function OnbCompletoPaso(_ref) {let { modo, onFin } = _ref;
     ),
     mes && vida &&
     React.createElement("p", { "data-pace-onb-precios": true, style: onbCompletoStyles.precios },
-    tn(abierto ? paceTextoV1('premium.onb.abierto.precios') : 'premium.onb.precios', { vida: vida.precio, mes: mes.precio, dias })
+    tn(abierto ? paceTextoV1('premium.onb.abierto.precios') : dias ? 'premium.onb.precios' : 'premium.onb.precios.sin', { vida: vida.precio, mes: mes.precio, dias })
     ),
 
     soloVida && React.createElement("p", { "data-pace-onb-precios": true, style: onbCompletoStyles.precios }, tn('premium.onb.vida.sola', { vida: vida.precio })),
@@ -48980,7 +49560,7 @@ function OnbCompletoPaso(_ref) {let { modo, onFin } = _ref;
     React.createElement("div", { style: onbCompletoStyles.par },
     mes &&
     React.createElement("button", { "data-pace-cta": true, "data-pace-onb-probar": true, onClick: () => onFin('mes'), style: { ...onboardingStyles.cta, ...onbCompletoStyles.mitad } },
-    tn('premium.onb.probar', { dias })
+    dias ? tn('premium.onb.probar', { dias }) : tn('premium.onb.mes', { mes: mes.precio })
     ),
 
     soloVida &&
@@ -48994,7 +49574,8 @@ function OnbCompletoPaso(_ref) {let { modo, onFin } = _ref;
     ),
     mes &&
     React.createElement("div", { style: onbCompletoStyles.pie },
-    React.createElement("p", { style: onbCompletoStyles.aviso }, t('premium.onb.aviso')),
+    !nativo && React.createElement("p", { style: onbCompletoStyles.aviso }, t('premium.onb.aviso')),
+    React.createElement(PremiumTiendaRenueva, { mes: mes }),
     vida &&
     React.createElement("button", { "data-pace-onb-vida": true, onClick: () => onFin('vida'), style: onboardingStyles.ghostBtn },
     tn('premium.onb.vida', { vida: vida.precio })
@@ -49002,7 +49583,10 @@ function OnbCompletoPaso(_ref) {let { modo, onFin } = _ref;
 
     )
 
-    )
+    ),
+
+    !abierto && nativo &&
+    React.createElement(PremiumTiendaPie, { alRestaurar: (r) => {onFin(null);paceAbrirPremium({ resultado: { ok: true, plan: r.plan, restaurada: true } });} })
 
     ));
 
@@ -49314,7 +49898,10 @@ function Onboarding() {
     React.createElement(OnbCompletoPaso, { modo: modoCompleto, onFin: (plan) => {
         const comprando = !!plan && typeof paceComprar === 'function';
         finish({ pick: conPick, comprando });
-        if (comprando) paceComprar(plan);
+
+        if (comprando) Promise.resolve(paceComprar(plan)).then((r) => {
+          if (r && !r.fuera && (r.ok || r.motivo === 'pendiente')) paceAbrirPremium({ resultado: r });
+        }, () => {});
       } }),
 
 

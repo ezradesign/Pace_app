@@ -4,6 +4,18 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de noviembre de 2026, 10:20, v0.204.0 en `main` y los cuatro arreglos de S3 y S4 en su rama.
 
+## AL RELEVO (18 nov., 21:00, cuenta 5iWBf con la SEMANA al 96 %): empieza aquí; manda sobre todo lo de abajo
+
+- **`origin/main` = 0.210.0, en verde entero.** **`main` LOCAL lleva la 0.211.0 SIN SUBIR**: la unión de la compra en las tiendas (`claude/cobro-tiendas-montaje-18nov`, con el «Móntalo» de Ez; código propio, apagada hasta las altas), el bump, el build, CHANGELOG y STATE, y un arreglo que destapó su suite: `paceConservarAlImportar` (`app/state-entitlement.jsx`) ya no escribe `tiendaUltima: null` (la copia que va y vuelve cambiaba el estado); `tests/copia-ida-vuelta.spec.js` y `tests/compra-apps.spec.js`, al día. Mínimo de pruebas 1695.
+- **La suite entera de la 0.211.0 corre desde las ~21:00** (puerto 8835); registro: `C:\Users\ezrav\AppData\Local\Temp\suite-0211b.log`; acaba con `exit=`. La primera pasada dio 7 rojas con la máquina cargada; repetidas solo caían `copia-ida-vuelta` (arreglado) y `ritmo-reloj.spec.js:110` (1 de 2; cae a veces desde hace días: si vuelve, mirarlo). **Para cerrar la 0.211.0:** suite en verde, commit «v0.211.0: bump, build y lo que junta», push, CI con sus cinco trozos, Android e iPhone.
+- **Los arreglos del recorrido** (`claude/arreglos-tester-18nov`, página A3Dc4VmgwvjkW7t6v4ZU8r): siete de las once letras montadas, su suite en verde; **faltan la 1, la 2, la 8, el resto de la 10 y la 11** (Ez dio 1A, 2A, 3B «atenuadas y no hecha las dos», 4A a 11A: la 11 también va). Después, su «júntalo».
+- **En espera por Ez:** los textos largos; su sí al texto de tres pasos de la 1A de los arreglos menores. **Lo de Ez:** la aprobación de Google, probar en sus móviles, testers, altas (Play, Apple, Google Cloud, Microsoft), «Avísame», ChatGPT del cobro, la décima de Fable.
+- **Uso en 5iWBf a las 21:00:** 5 h al 37 %, **semana al 96 %** (se repone el lunes 23 a las 18:00). Las páginas de 5iWBf dan 404 en la otra cuenta: se publican de nuevo desde su carpeta de `docs/proposals/` (o de la rama) y se apunta el par en `docs/traspaso/archivos/hoja-ids-cuentas.js`.
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (18 nov., 21:00)» de arriba del todo de docs/traspaso/LEEME.md, y sigue como coordinadora. main local lleva la 0.211.0 (la compra en las tiendas, apagada) juntada y sin subir, con su suite corriendo. Por este orden: mira cómo acabó la suite y cierra la 0.211.0 con push y GitHub en verde; encarga que se acaben los arreglos del recorrido (faltan la 1, 2, 8, 10 y 11) y enséñamelos antes de juntarlos. Haz pocas vueltas.
+```
+
 ## AL RELEVO (18 nov., 14:30, cuenta 5iWBf con las 5 h al 97 % y la semana al 80 %): empieza aquí; manda sobre lo de abajo
 
 - **`main` = 0.210.0 con GitHub en verde entero** (CI, Android e iPhone, que compiló el calendario de Apple). **Ninguna sesión trabajando**; nada sin subir.
