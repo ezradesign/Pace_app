@@ -2,24 +2,22 @@
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
    ============================================================
-   PACE completo se compra en dos tiendas: en la web, Stripe en su modo «vende
-   por ti»; en Android, Google Play Billing (Ez, 15 oct. 2026). Cada tienda es un
+   PACE completo se compra en tres tiendas: en la web, Stripe en su modo «vende
+   por ti»; en Android, Google Play, y en el iPhone, Apple (state-compra.apps.js). Cada tienda es un
    ADAPTADOR con la misma forma, y fuera de `state-entitlement.jsx` nadie habla
    con ellos: la app pregunta al guard (`paceTiendaAbierta`, `paceTiendaPlanes`,
    `paceComprar`, `paceGestionarCompra`) y el guard elige la tienda del canal en
    el que está. Así, enchufar una tienda no toca ni la bienvenida ni la
    invitación.
 
-   HOY LAS DOS ESTÁN VACÍAS: `listo()` dice que no y nada enseña un botón de
-   compra. La tienda de la web ofrece SOLO LOS PLANES QUE TIENEN ENLACE (Ez, 5 nov.
+   HOY NINGUNA VENDE: `listo()` dice que no y nada enseña un botón de compra (las
+   de las apps, apagadas hasta las altas de Ez y v1: state-compra.apps.js). La tienda de la web ofrece SOLO LOS PLANES QUE TIENEN ENLACE (Ez, 5 nov.
    2026: hasta v1, solo el de por vida y solo en la web): con `enlaces.vida` puesto
    y `enlaces.mes` en `null`, la tienda está lista y vende un plan. El mensual y
    su código de Stripe se quedan: vuelve con v1 en cuanto `enlaces.mes` tenga un
    valor, sin tocar nada más. Ninguna tienda enseña un plan sin enlace, y `precios()`
    (lo que costará después, para la bienvenida de «abierto hasta v1») sigue
-   diciendo los dos. La de Play se rellena en `paceTiendaPlay` cuando la app lleve
-   el complemento de Play Billing, y hasta entonces ni Android ni el iPhone
-   tienen nada que comprar: ni botón, ni enlace a /premium.
+   diciendo los dos. Ni Android ni el iPhone enlazan nunca a /premium.
 
    LA FORMA DE UNA TIENDA:
      listo()        -> true si en este canal ya se puede comprar.
@@ -40,8 +38,8 @@
      gestionar()    -> abre donde se cancela la suscripción: la página de Stripe
                        o las suscripciones de Google Play.
 
-   EN EL IPHONE, LA TIENDA LLEGA CON V1 (Ez, 22 oct. 2026: el iPhone, dentro de v1). Hasta que se monte
-   la compra de Apple su canal es 'ninguno', igual que la de Play espera el alta de Ez.
+   EN EL IPHONE, LA TIENDA LLEGA CON V1 (Ez, 22 oct. 2026: el iPhone, dentro de v1): su canal es
+   'apple', con la misma forma que la de Play.
 
    `var`/`function` a propósito: un `const` no cruza la IIFE del artefacto. Carga
    después de state-licencia y antes de state-entitlement, y lee `paceEsNativo`
@@ -108,18 +106,6 @@ var paceTiendaWeb = {
   },
 };
 
-/* La tienda de Android, vacía hasta Play Billing. */
-var paceTiendaPlay = {
-  listo: function () { return false; },
-  planes: function () { return []; },
-  precios: function () { return []; },
-  comprar: function () { return Promise.resolve({ ok: false, motivo: 'cerrada' }); },
-  vigente: function () { return false; },
-  /* Con Play Billing: las suscripciones de Google Play, si hay una. */
-  puedeGestionar: function () { return false; },
-  gestionar: function () { return false; },
-};
-
 var paceTiendaNinguna = {
   listo: function () { return false; },
   planes: function () { return []; },
@@ -130,19 +116,20 @@ var paceTiendaNinguna = {
   gestionar: function () { return false; },
 };
 
-/* 'web' | 'play' | 'ninguno' */
+/* 'web' | 'play' | 'apple' */
 function paceTiendaCanal() {
   var p = typeof pacePlataformaNativa === 'function' ? pacePlataformaNativa() : null;
   if (p === 'android') return 'play';
-  if (p) return 'ninguno';
+  if (p === 'ios') return 'apple';
   return 'web';
 }
 
-/* Se lee de `window`: el complemento de Play, al llegar, y las pruebas ponen ahí su tienda. */
+/* Se lee de `window`: las tiendas de las apps viven en state-compra.apps.js, que carga detrás. */
 function paceTiendaDelCanal() {
   var c = paceTiendaCanal();
   if (c === 'web') return window.paceTiendaWeb || paceTiendaWeb;
-  if (c === 'play') return window.paceTiendaPlay || paceTiendaPlay;
+  if (c === 'play') return window.paceTiendaPlay || paceTiendaNinguna;
+  if (c === 'apple') return window.paceTiendaApple || paceTiendaNinguna;
   return paceTiendaNinguna;
 }
 
@@ -158,5 +145,5 @@ function paceTiendaPrecioTexto(plan, lang) {
 }
 
 Object.assign(window, {
-  PACE_TIENDA_WEB, paceTiendaWeb, paceTiendaPlay, paceTiendaCanal, paceTiendaDelCanal, paceTiendaPrecioTexto,
+  PACE_TIENDA_WEB, paceTiendaWeb, paceTiendaNinguna, paceTiendaCanal, paceTiendaDelCanal, paceTiendaPrecioTexto,
 });

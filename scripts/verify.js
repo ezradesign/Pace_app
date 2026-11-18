@@ -71,6 +71,8 @@ var plurales = require('./verify.plurales.js');
 var claves = require('./verify.claves.js');   // D-1 y D-2 no vuelven
 /* Que la tabla de la voz de Mueve y Estira case con su fila: trozos ceñidos y que todo quepa (16 nov.). */
 var voz = require('./verify.voz.js');
+/* Que las tiendas de las apps no se enciendan sin las altas de Ez y que sus piezas comprueben lo que compran (18 nov.). */
+var compras = require('./verify.compras.js');
 
 /* --------------------------------------------------------------------------
    Identificadores de PLATAFORMA. Un nombre sin ligar que este aqui es del
@@ -436,7 +438,7 @@ var NO_CUBRE = [
   'orden de carga: un modulo que use algo publicado DESPUES sigue pasando',
   'CSS, tokens y layout: no se mira una sola regla',
   'el standalone: se restaura, no se analiza (index.html es el canonico, s134)',
-].concat(tamano.NO_CUBRE).concat(integridad.NO_CUBRE).concat(lienzo.NO_CUBRE).concat(web.NO_CUBRE).concat(privacidad.NO_CUBRE).concat(escrituras.NO_CUBRE).concat(diaV1.NO_CUBRE).concat(plurales.NO_CUBRE).concat(voz.NO_CUBRE);
+].concat(tamano.NO_CUBRE).concat(integridad.NO_CUBRE).concat(lienzo.NO_CUBRE).concat(web.NO_CUBRE).concat(privacidad.NO_CUBRE).concat(escrituras.NO_CUBRE).concat(diaV1.NO_CUBRE).concat(plurales.NO_CUBRE).concat(voz.NO_CUBRE).concat(compras.NO_CUBRE);
 
 function main() {
   console.log('=== PACE verify v2 (s150 + s152) — build + artefacto + node --check + integridad ===');
@@ -464,6 +466,7 @@ function main() {
   plurales.tandaPlurales({ ROOT: ROOT, babel: babel, falla: falla, ok: ok, info: info }, declarados);
   claves.tandaClaves({ ROOT: ROOT, babel: babel, falla: falla, ok: ok, info: info }, declarados);
   voz.tandaVoz({ ROOT: ROOT, falla: falla, ok: ok, info: info });
+  compras.tandaCompras({ ROOT: ROOT, falla: falla, ok: ok, info: info });
   tandaVersion();
 
   console.log('\n--- lo que este verify NO cubre ---');

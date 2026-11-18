@@ -261,7 +261,10 @@ function Onboarding() {
             <OnbCompletoPaso modo={modoCompleto} onFin={(plan) => {
               const comprando = !!plan && typeof paceComprar === 'function';
               finish({ pick: conPick, comprando });
-              if (comprando) paceComprar(plan);
+              /* La tienda de las apps contesta aquí mismo: la hoja de PACE completo dice lo que pasó. */
+              if (comprando) Promise.resolve(paceComprar(plan)).then((r) => {
+                if (r && !r.fuera && (r.ok || r.motivo === 'pendiente')) paceAbrirPremium({ resultado: r });
+              }, () => {});
             }} />
           )}
 

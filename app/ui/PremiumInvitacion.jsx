@@ -21,8 +21,11 @@
    con «Ahora no» del mismo tamaño; sin prueba, sin aviso de los dos días y sin la
    línea de «Prefiero pagarlo una vez».
 
-   EN ANDROID NO HAY «Tengo un código»: Google Play no deja desbloquear con
-   códigos propios (state-licencia.js). Allí la hoja solo informa. Donde hay
+   EN LAS APPS, «Tengo un código» ABRE EL CANJE DE LA TIENDA (Ez, 3A del 18 nov. 2026): Google
+   Play y Apple no dejan desbloquear con códigos propios (state-licencia.js), y los testers
+   reciben un código de la tienda. Lo de la tienda que solo sale en las apps (la línea de la
+   renovación, el pie con «Restaurar compras», cargando y reintentar, el pago pendiente) vive
+   en PremiumInvitacion.tienda.jsx. Donde hay
    código, debajo del campo va «¿Lo has perdido?», que abre pacegrass.app/recuperar
    (Ez, 2A del 28 oct.): la app no se conecta para buscarlo.
 
@@ -86,7 +89,9 @@ function PremiumInvitacion() {
   const [comprobando, setComprobando] = useStatePI(false);
   const [tester, setTester] = useStatePI(false);
   const [mensual, setMensual] = useStatePI(false);
+  const [resultado, setResultado] = useStatePI(null); // lo que dijo la tienda de las apps al comprar
   const campoRef = useRefPI(null);
+  usePaceTienda();
   const abiertaRef = useRefPI(null);
   abiertaRef.current = abierta;
 
@@ -129,8 +134,15 @@ function PremiumInvitacion() {
       const d = (e && e.detail) || {};
       const conCodigo = d.modo === 'codigo' && window.paceLicenciaPermitida && window.paceLicenciaPermitida();
       setAbierta({ nombre: d.nombre || null });
-      setModo(conCodigo ? 'codigo' : 'invita');
       setTexto(''); setError(null); setComprobando(false);
+      /* La bienvenida compra en la tienda de las apps y trae aquí lo que pasó. */
+      if (d.resultado) {
+        setResultado(d.resultado); setTester(false); setMensual(d.resultado.plan === 'mes');
+        setModo(d.resultado.motivo === 'pendiente' ? 'pendiente' : 'ok');
+        return;
+      }
+      setResultado(null);
+      setModo(conCodigo ? 'codigo' : 'invita');
     };
     window.addEventListener('pace:open-premium', abrir);
     return () => window.removeEventListener('pace:open-premium', abrir);
@@ -146,7 +158,15 @@ function PremiumInvitacion() {
   const cerrar = () => setAbierta(null);
   const permitida = !!(window.paceLicenciaPermitida && window.paceLicenciaPermitida());
 
+  const canal = window.paceTiendaCanal ? window.paceTiendaCanal() : 'web';
+  const nativo = canal !== 'web';
+  const hechoTienda = (r) => {
+    setResultado(r); setTester(false); setMensual(r.plan === 'mes');
+    setModo(r.motivo === 'pendiente' ? 'pendiente' : 'ok');
+  };
+
   const hecho = (datos) => {
+    setResultado(null);
     setTester(!!(datos && datos.tester != null));
     setMensual(!!(datos && window.paceLicenciaEsMensual && window.paceLicenciaEsMensual(datos)));
     setModo('ok');
@@ -170,28 +190,39 @@ function PremiumInvitacion() {
     paceComprar(plan).then((r) => {
       setComprobando(false);
       if (r && r.ok && r.fuera) cerrar();
+      else if (r && r.ok && r.plan) hechoTienda(r);
       else if (r && r.ok) hecho(r.datos);
-      else if (r && r.motivo === 'error') setError('compra');
+      else if (r && r.motivo === 'pendiente') hechoTienda(r);
+      else if (r && r.motivo === 'error') setError(nativo ? 'fallo' : 'compra');
     });
   };
 
   if (modo === 'prueba') return <PremiumAvisoPrueba datos={abierta.prueba} cerrar={cerrar} />;
   if (modo === 'pasov1') return <PremiumPasoV1 datos={abierta.pasoV1} cerrar={cerrar} />;
   if (modo === 'fin') return <PremiumFinPrueba datos={abierta.fin} cerrar={cerrar} />;
+  if (modo === 'pendiente') return <PremiumPendiente cerrar={cerrar} />;
 
   const titulo = modo === 'ok' ? t(mensual ? 'premium.ok.title.monthly' : 'premium.ok.title') : (abierta.nombre || t('premium.name'));
   const tienda = modo === 'invita' && !!(window.paceTiendaAbierta && window.paceTiendaAbierta());
   const planes = tienda ? paceTiendaPlanes(lang) : [];
   const mes = planes.find((p) => p.plan === 'mes') || null;
   const vida = planes.find((p) => p.plan === 'vida') || null;
-  const dias = (mes && mes.pruebaDias) || 7;
+  /* La prueba, solo si la tienda dice que a esta persona le toca (sexta nº 9). */
+  const dias = (mes && mes.pruebaDias) || 0;
   const soloVida = !mes && !!vida;
-  const tengo = permitida && (
+  const estadoTienda = nativo && modo === 'invita' && !tienda && window.paceTiendaEstado ? window.paceTiendaEstado() : 'cerrada';
+  /* «Tengo un código»: en la web, el código de PACE; en las apps, el canje de la tienda (Ez, 3A). */
+  const tengo = permitida ? (
     <button type="button" data-pace-premium-tengo onClick={() => setModo('codigo')}
       style={{ ...premiumInvitacionStyles.enlace, ...(tienda ? { marginTop: 6 } : null) }}>
       {t('premium.code.have')}
     </button>
-  );
+  ) : nativo && tienda && window.paceTiendaPuedeCanjear && window.paceTiendaPuedeCanjear() ? (
+    <button type="button" data-pace-premium-canjear onClick={() => window.paceTiendaCanjear()}
+      style={{ ...premiumInvitacionStyles.enlace, marginTop: 6 }}>
+      {t('premium.code.have')}
+    </button>
+  ) : null;
 
   return (
     <Modal open onClose={cerrar} maxWidth={440} ariaLabel={titulo}>
@@ -201,7 +232,9 @@ function PremiumInvitacion() {
 
         {modo === 'ok' ? (
           <React.Fragment>
-            <p style={premiumInvitacionStyles.sub}>{t(tester ? 'premium.ok.tester' : 'premium.ok.other')}</p>
+            <p data-pace-premium-resultado style={premiumInvitacionStyles.sub}>
+              {resultado ? premiumResultadoTexto(resultado, t, tn, lang) : t(tester ? 'premium.ok.tester' : 'premium.ok.other')}
+            </p>
             <Button onClick={cerrar} style={premiumInvitacionStyles.ancho}>{t('premium.ok.continue')}</Button>
           </React.Fragment>
         ) : (
@@ -242,16 +275,18 @@ function PremiumInvitacion() {
             ) : tienda && (mes || vida) ? (
               <React.Fragment>
                 {mes && vida && (
-                  <p data-pace-premium-precios style={premiumInvitacionStyles.v1}>{tn('premium.onb.precios', { vida: vida.precio, mes: mes.precio, dias })}</p>
+                  <p data-pace-premium-precios style={premiumInvitacionStyles.v1}>{tn(dias ? 'premium.onb.precios' : 'premium.onb.precios.sin', { vida: vida.precio, mes: mes.precio, dias })}</p>
                 )}
                 {soloVida && (
                   <p data-pace-premium-precios style={premiumInvitacionStyles.v1}>{tn('premium.onb.vida.sola', { vida: vida.precio })}</p>
                 )}
-                {error === 'compra' && <p role="alert" data-pace-premium-error="compra" style={premiumInvitacionStyles.error}>{t('premium.compra.error')}</p>}
+                {(error === 'compra' || error === 'fallo') && (
+                  <p role="alert" data-pace-premium-error={error} style={premiumInvitacionStyles.error}>{t(error === 'fallo' ? 'premium.compra.fallo' : 'premium.compra.error')}</p>
+                )}
                 <div style={premiumInvitacionStyles.par}>
                   {mes && (
-                    <Button disabled={comprobando} onClick={() => comprar('mes')} style={premiumInvitacionStyles.mitad}>
-                      {tn('premium.onb.probar', { dias })}
+                    <Button data-pace-premium-mes disabled={comprobando} onClick={() => comprar('mes')} style={premiumInvitacionStyles.mitad}>
+                      {dias ? tn('premium.onb.probar', { dias }) : tn('premium.onb.mes', { mes: mes.precio })}
                     </Button>
                   )}
                   {soloVida && (
@@ -261,17 +296,21 @@ function PremiumInvitacion() {
                   )}
                   <Button variant="secondary" onClick={cerrar} style={premiumInvitacionStyles.mitad}>{t('premium.later')}</Button>
                 </div>
-                {mes && <p style={premiumInvitacionStyles.aviso}>{t('premium.onb.aviso')}</p>}
+                {mes && !nativo && <p data-pace-premium-aviso style={premiumInvitacionStyles.aviso}>{t('premium.onb.aviso')}</p>}
+                <PremiumTiendaRenueva mes={mes} />
                 {mes && vida && (
                   <button type="button" data-pace-premium-vida disabled={comprobando} onClick={() => comprar('vida')} style={premiumInvitacionStyles.fantasma}>
                     {tn('premium.onb.vida', { vida: vida.precio })}
                   </button>
                 )}
                 {tengo}
+                {nativo && <PremiumTiendaPie alRestaurar={(r) => hechoTienda({ ok: true, plan: r.plan, restaurada: true })} />}
               </React.Fragment>
             ) : (
               <React.Fragment>
-                <p data-pace-premium-v1 style={premiumInvitacionStyles.v1}>{t(paceTextoV1('premium.v1'))}</p>
+                {estadoTienda === 'cargando' || estadoTienda === 'error'
+                  ? <PremiumTiendaCarga estado={estadoTienda} />
+                  : <p data-pace-premium-v1 style={premiumInvitacionStyles.v1}>{t(paceTextoV1('premium.v1'))}</p>}
                 <Button variant="secondary" onClick={cerrar} style={premiumInvitacionStyles.ancho}>{t('premium.later')}</Button>
                 {tengo}
               </React.Fragment>
