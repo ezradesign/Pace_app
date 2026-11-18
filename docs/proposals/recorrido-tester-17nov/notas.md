@@ -41,3 +41,14 @@ Se repite con `conduce.js` (ver DONDE-ME-QUEDO.md). «Oído» = lo que apuntan l
 
 ## Día 2 · martes
 - d2-01 8:45: vuelve la home de la primera vez («FOCO MANUAL», actividades, «Hoy, como cada martes»).
+- d2-02/03 dos toques otra vez («Preparar jornada» → «Preparar jornada»), cada mañana.
+- d2-04 Ver todo del martes: cambia (piernas primero, Coherente 5·5 en vez de 4·6, Hombros, Cadena posterior, Diafragmática): es «lo de ayer» (el lunes se saltó Gemelos), pero nada lo dice. No hay ninguna línea con «ayer» en la app.
+- d2-05 panel: «Tu día empieza en blanco. Lo que hagas se queda aquí.» Bien. «Último logro: Regresas» sin aviso.
+- d2-06 pausa 1: «Suspiro fisiológico · la de antes, 2 min» (la última que hizo, ayer a las 16:55): bien.
+- d2-07 «Ya la hice por mi cuenta»: «Nuevo sello · Larga sesión» («Cinco bloques de 45 min sin pausa»), pero cuenta cinco bloques cualesquiera con sus pausas (state-timer.jsx:58). El texto no dice la verdad. Inglés igual («without a break»).
+- d2-08 pausa 2: «Nuevo sello · Regresas» (de las 8:45) sale a las 10:34. Los sellos esperan al fin del Foco: llegan horas tarde.
+- d2-09 «OTRA» cambia en un toque (Glúteos en la silla → Escritorio express): bien.
+- d2-10 ficha de Escritorio express: «6 movimientos en la silla» y la lista y el cierre tienen 5.
+- d2-11 «No» → «¿Por qué? Aquí no podía · Difícil · Me molestó»: bien, pero toques de 22 px de alto (Difícil 37 × 22, Deshacer 55 × 20).
+- d2-12 vuelve a las 17:40 sin cerrar: «Jornada cerrada · 1 h 30 min de foco. Lo que queda del día es tuyo.» Bien, sin regañar. (En la app, en esas 7 h, habrían sonado los avisos de cada pausa: sin probar aquí.)
+- d2-13 Estadísticas › Hoy: dice que a las 10:34 hizo «Manos y muñecas · hecha»; hizo Escritorio express (lo guardado: platos {2: move.desk.quick}). Recalcula el nombre con el índice de «Otra» sobre el plan de ahora. FALLO. Y las pausas que no hizo (11:24 a 16:55) salen con sus minutos, igual que las hechas, y con otros nombres que los del plan de la mañana.

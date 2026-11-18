@@ -270,3 +270,76 @@
 {"cmd":"botones"}
 {"cmd":"oido"}
 {"cmd":"hora"}
+{"cmd":"toca","nombre":"Preparar jornada","espera":1200}
+{"cmd":"foto","n":"d2-02-preparar"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Preparar jornada","n":-1,"espera":1500}
+{"cmd":"foto","n":"d2-03-dia-servido"}
+{"cmd":"texto"}
+{"cmd":"oido"}
+{"cmd":"toca","nombre":"Ver todo","espera":1000}
+{"cmd":"foto","n":"d2-04-ver-todo"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Cerrar","n":-1,"espera":600}
+{"cmd":"toca","nombre":"Abrir panel","espera":900}
+{"cmd":"foto","n":"d2-05-panel"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Colapsar panel","espera":600}
+{"cmd":"salta","ms":840000}
+{"cmd":"toca","nombre":"Empezar jornada","espera":1000}
+{"cmd":"salta","ms":2580000}
+{"cmd":"espera","ms":130000}
+{"cmd":"foto","n":"d2-06-pausa1-ventana"}
+{"cmd":"texto"}
+{"cmd":"oido"}
+{"cmd":"js","code":"(document.querySelector(`[data-pace-sello-aro]`)||{}).innerText||`-`"}
+{"cmd":"toca","nombre":"Ya la hice por mi cuenta","espera":1200}
+{"cmd":"foto","n":"d2-07-ya-la-hice"}
+{"cmd":"texto"}
+{"cmd":"oido"}
+{"cmd":"espera","ms":290000}
+{"cmd":"toca","nombre":"Empezar bloque 2","espera":1000}
+{"cmd":"salta","ms":2580000}
+{"cmd":"espera","ms":130000}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Cerrar","n":-1,"espera":800}
+{"cmd":"foto","n":"d2-08-pausa2-cerrada"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"^OTRA$","espera":1000}
+{"cmd":"foto","n":"d2-09-otra"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"toca","nombre":"Hacer la pausa","n":-1,"espera":1500}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"^Empezar$","n":-1,"espera":1500}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"foto","n":"d2-10-cierre"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"^No$","espera":800}
+{"cmd":"foto","n":"d2-11-no-porque"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"toca","nombre":"^Volver","espera":1200}
+{"cmd":"cerrar"}
+{"cmd":"abrir","t":"2026-11-24T17:40:00+01:00"}
+{"cmd":"espera","ms":2500}
+{"cmd":"foto","n":"d2-12-vuelve-1740"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"oido"}
+{"cmd":"toca","nombre":"Ver estadísticas","espera":1200}
+{"cmd":"foto","n":"d2-13-estadisticas"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"js","code":"(()=>{const s=JSON.parse(localStorage.getItem(`pace.state.v2`));const r=s.ritmo||{};return {dia:JSON.stringify(r.dia).slice(0,600),keys:Object.keys(s).filter(k=>/hist|sesion|session|log|hechas/i.test(k)),hist:JSON.stringify(s.history||s.sessionsLog||``).slice(-700)}})()"}
