@@ -120,6 +120,9 @@ function statsHoyMeta(p, t, hechas) {
   if (estado === 'saltada') return t('ritmo.saltada');
   if (estado === 'cuenta') return t('ritmo.cuenta');   /* sin minutos: no hubo sesión (4A del 8 nov.) */
   if (estado === 'ahora') return t('ritmo.ahora.min');
+  /* Pasada sin hacer: «no hecha», sin los minutos del hueco, que se leían como hechos (Ez, 3 «B atenuadas y no
+     hecha las dos», 18 nov. 2026; la atenúa StatsPanel.css.jsx). */
+  if (estado === 'pasada') return t('ritmo.noHecha');
   return it.dur + ' min';
 }
 

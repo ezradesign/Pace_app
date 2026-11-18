@@ -30,6 +30,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'ritmo.frase.movil.empieza':     'empieza en el aro, arriba',
     'ritmo.hecha':                   'hecha',
     'ritmo.saltada':                 'saltada',
+    'ritmo.noHecha':                 'no hecha',   /* pasada sin hacer, en Estadísticas › Hoy (Ez, 3B, 18 nov.) */
     'ritmo.cuenta':                  'por tu cuenta',   /* hecha sin la rutina: sin minutos (4A del 8 nov.) */
     'ritmo.hoy':                     'hoy de {desde} a {hasta}',
     'ritmo.opcion.1h':               'Una hora',
@@ -226,6 +227,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.frase.movil.empieza':     'start with the timer above',
     'ritmo.hecha':                   'done',
     'ritmo.saltada':                 'skipped',
+    'ritmo.noHecha':                 'not done',
     'ritmo.cuenta':                  'your own way',
     /* Corta a propósito (elegido por Ez): con «today from … to …» la frase del móvil cabía con
        0,3 px en dos líneas y un Chromium que ensancha la letra la partía en tres (scroll a 360×640). */

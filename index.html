@@ -4488,6 +4488,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.frase.movil.empieza': 'empieza en el aro, arriba',
   'ritmo.hecha': 'hecha',
   'ritmo.saltada': 'saltada',
+  'ritmo.noHecha': 'no hecha',
   'ritmo.cuenta': 'por tu cuenta',
   'ritmo.hoy': 'hoy de {desde} a {hasta}',
   'ritmo.opcion.1h': 'Una hora',
@@ -4684,6 +4685,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.frase.movil.empieza': 'start with the timer above',
   'ritmo.hecha': 'done',
   'ritmo.saltada': 'skipped',
+  'ritmo.noHecha': 'not done',
   'ritmo.cuenta': 'your own way',
 
 
@@ -42552,6 +42554,9 @@ function statsHoyMeta(p, t, hechas) {
   if (estado === 'saltada') return t('ritmo.saltada');
   if (estado === 'cuenta') return t('ritmo.cuenta');
   if (estado === 'ahora') return t('ritmo.ahora.min');
+
+
+  if (estado === 'pasada') return t('ritmo.noHecha');
   return it.dur + ' min';
 }
 
@@ -43800,7 +43805,7 @@ Object.assign(window, { PathStats });
     .pace-sh-aro.pace-sh-larga { width: 36px; border-radius: 11px; gap: 1px; }
     .pace-sh-aro .pace-rt-g { width: 13px; height: 13px; }
     .pace-sh-hecha .pace-sh-aro, .pace-sh-cuenta .pace-sh-aro { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 22%, var(--paper)); }
-    .pace-sh-saltada { opacity: 0.45; }
+    .pace-sh-saltada, .pace-sh-pasada { opacity: 0.45; }
     .pace-sh-saltada .pace-sh-aro { border-style: dashed; }
     .pace-sh-ahora { box-shadow: inset 0 0 0 1.5px var(--c); background: color-mix(in srgb, var(--c) 12%, var(--paper-2)); }
     .pace-sh-ahora .pace-sh-m { color: var(--cd, var(--c)); font-weight: 500; }   /* letra: el hondo (Ez, 2B) */
