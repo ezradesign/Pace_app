@@ -86,7 +86,7 @@ tbody th{font-weight:500;color:var(--ink)}
   <h1>Cobrar en las apps</h1>
   <p class="lead">Cómo se monta la compra de PACE completo en Google Play y en el iPhone, para que el día que tengas tus altas solo quede probarla.</p>
   <p>Hoy las apps no venden nada: la tienda de Android está vacía, el iPhone no tiene tienda y no hay ninguna pieza de compra instalada. Lo que sí está hecho es el sitio por donde pasa toda compra de PACE (el que decide quién tiene PACE completo), así que enchufar las tiendas no cambia la bienvenida ni la invitación: solo hay que darles con quién hablar.</p>
-  <p class="montado"><strong>Nada montado.</strong> Son cinco letras, en la tabla del final; recomiendo la A en las cinco. Tus altas siguen siendo lo que fija el día de probarlo de verdad.</p>
+  <p class="montado"><strong>Elegido (18 nov.): 1 B, 2 A, 3 A, 4 A y 5 A.</strong> La 1 me la dejaste a mí con tres criterios por orden (estable, segura, mejor): abajo, en «Elegida», el porqué. Se monta apagado en la rama <code>claude/cobro-tiendas-montaje-18nov</code>; tus altas fijan el día de probarlo de verdad.</p>
 
   <div class="decidido">
     <div class="t">Ya decidido, no se vuelve a preguntar</div>
@@ -103,8 +103,10 @@ tbody th{font-weight:500;color:var(--ink)}
   <h2>1 · Con qué herramienta</h2>
   <p>Hace falta una pieza que hable desde el móvil con Google Play y con Apple: enseñar los precios, abrir la ventana de pago de la tienda, preguntar qué tiene comprado esta persona y abrir la página donde se cancela. Hay tres caminos. Comprobado hoy en su código o su documentación, salvo donde dice lo contrario.</p>
 
-  <div class="camino rec">
-    <h3>A · Una pieza libre ya hecha <span class="sello">recomendada</span></h3>
+  <p class="montado"><strong>Elegida la B, código propio (18 nov.).</strong> <em>Estable:</em> la pieza de Capgo está viva (8.9.16 del 13 nov., un solo fallo abierto), pero en los últimos ocho días arregló fallos justo en lo que PACE usaría: la prueba de la mensual no se aplicaba (<a href="https://github.com/Cap-go/capacitor-native-purchases/pull/245">#245</a>), una compra se podía perder con la ventana de Play abierta (<a href="https://github.com/Cap-go/capacitor-native-purchases/issues/254">#254</a>) y decía mal el tipo de producto (<a href="https://github.com/Cap-go/capacitor-native-purchases/pull/249">#249</a>); y hoy empieza a pasarse a Capacitor 9 (<a href="https://github.com/Cap-go/capacitor-native-purchases/commits/main">sus cambios</a>). El código propio solo depende de Google y de Apple, que avisan con dos años. <em>Segura:</em> con código propio, Android comprueba en el móvil la firma de Google de cada compra con la clave de tu Play Console, y el iPhone solo cree las compras que firma Apple; restaurar va con la cuenta de la tienda en las dos.</p>
+
+  <div class="camino">
+    <h3>A · Una pieza libre ya hecha</h3>
     <ul>
       <li><strong>Qué es:</strong> <code>@capgo/native-purchases</code>, código abierto que habla con las dos tiendas desde el móvil. La mantiene una empresa (Capgo), pero no pide cuenta ni pago.</li>
       <li><strong>Va con lo de PACE:</strong> Capacitor 8; la biblioteca de cobro 9.1 de Google, la que Play acepta ahora (vale hasta agosto de 2028); la forma nueva de compras de Apple (StoreKit 2, desde iOS 15; PACE pide iOS 16.4) y el sistema con el que el iPhone de PACE junta sus piezas. Trae comprar, restaurar, abrir la página para cancelar y la ventana de Apple para canjear códigos.</li>
@@ -113,8 +115,8 @@ tbody th{font-weight:500;color:var(--ink)}
     </ul>
   </div>
 
-  <div class="camino">
-    <h3>B · Código propio de PACE para cada tienda</h3>
+  <div class="camino rec">
+    <h3>B · Código propio de PACE para cada tienda <span class="sello">elegida</span></h3>
     <ul>
       <li><strong>Qué es:</strong> lo mismo que A, escrito para PACE: un archivo para Android y otro para el iPhone, como ya tiene PACE para el calendario y para la ventana de valorar.</li>
       <li><strong>Cuesta:</strong> 0 €. Montarlo, tres sesiones. Mantenerlo, todo nuestro: el cambio de biblioteca de Google y los casos raros de cada tienda (pagos pendientes, devoluciones, cambios de Apple).</li>
@@ -312,7 +314,7 @@ tbody th{font-weight:500;color:var(--ink)}
   <div class="tabla"><table>
     <thead><tr><th>nº</th><th>Pregunta</th><th>A</th><th>B</th><th>Recomendada</th></tr></thead>
     <tbody>
-      <tr><th>1</th><td>Con qué se habla con las tiendas (dentro de tu D-9 A)</td><td>La pieza libre <code>@capgo/native-purchases</code></td><td>Código propio de PACE</td><td class="rec">A: dos sesiones en vez de tres, y si falla se pasa a B sin tocar lo demás</td></tr>
+      <tr><th>1</th><td>Con qué se habla con las tiendas (dentro de tu D-9 A)</td><td>La pieza libre <code>@capgo/native-purchases</code></td><td>Código propio de PACE</td><td class="rec">Elegí la B (18 nov.): más estable y más segura; ver «Elegida»</td></tr>
       <tr><th>2</th><td>Cuándo se monta</td><td>Ya, apagado, con la tienda de mentira (sesiones 1 y 2)</td><td>Todo junto cuando tengas las altas</td><td class="rec">A: el día de las altas solo queda probar</td></tr>
       <tr><th>3</th><td>«Tengo un código», en las apps</td><td>Abre el canje de la tienda: la ventana de Apple, o Play Store en Android</td><td>Sin fila: el tester usa el enlace que le mandas</td><td class="rec">A: quien pierda el enlace lo canjea desde PACE</td></tr>
       <tr><th>4</th><td>Las condiciones de uso en el iPhone</td><td>Las de Apple para todas las apps (su contrato estándar)</td><td>Unas propias de PACE, que esperan al jurista como las de la web</td><td class="rec">A: no esperan a nadie</td></tr>
