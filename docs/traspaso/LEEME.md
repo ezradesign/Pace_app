@@ -4,6 +4,11 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de noviembre de 2026, 10:20, v0.204.0 en `main` y los cuatro arreglos de S3 y S4 en su rama.
 
+## 17 nov., tarde (cuenta 5iWBf): la 0.210.0. Manda sobre lo de abajo
+
+- **Ez (literal): «Solo el calendario»** y luego **«y si la voz arreglada, lo de los textos largos dejalo en stanby»**. Uniones 832fa7e3 (calendario, sin choques) y 98015a4f (`claude/voz-cuerpo-cola-17nov`; choque en el mínimo de pruebas, 1684, y en las decisiones). La primera suite se paró al llegar la voz (su servidor se quedó en el 8805: la buena fue por el 8815). Suite entera: **1726 en verde, 2 saltadas y 3 rojas de carga** que pasan solas 12 de 12.
+- **En espera:** los textos largos (tres letras: recomendadas 1A, 2A y 3B; Ez no las entendió a la primera y se le explicaron sin jerga). **Falta el sí de Ez** al texto de tres pasos de la 1A de los arreglos menores; lo demás de esa rama (2.1 A, 2.2, 2.3 A y `CONTENT.md`) está montado.
+
 ## 17 nov. (cuenta 5iWBf): la 0.209.0. Manda sobre lo de abajo
 
 - **Ez (literal): «Júntalas»** para los avisos de la novena (`claude/avisos-novena-16nov-cdf66e`) y las maquetas 1A, 2 A+B+C y 3B (`claude/maquetas-4-16nov-90bbca`; la 4, «Déjala así»). Uniones af3ce9e4 y 95628082; choques en el censo (1236), el mínimo de pruebas (1668) y las decisiones, y un `DONDE-ME-QUEDO.md` suelto en la raíz que no debe estar en `main` (quitado). La suite destapó que «Tus datos» pedía scroll a 1280 × 940 en la semana de prueba: `umbralBajo` pasa a base 890 (la línea de «Marca la fase» de la voz) y la línea de la prueba a 40. Segunda suite: 1707 en verde, 2 saltadas y 2 rojas de carga que pasan solas.
