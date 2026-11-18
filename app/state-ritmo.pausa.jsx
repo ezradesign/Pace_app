@@ -110,6 +110,50 @@ function ritmoPausaHecha(routineId, runId, minutos) {
   });
 }
 
+/* LO QUE SE HIZO EN UNA PARADA, PARA ENSEÑARLO (recorrido de tester, 18 nov. 2026). El día se recompone
+   con la regla cada vez que se pinta, y con lo hecho ya contado la regla sirve otra cosa en ese hueco: la
+   pausa hecha con «Otra» como Escritorio express salía en Estadísticas como «Manos y muñecas · hecha».
+   Lo apuntado al hacerla (`dia.platos`) manda: cada plato hecho ocupa el sitio del servido de su mismo
+   módulo, y lo que no se hizo de una pausa larga se queda como lo sirve la regla. Sin nada apuntado, los
+   platos del plan tal cual. Solo para enseñar: la regla y la pausa abierta siguen con los suyos. */
+function ritmoModuloDeRutina(id, base) {
+  if (window.getBreatheRoutine && window.getBreatheRoutine(id)) return 'respira';
+  if (/^extra\./.test(id)) return 'mueve';    /* los ids van cruzados: extra.* es Mueve */
+  if (/^move\./.test(id)) return 'estira';    /* y move.* es Estira */
+  return base;
+}
+
+function ritmoPlatosVistos(it, n, dia) {
+  var platos = (it && it.platos) || [];
+  var hechos = dia && dia.platos && Array.isArray(dia.platos[n]) ? dia.platos[n] : [];
+  if (!hechos.length) return platos;
+  var resolver = window.resolveAnyRoutine;
+  var vistos = hechos.map(function (id) {
+    var servido = platos.filter(function (pl) { return pl.id === id; })[0];
+    if (servido) return servido;
+    var rutina = typeof resolver === 'function' ? resolver(id) : null;
+    if (!rutina) return null;
+    var base = platos[0] || {};
+    return Object.assign({}, base, { id: id, rutina: rutina, modulo: ritmoModuloDeRutina(id, base.modulo) });
+  }).filter(Boolean);
+  if (!vistos.length) return platos;
+  /* Primero cada hecho en el hueco de su módulo; los que quedan, en los huecos que quedan por orden
+     («Otra» puede cambiar de módulo: Glúteos en la silla, de Mueve, por Escritorio express, de Estira). */
+  var libres = vistos.slice();
+  var out = platos.map(function (pl) {
+    var k = -1;
+    for (var i = 0; i < libres.length; i++) if (libres[i] && libres[i].modulo === pl.modulo) { k = i; break; }
+    if (k === -1) return null;
+    var v = libres[k]; libres[k] = null; return v;
+  });
+  out = out.map(function (v, i) {
+    if (v) return v;
+    for (var j = 0; j < libres.length; j++) if (libres[j]) { var w = libres[j]; libres[j] = null; return w; }
+    return platos[i];
+  });
+  return out.concat(libres.filter(Boolean));
+}
+
 /* LOS MINUTOS DE UNA PAUSA HECHA SON LOS QUE HICISTE (Ez, 7A del 11 nov. 2026; revisión de ChatGPT,
    punto 7). Estadísticas › Hoy, la línea y la hoja decían «hecha · 5 min», los minutos del hueco del
    plan, aunque la rutina durara 2. Ahora suman los de las sesiones de esa pausa (`dia.sesiones`), con
@@ -258,7 +302,7 @@ function ritmoPausaCerrarConElDia() {
 }
 
 Object.assign(window, {
-  ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta,
+  ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta, ritmoPlatosVistos,
   ritmoSesionesHoy, ritmoMinutosHechos, ritmoMetaHecha, RITMO_MODULO_SESION,
   ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia, ritmoParadaHasta,
 });

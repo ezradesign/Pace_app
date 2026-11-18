@@ -15288,6 +15288,50 @@ function ritmoPausaHecha(routineId, runId, minutos) {
 
 
 
+function ritmoModuloDeRutina(id, base) {
+  if (window.getBreatheRoutine && window.getBreatheRoutine(id)) return 'respira';
+  if (/^extra\./.test(id)) return 'mueve';
+  if (/^move\./.test(id)) return 'estira';
+  return base;
+}
+
+function ritmoPlatosVistos(it, n, dia) {
+  var platos = it && it.platos || [];
+  var hechos = dia && dia.platos && Array.isArray(dia.platos[n]) ? dia.platos[n] : [];
+  if (!hechos.length) return platos;
+  var resolver = window.resolveAnyRoutine;
+  var vistos = hechos.map(function (id) {
+    var servido = platos.filter(function (pl) {return pl.id === id;})[0];
+    if (servido) return servido;
+    var rutina = typeof resolver === 'function' ? resolver(id) : null;
+    if (!rutina) return null;
+    var base = platos[0] || {};
+    return Object.assign({}, base, { id: id, rutina: rutina, modulo: ritmoModuloDeRutina(id, base.modulo) });
+  }).filter(Boolean);
+  if (!vistos.length) return platos;
+
+
+  var libres = vistos.slice();
+  var out = platos.map(function (pl) {
+    var k = -1;
+    for (var i = 0; i < libres.length; i++) if (libres[i] && libres[i].modulo === pl.modulo) {k = i;break;}
+    if (k === -1) return null;
+    var v = libres[k];libres[k] = null;return v;
+  });
+  out = out.map(function (v, i) {
+    if (v) return v;
+    for (var j = 0; j < libres.length; j++) if (libres[j]) {var w = libres[j];libres[j] = null;return w;}
+    return platos[i];
+  });
+  return out.concat(libres.filter(Boolean));
+}
+
+
+
+
+
+
+
 
 
 function ritmoSesionesHoy() {
@@ -15430,11 +15474,11 @@ function ritmoPausaCerrarConElDia() {
 }
 
 Object.assign(window, {
-  ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta,
+  ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta, ritmoPlatosVistos,
   ritmoSesionesHoy, ritmoMinutosHechos, ritmoMetaHecha, RITMO_MODULO_SESION,
   ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia, ritmoParadaHasta
 });
-;Object.assign(window, { ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, RITMO_METAS_DE_FIN, ritmoSigueCierre, ritmoPausaHecha, ritmoSesionesHoy, RITMO_MODULO_SESION, ritmoMinutosHechos, ritmoMetaHecha, ritmoPausaPorTuCuenta, ritmoSinPausa, ritmoPausaEmpieza, ritmoParadaHasta, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia });
+;Object.assign(window, { ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, RITMO_METAS_DE_FIN, ritmoSigueCierre, ritmoPausaHecha, ritmoModuloDeRutina, ritmoPlatosVistos, ritmoSesionesHoy, RITMO_MODULO_SESION, ritmoMinutosHechos, ritmoMetaHecha, ritmoPausaPorTuCuenta, ritmoSinPausa, ritmoPausaEmpieza, ritmoParadaHasta, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia });
 })();
 </script>
   <!-- Las pausas con bloques cortos (22 oct. 2026): la invitación, «a mi ritmo» o tras cada bloque, y sin día. -->
@@ -42502,6 +42546,7 @@ function StatsHoy(_ref4) {let { state, onClose } = _ref4;
 
   if (plan) {
     const paradas = statsHoyParadas(plan);
+    const dia = R.dia || {};
     const hechas = ritmoMinutosHechos(state);
     const sueltas = statsHoySueltas(state);
     return (
@@ -42512,9 +42557,11 @@ function StatsHoy(_ref4) {let { state, onClose } = _ref4;
       ),
       React.createElement(StatsHoyRejilla, { n: paradas.length },
       paradas.map((p, k) => {
-        const modulos = p.comida ? ['comida'] : p.it.platos.map((x) => x.modulo);
+
+        const platos = p.comida ? [] : ritmoPlatosVistos(p.it, p.n, dia);
+        const modulos = p.comida ? ['comida'] : platos.map((x) => x.modulo);
         return React.createElement(StatsHoyTarjeta, { key: k, modulos: modulos, larga: p.it.larga,
-          nombre: p.comida ? t('ritmo.comida') : ritmoPlatos(p.it, t, lang), hora: ritmoHora(p.it.desde),
+          nombre: p.comida ? t('ritmo.comida') : ritmoPlatos({ platos }, t, lang), hora: ritmoHora(p.it.desde),
           meta: statsHoyMeta(p, t, hechas), estado: p.comida ? 'comida' : p.estado });
       })
       ),
