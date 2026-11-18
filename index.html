@@ -33137,10 +33137,14 @@ function aroPlatoPendiente(s) {
 
 
 
+
+
+const ARO_PAUSA_TERMINADA_MIN = 15;
 function aroPausaTerminada(s) {
   if (typeof ritmoPausaCuenta !== 'function' || ritmoPausaCuenta(s)) return false;
   const a = ritmoPausaAbierta(s);
-  return !!a && a.it.tipo === 'pausa';
+  if (!a || a.it.tipo !== 'pausa') return false;
+  return ritmoAhoraExacto() - (a.it.desde + a.it.dur) <= ARO_PAUSA_TERMINADA_MIN;
 }
 
 
