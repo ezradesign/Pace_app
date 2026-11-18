@@ -52,3 +52,12 @@ Se repite con `conduce.js` (ver DONDE-ME-QUEDO.md). «Oído» = lo que apuntan l
 - d2-11 «No» → «¿Por qué? Aquí no podía · Difícil · Me molestó»: bien, pero toques de 22 px de alto (Difícil 37 × 22, Deshacer 55 × 20).
 - d2-12 vuelve a las 17:40 sin cerrar: «Jornada cerrada · 1 h 30 min de foco. Lo que queda del día es tuyo.» Bien, sin regañar. (En la app, en esas 7 h, habrían sonado los avisos de cada pausa: sin probar aquí.)
 - d2-13 Estadísticas › Hoy: dice que a las 10:34 hizo «Manos y muñecas · hecha»; hizo Escritorio express (lo guardado: platos {2: move.desk.quick}). Recalcula el nombre con el índice de «Otra» sobre el plan de ahora. FALLO. Y las pausas que no hizo (11:24 a 16:55) salen con sus minutos, igual que las hechas, y con otros nombres que los del plan de la mañana.
+
+## Día 3 · miércoles sin nada, y el jueves
+- d3-01 miércoles 12:30, solo mira: «Jornada entera, 12:30–17:00»: se ajusta a lo que queda. Bien.
+- d3-02/03 jueves 8:50: nada regaña; la línea «1 día en ritmo» desaparece sin más; las barras L y M llenas, X vacía.
+- d3-04 el plan del jueves vuelve a empezar por Empuje sencillo; «Coherente 432» no se entiende.
+- d3-05 Ajustes › Tu semana es la misma pantalla de la bienvenida: no enseña nada de lo aprendido.
+
+## El lunes siguiente (lo que verán el día 8)
+- d8-01 la carta: «Te ayudó: Empuje sencillo · 4 de 17 pausas hechas · Sigue igual: no ha habido nada que cambiar». Bien. (Conté 5 hechas: si el cierre no cuenta, son 4.) Arriba aparece el icono del sobre.
