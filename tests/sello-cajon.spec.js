@@ -8,14 +8,14 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto } = require('./helpers');
+const { sembrar, irAlArtefacto, MEDIODIA } = require('./helpers');
 
 const sello = (page) => page.locator('[data-pace-sello-aro]');
 const visibilidad = (page) => sello(page).evaluate((e) => getComputedStyle(e).visibility);
 
 async function conSello(page, context, ancho, alto) {
   await sembrar(context, { sidebarCollapsed: true });
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await page.setViewportSize({ width: ancho, height: alto });
   await irAlArtefacto(page);
   await page.evaluate(() => showToast({ id: 'first.step', type: 'achievement' }));
@@ -34,7 +34,7 @@ test('en el móvil, con el cajón abierto el sello del aro no se ve', async ({ p
 
 test('en el escritorio, con la barra abierta al lado, el sello del aro se ve', async ({ page, context }) => {
   await sembrar(context, { sidebarCollapsed: false });
-  await page.clock.install();
+  await page.clock.install({ time: MEDIODIA });
   await page.setViewportSize({ width: 1280, height: 800 });
   await irAlArtefacto(page);
   await page.evaluate(() => showToast({ id: 'first.step', type: 'achievement' }));
