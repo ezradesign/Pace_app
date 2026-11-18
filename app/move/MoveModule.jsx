@@ -312,7 +312,7 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
       routine={displayRoutine}
       onExit={onExit}
       atmosphere={atmo}
-      headerExtra={<Meta>{tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}</Meta>}
+      headerExtra={<Meta>{sessionPasoCabecera(routine, stepIdx, t, tn)}</Meta>}
       footer={footer}
       hint={t('move.hint')}
     >
@@ -330,7 +330,7 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
         <StepGlyph stepName={step.name} accent={accent} accentSoft={accentSoft}
           size={typeof v1GlyphSizeAhora === 'function' ? v1GlyphSizeAhora() : 72} />
         <div style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: letraDe(accent), marginBottom: 12, fontWeight: 500 }}>
-          {tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}
+          {sessionPasoCabecera(routine, stepIdx, t, tn)}
         </div>
         <h1 style={{
           ...displayItalic,

@@ -22438,8 +22438,19 @@ function sessionPrepCopy(routine, tn) {
   return tn('move.prepCopy.' + donde + (n === 1 ? '.uno' : ''), { n });
 }
 
-Object.assign(window, { SessionPrep, sessionPrepCopy });
-;Object.assign(window, { SessionPrep, sessionPrepCopy });
+
+
+
+function sessionPasoCabecera(routine, stepIdx, t, tn) {
+  const steps = routine && routine.steps || [];
+  if (steps[stepIdx] && steps[stepIdx].mode === 'rest') return t('session.restLabel');
+  const total = steps.filter((s) => s.mode !== 'rest').length;
+  const current = steps.slice(0, stepIdx + 1).filter((s) => s.mode !== 'rest').length;
+  return tn('move.stepCount', { current, total });
+}
+
+Object.assign(window, { SessionPrep, sessionPrepCopy, sessionPasoCabecera });
+;Object.assign(window, { SessionPrep, sessionPrepCopy, sessionPasoCabecera });
 })();
 </script>
   <!-- CSS responsive de las pantallas de sesión, extraído de SessionShell.jsx
@@ -36463,7 +36474,7 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
       routine: displayRoutine,
       onExit: onExit,
       atmosphere: atmo,
-      headerExtra: React.createElement(Meta, null, tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })),
+      headerExtra: React.createElement(Meta, null, sessionPasoCabecera(routine, stepIdx, t, tn)),
       footer: footer,
       hint: t('move.hint') },
 
@@ -36481,7 +36492,7 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
     React.createElement(StepGlyph, { stepName: step.name, accent: accent, accentSoft: accentSoft,
       size: typeof v1GlyphSizeAhora === 'function' ? v1GlyphSizeAhora() : 72 }),
     React.createElement("div", { style: { fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: letraDe(accent), marginBottom: 12, fontWeight: 500 } },
-    tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })
+    sessionPasoCabecera(routine, stepIdx, t, tn)
     ),
     React.createElement("h1", { style: {
         ...displayItalic,
@@ -38615,7 +38626,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   return (
     React.createElement(SessionShell, {
       routine: displayRoutine, onExit: onExit, atmosphere: atmo,
-      headerExtra: React.createElement(Meta, null, tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })),
+      headerExtra: React.createElement(Meta, null, sessionPasoCabecera(routine, stepIdx, t, tn)),
       footer: React.createElement(MandoV1, { accent: stepAccent, paused: paused && vuelta.cuenta == null, onPause: vuelta.alternar, anillo: anillo, espera: espera, acentoModulo: accent,
         prev: { onClick: () => {if (stepIdx > 0) {vuelta.reanudar();startStep(stepIdx - 1);}}, disabled: stepIdx === 0 },
         next: { label: primary.label, onClick: () => {vuelta.reanudar();primary.onClick();} },

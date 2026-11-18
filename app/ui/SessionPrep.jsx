@@ -108,4 +108,15 @@ function sessionPrepCopy(routine, tn) {
   return tn('move.prepCopy.' + donde + (n === 1 ? '.uno' : ''), { n });
 }
 
-Object.assign(window, { SessionPrep, sessionPrepCopy });
+/* «Paso 2 de 4» en el runner: los pasos son los ejercicios, sin los descansos, como en «Prepárate» y en el
+   cierre; en un descanso, «Descanso» sin número (Ez, 6A del 18 nov. 2026). Antes contaba el descanso: Espalda
+   de pie decía «Paso 1 de 5» con «4 pasos» al empezar y al acabar. */
+function sessionPasoCabecera(routine, stepIdx, t, tn) {
+  const steps = (routine && routine.steps) || [];
+  if (steps[stepIdx] && steps[stepIdx].mode === 'rest') return t('session.restLabel');
+  const total = steps.filter(s => s.mode !== 'rest').length;
+  const current = steps.slice(0, stepIdx + 1).filter(s => s.mode !== 'rest').length;
+  return tn('move.stepCount', { current, total });
+}
+
+Object.assign(window, { SessionPrep, sessionPrepCopy, sessionPasoCabecera });
