@@ -1,0 +1,38 @@
+/* PACE · E2E · LOS TEXTOS DICEN LA VERDAD (recorrido de tester, 18 nov. 2026)
+ * ==========================================================================
+ * Lo que un tester nuevo leyó y no era cierto:
+ *   · «Larga sesión: cinco bloques de 45 min sin pausa», y se gana con cinco bloques cualesquiera, con
+ *     sus pausas (state-timer.jsx). En inglés, «without a break».
+ *   · Escritorio express: «6 movimientos en la silla», y son 5. Se mira en toda rutina de cuerpo que diga
+ *     cuántos pasos o movimientos tiene, en los dos idiomas.
+ *   · «Prepárate · 5 pasos» contaba el descanso, y el cierre dice «4 PASOS» (ejercicios sin descansos).
+ *   · La pausa larga dice «Dos horas: sal de la silla» y Respira empezaba con «Siéntate cómodo».
+ *   · Los logros hablaban de «Pomodoro» (la app dice Foco), «antes de las 9am», «sesiones SIT» (una
+ *     etiqueta interna) y «con pace» en minúscula.
+ */
+'use strict';
+
+const { test, expect } = require('@playwright/test');
+const { sembrar, irAlArtefacto, MEDIODIA } = require('./helpers');
+
+async function abrir(page, context, extra) {
+  await sembrar(context, extra || {});
+  await page.clock.install({ time: MEDIODIA });
+  await irAlArtefacto(page);
+}
+
+test('los logros no dicen «Pomodoro», «9am», «SIT», «sin pausa» ni «pace» en minúscula (es y en)', async ({ page, context }) => {
+  await abrir(page, context);
+  const malas = await page.evaluate(() => {
+    const en = window.PACE_STRINGS.en;
+    const out = [];
+    for (const a of window.ACHIEVEMENT_CATALOG) {
+      if (a.secret) continue;
+      for (const [lang, d] of [['es', a.desc], ['en', en['ach.item.' + a.id + '.desc']]]) {
+        if (/Pomodoro|\d(am|pm)\b|\bSIT\b|sin pausa|without a break|\bpace\b/.test(d || '')) out.push(a.id + ' (' + lang + '): ' + d);
+      }
+    }
+    return out;
+  });
+  expect(malas).toEqual([]);
+});

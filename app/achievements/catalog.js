@@ -20,12 +20,12 @@ const GLYPH_SVG = window.ACHIEVEMENT_GLYPHS || {};
 
 const ACHIEVEMENT_CATALOG = [
   // Primeros pasos (1-10)
-  { id: 'first.step', cat: 'primeros', title: 'Primer paso', desc: 'Completa tu primer Pomodoro', glyph: '✦', glyphSvg: GLYPH_SVG['first.step'] },
+  { id: 'first.step', cat: 'primeros', title: 'Primer paso', desc: 'Completa tu primer Foco', glyph: '✦', glyphSvg: GLYPH_SVG['first.step'] },
   { id: 'first.breath', cat: 'primeros', title: 'Primer aliento', desc: 'Tu primera sesión de respiración', glyph: '𓇼', glyphSvg: GLYPH_SVG['first.breath'] },
   { id: 'first.stretch', cat: 'primeros', title: 'Primer estirón', desc: 'Tu primera rutina de Estira', glyph: '𓂃', glyphSvg: GLYPH_SVG['first.stretch'] },
   { id: 'first.sip', cat: 'primeros', title: 'Primer sorbo', desc: 'Tu primer vaso de agua', glyph: '◌', glyphSvg: GLYPH_SVG['first.sip'] },
   { id: 'first.extra', cat: 'primeros', title: 'Primera calistenia', desc: 'Tu primera rutina de Mueve', glyph: '✕', glyphSvg: GLYPH_SVG['first.extra'] },
-  { id: 'first.cycle', cat: 'primeros', title: 'Ciclo completo', desc: 'Un Pomodoro + pausa activa', glyph: '◯', glyphSvg: GLYPH_SVG['first.cycle'] },
+  { id: 'first.cycle', cat: 'primeros', title: 'Ciclo completo', desc: 'Un Foco y su pausa activa', glyph: '◯', glyphSvg: GLYPH_SVG['first.cycle'] },
   { id: 'first.ritual', cat: 'primeros', title: 'Primer ritual', desc: 'Usa los 4 módulos en un día', glyph: '✧', glyphSvg: GLYPH_SVG['first.ritual'] },
   { id: 'first.day', cat: 'primeros', title: 'Primer día', desc: 'Un día con dos actividades distintas', glyph: '☾', glyphSvg: GLYPH_SVG['first.day'] },
   { id: 'first.plan', cat: 'primeros', title: 'Con un plan', desc: 'Completa el plan del día tres veces', glyph: '✓', glyphSvg: GLYPH_SVG['first.plan'] },
@@ -53,9 +53,9 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'breathe.sessions.50', cat: 'constancia', title: '50 respiraciones', desc: 'Sesiones acumuladas', glyph: '≋', glyphSvg: GLYPH_SVG['breathe.sessions.50'] },
   { id: 'move.sessions.25', cat: 'constancia', title: '25 rutinas de Mueve', desc: 'Sesiones acumuladas', glyph: '∷', glyphSvg: GLYPH_SVG['move.sessions.25'] },
   { id: 'hydrate.week.perfect', cat: 'constancia', title: 'Semana hidratada', desc: '8 vasos / 7 días', glyph: '◌' },
-  { id: 'stats.month.first', cat: 'constancia', title: 'Mes habitado', desc: 'Veinte días con pace en un mismo mes', glyph: '✦' },
+  { id: 'stats.month.first', cat: 'constancia', title: 'Mes habitado', desc: 'Veinte días con PACE en un mismo mes', glyph: '✦' },
   { id: 'stats.month.focus', cat: 'constancia', title: 'Mes profundo', desc: 'Veinte horas de foco en un mes', glyph: '✦' },
-  { id: 'stats.year.first', cat: 'constancia', title: 'Año entero', desc: 'Doce meses con pace, sin saltarte ninguno', glyph: '✦' },
+  { id: 'stats.year.first', cat: 'constancia', title: 'Año entero', desc: 'Doce meses con PACE, sin saltarte ninguno', glyph: '✦' },
 
   // Exploración (28-45)
   { id: 'explore.box', cat: 'exploracion', title: 'Box asentada', desc: 'Tres sesiones de Box 4·4·4·4', glyph: '▢', glyphSvg: GLYPH_SVG['explore.box'] },
@@ -79,8 +79,8 @@ const ACHIEVEMENT_CATALOG = [
 
   // Maestría (46-64) — s168: solo PROFUNDIDAD en una practica. Los siete de
   // hora del dia y carga de jornada se fueron a «la jornada».
-  { id: 'master.pomodoro.12', cat: 'maestria', title: 'Doce profundos', desc: '12 Pomodoros', glyph: 'XII' },
-  { id: 'master.long.focus', cat: 'maestria', title: 'Larga sesión', desc: 'Cinco bloques de 45 min sin pausa', glyph: '═', glyphSvg: GLYPH_SVG['master.long.focus'] },
+  { id: 'master.pomodoro.12', cat: 'maestria', title: 'Doce profundos', desc: '12 bloques de Foco', glyph: 'XII' },
+  { id: 'master.long.focus', cat: 'maestria', title: 'Larga sesión', desc: 'Cinco bloques de Foco de 45 min', glyph: '═', glyphSvg: GLYPH_SVG['master.long.focus'] },
   { id: 'master.box.15', cat: 'maestria', title: 'Caja maestra', desc: '15 sesiones Box', glyph: '▣' },
   { id: 'master.coherent.15', cat: 'maestria', title: 'Corazón sincronizado', desc: '15 sesiones coherente', glyph: '♥' },
   { id: 'master.rounds.15', cat: 'maestria', title: 'Rondas maestra', desc: '15 sesiones', glyph: '◶' },
@@ -94,7 +94,7 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'master.marathon', cat: 'maestria', title: 'Maratoniana', desc: '2000 min totales', glyph: 'ℳ', glyphSvg: GLYPH_SVG['master.marathon'] },
   { id: 'master.centurion', cat: 'maestria', title: 'Centurión', desc: '100 sesiones respiración', glyph: 'C', glyphSvg: GLYPH_SVG['master.centurion'] },
   { id: 'master.gardener', cat: 'maestria', title: 'Jardinera', desc: '200 vasos acumulados', glyph: '❀' },
-  { id: 'master.antidote', cat: 'maestria', title: 'Antídoto completo', desc: '50 sesiones SIT', glyph: '✚' },
+  { id: 'master.antidote', cat: 'maestria', title: 'Antídoto completo', desc: '50 rutinas de Estira en la silla', glyph: '✚' },
   { id: 'master.collector.half', cat: 'maestria', title: 'Cuarenta y cinco sellos', desc: '45 sellos reunidos', glyph: 'L' },
   { id: 'master.collector.full', cat: 'maestria', title: 'Setenta y cinco sellos', desc: '75 sellos reunidos', glyph: 'C' },
   { id: 'master.path.all7', cat: 'maestria', title: 'Cartógrafa', desc: 'Recorre los siete caminos al menos una vez', glyph: '✦', glyphSvg: GLYPH_SVG['master.path.all7'] },
@@ -107,8 +107,8 @@ const ACHIEVEMENT_CATALOG = [
   // `morningDates` (5 dias y 30 dias de la misma condicion) desde tres familias
   // distintas. La idea de la familia: a que hora empiezas y cierras el dia, y
   // cuanto cabe dentro de el.
-  { id: 'master.dawn', cat: 'jornada', title: 'Amanecer', desc: 'Cinco días con sesión antes de las 7am', glyph: '↑', glyphSvg: GLYPH_SVG['master.dawn'] },
-  { id: 'morning.5', cat: 'jornada', title: 'Madrugadora', desc: '5 sesiones antes de las 9am', glyph: '☀' },
+  { id: 'master.dawn', cat: 'jornada', title: 'Amanecer', desc: 'Cinco días con sesión antes de las 7:00', glyph: '↑', glyphSvg: GLYPH_SVG['master.dawn'] },
+  { id: 'morning.5', cat: 'jornada', title: 'Madrugadora', desc: '5 sesiones antes de las 9:00', glyph: '☀' },
   /* s167 — la descripcion decia «un mes seguido sin perder el ritmo» y la
      desbloqueaba LA MISMA LINEA que `streak.30` («Luna llena», 30 dias
      seguidos): dos sellos para un solo hito. Ahora mide treinta AMANECERES de
@@ -117,7 +117,7 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'stats.streak.30', cat: 'jornada', title: 'Treinta amaneceres', desc: 'Treinta días con sesión antes de las 9', glyph: '✦' },
   { id: 'master.dusk', cat: 'jornada', title: 'Ocaso', desc: 'Cinco jornadas cerradas a su hora', glyph: '↓', glyphSvg: GLYPH_SVG['master.dusk'] },
   { id: 'master.midnight.never', cat: 'jornada', title: 'Nunca a medianoche', desc: '30 días sin uso tras 23h', glyph: '○' },
-  { id: 'master.pomodoro.8', cat: 'jornada', title: 'Jornada de ocho', desc: '8 Pomodoros en un día', glyph: 'VIII', glyphSvg: GLYPH_SVG['master.pomodoro.8'] },
+  { id: 'master.pomodoro.8', cat: 'jornada', title: 'Jornada de ocho', desc: '8 bloques de Foco en un día', glyph: 'VIII', glyphSvg: GLYPH_SVG['master.pomodoro.8'] },
   { id: 'master.focus.day', cat: 'jornada', title: 'Día de foco', desc: '4h de foco en un día', glyph: 'IV', glyphSvg: GLYPH_SVG['master.focus.day'] },
   { id: 'master.retreat', cat: 'jornada', title: 'Retiro personal', desc: '2h respira + mueve en día', glyph: '❖', glyphSvg: GLYPH_SVG['master.retreat'] },
   { id: 'master.silent.day', cat: 'jornada', title: 'Día silencioso', desc: '5 días en modo silencio', glyph: '𝇇' },

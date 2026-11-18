@@ -17,7 +17,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
   // ── Primeros pasos ─────────────────────────────
   'ach.item.first.step.title':                'First step',
-  'ach.item.first.step.desc':                 'Complete your first Pomodoro',
+  'ach.item.first.step.desc':                 'Complete your first Focus block',
   'ach.item.first.breath.title':              'First breath',
   'ach.item.first.breath.desc':               'Your first breathing session',
   'ach.item.first.stretch.title':             'First stretch',
@@ -27,7 +27,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.first.extra.title':               'First Move',
   'ach.item.first.extra.desc':                'Your first Move routine',
   'ach.item.first.cycle.title':               'Full cycle',
-  'ach.item.first.cycle.desc':                'One Pomodoro plus an active break',
+  'ach.item.first.cycle.desc':                'One Focus block and its active break',
   'ach.item.first.ritual.title':              'First ritual',
   'ach.item.first.ritual.desc':               'Use all four modules in one day',
   'ach.item.first.day.title':                 'First day',
@@ -113,9 +113,9 @@ Object.assign(window.PACE_STRINGS.en, {
 
   // ── Maestria ───────────────────────────────────
   'ach.item.master.pomodoro.12.title':        'Twelve deep',
-  'ach.item.master.pomodoro.12.desc':         '12 Pomodoros',
+  'ach.item.master.pomodoro.12.desc':         '12 Focus blocks',
   'ach.item.master.long.focus.title':         'The long session',
-  'ach.item.master.long.focus.desc':          'Five 45-minute blocks without a break',
+  'ach.item.master.long.focus.desc':          'Five 45-minute Focus blocks',
   'ach.item.master.box.15.title':             'Box mastered',
   'ach.item.master.box.15.desc':              '15 Box sessions',
   'ach.item.master.coherent.15.title':        'Heart in time',
@@ -143,7 +143,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.master.gardener.title':           'The gardener',
   'ach.item.master.gardener.desc':            '200 glasses accumulated',
   'ach.item.master.antidote.title':           'The full antidote',
-  'ach.item.master.antidote.desc':            '50 SIT sessions',
+  'ach.item.master.antidote.desc':            '50 seated Stretch routines',
   'ach.item.master.collector.half.title':     'Forty-five stamps',
   'ach.item.master.collector.half.desc':      '45 stamps gathered',
   'ach.item.master.collector.full.title':     'Seventy-five stamps',
@@ -163,7 +163,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.master.midnight.never.title':     'Before midnight',
   'ach.item.master.midnight.never.desc':      '30 days with no use after 23:00',
   'ach.item.master.pomodoro.8.title':         'A day of eight',
-  'ach.item.master.pomodoro.8.desc':          '8 Pomodoros in one day',
+  'ach.item.master.pomodoro.8.desc':          '8 Focus blocks in one day',
   'ach.item.master.focus.day.title':          'A day of focus',
   'ach.item.master.focus.day.desc':           '4h of focus in one day',
   'ach.item.master.retreat.title':            'Personal retreat',
