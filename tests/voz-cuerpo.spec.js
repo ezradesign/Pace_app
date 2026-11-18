@@ -91,14 +91,14 @@ test('voz-3 · vibrar: de fábrica con el sonido apagado sí, con el sonido pues
   await context.close();
 });
 
-test('voz-4 · Ajustes: «En Respira, Mueve y Estira» bajo «Marca la fase», y «Vibrar» solo donde se puede', async ({ browser }) => {
+test('voz-4 · Ajustes: «La voz que cuenta las fases» bajo «Marca la fase», y «Vibrar» solo donde se puede', async ({ browser }) => {
   for (const tactil of [true, false]) {
     const context = await browser.newContext({ hasTouch: tactil, viewport: { width: 1280, height: 720 }, locale: 'es-ES', timezoneId: 'Europe/Madrid' });
     await sembrar(context);
     const page = await context.newPage();
     await irAlArtefacto(page);
     await page.keyboard.press('t');
-    await expect(page.locator('[data-pace-aj-fila="signal"]')).toContainText('En Respira, Mueve y Estira');
+    await expect(page.locator('[data-pace-aj-fila="signal"]')).toContainText('La voz que cuenta las fases');
     const fila = page.locator('[data-pace-aj-fila="vibrar"]');
     if (tactil) {
       await expect(fila.getByRole('button', { name: 'Sin sonido' })).toHaveAttribute('aria-pressed', 'true');

@@ -62,8 +62,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'settings.bg.music':             'Música',
     /* Oír la señal elegida sin empezar una Respira, y dónde suena la música (Ez, 6A del 8 nov.). */
     'settings.signal.escuchar':      'Escuchar',
-    'settings.bg.music.nota':        'La música, solo en Respira',
-    'settings.signal.nota':          'En Respira, Mueve y Estira',
+    'settings.bg.music.nota':        'Lo que suena al respirar',   /* dice qué es la fila (Ez, 10A del 18 nov.; «mientras respiras» partía la línea a 360 × 640) */
+    'settings.signal.nota':          'La voz que cuenta las fases',
     'settings.vibrar':               'Vibrar',
     'settings.vibrar.sub':           'Mueve y Estira',
     'settings.vibrar.no':            'No',
@@ -180,8 +180,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'settings.bg.ambient':           'Ambient',
     'settings.bg.music':             'Music',
     'settings.signal.escuchar':      'Listen',
-    'settings.bg.music.nota':        'Music plays only in Breathe',
-    'settings.signal.nota':          'Breathe, Move, Stretch',
+    'settings.bg.music.nota':        'What plays as you breathe',
+    'settings.signal.nota':          'The voice for each phase',
     'settings.vibrar':               'Vibrate',
     'settings.vibrar.sub':           'Move and Stretch',
     'settings.vibrar.no':            'Never',
