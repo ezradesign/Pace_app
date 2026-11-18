@@ -10,8 +10,11 @@
      el código caduca) y, si es de un tester, su número debajo;
    · sin código, en la web: «PACE completo · Introducir código», que abre la
      invitación con el campo ya puesto;
-   · en Android: «PACE completo · pronto». Allí no se canjean códigos propios
-     (state-licencia.js); llegará la compra de Google Play.
+   · en las apps, sin la tienda encendida: «PACE completo · pronto». Allí no se canjean
+     códigos propios (state-licencia.js). Con la tienda de Google Play o de Apple encendida
+     (state-compra.apps.js), lo que se compró («Para siempre», «Mensual · se renueva el …»,
+     «Prueba gratis · hasta el …»), «Gestionar la suscripción», «Restaurar compras» y
+     «Tengo un código», que abre el canje de la tienda (Ez, 3A del 18 nov. 2026).
    Y desde v1, mientras dura la semana de quien ya usaba PACE, «Prueba hasta el …».
    Con la tienda abierta, sin código: «Tenerlo para siempre · <precio>» y «Tengo un código». */
 
@@ -37,9 +40,11 @@ function premiumPlanEnAjustes(lang) {
   return premiumPlanVida(lang);
 }
 
-/* El plan de por vida si se puede comprar desde aquí, haya o no semana de prueba. */
+/* El plan de por vida si se puede comprar desde aquí, haya o no semana de prueba: en la web con
+   su tienda, y en las apps con la de Google Play o la de Apple. */
 function premiumPlanVida(lang) {
-  if (!(window.paceLicenciaPermitida && window.paceLicenciaPermitida())) return null;
+  const nativo = !!(window.paceTiendaCanal && window.paceTiendaCanal() !== 'web');
+  if (!nativo && !(window.paceLicenciaPermitida && window.paceLicenciaPermitida())) return null;
   const est = window.paceLicenciaEstado ? window.paceLicenciaEstado() : { estado: 'ninguno' };
   if (est.estado === 'vigente' || est.estado === 'caducado') return null;
   if (!(window.paceTiendaAbierta && window.paceTiendaAbierta())) return null;
@@ -55,18 +60,53 @@ function premiumPlanEnPrueba(lang) {
   return window.pacePruebaV1Hasta && window.pacePruebaV1Hasta() ? premiumPlanVida(lang) : null;
 }
 
+/* Lo que dice la fila con una compra de la tienda de las apps (sexta nº 8). */
+function premiumCompraTexto(compra, t, tn, lang) {
+  if (compra.plan === 'vida') return t('premium.settings.forever');
+  if (typeof compra.hasta !== 'number') return t('premium.settings.mes');
+  const fecha = new Date(compra.hasta).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long' });
+  if (compra.prueba) return tn('premium.settings.mes.prueba', { fecha });
+  return tn(compra.renueva === false ? 'premium.settings.mes.cancelada' : 'premium.settings.mes.renueva', { fecha });
+}
+
+/* «Restaurar compras» en las apps, con la tienda encendida (Apple lo pide, norma 3.1.1). Si
+   encuentra la compra, la fila de arriba cambia sola; si no, lo dice debajo. */
+function PremiumRestaurarFila() {
+  const { t, tn } = useT();
+  const [aviso, setAviso] = React.useState(null);
+  const [buscando, setBuscando] = React.useState(false);
+  const tienda = t('premium.tienda.' + (window.paceTiendaCanal ? window.paceTiendaCanal() : 'play'));
+  const restaurar = () => {
+    if (buscando) return;
+    setBuscando(true); setAviso(null);
+    window.paceRestaurarCompras().then((r) => {
+      setBuscando(false);
+      setAviso(r && r.ok ? (r.plan ? null : 'no') : 'error');
+    });
+  };
+  return (
+    <AjustesAccion suave onClick={restaurar} derecha="›"
+      sub={aviso ? <span data-pace-aj-restaurado={aviso}>{tn('premium.restaurar.' + aviso, { tienda })}</span> : null}>
+      <span data-pace-aj-restaurar>{t('premium.tienda.restaurar')}</span>
+    </AjustesAccion>
+  );
+}
+
 function PremiumSection() {
   const { t, tn, lang } = useT();
   usePace(); // al canjear o renovar el código, la fila cambia sin cerrar Ajustes
+  usePaceTienda(); // y cuando contesta la tienda de las apps
   const est = window.paceLicenciaEstado ? window.paceLicenciaEstado() : { estado: 'ninguno', motivo: null, datos: null };
   const permitida = !!(window.paceLicenciaPermitida && window.paceLicenciaPermitida());
-  const mensual = !!(est.datos && window.paceLicenciaEsMensual && window.paceLicenciaEsMensual(est.datos));
+  const compra = window.paceCompraEstado ? window.paceCompraEstado() : null;
+  const mensual = !!(est.datos && window.paceLicenciaEsMensual && window.paceLicenciaEsMensual(est.datos)) || !!(compra && compra.plan === 'mes');
   const canal = window.paceTiendaCanal ? window.paceTiendaCanal() : 'web';
   const gestionar = mensual && window.paceTiendaPuedeGestionar && window.paceTiendaPuedeGestionar() ? (
-    <AjustesAccion suave onClick={() => window.paceGestionarCompra()} derecha={t('premium.settings.manage.' + (canal === 'play' ? 'play' : 'web')) + ' ›'}>
+    <AjustesAccion suave onClick={() => window.paceGestionarCompra()} derecha={t('premium.settings.manage.' + (canal === 'web' ? 'web' : canal)) + ' ›'}>
       {t('premium.settings.manage')}
     </AjustesAccion>
   ) : null;
+  const restaurar = canal !== 'web' && window.paceTiendaPuedeRestaurar && window.paceTiendaPuedeRestaurar() ? <PremiumRestaurarFila /> : null;
   /* EL DESISTIMIENTO (Ez, 1A del 30 oct. 2026): quien compró en la web (su código lleva el número
      del pedido; el de un tester, no) tiene a mano «Desistir del contrato aquí», que abre
      pacegrass.app/desistir. Solo en la web: en Android y en el iPhone se compra y se devuelve en
@@ -78,6 +118,17 @@ function PremiumSection() {
     </AjustesAccion>
   ) : null;
 
+  if (compra) {
+    return (
+      <React.Fragment>
+        <AjustesAccion derecha={<span data-pace-licencia-estado data-pace-compra-estado={compra.plan} style={{ color: 'var(--focus)' }}>{premiumCompraTexto(compra, t, tn, lang)}</span>}>
+          {t('premium.name')}
+        </AjustesAccion>
+        {gestionar}
+        {restaurar}
+      </React.Fragment>
+    );
+  }
   if (est.estado === 'vigente') {
     const datos = est.datos;
     const f = premiumFechaTexto(datos, lang);
@@ -136,9 +187,11 @@ function PremiumSection() {
           derecha={<span data-pace-aj-comprar={vida.plan}>{vida.precio}</span>}>
           {t('premium.settings.vida')}
         </AjustesAccion>
-        <AjustesAccion suave onClick={() => paceAbrirPremium({ modo: 'codigo' })} derecha={t('premium.settings.enter')}>
-          {t('premium.code.have')}
+        <AjustesAccion suave onClick={() => (canal === 'web' ? paceAbrirPremium({ modo: 'codigo' }) : window.paceTiendaCanjear())}
+          derecha={canal === 'web' ? t('premium.settings.enter') : '›'}>
+          <span data-pace-aj-codigo>{t('premium.code.have')}</span>
         </AjustesAccion>
+        {restaurar}
       </React.Fragment>
     );
   }
@@ -150,10 +203,13 @@ function PremiumSection() {
     );
   }
   return (
-    <AjustesAccion suave derecha={t('settings.license.soon')}>
-      {t('premium.name')}
-    </AjustesAccion>
+    <React.Fragment>
+      <AjustesAccion suave derecha={t('settings.license.soon')}>
+        {t('premium.name')}
+      </AjustesAccion>
+      {restaurar}
+    </React.Fragment>
   );
 }
 
-Object.assign(window, { PremiumSection, premiumPlanEnAjustes, premiumPlanVida, premiumPlanEnPrueba });
+Object.assign(window, { PremiumSection, premiumPlanEnAjustes, premiumPlanVida, premiumPlanEnPrueba, premiumCompraTexto, PremiumRestaurarFila });

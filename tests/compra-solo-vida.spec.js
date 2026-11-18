@@ -307,7 +307,7 @@ for (const plataforma of ['android', 'ios']) {
         hash: location.hash,
       }));
       expect(canal).toEqual({
-        canal: plataforma === 'android' ? 'play' : 'ninguno', esWeb: false, lista: false, abierta: false, planes: [], precios: [],
+        canal: plataforma === 'android' ? 'play' : 'apple', esWeb: false, lista: false, abierta: false, planes: [], precios: [],
         vida: { ok: false, motivo: 'cerrada' }, mes: { ok: false, motivo: 'cerrada' }, bienvenida: null, gestionar: false, hash: '',
       });
 

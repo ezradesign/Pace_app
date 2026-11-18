@@ -20,6 +20,7 @@
 		7ACE00000000000000000003 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 7ACE00000000000000000004 /* PrivacyInfo.xcprivacy */; };
 		7ACE00000000000000000005 /* PaceValoracion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACE00000000000000000006 /* PaceValoracion.swift */; };
 		7ACE00000000000000000007 /* PaceCalendario.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACE00000000000000000008 /* PaceCalendario.swift */; };
+		7ACE0000000000000000000D /* PaceCompras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACE0000000000000000000E /* PaceCompras.swift */; };
 		7ACE00000000000000000009 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7ACE0000000000000000000A /* InfoPlist.strings */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +40,7 @@
 		7ACE00000000000000000004 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		7ACE00000000000000000006 /* PaceValoracion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaceValoracion.swift; sourceTree = "<group>"; };
 		7ACE00000000000000000008 /* PaceCalendario.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaceCalendario.swift; sourceTree = "<group>"; };
+		7ACE0000000000000000000E /* PaceCompras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaceCompras.swift; sourceTree = "<group>"; };
 		7ACE0000000000000000000B /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7ACE0000000000000000000C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -79,6 +81,7 @@
 				7ACE00000000000000000002 /* PaceViewController.swift */,
 				7ACE00000000000000000006 /* PaceValoracion.swift */,
 				7ACE00000000000000000008 /* PaceCalendario.swift */,
+				7ACE0000000000000000000E /* PaceCompras.swift */,
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
 				7ACE00000000000000000004 /* PrivacyInfo.xcprivacy */,
@@ -182,6 +185,7 @@
 				7ACE00000000000000000001 /* PaceViewController.swift in Sources */,
 				7ACE00000000000000000005 /* PaceValoracion.swift in Sources */,
 				7ACE00000000000000000007 /* PaceCalendario.swift in Sources */,
+				7ACE0000000000000000000D /* PaceCompras.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

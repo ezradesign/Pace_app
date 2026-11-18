@@ -33,8 +33,11 @@ function OnbCompletoPaso({ modo, onFin }) {
   const planes = abierto ? paceTiendaPrecios(lang) : paceTiendaPlanes(lang);
   const mes = planes.find((p) => p.plan === 'mes') || null;
   const vida = planes.find((p) => p.plan === 'vida') || null;
-  const dias = (mes && mes.pruebaDias) || 7;
+  const dias = (mes && mes.pruebaDias) || 0;
   const soloVida = !abierto && !mes && !!vida;
+  /* En las apps: sin el aviso de dos días (Ez, D-11 A), con la línea de la renovación y el pie de
+     la tienda (PremiumInvitacion.tienda.jsx). La prueba, solo si la tienda dice que te toca. */
+  const nativo = !!(window.paceTiendaCanal && window.paceTiendaCanal() !== 'web');
   const todoAbierto = abierto || window.PREMIUM_ABIERTO_HASTA_V1 === true;
 
   return (
@@ -51,7 +54,7 @@ function OnbCompletoPaso({ modo, onFin }) {
       </ul>
       {mes && vida && (
         <p data-pace-onb-precios style={onbCompletoStyles.precios}>
-          {tn(abierto ? paceTextoV1('premium.onb.abierto.precios') : 'premium.onb.precios', { vida: vida.precio, mes: mes.precio, dias })}
+          {tn(abierto ? paceTextoV1('premium.onb.abierto.precios') : (dias ? 'premium.onb.precios' : 'premium.onb.precios.sin'), { vida: vida.precio, mes: mes.precio, dias })}
         </p>
       )}
       {soloVida && <p data-pace-onb-precios style={onbCompletoStyles.precios}>{tn('premium.onb.vida.sola', { vida: vida.precio })}</p>}
@@ -69,7 +72,7 @@ function OnbCompletoPaso({ modo, onFin }) {
           <div style={onbCompletoStyles.par}>
             {mes && (
               <button data-pace-cta data-pace-onb-probar onClick={() => onFin('mes')} style={{ ...onboardingStyles.cta, ...onbCompletoStyles.mitad }}>
-                {tn('premium.onb.probar', { dias })}
+                {dias ? tn('premium.onb.probar', { dias }) : tn('premium.onb.mes', { mes: mes.precio })}
               </button>
             )}
             {soloVida && (
@@ -83,7 +86,8 @@ function OnbCompletoPaso({ modo, onFin }) {
           </div>
           {mes && (
             <div style={onbCompletoStyles.pie}>
-              <p style={onbCompletoStyles.aviso}>{t('premium.onb.aviso')}</p>
+              {!nativo && <p style={onbCompletoStyles.aviso}>{t('premium.onb.aviso')}</p>}
+              <PremiumTiendaRenueva mes={mes} />
               {vida && (
                 <button data-pace-onb-vida onClick={() => onFin('vida')} style={onboardingStyles.ghostBtn}>
                   {tn('premium.onb.vida', { vida: vida.precio })}
@@ -92,6 +96,9 @@ function OnbCompletoPaso({ modo, onFin }) {
             </div>
           )}
         </React.Fragment>
+      )}
+      {!abierto && nativo && (
+        <PremiumTiendaPie alRestaurar={(r) => { onFin(null); paceAbrirPremium({ resultado: { ok: true, plan: r.plan, restaurada: true } }); }} />
       )}
     </React.Fragment>
   );

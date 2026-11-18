@@ -222,6 +222,8 @@
   <!-- Las tiendas de PACE completo (Stripe en la web, Play en Android), vacías hasta
        que se enchufen. Solo el guard, que carga detrás, les habla. -->
   <script type="text/babel" src="app/state-compra.js"></script>
+  <!-- Las tiendas de las apps (Google Play y Apple), apagadas hasta las altas de Ez y v1. -->
+  <script type="text/babel" src="app/state-compra.apps.js"></script>
   <!-- Guard central de entitlement (s95): canAccessRoutine/canAccessPath.
        Antes de state-paths (getSuggestedPath lo consume) y del resto de
        consumidores. Unico sitio que cambiara cuando llegue la licencia. -->
@@ -367,6 +369,7 @@
   <script type="text/babel" src="app/ui/Sound.musica.jsx"></script>
   <script type="text/babel" src="app/ui/Toast.jsx"></script>
   <!-- La invitación a PACE completo: se abre al tocar algo cerrado. -->
+  <script type="text/babel" src="app/ui/PremiumInvitacion.tienda.jsx"></script>
   <script type="text/babel" src="app/ui/PremiumInvitacion.jsx"></script>
   <!-- La nota del fin de la semana de prueba de v1: la hoja y la línea de la biblioteca. -->
   <script type="text/babel" src="app/ui/PremiumFinPrueba.jsx"></script>
