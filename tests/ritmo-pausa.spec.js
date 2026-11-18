@@ -81,7 +81,7 @@ test('al acabar el bloque, «Tu pausa» con el plato y su glifo; «Seguir» arra
   await expect(modal).toContainText('Tu pausa');
   await expect(modal).toContainText('9:45 · Lo que toca ahora.');
   /* la frase de las series (Ez, 15 oct. 2026) encima del nombre */
-  await expect(modal.locator('[data-pace-break-ritmo]')).toContainText('Piernas: sin mover hoy');
+  await expect(modal.locator('[data-pace-break-ritmo]')).toContainText('Piernas: aún sin mover');
   /* el glifo es una máscara CSS o un SVG según el arte que haya (s138): se mide que pinte algo */
   const glifo = modal.locator('[data-pace-break-glifo]');
   await expect(glifo, 'el plato lleva el glifo de su ejercicio').toHaveCount(1);

@@ -241,7 +241,7 @@ test('en la app: la pausa dice la frase, «Otra» da otra cosa y lo servido se g
     await page.waitForTimeout(60);
   }
   const plato = page.locator('[data-pace-break-ritmo]');
-  await expect(plato.locator('.pace-break-motivo')).toHaveText('Hombros: sin mover hoy');
+  await expect(plato.locator('.pace-break-motivo')).toHaveText('Hombros: aún sin mover');
   await expect(plato).toContainText('Empuje sencillo');
   await page.keyboard.press('Escape');
   const s = await page.evaluate(() => ({ serv: getState().ritmo.servidos, otra: (ritmoOtra(['p1']), ritmoPlan(getState()).pausa.platos[0].id) }));
@@ -277,7 +277,7 @@ test.describe('a 360 px', () => {
       await page.clock.fastForward(60 * 1000);
       await page.waitForTimeout(60);
     }
-    await expect(page.locator('[data-pace-break-ritmo] .pace-break-motivo')).toHaveText('Hombros: sin mover hoy');
+    await expect(page.locator('[data-pace-break-ritmo] .pace-break-motivo')).toHaveText('Hombros: aún sin mover');
     /* se miden todas las frases en el motivo de la ventana, que es el hueco más estrecho */
     await page.evaluate(() => document.fonts.ready);
     const r = await page.evaluate(() => {
@@ -296,6 +296,6 @@ test.describe('a 360 px', () => {
     expect(r.out, 'frases que se parten en dos líneas').toEqual([]);
     /* la línea dice lo mismo: la fila de «Ahora» del móvil, que es la pausa abierta */
     await page.keyboard.press('Escape');
-    await expect(page.locator('.pace-rt-fila').filter({ visible: true }).first()).toContainText('Hombros: sin mover hoy');
+    await expect(page.locator('.pace-rt-fila').filter({ visible: true }).first()).toContainText('Hombros: aún sin mover');
   });
 });

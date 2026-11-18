@@ -104,7 +104,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'ritmo.motivo.cierre':           'Para cerrar la jornada',
     'ritmo.motivo.respira':          'Bajar revoluciones',
     /* La frase de las series (Ez, 15 oct. 2026: la B, «lo de hoy»), encima del nombre */
-    'ritmo.frase.zona':              '{zona}: sin mover hoy',
+    'ritmo.frase.zona':              '{zona}: aún sin mover',   /* «aún»: sin él se leía como «hoy no lo muevas» (Ez, 7A del 18 nov.); sin «hoy», que con «aún» partía en dos líneas la ventana a 360 px */
     'ritmo.frase.sentado':           'Llevas {n} min sentado',
     'ritmo.frase.larga':             'Dos horas: sal de la silla',
     'ritmo.frase.cierre':            'Para cerrar, despacio',
