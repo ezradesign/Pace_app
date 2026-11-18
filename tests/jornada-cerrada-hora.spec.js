@@ -63,7 +63,7 @@ test('cerrado por la hora tras un bloque con la tapa cerrada: «Jornada cerrada�
 
 test('en inglés, los mismos textos que V2', async ({ page, context }) => {
   await bloqueYTapa(page, context, 'en');
-  await expect(vis(page, '[data-pace-dial-label]')).toHaveText('Day complete');
+  await expect(vis(page, '[data-pace-dial-label]')).toHaveText('Workday over');
   await expect(vis(page, '[data-pace-dial-subtitle]')).toHaveText('The rest of the day is yours');
-  await expect(vis(page, '[data-pace-cta]')).toHaveText('Keep going freestyle');
+  await expect(vis(page, '[data-pace-cta]')).toHaveText('Keep going');
 });

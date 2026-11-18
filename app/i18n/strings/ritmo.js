@@ -308,11 +308,11 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.zona.caderas':            'Hips',
     'ritmo.zona.piernas':            'Legs',
     'ritmo.zona.manos':              'Hands',
-    'ritmo.hecho':                   'Day complete',
+    'ritmo.hecho':                   'Workday over',   /* como «Jornada cerrada»: «complete» sonaba a día cumplido tras un solo bloque (Ez, 9A del 18 nov.) */
     'ritmo.hecho.sub':               '{f} of focus. The rest of the day is yours.',
     'ritmo.aro.hecho':               '{f} of focus',
     'ritmo.aro.tuyo':                'The rest of the day is yours',
-    'ritmo.aro.libre':               'Keep going freestyle',
+    'ritmo.aro.libre':               'Keep going',
     'ritmo.aro.bloque':              'Block {n} of {m}',
     'ritmo.aro.hasta':               'Your day, until {h}',
     'ritmo.aro.empezar':             'Start the day',
