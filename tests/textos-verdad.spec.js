@@ -53,3 +53,14 @@ test('cada rutina de cuerpo que dice cuántos pasos o movimientos tiene, dice lo
   });
   expect(malas).toEqual([]);
 });
+test('«Prepárate» cuenta los pasos como el cierre: sin el descanso', async ({ page, context }) => {
+  await abrir(page, context);
+  const r = await page.evaluate(() => {
+    const t = (k, v) => String(window.PACE_STRINGS.es[k]).replace('{n}', v.n);
+    const espalda = Object.values(window.EXTRA_ROUTINES).flatMap((g) => g.items).find((x) => x.name === 'Espalda de pie');
+    return { copia: sessionPrepCopy(espalda, t), ejercicios: espalda.steps.filter((s) => s.mode !== 'rest').length,
+             todos: espalda.steps.length };
+  });
+  expect(r.todos, 'GUARD: Espalda de pie lleva un descanso entre sus pasos').toBeGreaterThan(r.ejercicios);
+  expect(r.copia).toContain(r.ejercicios + ' pasos');
+});

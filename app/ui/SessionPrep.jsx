@@ -102,7 +102,9 @@ function sessionPrepCopy(routine, tn) {
   const donde = (pos.length && pos.every(p => PREP_SUELO.indexOf(p) !== -1)) ? 'floor'
     : (pos.length === 1 && (pos[0] === 'seated' || pos[0] === 'standing')) ? pos[0]
     : 'any';
-  const n = routine.steps.length;
+  /* Los pasos son los ejercicios, sin los descansos: los que cuenta el cierre (v1DoneStats) y lista la
+     ficha. Con el descanso, Espalda de pie decía «5 pasos» al empezar y «4 PASOS» al acabar. */
+  const n = routine.steps.filter(s => s.mode !== 'rest').length;
   return tn('move.prepCopy.' + donde + (n === 1 ? '.uno' : ''), { n });
 }
 
