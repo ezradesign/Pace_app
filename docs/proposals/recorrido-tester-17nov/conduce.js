@@ -138,6 +138,8 @@ async function oido() {
 
 async function foto({ n, completa = false }) {
   await page.evaluate(() => document.fonts.ready);
+  /* Las entradas (fundidos de CSS) corren con el reloj de verdad, no con el falso: se les deja acabar. */
+  await page.waitForTimeout(1200);
   const png = await page.screenshot({ fullPage: completa });
   const ruta = path.join(FOTOS, n + '.webp');
   await require('sharp')(png).webp({ quality: 80 }).toFile(ruta);

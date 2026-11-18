@@ -61,3 +61,13 @@ Se repite con `conduce.js` (ver DONDE-ME-QUEDO.md). «Oído» = lo que apuntan l
 
 ## El lunes siguiente (lo que verán el día 8)
 - d8-01 la carta: «Te ayudó: Empuje sencillo · 4 de 17 pausas hechas · Sigue igual: no ha habido nada que cambiar». Bien. (Conté 5 hechas: si el cierre no cuenta, son 4.) Arriba aparece el icono del sobre.
+- d2-12 (sin foto: salió a medio aparecer y el perfil ya había pasado de día).
+
+## Inglés, los momentos clave (perfil aparte, mismo lunes)
+- en-02 la comida, a las 12:30 en inglés (14:00 en castellano): bien pensado.
+- en-03 «Start» dos veces seguidas, como «Comenzar».
+- en-08 «Shoulders: unmoved today» se entiende mejor que «sin mover hoy». «I did it my own way» suena a canción: «I already did one».
+- en-15 tras UN bloque de 45 min y siete horas fuera: «DAY COMPLETE · 45 min of focus». «Complete» suena a día cumplido; «Jornada cerrada» no. Y «Keep going freestyle» + «NO PLAN TODAY» con el día ya acabado.
+
+## 360 × 640
+- p640-01..05: la home de la primera vez, el día servido, la ventana de la pausa y la ficha caben sin scroll. «CICLO 1 / 4» y «ACTIVIDADES» casi se tocan. (Ajustes, 12 px de scroll con «Vibrar»: ya sabido, rama de textos largos.)

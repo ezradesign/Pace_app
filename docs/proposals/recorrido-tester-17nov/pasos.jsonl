@@ -379,3 +379,92 @@
 {"cmd":"toca","nombre":"^Vale","espera":1000}
 {"cmd":"foto","n":"d8-02-tras-la-carta"}
 {"cmd":"texto"}
+{"cmd":"cerrar"}
+{"cmd":"abrir","t":"2026-11-23T08:52:00+01:00","lang":"en","perfil":"en","limpio":true}
+{"cmd":"foto","n":"en-01-welcome"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"toca","nombre":"^Start$"}
+{"cmd":"foto","n":"en-02-week"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"toca","nombre":"^Continue$"}
+{"cmd":"foto","n":"en-03-complete"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"espera","ms":1500}
+{"cmd":"foto","n":"en-03-complete"}
+{"cmd":"toca","nombre":"^Start$","espera":1500}
+{"cmd":"foto","n":"en-04-tour-1"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"toca","nombre":"Skip the tour","espera":1500}
+{"cmd":"foto","n":"en-05-home"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Plan (my|the) ?day|Prepare|Plan","espera":1200}
+{"cmd":"foto","n":"en-06-prepare"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"toca","nombre":"Plan my day","n":-1,"espera":1500}
+{"cmd":"foto","n":"en-07-day-served"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Start (the|my|your)? ?(work)?day","espera":1000}
+{"cmd":"salta","ms":2580000}
+{"cmd":"espera","ms":130000}
+{"cmd":"foto","n":"en-08-break-window"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Take the break","n":-1,"espera":1500}
+{"cmd":"foto","n":"en-09-exercise-card"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"^Start$","n":-1,"espera":1200}
+{"cmd":"espera","ms":14000}
+{"cmd":"foto","n":"en-10-runner"}
+{"cmd":"texto"}
+{"cmd":"espera","ms":75000}
+{"cmd":"foto","n":"en-11-close"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"^Yes$","espera":800}
+{"cmd":"toca","nombre":"^Back","espera":1500}
+{"cmd":"foto","n":"en-12-home-break"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Open settings","espera":1000}
+{"cmd":"foto","n":"en-13-settings"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Close","n":-1,"espera":600}
+{"cmd":"cerrar"}
+{"cmd":"abrir","t":"2026-11-23T16:10:00+01:00","lang":"en","perfil":"en"}
+{"cmd":"espera","ms":2500}
+{"cmd":"foto","n":"en-14-back-1610"}
+{"cmd":"texto"}
+{"cmd":"cerrar"}
+{"cmd":"abrir","t":"2026-11-23T17:40:00+01:00","lang":"en","perfil":"en"}
+{"cmd":"espera","ms":2500}
+{"cmd":"foto","n":"en-15-day-closed"}
+{"cmd":"texto"}
+{"cmd":"cerrar"}
+{"cmd":"abrir","t":"2026-11-30T08:52:00+01:00","h":640}
+{"cmd":"espera","ms":2500}
+{"cmd":"foto","n":"p640-01-home"}
+{"cmd":"js","code":"document.scrollingElement.scrollHeight-innerHeight"}
+{"cmd":"toca","nombre":"Preparar jornada","espera":1000}
+{"cmd":"foto","n":"p640-02-preparar"}
+{"cmd":"toca","nombre":"Preparar jornada","n":-1,"espera":1500}
+{"cmd":"foto","n":"p640-03-dia"}
+{"cmd":"js","code":"document.scrollingElement.scrollHeight-innerHeight"}
+{"cmd":"botones"}
+{"cmd":"toca","nombre":"Empezar jornada","espera":1000}
+{"cmd":"salta","ms":2580000}
+{"cmd":"espera","ms":130000}
+{"cmd":"foto","n":"p640-04-pausa"}
+{"cmd":"botones"}
+{"cmd":"toca","nombre":"Hacer la pausa","n":-1,"espera":1500}
+{"cmd":"foto","n":"p640-05-ficha"}
+{"cmd":"js","code":"(()=>{const c=Array.from(document.querySelectorAll(`[role=dialog],[data-pace-modal-card]`)).filter(e=>e.getClientRects().length).pop();if(!c)return null;const all=[c,...c.querySelectorAll(`*`)].filter(e=>e.scrollHeight>e.clientHeight+2&&/(auto|scroll)/.test(getComputedStyle(e).overflowY));return all.map(e=>e.scrollHeight-e.clientHeight)})()"}
+{"cmd":"abrir","t":"2026-11-23T08:52:00+01:00","perfil":"es-b","limpio":true}
+{"cmd":"toca","nombre":"^Comenzar$"}
+{"cmd":"foto","n":"d1-02-bienvenida-2"}
+{"cmd":"cerrar"}
+{"cmd":"abrir","t":"2026-11-23T08:52:00+01:00","lang":"en","perfil":"en-b","limpio":true}
+{"cmd":"toca","nombre":"^Start$"}
+{"cmd":"foto","n":"en-02-week"}
+{"cmd":"cerrar"}
