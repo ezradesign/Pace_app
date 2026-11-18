@@ -356,8 +356,9 @@ function RitmoHecho({ plan }) {
           )}
         </div>
         <div className="pace-rt-der">
+          {/* Sin «Hoy voy por libre»: con la jornada cerrada ya está «Seguir por libre» en el aro, y eran dos
+              botones casi iguales (Ez, 5A del 18 nov. 2026). */}
           <button className="pace-rt-enlace" onClick={ritmoPreguntar}>{t('ritmo.cambiar')}</button>
-          <RitmoLibre />
         </div>
       </div>
     </div>
