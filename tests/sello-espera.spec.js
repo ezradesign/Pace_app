@@ -90,9 +90,12 @@ test('el aplazamiento de los Caminos sigue: el sello espera a que se cierre su p
 test('el sello del aro se esconde si se abre una ventana encima, y el siguiente espera a que se cierre', async ({ page, context }) => {
   await sembrar(context);
   await irAlArtefacto(page);
-  await page.evaluate(() => ['first.step', 'first.sip'].forEach((id) => showToast({ id, type: 'achievement' })));
+  /* El segundo llega con el primero ya a la vista: los que llegan a la vez salen juntos (1A de Ez,
+     18 nov. 2026; sellos-juntos.spec.js), y este espera en la fila. */
+  await page.evaluate(() => showToast({ id: 'first.step', type: 'achievement' }));
   const sello = page.locator('[data-pace-sello-aro]');
   await expect(sello, 'GUARD: el primer sello no sale en el aro').toContainText('Primer paso');
+  await page.evaluate(() => showToast({ id: 'first.sip', type: 'achievement' }));
   await page.getByRole('button', { name: /^Mueve/ }).click();
   await expect(page.locator('[data-pace-modal-backdrop]'), 'GUARD: no se abrió la biblioteca').toHaveCount(1);
   /* Una lectura, no `toBeHidden`: esa reintenta y acaba en verde cuando el sello se va solo. */

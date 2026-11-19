@@ -3740,7 +3740,11 @@ Object.assign(window.PACE_STRINGS.es, {
   'ach.cat.estacionales': 'Estacionales',
   'ach.seal.secret': 'Secreto',
   'ach.seal.discover': 'Por descubrir',
-  'ach.toast.new': 'Nuevo sello'
+  'ach.toast.new': 'Nuevo sello',
+  'ach.toast.varios': '{n} sellos nuevos',
+  'ach.toast.mas.uno': '{t} y uno más',
+  'ach.toast.mas': '{t} y {n} más',
+  'ach.toast.numeros': 'uno,dos,tres,cuatro,cinco,seis,siete,ocho,nueve,diez'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -3758,7 +3762,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.cat.estacionales': 'Seasonal',
   'ach.seal.secret': 'Secret',
   'ach.seal.discover': 'To discover',
-  'ach.toast.new': 'New stamp'
+  'ach.toast.new': 'New stamp',
+  'ach.toast.varios': '{n} new stamps',
+  'ach.toast.mas.uno': '{t} and one more',
+  'ach.toast.mas': '{t} and {n} more',
+  'ach.toast.numeros': 'one,two,three,four,five,six,seven,eight,nine,ten'
 });
 })();
 </script>
@@ -9066,21 +9074,6 @@ function checkRetreatAchievement() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function unlockAchievement(id, note) {
   const s = getState();
   if (s.achievements[id]) return false;
@@ -9091,6 +9084,7 @@ function unlockAchievement(id, note) {
     ...(id === 'first.stretch' || id === 'first.extra' ? { logrosPrimerosCruzados: true } : {})
   });
   checkCollectorAchievements();
+  programarSellos();
   return true;
 }
 
@@ -9100,28 +9094,32 @@ function unlockAchievement(id, note) {
 
 
 
+function paceFocoEnMarcha() {
+  try {
+    const f = JSON.parse(localStorage.getItem('pace.timer.v1') || 'null');
+    return !!(f && typeof f.endsAt === 'number' && f.endsAt > Date.now());
+  } catch (e) {return false;}
+}
+let _sellosTimer = null;
 
-
-
-
-
+function programarSellos() {
+  if (_sellosTimer) return;
+  _sellosTimer = setTimeout(() => {_sellosTimer = null;flushAchievementToast();}, 0);
+}
 
 
 
 function flushAchievementToast(modulo) {
   const q = getState().achievementQueue || [];
-  if (!q.length) return false;
+  if (!q.length || paceFocoEnMarcha()) return false;
 
 
 
 
-
-  let i = modulo ? q.findIndex((id) => MODULO_DE_LOGRO[id] === modulo) : -1;
-  if (i === -1) i = q.findIndex((id) => encajaEnSesion(id, modulo));
-  if (i === -1) return false;
-  const siguiente = q[i];
-  setState({ achievementQueue: q.filter((_, n) => n !== i) });
-  showToast({ id: siguiente, type: 'achievement' });
+  const suyos = modulo ? q.filter((id) => MODULO_DE_LOGRO[id] === modulo) : [];
+  const orden = suyos.concat(q.filter((id) => suyos.indexOf(id) === -1));
+  setState({ achievementQueue: [] });
+  orden.forEach((id) => showToast({ id, type: 'achievement' }));
   return true;
 }
 
@@ -9349,7 +9347,7 @@ Object.assign(window, {
   checkAllPathsCompleted,
   checkTimeOfDayAchievements
 });
-;Object.assign(window, { checkPlanAchievements, marcaDia, checkTimeOfDayAchievements, checkCollectorAchievements, checkSilentDayAchievement, checkRoutineCountAchievements, checkStatsAchievements, checkAllPathsCompleted, checkPrimerDiaDeVerdad, checkRetreatAchievement, unlockAchievement, flushAchievementToast, updateStreak, conMinutosQueCuentan, completeBreathSession, logrosDeRespira, completeMoveSession, logrosDeMueve, completeExtraSession, logrosDeEstira });
+;Object.assign(window, { checkPlanAchievements, marcaDia, checkTimeOfDayAchievements, checkCollectorAchievements, checkSilentDayAchievement, checkRoutineCountAchievements, checkStatsAchievements, checkAllPathsCompleted, checkPrimerDiaDeVerdad, checkRetreatAchievement, unlockAchievement, paceFocoEnMarcha, programarSellos, flushAchievementToast, updateStreak, conMinutosQueCuentan, completeBreathSession, logrosDeRespira, completeMoveSession, logrosDeMueve, completeExtraSession, logrosDeEstira });
 })();
 </script>
   <!-- Ocaso y Búho con lo que premian ahora (Ez, D-6 D del 11 nov.). DESPUÉS de state-achievements. -->
@@ -25153,6 +25151,28 @@ function paceSelloPendiente() {
 }
 
 
+
+function selloTextos(toast, t, tn) {
+  const g = toast.grupo || [];
+  if (g.length < 2) return { cabeza: t('ach.toast.new'), titulo: toast.title, desc: toast.desc };
+  const otros = g.length - 1;
+  const palabras = String(t('ach.toast.numeros')).split(',');
+  const n = otros <= palabras.length ? palabras[otros - 1] : String(otros);
+  return { cabeza: tn('ach.toast.varios', { n: g.length }),
+    titulo: tn(otros === 1 ? 'ach.toast.mas.uno' : 'ach.toast.mas', { t: g[0].title, n }), desc: null };
+}
+
+
+const SELLO_CALLADO_MS = 15 * 60 * 1000;
+function selloViejo(grupo) {
+  try {
+    const ach = getState().achievements || {};
+    const fechas = (grupo || []).map((x) => (ach[x.id] || {}).unlockedAt).filter((f) => typeof f === 'number');
+    return fechas.length === (grupo || []).length && fechas.length > 0 && Date.now() - Math.max(...fechas) > SELLO_CALLADO_MS;
+  } catch (e) {return false;}
+}
+
+
 const toastSoloLector = { position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap' };
 
 
@@ -25161,7 +25181,7 @@ const toastSoloLector = { position: 'absolute', width: 1, height: 1, overflow: '
 
 
 
-function SelloEnAro(_ref) {let { toast, t } = _ref;
+function SelloEnAro(_ref) {let { toast, t, tn } = _ref;
   const textoRef = useRefTO(null);
   const [ajuste, setAjuste] = useStateTO({ escala: 1, corto: false });
 
@@ -25204,7 +25224,7 @@ function SelloEnAro(_ref) {let { toast, t } = _ref;
         opacity: toast.exiting ? 0 : 1, transition: 'opacity 300ms ease-out'
       } },
     React.createElement("span", { "data-pace-sello-texto": true, ref: textoRef, style: { minWidth: 0, overflow: 'hidden' } },
-    React.createElement("span", { style: ajuste.corto ? toastSoloLector : undefined }, t('ach.toast.new'), " \xB7 "), toast.title
+    React.createElement("span", { style: ajuste.corto ? toastSoloLector : undefined }, selloTextos(toast, t, tn).cabeza, " \xB7 "), selloTextos(toast, t, tn).titulo
     )
     ));
 
@@ -25212,7 +25232,7 @@ function SelloEnAro(_ref) {let { toast, t } = _ref;
 
 function ToastHost() {
   const [toasts, setToasts] = useStateTO([]);
-  const { t, lang } = useT();
+  const { t, tn, lang } = useT();
 
 
 
@@ -25238,7 +25258,7 @@ function ToastHost() {
     const full = Object.assign({}, sig, { aro: sig.licencia ? null : toastHuecoDelAro() });
     activoRef.current = true;
     setToasts((prev) => [...prev, full]);
-    if (!full.licencia) {try {playSound(full.secreto ? 'achievement.secret' : 'achievement.unlock');} catch (e) {}}
+    if (!full.licencia && !selloViejo(full.grupo)) {try {playSound(full.secreto && full.grupo.length === 1 ? 'achievement.secret' : 'achievement.unlock');} catch (e) {}}
     const durationMs = full.duracion || (typeof TOAST_DURATION_MS === 'number' ? TOAST_DURATION_MS : 3000);
     const fadeMs = 300;
 
@@ -25258,11 +25278,14 @@ function ToastHost() {
       if (toast.type === 'achievement') {
         const a = (window.ACHIEVEMENT_CATALOG || []).find((x) => x.id === toast.id);
         if (!a) return;
-        colaRef.current.push({ ...toast,
-          title: tR('ach.item.' + a.id + '.title', a.title),
-          desc: tR('ach.item.' + a.id + '.desc', a.desc),
+        const uno = { id: a.id, title: tR('ach.item.' + a.id + '.title', a.title), desc: tR('ach.item.' + a.id + '.desc', a.desc) };
+
+
+        const ultimo = colaRef.current[colaRef.current.length - 1];
+        if (ultimo && ultimo.grupo) {if (!ultimo.grupo.some((x) => x.id === a.id)) ultimo.grupo.push(uno);} else
+        colaRef.current.push({ ...toast, ...uno, grupo: [uno],
           glyph: a.glyph, glyphSvg: a.glyphSvg, secreto: !!a.secret, exiting: false });
-        siguienteRef.current();
+        setTimeout(() => siguienteRef.current(), 0);
       }
 
 
@@ -25298,7 +25321,7 @@ function ToastHost() {
       } },
 
     toasts.map((toast) => toast.aro ?
-    React.createElement(SelloEnAro, { key: toast._id, toast: toast, t: t }) :
+    React.createElement(SelloEnAro, { key: toast._id, toast: toast, t: t, tn: tn }) :
 
     React.createElement("div", { key: toast._id, "data-pace-toast": toast.licencia ? 'licencia' : 'logro', style: {
         display: 'flex', alignItems: 'center', gap: 14,
@@ -25337,9 +25360,9 @@ function ToastHost() {
 
     ),
     React.createElement("div", null,
-    React.createElement("div", { style: { fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: toast.licencia ? 'var(--premium)' : 'var(--achievement)' } }, toast.eyebrow || t('ach.toast.new')),
-    React.createElement("div", { style: { ...displayItalic, fontSize: 18, fontWeight: 500, lineHeight: 1.2 } }, toast.title),
-    React.createElement("div", { style: { fontSize: 11, color: 'var(--ink-3)' } }, toast.desc)
+    React.createElement("div", { style: { fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: toast.licencia ? 'var(--premium)' : 'var(--achievement)' } }, toast.eyebrow || selloTextos(toast, t, tn).cabeza),
+    React.createElement("div", { style: { ...displayItalic, fontSize: 18, fontWeight: 500, lineHeight: 1.2 } }, toast.licencia ? toast.title : selloTextos(toast, t, tn).titulo),
+    (toast.licencia ? toast.desc : selloTextos(toast, t, tn).desc) ? React.createElement("div", { style: { fontSize: 11, color: 'var(--ink-3)' } }, toast.licencia ? toast.desc : selloTextos(toast, t, tn).desc) : null
     )
     )
     )
@@ -25348,7 +25371,7 @@ function ToastHost() {
 }
 
 Object.assign(window, { ToastHost, toastTapado, paceSelloPendiente });
-;Object.assign(window, { toastHuecoDelAro, toastTapado, paceSelloPendiente, SelloEnAro, ToastHost });
+;Object.assign(window, { toastHuecoDelAro, toastTapado, paceSelloPendiente, selloTextos, selloViejo, SelloEnAro, ToastHost });
 })();
 </script>
   <!-- La invitación a PACE completo: se abre al tocar algo cerrado. -->

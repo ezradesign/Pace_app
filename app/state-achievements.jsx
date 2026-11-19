@@ -203,25 +203,10 @@ function checkRetreatAchievement() {
   if (todayBreath + todayMove >= 120) unlockAchievement('master.retreat');
 }
 
-/* ENTREGA ESCALONADA (s145 · Fase 2.5) — decisión del usuario: **uno por
-   sesión**, el resto en cola invisible.
-
-   EL PROBLEMA, MEDIDO: una primera sesión de Respira a las 6:50 desbloqueaba
-   CUATRO logros de golpe, con sus cuatro toasts en cascada — `first.breath`
-   (siempre) + `explore.<tipo>` (lo tienen 12 de las 20 rutinas) + `master.dawn`
-   (antes de las 7) + `first.day` (`updateStreak` lo da con `current >= 1`). Con
-   el plan del día completo entraban además `first.ritual` y `first.plan`. Es
-   literalmente el «con hacer media cosa ya consigues 4 logros seguidos» que
-   reportó el usuario.
-
-   LO QUE NO CAMBIA: el logro se GANA en el momento y queda registrado en
-   `achievements` al instante. Solo se aplaza el AVISO. Nada se pierde, nadie
-   ve progreso retroceder — la regla §2.5 «progreso sin culpa» queda intacta.
-
-   La cola se PERSISTE (`achievementQueue`) porque si viviera en memoria, una
-   recarga se comería las celebraciones pendientes: el logro seguiría ahí, pero
-   nunca se anunciaría. Se drena en los cierres de sesión, UNO por vez.
-   Precedente: los toasts aplazados durante un Camino (s105). */
+/* EL LOGRO SE GANA AL INSTANTE y queda en `achievements`; lo que espera es el AVISO, en una cola que se
+   PERSISTE (`achievementQueue`): en memoria, una recarga se comería las celebraciones pendientes. Una primera
+   Respira a las 6:50 gana cuatro de golpe (s145); desde la 1A de Ez (18 nov. 2026) salen juntos, en un aviso
+   con una campanita, y no uno por cierre de sesión. Nada se pierde ni retrocede (§2.5, progreso sin culpa). */
 function unlockAchievement(id, note) {
   const s = getState();
   if (s.achievements[id]) return false;
@@ -232,37 +217,42 @@ function unlockAchievement(id, note) {
     ...((id === 'first.stretch' || id === 'first.extra') ? { logrosPrimerosCruzados: true } : {}),
   });
   checkCollectorAchievements();
+  programarSellos();
   return true;
 }
 
-/* Saca UNO de la cola y lo celebra. Se llama al cerrar una sesión, gane o no
-   gane un logro nuevo: si no drenara también sin desbloqueos, una cola de tres
-   se quedaría esperando para siempre a que hubiera un cuarto.
+/* LOS SELLOS SALEN AL GANARLOS, SALVO EN UN FOCO (Ez, 1A del 18 nov. 2026). Solo se anunciaban al
+   cerrar una sesión, uno por cierre, y alguno llegaba horas tarde: «Curiosidad», ganado a las 9:43 al
+   abrir los Ajustes, salió a las 16:58. Ahora, al ganarlo, se anuncia todo lo que espera (el buzón
+   aguarda a que se cierre lo que haya abierto: state-core.toast.jsx). Con un Foco en marcha, no: lo que
+   se gane en él (un vaso de agua) sale al acabarlo, con lo del propio Foco (completePomodoro). El
+   Foco en marcha es el de `pace.timer.v1` con su final por delante, como en ui/UpdatePrompt.jsx. */
+function paceFocoEnMarcha() {
+  try {
+    const f = JSON.parse(localStorage.getItem('pace.timer.v1') || 'null');
+    return !!(f && typeof f.endsAt === 'number' && f.endsAt > Date.now());
+  } catch (e) { return false; }
+}
+let _sellosTimer = null;
+/* En el siguiente turno, para que lo ganado en el mismo gesto salga junto. */
+function programarSellos() {
+  if (_sellosTimer) return;
+  _sellosTimer = setTimeout(() => { _sellosTimer = null; flushAchievementToast(); }, 0);
+}
 
-   s146b — EL AVISO TIENE QUE HABLAR DE ESTA SESIÓN. Reportado por el usuario y
-   reproducido: al acabar 4·7·8 salía «Primer estirón», porque la cola es FIFO y
-   drenaba lo más antiguo — el logro de la sesión anterior. Ahora se recorre la
-   cola y se coge **el primero que encaje con el módulo**; lo que no encaja NO se
-   pierde ni se adelanta, se queda esperando a una sesión suya. Los logros
-   transversales (rachas, horas del día, hitos de colección) no declaran módulo y
-   siguen valiendo en cualquier sesión: no prometen relación con la actividad.
-
-   `modulo` sin valor = superficie que no es de módulo (agua desde la home): se
-   comporta como antes y drena lo más antiguo que encaje. */
+/* Anuncia lo que espera. Se llama también al cerrar una sesión aunque no gane nada, para que nada se quede
+   en la cola; `modulo` es el de esa sesión, y sin él (agua, Ajustes) el orden es el de la cola. */
 function flushAchievementToast(modulo) {
   const q = getState().achievementQueue || [];
-  if (!q.length) return false;
-  /* DOS PASADAS, y el orden importa. Primero lo que es DE ESTE modulo; solo si
-     no hay nada suyo, un transversal. Con una sola pasada FIFO los transversales
-     —que son mas antiguos y encajan en todo— se colaban por delante: al acabar
-     4·7·8 salia «Primer dia» y «Primer aliento» se quedaba en la cola. Sigue
-     habiendo un solo aviso por sesion (§16.2); lo que cambia es cual. */
-  let i = modulo ? q.findIndex(id => MODULO_DE_LOGRO[id] === modulo) : -1;
-  if (i === -1) i = q.findIndex(id => encajaEnSesion(id, modulo));
-  if (i === -1) return false;
-  const siguiente = q[i];
-  setState({ achievementQueue: q.filter((_, n) => n !== i) });
-  showToast({ id: siguiente, type: 'achievement' });
+  if (!q.length || paceFocoEnMarcha()) return false;
+  /* TODOS, Y JUNTOS (Ez, 1A del 18 nov. 2026): ToastHost junta los que llegan a la vez en un aviso,
+     «3 sellos nuevos · Primer paso y dos más», con una campanita. El que da nombre al aviso es el
+     primero, así que va delante lo de ESTE módulo: el aviso habla de la sesión que se cierra (s146b:
+     al acabar 4·7·8 salía «Primer estirón», de la sesión anterior). */
+  const suyos = modulo ? q.filter(id => MODULO_DE_LOGRO[id] === modulo) : [];
+  const orden = suyos.concat(q.filter(id => suyos.indexOf(id) === -1));
+  setState({ achievementQueue: [] });
+  orden.forEach(id => showToast({ id, type: 'achievement' }));
   return true;
 }
 

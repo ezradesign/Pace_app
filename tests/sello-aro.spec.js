@@ -9,8 +9,9 @@
  *  · el texto cabe entero: nada recortado por dentro (scrollWidth > clientWidth);
  *  · va sin dibujo: Ez eligió la opción B, solo el texto, mirando fotos (10 oct.); el dibujo
  *    diminuto era el «}» o el «?» que vio;
- *  · dos sellos van uno detrás de otro (fila de s145): nunca hay dos a la vista, y ninguno toca
- *    el contador ni la raya de debajo.
+ *  · varios sellos a la vez van en un aviso («3 sellos nuevos · Primer paso y dos más», Ez, 1A del
+ *    18 nov. 2026; antes, uno detrás de otro): nunca hay dos a la vista, y no toca el contador ni
+ *    la raya de debajo. Lo demás de juntarlos, en sellos-juntos.spec.js.
  *
  * Los avisos se piden con `showToast`, que es la puerta de todos (state-core.toast.jsx): el
  * mecanismo que decide CUÁNDO salen ya lo vigila sello-espera.spec.js; esto mira CÓMO salen.
@@ -71,7 +72,7 @@ for (const [ancho, alto] of [[360, 640], [360, 718]]) {
   }
 }
 
-test('360×718 · tres sellos a la vez salen uno detrás de otro, sin pisarse ni pisar el contador', async ({ page, context }) => {
+test('360×718 · tres sellos a la vez salen en un aviso, sin pisar el contador', async ({ page, context }) => {
   await home(page, context, 360, 718, 'es');
   const ids = ['first.step', LARGO, 'secret.zen'];
   await page.evaluate((lista) => lista.forEach((id) => showToast({ id, type: 'achievement' })), ids);
@@ -79,7 +80,7 @@ test('360×718 · tres sellos a la vez salen uno detrás de otro, sin pisarse ni
   const vistos = new Set();
   let maximo = 0;
   const choques = [];
-  for (let i = 0; i < 70 && vistos.size < ids.length; i++) {
+  for (let i = 0; i < 25; i++) {
     const f = await foto(page);
     maximo = Math.max(maximo, f.sellos.length);
     for (const s of f.sellos) {
@@ -91,7 +92,7 @@ test('360×718 · tres sellos a la vez salen uno detrás de otro, sin pisarse ni
   }
   expect(maximo, 'dos sellos a la vista a la vez').toBe(1);
   expect(choques, 'un sello pisa el aro').toEqual([]);
-  expect(vistos.size, 'no salieron los tres, uno detrás de otro').toBe(ids.length);
+  expect([...vistos], 'no salieron los tres en un aviso').toEqual(['3 sellos nuevos · Primer paso y dos más']);
 });
 
 /* EL SELLO SIGUE AL HUECO SI EL ARO CAMBIA MIENTRAS SE VE (caza de la semana, 7 nov. 2026). El hueco

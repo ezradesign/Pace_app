@@ -16,7 +16,9 @@ const { sembrar, irAlArtefacto, overlaySuperior, MEDIODIA } = require('./helpers
 const avisos = (page) => page.locator('div[aria-live="polite"][aria-atomic="true"] > div');
 const ningunAviso = async (page, porque) => {
   await page.waitForTimeout(300);
-  expect(await avisos(page).count(), porque).toBe(0);
+  /* Lo que se VE: un sello que ya salió se esconde mientras haya una ventana encima (ui/Toast.jsx),
+     y desde la 1A de Ez (18 nov. 2026) los sellos salen al ganarlos, así que puede estar en el DOM. */
+  expect(await avisos(page).filter({ visible: true }).count(), porque).toBe(0);
 };
 
 async function abrirRespira(page, rutina) {
@@ -51,7 +53,7 @@ test('respira-6 · en Hidrátate los avisos esperan a que se cierre', async ({ p
   await sembrar(context);
   await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
-  /* «Curiosidad» se gana al abrir Ajustes y se queda en la cola. */
+  /* «Curiosidad» se gana al abrir Ajustes y sale al cerrarlos, o, si Hidrátate se abre antes, espera. */
   await page.keyboard.press('t');
   await page.waitForTimeout(300);
   await page.keyboard.press('Escape');
