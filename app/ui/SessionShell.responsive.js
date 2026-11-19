@@ -250,10 +250,12 @@
        del círculo de antes. En Mueve y Estira CRECE CON EL ALTO QUE SOBRA (Ez, 14 oct.,
        opción B): a 72 px fijos se perdía en una pantalla grande. Su tamaño de siempre es
        el tope: 120 px a 720 de alto, 216 desde 816, y en el móvil de 72 a 140; Respira,
-       72. Por debajo de ese tope cede hasta 48 px cuando no cabe todo lo demás. */
+       72. Por debajo de ese tope cede hasta 32 px cuando no cabe todo lo demás: con 48, un nombre en
+       dos líneas («Calf Raises Under the Desk») se pasaba 15 px a 1536x701 y «Not now» pisaba
+       «Back to Home». */
     [data-pace-session-done-hero][data-pace-session-done-glifo] {
       --pace-cierre-glifo: 72px;
-      flex: 0 1 var(--pace-cierre-glifo); min-height: 48px; aspect-ratio: 1 / 1;
+      flex: 0 1 var(--pace-cierre-glifo); min-height: 32px; aspect-ratio: 1 / 1;
       width: auto !important; height: auto !important;
       background: none !important; border: 0 !important;
     }
@@ -265,7 +267,7 @@
         --pace-cierre-glifo: clamp(72px, calc(100 * var(--pace-vh, 1vh) - 500px), 140px);
       }
     }
-    /* En una ventana de escritorio muy baja ni con el dibujo en 48 px caben la pregunta,
+    /* En una ventana de escritorio muy baja ni con el dibujo en 32 px caben la pregunta,
        las respuestas, «Ahora no» y la salida: el dibujo, que es decorativo, se quita
        (hasta el 16 oct. se quitaba desde 430 px, y de 431 a 510 «Volver al inicio»
        tapaba lo de abajo también en Respira). */

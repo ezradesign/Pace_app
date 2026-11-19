@@ -303,7 +303,7 @@ test('recargar a mitad de Estira deja «Continúa · Paso 2 de 4», y se sigue p
 
   await page.reload();
   await expect(tarjeta(page), 'tras recargar, la barra no ofrece seguir').toHaveAttribute('data-kind', 'resume');
-  await expect(tarjeta(page)).toContainText('Postura reset');
+  await expect(tarjeta(page)).toContainText('Recolocar la postura');
   await expect(tarjeta(page)).toContainText('Paso 2 de 4');
   expect(hoy((await leerEstado(page)).weeklyStats && (await leerEstado(page)).weeklyStats.moveMinutes)).toBe(0);
   expect(await sesiones(page), 'a medias ya contaba').toEqual([]);
@@ -331,7 +331,7 @@ test('«Salir» a mitad de Mueve también la deja para seguir, con lo hecho', as
   await segundos(page, 5 + 40);
   await sesion(page).getByRole('button', { name: /Salir/ }).click();
   await expect(tarjeta(page)).toHaveAttribute('data-kind', 'resume');
-  await expect(tarjeta(page)).toContainText('Gemelos subrepticios');
+  await expect(tarjeta(page)).toContainText('Gemelos bajo la mesa');
   await expect(tarjeta(page)).toContainText('Paso 1 de');
 
   await tarjeta(page).locator('[data-pace-sidebar-accion-boton]').click();

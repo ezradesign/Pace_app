@@ -27,7 +27,7 @@ const { sembrar, capturarErrores, irAlArtefacto, overlaySuperior } = require('./
 /* La rutina con la que se recorre la sesión. Hasta la opción A del runner guiado había una
    segunda, del runner legacy, para comparar los dos círculos; ya no queda runner legacy (ver
    «ninguna rutina del catálogo vuelve al runner antiguo», abajo). */
-const RUTINA_V1 = 'Antídoto silla';
+const RUTINA_V1 = 'Antídoto a la silla';
 
 test.beforeEach(async ({ context }) => { await sembrar(context); });
 

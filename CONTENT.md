@@ -118,9 +118,9 @@ sueltos dentro de una rutina (sería un muro de pago a mitad de flujo).
 |---|---|---|
 | **Respira** | `breathe.coherent.55` · Coherente 5·5 | `breathe.box.4` · Box 4·4·4·4 |
 | **Mueve** | `extra.desk.pushups` · Empuje sencillo | «Para empezar» entera (Ez, 23 oct. 2026: 4A) |
-| **Estira** | `move.chair.antidote` · Antídoto silla | `move.neck.3` · Cuello suave, y «Para empezar» entera |
+| **Estira** | `move.chair.antidote` · Antídoto a la silla | `move.neck.3` · Cuello suave, y «Para empezar» entera |
 
-> Desde v0.176.0 «Postura reset» es de Estira y sigue gratis: lo que era gratis sigue gratis (4A).
+> Desde v0.176.0 «Recolocar la postura» (antes «Postura reset») es de Estira y sigue gratis: lo que era gratis sigue gratis (4A).
 
 **Siempre gratis pase lo que pase:** Pomodoro (Foco), Hidrátate, y las
 2 iniciales de cada módulo. El core funciona y es útil por sí solo.
@@ -158,7 +158,7 @@ nada de «regula el sistema nervioso» ni «la mente se aquieta», en los dos id
 | `breathe.kapalabhati` | Kapalabhati · Kriya | pranayama | 3 | ⚠ | **premium** (kriya avanzado) |
 | `breathe.rounds.express` | Rondas express (2×25) | energia | 5 | ⚠ | free (B1.2: era premium; sin ella Energía quedaba sin entrada free) |
 | `breathe.rounds.full` | Respiración en rondas (3×30) | energia | 9 | ⚠ | **premium** (rondas) |
-| `breathe.coherent.432` | Coherente 432 | balance | 10 | — | **premium** (F4 — inmersiva, drone forzado) |
+| `breathe.coherent.432` | Coherente 432 Hz | balance | 10 | — | **premium** (F4 — inmersiva, drone forzado) |
 | `breathe.kumbhaka` | Kumbhaka 1:4:2 | pranayama | 6 | ⚠ | **premium** (F4 — retención clásica) |
 | `breathe.co2` | Tolerancia CO₂ | equilibrio | 6 | ⚠ | **premium** (F4 — apnea en vacío) |
 | `breathe.rounds.long` | Rondas profundas (5×35) | energia | 17 | ⚠ | **premium** (F4 — precursora CTB) |
@@ -170,7 +170,7 @@ nada de «regula el sistema nervioso» ni «la mente se aquieta», en los dos id
 > técnica a 12 o más respiraciones por minuto lleve `safety` lo vigila
 > `tests/respira-biblioteca.spec.js` a partir de su secuencia, no de esta tabla.
 >
-> **Coherente 432** lleva `drone: true`: fuerza el drone ambiente (base
+> **Coherente 432 Hz** lleva `drone: true`: fuerza el drone ambiente (base
 > 432 Hz) durante la sesión aunque el toggle Ambiente esté apagado; `soundOn`
 > (master) manda siempre. Ver `ambientDrone.start(force)` en `Sound.jsx`.
 >
@@ -185,7 +185,7 @@ nada de «regula el sistema nervioso» ni «la mente se aquieta», en los dos id
 Botón «Mueve». Fuerza contra tu peso, una pared o tu mano: calistenia sin tecnicismos (Ez, 23 oct.
 2026). Datos en `app/move/move.data.js` (`MOVE_ROUTINES`, ids `extra.*`). **14 rutinas** en las
 tres capas que eligió Ez (2A): «Para empezar» arriba (pausas de 2-3 min, gratis enteras, `entrada`),
-«Sigilo», «Con material» (banda o barra; los pasos de banda se pueden saltar, `opcional`) y «Para ir a
+«Sin levantarte» (`sigilo`), «Con material» (banda o barra; los pasos de banda se pueden saltar, `opcional`) y «Para ir a
 más». Las dos últimas van `aparte`: «A tu ritmo» nunca las propone. Grupos i18n con prefijo
 `mueve.cat.*`. Sin absolutos: «casi siempre sin material», «en tu mesa», nunca «nadie se entera» ni «invisible»,
 en los dos idiomas (Ez, 7 nov. 2026).
@@ -196,9 +196,9 @@ en los dos idiomas (Ez, 7 nov. 2026).
 | `extra.desk.pushups` | Empuje sencillo | Para empezar | 2 | free |
 | `extra.legs.standing` | Piernas sin pasos | Para empezar | 3 | free |
 | `extra.pausa.suelo` | Fuerza en suelo | Para empezar | 3 | free |
-| `extra.calves` | Gemelos subrepticios | Sigilo | 2 | free |
-| `extra.glutes.stealth` | Glúteos en la silla | Sigilo | 2 | free |
-| `extra.core.stealth` | Core silencioso | Sigilo | 2 | **premium** |
+| `extra.calves` | Gemelos bajo la mesa | Sin levantarte | 2 | free |
+| `extra.glutes.stealth` | Glúteos en la silla | Sin levantarte | 2 | free |
+| `extra.core.stealth` | Core silencioso | Sin levantarte | 2 | **premium** |
 | `extra.banda.espalda` | Espalda con banda | Con material | 4 | **premium** |
 | `extra.hang.bar` | Colgarse | Con material | 2 | **premium** |
 | `extra.push.ladder` | Empuje · progresión | Para ir a más | 3 | **premium** |
@@ -209,7 +209,7 @@ en los dos idiomas (Ez, 7 nov. 2026).
 
 > **De dónde sale cada una.** «Levántate y sube», «Empuje sencillo» y «Piernas sin pasos» rehacen
 > «Sentadillas de silla», «Flexiones de escritorio» y «Piernas de pie» con su id. Nuevas: «Fuerza en
-> suelo» y «Espalda con banda». Pasaron a Estira «Postura reset», «Grip + antebrazos» (ahora «Manos y
+> suelo» y «Espalda con banda». Pasaron a Estira «Postura reset» (hoy «Recolocar la postura»), «Grip + antebrazos» (ahora «Manos y
 > antebrazos») y «Espalda de oficina», que son estirar. Los ejercicios nuevos (3A) que aún llevan el
 > glifo del módulo: Remo con banda, Remo con tu mano, Bisagra de cadera y Desliza el talón
 > (`docs/product/GLIFOS_A_DIBUJAR.md`).
@@ -233,8 +233,8 @@ columna», «Caderas y piernas» y «Para ir a más» (`aparte`). ATG y Ancestra
 | `move.hamstrings.standing` | Piernas en pausa | Para empezar | 3 | free |
 | `move.morning.flow` | Movilidad en suelo | Para empezar | 3 | free |
 | `move.desk.quick` | Escritorio express | Oficina | 2 | free |
-| `move.chair.antidote` | Antídoto silla | Oficina | 6 | free |
-| `extra.posture.set` | Postura reset | Oficina | 2 | free |
+| `move.chair.antidote` | Antídoto a la silla | Oficina | 6 | free |
+| `extra.posture.set` | Recolocar la postura | Oficina | 2 | free |
 | `extra.grip.squeeze` | Manos y antebrazos | Oficina | 3 | free |
 | `move.shoulders.5` | Hombros | Hombros y columna | 3 | free |
 | `extra.back.desk` | Espalda de oficina | Hombros y columna | 3 | free |
@@ -249,7 +249,7 @@ columna», «Caderas y piernas» y «Para ir a más» (`aparte`). ATG y Ancestra
 > **De dónde sale cada una.** «Cuello suave», «Brazos libres», «Manos y muñecas», «Tronco sentado»,
 > «Piernas en pausa» y «Movilidad en suelo» rehacen «Cuello», «Hombros · círculos», «Muñecas y
 > manos», «Columna en la silla», «Cadena posterior de pie» y «Despertar matinal» con su id. Ningún
-> ejercicio se borra: los escalenos van a «Antídoto silla» y las palmas en la mesa y el rezo
+> ejercicio se borra: los escalenos van a «Antídoto a la silla» y las palmas en la mesa y el rezo
 > invertido a «Manos y antebrazos». Salen de sus rutinas, hasta tener texto y dibujo claros, la
 > sentadilla de cuádriceps, el puente torácico, la onda espinal y la marcha del elefante. Los
 > ejercicios nuevos (3A) con el glifo del módulo: Inclinación de tronco y Gemelo en pared.

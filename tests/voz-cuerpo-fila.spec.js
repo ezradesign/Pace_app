@@ -105,7 +105,7 @@ async function correrRutina(page, maxSeg) {
   }
 }
 
-test('fila-1 · «Gemelos subrepticios»: 25 repeticiones de 2 s (la cadencia más corta) y 12 de 5 s; cada número en su repetición, 0,15 s entre palabras y 0,3 tras la serie', async ({ page, context }) => {
+test('fila-1 · «Gemelos bajo la mesa»: 25 repeticiones de 2 s (la cadencia más corta) y 12 de 5 s; cada número en su repetición, 0,15 s entre palabras y 0,3 tras la serie', async ({ page, context }) => {
   test.setTimeout(120000);
   const errores = capturarErrores(page);
   await prepararVoz(page, context);

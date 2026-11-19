@@ -81,7 +81,7 @@ test('el lunes, la semana del registro llega a la carta; «Vale» la aplica y no
   await expect(page.locator('[data-pace-carta-ayudo]')).toHaveText('Cuello suave');
   await expect(carta).toContainText('17 de 20 pausas hechas');
   await expect(carta).toContainText('del 12 al 16 oct');
-  await expect(page.locator('[data-pace-carta-cambio="descansa"]')).toHaveText('Gemelos subrepticios, que cambiaste cuatro veces, descansa un mes.');
+  await expect(page.locator('[data-pace-carta-cambio="descansa"]')).toHaveText('Gemelos bajo la mesa, que cambiaste cuatro veces, descansa un mes.');
   await expect(page.locator('[data-pace-carta-cambio="corta"]')).toHaveText('La pausa de las 15:45, que saltaste tres días, pasa a ser de 2 minutos.');
   await page.locator('[data-pace-carta-si]').click();
   await expect(carta).toHaveCount(0);
@@ -156,7 +156,7 @@ test('«Tu semana» dice lo aprendido en una línea, lo enseña al tocarla y cad
   await expect(page.locator('[data-pace-aprendido]'), 'cerrada hasta tocarla').toHaveCount(0);
   await expect(page.locator('[data-pace-aprendidos-abrir]')).toHaveText(/PACE ha aprendido 2 cosas/);
   await page.locator('[data-pace-aprendidos-abrir]').click();
-  await expect(page.locator('[data-pace-aprendido="descansa:extra.calves"]')).toContainText('Gemelos subrepticios descansa hasta el 16 nov');
+  await expect(page.locator('[data-pace-aprendido="descansa:extra.calves"]')).toContainText('Gemelos bajo la mesa descansa hasta el 16 nov');
   await expect(page.locator('[data-pace-aprendido="dia:1:inicio"]')).toContainText('Los lunes empiezas a las 9:40');
   await page.locator('[data-pace-aprendido="dia:1:inicio"] button').click();
   await expect(page.locator('[data-pace-aprendido="dia:1:inicio"]')).toHaveCount(0);

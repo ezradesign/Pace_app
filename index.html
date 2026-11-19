@@ -5342,7 +5342,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'breathe.co2.name': 'CO₂ Tolerance',
   'breathe.co2.desc': 'Exhale and hold with empty lungs. Breathe in whenever you need to.',
   'breathe.co2.code': 'Balance',
-  'breathe.coherent.432.name': 'Coherent 432',
+  'breathe.coherent.432.name': 'Coherent 432 Hz',
   'breathe.coherent.432.desc': 'Coherence 6·6 over a background drone. Immersive.',
   'breathe.coherent.432.code': 'Coherence',
   'breathe.exhale.46.name': 'Exhale 4·6',
@@ -5374,7 +5374,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
   'mueve.cat.empezar.label': 'Start here',
   'mueve.cat.empezar.aside': 'Two or three minutes, a gentle start',
-  'mueve.cat.sigilo.label': 'Discreet',
+  'mueve.cat.sigilo.label': 'Without standing up',
   'mueve.cat.sigilo.aside': 'Small movements at your desk',
   'mueve.cat.material.label': 'With equipment',
   'mueve.cat.material.aside': 'A band or a bar; without them, skip it',
@@ -5430,7 +5430,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.wall.sit.s2.instruction.action': 'Second round. Return to the position and hold.',
   'extra.wall.sit.s2.instruction.care': 'Choose a height that lets you breathe easy.',
 
-  'extra.calves.name': 'Stealth Calf Raises',
+  'extra.calves.name': 'Calf Raises Under the Desk',
   'extra.calves.desc': 'Under your desk, heels up and down.',
   'extra.calves.code': 'Calves',
   'extra.calves.s0.name': 'Calf raises',
@@ -12427,7 +12427,7 @@ Object.assign(window, {
    `docs/proposals/por-donde-seguir-s198.html`): con «A tu ritmo», el aviso dice
    QUE pausa toca y CUANDO vuelves.
 
-     Tu pausa: Gemelos subrepticios · 1 min
+     Tu pausa: Gemelos bajo la mesa · 1 min
      Bloque 1 de 9 hecho. El siguiente, a las 9:50.
 
    `ritmoAviso(s, t, tn, lang)` -> { title, body } o null (sin menu, o nada que
@@ -22755,10 +22755,12 @@ Object.assign(window, { SessionPrep, sessionPrepCopy, sessionPasoCabecera });
        del círculo de antes. En Mueve y Estira CRECE CON EL ALTO QUE SOBRA (Ez, 14 oct.,
        opción B): a 72 px fijos se perdía en una pantalla grande. Su tamaño de siempre es
        el tope: 120 px a 720 de alto, 216 desde 816, y en el móvil de 72 a 140; Respira,
-       72. Por debajo de ese tope cede hasta 48 px cuando no cabe todo lo demás. */
+       72. Por debajo de ese tope cede hasta 32 px cuando no cabe todo lo demás: con 48, un nombre en
+       dos líneas («Calf Raises Under the Desk») se pasaba 15 px a 1536x701 y «Not now» pisaba
+       «Back to Home». */
     [data-pace-session-done-hero][data-pace-session-done-glifo] {
       --pace-cierre-glifo: 72px;
-      flex: 0 1 var(--pace-cierre-glifo); min-height: 48px; aspect-ratio: 1 / 1;
+      flex: 0 1 var(--pace-cierre-glifo); min-height: 32px; aspect-ratio: 1 / 1;
       width: auto !important; height: auto !important;
       background: none !important; border: 0 !important;
     }
@@ -22770,7 +22772,7 @@ Object.assign(window, { SessionPrep, sessionPrepCopy, sessionPasoCabecera });
         --pace-cierre-glifo: clamp(72px, calc(100 * var(--pace-vh, 1vh) - 500px), 140px);
       }
     }
-    /* En una ventana de escritorio muy baja ni con el dibujo en 48 px caben la pregunta,
+    /* En una ventana de escritorio muy baja ni con el dibujo en 32 px caben la pregunta,
        las respuestas, «Ahora no» y la salida: el dibujo, que es decorativo, se quita
        (hasta el 16 oct. se quitaba desde 430 px, y de 431 a 510 «Volver al inicio»
        tapaba lo de abajo también en Respira). */
@@ -34590,7 +34592,7 @@ const BREATHE_ROUTINES = {
     items: [
     { id: 'breathe.coherent.55', tag: 'BAL', code: 'Coherencia', name: 'Coherente 5·5', desc: 'Ritmo constante de cinco y cinco. Pensada para encontrar un compás estable.', min: 5, pattern: 'coherent', cycle: [5, 0, 5, 0] },
     { id: 'breathe.coherent.66', tag: 'BAL', code: 'Coherencia', name: 'Coherente 6·6', desc: 'Versión más profunda. 5 ciclos por minuto.', min: 10, pattern: 'coherent', cycle: [6, 0, 6, 0] },
-    { id: 'breathe.coherent.432', tag: 'BAL', code: 'Coherencia', name: 'Coherente 432', desc: 'Coherencia 6·6 sobre un drone de fondo. Inmersiva.', min: 10, pattern: 'coherent', cycle: [6, 0, 6, 0], drone: true, access: 'premium' }]
+    { id: 'breathe.coherent.432', tag: 'BAL', code: 'Coherencia', name: 'Coherente 432 Hz', desc: 'Coherencia 6·6 sobre un drone de fondo. Inmersiva.', min: 10, pattern: 'coherent', cycle: [6, 0, 6, 0], drone: true, access: 'premium' }]
 
   },
   relajacion: {
@@ -35921,12 +35923,12 @@ var MOVE_ROUTINES = {
 
   },
   sigilo: {
-    label: 'Sigilo',
+    label: 'Sin levantarte',
     aside: 'Movimientos pequeños, en tu mesa',
     items: [
 
 
-    { id: 'extra.calves', tag: 'STEALTH', code: 'Gemelos', name: 'Gemelos subrepticios', desc: 'Bajo la mesa, talones arriba y abajo.', min: 2,
+    { id: 'extra.calves', tag: 'STEALTH', code: 'Gemelos', name: 'Gemelos bajo la mesa', desc: 'Bajo la mesa, talones arriba y abajo.', min: 2,
       position: ['seated', 'standing'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
       { name: 'Elevación de talones', mode: 'reps', reps: 25, dur: 30,
@@ -38950,7 +38952,7 @@ const EXTRA_ROUTINES = {
 
 
 
-    { id: 'move.chair.antidote', tag: 'SIT', code: 'Antídoto a estar sentado', name: 'Antídoto silla',
+    { id: 'move.chair.antidote', tag: 'SIT', code: 'Antídoto a estar sentado', name: 'Antídoto a la silla',
       desc: 'Lo contrario de estar sentado: pecho, caderas y cuello. Pasarás por el suelo.', min: 6,
       position: ['seated', 'halfKneeling', 'standing'], equipment: ['cushionOptional'], requiresFloor: true, intensity: 'gentle', level: 'accessible',
       steps: [
@@ -38988,7 +38990,7 @@ const EXTRA_ROUTINES = {
     },
 
 
-    { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Postura reset', desc: 'Barbilla, omóplatos y pecho. Tres gestos contra la silla.', min: 2,
+    { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Recolocar la postura', desc: 'Barbilla, omóplatos y pecho. Tres gestos contra la silla.', min: 2,
       position: ['seated'], equipment: ['chair'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
       { name: 'Barbilla atrás', mode: 'reps', reps: 8, dur: 30,

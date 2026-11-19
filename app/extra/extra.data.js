@@ -217,7 +217,7 @@ const EXTRA_ROUTINES = {
       /* Lo contrario de estar sentado: pecho, caderas y cuello, con paso por el suelo. Los
          escalenos llegan de «Cuello», que ahora es una pausa de entrada (2A): ningún ejercicio se
          borra. Sin «exacto a 4 h»: nadie lo ha medido, y la base no deja prometer efectos. */
-      { id: 'move.chair.antidote', tag: 'SIT', code: 'Antídoto a estar sentado', name: 'Antídoto silla',
+      { id: 'move.chair.antidote', tag: 'SIT', code: 'Antídoto a estar sentado', name: 'Antídoto a la silla',
         desc: 'Lo contrario de estar sentado: pecho, caderas y cuello. Pasarás por el suelo.', min: 6,
         position: ['seated', 'halfKneeling', 'standing'], equipment: ['cushionOptional'], requiresFloor: true, intensity: 'gentle', level: 'accessible',
         steps: [
@@ -255,7 +255,7 @@ const EXTRA_ROUTINES = {
         ]},
       /* s118 (B2.3 OLA 1): migrado — control postural (chin tucks + scapular con
          retención → reps con hold) y dos movilizaciones suaves `timed` (§B). */
-      { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Postura reset', desc: 'Barbilla, omóplatos y pecho. Tres gestos contra la silla.', min: 2,
+      { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Recolocar la postura', desc: 'Barbilla, omóplatos y pecho. Tres gestos contra la silla.', min: 2,
         position: ['seated'], equipment: ['chair'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
           { name: 'Barbilla atrás', mode: 'reps', reps: 8, dur: 30,

@@ -173,7 +173,7 @@ test('con ciclos cortos la música suena quieta y abierta', async ({ page }) => 
 });
 
 test('Coherente 432 suena con su drone y sin música, aunque el fondo sea Música', async ({ page }) => {
-  await empezar(page, 'Coherente 432');
+  await empezar(page, 'Coherente 432 Hz');
   const r = await page.evaluate(() => ({ ultimo: paceMusica.ultimo, musica: paceMusica.isActive(), drone: ambientDrone.isActive() }));
   expect(r.ultimo.motivo).toMatch(/Coherente 432/);
   expect(r.musica).toBe(false);
