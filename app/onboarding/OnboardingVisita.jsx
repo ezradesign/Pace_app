@@ -8,7 +8,8 @@
      1. Tu día         la tarjeta o el panel de «A tu ritmo»: cómo se prepara el día.
      2. El aro         y, de la B (la pista de la home), que al acabar llega una pausa.
      3. Actividades    Respira, Estira, Mueve e Hidrátate.
-     4. Ajustes        y que desde allí se repite la visita («Visita guiada ›»).
+     4. Estadísticas y logros   los dos iconos de arriba, que no tienen nombre a la vista.
+     5. Ajustes        y que desde allí se repite la visita («Visita guiada ›»).
 
    Una parada cuyo sitio no se ve al empezar (con un día elegido, Actividades no está
    en la home) se salta, y la cuenta «1 de N» sale de las que quedan.
@@ -30,6 +31,7 @@ const PACE_VISITA_PARADAS = [
   { id: 'dia', sel: '[data-pace-ritmo-tarjeta], [data-pace-ritmo-panel]' },
   { id: 'aro', sel: '[data-pace-dial-ring]', redonda: true },
   { id: 'act', sel: '[data-pace-activitybar-grid]' },
+  { id: 'arriba', sel: '[data-pace-topbar-stats]', y: '[data-pace-topbar-logros]' },
   { id: 'ajustes', sel: '[data-pace-topbar-ajustes]', redonda: true },
 ];
 
@@ -45,11 +47,18 @@ function paceVisitaElemento(sel) {
   return null;
 }
 
-/* El hueco: un círculo para el aro y el botón de Ajustes, un rectángulo con aire para el resto. */
+/* El hueco: un círculo para el aro y el botón de Ajustes, un rectángulo con aire para el resto.
+   Con `y`, el rectángulo abarca también esa segunda pieza (Estadísticas y Logros, uno al lado del otro). */
 function paceVisitaHueco(parada) {
   const el = parada && paceVisitaElemento(parada.sel);
   if (!el) return null;
-  const r = paceCaja(el);
+  let r = paceCaja(el);
+  const otra = parada.y && paceVisitaElemento(parada.y);
+  if (otra) {
+    const q = paceCaja(otra);
+    const izq = Math.min(r.left, q.left), arr = Math.min(r.top, q.top);
+    r = { left: izq, top: arr, width: Math.max(r.left + r.width, q.left + q.width) - izq, height: Math.max(r.top + r.height, q.top + q.height) - arr };
+  }
   if (parada.redonda) {
     const d = Math.max(r.width, r.height) + 12;
     return { left: r.left + r.width / 2 - d / 2, top: r.top + r.height / 2 - d / 2, width: d, height: d, radio: d / 2 };

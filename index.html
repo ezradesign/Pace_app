@@ -4434,6 +4434,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'visita.act.texto': 'Respira, Estira y Mueve, con rutinas cortas, e Hidrátate, para tus vasos de agua. Cuando quieras.',
   'visita.dia.titulo': 'Empieza por tu día',
   'visita.dia.texto': 'Elige cuánto trabajas hoy y PACE reparte tus pausas por la jornada, cada una a su hora y con qué hacer. Cada mañana te lo propone según tu semana.',
+  'visita.arriba.titulo': 'Estadísticas y logros',
+  'visita.arriba.texto': 'Lo que has hecho hoy, esta semana y este mes, sin compararte con nadie. Y los sellos, que llegan solos al usar PACE.',
   'visita.ajustes.titulo': 'Ajustes',
   'visita.ajustes.texto': 'El idioma, la paleta, el sonido y tus datos. Desde aquí puedes repetir esta visita.'
 });
@@ -4504,6 +4506,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'visita.act.texto': 'Try short routines in Breathe, Stretch and Move. Log your water in Hydrate. Whenever you like.',
   'visita.dia.titulo': 'Start with your day',
   'visita.dia.texto': 'Choose how long you work today and PACE spreads your breaks across it, each at its time and with what to do. Each morning it suggests a plan from your week.',
+  'visita.arriba.titulo': 'Stats and achievements',
+  'visita.arriba.texto': 'What you’ve done today, this week and this month, without comparing you to anyone. And the stamps, which come on their own as you use PACE.',
   'visita.ajustes.titulo': 'Settings',
   'visita.ajustes.texto': 'Language, color theme, sound and your data. You can take this tour again here.'
 });
@@ -50161,6 +50165,7 @@ Object.assign(window, { Onboarding, onboardingStyles });
 
 
 
+
 const { useState: useStateVIS, useEffect: useEffectVIS, useLayoutEffect: useLayoutEffectVIS, useRef: useRefVIS } = React;
 
 
@@ -50169,6 +50174,7 @@ const PACE_VISITA_PARADAS = [
 { id: 'dia', sel: '[data-pace-ritmo-tarjeta], [data-pace-ritmo-panel]' },
 { id: 'aro', sel: '[data-pace-dial-ring]', redonda: true },
 { id: 'act', sel: '[data-pace-activitybar-grid]' },
+{ id: 'arriba', sel: '[data-pace-topbar-stats]', y: '[data-pace-topbar-logros]' },
 { id: 'ajustes', sel: '[data-pace-topbar-ajustes]', redonda: true }];
 
 
@@ -50185,10 +50191,17 @@ function paceVisitaElemento(sel) {
 }
 
 
+
 function paceVisitaHueco(parada) {
   const el = parada && paceVisitaElemento(parada.sel);
   if (!el) return null;
-  const r = paceCaja(el);
+  let r = paceCaja(el);
+  const otra = parada.y && paceVisitaElemento(parada.y);
+  if (otra) {
+    const q = paceCaja(otra);
+    const izq = Math.min(r.left, q.left),arr = Math.min(r.top, q.top);
+    r = { left: izq, top: arr, width: Math.max(r.left + r.width, q.left + q.width) - izq, height: Math.max(r.top + r.height, q.top + q.height) - arr };
+  }
   if (parada.redonda) {
     const d = Math.max(r.width, r.height) + 12;
     return { left: r.left + r.width / 2 - d / 2, top: r.top + r.height / 2 - d / 2, width: d, height: d, radio: d / 2 };
@@ -54978,12 +54991,12 @@ function TopBar(_ref) {let { onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTw
 
 
     typeof PaceSobre === 'function' && React.createElement(PaceSobre, { estilo: topBarStyles.iconBtn }),
-    React.createElement("button", { "data-pace-topbar-icon": true, onClick: onOpenStats, style: topBarStyles.iconBtn, title: t('topbar.stats.title'), "aria-label": t('topbar.stats.aria') },
+    React.createElement("button", { "data-pace-topbar-icon": true, "data-pace-topbar-stats": true, onClick: onOpenStats, style: topBarStyles.iconBtn, title: t('topbar.stats.title'), "aria-label": t('topbar.stats.aria') },
     React.createElement("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.6", strokeLinecap: "round", strokeLinejoin: "round" },
     React.createElement("path", { d: "M3 3v18h18" }), React.createElement("path", { d: "M7 14l4-4 4 4 6-6" })
     )
     ),
-    React.createElement("button", { "data-pace-topbar-icon": true, onClick: () => window.dispatchEvent(new CustomEvent('pace:open-achievements')), style: topBarStyles.iconBtn, title: t('topbar.achievements.title'), "aria-label": t('topbar.achievements.aria') },
+    React.createElement("button", { "data-pace-topbar-icon": true, "data-pace-topbar-logros": true, onClick: () => window.dispatchEvent(new CustomEvent('pace:open-achievements')), style: topBarStyles.iconBtn, title: t('topbar.achievements.title'), "aria-label": t('topbar.achievements.aria') },
     React.createElement("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.6", strokeLinecap: "round", strokeLinejoin: "round" },
     React.createElement("circle", { cx: "12", cy: "9", r: "6" }), React.createElement("path", { d: "M8 14l-1 7 5-3 5 3-1-7" })
     )

@@ -17,12 +17,15 @@ const { test, expect } = require('@playwright/test');
 const { capturarErrores, sembrar, irAlArtefacto, RUTA_ARTEFACTO } = require('./helpers');
 
 const VISITA = '[role=dialog][data-pace-visita]';
+/* Lo que enseña cada parada; con dos piezas, el hueco las rodea a las dos. */
 const SITIO = {
-  aro: '[data-pace-dial-ring]',
-  act: '[data-pace-activitybar-grid]',
-  dia: '[data-pace-ritmo-tarjeta], [data-pace-ritmo-panel]',
-  ajustes: '[data-pace-topbar-ajustes]',
+  aro: ['[data-pace-dial-ring]'],
+  act: ['[data-pace-activitybar-grid]'],
+  dia: ['[data-pace-ritmo-tarjeta], [data-pace-ritmo-panel]'],
+  arriba: ['[data-pace-topbar-stats]', '[data-pace-topbar-logros]'],
+  ajustes: ['[data-pace-topbar-ajustes]'],
 };
+const ORDEN = ['dia', 'aro', 'act', 'arriba', 'ajustes'];
 
 async function hastaLaVisita(page) {
   await page.goto(RUTA_ARTEFACTO);   // sin sembrar: primera vez de la vida
@@ -49,11 +52,11 @@ async function medirParada(page) {
     const id = raiz.getAttribute('data-pace-visita');
     const t = document.querySelector('[data-pace-visita-tarjeta]').getBoundingClientRect();
     const h = document.querySelector('[data-pace-visita-hueco]').getBoundingClientRect();
-    const el = [...document.querySelectorAll(sitios[id])].find((e) => e.getBoundingClientRect().width > 0);
-    const r = el.getBoundingClientRect();
+    const cajas = sitios[id].map((sel) => [...document.querySelectorAll(sel)].find((e) => e.getBoundingClientRect().width > 0).getBoundingClientRect());
+    const r = cajas[0];
     const rodea = id === 'aro' || id === 'ajustes'
       ? Math.hypot(h.x + h.width / 2 - (r.x + r.width / 2), h.y + h.height / 2 - (r.y + r.height / 2)) < 2 && h.width >= Math.max(r.width, r.height)
-      : h.left <= r.left && h.top <= r.top && h.right >= r.right && h.bottom >= r.bottom;
+      : cajas.every((c) => h.left <= c.left && h.top <= c.top && h.right >= c.right && h.bottom >= c.bottom);
     return {
       id, rodea,
       meta: raiz.querySelector('.pace-meta').textContent,
@@ -70,14 +73,14 @@ for (const v of [{ width: 360, height: 640 }, { width: 360, height: 740 }, { wid
   test.describe('a ' + v.width + ' × ' + v.height, () => {
     test.use({ viewport: v });
 
-    test('al cerrar la bienvenida, la visita empieza por tu día y sigue por el aro, Actividades y Ajustes, y «Entendido» devuelve la home', async ({ page }) => {
+    test('al cerrar la bienvenida, la visita empieza por tu día y sigue por el aro, Actividades, Estadísticas y logros y Ajustes, y «Entendido» devuelve la home', async ({ page }) => {
       const errores = capturarErrores(page);
       await hastaLaVisita(page);
       const vistas = [];
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < ORDEN.length; i++) {
         const m = await medirParada(page);
         vistas.push(m.id);
-        expect(m.meta).toBe((i + 1) + ' de 4');
+        expect(m.meta).toBe((i + 1) + ' de ' + ORDEN.length);
         expect(m.rodea, 'el hueco de «' + m.titulo + '» no rodea lo que enseña').toBe(true);
         expect(m.dentro, 'la tarjeta de «' + m.titulo + '» se sale de la ventana').toBe(true);
         expect(m.pisa, 'la tarjeta de «' + m.titulo + '» tapa lo que enseña').toBe(false);
@@ -91,10 +94,15 @@ for (const v of [{ width: 360, height: 640 }, { width: 360, height: 740 }, { wid
           expect(m.texto).toContain('toca «Empezar foco»');
           expect(m.texto).toContain('Al acabar, PACE te propone una pausa corta: moverte, estirar o respirar.');
         }
-        await expect(page.locator('[data-pace-visita-siguiente]')).toHaveText(i === 3 ? 'Entendido' : 'Siguiente');
+        if (m.id === 'arriba') {
+          /* Los dos iconos de arriba no tienen nombre a la vista: la visita dice qué son. */
+          expect(m.titulo).toBe('Estadísticas y logros');
+          expect(m.texto).toContain('sin compararte con nadie');
+        }
+        await expect(page.locator('[data-pace-visita-siguiente]')).toHaveText(i === ORDEN.length - 1 ? 'Entendido' : 'Siguiente');
         await page.locator('[data-pace-visita-siguiente]').click();
       }
-      expect(vistas).toEqual(['dia', 'aro', 'act', 'ajustes']);
+      expect(vistas).toEqual(ORDEN);
       await expect(page.locator(VISITA)).toHaveCount(0);
 
       /* La home vuelve a ser de la persona: lo que hay en el centro de «Empezar foco» es el botón. */
@@ -142,14 +150,15 @@ test('desde Ajustes, «Visita guiada» la repite; una parada cuyo sitio no se ve
   await expect(page.locator('[data-pace-tweaks-panel]'), 'Ajustes se quedó abierto debajo de la visita').toHaveCount(0);
   await page.locator(VISITA).waitFor({ state: 'visible' });
 
+  const quedan = ORDEN.filter((id) => id !== 'act');
   const vistas = [];
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < quedan.length; i++) {
     const m = await medirParada(page);
     vistas.push(m.id);
-    expect(m.meta).toBe((i + 1) + ' de 3');
+    expect(m.meta).toBe((i + 1) + ' de ' + quedan.length);
     await page.locator('[data-pace-visita-siguiente]').click();
   }
-  expect(vistas).toEqual(['dia', 'aro', 'ajustes']);
+  expect(vistas).toEqual(quedan);
   await expect(page.locator(VISITA)).toHaveCount(0);
   expect(errores).toEqual([]);
 });
@@ -161,7 +170,7 @@ test.describe('en inglés', () => {
     await hastaLaVisita(page);
     const d = await medirParada(page);
     expect(d.titulo).toBe('Start with your day');
-    expect(d.meta).toBe('1 of 4');
+    expect(d.meta).toBe('1 of ' + ORDEN.length);
     expect(d.texto).toContain('Choose how long you work today');
     await page.locator('[data-pace-visita-siguiente]').click();
     const m = await medirParada(page);
