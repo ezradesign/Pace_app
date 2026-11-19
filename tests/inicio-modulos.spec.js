@@ -52,18 +52,17 @@ test('móvil: «Comienza» abre la pregunta entera, y «Hoy voy por libre» sigu
   expect((await leerRitmo(page)).pregunta).toBe('2026-10-22');
 });
 
-test('móvil: con tu semana guardada, la tarjeta dice tu día de siempre y «Comienza» lo abre contestado', async ({ page, context }) => {
+/* Desde la 2A de Ez (18 nov. 2026), «Preparar jornada» sirve tu día de siempre de un toque, sin la
+   pregunta en medio; «Hoy es distinto» va en la tarjeta (tests/ritmo-tarjeta-un-toque.spec.js). */
+test('móvil: con tu semana guardada, la tarjeta dice tu día de siempre y «Comienza» lo sirve', async ({ page, context }) => {
   await page.setViewportSize({ width: 360, height: 730 });
   await sembrar(context, { ritmo: { semanaTipo: SEMANA } });
   await page.clock.install({ time: JUEVES });
   await irAlArtefacto(page);
   await expect(vis(page, '[data-pace-activitybar-chip]')).toHaveCount(4);
   await expect(vis(page, '[data-pace-ritmo-tarjeta-titulo]')).toHaveText('Hoy, como cada jueves');
-  await expect(vis(page, '[data-pace-ritmo-tarjeta] .pace-rt-tm-nota')).toHaveText('Jornada entera, 9:00–17:00');
+  await expect(vis(page, '[data-pace-ritmo-tarjeta] .pace-rt-tm-nota')).toHaveText('Jornada enteraHoy es distinto');
   await vis(page, '[data-pace-ritmo-comienza]').click();
-  /* la pregunta llega con tu día de siempre ya contestado, listo para empezarlo */
-  await expect(vis(page, '[data-pace-ritmo-habitual-comienza]')).toHaveCount(1);
-  await vis(page, '[data-pace-ritmo-habitual-comienza]').click();
   await expect.poll(async () => ((await leerRitmo(page)).dia || {}).opcion).toBe('jornada');
 });
 
@@ -83,5 +82,5 @@ test('en inglés, con tu semana guardada, la tarjeta dice «Today, like every Th
   await page.clock.install({ time: JUEVES });
   await irAlArtefacto(page);
   await expect(vis(page, '[data-pace-ritmo-tarjeta-titulo]')).toHaveText('Today, like every Thursday');
-  await expect(vis(page, '[data-pace-ritmo-tarjeta] .pace-rt-tm-nota')).toHaveText('Full day, 9:00–17:00');
+  await expect(vis(page, '[data-pace-ritmo-tarjeta] .pace-rt-tm-nota')).toHaveText('Full dayToday is different');
 });

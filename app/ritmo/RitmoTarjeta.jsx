@@ -26,8 +26,8 @@
 
    DESDE LA 1A (Ez, 22 oct. 2026) TAMBIÉN SIN CONTESTAR: la home abre siempre con los módulos
    y esta tarjeta, y «Preparar jornada» abre la pregunta (ritmoAbrirPregunta). Con tu semana guardada
-   dice tu día de siempre («Hoy, como cada jueves · Jornada entera, 9:00–17:00») y el botón
-   abre ese día ya contestado, para empezarlo. */
+   dice tu día de siempre («Hoy, como cada jueves») y, desde la 2A de Ez (18 nov.), el botón lo
+   sirve de un toque, con «Hoy es distinto» al lado para pedir la pregunta solo por hoy. */
 
 /* El esquema: una jornada tipo (las paradas de «Jornada entera» con la comida en
    medio), sin horas ni etiquetas. Es un dibujo, no un plan: no lee el estado. Un
@@ -102,10 +102,19 @@ function RitmoTarjeta() {
           {/* El calendario al final del esquema, como «Ver todo» al final de la línea del día
               (Ez, 1A del 16 nov.): sin alto propio (RitmoCalendario.tarjeta.jsx). */}
           <div className="pace-rt-esq-fila"><RitmoEsquema /><RitmoCalendarioTarjeta corto /></div>
+          {/* CON TU SEMANA, UN TOQUE (Ez, 2A del 18 nov. 2026): «Preparar jornada» sirve tu día de
+              siempre, sin pasar por una pregunta con otro «Preparar jornada» igual; el horario se cambia
+              después con «Cambiar». «Hoy es distinto» va debajo de «Jornada entera», en el mismo alto
+              del pie: las horas no caben a su lado sin que la home pida scroll a 360 × 640. */}
           <div className="pace-rt-tm-pie">
-            <span className="pace-rt-tm-nota">{nota}</span>
+            {H ? (
+              <span className="pace-rt-tm-nota pace-rt-tm-nota-h">
+                <span>{t('ritmo.opcion.' + H.opcion)}</span>
+                <button type="button" className="pace-rt-enlace pace-rt-tm-distinto" data-pace-ritmo-distinto onClick={ritmoDistinto}>{t('ritmo.manana.distinto')}</button>
+              </span>
+            ) : <span className="pace-rt-tm-nota">{nota}</span>}
             {/* El botón mide 44 de alto para el dedo; la píldora que se ve, 34. */}
-            <button type="button" className="pace-rt-tm-comienza" data-pace-ritmo-comienza onClick={ritmoAbrirPregunta}>
+            <button type="button" className="pace-rt-tm-comienza" data-pace-ritmo-comienza onClick={H ? ritmoComenzarHabitual : ritmoAbrirPregunta}>
               <span className="pace-rt-tm-pildora">
                 {t('ritmo.tarjeta.comienza')}
                 <svg width="16" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

@@ -487,9 +487,9 @@
 .pace-rt-paso-ahora b { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 19px; }
 .pace-rt-paso-ahora span { font-family: var(--font-display); font-style: italic; font-size: 16px; color: var(--ink-2); }
 .pace-rt-paso-mas:focus-visible, .pace-rt-paso-hora:focus-visible, .pace-rt-paso-dejar:focus-visible, .pace-rt-paso-ahora:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
-/* EL DÍA YA CONTESTADO (RitmoManana.jsx). Escritorio: tu opción marcada y «Comienza» a la
-   derecha de las cuatro. Móvil: «· como cada martes» detrás del título, más pequeño, sin
-   partirse (si no cabe, baja entero), y el pie sin margen propio, porque la línea deja el suyo. */
+/* EL DÍA YA CONTESTADO (RitmoManana.jsx). Escritorio: tu opción marcada y «Comienza» a la derecha de las cuatro. Móvil: «· como cada martes»
+   detrás del título, sin partirse, y el pie sin margen propio. En la tarjeta corta, «Hoy es distinto» bajo tu opción, en el alto del pie (2A). */
+.pace-rt-tm-nota-h { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.2; } .pace-rt-tm-distinto { font-size: 14px; line-height: 17px; padding: 4px 0 !important; margin: -3px 0 -4px; background: none !important; border: none !important; cursor: pointer; }
 .pace-rt-habitual-fila { display: flex; align-items: flex-end; gap: 16px; }
 .pace-rt-habitual-fila .pace-rt-chips { flex: 1 1 auto; min-width: 0; }
 .pace-rt-chip.pace-rt-chip-tuyo { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; }

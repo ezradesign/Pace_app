@@ -112,8 +112,10 @@ for (const [ancho, alto] of [[1280, 720], [360, 718]]) {
     await irAlArtefacto(page);
     const vis = (sel) => page.locator(sel).filter({ visible: true });
     const comienza = vis('[data-pace-ritmo-comienza]');
+    /* En el móvil, «Preparar jornada» sirve el día de un toque (Ez, 2A del 18 nov. 2026); en el
+       ordenador, la loseta. */
     if (await comienza.count()) await comienza.first().click();
-    await vis('[data-pace-ritmo-habitual-comienza], [data-pace-ritmo-loseta="jornada"]').first().click();
+    else await vis('[data-pace-ritmo-loseta="jornada"]').first().click();
     await vis('[data-pace-cta]').first().click();
     await page.waitForTimeout(250);
     await terminarBloque(page);
