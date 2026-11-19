@@ -47,13 +47,13 @@ function PremiumTiendaRenueva({ mes }) {
 
 /* El pie: condiciones, privacidad y «Restaurar compras». `alRestaurar(r)` con lo encontrado. */
 function PremiumTiendaPie({ alRestaurar }) {
-  const { t, tn } = useT();
+  const { t, tn, lang } = useT();
   const [aviso, setAviso] = useStatePT(null);
   const [buscando, setBuscando] = useStatePT(false);
   const canal = premiumTiendaCanal();
   if (canal === 'web') return null;
   const tienda = t('premium.tienda.' + canal);
-  const privacidad = typeof paceNativoEnlace === 'function' ? paceNativoEnlace('/privacy') : '/privacy';
+  const privacidad = typeof paceEnlaceLegal === 'function' ? paceEnlaceLegal('/privacy', lang) : '/privacy';
   const restaurar = () => {
     if (buscando) return;
     setBuscando(true); setAviso(null);

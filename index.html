@@ -20747,11 +20747,18 @@ function paceNativoEnlace(ruta) {
   return paceEsNativo() ? PACE_WEB_PUBLICA + ruta : ruta;
 }
 
+
+
+
+function paceEnlaceLegal(ruta, lang) {
+  return paceNativoEnlace(lang === 'en' ? ruta + '#en' : ruta);
+}
+
 Object.assign(window, {
   pacePlataformaNativa, paceEsNativo, paceNativoPlugin, paceNativoAvisos, paceNativoAvisoPermiso,
-  paceNativoAvisoPedir, paceNativoFoco, paceNativoPausa, paceNativoTextosFin, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace
+  paceNativoAvisoPedir, paceNativoFoco, paceNativoPausa, paceNativoTextosFin, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace, paceEnlaceLegal
 });
-;Object.assign(window, { pacePlataformaNativa, paceEsNativo, paceNativoPlugin, paceNativoAvisos, paceNativoAvisoPermiso, paceNativoAvisoPedir, paceNativoFoco, paceNativoPausa, paceNativoTextosFin, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace });
+;Object.assign(window, { pacePlataformaNativa, paceEsNativo, paceNativoPlugin, paceNativoAvisos, paceNativoAvisoPermiso, paceNativoAvisoPedir, paceNativoFoco, paceNativoPausa, paceNativoTextosFin, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace, paceEnlaceLegal });
 })();
 </script>
   <script>
@@ -23080,7 +23087,7 @@ Object.assign(window, { SessionPrep, sessionPrepCopy });
 const { useState: useStateSF, useRef: useRefSF, useEffect: useEffectSF } = React;
 
 function SessionFeedback(_ref) {let { routineId, kind = 'move', accent = 'var(--move)' } = _ref;
-  const { t } = useT();
+  const { t, lang } = useT();
 
   const [shouldShow] = useStateSF(() => {
     try {return shouldPromptRoutineFeedback(routineId);} catch (e) {return false;}
@@ -23156,7 +23163,7 @@ function SessionFeedback(_ref) {let { routineId, kind = 'move', accent = 'var(--
   const dolor =
   React.createElement(React.Fragment, null,
   t('session.feedback.dolor'), ' ',
-  React.createElement("a", { href: typeof paceNativoEnlace === 'function' ? paceNativoEnlace('/safety') : '/safety', target: "_blank", rel: "noopener",
+  React.createElement("a", { href: typeof paceEnlaceLegal === 'function' ? paceEnlaceLegal('/safety', lang) : '/safety', target: "_blank", rel: "noopener",
     "data-pace-fb-seguridad": true, style: sessionFeedbackStyles.deshacer }, t('settings.legal.safety')), "."
   );
 
@@ -25667,13 +25674,13 @@ function PremiumTiendaRenueva(_ref) {let { mes } = _ref;
 
 
 function PremiumTiendaPie(_ref2) {let { alRestaurar } = _ref2;
-  const { t, tn } = useT();
+  const { t, tn, lang } = useT();
   const [aviso, setAviso] = useStatePT(null);
   const [buscando, setBuscando] = useStatePT(false);
   const canal = premiumTiendaCanal();
   if (canal === 'web') return null;
   const tienda = t('premium.tienda.' + canal);
-  const privacidad = typeof paceNativoEnlace === 'function' ? paceNativoEnlace('/privacy') : '/privacy';
+  const privacidad = typeof paceEnlaceLegal === 'function' ? paceEnlaceLegal('/privacy', lang) : '/privacy';
   const restaurar = () => {
     if (buscando) return;
     setBuscando(true);setAviso(null);
@@ -45149,10 +45156,6 @@ function paceBajarJSON(payload, nombre, alAbrir) {
   return 'descargada';
 }
 
-function paceEnlaceLegal(ruta) {
-  return typeof paceNativoEnlace === 'function' ? paceNativoEnlace(ruta) : ruta;
-}
-
 function paceDiaArchivo() {
   return toISODate(new Date()).replace(/-/g, '');
 }
@@ -45312,9 +45315,9 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
     React.createElement("span", null, t(typeof paceEsNativo === 'function' && paceEsNativo() ? 'settings.foot.app' : 'settings.foot')),
     isWeb &&
     React.createElement("span", null,
-    React.createElement("a", { href: paceEnlaceLegal('/safety'), target: "_blank", rel: "noopener" }, t('settings.legal.safety')),
+    React.createElement("a", { href: paceEnlaceLegal('/safety', lang), target: "_blank", rel: "noopener" }, t('settings.legal.safety')),
     React.createElement("span", { style: { margin: '0 5px' } }, "\xB7"),
-    React.createElement("a", { href: paceEnlaceLegal('/privacy'), target: "_blank", rel: "noopener" }, t('settings.legal.privacy'))
+    React.createElement("a", { href: paceEnlaceLegal('/privacy', lang), target: "_blank", rel: "noopener" }, t('settings.legal.privacy'))
     )
 
     )
@@ -45350,7 +45353,7 @@ function UploadIcon() {
 
 
 Object.assign(window, { TweaksDataSection, paceDescargarCopia, paceDescargarRescate });
-;Object.assign(window, { paceBajarJSON, paceEnlaceLegal, paceDiaArchivo, paceDescargarCopia, paceDescargarRescate, paceConLogroDeLaCopia, TweaksDataSection, DownloadIcon, UploadIcon });
+;Object.assign(window, { paceBajarJSON, paceDiaArchivo, paceDescargarCopia, paceDescargarRescate, paceConLogroDeLaCopia, TweaksDataSection, DownloadIcon, UploadIcon });
 })();
 </script>
   <script>

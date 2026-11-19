@@ -5,10 +5,12 @@
        idiomas, y 6 a 1280 × 720, y cortaba «Tus datos». Ahora lo dice la línea pequeña de la fila
        («Foco · bloqueados en este navegador»), que ya estaba y no suma altura. En las apps la nota
        sigue como era (la miden sus pruebas: android-avisos, android-nativo, ios-*).
+   5 · Con PACE en inglés, Privacidad y Seguridad abren en su parte en inglés (5A): `#en`, y arriba
+       de cada página un «English ↓».
 */
 'use strict';
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto } = require('./helpers');
+const { sembrar, irAlArtefacto, abrirTusDatos } = require('./helpers');
 
 const PANEL = '[data-pace-tweaks-panel]';
 const ABRIR = { es: 'Abrir ajustes', en: 'Open settings' };
@@ -54,3 +56,32 @@ test('4 · sin bloquear, la línea pequeña es la de siempre', async ({ page, co
   await abrirAjustes(page, 'es');
   await expect(page.locator(PANEL + ' [data-pace-aj-fila="notify"]')).toContainText('Foco · si la pestaña está detrás');
 });
+
+for (const lang of ['es', 'en']) {
+  test('5 · ' + lang + ': los enlaces a Privacidad y Seguridad van a la parte del idioma de PACE', async ({ page, context }) => {
+    await page.setViewportSize({ width: 360, height: 640 });
+    await sembrar(context, { lang });
+    await irAlArtefacto(page);
+    await abrirAjustes(page, lang);
+    await abrirTusDatos(page);
+    const pie = page.locator(PANEL + ' .pace-aj-pie');
+    const priv = await pie.getByRole('link', { name: lang === 'en' ? 'Privacy' : 'Privacidad' }).getAttribute('href');
+    const seg = await pie.getByRole('link', { name: lang === 'en' ? 'Safety' : 'Seguridad' }).getAttribute('href');
+    expect(priv).toBe(lang === 'en' ? '/privacy#en' : '/privacy');
+    expect(seg).toBe(lang === 'en' ? '/safety#en' : '/safety');
+  });
+}
+
+for (const pagina of ['privacy', 'safety']) {
+  test('5 · /' + pagina + '#en abre en inglés, y arriba hay un «English ↓» que lleva allí', async ({ page }) => {
+    await page.setViewportSize({ width: 360, height: 640 });
+    await page.goto('/' + pagina + '.html');
+    const salto = page.getByRole('link', { name: /English/ }).first();
+    await expect(salto).toBeInViewport();
+    await expect(salto).toHaveAttribute('href', '#en');
+    await expect(page.locator('#en')).toHaveAttribute('lang', 'en');
+    await page.goto('/' + pagina + '.html#en');
+    await expect(page.locator('#en h1')).toBeInViewport();
+    await expect(page.locator('#en h1')).toHaveText(pagina === 'privacy' ? 'Privacy' : 'Safety');
+  });
+}

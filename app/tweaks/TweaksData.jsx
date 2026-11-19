@@ -50,10 +50,6 @@ function paceBajarJSON(payload, nombre, alAbrir) {
   return 'descargada';
 }
 
-function paceEnlaceLegal(ruta) {
-  return typeof paceNativoEnlace === 'function' ? paceNativoEnlace(ruta) : ruta;
-}
-
 function paceDiaArchivo() {
   return toISODate(new Date()).replace(/-/g, ''); // local, no UTC (s105)
 }
@@ -213,9 +209,9 @@ function TweaksDataSection({ onReset, isWeb }) {
         <span>{t(typeof paceEsNativo === 'function' && paceEsNativo() ? 'settings.foot.app' : 'settings.foot')}</span>
         {isWeb && (
           <span>
-            <a href={paceEnlaceLegal('/safety')} target="_blank" rel="noopener">{t('settings.legal.safety')}</a>
+            <a href={paceEnlaceLegal('/safety', lang)} target="_blank" rel="noopener">{t('settings.legal.safety')}</a>
             <span style={{ margin: '0 5px' }}>·</span>
-            <a href={paceEnlaceLegal('/privacy')} target="_blank" rel="noopener">{t('settings.legal.privacy')}</a>
+            <a href={paceEnlaceLegal('/privacy', lang)} target="_blank" rel="noopener">{t('settings.legal.privacy')}</a>
           </span>
         )}
       </div>
