@@ -72,37 +72,25 @@
 .pace-rt-porlibre:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
 .pace-rt-pie { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
 .pace-rt-der { display: flex; gap: 14px; align-items: center; }
-/* La parte derecha de la cabecera del menú (escritorio, s195): el RESUMEN del día con
-   «Cambiar» y los chips con la píldora. Antes el resumen era un absoluto a 21 px sobre la
-   línea —la misma banda donde la etiqueta «AHORA» se ancla al bloque de ahora— y se
-   pisaban en cuanto el bloque actual caía en el último cuarto del día, en los nueve
-   viewports de escritorio medidos. En la cabecera no comparte banda con nada.
+/* La parte derecha de la cabecera del menú (escritorio): «Cambiar» y «Al calendario», y la
+   píldora «Hoy voy por libre». No van sobre la línea, donde «AHORA» se ancla al bloque de
+   ahora y se pisaban al final del día (s195). Sin el resumen del día ni la etiqueta del
+   material (Ez, encargo 3 del 19 nov. 2026): con ellos, la columna medía 246 px y la frase
+   de la jornada entera llegando tarde partía «a 20:00» a 1280 y 1366.
    Dos formas según lo ancho que sea el PANEL (container query, porque el panel cambia de
-   ancho también al plegar la barra lateral): con sitio, todo en la fila del título
-   (resumen · chips · píldora) y el panel no crece ni un píxel; sin sitio, dos filas a la
-   derecha, chips arriba y resumen debajo (+19 px). Medido en es: resumen 246 + 14 + chips
-   327 = 587 a la derecha; el título de «Una hora» llegando tarde mide 451 y el de la
-   jornada entera unos 400. El corte va en 1000 px de contenido: por encima, al título le
-   quedan al menos 397 y como mucho se parte en dos líneas (lo que cuesta lo mismo que la
-   columna); por debajo (1366 → 962, 1280 → 876, 1024 → 620) la fila del título ya no da
-   para las dos cosas. 1536×704 (1132) y 1440×789 (1036) van en fila. */
+   ancho también al plegar la barra lateral): con 1000 px o más, todo en la fila del título;
+   por debajo (1366 → 962, 1280 → 876, 1024 → 620), la píldora arriba y los enlaces debajo,
+   que deja más ancho a la frase. */
 .pace-rt-panel { container-type: inline-size; }
 .pace-rt-der-col { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
 .pace-rt-der-col .pace-rt-sobre { order: 2; }
 .pace-rt-sobre { display: flex; align-items: center; justify-content: flex-end; gap: 14px; }
-.pace-rt-sobre .pace-rt-meta { font-size: 9px; letter-spacing: 0.14em; }
 /* La línea de los lunes (ritmo.lunes.jsx): bajo el resumen y sin ancho propio, o el título se encoge (DECISIONES, 11 nov.). */
 .pace-rt-sobre:has(.pace-rt-lunes) { flex-wrap: wrap; row-gap: 2px; }
 .pace-rt-lunes { flex-basis: 100%; contain: inline-size; text-align: right; background: none; border: 0; padding: 0; margin: 0 0 0 -14px; font-family: var(--font-display); font-style: italic; font-size: 15px; color: var(--ink-2); cursor: pointer; white-space: nowrap; } .pace-rt-lunes:hover { color: var(--ink); }
 @container (min-width: 1000px) {
   .pace-rt-der-col { flex-direction: row; align-items: center; gap: 14px; }
   .pace-rt-der-col .pace-rt-sobre { order: 0; }
-  /* En la fila del título, «Sin material, a veces pared o mesa» (Ez, 3B del 30 oct.) va sola y en dos
-     líneas: junto a «Junto a la mesa» y en una línea se comía 126 px y el título de la jornada se
-     partía en dos o tres líneas a 1440, 1536 y 1920, con el panel 24 px más alto (medido). Ya dice
-     «mesa»; en las dos filas de debajo de 1000 y en la hoja del móvil van las dos, en una línea. */
-  .pace-rt-esc .pace-rt-ctx .pace-rt-ctx-mesa { display: none; }
-  .pace-rt-esc .pace-rt-ctx .pace-rt-ctx-material { white-space: normal; max-width: 13em; text-align: center; line-height: 1.15; padding: 2px 9px; }
 }
 
 /* LAS OPCIONES */
@@ -115,10 +103,6 @@
 .pace-rt-chip b { display: block; font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 16px; color: var(--ink); line-height: 1.1; }
 .pace-rt-chip > span { display: block; font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--ink-2); margin-top: 4px; }   /* s195c: la hora en itálica, como en la tarjeta por libre */
 
-/* EL CONTEXTO (fijo por ahora: el onboarding contextual es la Fase 8) */
-.pace-rt-ctx { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
-.pace-rt-ctx span { font-size: 10px; letter-spacing: 0.08em; color: var(--ink-2); border: 1px solid var(--line);
-  border-radius: var(--r-pill); padding: 3px 9px; white-space: nowrap; }
 
 /* EL HORARIO se edita dentro de la frase: un botón con aspecto de texto subrayado que abre
    su paso a paso (RitmoHoraPaso); el <select> de los bloques y del calendario lleva la misma
@@ -487,9 +471,9 @@
 .pace-rt-paso-ahora b { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 19px; }
 .pace-rt-paso-ahora span { font-family: var(--font-display); font-style: italic; font-size: 16px; color: var(--ink-2); }
 .pace-rt-paso-mas:focus-visible, .pace-rt-paso-hora:focus-visible, .pace-rt-paso-dejar:focus-visible, .pace-rt-paso-ahora:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
-/* EL DÍA YA CONTESTADO (RitmoManana.jsx). Escritorio: tu opción marcada y «Comienza» a la
-   derecha de las cuatro. Móvil: «· como cada martes» detrás del título, más pequeño, sin
-   partirse (si no cabe, baja entero), y el pie sin margen propio, porque la línea deja el suyo. */
+/* EL DÍA YA CONTESTADO (RitmoManana.jsx). Escritorio: tu opción marcada y «Comienza» a la derecha de las cuatro. Móvil: «· como cada martes»
+   detrás del título, sin partirse, y el pie sin margen propio. En la tarjeta corta, «Hoy es distinto» bajo tu opción, en el alto del pie (2A). */
+.pace-rt-tm-nota-h { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.2; } .pace-rt-tm-distinto { font-size: 14px; line-height: 17px; padding: 4px 0 !important; margin: -3px 0 -4px; background: none !important; border: none !important; cursor: pointer; }
 .pace-rt-habitual-fila { display: flex; align-items: flex-end; gap: 16px; }
 .pace-rt-habitual-fila .pace-rt-chips { flex: 1 1 auto; min-width: 0; }
 .pace-rt-chip.pace-rt-chip-tuyo { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; }

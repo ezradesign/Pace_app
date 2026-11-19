@@ -5,7 +5,7 @@
 
      · LA PREGUNTA — «¿Cuánto trabajas hoy?», la frase del horario con sus cuatro
        horas editables y las cuatro opciones, cada una con su hora de fin.
-     · EL MENÚ SERVIDO — escritorio: título + frase + contexto, y la línea del
+     · EL MENÚ SERVIDO — escritorio: título y frase en una línea, «Cambiar», «Al calendario» y la píldora, y la línea del
        día. Móvil: «Ahora» y «Luego» con sus glifos, la línea con puntos y la
        jornada entera en una hoja. s193: con la PAUSA ABIERTA (plan.pausa),
        «Ahora» es la parada y «Luego» el bloque que viene. Sin frase de ayuda
@@ -22,16 +22,6 @@ const { useState: useStateRP, useLayoutEffect: useLayoutEffectRP } = React;
 
 var RITMO_OPCIONES_UI = ['1h', '2h', 'media', 'jornada'];
 
-function RitmoContexto() {
-  const { t } = useT();
-  return (
-    <div className="pace-rt-ctx">
-      <span className="pace-rt-ctx-mesa">{t('ritmo.ctx.mesa')}</span>
-      <span className="pace-rt-ctx-material">{t('ritmo.ctx.material')}</span>
-    </div>
-  );
-}
-
 /* «Hoy voy por libre» es la ÚNICA salida del menú, y el usuario pidió que destacara más
    (s194). Variante E, elegida mirándola entre cinco: una píldora en verde —el lenguaje de
    los chips de contexto— que en escritorio vive en la CABECERA junto al contexto, no en la
@@ -43,16 +33,16 @@ function RitmoLibre({ enlace }) {
   return <button className={enlace ? 'pace-rt-enlace pace-rt-fuerte' : 'pace-rt-porlibre'} data-pace-ritmo-libre onClick={ritmoPorLibre}>{t('ritmo.libre')}</button>;
 }
 
-/* El resumen del día («6 h 10 min de foco · 7 pausas · 8 vasos») con «Cambiar». s195: vive
-   en la CABECERA —en la fila del título si el panel es ancho, bajo los chips si no (la
-   hoja decide con una container query)— y no sobre la línea: allí compartía banda con la
-   etiqueta «AHORA» y se pisaban al final del día (medido en nueve viewports de escritorio). */
-function RitmoSobre({ m }) {
-  const { t, tn } = useT();
-  const [st] = usePace();
+/* «Cambiar» y «Al calendario» en la CABECERA del ordenador: en la fila del título si el panel es
+   ancho, bajo «Hoy voy por libre» si no (la hoja decide con una container query), y no sobre la
+   línea, donde se pisaban con «AHORA» al final del día (s195). Sin el resumen del día («4 h 45 min
+   de foco · 6 pausas · 5 de 8 vasos») ni la etiqueta «Sin material, a veces pared o mesa»: Ez los
+   quitó para que la tarjeta sea mucho más limpia (encargo 3, 19 nov. 2026), y con ese sitio la
+   frase del día cabe en una línea. Los dos siguen en «Ver todo» del móvil (RitmoHoja). */
+function RitmoSobre() {
+  const { t } = useT();
   return (
     <div className="pace-rt-sobre" data-pace-ritmo-resumen>
-      <span className="pace-rt-meta">{ritmoResumen(m, tn, ritmoMetaVasos(st))}</span>
       <button className="pace-rt-enlace" onClick={ritmoPreguntar}>{t('ritmo.cambiar')}</button>
       <RitmoAlCalendario />
       {typeof RitmoLunes === 'function' ? <RitmoLunes /> : null}
@@ -137,7 +127,7 @@ function RitmoPregunta({ state }) {
       <div className="pace-rt-panel pace-rt-esc" data-pace-ritmo-estado="pregunta">
         <div className="pace-rt-cab">
           <div>
-            <div className="pace-rt-titulo">{H ? tn('ritmo.manana.titulo', { dia }) : t('ritmo.pregunta')}</div>
+            <div className="pace-rt-titulo">{H ? ritmoTituloHabitual(state, H.diaSemana, t, tn) : t('ritmo.pregunta')}</div>
             {H ? null : <div className="pace-rt-sub">{t('ritmo.sub')}</div>}
             <div className="pace-rt-sub pace-rt-frase">{frase}</div>
             <div className="pace-rt-sub pace-rt-frase" data-pace-ritmo-frase-media>{fraseMedia}</div>
@@ -248,8 +238,8 @@ function RitmoEscritorio({ state, plan }) {
           </span>
         </div>
         <div className="pace-rt-der-col">
-          <RitmoSobre m={plan.m} />
-          <div className="pace-rt-der"><RitmoContexto /><RitmoLibre /></div>
+          <RitmoSobre />
+          <div className="pace-rt-der"><RitmoLibre /></div>
         </div>
       </div>
       <RitmoLinea plan={plan} />
@@ -257,7 +247,9 @@ function RitmoEscritorio({ state, plan }) {
   );
 }
 
-function RitmoFila({ rotulo, modulo, nombre, meta, claves, luego }) {
+/* `hecha`: la pausa de ahora ya está hecha. Dice «hecha» en vez de ofrecer «Otra», que la hacía
+   parecer pendiente (Ez, 10A del 18 nov. 2026). */
+function RitmoFila({ rotulo, modulo, nombre, meta, claves, luego, hecha }) {
   const { t } = useT();
   return (
     <div className="pace-rt-fila" data-pace-ritmo-luego={luego ? '' : undefined}>
@@ -266,7 +258,8 @@ function RitmoFila({ rotulo, modulo, nombre, meta, claves, luego }) {
         <div className="pace-rt-n"><RitmoGlifo modulo={modulo} />{nombre}</div>
         <div className="pace-rt-m">{meta}</div>
       </div>
-      {claves
+      {hecha ? <span className="pace-rt-sub" data-pace-ritmo-hecha>{t('ritmo.hecha')}</span>
+        : claves
         ? <button type="button" className="pace-rt-otra" data-pace-ritmo-otra onClick={() => ritmoOtra(claves)}>{t('ritmo.otra')}</button>
         : <span />}
     </div>
@@ -275,7 +268,7 @@ function RitmoFila({ rotulo, modulo, nombre, meta, claves, luego }) {
 
 /* La fila de una parada (pausa o comida) con su rótulo («Ahora» o «Luego»). `corta`:
    en el móvil, la meta sin el nombre del módulo (ritmoMetaPlato). */
-function RitmoFilaParada({ it, rotulo, corta }) {
+function RitmoFilaParada({ it, rotulo, corta, hecha }) {
   const { t, tn, lang } = useT();
   const cab = <React.Fragment>{t(rotulo)}<br />{ritmoHora(it.desde)}</React.Fragment>;
   const luego = rotulo === 'ritmo.luego';
@@ -288,7 +281,7 @@ function RitmoFilaParada({ it, rotulo, corta }) {
   if (!it.platos || !it.platos.length) return null;
   return <RitmoFila rotulo={cab} luego={luego} modulo={it.platos[0].modulo} nombre={ritmoPlatos(it, t, lang)}
     meta={<RitmoMetaGota texto={ritmoMetaPlato(it, t, tn, corta)} agua={it.agua} />}
-    claves={it.platos.map((p) => p.clave)} />;
+    claves={it.platos.map((p) => p.clave)} hecha={hecha} />;
 }
 
 function RitmoMovil({ state, plan, onVer }) {
@@ -317,7 +310,8 @@ function RitmoMovil({ state, plan, onVer }) {
     if (typeof window.paceHomeGeometriaYa === 'function') window.paceHomeGeometriaYa();
   }, [conPausa, !!luego, plan.hechos, plan.m.opcion]);
   const filas = conPausa
-    ? <React.Fragment><RitmoFilaParada it={plan.pausa} rotulo="ritmo.ahora" corta />{b ? filaBloque('ritmo.luego') : null}</React.Fragment>
+    ? <React.Fragment><RitmoFilaParada it={plan.pausa} rotulo="ritmo.ahora" corta
+        hecha={(plan.estados || {})[ritmoOrdinal(plan.m, plan.pausa)] === 'hecha'} />{b ? filaBloque('ritmo.luego') : null}</React.Fragment>
     : <React.Fragment>{filaBloque('ritmo.ahora')}{luego ? <RitmoFilaParada it={luego} rotulo="ritmo.luego" corta /> : null}</React.Fragment>;
   return (
     <div className="pace-rt-panel pace-rt-mov" data-pace-ritmo-estado="menu">
@@ -357,8 +351,9 @@ function RitmoHecho({ plan }) {
           )}
         </div>
         <div className="pace-rt-der">
+          {/* Sin «Hoy voy por libre»: con la jornada cerrada ya está «Seguir por libre» en el aro, y eran dos
+              botones casi iguales (Ez, 5A del 18 nov. 2026). */}
           <button className="pace-rt-enlace" onClick={ritmoPreguntar}>{t('ritmo.cambiar')}</button>
-          <RitmoLibre />
         </div>
       </div>
     </div>
@@ -366,6 +361,6 @@ function RitmoHecho({ plan }) {
 }
 
 Object.assign(window, {
-  RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub,
+  RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub,
   RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho,
 });

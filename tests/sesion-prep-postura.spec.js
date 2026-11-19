@@ -67,6 +67,7 @@ test('Mueve · «Levántate y sube», que es de pie, sigue diciendo «De pie»',
   const errores = capturarErrores(page);
   await irAlArtefacto(page);
   const frase = await abrirPreparacion(page, 'Mueve', 'Levántate y sube');
-  await expect(frase).toHaveText('De pie. Sin prisa. 7 pasos.');
+  /* 4 ejercicios y 3 descansos: los pasos son los ejercicios, como en el cierre (recorrido de tester, 18 nov.). */
+  await expect(frase).toHaveText('De pie. Sin prisa. 4 pasos.');
   expect(errores).toEqual([]);
 });

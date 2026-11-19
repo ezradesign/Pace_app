@@ -69,7 +69,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'breathe.co2.name':                    'CO₂ Tolerance',
   'breathe.co2.desc':                    'Exhale and hold with empty lungs. Breathe in whenever you need to.',
   'breathe.co2.code':                    'Balance',
-  'breathe.coherent.432.name':           'Coherent 432',
+  'breathe.coherent.432.name':           'Coherent 432 Hz',
   'breathe.coherent.432.desc':           'Coherence 6·6 over a background drone. Immersive.',
   'breathe.coherent.432.code':           'Coherence',
   'breathe.exhale.46.name':              'Exhale 4·6',

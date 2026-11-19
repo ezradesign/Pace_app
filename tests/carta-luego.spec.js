@@ -64,7 +64,7 @@ test('la × la deja para luego: no aplica ni rechaza nada, y espera en el sobre 
   /* El sobre la abre igual, con los mismos cambios; «Vale» los aplica y el sobre se abre. */
   await sobre.click();
   await expect(carta).toBeVisible();
-  await expect(page.locator('[data-pace-carta-cambio="descansa"]')).toHaveText('Gemelos subrepticios, que cambiaste cuatro veces, descansa un mes.');
+  await expect(page.locator('[data-pace-carta-cambio="descansa"]')).toHaveText('Gemelos bajo la mesa, que cambiaste cuatro veces, descansa un mes.');
   await expect(page.locator('[data-pace-carta-cambio="corta"]')).toHaveText('La pausa de las 15:45, que saltaste tres días, pasa a ser de 2 minutos.');
   await page.locator('[data-pace-carta-si]').click();
   await expect(carta).toHaveCount(0);

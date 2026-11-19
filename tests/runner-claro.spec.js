@@ -34,10 +34,7 @@ async function abrirRutina(page, biblioteca, id) {
 const fase = (page) => page.locator('[data-pace-v1-raiz]').getAttribute('data-pace-v1-fase');
 const nombre = async (page) => (await page.locator('[data-pace-v1-name]').textContent()).trim();
 const flecha = (page) => page.locator('[data-pace-v1-btn="next"]');
-const pasoActual = async (page) => {
-  const m = (await page.getByText(/^(Paso|Step) \d+ (de|of) \d+$/).first().textContent()).match(/(?:Paso|Step) (\d+)/);
-  return +m[1] - 1;
-};
+const pasoActual = async (page) => +(await page.locator('[data-pace-v1-raiz]').getAttribute('data-pace-v1-paso'));   /* el índice, descansos incluidos: la cabecera solo cuenta ejercicios (6A) */
 async function hasta(page, cond, maxSeg) {
   for (let i = 0; i < (maxSeg || 120); i++) { if (await cond()) return true; await page.clock.runFor(1000); }
   return cond();

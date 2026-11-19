@@ -78,7 +78,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'break.ritmo.sub':               '{h} · What comes next.',
     'break.ritmo.hacer':             'Take the break',
     'break.ritmo.seguir':            'Continue to block {n}',
-    'break.ritmo.cuenta':            'I did it my own way',
+    'break.ritmo.cuenta':            'I already did one',   /* sonaba a canción (Ez, 9A del 18 nov.) */
     'break.ritmo.agua':              'and a glass of water',
     'break.ritmo.vaso':              'a glass now',
     'break.antes':                   'your last one, {n} min',

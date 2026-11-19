@@ -1,0 +1,87 @@
+{"cmd":"abrir","t":"2026-11-24T17:40:00+01:00","perfil":"stats","limpio":true,"estado":{"firstSeen":1,"lang":"es","langAuto":false,"palette":"crema","novedadesVistas":"*","copiaAvisoVisto":"*","soundOn":false,"_historyMigrated":true,"achievements":{"first.step":{"unlockedAt":1}},"cycle":2,"lastActiveDay":"Tue Nov 24 2026","ritmo":{"dia":{"fecha":"2026-11-24","opcion":"jornada","desde":540,"cicloBase":0,"cambios":{},"estados":{"1":"cuenta","2":"hecha"},"platos":{"2":["move.desk.quick"]}}}}}
+{"cmd":"toca","nombre":"Ver estadísticas","espera":1200}
+{"cmd":"foto","n":"stats-hoy"}
+{"cmd":"js","code":"[...document.querySelectorAll(`[data-pace-hoy-parada]`)].map(c=>c.dataset.paceHoyParada+` | `+c.innerText.replace(/\n/g,` · `))"}
+{"cmd":"espera","ms":1500}
+{"cmd":"toca","nombre":"Ver estadísticas","espera":1200,"force":true}
+{"cmd":"foto","n":"stats-hoy"}
+{"cmd":"js","code":"[...document.querySelectorAll(`[data-pace-hoy-parada]`)].map(c=>c.dataset.paceHoyParada+` | `+c.innerText.split(String.fromCharCode(10)).join(` · `))"}
+{"cmd":"js","code":"[(localStorage.getItem(`pace.state.v2`)||``).slice(0,200), sessionStorage.getItem(`__sembrado`), Object.keys(localStorage).join(`,`)]"}
+{"cmd":"abrir","t":"2026-11-24T17:40:00+01:00","perfil":"stats","limpio":true,"semilla":{"firstSeen":1,"lang":"es","langAuto":false,"palette":"crema","novedadesVistas":"*","copiaAvisoVisto":"*","soundOn":false,"_historyMigrated":true,"achievements":{"first.step":{"unlockedAt":1}},"cycle":2,"lastActiveDay":"Tue Nov 24 2026","ritmo":{"dia":{"fecha":"2026-11-24","opcion":"jornada","desde":540,"cicloBase":0,"cambios":{},"estados":{"1":"cuenta","2":"hecha"},"platos":{"2":["move.desk.quick"]}}}}}
+{"cmd":"espera","ms":1500}
+{"cmd":"toca","nombre":"Ver estadísticas","espera":1200,"force":true}
+{"cmd":"foto","n":"stats-hoy"}
+{"cmd":"js","code":"[...document.querySelectorAll(`[data-pace-hoy-parada]`)].map(c=>c.dataset.paceHoyParada+` | `+c.innerText.split(String.fromCharCode(10)).join(` · `))"}
+{"cmd":"js","code":"[...document.querySelectorAll(`[data-pace-hoy-parada=pasada] .pace-sh-m`)].forEach(m=>{const h=m.querySelector(`.pace-sh-h`).textContent; m.innerHTML=`<span class=pace-sh-h>`+h+`</span> · no hecha`}); 1"}
+{"cmd":"foto","n":"stats-a"}
+{"cmd":"js","code":"[...document.querySelectorAll(`[data-pace-hoy-parada=pasada] .pace-sh-m`)].forEach(m=>{const h=m.querySelector(`.pace-sh-h`).textContent; m.innerHTML=`<span class=pace-sh-h>`+h+`</span>`; m.closest(`[data-pace-hoy-parada]`).style.opacity=0.45}); 1"}
+{"cmd":"foto","n":"stats-b"}
+{"cmd":"abrir","t":"2026-11-24T12:20:00+01:00","perfil":"pt","limpio":true,"semilla":{"firstSeen":1,"lang":"es","langAuto":false,"palette":"crema","novedadesVistas":"*","copiaAvisoVisto":"*","soundOn":false,"_historyMigrated":true,"achievements":{"first.step":{"unlockedAt":1}},"cycle":1,"lastActiveDay":"Tue Nov 24 2026","ritmo":{"dia":{"fecha":"2026-11-24","opcion":"jornada","desde":540,"cicloBase":0,"cambios":{},"pausa":1}}}}
+{"cmd":"espera","ms":1500}
+{"cmd":"foto","n":"pt-hoy"}
+{"cmd":"js","code":"document.querySelector(`[data-pace-dial-subtitle]`).innerText"}
+{"cmd":"js","code":"document.querySelectorAll(`[data-pace-dial-subtitle]`).forEach(e=>e.textContent=`Trabajo en profundidad`); 1"}
+{"cmd":"foto","n":"pt-a"}
+{"cmd":"js","code":"document.querySelectorAll(`[data-pace-dial-subtitle]`).forEach(e=>e.textContent=`Pausa terminada a las 9:50`); 1"}
+{"cmd":"foto","n":"pt-b"}
+{"cmd":"abrir","t":"2026-11-24T17:40:00+01:00","perfil":"jc","limpio":true,"semilla":{"firstSeen":1,"lang":"es","langAuto":false,"palette":"crema","novedadesVistas":"*","copiaAvisoVisto":"*","soundOn":false,"_historyMigrated":true,"achievements":{"first.step":{"unlockedAt":1}},"cycle":2,"lastActiveDay":"Tue Nov 24 2026","ritmo":{"dia":{"fecha":"2026-11-24","opcion":"jornada","desde":540,"cicloBase":0,"cambios":{},"estados":{"1":"hecha"}}}}}
+{"cmd":"espera","ms":1500}
+{"cmd":"foto","n":"jc-hoy"}
+{"cmd":"botones"}
+{"cmd":"js","code":"(()=>{const b=[...document.querySelectorAll(`button`)].find(x=>x.innerText.trim()===`HOY VOY POR LIBRE`&&x.getClientRects().length); b.style.visibility=`hidden`; return 1})()"}
+{"cmd":"foto","n":"jc-a"}
+{"cmd":"js","code":"(()=>{const b=[...document.querySelectorAll(`button`)].find(x=>x.innerText.trim()===`HOY VOY POR LIBRE`); b.style.visibility=`visible`; const c=[...document.querySelectorAll(`button`)].find(x=>x.innerText.trim()===`Seguir por libre`&&x.getClientRects().length); c.style.visibility=`hidden`; return 1})()"}
+{"cmd":"foto","n":"jc-b"}
+{"cmd":"js","code":"(()=>{const b=[...document.querySelectorAll(`button`)].find(x=>x.textContent.trim().toUpperCase()===`HOY VOY POR LIBRE`&&x.getClientRects().length); b.style.visibility=`visible`; const c=[...document.querySelectorAll(`button`)].find(x=>x.textContent.trim()===`Seguir por libre`&&x.getClientRects().length); c.style.visibility=`hidden`; return 1})()"}
+{"cmd":"foto","n":"jc-b"}
+{"cmd":"abrir","t":"2026-11-23T08:55:00+01:00","perfil":"hom","limpio":true,"semilla":{"firstSeen":1,"lang":"es","langAuto":false,"palette":"crema","novedadesVistas":"*","copiaAvisoVisto":"*","soundOn":false,"_historyMigrated":true,"achievements":{"first.step":{"unlockedAt":1}},"cycle":0,"lastActiveDay":"Mon Nov 23 2026","ritmo":{"dia":{"fecha":"2026-11-23","opcion":"jornada","desde":540,"cicloBase":0,"cambios":{}}}}}
+{"cmd":"espera","ms":1500}
+{"cmd":"foto","n":"hom-hoy"}
+{"cmd":"js","code":"[...document.querySelectorAll(`*`)].filter(e=>e.children.length===0&&/sin mover hoy/.test(e.textContent)).map(e=>e.tagName+`|`+e.textContent)"}
+{"cmd":"js","code":"(()=>{const e=[...document.querySelectorAll(`div`)].find(x=>x.children.length===0&&x.dataset.maq!==undefined||x.children.length===0&&/sin mover hoy$/.test(x.textContent)); e.dataset.maq=1; e.textContent=`2 min · Hombros: aún sin mover hoy`; return e.textContent})()"}
+{"cmd":"foto","n":"hom-a"}
+{"cmd":"js","code":"(()=>{const e=[...document.querySelectorAll(`div`)].find(x=>x.children.length===0&&x.dataset.maq!==undefined||x.children.length===0&&/sin mover hoy$/.test(x.textContent)); e.dataset.maq=1; e.textContent=`2 min · Para los hombros, que aún no has movido`; return e.textContent})()"}
+{"cmd":"foto","n":"hom-b"}
+{"cmd":"js","code":"(()=>{const l=[...document.querySelectorAll(`div,span`)].filter(x=>x.children.length===0&&x.textContent.trim()===`Empuje sencillo`&&x.getClientRects().length); l.forEach(x=>x.textContent=`Piernas sin pasos`); const e=document.querySelector(`[data-maq]`); e.textContent=`3 min · Piernas: ayer no las moviste`; return l.length})()"}
+{"cmd":"foto","n":"ayer-a"}
+{"cmd":"js","code":"(()=>{const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n,c=0;while(n=w.nextNode()){if(n.nodeValue.trim()===`Empuje sencillo`&&n.parentElement.getClientRects().length){n.nodeValue=n.nodeValue.replace(`Empuje sencillo`,`Piernas sin pasos`);c++}}return c})()"}
+{"cmd":"foto","n":"ayer-a"}
+{"cmd":"abrir","t":"2026-11-23T09:38:00+01:00","perfil":"hom"}
+{"cmd":"espera","ms":1200}
+{"cmd":"js","code":"[`first.step`,`first.extra`,`first.sip`].forEach(id=>showToast({id,type:`achievement`})); 1"}
+{"cmd":"espera","ms":900}
+{"cmd":"foto","n":"sello-hoy"}
+{"cmd":"js","code":"(()=>{const s=document.querySelector(`[data-pace-sello-texto]`); s.innerHTML=`3 sellos nuevos · Primer paso y dos más`; return s.textContent})()"}
+{"cmd":"foto","n":"sello-a"}
+{"cmd":"js","code":"(()=>{document.querySelector(`[data-pace-sello-aro]`).style.visibility=`hidden`; document.querySelectorAll(`[data-pace-dial-subtitle]`).forEach(e=>e.style.visibility=`visible`); const b=document.querySelector(`[aria-label=\"Ver logros\"]`); b.style.position=`relative`; const d=document.createElement(`i`); d.style.cssText=`position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--achievement-deep)`; b.appendChild(d); return 1})()"}
+{"cmd":"foto","n":"sello-c"}
+{"cmd":"abrir","t":"2026-11-23T11:20:00+01:00","perfil":"run","limpio":true,"semilla":{"firstSeen":1,"lang":"es","langAuto":false,"palette":"crema","novedadesVistas":"*","copiaAvisoVisto":"*","soundOn":false,"_historyMigrated":true,"achievements":{"first.step":{"unlockedAt":1}},"ritmo":{"libre":true}}}
+{"cmd":"espera","ms":1200}
+{"cmd":"toca","nombre":"^Estira","force":true,"espera":1200}
+{"cmd":"toca","rol":"heading","nombre":"^Espalda de pie$","force":true,"espera":1200}
+{"cmd":"toca","nombre":"^Empezar$","n":-1,"force":true,"espera":1200}
+{"cmd":"foto","n":"run-prep"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Empezar ahora","force":true,"espera":1500}
+{"cmd":"foto","n":"run-hoy"}
+{"cmd":"texto"}
+{"cmd":"texto"}
+{"cmd":"js","code":"(()=>{const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n,o=[];while(n=w.nextNode()){if(/PASO|Paso/.test(n.nodeValue))o.push(n.nodeValue)}return o})()"}
+{"cmd":"js","code":"(()=>{const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n,c=0;while(n=w.nextNode()){if(n.nodeValue===`Paso 1 de 5`){n.nodeValue=`Paso 1 de 4`;c++}}return c})()"}
+{"cmd":"foto","n":"run-a"}
+{"cmd":"abrir","t":"2026-11-24T17:40:00+01:00","perfil":"n1","limpio":true,"semilla":{"firstSeen":1,"lang":"es","langAuto":false,"palette":"crema","novedadesVistas":"*","copiaAvisoVisto":"*","soundOn":false,"_historyMigrated":true,"achievements":{"first.step":{"unlockedAt":1}},"cycle":2,"lastActiveDay":"Tue Nov 24 2026","ritmo":{"dia":{"fecha":"2026-11-24","opcion":"jornada","desde":540,"cicloBase":0,"cambios":{},"estados":{"1":"cuenta","2":"hecha"},"platos":{"2":["move.desk.quick"]}}}}}
+{"cmd":"espera","ms":1500}
+{"cmd":"foto","n":"nuevo-jornada-cerrada"}
+{"cmd":"toca","nombre":"Ver estadísticas","espera":1200,"force":true}
+{"cmd":"foto","n":"nuevo-stats"}
+{"cmd":"abrir","t":"2026-11-23T08:55:00+01:00","perfil":"n2","limpio":true,"semilla":{"firstSeen":1,"lang":"es","langAuto":false,"palette":"crema","novedadesVistas":"*","copiaAvisoVisto":"*","soundOn":false,"_historyMigrated":true,"achievements":{"first.step":{"unlockedAt":1}},"cycle":0,"lastActiveDay":"Mon Nov 23 2026","ritmo":{"dia":{"fecha":"2026-11-23","opcion":"jornada","desde":540,"cicloBase":0,"cambios":{}}}}}
+{"cmd":"espera","ms":1500}
+{"cmd":"foto","n":"nuevo-aun-sin-mover"}
+{"cmd":"abrir","t":"2026-11-23T11:20:00+01:00","perfil":"n3","limpio":true,"semilla":{"firstSeen":1,"lang":"es","langAuto":false,"palette":"crema","novedadesVistas":"*","copiaAvisoVisto":"*","soundOn":false,"_historyMigrated":true,"achievements":{"first.step":{"unlockedAt":1}},"ritmo":{"libre":true}}}
+{"cmd":"espera","ms":1200}
+{"cmd":"toca","nombre":"^Estira","force":true,"espera":1200}
+{"cmd":"toca","rol":"heading","nombre":"^Espalda de pie$","force":true,"espera":1200}
+{"cmd":"toca","nombre":"^Empezar$","n":-1,"force":true,"espera":1200}
+{"cmd":"toca","nombre":"Empezar ahora","force":true,"espera":1500}
+{"cmd":"foto","n":"nuevo-runner"}
+{"cmd":"cerrar"}

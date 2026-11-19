@@ -96,6 +96,8 @@ function ritmoGuardarSemana(tipo, cambios) {
   if (typeof ritmoFijarLoHecho === 'function') ritmoFijarLoHecho();   /* lo hecho no se recompone (state-ritmo.recolocar.jsx) */
   ritmoGuardar(function (r) {
     var c = { semanaTipo: Array.isArray(tipo) ? tipo.slice(0, 7) : null };
+    /* El día en que se guardó por primera vez, para no decir «como cada lunes» sin lunes de antes. */
+    if (c.semanaTipo && !r.semanaDesde) c.semanaDesde = ritmoHoy();
     if (tocadas.length) {
       var R = ritmoDe(getState());
       var h = Object.assign({}, r.horario || {});
@@ -140,6 +142,19 @@ function ritmoAbrirPregunta() {
   ritmoGuardar(function () { return { pregunta: ritmoHoy() }; });
 }
 
+/* «HOY, LUNES» LA PRIMERA SEMANA (Ez, 10A del 18 nov. 2026): «Hoy, como cada lunes» el mismo lunes
+   en que guardaste la semana no era verdad. Hasta siete días después de guardarla, «Hoy, lunes»;
+   después, «como cada». Sin `semanaDesde` (guardada antes de esto), como siempre. `fecha` es la
+   del día que se nombra (el aviso de entrada habla de días que vienen). */
+function ritmoPrimeraSemana(s, fecha) {
+  var desde = s && s.ritmo && s.ritmo.semanaDesde;
+  var hace = desde && typeof ritmoDiasEntre === 'function' ? ritmoDiasEntre(desde, fecha || ritmoHoy()) : null;
+  return hace != null && hace < 7;
+}
+function ritmoTituloHabitual(s, diaSemana, t, tn) {
+  return tn(ritmoPrimeraSemana(s) ? 'ritmo.manana.titulo.primera' : 'ritmo.manana.titulo', { dia: ritmoNombreDia(diaSemana, t) });
+}
+
 /* El nombre del día de hoy en minúsculas («martes»), del reloj de la app. */
 function ritmoNombreDia(diaSemana, t) {
   var lista = String(t('ritmo.dias')).split(',');
@@ -152,5 +167,5 @@ function ritmoNombreDia(diaSemana, t) {
 
 Object.assign(window, {
   RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoTramoCon, ritmoOcupadoDe,
-  ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoNombreDia,
+  ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoNombreDia, ritmoTituloHabitual, ritmoPrimeraSemana,
 });

@@ -9,7 +9,7 @@
    «Los lunes, PACE completo te escribe tu semana ›», y tocarla abre la invitación. Solo los lunes:
    todos los días sería pedir la compra cada vez que se abre la app.
 
-   DÓNDE: en el ordenador, en la fila del resumen del día (`RitmoSobre`, RitmoPanel.jsx). En el
+   DÓNDE: en el ordenador, en la fila de «Cambiar» y «Al calendario» (`RitmoSobre`, RitmoPanel.jsx). En el
    móvil la home no tiene sitio (se pasaba 2 px a 360×740), y va en DOS sitios a la vez: en el
    sobre de arriba, donde llegaría la carta (cerrado hasta que se abre ese lunes), y en una fila
    del cajón bajo «Tus rutinas» (`SidebarFooter`). El sobre y la fila no salen en el ordenador.

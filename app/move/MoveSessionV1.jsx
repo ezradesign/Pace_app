@@ -469,7 +469,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   return (
     <SessionShell
       routine={displayRoutine} onExit={onExit} atmosphere={atmo}
-      headerExtra={<Meta>{tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}</Meta>}
+      headerExtra={<Meta>{sessionPasoCabecera(routine, stepIdx, t, tn)}</Meta>}
       footer={<MandoV1 accent={stepAccent} paused={paused && vuelta.cuenta == null} onPause={vuelta.alternar} anillo={anillo} espera={espera} acentoModulo={accent}
         prev={{ onClick: () => { if (stepIdx > 0) { vuelta.reanudar(); startStep(stepIdx - 1); } }, disabled: stepIdx === 0 }}
         next={{ label: primary.label, onClick: () => { vuelta.reanudar(); primary.onClick(); } }}

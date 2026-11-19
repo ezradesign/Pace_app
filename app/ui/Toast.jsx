@@ -43,11 +43,18 @@ function toastHuecoDelAro() {
    si mientras dura se abría una biblioteca, «Antes de empezar» o una sesión, se pintaba encima
    de su título. Mientras haya una ventana, una sesión o un diálogo (Ajustes incluido), no se ve. */
 const TOAST_TAPADO = 'html:has([data-pace-modal-backdrop], [data-pace-session-root], [role="dialog"])';
+/* Y EN EL MÓVIL, TAMPOCO ENCIMA DEL CAJÓN (recorrido de tester, 18 nov. 2026): el panel lateral es ahí
+   un cajón a pantalla completa en z 60, y el sello del aro se pintaba encima, sobre la fila de los vasos.
+   La barra solo está montada abierta (Sidebar devuelve null plegada); en el escritorio va al lado del aro. */
+const TOAST_CAJON = 'html:has([data-pace-sidebar])';
 if (!document.getElementById('pace-toast-css')) {
   const st = document.createElement('style');
   st.id = 'pace-toast-css';
   st.textContent = '[data-pace-sello-en-aro] [data-pace-dial-subtitle] { visibility: hidden; }'
-    + TOAST_TAPADO + ' [data-pace-sello-aro], ' + TOAST_TAPADO + ' [data-pace-toast] { visibility: hidden; }';
+    + TOAST_TAPADO + ' [data-pace-sello-aro], ' + TOAST_TAPADO + ' [data-pace-toast] { visibility: hidden; }'
+    + (typeof PACE_CORTE_MOVIL === 'string'
+      ? '@media ' + PACE_CORTE_MOVIL + ' { ' + TOAST_CAJON + ' [data-pace-sello-aro], ' + TOAST_CAJON + ' [data-pace-toast] { visibility: hidden; } }'
+      : '');
   document.head.appendChild(st);
 }
 
@@ -70,6 +77,28 @@ function paceSelloPendiente() {
   } catch (e) { return false; }
 }
 
+/* VARIOS SELLOS, UN AVISO (Ez, 1A del 18 nov. 2026): «3 sellos nuevos · Primer paso y dos más». El
+   primero da el nombre; los demás están en Logros. Con uno solo, «Nuevo sello · Primer paso». */
+function selloTextos(toast, t, tn) {
+  const g = toast.grupo || [];
+  if (g.length < 2) return { cabeza: t('ach.toast.new'), titulo: toast.title, desc: toast.desc };
+  const otros = g.length - 1;
+  const palabras = String(t('ach.toast.numeros')).split(',');
+  const n = otros <= palabras.length ? palabras[otros - 1] : String(otros);
+  return { cabeza: tn('ach.toast.varios', { n: g.length }),
+    titulo: tn(otros === 1 ? 'ach.toast.mas.uno' : 'ach.toast.mas', { t: g[0].title, n }), desc: null };
+}
+/* Y CALLADO SI ESPERÓ MÁS DE 15 MIN (la misma 1A): un sello de hace media hora que suena ahora no dice
+   nada de lo que se acaba de hacer. Sin fecha (un aviso pedido a mano), suena. */
+const SELLO_CALLADO_MS = 15 * 60 * 1000;
+function selloViejo(grupo) {
+  try {
+    const ach = getState().achievements || {};
+    const fechas = (grupo || []).map((x) => (ach[x.id] || {}).unlockedAt).filter((f) => typeof f === 'number');
+    return fechas.length === (grupo || []).length && fechas.length > 0 && Date.now() - Math.max(...fechas) > SELLO_CALLADO_MS;
+  } catch (e) { return false; }
+}
+
 /* Lo que solo oye el lector de pantalla. */
 const toastSoloLector = { position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap' };
 
@@ -79,7 +108,7 @@ const toastSoloLector = { position: 'absolute', width: 1, height: 1, overflow: '
    sigue en la colección y en la caja de siempre. Si el texto no cabe, primero encoge la letra
    (hasta un 82 %) y luego «Nuevo sello ·» pasa al lector de pantalla: el título se lee siempre
    entero (lo mide tests/sello-aro.spec.js). */
-function SelloEnAro({ toast, t }) {
+function SelloEnAro({ toast, t, tn }) {
   const textoRef = useRefTO(null);
   const [ajuste, setAjuste] = useStateTO({ escala: 1, corto: false });
   /* EL HUECO SE SIGUE MIENTRAS SE VE (caza de la semana, 7 nov. 2026). Se mide al salir, pero el
@@ -122,7 +151,7 @@ function SelloEnAro({ toast, t }) {
       opacity: toast.exiting ? 0 : 1, transition: 'opacity 300ms ease-out',
     }}>
       <span data-pace-sello-texto ref={textoRef} style={{ minWidth: 0, overflow: 'hidden' }}>
-        <span style={ajuste.corto ? toastSoloLector : undefined}>{t('ach.toast.new')} · </span>{toast.title}
+        <span style={ajuste.corto ? toastSoloLector : undefined}>{selloTextos(toast, t, tn).cabeza} · </span>{selloTextos(toast, t, tn).titulo}
       </span>
     </div>
   );
@@ -130,16 +159,16 @@ function SelloEnAro({ toast, t }) {
 
 function ToastHost() {
   const [toasts, setToasts] = useStateTO([]);
-  const { t, lang } = useT();
+  const { t, tn, lang } = useT();
   /* s167 — el aviso copiaba `a.title`/`a.desc` del catalogo, asi que el «Nuevo
      sello» se anunciaba en español aunque la app estuviera en ingles. Mismo
      helper que Achievements.jsx y que Respira/Mueve/Extra. */
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
 
-  /* UNO DETRÁS DE OTRO (fila de s145). El primer Foco puede ganar varios sellos a la vez, y se
-     apilaban: en el aro, hacia arriba y encima del contador; abajo, en una torre de cajas.
-     Ahora esperan en fila y cada uno sale cuando se ha ido el anterior, con su sonido. Y el
-     hueco del aro se mide al SALIR, no al llegar: para entonces la home puede haber cambiado. */
+  /* EN FILA, Y LOS QUE LLEGAN A LA VEZ, JUNTOS. El primer Foco puede ganar varios sellos a la vez, y se
+     apilaban encima del contador; luego salían uno detrás de otro, cada uno con su campanita, y tras la
+     primera pausa sonaban cuatro en diez segundos. Ahora los que llegan juntos van en un aviso (1A de Ez,
+     18 nov. 2026); lo que llegue mientras se ve uno espera en la fila. El hueco del aro se mide al SALIR. */
   const colaRef = useRefTO([]);
   const activoRef = useRefTO(false);
   const siguienteRef = useRefTO(null);
@@ -156,7 +185,7 @@ function ToastHost() {
     const full = Object.assign({}, sig, { aro: sig.licencia ? null : toastHuecoDelAro() });
     activoRef.current = true;
     setToasts(prev => [...prev, full]);
-    if (!full.licencia) { try { playSound(full.secreto ? 'achievement.secret' : 'achievement.unlock'); } catch(e) {} }
+    if (!full.licencia && !selloViejo(full.grupo)) { try { playSound(full.secreto && full.grupo.length === 1 ? 'achievement.secret' : 'achievement.unlock'); } catch(e) {} }
     const durationMs = full.duracion || ((typeof TOAST_DURATION_MS === 'number') ? TOAST_DURATION_MS : 3000);
     const fadeMs = 300;
     /* s79: tres fases. Visible (durationMs) -> exiting (opacity 1->0) -> fuera del array. */
@@ -176,11 +205,14 @@ function ToastHost() {
       if (toast.type === 'achievement') {
         const a = (window.ACHIEVEMENT_CATALOG || []).find(x => x.id === toast.id);
         if (!a) return;
-        colaRef.current.push({ ...toast,
-          title: tR('ach.item.' + a.id + '.title', a.title),
-          desc: tR('ach.item.' + a.id + '.desc', a.desc),
+        const uno = { id: a.id, title: tR('ach.item.' + a.id + '.title', a.title), desc: tR('ach.item.' + a.id + '.desc', a.desc) };
+        /* Se junta con el último de la fila si aún no ha salido; y sale en el turno siguiente, para que
+           los que el buzón suelta de golpe (state-core.toast.jsx) lleguen todos antes. */
+        const ultimo = colaRef.current[colaRef.current.length - 1];
+        if (ultimo && ultimo.grupo) { if (!ultimo.grupo.some((x) => x.id === a.id)) ultimo.grupo.push(uno); }
+        else colaRef.current.push({ ...toast, ...uno, grupo: [uno],
           glyph: a.glyph, glyphSvg: a.glyphSvg, secreto: !!a.secret, exiting: false });
-        siguienteRef.current();
+        setTimeout(() => siguienteRef.current(), 0);
       }
       /* El enlace de un código de PACE completo (state-licencia.js). Va en la misma fila, pero
          sin sonido (no es un logro), abajo en su caja (nunca en el aro) y el doble de rato,
@@ -216,7 +248,7 @@ function ToastHost() {
       }}
     >
       {toasts.map(toast => toast.aro ? (
-        <SelloEnAro key={toast._id} toast={toast} t={t} />
+        <SelloEnAro key={toast._id} toast={toast} t={t} tn={tn} />
       ) : (
         <div key={toast._id} data-pace-toast={toast.licencia ? 'licencia' : 'logro'} style={{
           display: 'flex', alignItems: 'center', gap: 14,
@@ -255,9 +287,9 @@ function ToastHost() {
             }
           </div>
           <div>
-            <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: toast.licencia ? 'var(--premium)' : 'var(--achievement)' }}>{toast.eyebrow || t('ach.toast.new')}</div>
-            <div style={{ ...displayItalic, fontSize: 18, fontWeight: 500, lineHeight: 1.2 }}>{toast.title}</div>
-            <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>{toast.desc}</div>
+            <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: toast.licencia ? 'var(--premium)' : 'var(--achievement)' }}>{toast.eyebrow || selloTextos(toast, t, tn).cabeza}</div>
+            <div style={{ ...displayItalic, fontSize: 18, fontWeight: 500, lineHeight: 1.2 }}>{toast.licencia ? toast.title : selloTextos(toast, t, tn).titulo}</div>
+            {(toast.licencia ? toast.desc : selloTextos(toast, t, tn).desc) ? <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>{toast.licencia ? toast.desc : selloTextos(toast, t, tn).desc}</div> : null}
           </div>
         </div>
       ))}

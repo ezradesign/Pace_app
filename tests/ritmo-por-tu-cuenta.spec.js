@@ -77,12 +77,12 @@ test('Estadísticas no le suma minutos y su tarjeta dice «por tu cuenta»', asy
   await expect(vis(page, '[data-pace-hoy-parada="saltada"]')).toHaveCount(0);
 });
 
-test('en inglés, en el móvil: «I did it my own way» cabe junto a «Not now»', async ({ page, context }) => {
+test('en inglés, en el móvil: «I already did one» cabe junto a «Not now»', async ({ page, context }) => {
   await page.setViewportSize({ width: 360, height: 800 });
   await hastaLaVentana(page, context, { lang: 'en', sidebarCollapsed: true });
   const ventana = overlaySuperior(page);
   const enlace = ventana.locator('[data-pace-break-cuenta]');
-  await expect(enlace).toHaveText('I did it my own way');
+  await expect(enlace).toHaveText('I already did one');
   const [e, n] = [await enlace.boundingBox(), await ventana.getByRole('button', { name: 'Not now', exact: true }).boundingBox()];
   expect(e.x + e.width, 'se pisan').toBeLessThan(n.x);
   expect(n.x + n.width, 'se sale de la pantalla').toBeLessThanOrEqual(360);

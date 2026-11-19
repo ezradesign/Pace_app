@@ -10,7 +10,7 @@ Object.assign(window.PACE_STRINGS.en, {
   // ── Mueve — las tres capas (Ez, 23 oct. 2026: 2A) ─────────────────
   'mueve.cat.empezar.label':             'Start here',
   'mueve.cat.empezar.aside':             'Two or three minutes, a gentle start',
-  'mueve.cat.sigilo.label':              'Discreet',
+  'mueve.cat.sigilo.label':              'Without standing up',
   'mueve.cat.sigilo.aside':              'Small movements at your desk',
   'mueve.cat.material.label':            'With equipment',
   'mueve.cat.material.aside':            'A band or a bar; without them, skip it',
@@ -66,7 +66,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.wall.sit.s2.instruction.action':'Second round. Return to the position and hold.',
   'extra.wall.sit.s2.instruction.care':  'Choose a height that lets you breathe easy.',
 
-  'extra.calves.name':                        'Stealth Calf Raises',
+  'extra.calves.name':                        'Calf Raises Under the Desk',
   'extra.calves.desc':                        'Under your desk, heels up and down.',
   'extra.calves.code':                        'Calves',
   'extra.calves.s0.name':                     'Calf raises',

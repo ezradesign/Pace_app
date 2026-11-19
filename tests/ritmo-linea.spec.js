@@ -76,11 +76,10 @@ const CHOQUES = () => {
   const piezas = [];
   const add = (sel, nombre) => vis(sel).forEach((e, i) => piezas.push({ n: nombre + (i ? i : ''), r: e.getBoundingClientRect(), txt: (e.textContent || '').trim().slice(0, 24) }));
   add('.pace-rt-esc .pace-rt-titulo', 'título');
-  add('.pace-rt-esc .pace-rt-ctx span', 'chip');
   add('.pace-rt-esc [data-pace-ritmo-libre]', 'píldora');
-  /* Por CLASE y no por el data- de s195: así la medida sigue encontrando el resumen si
-     alguien lo devuelve a la línea (la pasada de control contra HEAD lo comprobó). */
-  add('.pace-rt-esc .pace-rt-sobre .pace-rt-meta', 'resumen');
+  /* Por CLASE y no por el data- de s195: así la medida sigue encontrando «Cambiar» si alguien lo
+     devuelve a la línea. El resumen del día y la etiqueta del material ya no están (Ez, encargo 3,
+     19 nov. 2026). */
   add('.pace-rt-esc .pace-rt-sobre button', 'cambiar');
   add('.pace-rt-esc .pace-rt-ahora-tag', 'AHORA');
   add('.pace-rt-esc [data-pace-ritmo-etiq]', 'etiqueta');
@@ -138,7 +137,7 @@ for (const vp of [{ w: 1536, h: 704 }, { w: 1600, h: 780 }, { w: 1440, h: 789 },
       await abrirTarde(page, context);
       const c = await page.evaluate(CHOQUES);
       expect(c.piezas, 'GUARD: el panel del menú no está montado').toBeGreaterThan(8);
-      expect(c.nombres, 'GUARD: el resumen del día no se ha medido; el aserto de los pares sería ciego a él').toEqual(expect.arrayContaining(['resumen', 'cambiar', 'AHORA']));
+      expect(c.nombres, 'GUARD: «Cambiar» no se ha medido; el aserto de los pares sería ciego a él').toEqual(expect.arrayContaining(['cambiar', 'AHORA']));
       expect(c.tagEn, 'GUARD: «AHORA» no está anclado al bloque del final (el escenario no es el del choque)').toBeGreaterThan(0.6);
       expect(c.pares, 'piezas del panel que se pisan').toEqual([]);
       expect(await page.evaluate(ARRASTRABLE), 'la home hace scroll vertical con el bloque corriendo').toBe(0);
@@ -153,7 +152,7 @@ test.describe('el resumen del día cambia de fila con el ancho del panel', () =>
       await abrirTarde(page, context);
       const m = await page.evaluate(() => {
         const vis = (s) => Array.from(document.querySelectorAll(s)).find((e) => e.getBoundingClientRect().width > 0);
-        const r = vis('[data-pace-ritmo-resumen]').getBoundingClientRect(), ch = vis('.pace-rt-esc .pace-rt-ctx').getBoundingClientRect(), t = vis('.pace-rt-esc .pace-rt-titulo').getBoundingClientRect();
+        const r = vis('[data-pace-ritmo-resumen]').getBoundingClientRect(), ch = vis('.pace-rt-esc [data-pace-ritmo-libre]').getBoundingClientRect(), t = vis('.pace-rt-esc .pace-rt-titulo').getBoundingClientRect();
         return { dy: Math.abs((r.top + r.bottom) / 2 - (ch.top + ch.bottom) / 2), aLaIzquierda: r.right <= ch.left, tituloLineas: Math.round(t.height / 22) };
       });
       expect(m.dy, 'el resumen no está en la fila de los chips').toBeLessThan(6);

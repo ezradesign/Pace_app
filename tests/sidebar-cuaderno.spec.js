@@ -237,17 +237,17 @@ test('las tres puertas abren su biblioteca, también la de Estira', async ({ pag
    LA HOME, CON LA META DE VASOS
    ========================================================================== */
 
-test('la home dice los vasos del plan frente a la meta, sin partir el título del día', async ({ page, context }) => {
+/* La home ya no dice «5 de 8 vasos» en el ordenador: Ez quitó el resumen del día de la tarjeta (encargo 3,
+   19 nov. 2026; tests/jornada-limpia.spec.js). Con una meta de 12, el título sigue en una línea. */
+test('con la meta de vasos en 12, el título del día cabe en una línea', async ({ page, context }) => {
   await page.setViewportSize({ width: 1536, height: 864 });
   await abrirDiaServido(page, context, { water: { goal: 12, today: 4, lastReset: null } });
   const vis = (s) => page.locator(s).filter({ visible: true }).first();
-  await expect(vis('[data-pace-ritmo-resumen] .pace-rt-meta')).toHaveText(/ · \d+ de 12 vasos$/);
+  await expect(vis('[data-pace-ritmo-resumen]')).toBeVisible();
   /* Con las fuentes ya puestas: con la de reserva, más ancha, el título se parte siempre. */
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(300);
   const lineas = await vis('.pace-rt-esc .pace-rt-titulo').evaluate((e) =>
     Math.round(e.getBoundingClientRect().height / (parseFloat(getComputedStyle(e).lineHeight) || 30)));
-  expect(lineas, 'el título del día cabe en una línea, como antes de nombrar la meta').toBe(1);
-  await page.evaluate(() => setState({ water: Object.assign({}, getState().water, { goal: 6 }) }));
-  await expect(vis('[data-pace-ritmo-resumen] .pace-rt-meta'), 'y cambia al cambiar la meta en Ajustes').toHaveText(/ de 6 vasos$/);
+  expect(lineas, 'el título del día cabe en una línea').toBe(1);
 });

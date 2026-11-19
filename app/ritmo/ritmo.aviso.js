@@ -11,7 +11,7 @@
    `docs/proposals/por-donde-seguir-s198.html`): con «A tu ritmo», el aviso dice
    QUE pausa toca y CUANDO vuelves.
 
-     Tu pausa: Gemelos subrepticios · 1 min
+     Tu pausa: Gemelos bajo la mesa · 1 min
      Bloque 1 de 9 hecho. El siguiente, a las 9:50.
 
    `ritmoAviso(s, t, tn, lang)` -> { title, body } o null (sin menu, o nada que
@@ -89,7 +89,7 @@ function ritmoAvisoTras(p, n, t, tn, lang) {
    PACE está en el fondo, Android enseña lo que queda, que cuenta solo (PaceAvisoFijo), con
    este título y este texto: el bloque, la hora a la que acaba y lo que viene detrás.
      Foco · bloque 2 de 9
-     Hasta las 10:40. Luego, tu pausa: Gemelos subrepticios · 1 min
+     Hasta las 10:40. Luego, tu pausa: Gemelos bajo la mesa · 1 min
    Sin «A tu ritmo», «Foco · 25 min» y la hora. Se lee al irse al fondo, con el bloque aún sin
    cerrar: el que corre es `focos[hechos]`, y lo de detrás sigue las reglas de `ritmoAviso`
    (la duración de la rutina; la de la parada en la larga). */

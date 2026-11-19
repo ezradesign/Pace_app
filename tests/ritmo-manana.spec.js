@@ -6,8 +6,8 @@
  * que pasa cada mañana:
  *
  *   · escritorio: «Hoy, como cada jueves», tu opción marcada y «Comienza» la sirve;
- *   · móvil: la tarjeta del día de siempre, y «Hoy es distinto» abre la pregunta
- *     solo por hoy;
+ *   · móvil: la tarjeta corta dice el día de siempre, «Preparar jornada» lo sirve de un toque
+ *     (Ez, 2A del 18 nov. 2026) y «Hoy es distinto» abre la pregunta solo por hoy;
  *   · un día libre de tu semana es «Hoy voy por libre»;
  *   · sin jornada por delante (a las 20:00) vuelve la pregunta de siempre;
  *   · mirar no escribe nada: el día se deriva al pintar;
@@ -58,11 +58,9 @@ test('escritorio: el jueves llega como cada jueves, con tu opción marcada, y «
 test('móvil: la tarjeta del día de siempre, y «Hoy es distinto» abre la pregunta solo por hoy', async ({ browser }) => {
   const { context, page } = await movil(browser, LV);
   const errores = capturarErrores(page);
-  await pulsarComienza(page);
-  const tarjeta = vis(page, '[data-pace-ritmo-estado="habitual"]');
+  const tarjeta = vis(page, '[data-pace-ritmo-tarjeta-movil]');
   await expect(tarjeta).toContainText('Jornada entera');
   await expect(tarjeta).toContainText('como cada jueves');
-  await expect(tarjeta.locator('.pace-rt-mini')).toBeVisible();
 
   await tarjeta.locator('[data-pace-ritmo-distinto]').click();
   await expect(vis(page, '[data-pace-ritmo-estado="pregunta"]')).toBeVisible();
@@ -82,11 +80,9 @@ test('móvil: la tarjeta del día de siempre, y «Hoy es distinto» abre la preg
 test('móvil: «Comienza» sirve la media jornada de un jueves de media', async ({ browser }) => {
   const media = ['jornada', 'jornada', 'jornada', 'media', 'jornada', 'libre', 'libre'];
   const { context, page } = await movil(browser, media);
-  await pulsarComienza(page);
-  const tarjeta = vis(page, '[data-pace-ritmo-estado="habitual"]');
-  await expect(tarjeta).toHaveAttribute('data-pace-ritmo-habitual', 'media');
+  const tarjeta = vis(page, '[data-pace-ritmo-tarjeta-movil]');
   await expect(tarjeta).toContainText('Media jornada');
-  await tarjeta.locator('[data-pace-ritmo-habitual-comienza]').click();
+  await tarjeta.locator('[data-pace-ritmo-comienza]').click();
   await expect(vis(page, '[data-pace-ritmo-estado="menu"]')).toBeVisible();
   expect((await ritmo(page)).dia.opcion).toBe('media');
   await context.close();

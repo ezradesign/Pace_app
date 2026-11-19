@@ -30,11 +30,15 @@ function aroPlatoPendiente(s) {
 
 /* ¿Acabó el tiempo de la pausa? La parada sigue abierta hasta que empiece el bloque, pero
    eso también vale para la comida, que no cuenta tiempo, y para quien pasó a mano a Foco
-   con la pausa aún corriendo: en esos dos casos no ha terminado nada. */
+   con la pausa aún corriendo: en esos dos casos no ha terminado nada.
+   Y SOLO UN RATO (Ez, 4A del 18 nov. 2026, sobre su V1 A del 7 nov.): quien cerró PACE a media mañana y
+   volvió a las 16:10 leía «Pausa terminada» cuatro horas y media después. Pasados 15 min, lo de siempre. */
+const ARO_PAUSA_TERMINADA_MIN = 15;
 function aroPausaTerminada(s) {
   if (typeof ritmoPausaCuenta !== 'function' || ritmoPausaCuenta(s)) return false;
   const a = ritmoPausaAbierta(s);
-  return !!a && a.it.tipo === 'pausa';
+  if (!a || a.it.tipo !== 'pausa') return false;
+  return ritmoAhoraExacto() - (a.it.desde + a.it.dur) <= ARO_PAUSA_TERMINADA_MIN;
 }
 
 /* «Mueve · 2 min», «Respira y Estira · 15 min», «Comida · 1 h» o «Bloque 3»: lo que viene

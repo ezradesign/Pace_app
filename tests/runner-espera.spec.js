@@ -31,7 +31,7 @@ const fase = (page) => page.locator('[data-pace-v1-raiz]').getAttribute('data-pa
 const nombre = async (page) => (await page.locator('[data-pace-v1-name]').textContent()).trim();
 const numero = async (page) => (await page.locator('[data-pace-v1-num]').textContent()).trim();
 const siguiente = (page) => page.locator('[data-pace-v1-btn="next"]');
-const pasoActual = async (page) => +(await page.getByText(/^Paso \d+ de \d+$/).first().textContent()).match(/Paso (\d+)/)[1] - 1;
+const pasoActual = async (page) => +(await page.locator('[data-pace-v1-raiz]').getAttribute('data-pace-v1-paso'));   /* el índice, descansos incluidos: la cabecera solo cuenta ejercicios (6A) */
 async function irAlPaso(page, idx) {
   for (let i = 0; i < 40 && (await pasoActual(page)) < idx; i++) { await siguiente(page).click(); await page.clock.runFor(200); }
   expect(await pasoActual(page)).toBe(idx);

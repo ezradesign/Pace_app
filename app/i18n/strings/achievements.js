@@ -20,6 +20,10 @@ Object.assign(window.PACE_STRINGS.es, {
     'ach.seal.secret':                 'Secreto',
     'ach.seal.discover':               'Por descubrir',
     'ach.toast.new':                   'Nuevo sello',
+    'ach.toast.varios':                '{n} sellos nuevos',
+    'ach.toast.mas.uno':               '{t} y uno más',
+    'ach.toast.mas':                   '{t} y {n} más',
+    'ach.toast.numeros':               'uno,dos,tres,cuatro,cinco,seis,siete,ocho,nueve,diez',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -38,4 +42,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'ach.seal.secret':                 'Secret',
     'ach.seal.discover':               'To discover',
     'ach.toast.new':                   'New stamp',
+    'ach.toast.varios':                '{n} new stamps',
+    'ach.toast.mas.uno':               '{t} and one more',
+    'ach.toast.mas':                   '{t} and {n} more',
+    'ach.toast.numeros':               'one,two,three,four,five,six,seven,eight,nine,ten',
 });

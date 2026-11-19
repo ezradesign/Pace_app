@@ -78,7 +78,7 @@ test('en «Cambia de lado» el aro se queda vacío', async ({ page, context }) =
   const errores = capturarErrores(page);
   await sembrar(context);
   await irAlArtefacto(page);
-  await abrirRutina(page, 'Estira', 'Antídoto silla');
+  await abrirRutina(page, 'Estira', 'Antídoto a la silla');
   await siguiente(page);                       // paso 2, «Rotación torácica», por lados
   await expect.poll(() => fase(page)).toBe('place');
   await siguiente(page);                       // empieza el primer lado

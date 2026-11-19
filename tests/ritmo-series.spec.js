@@ -232,16 +232,17 @@ test('en la app: la pausa dice la frase, «Otra» da otra cosa y lo servido se g
   const plan = await page.evaluate(() => { const p = ritmoPlan(getState()); const it = ritmoDetras(p.m, p.actual); return { id: it.platos[0].id, name: it.platos[0].name, frase: it.frase }; });
   expect(plan.id, 'no la misma primera que ayer').not.toBe('extra.legs.standing');
   /* Con las capas (Ez, 23 oct.: 2A) la primera del día es «Empuje sencillo», la otra Mueve de pie
-     de «Para empezar», con los hombros sin mover. Antes, Sentadilla en pared, que ahora va en
+     de «Para empezar»: ayer solo salió Piernas, así que dice que los hombros ayer no se movieron
+     (Ez, 8A del 18 nov.; tests/ritmo-ayer.spec.js). Antes, Sentadilla en pared, que ahora va en
      «Para ir a más» y no se propone; antes aún, Espalda de oficina y Flexiones de escritorio. */
-  expect(plan).toEqual({ id: 'extra.desk.pushups', name: 'Empuje sencillo', frase: { k: 'zona', zona: 'hombros' } });
+  expect(plan).toEqual({ id: 'extra.desk.pushups', name: 'Empuje sencillo', frase: { k: 'ayer', zona: 'hombros' } });
   await page.getByRole('button', { name: 'Empezar jornada', exact: true }).filter({ visible: true }).first().click();
   for (let i = 0; i < 60 && !(await page.locator('[data-pace-break-shortcut]').count()); i++) {
     await page.clock.fastForward(60 * 1000);
     await page.waitForTimeout(60);
   }
   const plato = page.locator('[data-pace-break-ritmo]');
-  await expect(plato.locator('.pace-break-motivo')).toHaveText('Hombros: sin mover hoy');
+  await expect(plato.locator('.pace-break-motivo')).toHaveText('Hombros: ayer sin mover');
   await expect(plato).toContainText('Empuje sencillo');
   await page.keyboard.press('Escape');
   const s = await page.evaluate(() => ({ serv: getState().ritmo.servidos, otra: (ritmoOtra(['p1']), ritmoPlan(getState()).pausa.platos[0].id) }));
@@ -277,7 +278,7 @@ test.describe('a 360 px', () => {
       await page.clock.fastForward(60 * 1000);
       await page.waitForTimeout(60);
     }
-    await expect(page.locator('[data-pace-break-ritmo] .pace-break-motivo')).toHaveText('Hombros: sin mover hoy');
+    await expect(page.locator('[data-pace-break-ritmo] .pace-break-motivo')).toHaveText('Hombros: aún sin mover');
     /* se miden todas las frases en el motivo de la ventana, que es el hueco más estrecho */
     await page.evaluate(() => document.fonts.ready);
     const r = await page.evaluate(() => {
@@ -286,7 +287,9 @@ test.describe('a 360 px', () => {
       const frases = (lang) => {
         const S = window.PACE_STRINGS[lang];
         const zonas = ['cuello', 'hombros', 'espalda', 'caderas', 'piernas', 'manos'].map((z) => S['ritmo.frase.zona'].replace('{zona}', S['ritmo.zona.' + z]));
-        return zonas.concat([S['ritmo.frase.sentado'].replace('{n}', '125'), S['ritmo.frase.larga'], S['ritmo.frase.cierre']]);
+        /* y las de lo de ayer (Ez, 8A del 18 nov. 2026; tests/ritmo-ayer.spec.js) */
+        const ayer = ['cuello', 'hombros', 'espalda', 'caderas', 'piernas', 'manos'].map((z) => S['ritmo.frase.ayer'].replace('{zona}', S['ritmo.zona.' + z]));
+        return zonas.concat(ayer, [S['ritmo.frase.sentado'].replace('{n}', '125'), S['ritmo.frase.larga'], S['ritmo.frase.cierre']]);
       };
       const out = [];
       ['es', 'en'].forEach((l) => frases(l).forEach((f) => { el.textContent = f; if (Math.round(el.getBoundingClientRect().height / alto) > 1) out.push(l + ': ' + f); }));
@@ -296,6 +299,6 @@ test.describe('a 360 px', () => {
     expect(r.out, 'frases que se parten en dos líneas').toEqual([]);
     /* la línea dice lo mismo: la fila de «Ahora» del móvil, que es la pausa abierta */
     await page.keyboard.press('Escape');
-    await expect(page.locator('.pace-rt-fila').filter({ visible: true }).first()).toContainText('Hombros: sin mover hoy');
+    await expect(page.locator('.pace-rt-fila').filter({ visible: true }).first()).toContainText('Hombros: aún sin mover');
   });
 });

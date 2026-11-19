@@ -120,6 +120,9 @@ function statsHoyMeta(p, t, hechas) {
   if (estado === 'saltada') return t('ritmo.saltada');
   if (estado === 'cuenta') return t('ritmo.cuenta');   /* sin minutos: no hubo sesión (4A del 8 nov.) */
   if (estado === 'ahora') return t('ritmo.ahora.min');
+  /* Pasada sin hacer: «no hecha», sin los minutos del hueco, que se leían como hechos (Ez, 3 «B atenuadas y no
+     hecha las dos», 18 nov. 2026; la atenúa StatsPanel.css.jsx). */
+  if (estado === 'pasada') return t('ritmo.noHecha');
   return it.dur + ' min';
 }
 
@@ -135,6 +138,7 @@ function StatsHoy({ state, onClose }) {
 
   if (plan) {
     const paradas = statsHoyParadas(plan);
+    const dia = R.dia || {};
     const hechas = ritmoMinutosHechos(state);
     const sueltas = statsHoySueltas(state);
     return (
@@ -145,9 +149,11 @@ function StatsHoy({ state, onClose }) {
         </div>
         <StatsHoyRejilla n={paradas.length}>
           {paradas.map((p, k) => {
-            const modulos = p.comida ? ['comida'] : p.it.platos.map((x) => x.modulo);
+            /* Lo hecho, como se hizo (ritmoPlatosVistos): no lo que la regla serviría ahí ahora. */
+            const platos = p.comida ? [] : ritmoPlatosVistos(p.it, p.n, dia);
+            const modulos = p.comida ? ['comida'] : platos.map((x) => x.modulo);
             return <StatsHoyTarjeta key={k} modulos={modulos} larga={p.it.larga}
-              nombre={p.comida ? t('ritmo.comida') : ritmoPlatos(p.it, t, lang)} hora={ritmoHora(p.it.desde)}
+              nombre={p.comida ? t('ritmo.comida') : ritmoPlatos({ platos }, t, lang)} hora={ritmoHora(p.it.desde)}
               meta={statsHoyMeta(p, t, hechas)} estado={p.comida ? 'comida' : p.estado} />;
           })}
         </StatsHoyRejilla>

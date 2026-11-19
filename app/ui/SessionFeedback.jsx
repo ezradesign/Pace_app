@@ -236,11 +236,13 @@ const sessionFeedbackStyles = {
     textDecoration: 'underline', textUnderlineOffset: 3,
     transition: 'color 160ms ease',
   },
-  /* «Deshacer», dentro del acuse: el mismo enlace, en su línea de texto. */
+  /* «Deshacer», dentro del acuse: el mismo enlace, en su línea de texto. Con 2 px arriba y abajo mide
+     24 de alto, lo que pide WCAG 2.5.8 para tocarlo sin dar al vecino (medía 20; recorrido de tester,
+     18 nov. 2026). Los porqués, igual: 3 px y 24 de alto (medían 22). */
   deshacer: {
     ...displayItalic,
     fontSize: 'inherit', color: 'var(--ink-2)',
-    background: 'none', border: 'none', padding: '0 2px', cursor: 'pointer',
+    background: 'none', border: 'none', padding: '2px 2px', cursor: 'pointer',
     textDecoration: 'underline', textUnderlineOffset: 3,
   },
   /* La línea de los porqués (la forma de la B que eligió Ez): enlaces en la letra de «Ahora no». */
@@ -251,7 +253,7 @@ const sessionFeedbackStyles = {
   razon: {
     ...displayItalic,
     fontSize: 'inherit', color: 'var(--ink-3)',
-    background: 'none', border: 'none', padding: '2px 2px', cursor: 'pointer',
+    background: 'none', border: 'none', padding: '3px 2px', cursor: 'pointer',
     textDecoration: 'underline', textUnderlineOffset: 3,
   },
   thanks: {

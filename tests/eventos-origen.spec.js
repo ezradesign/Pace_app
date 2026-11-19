@@ -105,7 +105,7 @@ test('el aro con plan es «aro» servido por el menú, y la propuesta de la paus
   /* La pausa propone el plato del menú: desde las series (Ez, 15 oct. 2026), la primera
      pausa es Mueve de pie, con la frase de lo de hoy. */
   const prop = page.locator('[data-pace-break-prop]');
-  await expect(prop).toContainText('Piernas: sin mover hoy');
+  await expect(prop).toContainText('Piernas: aún sin mover');
   await expect(prop, 'la propuesta no es la del menú').toHaveAttribute('data-pace-break-ritmo', '');
   /* s195: con menú, el modal es «Tu pausa» y el botón del plato es «Hacer la pausa» */
   await overlaySuperior(page).getByRole('button', { name: 'Hacer la pausa', exact: true }).click();

@@ -251,7 +251,7 @@ function BreatheSession({ routine, onExit, inPath, reanudar }) {
         onExit={onExit}
         accent="var(--breathe)"
         prepCount={prepCount}
-        copy={t('breathe.prepCopy')}
+        copy={t(typeof ritmoPausaDeLevantarse === 'function' && ritmoPausaDeLevantarse(routine && routine.id) ? 'breathe.prepCopy.dePie' : 'breathe.prepCopy')}
         onSkip={() => { setPaused(false); setPrepCount(0); setStage('active'); playPhaseSound(sequence[0].label, sequence[0].duration); }}
         atmosphere={atmo}
       />

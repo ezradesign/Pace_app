@@ -30,6 +30,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'ritmo.frase.movil.empieza':     'empieza en el aro, arriba',
     'ritmo.hecha':                   'hecha',
     'ritmo.saltada':                 'saltada',
+    'ritmo.noHecha':                 'no hecha',   /* pasada sin hacer, en Estadísticas › Hoy (Ez, 3B, 18 nov.) */
     'ritmo.cuenta':                  'por tu cuenta',   /* hecha sin la rutina: sin minutos (4A del 8 nov.) */
     'ritmo.hoy':                     'hoy de {desde} a {hasta}',
     'ritmo.opcion.1h':               'Una hora',
@@ -57,6 +58,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'ritmo.resumen':                 '{f} de foco · {p} pausas · {v}',
     'ritmo.resumen.una':             '{f} de foco · 1 pausa · {v}',
     'ritmo.vasos':                   '{v} de {m} vasos',
+    'ritmo.vasos.jornada':           '{v} vasos en la jornada',
+    'ritmo.vasos.jornada.uno':       '1 vaso en la jornada',
     'ritmo.ahora':                   'Ahora',
     'ritmo.luego':                   'Luego',
     'ritmo.fila.bloque':             'Foco · bloque {n} de {m}',
@@ -108,7 +111,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'ritmo.motivo.cierre':           'Para cerrar la jornada',
     'ritmo.motivo.respira':          'Bajar revoluciones',
     /* La frase de las series (Ez, 15 oct. 2026: la B, «lo de hoy»), encima del nombre */
-    'ritmo.frase.zona':              '{zona}: sin mover hoy',
+    'ritmo.frase.zona':              '{zona}: aún sin mover',   /* «aún»: sin él se leía como «hoy no lo muevas» (Ez, 7A del 18 nov.); sin «hoy», que con «aún» partía en dos líneas la ventana a 360 px */
+    'ritmo.frase.ayer':              '{zona}: ayer sin mover',   /* Ez, 8A del 18 nov.: «ayer no las moviste» partía en dos líneas la ventana a 360 px */
     'ritmo.frase.sentado':           'Llevas {n} min sentado',
     'ritmo.frase.larga':             'Dos horas: sal de la silla',
     'ritmo.frase.cierre':            'Para cerrar, despacio',
@@ -205,6 +209,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'ritmo.st.aviso.verbo':          'Avísame',
     'ritmo.st.aviso.resto':          'a mi hora de entrada',
     'ritmo.manana.titulo':           'Hoy, como cada {dia}',
+    'ritmo.manana.titulo.primera':   'Hoy, {dia}',
     'ritmo.manana.como':             'como cada {dia}',
     'ritmo.manana.distinto':         'Hoy es distinto',
     'ritmo.dias':                    'lunes,martes,miércoles,jueves,viernes,sábado,domingo',
@@ -231,6 +236,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.frase.movil.empieza':     'start with the timer above',
     'ritmo.hecha':                   'done',
     'ritmo.saltada':                 'skipped',
+    'ritmo.noHecha':                 'not done',
     'ritmo.cuenta':                  'your own way',
     /* Corta a propósito (elegido por Ez): con «today from … to …» la frase del móvil cabía con
        0,3 px en dos líneas y un Chromium que ensancha la letra la partía en tres (scroll a 360×640). */
@@ -260,6 +266,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.resumen':                 '{f} of focus · {p} breaks · {v}',
     'ritmo.resumen.una':             '{f} of focus · 1 break · {v}',
     'ritmo.vasos':                   '{v} of {m} glasses',
+    'ritmo.vasos.jornada':           '{v} glasses over the day',
+    'ritmo.vasos.jornada.uno':       '1 glass over the day',
     'ritmo.ahora':                   'Now',
     'ritmo.luego':                   'Next',
     'ritmo.fila.bloque':             'Focus · block {n} of {m}',
@@ -305,6 +313,7 @@ Object.assign(window.PACE_STRINGS.en, {
     /* A 360 px tienen que caber en una línea: «Shoulders: not moved today» y «Two hours:
        leave the chair» se partían (medido en la app, docs/traspaso/archivos/series-15oct/). */
     'ritmo.frase.zona':              '{zona}: unmoved today',
+    'ritmo.frase.ayer':              '{zona}: idle yesterday',
     'ritmo.frase.sentado':           '{n} min sitting so far',
     'ritmo.frase.larga':             'Two hours: time to stand',
     'ritmo.frase.cierre':            'A gentle finish',
@@ -314,11 +323,11 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.zona.caderas':            'Hips',
     'ritmo.zona.piernas':            'Legs',
     'ritmo.zona.manos':              'Hands',
-    'ritmo.hecho':                   'Day complete',
+    'ritmo.hecho':                   'Workday over',   /* como «Jornada cerrada»: «complete» sonaba a día cumplido tras un solo bloque (Ez, 9A del 18 nov.) */
     'ritmo.hecho.sub':               '{f} of focus. The rest of the day is yours.',
     'ritmo.aro.hecho':               '{f} of focus',
     'ritmo.aro.tuyo':                'The rest of the day is yours',
-    'ritmo.aro.libre':               'Keep going freestyle',
+    'ritmo.aro.libre':               'Keep going',
     'ritmo.aro.bloque':              'Block {n} of {m}',
     'ritmo.aro.hasta':               'Your day, until {h}',
     'ritmo.aro.empezar':             'Start the day',
@@ -395,6 +404,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.st.aviso.verbo':          'Remind me',
     'ritmo.st.aviso.resto':          'at my start time',
     'ritmo.manana.titulo':           'Today, like every {dia}',
+    'ritmo.manana.titulo.primera':   'Today, {dia}',
     'ritmo.manana.como':             'like every {dia}',
     'ritmo.manana.distinto':         'Today is different',
     'ritmo.dias':                    'Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',

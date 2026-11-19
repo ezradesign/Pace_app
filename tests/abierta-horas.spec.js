@@ -173,7 +173,8 @@ async function volver(page) {
 }
 
 test.describe('V1 · si al volver la pausa entera ya pasó, la ventana no sale', () => {
-  test('pestaña de fondo de 8:10 a 12:10: el aro dice «Pausa terminada» y no sale la ventana de las 8:45', async ({ page, context }) => {
+  /* «Pausa terminada» solo los 15 min siguientes a la pausa (Ez, 4A del 18 nov.): a las 12:10, la línea de siempre. */
+  test('pestaña de fondo de 8:10 a 12:10: el aro ya no dice «Pausa terminada» y no sale la ventana de las 8:45', async ({ page, context }) => {
     const errores = capturarErrores(page);
     await empezarA(page, context, '08:00');
     await page.clock.fastForward(10 * 60 * 1000);
@@ -184,7 +185,7 @@ test.describe('V1 · si al volver la pausa entera ya pasó, la ventana no sale',
     await expect.poll(() => page.evaluate(() => ritmoPlan(getState()).hechos)).toBe(1);
     await page.clock.fastForward((3 * 60 + 18) * 60 * 1000);   // las 12:10
     expect(await volver(page), 'salió «8:45 · Lo que toca ahora» a las 12:10').toBe(false);
-    await expect(vis(page, '[data-pace-dial-subtitle]')).toHaveText('Pausa terminada');
+    await expect(vis(page, '[data-pace-dial-subtitle]')).not.toHaveText('Pausa terminada');
     await expect(vis(page, '[data-pace-cta]')).toHaveText('Empezar bloque 2');
     expect(errores).toEqual([]);
   });
@@ -196,6 +197,7 @@ test.describe('V1 · si al volver la pausa entera ya pasó, la ventana no sale',
     await vigilarVentana(page);
     await page.clock.fastForward(60 * 60 * 1000);
     expect(await volver(page)).toBe(false);
+    /* Aquí la pausa se recoloca a la vuelta (empieza a las 9:20): acaba de terminar, y lo dice (4A del 18 nov.). */
     await expect(vis(page, '[data-pace-dial-subtitle]')).toHaveText('Pausa terminada');
   });
 
