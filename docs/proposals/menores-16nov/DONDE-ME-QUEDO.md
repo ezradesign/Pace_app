@@ -22,11 +22,11 @@ Rama `claude/menores-valorar-16nov-87ef7b`. No se junta ni se sube a `main`: eso
 2. Fotos: hechas (arriba).
 3. Suite entera SOLO cuando la coordinadora mande «turno de suite» (corre la de la voz): `PACE_E2E_PORT=8936 npm run test:e2e -- --reporter=line`
    de fondo; 8935 y 8835 tienen servidores colgados que no se dejan matar. Rojas, repetidas solas.
-4. Página: con la cifra, cambiar `suite-1`, `suite-2` y el sello de «Cómo está» a «Lista para juntar» y republicar. Se publica en ESTA cuenta (5iWBf)
-   en su sitio, `https://claude.ai/artifact/BF18PgPNiZ2Qv6j9jhWEx3` (read y republicar encima). El par de EcLj6 queda
-   PENDIENTE: cuando alguien la publique en EcLj6, apuntar [id de EcLj6, 'BF18PgPNiZ2Qv6j9jhWEx3'] en
-   `docs/traspaso/archivos/hoja-ids-cuentas.js`.
+4. Página: la cifra ya está puesta y el sello dice «Lista para juntar» (19 nov., 14:55). Publicada en EcLj6 como página nueva:
+   `https://claude.ai/artifact/TsBpZKdKUGuy6oSDXpNk7S`. El par [EcLj6, 5iWBf] ya está en `docs/traspaso/archivos/hoja-ids-cuentas.js`:
+   [`TsBpZKdKUGuy6oSDXpNk7S`, `BF18PgPNiZ2Qv6j9jhWEx3`]. **POR HACER, en la cuenta 5iWBf:** republicar `index.html` (esta carpeta, con sus
+   `fotos/`) encima de `BF18PgPNiZ2Qv6j9jhWEx3` (read y publicar con ese `url`), que aún lleva «Esperando la suite».
 5. El aviso de «Auto» apagado ya está en la página (`#auto`). Si Ez dice que sí al arreglo (texto de antes con «Auto»
    apagado), medirlo con su condición en `runner-cambios` antes de montarlo.
 
-- **Suite entera en el 8936 (19 nov., 13:50-14:35, lanzada por la coordinadora): 1795 en verde, 2 saltadas a propósito, 0 rojas** (log en `suite-19nov.log` de esta carpeta). Falta ponerla en la página (BF18Pg…, 5iWBf) como «lista para juntar», su par en EcLj6 y el «júntalo» de Ez.
+- **Suite entera en el 8936 (19 nov., 13:50-14:35, lanzada por la coordinadora): 1795 en verde, 2 saltadas a propósito, 0 rojas** (log en `suite-19nov.log` de esta carpeta). La página ya la dice y está «lista para juntar» (EcLj6 publicada; 5iWBf por republicar). Solo falta el «júntalo» de Ez.
