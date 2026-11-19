@@ -3570,6 +3570,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'stats.ayuda.hora.fuente': '{n} Focos terminados',
   'stats.ayuda.tras': 'Después del Foco',
   'stats.ayuda.tras.frase': 'Tras {a} de tus {b} Focos, una pausa.',
+  'stats.ayuda.tras.cero': 'Aún no has parado justo después de un Foco.',
   'stats.ayuda.tras.franjas': 'Por la mañana, {ma} de {mb}. Por la tarde, {ta} de {tb}.',
   'stats.ayuda.tras.fuente': 'Una pausa en los 15 minutos siguientes',
 
@@ -3670,6 +3671,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'stats.ayuda.hora.fuente': '{n} Focus blocks finished',
   'stats.ayuda.tras': 'After Focus',
   'stats.ayuda.tras.frase': 'You took a break after {a} of your {b} Focus blocks.',
+  'stats.ayuda.tras.cero': 'You haven’t taken a break right after a Focus block yet.',
   'stats.ayuda.tras.franjas': 'In the morning, {ma} of {mb}. In the afternoon, {ta} of {tb}.',
   'stats.ayuda.tras.fuente': 'A break within the next 15 minutes',
 
@@ -43398,7 +43400,9 @@ function StatsAyudaTras(_ref5) {let { tras } = _ref5;
   const { t, tn } = useT();
   return (
     React.createElement(StatsAyudaTarjeta, { idea: "tras", color: "var(--move)", titulo: t('stats.ayuda.tras'), fuente: t('stats.ayuda.tras.fuente') },
-    React.createElement("div", { className: "pace-ay-frase" }, tn('stats.ayuda.tras.frase', { a: tras.a, b: tras.b })),
+
+
+    React.createElement("div", { className: "pace-ay-frase" }, tras.a === 0 ? t('stats.ayuda.tras.cero') : tn('stats.ayuda.tras.frase', { a: tras.a, b: tras.b })),
     tras.manana ?
     React.createElement("div", { className: "pace-ay-nota" }, tn('stats.ayuda.tras.franjas', { ma: tras.manana[0], mb: tras.manana[1], ta: tras.tarde[0], tb: tras.tarde[1] })) :
     null
