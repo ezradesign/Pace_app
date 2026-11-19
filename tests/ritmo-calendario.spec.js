@@ -155,7 +155,8 @@ test('en la web sin ids, «Al calendario» ofrece solo el archivo y lo descarga'
   await enlace.click();
   const hoja = page.locator('[data-pace-cal]');
   await expect(page.getByRole('dialog', { name: 'Tu día en el calendario' })).toBeVisible();
-  await expect(hoja.locator('[data-pace-cal-resumen]')).toHaveText('Se añade lo que queda de hoy: 9 bloques de foco con sus pausas, de 9:00 a 17:00.');
+  /* En la web solo hay archivo: «Se añade» prometía algo que hace tu calendario, no PACE (Ez, 10A del 18 nov.). */
+  await expect(hoja.locator('[data-pace-cal-resumen]')).toHaveText('Descarga lo que queda de hoy y ábrelo con tu calendario: 9 bloques de foco con sus pausas, de 9:00 a 17:00.');
   await expect(hoja.locator('[data-pace-cal-destino]')).toHaveCount(1);
   await expect(hoja.locator('[data-pace-cal-reuniones]')).toHaveCount(0);
   const [descarga] = await Promise.all([

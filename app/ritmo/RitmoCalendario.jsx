@@ -159,8 +159,12 @@ function RitmoCalendarioHoja({ plan, onClose }) {
   /* SIN DÍA (desde la tarjeta): «Conectar» da el permiso y lee las reuniones, y el día llega al elegir. */
   const sinDia = !plan;
   const evs = sinDia ? [] : calendarioEventos(plan.m, ritmoAhoraExacto(), t, tn, lang);
+  /* En la web con solo el archivo, PACE no añade nada: lo descargas y lo abre tu calendario (Ez, 10A
+     del 18 nov. 2026). En las apps y con un calendario conectado, «Se añade» es verdad. */
+  const soloArchivo = !compartir && destinos.every((d) => d === 'archivo');
+  const claveResumen = (soloArchivo ? 'cal.resumen.web' : 'cal.resumen') + (evs.length === 1 ? '.uno' : '');
   let resumen = sinDia ? t('cal.sindia.resumen') : !evs.length ? t('cal.resumen.nada')
-    : tn(evs.length === 1 ? 'cal.resumen.uno' : 'cal.resumen', { n: evs.length, a: ritmoHora(evs[0].desde), b: ritmoHora(evs[evs.length - 1].hasta) });
+    : tn(claveResumen, { n: evs.length, a: ritmoHora(evs[0].desde), b: ritmoHora(evs[evs.length - 1].hasta) });
   if (solo && !sinDia) {
     const q = solo.quedan;
     resumen = calendarioSoloPorDetras(solo) || calendarioSoloCaso(solo) === 'fallo'

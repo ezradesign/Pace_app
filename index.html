@@ -5039,6 +5039,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'cal.resumen': 'Se añade lo que queda de hoy: {n} bloques de foco con sus pausas, de {a} a {b}.',
   'cal.resumen.uno': 'Se añade lo que queda de hoy: 1 bloque de foco con su pausa, de {a} a {b}.',
   'cal.resumen.nada': 'De hoy ya no queda nada que añadir.',
+  'cal.resumen.web': 'Descarga lo que queda de hoy y ábrelo con tu calendario: {n} bloques de foco con sus pausas, de {a} a {b}.',
+  'cal.resumen.web.uno': 'Descarga lo que queda de hoy y ábrelo con tu calendario: 1 bloque de foco con su pausa, de {a} a {b}.',
   'cal.dest.android': 'Calendario del móvil',
   'cal.dest.android.sub': 'El de tu cuenta de Google o de Microsoft en el teléfono',
   'cal.dest.android.en': 'En',
@@ -5164,6 +5166,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'cal.resumen': 'Add the rest of today’s plan: {n} Focus blocks and their breaks, from {a} to {b}.',
   'cal.resumen.uno': 'Add the rest of today’s plan: 1 Focus block and its break, from {a} to {b}.',
   'cal.resumen.nada': 'No more events to add today.',
+  'cal.resumen.web': 'Download the rest of today and open it with your calendar: {n} Focus blocks and their breaks, from {a} to {b}.',
+  'cal.resumen.web.uno': 'Download the rest of today and open it with your calendar: 1 Focus block and its break, from {a} to {b}.',
   'cal.dest.android': 'Phone calendar',
   'cal.dest.android.sub': 'The one from your Google or Microsoft account on this phone',
   'cal.dest.android.en': 'In',
@@ -51664,8 +51668,12 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
 
   const sinDia = !plan;
   const evs = sinDia ? [] : calendarioEventos(plan.m, ritmoAhoraExacto(), t, tn, lang);
+
+
+  const soloArchivo = !compartir && destinos.every((d) => d === 'archivo');
+  const claveResumen = (soloArchivo ? 'cal.resumen.web' : 'cal.resumen') + (evs.length === 1 ? '.uno' : '');
   let resumen = sinDia ? t('cal.sindia.resumen') : !evs.length ? t('cal.resumen.nada') :
-  tn(evs.length === 1 ? 'cal.resumen.uno' : 'cal.resumen', { n: evs.length, a: ritmoHora(evs[0].desde), b: ritmoHora(evs[evs.length - 1].hasta) });
+  tn(claveResumen, { n: evs.length, a: ritmoHora(evs[0].desde), b: ritmoHora(evs[evs.length - 1].hasta) });
   if (solo && !sinDia) {
     const q = solo.quedan;
     resumen = calendarioSoloPorDetras(solo) || calendarioSoloCaso(solo) === 'fallo' ?
