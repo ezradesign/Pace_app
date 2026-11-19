@@ -2593,6 +2593,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'focus.startPause': 'Empezar pausa',
   'focus.pause': 'Pausar',
   'focus.tab.done': '● Foco terminado · PACE',
+  'mini.fin': 'Foco terminado',
+  'mini.fin.sub': 'Vuelve a PACE para tu pausa',
+  'mini.volver': 'Volver',
   'focus.continue': 'Continuar',
   'focus.startAnother': 'Empezar otro ciclo',
   'focus.cycleComplete': 'Ciclo completado',
@@ -2810,6 +2813,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'focus.startPause': 'Start break',
   'focus.pause': 'Pause',
   'focus.tab.done': '● Focus done · PACE',
+  'mini.fin': 'Focus done',
+  'mini.fin.sub': 'Back to PACE for your break',
+  'mini.volver': 'Back',
   'focus.continue': 'Continue',
   'focus.startAnother': 'Start another cycle',
   'focus.cycleComplete': 'Cycle complete',
@@ -33939,6 +33945,158 @@ Object.assign(window, { useTituloCuenta, paceTituloCuenta, paceTabTerminado });
 ;Object.assign(window, { paceTituloCuenta, paceTabMirando, paceTabFinPon, paceTabTerminado, paceIconoPon, useTituloCuenta });
 })();
 </script>
+  <!-- La miniventana: el Foco en una tira encima de todas las ventanas. Antes de FocusTimer.jsx. -->
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const { useEffect: useEffectMini, useState: useStateMini } = React;
+
+const PACE_MINI_TAM = { width: 300, height: 84 };
+let _paceMini = { win: null, root: null, props: null };
+
+function paceMiniPuede() {
+  try {return 'documentPictureInPicture' in window && window.top === window;} catch (e) {return false;}
+}
+function paceMiniAbierta() {return !!_paceMini.win;}
+function paceMiniAvisar() {try {window.dispatchEvent(new CustomEvent('pace:mini'));} catch (e) {}}
+function paceMiniPintar() {
+  if (!_paceMini.root || !_paceMini.props) return;
+  try {_paceMini.root.render(React.createElement(MiniTira, _paceMini.props));} catch (e) {}
+}
+function paceMiniCerrar() {
+  const w = _paceMini.win;
+  if (w) {try {w.close();} catch (e) {}}
+}
+
+
+
+function paceMiniVestir(w) {
+  const d = w.document;
+  const base = d.createElement('base');
+  base.href = document.baseURI;
+  d.head.appendChild(base);
+  document.querySelectorAll('link[rel="stylesheet"], style').forEach((nodo) => {
+    try {d.head.appendChild(nodo.cloneNode(true));} catch (e) {}
+  });
+  Array.prototype.forEach.call(document.documentElement.attributes, (atr) => {
+    try {d.documentElement.setAttribute(atr.name, atr.value);} catch (e) {}
+  });
+  d.title = 'PACE';
+  d.documentElement.style.height = '100%';
+  d.body.style.cssText = 'margin:0;height:100%;overflow:hidden;background:var(--paper);';
+}
+
+function paceMiniAbrir() {
+  if (!paceMiniPuede()) return Promise.resolve(null);
+  if (_paceMini.win) {try {_paceMini.win.focus();} catch (e) {}return Promise.resolve(_paceMini.win);}
+  return Promise.resolve(window.documentPictureInPicture.requestWindow(PACE_MINI_TAM)).then((w) => {
+    paceMiniVestir(w);
+    const cont = w.document.createElement('div');
+    cont.style.height = '100%';
+    w.document.body.appendChild(cont);
+    _paceMini.win = w;
+    _paceMini.root = ReactDOM.createRoot(cont);
+    const tic = w.setInterval(paceMiniPintar, 1000);
+    w.addEventListener('pagehide', () => {
+      try {w.clearInterval(tic);} catch (e) {}
+      try {_paceMini.root && _paceMini.root.unmount();} catch (e) {}
+      _paceMini = { win: null, root: null, props: _paceMini.props };
+      paceMiniAvisar();
+    });
+    paceMiniPintar();
+    paceMiniAvisar();
+    return w;
+  }).catch(() => null);
+}
+
+
+function paceMiniQueda(p) {
+  if (p.status === 'running' && p.endsAt) return Math.max(0, Math.ceil((p.endsAt - Date.now()) / 1000));
+  if (p.status === 'paused' && p.restanteMs != null) return Math.ceil(p.restanteMs / 1000);
+  if (p.status === 'completed') return 0;
+  return p.total;
+}
+
+const miniTiraStyles = {
+  caja: { position: 'relative', height: '100%', boxSizing: 'border-box', display: 'flex', alignItems: 'center', gap: 12,
+    padding: '0 14px', fontFamily: 'var(--font-ui)', color: 'var(--ink)', background: 'var(--paper)', overflow: 'hidden' },
+  cajaFin: { background: 'var(--breathe-soft)' },
+  txt: { display: 'flex', flexDirection: 'column', gap: 2, flex: 1, minWidth: 0 },
+  hora: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 400, fontSize: 30, lineHeight: 1,
+    fontVariantNumeric: 'tabular-nums', color: 'var(--ink)' },
+  horaFin: { fontSize: 22, color: 'var(--breathe-deep)' },
+  sub: { fontSize: 12, color: 'var(--ink-3)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },
+  boton: { flexShrink: 0, border: '1px solid var(--line)', background: 'var(--paper-2)', color: 'var(--ink-2)',
+    borderRadius: 999, padding: '5px 12px', fontFamily: 'var(--font-ui)', fontSize: 12, cursor: 'pointer' },
+  botonFin: { background: 'var(--breathe-deep)', borderColor: 'var(--breathe-deep)', color: 'var(--paper)' },
+  linea: { position: 'absolute', left: 0, bottom: 0, height: 3, background: 'var(--focus)' }
+};
+
+function MiniTira(p) {
+  const { t } = p;
+  const fin = p.status === 'completed' && p.modo === 'foco';
+  const queda = paceMiniQueda(p);
+  const hecho = fin ? 1 : p.total > 0 ? Math.min(1, Math.max(0, 1 - queda / p.total)) : 0;
+  const dos = (n) => (n < 10 ? '0' : '') + n;
+  const color = fin ? 'var(--breathe)' : 'var(--focus)';
+  const r = 18.5,vuelta = 2 * Math.PI * r;
+  const etiqueta = p.modo === 'foco' ? t('focus.mode.focus') : p.modo === 'pausa' ? t('focus.mode.pause') : t('focus.mode.long');
+  let boton = null;
+  if (fin) boton = React.createElement("button", { type: "button", style: { ...miniTiraStyles.boton, ...miniTiraStyles.botonFin }, onClick: () => {try {window.focus();} catch (e) {}} }, t('mini.volver'));else
+  if (p.status === 'running') boton = React.createElement("button", { type: "button", style: miniTiraStyles.boton, onClick: p.onPausar }, t('focus.pause'));else
+  if (p.status === 'paused') boton = React.createElement("button", { type: "button", style: miniTiraStyles.boton, onClick: p.onSeguir }, t('focus.continue'));
+  return (
+    React.createElement("div", { "data-pace-mini": true, "data-fin": fin ? '' : undefined, style: fin ? { ...miniTiraStyles.caja, ...miniTiraStyles.cajaFin } : miniTiraStyles.caja },
+    React.createElement("svg", { width: "40", height: "40", viewBox: "0 0 40 40", "aria-hidden": "true", style: { flexShrink: 0 } },
+    React.createElement("circle", { cx: "20", cy: "20", r: r, fill: "none", stroke: "var(--line)", strokeWidth: "1.5" }),
+    React.createElement("circle", { cx: "20", cy: "20", r: r, fill: "none", stroke: color, strokeWidth: "3", strokeLinecap: "round",
+      strokeDasharray: (vuelta * hecho).toFixed(1) + ' ' + vuelta.toFixed(1), transform: "rotate(-90 20 20)" })
+    ),
+    React.createElement("div", { style: miniTiraStyles.txt },
+    React.createElement("span", { style: fin ? { ...miniTiraStyles.hora, ...miniTiraStyles.horaFin } : miniTiraStyles.hora },
+    fin ? t('mini.fin') : dos(Math.floor(queda / 60)) + ':' + dos(queda % 60)
+    ),
+    React.createElement("span", { style: miniTiraStyles.sub }, fin ? t('mini.fin.sub') : etiqueta + (p.modo === 'foco' && p.ciclo ? ' · ' + p.ciclo : ''))
+    ),
+    boton,
+    React.createElement("span", { style: { ...miniTiraStyles.linea, width: (hecho * 100).toFixed(1) + '%', background: color } })
+    ));
+
+}
+
+
+function useMiniventana(props) {
+  const [abierta, setAbierta] = useStateMini(paceMiniAbierta);
+  _paceMini.props = props;
+  useEffectMini(() => {paceMiniPintar();});
+  useEffectMini(() => {
+    const oye = () => setAbierta(paceMiniAbierta());
+    window.addEventListener('pace:mini', oye);
+    return () => {window.removeEventListener('pace:mini', oye);paceMiniCerrar();};
+  }, []);
+  return { puede: paceMiniPuede(), abierta };
+}
+
+Object.assign(window, { useMiniventana, paceMiniAbrir, paceMiniPuede, MiniTira });
+;Object.assign(window, { paceMiniPuede, paceMiniAbierta, paceMiniAvisar, paceMiniPintar, paceMiniCerrar, paceMiniVestir, paceMiniAbrir, paceMiniQueda, MiniTira, useMiniventana });
+})();
+</script>
   <script>
 ;(function () {
 
@@ -34300,6 +34458,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
   const cycleN = state.cycle % 4 + 1;
+  const mini = useMiniventana({ status, endsAt, restanteMs, total: durationSec, modo: state.focusMode, ciclo: tn('focus.cycleOf', { n: cycleN }), t, onPausar: handlePause, onSeguir: handleNormalStart });
   const cycleLabel = isFocoMode && isCompleted ?
   tn('focus.cycleNext', { n: cycleN }) :
   tn('focus.cycleOf', { n: cycleN });

@@ -184,3 +184,45 @@ test('aviso-pc · 1.2A · en inglés, la nota dice lo mismo en inglés', async (
   expect(texto).toContain('“Allow”');
   expect(texto).toContain('the tab and the bell still tell you');
 });
+
+/* 2B · La miniventana en tira (Document Picture-in-Picture). La de verdad no se abre sin una persona
+   que toque, así que `requestWindow` devuelve aquí la ventana de un iframe: la app pinta dentro lo
+   mismo que pintaría en la miniventana. */
+async function miniventanaFalsa(context) {
+  await context.addInitScript(() => {
+    if (window.top !== window) return;
+    /* Chromium trae la de verdad y no deja pisarla con una asignación. */
+    Object.defineProperty(window, 'documentPictureInPicture', { configurable: true, value: {
+      requestWindow: (op) => new Promise((ok) => {
+        window.__pipPedido = op;
+        const f = document.createElement('iframe');
+        f.setAttribute('data-pip-falso', '');
+        f.style.cssText = 'position:fixed;left:0;bottom:0;width:300px;height:84px;border:0;z-index:2147483647';
+        document.body.appendChild(f);
+        ok(f.contentWindow);
+      }),
+    } });
+  });
+}
+const tira = (page) => page.frameLocator('[data-pip-falso]').locator('[data-pace-mini]');
+
+test('aviso-pc · 2B · la tira cuenta el Foco, «Pausar» y «Continuar» mandan sobre el aro y al acabar se pone en terracota', async ({ page, context }) => {
+  await sembrar(context, { soundOn: false, notifyFocusEnd: false, focusMinutes: 5 });
+  await miniventanaFalsa(context);
+  await context.clock.install({ time: ARRANQUE });
+  await irAlArtefacto(page);
+  await empezarFoco(page);
+  await page.evaluate(() => paceMiniAbrir());
+  expect(await page.evaluate(() => window.__pipPedido), 'la tira mide 300 × 84').toEqual({ width: 300, height: 84 });
+  await expect(tira(page)).toContainText(/0[45]:\d\d/);
+  await expect(tira(page)).toContainText('Foco · Ciclo 1 / 4');
+  await tira(page).getByRole('button', { name: 'Pausar' }).click();
+  await expect(cta(page), '«Pausar» de la tira no pausó el Foco').toHaveText('Continuar');
+  await tira(page).getByRole('button', { name: 'Continuar' }).click();
+  await expect(cta(page)).toHaveText('Pausar');
+  await context.clock.fastForward(CINCO + 2000);
+  await context.clock.runFor(1500);
+  await expect(cta(page)).toHaveText('Empezar otro ciclo');
+  await expect(tira(page)).toHaveAttribute('data-fin', '');
+  await expect(tira(page)).toContainText('Foco terminado');
+});
