@@ -5,9 +5,9 @@
    «Saltar la visita». La bienvenida no contaba que el aro se toca para empezar, que al
    acabar PACE propone una pausa, ni qué hace «A tu ritmo» con la semana.
 
-     1. El aro         y, de la B (la pista de la home), que al acabar llega una pausa.
-     2. Actividades    Respira, Estira, Mueve e Hidrátate.
-     3. Tu día         la tarjeta o el panel de «A tu ritmo».
+     1. Tu día         la tarjeta o el panel de «A tu ritmo»: cómo se prepara el día.
+     2. El aro         y, de la B (la pista de la home), que al acabar llega una pausa.
+     3. Actividades    Respira, Estira, Mueve e Hidrátate.
      4. Ajustes        y que desde allí se repite la visita («Visita guiada ›»).
 
    Una parada cuyo sitio no se ve al empezar (con un día elegido, Actividades no está
@@ -24,10 +24,12 @@
 
 const { useState: useStateVIS, useEffect: useEffectVIS, useLayoutEffect: useLayoutEffectVIS, useRef: useRefVIS } = React;
 
+/* Tu día va la primera (Ez, 19 nov. 2026: «lo de construir tu día debería ser importante»): quien
+   salta la visita en cuanto sale ya sabe que el día se prepara, y es lo que da sentido al resto. */
 const PACE_VISITA_PARADAS = [
+  { id: 'dia', sel: '[data-pace-ritmo-tarjeta], [data-pace-ritmo-panel]' },
   { id: 'aro', sel: '[data-pace-dial-ring]', redonda: true },
   { id: 'act', sel: '[data-pace-activitybar-grid]' },
-  { id: 'dia', sel: '[data-pace-ritmo-tarjeta], [data-pace-ritmo-panel]' },
   { id: 'ajustes', sel: '[data-pace-topbar-ajustes]', redonda: true },
 ];
 

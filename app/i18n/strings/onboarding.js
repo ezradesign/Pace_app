@@ -71,8 +71,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'visita.aro.pausa':                'Al acabar, PACE te propone una pausa corta: moverte, estirar o respirar.',
     'visita.act.titulo':               'Actividades',
     'visita.act.texto':                'Respira, Estira y Mueve, con rutinas cortas, e Hidrátate, para tus vasos de agua. Cuando quieras.',
-    'visita.dia.titulo':               'Tu día',
-    'visita.dia.texto':                'Cada mañana, «A tu ritmo» te prepara el día según tu semana: cuándo parar y qué hacer en cada pausa.',
+    'visita.dia.titulo':               'Empieza por tu día',
+    'visita.dia.texto':                'Elige cuánto trabajas hoy y PACE reparte tus pausas por la jornada, cada una a su hora y con qué hacer. Cada mañana te lo propone según tu semana.',
     'visita.ajustes.titulo':           'Ajustes',
     'visita.ajustes.texto':            'El idioma, la paleta, el sonido y tus datos. Desde aquí puedes repetir esta visita.',
 });
@@ -141,8 +141,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'visita.aro.pausa':                'When it ends, PACE suggests a short break: moving, stretching or breathing.',
     'visita.act.titulo':               'Activities',
     'visita.act.texto':                'Try short routines in Breathe, Stretch and Move. Log your water in Hydrate. Whenever you like.',
-    'visita.dia.titulo':               'Your day',
-    'visita.dia.texto':                'Each morning, “At your pace” uses your weekly schedule to plan when to take a break and what to do.',
+    'visita.dia.titulo':               'Start with your day',
+    'visita.dia.texto':                'Choose how long you work today and PACE spreads your breaks across it, each at its time and with what to do. Each morning it suggests a plan from your week.',
     'visita.ajustes.titulo':           'Settings',
     'visita.ajustes.texto':            'Language, color theme, sound and your data. You can take this tour again here.',
 });

@@ -65,11 +65,12 @@ async function medirParada(page) {
   }, SITIO);
 }
 
-for (const v of [{ width: 360, height: 740 }, { width: 1280, height: 800 }]) {
+/* 360 × 640: el móvil bajo, donde la tarjeta de tu día y la de la visita compiten por el alto. */
+for (const v of [{ width: 360, height: 640 }, { width: 360, height: 740 }, { width: 1280, height: 800 }]) {
   test.describe('a ' + v.width + ' × ' + v.height, () => {
     test.use({ viewport: v });
 
-    test('al cerrar la bienvenida, la visita enseña el aro, Actividades, tu día y Ajustes, y «Entendido» devuelve la home', async ({ page }) => {
+    test('al cerrar la bienvenida, la visita empieza por tu día y sigue por el aro, Actividades y Ajustes, y «Entendido» devuelve la home', async ({ page }) => {
       const errores = capturarErrores(page);
       await hastaLaVisita(page);
       const vistas = [];
@@ -80,6 +81,11 @@ for (const v of [{ width: 360, height: 740 }, { width: 1280, height: 800 }]) {
         expect(m.rodea, 'el hueco de «' + m.titulo + '» no rodea lo que enseña').toBe(true);
         expect(m.dentro, 'la tarjeta de «' + m.titulo + '» se sale de la ventana').toBe(true);
         expect(m.pisa, 'la tarjeta de «' + m.titulo + '» tapa lo que enseña').toBe(false);
+        if (m.id === 'dia') {
+          /* Ez: «lo de construir tu día debería ser importante». Va la primera y dice cómo se prepara. */
+          expect(m.titulo).toBe('Empieza por tu día');
+          expect(m.texto).toContain('Elige cuánto trabajas hoy');
+        }
         if (m.id === 'aro') {
           /* De la B: lo que pasa al acabar el Foco, con el nombre del botón de verdad. */
           expect(m.texto).toContain('toca «Empezar foco»');
@@ -88,7 +94,7 @@ for (const v of [{ width: 360, height: 740 }, { width: 1280, height: 800 }]) {
         await expect(page.locator('[data-pace-visita-siguiente]')).toHaveText(i === 3 ? 'Entendido' : 'Siguiente');
         await page.locator('[data-pace-visita-siguiente]').click();
       }
-      expect(vistas).toEqual(['aro', 'act', 'dia', 'ajustes']);
+      expect(vistas).toEqual(['dia', 'aro', 'act', 'ajustes']);
       await expect(page.locator(VISITA)).toHaveCount(0);
 
       /* La home vuelve a ser de la persona: lo que hay en el centro de «Empezar foco» es el botón. */
@@ -104,7 +110,7 @@ test('la visita es un diálogo: el foco entra, Tab no sale, los atajos callan y 
   await hastaLaVisita(page);
   const raiz = page.locator(VISITA);
   await expect(raiz).toHaveAttribute('aria-modal', 'true');
-  await expect(raiz).toHaveAccessibleName('El aro');
+  await expect(raiz).toHaveAccessibleName('Empieza por tu día');
   const dentro = () => page.evaluate(() => !!document.activeElement.closest('[data-pace-visita]'));
   expect(await dentro(), 'el foco no entró en la visita').toBe(true);
   for (let i = 0; i < 5; i++) {
@@ -120,7 +126,7 @@ test('la visita es un diálogo: el foco entra, Tab no sale, los atajos callan y 
 test('«Saltar la visita» la cierra en cualquier parada', async ({ page }) => {
   await hastaLaVisita(page);
   await page.locator('[data-pace-visita-siguiente]').click();
-  await expect(page.locator(VISITA)).toHaveAttribute('data-pace-visita', 'act');
+  await expect(page.locator(VISITA)).toHaveAttribute('data-pace-visita', 'aro');
   await page.locator('[data-pace-visita-saltar]').click();
   await expect(page.locator(VISITA)).toHaveCount(0);
 });
@@ -143,7 +149,7 @@ test('desde Ajustes, «Visita guiada» la repite; una parada cuyo sitio no se ve
     expect(m.meta).toBe((i + 1) + ' de 3');
     await page.locator('[data-pace-visita-siguiente]').click();
   }
-  expect(vistas).toEqual(['aro', 'dia', 'ajustes']);
+  expect(vistas).toEqual(['dia', 'aro', 'ajustes']);
   await expect(page.locator(VISITA)).toHaveCount(0);
   expect(errores).toEqual([]);
 });
@@ -151,11 +157,15 @@ test('desde Ajustes, «Visita guiada» la repite; una parada cuyo sitio no se ve
 test.describe('en inglés', () => {
   test.use({ locale: 'en-GB', viewport: { width: 360, height: 740 } });
 
-  test('la visita habla inglés, con el botón del aro por su nombre', async ({ page }) => {
+  test('la visita habla inglés: empieza por tu día y nombra el botón del aro', async ({ page }) => {
     await hastaLaVisita(page);
+    const d = await medirParada(page);
+    expect(d.titulo).toBe('Start with your day');
+    expect(d.meta).toBe('1 of 4');
+    expect(d.texto).toContain('Choose how long you work today');
+    await page.locator('[data-pace-visita-siguiente]').click();
     const m = await medirParada(page);
     expect(m.titulo).toBe('The ring');
-    expect(m.meta).toBe('1 of 4');
     expect(m.texto).toContain('tap “Start Focus”');
     await expect(page.locator('[data-pace-visita-saltar]')).toHaveText('Skip the tour');
   });
