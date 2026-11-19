@@ -64,8 +64,9 @@ function FocusTimer({ onFinish }) {
     }
     paceFocoContar(bloque, () => {
       /* En Android y en el iPhone, si el aviso del sistema ya avisó de este bloque, la campana es suya (A1). */
-      const campana = () => { try { playSound('pomodoro.end'); } catch (e) {} };
+      const campana = () => { try { playSound('pomodoro.end', PACE_TOQUES_FIN_FOCO); } catch (e) {} };
       if (typeof paceNativoCampana === 'function') paceNativoCampana(finBloque, campana); else campana();
+      try { paceTabTerminado(); } catch (e) {}   // «● Foco terminado» en la pestaña si no lo mirabas
       /* s172 · `activeSeconds` ES el preset: la cuenta solo corre en 'running',
          asi que llegar a 0 es haber contado eso; lo pausado va en elapsed. */
       /* `fin`: el evento va a la hora a la que acabó, no a la de enterarse (el portátil cerrado,
@@ -155,7 +156,7 @@ function FocusTimer({ onFinish }) {
   /* En las apps (Android y iPhone) el aviso del fin del bloque y el del fin de la pausa los
      programa el sistema, porque con la app en el fondo esta cuenta no corre (FocusTimer.avisos.jsx). */
   useAvisosNativos({ state, running, endsAt, pausaRitmo, enPausaRitmo, t, tn, lang });
-  useTituloCuenta({ running, remaining, modo: state.focusMode, lang, t });   // «24:13 · Foco · PACE» en la pestaña
+  useTituloCuenta({ running, remaining, total: durationSec, modo: state.focusMode, lang, t });   // «24:13 · Foco · PACE» en la pestaña
   const ofertaExacta = useOfertaExacta({ state, set, status, t });   // en Android, «Avisos a su hora ›», una vez
 
   /* La barra de arriba pregunta antes de cambiar de modo con un Foco empezado, y con una pausa
@@ -356,6 +357,7 @@ function FocusTimer({ onFinish }) {
      completed en foco muestra «SIGUIENTE · CICLO N / 4». Los puntos marcan los
      ciclos completados del cuarteto actual (delta cero). */
   const cycleN = (state.cycle % 4) + 1;
+  const mini = useMiniventana({ status, endsAt, restanteMs, total: durationSec, modo: state.focusMode, ciclo: tn('focus.cycleOf', { n: cycleN }), t, onPausar: handlePause, onSeguir: handleNormalStart });   // la tira encima de todo
   const cycleLabel = (isFocoMode && isCompleted)
     ? tn('focus.cycleNext', { n: cycleN })
     : tn('focus.cycleOf', { n: cycleN });
@@ -374,6 +376,7 @@ function FocusTimer({ onFinish }) {
         {ctaLabel}
       </button>
       {bloques.seguir}
+      {running && state.focusMode === 'foco' && mini.puede && !mini.abierta && <button type="button" onClick={paceMiniAbrir} style={focusStyles.resetTextBtn} aria-label={t('mini.abrir.aria')}>{t('mini.abrir')}</button>}
       {/* Reset RE-JERARQUIZADO (s124): oculto en idle/running/completed; en
           paused es una acción TEXTUAL secundaria «Reiniciar bloque» (no botón
           circular). Va EN FILA junto al CTA para NO añadir altura al interior

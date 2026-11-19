@@ -100,6 +100,8 @@ function maybeNotifyFocusEnd(opts) {
       badge: '/icons/icon-192.png',
       tag,
       silent: true,
+      /* Se queda hasta cerrarlo (Ez, 1A del 19 nov. 2026): en Windows se iba solo a los pocos segundos. */
+      requireInteraction: true,
     };
     const fallback = () => { try { new Notification(title, nOpts); } catch (e) {} };
     if (navigator.serviceWorker && navigator.serviceWorker.getRegistration) {

@@ -48,6 +48,16 @@ const { useEffect: useEffectTW, useState: useStateTW, useRef: useRefTW } = React
    suyo no cruzaría la IIFE del build (la trampa de s148 con `sidebarStyles`).
    Aquí se referencian pelados a propósito. */
 
+/* El navegador, para decir cómo quitar el bloqueo de los avisos en el suyo (Ez, 1.2A del 19 nov. 2026).
+   Edge y Firefox antes que Chrome y Safari, porque sus nombres van con «Chrome» y «Safari» dentro. */
+function paceNavegador() {
+  const ua = (navigator && navigator.userAgent) || '';
+  if (/Edg\//.test(ua)) return 'edge';
+  if (/Firefox\//.test(ua)) return 'firefox';
+  if (/Safari\//.test(ua) && !/(Chrome|Chromium|CriOS)\//.test(ua)) return 'safari';
+  return 'chrome';
+}
+
 function TweaksPanel({ open, onClose }) {
   const [state, set] = usePace();
   const { t, tn } = useT();
@@ -349,8 +359,9 @@ function TweaksPanel({ open, onClose }) {
             </AjustesFila>
           );
         })()}
-        {canNotify && avisoNativo && permisoAviso() === 'denied' && (
-          <div className="pace-aj-nota">{t('settings.notify.blocked.' + plataforma)}</div>
+        {canNotify && permisoAviso() === 'denied' && (
+          <div className="pace-aj-nota" data-pace-aj-aviso-bloqueado>{avisoNativo ? t('settings.notify.blocked.' + plataforma)
+            : t('settings.notify.blocked.' + paceNavegador()) + ' ' + t('settings.notify.blocked.sigue')}</div>
         )}
         {falloAviso && state.notifyFocusEnd && permisoAviso() === 'granted' && (
           <div className="pace-aj-nota" data-pace-aj-aviso-fallo>{t('settings.notify.fallo.' + plataforma)}</div>
