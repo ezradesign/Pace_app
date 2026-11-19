@@ -48,6 +48,8 @@ function ritmoMemoria(s, fecha, dia, pasado) {
   var aprende = typeof ritmoPuedeAprender === 'function' && ritmoPuedeAprender() && typeof ritmoMotorVigente === 'function';
   return {
     ultima: fechas.length ? serv[fechas[fechas.length - 1]] || {} : {},
+    /* cuántos días hace de ese último día: la frase «ayer no las moviste» solo vale con 1 */
+    ultimaHace: fechas.length ? ritmoDiasEntre(fechas[fechas.length - 1], fecha) : null,
     dias: dias, hechas: hechas,
     pasado: pasado || [], estados: (dia && dia.estados) || {},
     inicio: pasado && pasado.length ? pasado[0].desde : null,
@@ -88,6 +90,7 @@ function ritmoFrase(it, t, tn) {
   var f = it && it.frase;
   if (!f || !f.k) return null;
   if (f.k === 'zona') return f.zona ? tn('ritmo.frase.zona', { zona: t('ritmo.zona.' + f.zona) }) : null;
+  if (f.k === 'ayer') return f.zona ? tn('ritmo.frase.ayer', { zona: t('ritmo.zona.' + f.zona) }) : null;
   if (f.k === 'sentado') return f.n > 0 ? tn('ritmo.frase.sentado', { n: f.n }) : null;
   return t('ritmo.frase.' + f.k);
 }

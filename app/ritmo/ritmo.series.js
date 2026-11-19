@@ -36,7 +36,8 @@
    ninguna de estas cuatro cosas: el cuerpo entero sí, la variedad no.
 
    LA FRASE B, encima del nombre (la pausa y la línea): la razón que más pesó, en `it.frase`
-   — el cierre, la larga de unas dos horas, los minutos sentado o la zona sin mover hoy. Sin
+   — el cierre, la larga de unas dos horas, los minutos sentado, la zona que ayer no se movió o la
+   que aún no se ha movido hoy. Sin
    razón, la de siempre (`it.motivo`).
 
    LO APRENDIDO (el motor de la semana, ritmo.motor.js; con PACE completo), en
@@ -185,6 +186,13 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
   var ayerMovidas = {}, pesos = {};
   Object.keys(otraVez).forEach(function (id) { ritmoSeriesZonas(id).forEach(function (z) { ayerMovidas[z] = true; }); });
   if (Object.keys(otraVez).length) RITMO_ZONAS.forEach(function (z) { if (!ayerMovidas[z]) pesos[z] = 7; });
+  /* LO DE AYER, DICHO (Ez, 8A del 18 nov. 2026): la parada que mueve una de esas zonas, aún sin mover
+     hoy, lo dice («Piernas: ayer sin mover»). Solo si el último día fue ayer: si no, «ayer» mentiría
+     y queda la línea de siempre. */
+  var zonaDeAyer = function (x) {
+    if (mem.ultimaHace !== 1 || !x) return null;
+    return ritmoSeriesZonas(x.r.id).filter(function (z) { return pesos[z] && !movidas[z]; })[0] || null;
+  };
 
   /* Lo ya pasado (congelado al recolocar) cuenta igual que lo servido: zonas, de pie, saltada. */
   function pasar(it, ids, saltada) {
@@ -345,6 +353,7 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
       if (xe) platos.push(plato('estira', xe, clave + 'b'));
       it.motivo = 'larga';
       if (it.desde - desdeLarga >= RITMO_SERIES_LARGA) frase = { k: 'larga' };
+      else if (zonaDeAyer(xe)) frase = { k: 'ayer', zona: zonaDeAyer(xe) };
       else if (xe && xe.nueva) frase = { k: 'zona', zona: xe.nueva };
     } else {
       var claveC = 'p' + (++i);
@@ -374,6 +383,7 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
       it.motivo = platos[0] ? platos[0].modulo : 'estira';
       var pie = !!(x && ritmoSeriesDePie(x.r.id));
       if (porPrevia && pie && !primera) frase = { k: 'sentado', n: Math.round(it.desde - ultimaPie) };
+      else if (zonaDeAyer(x)) frase = { k: 'ayer', zona: zonaDeAyer(x) };
       else if (x && x.nueva) frase = { k: 'zona', zona: x.nueva };
     }
     if (platos.length) it.platos = platos;

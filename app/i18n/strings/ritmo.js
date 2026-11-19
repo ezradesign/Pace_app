@@ -105,6 +105,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'ritmo.motivo.respira':          'Bajar revoluciones',
     /* La frase de las series (Ez, 15 oct. 2026: la B, «lo de hoy»), encima del nombre */
     'ritmo.frase.zona':              '{zona}: aún sin mover',   /* «aún»: sin él se leía como «hoy no lo muevas» (Ez, 7A del 18 nov.); sin «hoy», que con «aún» partía en dos líneas la ventana a 360 px */
+    'ritmo.frase.ayer':              '{zona}: ayer sin mover',   /* Ez, 8A del 18 nov.: «ayer no las moviste» partía en dos líneas la ventana a 360 px */
     'ritmo.frase.sentado':           'Llevas {n} min sentado',
     'ritmo.frase.larga':             'Dos horas: sal de la silla',
     'ritmo.frase.cierre':            'Para cerrar, despacio',
@@ -299,6 +300,7 @@ Object.assign(window.PACE_STRINGS.en, {
     /* A 360 px tienen que caber en una línea: «Shoulders: not moved today» y «Two hours:
        leave the chair» se partían (medido en la app, docs/traspaso/archivos/series-15oct/). */
     'ritmo.frase.zona':              '{zona}: unmoved today',
+    'ritmo.frase.ayer':              '{zona}: idle yesterday',
     'ritmo.frase.sentado':           '{n} min sitting so far',
     'ritmo.frase.larga':             'Two hours: time to stand',
     'ritmo.frase.cierre':            'A gentle finish',
