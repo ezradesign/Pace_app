@@ -185,6 +185,34 @@ async function escena9(browser) {
   }
 }
 
+/* ---------- 10 · Los tres que caben con su texto nuevo (Ez, 19 nov.) ----------
+   Círculos de brazos en la repetición 9 («Otro brazo.»), Gateo con rodillas en la 5 («Atrás.») y Desliza
+   el talón en la 4 («Otra pierna.»), a 360 × 640 y a 1280 × 800, sin nada pintado encima. */
+
+async function escena10(browser) {
+  console.log('10 · los tres que caben con su texto nuevo');
+  const PASOS10 = [['move.shoulder.circles', 'Círculos de brazos', 33, '1-montada-brazos'], ['extra.pausa.suelo', 'Gateo con rodillas', 13, '1-montada-gateo'],
+    ['extra.pausa.suelo', 'Desliza el talón', 13, '1-montada-talon']];
+  for (const [id, paso, seg, nombre] of PASOS10) {
+    for (const ancho of [null, 1280]) {
+      const { context, page } = await abrir(browser, ancho ? { ancho, alto: 800 } : {});
+      await P.lanzarRutina(page, id);
+      for (let k = 0; k < 600; k++) {
+        const ok = await page.evaluate((n) => {
+          const q = (x) => [...document.querySelectorAll(x)].find((e) => e.getBoundingClientRect().width > 0);
+          const r = q('[data-pace-v1-raiz]'); const h = q('[data-pace-v1-name]');
+          return !!r && r.getAttribute('data-pace-v1-fase') === 'work' && !!h && h.textContent === n;
+        }, paso);
+        if (ok) break;
+        await page.clock.runFor(1000); await page.waitForTimeout(20);
+      }
+      await P.avanzar(page, seg);
+      await foto(page, nombre + (ancho ? '-1280' : ''));
+      await context.close();
+    }
+  }
+}
+
 (async () => {
   fs.mkdirSync(FOTOS, { recursive: true });
   const solo = (process.argv[2] || '1,2,3,4,5').split(',');
@@ -200,6 +228,7 @@ async function escena9(browser) {
     if (solo.includes('6')) await escena6(browser);
     if (solo.includes('7')) await escena7(browser);
     if (solo.includes('9')) await escena9(browser);
+    if (solo.includes('10')) await escena10(browser);
     if (solo.includes('8')) { console.log('8 · la 1A, alternativa para los tres que no caben'); medidas.aCortaAlternativas = await require('./genera.a-corta').medirAlternativas(abrir, browser); }
   } finally {
     await browser.close();
