@@ -21,7 +21,9 @@ Se monta aquí; ni bump, ni juntar, ni subir a main. **Parado en «wip» con las
 
 - **6B** (losetas de noche apagadas, «Ya no cabe hoy»): código en `RitmoPanel.jsx` (`ritmoNoCabe`, `ritmoOpcionVacia`),
   `RitmoTarjeta.jsx`, `ritmo.js` (`ritmo.nocabe`) y el censo a 1287. `tests/caza-19nov-noche.spec.js` **en verde (7)**
-  con el build del 6. Faltaba ver las vecinas (abierta-horas, aro-jornada, ritmo-*, husos-noche…: estaban corriendo) y su commit.
+  con el build del 6. Vecinas (14 archivos: abierta-horas, aro-jornada, ritmo-*, husos-noche, hora-y-medianoche…), con el
+  build del 6: **102 en verde y 1 roja**, `tests/ritmo-pausa.spec.js:106` («Hacer la pausa» entra en el plato…). Sin mirar
+  aún si es del 6 o de carga (corrían otras suites a la vez): repetirla sola antes del commit del 6.
 - **8A, 9A, 11A**: código escrito sin construir ni probar: `StatsAyuda.jsx` + `stats.ayuda.tras.cero` (censo +1 → 1288,
   **falta subirlo**), `FocusTimer.parts.jsx` (`Math.min(180, …)`), `StatsSemana.jsx` (`fmtTime` en h y min; el 78 sin
   rótulo) y `tests/stats-auditoria.spec.js` (E3/E4 al día). `tests/caza-19nov-textos.spec.js` va ya entero en el wip
@@ -30,7 +32,7 @@ Se monta aquí; ni bump, ni juntar, ni subir a main. **Parado en «wip» con las
 
 ## Lo que falta
 
-1. Vecinas del 6 → commit del 6 (con `index.html` del 6 solo).
+1. Repetir sola `ritmo-pausa.spec.js:106`; si cae, mirar si es del 6 → commit del 6 (con `index.html` del 6 solo).
 2. `node build-standalone.js`, `caza-19nov-textos` entero y vecinas (stats-ayuda, stats-auditoria, caza-ingles, foco-minimo,
    foco-libre-minutos) → un commit por 8, 9 y 11 (censo a 1288 en el del 8).
 3. `npm run verify`.
