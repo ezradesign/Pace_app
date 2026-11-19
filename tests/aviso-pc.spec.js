@@ -119,3 +119,31 @@ test('aviso-pc · 1C · si lo estabas mirando, la pestaña no dice «terminado»
   await expect(cta(page)).toHaveText('Empezar otro ciclo');
   await expect(page).toHaveTitle('PACE · Foco · Cuerpo');
 });
+
+/* Tres toques de campana (Ez, 19 nov.: «tres toques de campana»): al acabar el Foco, la campana suena
+   tres veces seguidas (din, din, din) en vez de una. Se cuentan los golpes por cuándo empiezan. */
+test('aviso-pc · campana · al acabar el Foco la campana da tres toques', async ({ page, context }) => {
+  await sembrar(context, { soundOn: true, notifyFocusEnd: false, focusMinutes: 5 });
+  await context.addInitScript(() => {
+    window.__golpes = [];
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    const crea = Ctx.prototype.createOscillator;
+    Ctx.prototype.createOscillator = function () {
+      const o = crea.call(this);
+      const empieza = o.start.bind(o);
+      o.start = (cuando) => { if (window.__contar) window.__golpes.push(cuando || 0); return empieza(cuando); };
+      return o;
+    };
+  });
+  await context.clock.install({ time: ARRANQUE });
+  await irAlArtefacto(page);
+  await empezarFoco(page);
+  await page.evaluate(() => { window.__contar = true; });
+  await context.clock.fastForward(CINCO + 2000);
+  await context.clock.runFor(1500);
+  await expect(cta(page)).toHaveText('Empezar otro ciclo');
+  const golpes = await page.evaluate(() => window.__golpes.slice().sort((a, b) => a - b));
+  /* Un toque son tres tonos casi a la vez; los toques se separan más de medio segundo. */
+  const toques = golpes.filter((g, i) => i === 0 || g - golpes[i - 1] > 0.5).length;
+  expect(toques, 'la campana del final dio ' + toques + ' toque(s): ' + JSON.stringify(golpes)).toBe(3);
+});

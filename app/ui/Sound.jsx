@@ -213,6 +213,8 @@ function madera(ctx, dest, t0, peak) {
 /* El sonido del fin de la pausa: cambiarlo es cambiar esta palabra y volver a correr
    `node scripts/campana-aviso.js`, que regraba el archivo del aviso (verify lo exige). */
 var PACE_SONIDO_PAUSA = 'pausa.end.dos';
+/* Al acabar el Foco, la campana suena tres veces seguidas (Ez, 19 nov. 2026: «tres toques de campana»). */
+var PACE_TOQUES_FIN_FOCO = 3;
 
 /* === CATÁLOGO DE SONIDOS === */
 var SOUND_RECIPES = {
@@ -237,8 +239,8 @@ var SOUND_RECIPES = {
   'pomodoro.start': function(ctx, t0) {
     glide(ctx, ctx.destination, note('C5'), note('G5'), t0, 0.20, 0.06, 'sine');
   },
-  'pomodoro.end': function(ctx, t0) {
-    SOUND_RECIPES.complete(ctx, t0);
+  'pomodoro.end': function(ctx, t0, toques) {   // `toques`: cuántas veces seguidas (el aviso grabado, una)
+    for (var i = 0; i < (toques > 1 ? toques : 1); i++) SOUND_RECIPES.complete(ctx, t0 + i * 0.9);
   },
   /* El fin de la pausa suena distinto del fin del Foco, para saber sin mirar si toca parar o
      volver (auditoría externa 4.F3, 12 nov. 2026). Dos candidatos para que Ez elija oyéndolos;
@@ -491,4 +493,4 @@ const ambientDrone = (() => {
 
 /* `paceAudioCtx`: la música de Respira se cuelga del MISMO contexto, que el navegador
    ya ha desbloqueado con el primer toque; un segundo contexto podría nacer suspendido. */
-Object.assign(window, { playSound, useSound, ambientDrone, paceAudioCtx: getCtx });
+Object.assign(window, { playSound, useSound, ambientDrone, paceAudioCtx: getCtx, PACE_TOQUES_FIN_FOCO });

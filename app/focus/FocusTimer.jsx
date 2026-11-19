@@ -64,7 +64,7 @@ function FocusTimer({ onFinish }) {
     }
     paceFocoContar(bloque, () => {
       /* En Android y en el iPhone, si el aviso del sistema ya avisó de este bloque, la campana es suya (A1). */
-      const campana = () => { try { playSound('pomodoro.end'); } catch (e) {} };
+      const campana = () => { try { playSound('pomodoro.end', PACE_TOQUES_FIN_FOCO); } catch (e) {} };
       if (typeof paceNativoCampana === 'function') paceNativoCampana(finBloque, campana); else campana();
       try { paceTabTerminado(); } catch (e) {}   // «● Foco terminado» en la pestaña si no lo mirabas
       /* s172 · `activeSeconds` ES el preset: la cuenta solo corre en 'running',

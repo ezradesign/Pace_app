@@ -23947,6 +23947,8 @@ function madera(ctx, dest, t0, peak) {
 
 var PACE_SONIDO_PAUSA = 'pausa.end.dos';
 
+var PACE_TOQUES_FIN_FOCO = 3;
+
 
 var SOUND_RECIPES = {
 
@@ -23970,8 +23972,8 @@ var SOUND_RECIPES = {
   'pomodoro.start': function (ctx, t0) {
     glide(ctx, ctx.destination, note('C5'), note('G5'), t0, 0.20, 0.06, 'sine');
   },
-  'pomodoro.end': function (ctx, t0) {
-    SOUND_RECIPES.complete(ctx, t0);
+  'pomodoro.end': function (ctx, t0, toques) {
+    for (var i = 0; i < (toques > 1 ? toques : 1); i++) SOUND_RECIPES.complete(ctx, t0 + i * 0.9);
   },
 
 
@@ -24224,8 +24226,8 @@ const ambientDrone = (() => {
 
 
 
-Object.assign(window, { playSound, useSound, ambientDrone, paceAudioCtx: getCtx });
-;Object.assign(window, { note, getCtx, ensureRunning, envelope, tone, glide, chord, bell, breathNoise, cuenco, madera, PACE_SONIDO_PAUSA, SOUND_RECIPES, playSound, useSound });
+Object.assign(window, { playSound, useSound, ambientDrone, paceAudioCtx: getCtx, PACE_TOQUES_FIN_FOCO });
+;Object.assign(window, { note, getCtx, ensureRunning, envelope, tone, glide, chord, bell, breathNoise, cuenco, madera, PACE_SONIDO_PAUSA, PACE_TOQUES_FIN_FOCO, SOUND_RECIPES, playSound, useSound });
 })();
 </script>
   <script>
@@ -33996,7 +33998,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
     }
     paceFocoContar(bloque, () => {
 
-      const campana = () => {try {playSound('pomodoro.end');} catch (e) {}};
+      const campana = () => {try {playSound('pomodoro.end', PACE_TOQUES_FIN_FOCO);} catch (e) {}};
       if (typeof paceNativoCampana === 'function') paceNativoCampana(finBloque, campana);else campana();
       try {paceTabTerminado();} catch (e) {}
 
