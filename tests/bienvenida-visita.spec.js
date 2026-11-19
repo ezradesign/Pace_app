@@ -93,16 +93,22 @@ for (const v of [{ width: 360, height: 640 }, { width: 360, height: 740 }, { wid
           /* Ez: «lo de construir tu día debería ser importante». Va la primera y dice cómo se prepara. */
           expect(m.titulo).toBe('Empieza por tu día');
           expect(m.texto).toContain('Elige cuánto trabajas hoy');
+          expect(m.texto).toContain('«Al calendario» lo lleva a tu calendario');
         }
         if (m.id === 'aro') {
           /* De la B: lo que pasa al acabar el Foco, con el nombre del botón de verdad. */
           expect(m.texto).toContain('toca «Empezar foco»');
-          expect(m.texto).toContain('Al acabar, PACE te propone una pausa corta: moverte, estirar o respirar.');
+          /* El permiso del navegador o del móvil salía de golpe al empezar el primer Foco, sin decir para qué. */
+          expect(m.texto).toContain('Al acabar te propone una pausa corta y, la primera vez, te pide permiso para avisarte aunque estés en otra app.');
         }
         if (m.id === 'arriba') {
           /* Los dos iconos de arriba no tienen nombre a la vista: la visita dice qué son. */
           expect(m.titulo).toBe('Estadísticas y logros');
           expect(m.texto).toContain('sin compararte con nadie');
+        }
+        if (m.id === 'ajustes') {
+          /* PACE no tiene cuenta: si se borra el navegador o se cambia de móvil, sin copia se pierde todo. */
+          expect(m.texto).toContain('PACE lo guarda todo en este aparato: en «Tus datos» haces una copia.');
         }
         if (m.id === 'cajon' || m.id === 'columna') {
           expect(m.titulo).toBe(m.id === 'cajon' ? 'El menú' : 'A la izquierda');
@@ -186,5 +192,23 @@ test.describe('en inglés', () => {
     expect(m.titulo).toBe('The ring');
     expect(m.texto).toContain('tap “Start Focus”');
     await expect(page.locator('[data-pace-visita-saltar]')).toHaveText('Skip the tour');
+  });
+});
+
+/* El inglés es más largo: en el móvil bajo, ninguna tarjeta se sale ni tapa lo que enseña. */
+test.describe('en inglés a 360 × 640', () => {
+  test.use({ locale: 'en-GB', viewport: { width: 360, height: 640 } });
+
+  test('las seis paradas caben sin tapar lo que enseñan', async ({ page }) => {
+    await hastaLaVisita(page);
+    for (let i = 0; i < ORDEN_MOVIL.length; i++) {
+      const m = await medirParada(page);
+      expect(m.id).toBe(ORDEN_MOVIL[i]);
+      expect(m.rodea, 'el hueco de «' + m.titulo + '» no rodea lo que enseña').toBe(true);
+      expect(m.dentro, 'la tarjeta de «' + m.titulo + '» se sale de la ventana').toBe(true);
+      expect(m.pisa, 'la tarjeta de «' + m.titulo + '» tapa lo que enseña').toBe(false);
+      await page.locator('[data-pace-visita-siguiente]').click();
+    }
+    await expect(page.locator(VISITA)).toHaveCount(0);
   });
 });
