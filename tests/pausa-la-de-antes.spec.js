@@ -111,9 +111,8 @@ test('con «A tu ritmo»: debajo de Hidrátate, y la ventana cabe a 360 × 640',
   await page.clock.install({ time: JUEVES('08:50') });
   await irAlArtefacto(page);
   await hacerEscritorioExpress(page, 'Un poco');
-  /* La tarjeta corta abre el día contestado, y su «Preparar jornada» lo elige. */
+  /* Con la semana guardada, «Preparar jornada» de la tarjeta corta sirve el día de un toque (Ez, 2A del 18 nov.). */
   await page.getByRole('button', { name: /Preparar jornada/ }).filter({ visible: true }).first().click();
-  await page.getByRole('button', { name: /Preparar jornada/ }).filter({ visible: true }).last().click();
   await expect(page.getByRole('button', { name: /Empezar jornada/ }).filter({ visible: true }).first()).toBeVisible();
   await bloqueHastaLaPausa(page);
   await expect(modal(page).locator('[data-pace-break-ritmo]'), 'GUARD: no es la ventana de «A tu ritmo»').toHaveCount(1);
