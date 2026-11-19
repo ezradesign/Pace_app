@@ -81,7 +81,7 @@ function RitmoTarjeta() {
           <div className="pace-rt-losetas">
             {RITMO_OPCIONES_UI.map((op) => {
               const m = ritmoMenu(state, op, null, null);
-              const vacia = !m || !m.focos.length;
+              const vacia = ritmoOpcionVacia(op, m);
               return (
                 <button key={op} type="button" className="pace-rt-loseta" data-pace-ritmo-loseta={op}
                   disabled={vacia} onClick={() => ritmoElegir(op)}>

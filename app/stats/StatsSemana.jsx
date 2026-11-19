@@ -89,10 +89,14 @@ function statsTotalesDe(entry, t) {
   return statsSeries(t).map(s => ({ key: s.key, label: s.label, color: s.color, valor: v[s.key], unidad: v[s.key] === 1 && s.unit1 ? s.unit1 : s.unit }));
 }
 
+/* Horas y minutos, no horas con decimales (caza del 19 nov. 2026, Ez 11A): «20,6h» obligaba a hacer
+   la cuenta, y son 20 h 36 min. */
 function fmtTime(min, hourUnit, lang) {
-  if (min <= 0) return '0';
-  if (min < 60) return `${min}min`;
-  return `${statsNumero(min / 60, lang, 1)}${hourUnit}`;
+  const total = Math.round(min);
+  if (total <= 0) return '0';
+  if (total < 60) return `${total} min`;
+  const h = Math.floor(total / 60), resto = total % 60;
+  return `${statsNumero(h, lang)} ${hourUnit}` + (resto ? ` ${resto} min` : '');
 }
 
 /* LA LÍNEA DE TOTALES DEL ESCRITORIO, en el Mes y en el Año: las cuatro cifras en una fila bajo
@@ -113,7 +117,8 @@ function StatsLineaTotales({ entry }) {
       <span>{rotulo('var(--focus)', t('stats.month.total.focus'))}{' '}{fmtTime(v('focusMinutes'), h, lang)}</span>{punto}
       <span>{rotulo('var(--breathe)', t('stats.month.total.breathe'))}{' '}{fmtTime(v('breathMinutes'), h, lang)}</span>{punto}
       <span>{rotulo('var(--move)', t('stats.month.total.move'))}{' '}{fmtTime(v('moveMinutes'), h, lang)}</span>{punto}
-      <span>{rotulo('var(--hydrate)', statsNumero(agua, lang))}{' '}{agua === 1 ? t('stats.unit.glasses.1') : t('stats.month.total.water')}</span>
+      {/* El número de vasos va como las otras cifras, no con la letra de los rótulos (Ez 11A). */}
+      <span>{statsNumero(agua, lang)}{' '}{agua === 1 ? t('stats.unit.glasses.1') : t('stats.month.total.water')}</span>
     </div>
   );
 }

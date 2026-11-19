@@ -70,6 +70,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'stats.ayuda.hora.fuente':         '{n} Focos terminados',
     'stats.ayuda.tras':                'Después del Foco',
     'stats.ayuda.tras.frase':          'Tras {a} de tus {b} Focos, una pausa.',
+    'stats.ayuda.tras.cero':           'Aún no has parado justo después de un Foco.',
     'stats.ayuda.tras.franjas':        'Por la mañana, {ma} de {mb}. Por la tarde, {ta} de {tb}.',
     'stats.ayuda.tras.fuente':         'Una pausa en los 15 minutos siguientes',
     // Heatmap mensual — sesión 43
@@ -170,6 +171,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'stats.ayuda.hora.fuente':         '{n} Focus blocks finished',
     'stats.ayuda.tras':                'After Focus',
     'stats.ayuda.tras.frase':          'You took a break after {a} of your {b} Focus blocks.',
+    'stats.ayuda.tras.cero':           'You haven’t taken a break right after a Focus block yet.',
     'stats.ayuda.tras.franjas':        'In the morning, {ma} of {mb}. In the afternoon, {ta} of {tb}.',
     'stats.ayuda.tras.fuente':         'A break within the next 15 minutes',
     // Monthly heatmap — session 43
