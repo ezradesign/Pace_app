@@ -42767,10 +42767,14 @@ function statsTotalesDe(entry, t) {
   return statsSeries(t).map((s) => ({ key: s.key, label: s.label, color: s.color, valor: v[s.key], unidad: v[s.key] === 1 && s.unit1 ? s.unit1 : s.unit }));
 }
 
+
+
 function fmtTime(min, hourUnit, lang) {
-  if (min <= 0) return '0';
-  if (min < 60) return `${min}min`;
-  return `${statsNumero(min / 60, lang, 1)}${hourUnit}`;
+  const total = Math.round(min);
+  if (total <= 0) return '0';
+  if (total < 60) return `${total} min`;
+  const h = Math.floor(total / 60),resto = total % 60;
+  return `${statsNumero(h, lang)} ${hourUnit}` + (resto ? ` ${resto} min` : '');
 }
 
 
@@ -42791,7 +42795,8 @@ function StatsLineaTotales(_ref2) {let { entry } = _ref2;
     React.createElement("span", null, rotulo('var(--focus)', t('stats.month.total.focus')), ' ', fmtTime(v('focusMinutes'), h, lang)), punto,
     React.createElement("span", null, rotulo('var(--breathe)', t('stats.month.total.breathe')), ' ', fmtTime(v('breathMinutes'), h, lang)), punto,
     React.createElement("span", null, rotulo('var(--move)', t('stats.month.total.move')), ' ', fmtTime(v('moveMinutes'), h, lang)), punto,
-    React.createElement("span", null, rotulo('var(--hydrate)', statsNumero(agua, lang)), ' ', agua === 1 ? t('stats.unit.glasses.1') : t('stats.month.total.water'))
+
+    React.createElement("span", null, statsNumero(agua, lang), ' ', agua === 1 ? t('stats.unit.glasses.1') : t('stats.month.total.water'))
     ));
 
 }

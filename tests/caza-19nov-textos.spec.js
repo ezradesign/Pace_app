@@ -5,6 +5,7 @@
    3 · El aviso del sello y el del código salen en el idioma de ahora, no en el de cuando se abrió PACE.
    8 · «Tras 0 de tus 60 Focos, una pausa.» dice otra frase con cero (8A).
    9 · «Otro» con más de 180 se queda en 180, igual que con menos de 5 sube a 5 (9A).
+   11 · La línea del Mes dice horas y minutos y el número de vasos va como las otras cifras (11A).
 */
 const { test, expect } = require('@playwright/test');
 const { sembrar, irAlArtefacto } = require('./helpers');
@@ -91,5 +92,35 @@ test.describe('8 · «Después del Foco» con cero pausas', () => {
     await page.getByRole('button', { name: 'Ver estadísticas' }).first().click();
     await page.getByRole('dialog').getByRole('button', { name: 'Qué te ayuda', exact: true }).first().click();
     await expect(page.locator('[data-pace-ayuda-view] .pace-ay-frase').first()).toHaveText('Tras 12 de tus 60 Focos, una pausa.');
+  });
+});
+
+test.describe('11 · la línea del Mes', () => {
+  test.use({ viewport: { width: 1280, height: 800 } });
+
+  test('horas y minutos, y los vasos como las demás cifras', async ({ page, context }) => {
+    const hoy = new Date();
+    const iso = hoy.getFullYear() + '-' + String(hoy.getMonth() + 1).padStart(2, '0') + '-' + String(hoy.getDate()).padStart(2, '0');
+    /* Un día del mes con todo; `loadState` rehace el mes desde los días. */
+    await sembrar(context, {
+      lastActiveDay: hoy.toDateString(),
+      history: { days: { [iso]: { focusMinutes: 1236, breathMinutes: 27, moveMinutes: 66, waterGlasses: 78 } }, months: {}, years: {} },
+    });
+    await irAlArtefacto(page);
+    await page.getByRole('button', { name: 'Ver estadísticas' }).first().click();
+    await page.getByRole('dialog').getByRole('button', { name: 'Mes', exact: true }).first().click();
+    const linea = page.locator('.pace-heatmap-totals').first();
+    await expect(linea).toBeVisible();
+    const texto = (await linea.textContent()).replace(/\s+/g, ' ');
+    expect(texto).toContain('Foco 20 h 36 min');
+    expect(texto).toContain('Respira 27 min');
+    expect(texto).toContain('Cuerpo 1 h 6 min');
+    expect(texto).toContain('78 vasos');
+    /* El 78 no va en la letra de los rótulos (la serif itálica de «Foco»). */
+    const estilo = await linea.evaluate((el) => {
+      const n = [...el.querySelectorAll('*')].find((x) => x.textContent.trim() === '78');
+      return n ? getComputedStyle(n).fontStyle : 'sin-nodo';
+    });
+    expect(estilo).not.toBe('italic');
   });
 });
