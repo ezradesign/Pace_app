@@ -1,0 +1,190 @@
+<title>La visita guiada, más completa</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de papel y tinta, como las otras páginas para Ez: lo que enseña hoy la visita, lo que
+   se salta, y tres maneras de completarla, cada una con sus fotos sobre la app de verdad (360 y 1280). */
+:root{
+  --paper:#F2EDE0;--card:#FBF8F1;
+  --ink:#1F1C17;--ink-2:#4A453C;--ink-3:#77705F;
+  --line:#C9C0A8;
+  --olive:#3E5A3A;--olive-soft:rgba(62,90,58,.12);
+  --terra:#A85E43;--terra-soft:rgba(168,94,67,.12);
+  --velo:rgba(31,28,23,.86);
+  --display:'EB Garamond',Georgia,'Times New Roman',serif;
+  --ui:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);--velo:rgba(0,0,0,.88);color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);--velo:rgba(0,0,0,.88);color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+main{max-width:920px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 72px}
+h1,h2,h3{font-family:var(--display);font-style:italic;font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(32px,6vw,44px)}
+h2{font-size:clamp(23px,4vw,28px);margin:44px 0 10px;padding-top:22px;border-top:1px solid var(--line)}
+h3{font-size:20px;margin:22px 0 6px}
+p,li{color:var(--ink-2);max-width:68ch}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 12px;padding-left:22px}
+li{margin-bottom:6px}
+strong{color:var(--ink);font-weight:500}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.lead{font-family:var(--display);font-size:21px;color:var(--ink);max-width:62ch;margin-top:14px}
+.reco{background:var(--olive-soft);border:1px solid var(--olive);border-radius:10px;padding:14px 16px;margin:18px 0 0}
+.reco p{margin:0;color:var(--ink)}
+.letra{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--paper);font-family:var(--display);font-style:italic;font-size:19px;margin-right:10px;vertical-align:-4px}
+.op h2 .tag{font-family:var(--ui);font-style:normal;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--olive);border:1px solid var(--olive);border-radius:999px;padding:2px 10px;margin-left:10px;vertical-align:6px;white-space:nowrap}
+.costo{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin:12px 0 4px}
+.costo div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
+.costo .t{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px}
+.costo p{margin:0;font-size:15px}
+.tira{display:flex;gap:12px;overflow-x:auto;padding:6px 2px 12px;scroll-snap-type:x proximity}
+.tira figure{margin:0;flex:0 0 auto;scroll-snap-align:start}
+.tira.movil figure{width:min(200px,46vw)}
+.tira.pc figure{width:min(440px,84vw)}
+.tira img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:10px;background:var(--card);cursor:zoom-in}
+.tira.movil img{border-radius:14px}
+figcaption{font-size:13px;color:var(--ink-3);margin-top:6px;line-height:1.4}
+figcaption b{color:var(--ink);font-weight:500}
+.ancho{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin:14px 0 2px}
+.idioma{display:flex;gap:6px;margin:18px 0 0;flex-wrap:wrap;align-items:center;font-size:14px;color:var(--ink-3)}
+.idioma button{font:inherit;font-size:13px;padding:5px 14px;border-radius:999px;border:1px solid var(--line);background:none;color:var(--ink-2);cursor:pointer}
+.idioma button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+button:focus-visible,img:focus-visible{outline:2px solid var(--olive);outline-offset:2px}
+.falta li strong{display:inline}
+.nota{font-size:14px;color:var(--ink-3)}
+.contesta{margin-top:44px;padding:18px 18px;border:1px solid var(--ink);border-radius:12px;background:var(--card)}
+.contesta p{margin:0;color:var(--ink);font-size:17px}
+#grande{position:fixed;inset:0;background:var(--velo);display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:20;cursor:zoom-out}
+#grande img{max-width:100%;max-height:100%;border-radius:12px}
+@media (prefers-reduced-motion: no-preference){.tira{scroll-behavior:smooth}}
+</style>
+
+<main>
+  <div class="eyebrow">PACE · visita guiada · 19 nov.</div>
+  <h1>La visita guiada, más completa</h1>
+  <p class="lead">Preguntaste si podíamos hacer la visita guiada más completa. Sí: la he recorrido como alguien que nunca ha visto PACE, he apuntado lo que se salta y te dejo tres maneras de completarla, pintadas sobre la app.</p>
+  <div class="reco"><p><span class="letra">A</span><strong>Recomiendo la A</strong>: la misma visita de hoy con seis paradas en vez de cuatro. Es lo que verán las testers nuevas, es lo más pequeño de montar, sigue tu 1C del 27 oct. y no añade nada que flote encima de otras opciones.</p></div>
+  <div class="idioma" role="group" aria-label="Idioma de las fotos">Fotos en
+    <button type="button" id="es" aria-pressed="true">español</button>
+    <button type="button" id="en" aria-pressed="false">inglés</button>
+  </div>
+
+  <h2>Lo que enseña hoy</h2>
+  <p>Al acabar la bienvenida salen cuatro paradas sobre la home: el aro, las actividades, tu día y Ajustes. Cada una se puede saltar y desde Ajustes se repite.</p>
+  <div class="ancho">Móvil · 360 × 640</div>
+  <div class="tira movil" data-fotos="hoy-360" data-pies="El aro|Actividades|Tu día|Ajustes"></div>
+
+  <h3>Lo que se salta, y dónde se pierde alguien nuevo</h3>
+  <ol class="falta">
+    <li><strong>Los dos iconos de arriba.</strong> El de la gráfica (Estadísticas) y el del sello (Logros) no tienen nombre a la vista y nadie dice qué son.</li>
+    <li><strong>El menú.</strong> En el móvil, las tres rayas de arriba a la izquierda abren la semana, el agua de hoy, las bibliotecas y Tus rutinas. En el ordenador es la columna de la izquierda. La visita no pasa por ahí.</li>
+    <li><strong>El calendario y la semana.</strong> Nadie cuenta qué hace «Al calendario», ni que la semana que eligió en la bienvenida se cambia en Ajustes › Tu semana.</li>
+    <li><strong>Los avisos.</strong> El permiso del navegador o del móvil sale de golpe al empezar el primer Foco, sin decir para qué es.</li>
+    <li><strong>La copia.</strong> PACE lo guarda todo en el aparato y no hay cuenta: si se borra el navegador o se cambia de móvil, se pierde. La visita dice «tus datos», pero no que conviene hacer una copia.</li>
+  </ol>
+  <p class="nota">Lo que no hace falta enseñar: Respira, Estira y Mueve ya abren con «¿Es tu primera vez? Empieza aquí», y al acabar el Foco la pausa se explica sola. La bienvenida y la tarjeta de tu día cambian un poco con los arreglos del recorrido («Preparar jornada» de un toque); los textos de abajo valen igual con ellos.</p>
+
+  <section class="op">
+    <h2><span class="letra">A</span>Más paradas en la misma visita <span class="tag">Recomendada</span></h2>
+    <p>La visita de hoy, con dos paradas nuevas y tres textos más claros. El aro dice que la primera vez pedirá permiso para avisar; tu día cuenta «Al calendario»; una parada nueva enseña a la vez Estadísticas y Logros; otra, el menú (en el ordenador, la columna de la izquierda); y Ajustes dice que todo se guarda en el aparato y que en «Tus datos» se hace una copia.</p>
+    <div class="ancho">Móvil · 360 × 640</div>
+    <div class="tira movil" data-fotos="A-360" data-pies="1 · El aro, con los avisos|2 · Actividades, como hoy|3 · Tu día, con el calendario|4 · Estadísticas y logros, nueva|5 · El menú, nueva|6 · Ajustes, con la copia"></div>
+    <div class="ancho">Ordenador · 1280 × 800</div>
+    <div class="tira pc" data-fotos="A-1280" data-pies="1 · El aro, con los avisos|2 · Actividades, como hoy|3 · Tu día, con el calendario|4 · Estadísticas y logros, nueva|5 · A la izquierda, nueva|6 · Ajustes, con la copia"></div>
+    <div class="costo">
+      <div><div class="t">Lo que cuesta</div><p>Poco. La visita ya existe: dos paradas, tres textos en español e inglés y sus pruebas.</p></div>
+      <div><div class="t">Lo bueno</div><p>La ve toda persona nueva, una sola vez, y se salta con un toque. Medido: ninguna tarjeta se sale de la pantalla ni tapa lo que enseña, en los dos idiomas.</p></div>
+      <div><div class="t">La pega</div><p>Seis pasos en vez de cuatro. Quien tenga prisa la saltará antes de llegar a Estadísticas.</p></div>
+    </div>
+  </section>
+
+  <section class="op">
+    <h2><span class="letra">B</span>La visita de hoy y una línea la primera vez en cada sitio</h2>
+    <p>La visita se queda con sus cuatro paradas. La primera vez que entras en Estadísticas, Logros, Ajustes o al preparar la jornada, la frase de debajo del título cambia por una línea que dice qué hay ahí, con «Entendido» al final. No flota: ocupa el sitio de una frase que ya existe, o una línea nueva bajo el título.</p>
+    <div class="ancho">Móvil · 360 × 640</div>
+    <div class="tira movil" data-fotos="B-360" data-pies="Estadísticas, la primera vez|Logros, la primera vez|Ajustes, la primera vez: la copia|Preparar jornada, la primera vez"></div>
+    <div class="ancho">Ordenador · 1280 × 800</div>
+    <div class="tira pc" data-fotos="B-1280" data-pies="Estadísticas, la primera vez|Logros, la primera vez|Ajustes, la primera vez: la copia|Preparar jornada, la primera vez"></div>
+    <div class="costo">
+      <div><div class="t">Lo que cuesta</div><p>Lo más caro. Cuatro sitios, cada uno recuerda si ya se vio, y cada línea se mide en el móvil y con la letra grande.</p></div>
+      <div><div class="t">Lo bueno</div><p>Explica cada cosa justo cuando se usa, sin alargar la visita.</p></div>
+      <div><div class="t">La pega</div><p>Los primeros días sale texto nuevo en muchos sitios. La de tu día alarga la tarjeta dos líneas: hoy cabe sin scroll a 360 × 640, pero con la letra grande hay que comprobarlo.</p></div>
+    </div>
+  </section>
+
+  <section class="op">
+    <h2><span class="letra">C</span>Visitas cortas por temas, desde Ajustes</h2>
+    <p>La primera visita sigue con sus cuatro paradas, pero la última avisa de que hay más. En Ajustes, «Visita guiada ›» abre una lista con cuatro visitas cortas: lo básico, tu día, lo que llevas y tus datos y avisos. Aquí, la última parada, la lista y la visita «Tu día».</p>
+    <div class="ancho">Móvil · 360 × 640</div>
+    <div class="tira movil" data-fotos="C-360" data-pies="La última parada avisa de las otras|La lista, en Ajustes|«Tu día», 1 de 2|«Tu día», 2 de 2"></div>
+    <div class="ancho">Ordenador · 1280 × 800</div>
+    <div class="tira pc" data-fotos="C-1280" data-pies="La última parada avisa de las otras|La lista, en Ajustes|«Tu día», 1 de 2|«Tu día», 2 de 2"></div>
+    <div class="costo">
+      <div><div class="t">Lo que cuesta</div><p>Medio. Se usa la misma visita; falta la lista en Ajustes y tres recorridos cortos.</p></div>
+      <div><div class="t">Lo bueno</div><p>Quien quiera saber más lo encuentra ordenado por temas, y la primera visita no se alarga.</p></div>
+      <div><div class="t">La pega</div><p>Quien no entra en Ajustes no las ve nunca, y la primera visita sigue sin contar lo que falta.</p></div>
+    </div>
+  </section>
+
+  <h2>Lo que no he probado</h2>
+  <ul>
+    <li>Nada está montado en la app: las fotos son la 0.211.0 con la visita cambiada solo en el navegador de prueba.</li>
+    <li>Las medidas (que la tarjeta quepa y no tape lo que enseña) son a 360 × 640 y a 1280 × 800, en español e inglés, con la letra normal. Con la letra grande del móvil, se mide al montar.</li>
+    <li>Quien ya usa PACE no vuelve a ver la visita sola: la tiene en Ajustes › Visita guiada, como hoy.</li>
+  </ul>
+
+  <div class="contesta"><p>Contesta con una letra: <strong>A</strong>, <strong>B</strong> o <strong>C</strong>. Se pueden juntar, por ejemplo «A y la línea de la copia de la B».</p></div>
+</main>
+<div id="grande" hidden><img alt=""></div>
+
+<script>
+(function () {
+  var lang = 'es';
+  var fotos = {
+    'hoy-360': ['hoy-360-L-1', 'hoy-360-L-2', 'hoy-360-L-3', 'hoy-360-L-4'],
+    'A-360': [1, 2, 3, 4, 5, 6].map(function (k) { return 'A-360-L-' + k; }),
+    'A-1280': [1, 2, 3, 4, 5, 6].map(function (k) { return 'A-1280-L-' + k; }),
+    'B-360': [1, 2, 3, 4].map(function (k) { return 'B-360-L-' + k; }),
+    'B-1280': [1, 2, 3, 4].map(function (k) { return 'B-1280-L-' + k; }),
+    'C-360': ['C-360-L-1', 'C-360-L-2', 'Cdia-360-L-1', 'Cdia-360-L-2'],
+    'C-1280': ['C-1280-L-1', 'C-1280-L-2', 'Cdia-1280-L-1', 'Cdia-1280-L-2']
+  };
+  function pintar() {
+    document.querySelectorAll('[data-fotos]').forEach(function (tira) {
+      var pies = tira.getAttribute('data-pies').split('|');
+      var lista = fotos[tira.getAttribute('data-fotos')];
+      tira.innerHTML = lista.map(function (n, i) {
+        return '<figure><img loading="lazy" tabindex="0" src="fotos/' + n.replace('-L-', '-' + lang + '-') + '.webp" alt="' + pies[i] + '"><figcaption><b>' + pies[i] + '</b></figcaption></figure>';
+      }).join('');
+    });
+  }
+  pintar();
+  ['es', 'en'].forEach(function (l) {
+    document.getElementById(l).addEventListener('click', function () {
+      lang = l;
+      document.getElementById('es').setAttribute('aria-pressed', String(l === 'es'));
+      document.getElementById('en').setAttribute('aria-pressed', String(l === 'en'));
+      pintar();
+    });
+  });
+  var grande = document.getElementById('grande');
+  function abrir(img) { grande.querySelector('img').src = img.src; grande.querySelector('img').alt = img.alt; grande.hidden = false; }
+  document.addEventListener('click', function (e) {
+    if (e.target.matches('.tira img')) abrir(e.target);
+    else if (!grande.hidden && grande.contains(e.target)) grande.hidden = true;
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') grande.hidden = true;
+    if (e.key === 'Enter' && e.target.matches && e.target.matches('.tira img')) abrir(e.target);
+  });
+})();
+</script>
