@@ -93,7 +93,10 @@ function ritmoOcupadoDe(r, fecha) {
    por región se conserva. Las horas cambian el día servido, como en ritmoHorario. */
 function ritmoGuardarSemana(tipo, cambios) {
   var tocadas = Object.keys(cambios || {});
-  if (typeof ritmoFijarLoHecho === 'function') ritmoFijarLoHecho();   /* lo hecho no se recompone (state-ritmo.recolocar.jsx) */
+  /* lo hecho no se recompone (state-ritmo.recolocar.jsx), mirando ya las horas nuevas (la comida abierta) */
+  var nuevo = Object.assign({}, ritmoDe(getState()).horario);
+  tocadas.forEach(function (campo) { if (campo.indexOf('media.') !== 0) nuevo[campo] = Number(cambios[campo]); });
+  if (typeof ritmoFijarLoHecho === 'function') ritmoFijarLoHecho(nuevo);
   ritmoGuardar(function (r) {
     var c = { semanaTipo: Array.isArray(tipo) ? tipo.slice(0, 7) : null };
     if (tocadas.length) {

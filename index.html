@@ -14920,7 +14920,7 @@ function ritmoHorario(campo, valor) {
       Object.keys(cambios).forEach(function (c) {horario.media[c.slice(6)] = cambios[c];});
     } else Object.assign(horario, cambios);
   }
-  if (typeof ritmoFijarLoHecho === 'function') ritmoFijarLoHecho();
+  if (typeof ritmoFijarLoHecho === 'function') ritmoFijarLoHecho(horario);
   ritmoGuardar(function (r) {
     return { horario: horario, dia: r.dia ? Object.assign({}, r.dia, { cambios: {} }) : r.dia };
   });
@@ -15024,21 +15024,31 @@ function ritmoBloqueTerminado(inicioMs, finMs, minutos) {
 
 
 
-function ritmoFijarLoHecho() {
+
+
+
+
+
+
+function ritmoFijarLoHecho(nuevo) {
   var s = getState(),R = ritmoDe(s);
   if (!R.dia || R.libre) return;
   var p = ritmoPlanBase(s);
   if (!p || p.hechos < 1 || !p.actual || ritmoPasadaLaSalida(p)) return;
   var corre = typeof ritmoFocoCorriendo === 'function' && ritmoFocoCorriendo();
-  var hasta = corre ? p.actual : p.pausa || p.m.focos[p.hechos - 1];
+  var comida = !corre && p.pausa && p.pausa.tipo === 'comida' ? p.pausa : null;
+  var hasta = corre ? p.actual : comida ? p.m.focos[p.hechos - 1] : p.pausa || p.m.focos[p.hechos - 1];
   var corte = p.m.items.indexOf(hasta) + (corre ? 0 : 1);
   var ya = (R.dia.pasado || []).length;
   if (!p.m.items.slice(ya, corte).some(function (it) {return it.tipo !== 'libre';})) return;
   var antes = p.m.items.slice(0, corte);
   while (antes.length && antes[antes.length - 1].tipo === 'libre') antes.pop();
   var fin = antes[antes.length - 1];
-  var cambios = { pasado: ritmoCongelar(antes), pausaPendiente: false,
-    desde: corre ? p.actual.desde : Math.max(ritmoAhoraExacto(), fin.desde + fin.dur),
+  var t = ritmoAhoraExacto();
+  var desde = corre ? p.actual.desde : Math.max(t, fin.desde + fin.dur);
+  var h = nuevo || R.horario;
+  if (comida && comida.desde <= t && !h.sinComida && h.comida <= comida.desde && h.comida + (h.comidaDur || 60) > comida.desde) desde = comida.desde;
+  var cambios = { pasado: ritmoCongelar(antes), pausaPendiente: false, desde: desde,
     primerBloque: corre ? p.actual.dur : null };
   ritmoGuardar(function (r) {return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {};});
 }
@@ -15439,7 +15449,10 @@ function ritmoOcupadoDe(r, fecha) {
 
 function ritmoGuardarSemana(tipo, cambios) {
   var tocadas = Object.keys(cambios || {});
-  if (typeof ritmoFijarLoHecho === 'function') ritmoFijarLoHecho();
+
+  var nuevo = Object.assign({}, ritmoDe(getState()).horario);
+  tocadas.forEach(function (campo) {if (campo.indexOf('media.') !== 0) nuevo[campo] = Number(cambios[campo]);});
+  if (typeof ritmoFijarLoHecho === 'function') ritmoFijarLoHecho(nuevo);
   ritmoGuardar(function (r) {
     var c = { semanaTipo: Array.isArray(tipo) ? tipo.slice(0, 7) : null };
     if (tocadas.length) {
