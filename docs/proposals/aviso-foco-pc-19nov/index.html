@@ -78,6 +78,7 @@ figcaption b{color:var(--ink-2);font-weight:500}
 .pest.pace{flex:1 0 auto}
 .pest.otra{flex:0 1 92px}
 .pest .ic{flex:none;width:14px;height:14px;border-radius:50%}
+img.ic{border-radius:0}
 .pest .t{overflow:hidden;text-overflow:ellipsis}
 .pest.fija{flex:0 0 auto;padding:6px 9px}
 .ic-pace{background:radial-gradient(circle,#F2EDE0 38%,transparent 40%),conic-gradient(#3E5A3A 0 70%,#C9C0A8 70% 100%)}
@@ -150,15 +151,72 @@ td.no{color:var(--terra-deep)}
 </style>
 
 <main>
-  <div class="eyebrow">Propuesta · 19 nov. 2026 · sobre la 0.211.0 · solo maqueta</div>
+  <div class="eyebrow">Propuesta y montaje · 19 nov. 2026 · sobre la 0.211.0</div>
   <h1>Que el Foco te avise en el PC</h1>
   <p class="lead">Dos encargos tuyos: enterarte de que acabó el Foco sin volver a la pestaña de PACE, y una miniventana con el aro encima de todas las ventanas.</p>
 
   <div class="resumen">
-    <p>Recomiendo <b>1A</b> (el aviso se queda hasta que lo cierras, y la pestaña dice «Foco terminado» con el icono en terracota), <b>1.2A</b> (si el permiso está bloqueado, decir cómo desbloquearlo) y <b>2A</b> (la miniventana con el aro, desde un botón junto a «Pausar», <b>2.2A</b>). Lo primero es pequeño y sirve en todos los navegadores; la miniventana es más trabajo y va detrás.</p>
+    <p>Elegiste <b>1A + 1C</b>, <b>tres toques de campana</b>, <b>1.2A</b>, <b>2B</b> y <b>2.2A</b>. Está todo montado en la rama del aviso, cada letra con su prueba, sin juntar todavía con lo demás. Abajo van las fotos de la app de verdad, en español y en inglés, y después la propuesta tal como la viste.</p>
   </div>
 
-  <h2>Qué pasa hoy y por qué no te enteras</h2>
+  <h2 id="montado">Lo montado</h2>
+
+  <h3>La pestaña (1C)</h3>
+  <p>Mientras corre, el icono es un aro que se va llenando. Si el Foco acaba sin que mires la pestaña, dice «● Foco terminado · PACE» con el icono en terracota hasta que vuelves. Si la estabas mirando, no lo dice.</p>
+  <div class="escenas">
+    <figure class="escena">
+      <div class="mesa">
+        <div><div class="pestanas"><div class="pest otra"><span class="ic ic-otra"></span><span class="t">Correo</span></div><div class="pest pace"><img class="ic" src="montado/iconoCorre.png" alt=""><span class="t">12:59 · Foco · PACE</span></div><div class="pest activa otra"><span class="ic ic-otra2"></span><span class="t">Informe</span></div></div><div class="pagina"></div></div>
+      </div>
+      <figcaption><b>Corriendo.</b> Icono y título los pone la app; son los de verdad.</figcaption>
+    </figure>
+    <figure class="escena">
+      <div class="mesa">
+        <div><div class="pestanas"><div class="pest otra"><span class="ic ic-otra"></span><span class="t">Correo</span></div><div class="pest pace"><img class="ic" src="montado/iconoFin.png" alt=""><span class="t">● Foco terminado · PACE</span></div><div class="pest activa otra"><span class="ic ic-otra2"></span><span class="t">Informe</span></div></div><div class="pagina"></div></div>
+        <div class="toast"><div class="de"><i></i>Google Chrome · pacegrass.app</div><div class="cuerpo"><div class="logo">p</div><div><b>Foco completado</b><span>Ciclo cerrado. Elige tu micro-pausa.</span></div></div><div class="cerrar">Cerrar</div></div>
+      </div>
+      <figcaption><b>Al acabar, sin mirarla (1A y 1C).</b> El aviso lleva el texto de siempre (con «A tu ritmo», el nombre de la pausa) y ahora se queda hasta cerrarlo. La barra de pestañas y el aviso están pintados: una foto de la página no los incluye. Lo que hace Windows de verdad, en tu PC.</figcaption>
+    </figure>
+  </div>
+  <p class="nota">También en las dos: el final se programa a su hora exacta, así que la campana y el aviso ya no llegan un minuto tarde con la pestaña detrás.</p>
+
+  <h3>Tres toques de campana</h3>
+  <p>Lo entendí como tres golpes seguidos al acabar el Foco: din, din, din, en vez de uno. Si querías otra cosa, por ejemplo que vuelva a sonar al minuto si no has vuelto (la 1D), es cambiar un número o una línea: dímelo. El aviso grabado del móvil sigue siendo de un toque.</p>
+
+  <h3>Con el permiso bloqueado (1.2A)</h3>
+  <p>La nota de Ajustes dice cómo quitarlo en tu navegador (Chrome, Edge, Firefox o Safari) y que la pestaña y la campana siguen avisando.</p>
+  <div class="fotos">
+    <figure><img src="montado/ajustes-bloqueado-es.png" alt="Ajustes con la nota: cómo quitar el bloqueo en Chrome y que la pestaña y la campana siguen avisando" loading="lazy"><figcaption><b>Chrome, en español.</b></figcaption></figure>
+    <figure><img src="montado/ajustes-bloqueado-en.png" alt="Settings with the note in English" loading="lazy"><figcaption><b>En inglés.</b></figcaption></figure>
+  </div>
+
+  <h3>La tira encima de todo (2B) y su botón (2.2A)</h3>
+  <p>Mientras corre un Foco sale «Miniventana» junto a «Pausar», solo en los navegadores que la tienen. Al tocarlo se abre la tira, que se queda encima de cualquier programa. «Pausar» y «Continuar» de la tira mandan sobre el Foco. Al acabar se pone en terracota.</p>
+  <div class="fotos">
+    <figure><img src="montado/boton-es.png" alt="El aro corriendo con «Pausar» y «Miniventana» al lado" loading="lazy"><figcaption><b>El botón, junto a «Pausar».</b></figcaption></figure>
+    <figure><img src="montado/tira-encima-es.png" alt="La tira abajo a la izquierda con 12:57 y «Pausar»" loading="lazy"><figcaption><b>La tira abierta.</b> En la foto va dentro de la página, abajo a la izquierda; en Chrome es una ventana aparte, encima de todo.</figcaption></figure>
+  </div>
+  <div class="fotos">
+    <figure><img src="montado/tira-corre-es.png" alt="Tira corriendo: 12:57, Foco · Ciclo 1 / 4, Pausar" loading="lazy"><figcaption><b>Corriendo.</b></figcaption></figure>
+    <figure><img src="montado/tira-fin-es.png" alt="Tira al acabar: Foco terminado, Vuelve a PACE para tu pausa, Volver" loading="lazy"><figcaption><b>Al acabar.</b></figcaption></figure>
+    <figure><img src="montado/tira-corre-en.png" alt="Strip running in English" loading="lazy"><figcaption><b>En inglés, corriendo.</b></figcaption></figure>
+    <figure><img src="montado/tira-fin-en.png" alt="Strip done in English: Focus done" loading="lazy"><figcaption><b>En inglés, al acabar.</b></figcaption></figure>
+  </div>
+
+  <h3>Siguiente paso pequeño</h3>
+  <p>Te pareció interesante que se abra sola. Sería un interruptor en Ajustes, «Abrir la miniventana al empezar el Foco»: el navegador pide un toque y «Empezar foco» ya lo es. Unas dos horas. No está montado.</p>
+
+  <h3>Lo que falta mirar a mano</h3>
+  <ul>
+    <li>En tu Chrome: que el aviso se quede en la esquina hasta cerrarlo y que la miniventana se abra encima de todo.</li>
+    <li>Oír los tres toques al acabar un Foco.</li>
+    <li>Firefox: tiene la miniventana desde la 151, pero no se ha probado en él.</li>
+  </ul>
+
+  <h2>La propuesta que elegiste</h2>
+  <p class="nota">Tal como la viste el 19 nov., con las letras que elegiste: 1A, 1C, 1.2A, 2B y 2.2A.</p>
+
+  <h3 style="margin-top:20px">Qué pasaba y por qué no te enterabas</h3>
   <p>Lo he probado en el navegador con la 0.211.0. PACE ya tiene cuatro avisos, pero cada uno falla en algo:</p>
   <ul>
     <li><strong>El aviso del sistema</strong> («Aviso al terminar», en Ajustes) solo sale si la pestaña está detrás. Es silencioso y en Windows se va solo a los pocos segundos al centro de notificaciones. Si no estabas mirando la esquina, te lo pierdes. Con «No molestar» de Windows ni siquiera asoma.</li>

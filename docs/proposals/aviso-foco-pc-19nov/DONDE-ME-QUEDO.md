@@ -32,25 +32,29 @@
   dentro de la ventana, con su propio `setInterval` (es la ventana visible). El botón solo existe
   si `'documentPictureInPicture' in window`. Se cierra sola si se cierra o recarga la pestaña.
 
-## Montaje de lo elegido (19 nov., parado por uso al 98 %)
+## Montaje de lo elegido (19 nov.): hecho
 
 Ez eligió: «1a+ 1c + tres toques de campana / 1.2A + 2b + 2.2A aunque se abra sola es interesante».
 
-Hecho en esta rama, cada uno con su prueba vista caer antes del arreglo (`tests/aviso-pc.spec.js`,
-5 pruebas, puerto 8965, `--workers=1`) y `npm run verify` en verde:
+Todo montado en esta rama, una letra por commit, cada una con su prueba vista caer antes del arreglo
+(`tests/aviso-pc.spec.js`, 14 pruebas, puerto 8965, `--workers=1`) y `npm run verify` en verde:
 - `d0e0a017` 1A: `requireInteraction` (sigue `silent`) y el final con un `setTimeout` a `endsAt` (useCountdown).
-- `955f23e6` 1C: título «● Foco terminado · PACE» e icono (aro que se llena; terracota al acabar) hasta volver
-  (FocusTimer.titulo.jsx; clave `focus.tab.done`; censo i18n 1286).
-- `c8a21f75` Tres toques: `PACE_TOQUES_FIN_FOCO = 3` (Sound.jsx); el .wav del móvil no cambia.
+- `955f23e6` 1C: título «● Foco terminado · PACE» e icono (aro que se llena; terracota al acabar), solo si
+  acabó sin mirarla y hasta volver (FocusTimer.titulo.jsx).
+- `c8a21f75` Tres toques: `PACE_TOQUES_FIN_FOCO = 3` (Sound.jsx), din din din seguidos; el .wav del móvil no
+  cambia. Si Ez quería que insista al minuto (la 1D), es otra cosa: dicho en la página.
+- `5d5aa83b` 1.2A: la nota de Ajustes con los pasos de Chrome, Edge, Firefox o Safari (`paceNavegador`) y
+  «la pestaña y la campana siguen avisando», es y en.
+- `c5981143` 2B: la tira 300 × 84 (FocusTimer.mini.jsx, Document Picture-in-Picture), repintada con el reloj
+  de su ventana; «Pausar»/«Continuar» mandan sobre el aro; terracota al acabar.
+- `425b1c52` 2.2A: «Miniventana» junto a «Pausar», solo mientras corre un Foco, con la API y sin otra abierta.
+- Fila nueva arriba en DECISIONES_TECNICAS_VIGENTES.md. Censo i18n 1295.
+- Fotos a 1280, es y en, en `montado/`. Página republicada (versión 2) en NUbh7w6PypKwdPqnjF2vDV.
 
-Falta, en este orden:
-1. 1.2A: nota de Ajustes con el permiso bloqueado por navegador (Chrome, Edge, Firefox, Safari) y «la
-   pestaña y la campana siguen avisando», es y en (TweaksPanel.jsx ~347, `settings.notify.blocked`).
-   Ojo: subir el censo i18n en `scripts/verify.integridad.js`.
-2. 2B + 2.2A: la tira 300 × 84 con Document Picture-in-Picture, archivo nuevo (FocusTimer.jsx está a
-   494 líneas: solo una línea para el hook y otra para el botón en la fila de «Pausar»). Repintar con
-   `pipWindow.setInterval` (la pestaña oculta va frenada); «Pausar»/«Continuar» llaman a `handlePause`
-   y `handleNormalStart`. Prueba: `documentPictureInPicture` falso que devuelve el `contentWindow` de
-   un iframe. Dejar en la página «que se abra sola» como paso siguiente pequeño.
-3. Fila en DECISIONES (aviso del PC: `requireInteraction`, el `setTimeout` del final, el «terminado»
-   solo si no mirabas), fotos a 1280 en es y en, página republicada en NUbh7w6PypKwdPqnjF2vDV.
+Sin bump, sin CHANGELOG ni STATE (lo hace la coordinadora al juntar) y sin la suite entera.
+
+Lo que falta mirar a mano: en el Chrome de Ez, que el aviso se quede y que la miniventana se abra encima
+de todo (en el navegador de la app de Claude no abre: va incrustado); oír los tres toques; Firefox 151.
+
+Paso siguiente pequeño, sin montar: «Abrir la miniventana al empezar el Foco», un interruptor en Ajustes
+(«Empezar foco» ya es el toque que pide el navegador). Unas dos horas.
