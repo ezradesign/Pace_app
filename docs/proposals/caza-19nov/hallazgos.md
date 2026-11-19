@@ -1,6 +1,6 @@
 # Caza del 19 nov. 2026 (0.211.0) · hallazgos comprobados, sin montar nada
 
-Recorrido con Playwright sobre `index.html` (puerto 8945) y `dist/` (8946). Guiones en `guiones/` (se corren desde una carpeta con `lib.js`; `WT` apunta al worktree). Fotos en `fotos/`. **Falta la página para Ez.**
+Recorrido con Playwright sobre `index.html` (puerto 8945) y `dist/` (8946). Guiones en `guiones/` (se corren desde una carpeta con `lib.js`; `WT` apunta al worktree). Fotos en `fotos/`. Página para Ez: `index.html` (ver `DONDE-ME-QUEDO.md`).
 
 ## Bugs
 1. **El panel del móvil se abre solo al volver.** Si cierras PACE con el panel abierto, la siguiente vez arranca tapando el reloj (`sidebarCollapsed:false` se guarda y `loadState` solo lo cierra si falta). 360×640, cualquier hora: abrir panel → recargar. Foto `cajon-tras-recargar.png`. Arreglo: en el móvil, arrancar siempre con el panel cerrado (no guardar el estado del cajón). Afecta también a quien pasa del ordenador al móvil (el estado de la 0.191.1 de las testers lo trae abierto).
