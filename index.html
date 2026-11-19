@@ -8023,7 +8023,6 @@ function loadState(estricto) {
     const merged = rolloverIfNeeded({ ...defaultState, ...parsed });
 
 
-
     if (isMobileViewport()) return { ...merged, sidebarCollapsed: true };
     return merged;
   } catch (e) {
@@ -25513,31 +25512,35 @@ function ToastHost() {
     }, durationMs + fadeMs);
   };
 
-  useEffectTO(() => {
-    return onToast((toast) => {
-
-      if (toast.type === 'achievement') {
-        const a = (window.ACHIEVEMENT_CATALOG || []).find((x) => x.id === toast.id);
-        if (!a) return;
-        colaRef.current.push({ ...toast,
-          title: tR('ach.item.' + a.id + '.title', a.title),
-          desc: tR('ach.item.' + a.id + '.desc', a.desc),
-          glyph: a.glyph, glyphSvg: a.glyphSvg, secreto: !!a.secret, exiting: false });
-        siguienteRef.current();
-      }
 
 
 
-      if (toast.type === 'licencia') {
-        colaRef.current.push({ ...toast, exiting: false, licencia: true, duracion: 6000,
-          eyebrow: t('premium.settings.code'),
-          title: t(toast.ok ? toast.mensual ? 'premium.ok.title.monthly' : 'premium.ok.title' : 'premium.err.title'),
-          desc: toast.ok ? t(toast.tester ? 'premium.ok.tester' : 'premium.ok.other') :
-          t('premium.err.' + (toast.motivo || 'formato')) });
-        siguienteRef.current();
-      }
-    });
-  }, []);
+
+  const alRecibirRef = useRefTO(null);
+  useEffectTO(() => onToast((toast) => alRecibirRef.current(toast)), []);
+  alRecibirRef.current = (toast) => {
+
+    if (toast.type === 'achievement') {
+      const a = (window.ACHIEVEMENT_CATALOG || []).find((x) => x.id === toast.id);
+      if (!a) return;
+      colaRef.current.push({ ...toast,
+        title: tR('ach.item.' + a.id + '.title', a.title),
+        desc: tR('ach.item.' + a.id + '.desc', a.desc),
+        glyph: a.glyph, glyphSvg: a.glyphSvg, secreto: !!a.secret, exiting: false });
+      siguienteRef.current();
+    }
+
+
+
+    if (toast.type === 'licencia') {
+      colaRef.current.push({ ...toast, exiting: false, licencia: true, duracion: 6000,
+        eyebrow: t('premium.settings.code'),
+        title: t(toast.ok ? toast.mensual ? 'premium.ok.title.monthly' : 'premium.ok.title' : 'premium.err.title'),
+        desc: toast.ok ? t(toast.tester ? 'premium.ok.tester' : 'premium.ok.other') :
+        t('premium.err.' + (toast.motivo || 'formato')) });
+      siguienteRef.current();
+    }
+  };
 
 
   const enAro = toasts.some((x) => x.aro);
