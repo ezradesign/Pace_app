@@ -82,3 +82,8 @@ Una por commit con su prueba vista caer; al final, la suite entera con PACE_E2E_
   hecha. CONTENT.md:345 aún dice «sin mover hoy».
 - Hecho: suite entera (1724 verdes, 2 saltadas, 23 rojas: 14 del runner arregladas en 38f0d434 y 9 que pasan
   solas) y la página «Montado» con su cifra y fotos de lo nuevo (versión 2, misma URL).
+
+## Suite entera con la 11 y la tarjeta (19 nov., la coordinadora)
+- En 7fc08b5d: 1772 verdes, 2 saltadas, 2 rojas de aro-horario (1920x860 y 1536x710): con la rutina elegida el aro mide 9 y
+  7 px más porque la tarjeta es más baja (encargo 3). Prueba al día en c63da702 (524 y 433 px). aro-horario y vecinas (once
+  archivos, 90 pruebas) verdes en el 8918; verify verde. Página EcLj6, versión 3. Espera a Ez: el «júntalo».
