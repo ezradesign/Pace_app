@@ -342,9 +342,10 @@ qué sirve cada parada (`app/ritmo/ritmo.series.js`):
   salió en esa misma parada la última vez; suma +3 la zona que hoy no se ha movido, −3 repetir la
   zona de la parada anterior y −1 lo que la última vez salió en otra parada. Las zonas: cuello,
   hombros, espalda, caderas, piernas y manos (`RITMO_SERIES_META`).
-- **La frase B** encima del nombre, en la pausa y en las filas de la línea: «Caderas: sin mover hoy»,
-  «Llevas 70 min sentado», «Después de comer, de pie», «Dos horas: sal de la silla» (con 1 h 45 o
-  más), «Para cerrar, despacio»; sin razón, la de siempre («Antídoto a la silla»).
+- **La frase B** encima del nombre, en la pausa y en las filas de la línea: «Caderas: aún sin mover»
+  (Ez, 7A del 18 nov.), «Piernas: ayer sin mover» si la pausa viene de lo que el día anterior no movió
+  (8A), «Llevas 70 min sentado», «Dos horas: sal de la silla» (con 1 h 45 o más), «Para cerrar,
+  despacio»; sin razón, la de siempre («Antídoto a la silla»).
 
 Medido en treinta laborables (`docs/traspaso/archivos/series-16oct/medir-series.js`): «Dos horas», la
 mitad de las pausas de pie (antes, una de cada ocho); la jornada, 58 %; nunca dos sentadas seguidas,
