@@ -63,7 +63,10 @@ function paceVozCuerpoOcupa(nombre) {
   try {
     var tapa = PACE_VOZ_CUERPO_TAPA[nombre];
     var ctx = tapa && typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;
-    if (ctx) _paceVozCuerpoLibre = Math.max(_paceVozCuerpoLibre, ctx.currentTime + tapa + PACE_VOZ_CUERPO_HUECO);
+    if (ctx) {
+      _paceVozCuerpoSuena = Math.max(_paceVozCuerpoSuena, ctx.currentTime + tapa);
+      _paceVozCuerpoLibre = Math.max(_paceVozCuerpoLibre, ctx.currentTime + tapa + PACE_VOZ_CUERPO_HUECO);
+    }
   } catch (e) { /* sin fila, la palabra entra cuando le toca */ }
 }
 
@@ -74,13 +77,28 @@ function paceVozCuerpoCabe(e, max) {
 
 /* Suena la palabra `palabra` (n1…n25, c3…c1, colocate, siguiente, ya, ultimo, izquierda, derecha, cambia,
    descansa) si está y cabe en `max` segundos. `op` es lo que pasa el runner (MoveSessionV1.voz.jsx):
-   `ultima`, la última repetición de una serie, y `serie`, las palabras de su serie. true = suena o ya está
-   en la cola.
+   `ultima`, la última repetición de una serie; `serie`, las palabras de su serie, y `primera`, la palabra
+   que la abre. true = suena o ya está en la cola.
 
    UNA PALABRA CON `max` VA A SU HORA (los números y la cuenta atrás): no hace fila, porque una repetición
    que empieza tarde se mete en la siguiente. Si la de antes aún suena, madera. Y LA SERIE SE DECIDE ENTERA:
-   si una de sus palabras no cabe, ninguna, para no oír unos números con voz y otros con madera. */
+   si una de sus palabras no cabe, ninguna, para no oír unos números con voz y otros con madera; y lo que
+   decide su primera palabra vale para las demás. Antes se decidía palabra a palabra: si el «tres» no podía
+   sonar (la palabra de antes aún sonaba, la toma sin descodificar) y el «dos» sí, la cuenta salía a medias.
+   Dentro de una serie que ya suena, la siguiente solo espera a que acabe el trozo de la anterior, no a su
+   hueco: van a un segundo o más una de otra, y un tic que llega 80 ms tarde tiraba la siguiente a madera. */
+var _paceVozCuerpoSerie = null;   // { clave, voz }: la serie en curso y lo que decidió su primera palabra
+var _paceVozCuerpoSuena = 0;      // cuándo acaba de sonar lo último (palabra o tono), sin el hueco
 function paceVozCuerpoIntenta(palabra, max, op) {
+  var clave = typeof max === 'number' && op && op.serie ? op.serie.join(' ') : null;
+  var sigue = !!clave && !op.primera && !!_paceVozCuerpoSerie && _paceVozCuerpoSerie.clave === clave;
+  if (sigue && !_paceVozCuerpoSerie.voz) return false;
+  var dijo = _paceVozCuerpoSuenaPalabra(palabra, max, op, sigue);
+  if (clave && !sigue) _paceVozCuerpoSerie = { clave: clave, voz: dijo };
+  return dijo;
+}
+
+function _paceVozCuerpoSuenaPalabra(palabra, max, op, sigue) {
   try {
     if (typeof paceVozEncendida === 'function' && !paceVozEncendida()) return false;
     var j = paceVozCuerpoJuego();
@@ -97,8 +115,8 @@ function paceVozCuerpoIntenta(palabra, max, op) {
     if (ctx.state === 'closed') return false;
     if (ctx.state !== 'running') { try { ctx.resume(); } catch (er) {} }   // suspendido o interrumpido: arranca y suena
     var ahora = ctx.currentTime;
-    if (aSuHora && _paceVozCuerpoLibre > ahora) return false;
-    var t0 = Math.max(ahora, _paceVozCuerpoLibre);
+    if (aSuHora && (sigue ? _paceVozCuerpoSuena : _paceVozCuerpoLibre) > ahora) return false;
+    var t0 = aSuHora ? ahora : Math.max(ahora, _paceVozCuerpoLibre);
     if (t0 - ahora > PACE_VOZ_CUERPO_ESPERA) return false;   // llegaría tarde: su tono, no el silencio
     var dur = Math.min(e.b, toma.buffer.duration) - e.a;
     if (!(dur > 0.02)) return false;
@@ -121,6 +139,7 @@ function paceVozCuerpoIntenta(palabra, max, op) {
       try { g.disconnect(); } catch (er) {}
       _paceVozCuerpoVivas = _paceVozCuerpoVivas.filter(function (v) { return v !== viva; });
     };
+    _paceVozCuerpoSuena = t0 + dur;
     _paceVozCuerpoLibre = t0 + dur + (op && op.ultima ? PACE_VOZ_CUERPO_TRAS_SERIE : PACE_VOZ_CUERPO_HUECO);
     return true;
   } catch (err) {
@@ -146,6 +165,8 @@ function paceVozCuerpoCalla() {
   } catch (err) { /* nada que callar */ }
   _paceVozCuerpoVivas = [];
   _paceVozCuerpoLibre = 0;
+  _paceVozCuerpoSuena = 0;
+  _paceVozCuerpoSerie = null;
 }
 
 Object.assign(window, { paceVozCuerpoPrecarga: paceVozCuerpoPrecarga, paceVozCuerpoIntenta: paceVozCuerpoIntenta,

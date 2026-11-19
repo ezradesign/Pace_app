@@ -134,3 +134,35 @@ test('sincro-1b · lo mismo en inglés con bradford (Estira, «Cuello suave», r
   const ingles = await page.evaluate(() => window.paceVozIdioma());
   expect(ingles).toBe('en');
 });
+
+test('sincro-3 · una cuenta no sale a medias: si su primera palabra va a madera, todas; y un tic algo tarde no tira la siguiente', async ({ page, context }) => {
+  await prepararVoz(page, context);
+  await page.evaluate(() => {
+    window.paceAudioCtx();
+    const t0 = () => window.__ctx().currentTime;
+    const dice = (n) => { const op = window.v1VozCuenta(n); return window.paceVozCuerpoIntenta(op.voz, op.max, op); };
+    const espera = (s) => new Promise((ok) => setTimeout(ok, s * 1000));
+    window.__hecho = (async () => {
+      /* Con «Cambia de lado» aún sonando, el «tres» no cabe: madera. El «dos» y el «uno» llegan con la fila
+         libre, pero la cuenta ya se decidió. */
+      window.paceVozCuerpoIntenta('cambia');
+      const tapada = [];
+      await espera(0.3); tapada.push(dice(3));
+      await espera(1); tapada.push(dice(2));
+      await espera(1); tapada.push(dice(1));
+      window.paceVozCuerpoCalla();
+      /* El tic del «tres» llega 80 ms tarde y el del «dos», a su hora: entre los dos, 0,92 s. El «tres»
+         ya acabó de sonar (su trozo dura 0,80), así que el «dos» suena. */
+      await espera(3);
+      const tarde = [];
+      tarde.push(dice(3)); const a = t0();
+      await espera(0.92); tarde.push(dice(2));
+      await espera(1); tarde.push(dice(1));
+      return { tapada, tarde, a };
+    })();
+  });
+  await page.clock.runFor(10000);
+  const v = await page.evaluate(() => window.__llamadas.slice(-6).map((l) => l.r));
+  expect(v.slice(0, 3), '«tres» a madera y «dos, uno» con voz: cuenta a medias').toEqual([false, false, false]);
+  expect(v.slice(3), 'un tic 80 ms tarde dejó la cuenta a medias').toEqual([true, true, true]);
+});

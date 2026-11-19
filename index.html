@@ -24708,7 +24708,10 @@ function paceVozCuerpoOcupa(nombre) {
   try {
     var tapa = PACE_VOZ_CUERPO_TAPA[nombre];
     var ctx = tapa && typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;
-    if (ctx) _paceVozCuerpoLibre = Math.max(_paceVozCuerpoLibre, ctx.currentTime + tapa + PACE_VOZ_CUERPO_HUECO);
+    if (ctx) {
+      _paceVozCuerpoSuena = Math.max(_paceVozCuerpoSuena, ctx.currentTime + tapa);
+      _paceVozCuerpoLibre = Math.max(_paceVozCuerpoLibre, ctx.currentTime + tapa + PACE_VOZ_CUERPO_HUECO);
+    }
   } catch (e) {}
 }
 
@@ -24725,7 +24728,22 @@ function paceVozCuerpoCabe(e, max) {
 
 
 
+
+
+
+
+var _paceVozCuerpoSerie = null;
+var _paceVozCuerpoSuena = 0;
 function paceVozCuerpoIntenta(palabra, max, op) {
+  var clave = typeof max === 'number' && op && op.serie ? op.serie.join(' ') : null;
+  var sigue = !!clave && !op.primera && !!_paceVozCuerpoSerie && _paceVozCuerpoSerie.clave === clave;
+  if (sigue && !_paceVozCuerpoSerie.voz) return false;
+  var dijo = _paceVozCuerpoSuenaPalabra(palabra, max, op, sigue);
+  if (clave && !sigue) _paceVozCuerpoSerie = { clave: clave, voz: dijo };
+  return dijo;
+}
+
+function _paceVozCuerpoSuenaPalabra(palabra, max, op, sigue) {
   try {
     if (typeof paceVozEncendida === 'function' && !paceVozEncendida()) return false;
     var j = paceVozCuerpoJuego();
@@ -24742,8 +24760,8 @@ function paceVozCuerpoIntenta(palabra, max, op) {
     if (ctx.state === 'closed') return false;
     if (ctx.state !== 'running') {try {ctx.resume();} catch (er) {}}
     var ahora = ctx.currentTime;
-    if (aSuHora && _paceVozCuerpoLibre > ahora) return false;
-    var t0 = Math.max(ahora, _paceVozCuerpoLibre);
+    if (aSuHora && (sigue ? _paceVozCuerpoSuena : _paceVozCuerpoLibre) > ahora) return false;
+    var t0 = aSuHora ? ahora : Math.max(ahora, _paceVozCuerpoLibre);
     if (t0 - ahora > PACE_VOZ_CUERPO_ESPERA) return false;
     var dur = Math.min(e.b, toma.buffer.duration) - e.a;
     if (!(dur > 0.02)) return false;
@@ -24766,6 +24784,7 @@ function paceVozCuerpoIntenta(palabra, max, op) {
       try {g.disconnect();} catch (er) {}
       _paceVozCuerpoVivas = _paceVozCuerpoVivas.filter(function (v) {return v !== viva;});
     };
+    _paceVozCuerpoSuena = t0 + dur;
     _paceVozCuerpoLibre = t0 + dur + (op && op.ultima ? PACE_VOZ_CUERPO_TRAS_SERIE : PACE_VOZ_CUERPO_HUECO);
     return true;
   } catch (err) {
@@ -24791,11 +24810,13 @@ function paceVozCuerpoCalla() {
   } catch (err) {}
   _paceVozCuerpoVivas = [];
   _paceVozCuerpoLibre = 0;
+  _paceVozCuerpoSuena = 0;
+  _paceVozCuerpoSerie = null;
 }
 
 Object.assign(window, { paceVozCuerpoPrecarga: paceVozCuerpoPrecarga, paceVozCuerpoIntenta: paceVozCuerpoIntenta,
   paceVozCuerpoOcupa: paceVozCuerpoOcupa, paceVozCuerpoCalla: paceVozCuerpoCalla });
-;Object.assign(window, { PACE_VOZ_CUERPO_HUECO, PACE_VOZ_CUERPO_TRAS_SERIE, PACE_VOZ_CUERPO_ESPERA, _paceVozCuerpoTomas, _paceVozCuerpoLibre, _paceVozCuerpoVivas, paceVozCuerpoJuego, paceVozCuerpoPrecarga, PACE_VOZ_CUERPO_TAPA, paceVozCuerpoOcupa, paceVozCuerpoCabe, paceVozCuerpoIntenta, paceVozCuerpoCalla });
+;Object.assign(window, { PACE_VOZ_CUERPO_HUECO, PACE_VOZ_CUERPO_TRAS_SERIE, PACE_VOZ_CUERPO_ESPERA, _paceVozCuerpoTomas, _paceVozCuerpoLibre, _paceVozCuerpoVivas, paceVozCuerpoJuego, paceVozCuerpoPrecarga, PACE_VOZ_CUERPO_TAPA, paceVozCuerpoOcupa, paceVozCuerpoCabe, _paceVozCuerpoSerie, _paceVozCuerpoSuena, paceVozCuerpoIntenta, _paceVozCuerpoSuenaPalabra, paceVozCuerpoCalla });
 })();
 </script>
   <script>
