@@ -23,9 +23,13 @@ const SITIO = {
   act: ['[data-pace-activitybar-grid]'],
   dia: ['[data-pace-ritmo-tarjeta], [data-pace-ritmo-panel]'],
   arriba: ['[data-pace-topbar-stats]', '[data-pace-topbar-logros]'],
+  cajon: ['[data-pace-sidebar-open]'],
+  columna: ['[data-pace-sidebar]'],
   ajustes: ['[data-pace-topbar-ajustes]'],
 };
-const ORDEN = ['dia', 'aro', 'act', 'arriba', 'ajustes'];
+/* El menú es el botón de las tres rayas en el móvil y la columna de la izquierda en el ordenador. */
+const ORDEN_MOVIL = ['dia', 'aro', 'act', 'arriba', 'cajon', 'ajustes'];
+const ORDEN_PC = ['dia', 'aro', 'act', 'arriba', 'columna', 'ajustes'];
 
 async function hastaLaVisita(page) {
   await page.goto(RUTA_ARTEFACTO);   // sin sembrar: primera vez de la vida
@@ -54,7 +58,7 @@ async function medirParada(page) {
     const h = document.querySelector('[data-pace-visita-hueco]').getBoundingClientRect();
     const cajas = sitios[id].map((sel) => [...document.querySelectorAll(sel)].find((e) => e.getBoundingClientRect().width > 0).getBoundingClientRect());
     const r = cajas[0];
-    const rodea = id === 'aro' || id === 'ajustes'
+    const rodea = id === 'aro' || id === 'ajustes' || id === 'cajon'
       ? Math.hypot(h.x + h.width / 2 - (r.x + r.width / 2), h.y + h.height / 2 - (r.y + r.height / 2)) < 2 && h.width >= Math.max(r.width, r.height)
       : cajas.every((c) => h.left <= c.left && h.top <= c.top && h.right >= c.right && h.bottom >= c.bottom);
     return {
@@ -72,8 +76,9 @@ async function medirParada(page) {
 for (const v of [{ width: 360, height: 640 }, { width: 360, height: 740 }, { width: 1280, height: 800 }]) {
   test.describe('a ' + v.width + ' × ' + v.height, () => {
     test.use({ viewport: v });
+    const ORDEN = v.width < 700 ? ORDEN_MOVIL : ORDEN_PC;
 
-    test('al cerrar la bienvenida, la visita empieza por tu día y sigue por el aro, Actividades, Estadísticas y logros y Ajustes, y «Entendido» devuelve la home', async ({ page }) => {
+    test('al cerrar la bienvenida, la visita empieza por tu día y sigue por el aro, Actividades, Estadísticas y logros, el menú y Ajustes, y «Entendido» devuelve la home', async ({ page }) => {
       const errores = capturarErrores(page);
       await hastaLaVisita(page);
       const vistas = [];
@@ -98,6 +103,10 @@ for (const v of [{ width: 360, height: 640 }, { width: 360, height: 740 }, { wid
           /* Los dos iconos de arriba no tienen nombre a la vista: la visita dice qué son. */
           expect(m.titulo).toBe('Estadísticas y logros');
           expect(m.texto).toContain('sin compararte con nadie');
+        }
+        if (m.id === 'cajon' || m.id === 'columna') {
+          expect(m.titulo).toBe(m.id === 'cajon' ? 'El menú' : 'A la izquierda');
+          expect(m.texto).toContain('las bibliotecas de Respira, Estira y Mueve');
         }
         await expect(page.locator('[data-pace-visita-siguiente]')).toHaveText(i === ORDEN.length - 1 ? 'Entendido' : 'Siguiente');
         await page.locator('[data-pace-visita-siguiente]').click();
@@ -150,7 +159,7 @@ test('desde Ajustes, «Visita guiada» la repite; una parada cuyo sitio no se ve
   await expect(page.locator('[data-pace-tweaks-panel]'), 'Ajustes se quedó abierto debajo de la visita').toHaveCount(0);
   await page.locator(VISITA).waitFor({ state: 'visible' });
 
-  const quedan = ORDEN.filter((id) => id !== 'act');
+  const quedan = ORDEN_PC.filter((id) => id !== 'act');
   const vistas = [];
   for (let i = 0; i < quedan.length; i++) {
     const m = await medirParada(page);
@@ -170,7 +179,7 @@ test.describe('en inglés', () => {
     await hastaLaVisita(page);
     const d = await medirParada(page);
     expect(d.titulo).toBe('Start with your day');
-    expect(d.meta).toBe('1 of ' + ORDEN.length);
+    expect(d.meta).toBe('1 of ' + ORDEN_MOVIL.length);
     expect(d.texto).toContain('Choose how long you work today');
     await page.locator('[data-pace-visita-siguiente]').click();
     const m = await medirParada(page);

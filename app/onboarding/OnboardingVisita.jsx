@@ -9,7 +9,10 @@
      2. El aro         y, de la B (la pista de la home), que al acabar llega una pausa.
      3. Actividades    Respira, Estira, Mueve e Hidrátate.
      4. Estadísticas y logros   los dos iconos de arriba, que no tienen nombre a la vista.
-     5. Ajustes        y que desde allí se repite la visita («Visita guiada ›»).
+     5. El menú        el botón de las tres rayas en el móvil; en el ordenador, «A la izquierda»,
+                       la columna. Solo existe uno de los dos (con la columna abierta no hay
+                       botón), así que la cuenta es la misma. Los dos dicen lo mismo (`texto`).
+     6. Ajustes        y que desde allí se repite la visita («Visita guiada ›»).
 
    Una parada cuyo sitio no se ve al empezar (con un día elegido, Actividades no está
    en la home) se salta, y la cuenta «1 de N» sale de las que quedan.
@@ -32,6 +35,8 @@ const PACE_VISITA_PARADAS = [
   { id: 'aro', sel: '[data-pace-dial-ring]', redonda: true },
   { id: 'act', sel: '[data-pace-activitybar-grid]' },
   { id: 'arriba', sel: '[data-pace-topbar-stats]', y: '[data-pace-topbar-logros]' },
+  { id: 'cajon', sel: '[data-pace-sidebar-open]', redonda: true, texto: 'menu' },
+  { id: 'columna', sel: '[data-pace-sidebar]', texto: 'menu' },
   { id: 'ajustes', sel: '[data-pace-topbar-ajustes]', redonda: true },
 ];
 
@@ -151,7 +156,7 @@ function OnbVisita() {
           <div className="pace-meta">{tn('visita.paso', { n: paso + 1, total: paradas.length })}</div>
           <h2 id="pace-visita-titulo" style={onbVisitaStyles.titulo}>{t('visita.' + parada.id + '.titulo')}</h2>
           <p id="pace-visita-texto" style={onbVisitaStyles.texto}>
-            {parada.id === 'aro' ? tn('visita.aro.texto', { boton: t('focus.start') }) : t('visita.' + parada.id + '.texto')}
+            {parada.id === 'aro' ? tn('visita.aro.texto', { boton: t('focus.start') }) : t('visita.' + (parada.texto || parada.id) + '.texto')}
             {/* De la B (la pista de la home): lo que pasa al acabar el Foco, que la C no contaba. */}
             {parada.id === 'aro' ? ' ' + t('visita.aro.pausa') : null}
           </p>

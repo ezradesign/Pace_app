@@ -75,6 +75,9 @@ Object.assign(window.PACE_STRINGS.es, {
     'visita.dia.texto':                'Elige cuánto trabajas hoy y PACE reparte tus pausas por la jornada, cada una a su hora y con qué hacer. Cada mañana te lo propone según tu semana.',
     'visita.arriba.titulo':            'Estadísticas y logros',
     'visita.arriba.texto':             'Lo que has hecho hoy, esta semana y este mes, sin compararte con nadie. Y los sellos, que llegan solos al usar PACE.',
+    'visita.cajon.titulo':             'El menú',
+    'visita.columna.titulo':           'A la izquierda',
+    'visita.menu.texto':               'Tu semana de un vistazo, el agua de hoy, las bibliotecas de Respira, Estira y Mueve, y tus rutinas.',
     'visita.ajustes.titulo':           'Ajustes',
     'visita.ajustes.texto':            'El idioma, la paleta, el sonido y tus datos. Desde aquí puedes repetir esta visita.',
 });
@@ -147,6 +150,9 @@ Object.assign(window.PACE_STRINGS.en, {
     'visita.dia.texto':                'Choose how long you work today and PACE spreads your breaks across it, each at its time and with what to do. Each morning it suggests a plan from your week.',
     'visita.arriba.titulo':            'Stats and achievements',
     'visita.arriba.texto':             'What you’ve done today, this week and this month, without comparing you to anyone. And the stamps, which come on their own as you use PACE.',
+    'visita.cajon.titulo':             'The menu',
+    'visita.columna.titulo':           'On the left',
+    'visita.menu.texto':               'Your week at a glance, today’s water, the Breathe, Stretch and Move libraries, and your routines.',
     'visita.ajustes.titulo':           'Settings',
     'visita.ajustes.texto':            'Language, color theme, sound and your data. You can take this tour again here.',
 });
