@@ -42,7 +42,11 @@ Una por commit con su prueba vista caer; al final, la suite entera con PACE_E2E_
   día fue ayer. tests/ritmo-ayer.spec.js. MINIMO 1713, censo 1264. Suite de main de la coordinadora: acabada (exit=0).
 - 10A, el resto: bc9dd01c «Ver todo» (6 vasos en la jornada, contexto sin borde) + e0da294c (textos-honestos); 4c7f5845
   calendario de la web; 0ebd3631 «Hoy, lunes» la primera semana (ritmo.semanaDesde); f3766c1b «hecha» en la fila; CONTENT.md.
-  MINIMO 1723, censo 1269. Falta: 11A (página con opciones), suite entera, fotos, página, push.
+  MINIMO 1723, censo 1269.
+- 11: en la página, sin montar. A recomendada: Coherente con fondo · Gemelos bajo la mesa · FOCO · «Sin levantarte»
+  (grupo Sigilo) · Antídoto a la silla · Recolocar la postura. Ez contesta 11.1 a 11.6.
+- Fotos nuevas: fotos/nuevo2-*.webp. La página se publica en la cuenta EcLj6 (la de A3Dc… es la otra, 5iWBf).
+- Suite entera en la rama: corriendo con PACE_E2E_PORT=8915, registro en Temp/suite-arreglos-19nov.log.
 
 ## Falta (por orden)
 - 2A «Preparar jornada» en un toque: el botón de la tarjeta corta (RitmoTarjeta.jsx, data-pace-ritmo-comienza)
