@@ -28,3 +28,5 @@ Rama `claude/menores-valorar-16nov-87ef7b`. No se junta ni se sube a `main`: eso
    `docs/traspaso/archivos/hoja-ids-cuentas.js`.
 5. El aviso de «Auto» apagado ya está en la página (`#auto`). Si Ez dice que sí al arreglo (texto de antes con «Auto»
    apagado), medirlo con su condición en `runner-cambios` antes de montarlo.
+
+- **Suite entera en el 8936 (19 nov., 13:50-14:35, lanzada por la coordinadora): 1795 en verde, 2 saltadas a propósito, 0 rojas** (log en `suite-19nov.log` de esta carpeta). Falta ponerla en la página (BF18Pg…, 5iWBf) como «lista para juntar», su par en EcLj6 y el «júntalo» de Ez.
