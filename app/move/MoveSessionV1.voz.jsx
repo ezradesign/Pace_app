@@ -12,18 +12,21 @@
    1 s o suenan las tres a madera (Sound.voz.cuerpo.js decide la serie entera). */
 var V1_VOZ_CUENTA = ['c3', 'c2', 'c1'];
 function v1VozCuenta(n) {
-  return n >= 1 && n <= 3 ? { voz: 'c' + n, max: 1, serie: V1_VOZ_CUENTA } : null;
+  return n >= 1 && n <= 3 ? { voz: 'c' + n, max: 1, serie: V1_VOZ_CUENTA, primera: n === 3 } : null;
 }
 
-/* Cada repetición guiada se cuenta al acabarla, si caben todos los números de la serie en lo que dura una
-   repetición; si no, la serie entera va a madera. La última se dice entera y lo que viene después espera a
-   que acabe (la cola de Sound.voz.cuerpo.js); con el tono no suena nada en la última, como siempre: en ese
-   momento ya suena el cuenco del paso. Una serie de más de 25 no tiene todos sus números: madera. */
-function v1VozRep(n, repSec, ultima, total) {
-  if (!(n >= 1 && n <= 25 && n === Math.floor(n))) return ultima ? { soloVoz: true } : null;
+/* LA VOZ DICE EL NÚMERO QUE LA PANTALLA ACABA DE PONER (Ez, 19 nov. 2026): la pantalla cuenta la
+   repetición que empieza (1 al entrar, 2 al acabar la primera…), y la voz contaba la que acababa: decía
+   «uno» con un 2 en pantalla, una repetición entera tarde. Ahora, al empezar la repetición `n` (de 2 a
+   `total`), suena «n» con su madera. La primera no tiene número: en ese instante ya suena la palabra del
+   paso («Ya», «Siguiente», «Último paso») o el cuenco. Y al acabar la última no suena nada: suena lo que
+   viene después. La serie son esos números y se decide entera: si uno no cabe en lo que dura una
+   repetición, toda a madera. Una serie de más de 25 no tiene todos sus números: madera. */
+function v1VozRep(n, repSec, total) {
+  if (!(n >= 2 && n <= 25 && n === Math.floor(n) && n <= total)) return null;
   const serie = [];
-  for (let k = 1; k <= (total || n); k++) serie.push('n' + k);
-  return ultima ? { voz: 'n' + n, max: repSec, serie, soloVoz: true, ultima: true } : { voz: 'n' + n, max: repSec, serie };
+  for (let k = 2; k <= total; k++) serie.push('n' + k);
+  return { voz: 'n' + n, max: repSec, serie, primera: n === 2, ultima: n === total };
 }
 
 /* Al entrar en un paso: «Descansa»; «Último paso» en el último con ejercicio (si la rutina tiene más de

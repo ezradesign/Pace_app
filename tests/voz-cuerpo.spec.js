@@ -48,7 +48,7 @@ test('voz-1 · «Levántate y sube»: cuenta, «Colócate», «Ya», cada repeti
   expect(await hasta(page, async () => (await fase(page)) === 'rest', 120)).toBe(true);
   await page.clock.runFor(31000);
   const p = await palabras(page);
-  const esperado = ['c3', 'c2', 'c1', 'colocate', 'c3', 'c2', 'c1', 'ya', 'n1', 'n2', 'n3', 'n4', 'n5', 'descansa', 'c3', 'c2', 'c1', 'ya'];
+  const esperado = ['c3', 'c2', 'c1', 'colocate', 'c3', 'c2', 'c1', 'ya', 'n2', 'n3', 'n4', 'n5', 'descansa', 'c3', 'c2', 'c1', 'ya'];
   expect(p.slice(0, esperado.length)).toEqual(esperado);
   expect(errores).toEqual([]);
 });

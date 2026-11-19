@@ -258,11 +258,13 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
       // ('manual' reservado, sin piloto: quedaría en «Terminar antes»). El pulso
       // y la madera corren igual; los 5 pilotos son guided → comportamiento intacto.
       const guided = v1CompletionMode(step) !== 'manual';
+      // La madera marca el paso de una repetición a la siguiente, y la voz dice la que empieza, que es
+      // la que pone la pantalla (MoveSessionV1.voz.jsx). Al acabar la serie suena el paso que sigue.
       if (guided && elapsed >= v1RepTarget(step) * repSec) {
-        darSerie(v1RepTarget(step)); try { playSound('move.rep', v1VozRep(v1RepTarget(step), repSec, true, v1RepTarget(step))); } catch (e) {}
+        darSerie(v1RepTarget(step));
         advanceStep();
       } else if (suena && elapsed % repSec === 0) {
-        try { playSound('move.rep', v1VozRep(elapsed / repSec, repSec, false, v1RepTarget(step))); } catch (e) {}
+        try { playSound('move.rep', v1VozRep(elapsed / repSec + 1, repSec, v1RepTarget(step))); } catch (e) {}
       }
       return;
     }

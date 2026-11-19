@@ -37839,18 +37839,21 @@ Object.assign(window, {
 
 var V1_VOZ_CUENTA = ['c3', 'c2', 'c1'];
 function v1VozCuenta(n) {
-  return n >= 1 && n <= 3 ? { voz: 'c' + n, max: 1, serie: V1_VOZ_CUENTA } : null;
+  return n >= 1 && n <= 3 ? { voz: 'c' + n, max: 1, serie: V1_VOZ_CUENTA, primera: n === 3 } : null;
 }
 
 
 
 
 
-function v1VozRep(n, repSec, ultima, total) {
-  if (!(n >= 1 && n <= 25 && n === Math.floor(n))) return ultima ? { soloVoz: true } : null;
+
+
+
+function v1VozRep(n, repSec, total) {
+  if (!(n >= 2 && n <= 25 && n === Math.floor(n) && n <= total)) return null;
   const serie = [];
-  for (let k = 1; k <= (total || n); k++) serie.push('n' + k);
-  return ultima ? { voz: 'n' + n, max: repSec, serie, soloVoz: true, ultima: true } : { voz: 'n' + n, max: repSec, serie };
+  for (let k = 2; k <= total; k++) serie.push('n' + k);
+  return { voz: 'n' + n, max: repSec, serie, primera: n === 2, ultima: n === total };
 }
 
 
@@ -38855,11 +38858,13 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
 
       const guided = v1CompletionMode(step) !== 'manual';
+
+
       if (guided && elapsed >= v1RepTarget(step) * repSec) {
-        darSerie(v1RepTarget(step));try {playSound('move.rep', v1VozRep(v1RepTarget(step), repSec, true, v1RepTarget(step)));} catch (e) {}
+        darSerie(v1RepTarget(step));
         advanceStep();
       } else if (suena && elapsed % repSec === 0) {
-        try {playSound('move.rep', v1VozRep(elapsed / repSec, repSec, false, v1RepTarget(step)));} catch (e) {}
+        try {playSound('move.rep', v1VozRep(elapsed / repSec + 1, repSec, v1RepTarget(step)));} catch (e) {}
       }
       return;
     }
