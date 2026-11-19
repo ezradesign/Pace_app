@@ -100,8 +100,9 @@ test.describe('en el móvil', () => {
     await irAlArtefacto(page);
     await vis(page, '[data-pace-ritmo-ver]').click();
     await vis(page, '[data-pace-ritmo-lista]').waitFor();
-    const chip = vis(page, '.pace-rt-ctx span').nth(1);
-    await expect(chip).toHaveText('Sin material, a veces pared o mesa');
+    /* Desde la 10A de Ez (18 nov.), el contexto va en una línea sin borde (tests/ritmo-ver-todo.spec.js). */
+    const chip = vis(page, '[data-pace-ritmo-ctx]');
+    await expect(chip).toHaveText('Junto a la mesa · Sin material, a veces pared o mesa');
     const caja = await chip.boundingBox();
     expect(caja.x + caja.width, 'la etiqueta se sale de la pantalla').toBeLessThanOrEqual(360 - 16);
   });
