@@ -5,10 +5,14 @@
    «Saltar la visita». La bienvenida no contaba que el aro se toca para empezar, que al
    acabar PACE propone una pausa, ni qué hace «A tu ritmo» con la semana.
 
-     1. El aro         y, de la B (la pista de la home), que al acabar llega una pausa.
-     2. Actividades    Respira, Estira, Mueve e Hidrátate.
-     3. Tu día         la tarjeta o el panel de «A tu ritmo».
-     4. Ajustes        y que desde allí se repite la visita («Visita guiada ›»).
+     1. Tu día         la tarjeta o el panel de «A tu ritmo»: cómo se prepara el día.
+     2. El aro         y, de la B (la pista de la home), que al acabar llega una pausa.
+     3. Actividades    Respira, Estira, Mueve e Hidrátate.
+     4. Estadísticas y logros   los dos iconos de arriba, que no tienen nombre a la vista.
+     5. El menú        el botón de las tres rayas en el móvil; en el ordenador, «A la izquierda»,
+                       la columna. Solo existe uno de los dos (con la columna abierta no hay
+                       botón), así que la cuenta es la misma. Los dos dicen lo mismo (`texto`).
+     6. Ajustes        y que desde allí se repite la visita («Visita guiada ›»).
 
    Una parada cuyo sitio no se ve al empezar (con un día elegido, Actividades no está
    en la home) se salta, y la cuenta «1 de N» sale de las que quedan.
@@ -24,10 +28,15 @@
 
 const { useState: useStateVIS, useEffect: useEffectVIS, useLayoutEffect: useLayoutEffectVIS, useRef: useRefVIS } = React;
 
+/* Tu día va la primera (Ez, 19 nov. 2026: «lo de construir tu día debería ser importante»): quien
+   salta la visita en cuanto sale ya sabe que el día se prepara, y es lo que da sentido al resto. */
 const PACE_VISITA_PARADAS = [
+  { id: 'dia', sel: '[data-pace-ritmo-tarjeta], [data-pace-ritmo-panel]' },
   { id: 'aro', sel: '[data-pace-dial-ring]', redonda: true },
   { id: 'act', sel: '[data-pace-activitybar-grid]' },
-  { id: 'dia', sel: '[data-pace-ritmo-tarjeta], [data-pace-ritmo-panel]' },
+  { id: 'arriba', sel: '[data-pace-topbar-stats]', y: '[data-pace-topbar-logros]' },
+  { id: 'cajon', sel: '[data-pace-sidebar-open]', redonda: true, texto: 'menu' },
+  { id: 'columna', sel: '[data-pace-sidebar]', texto: 'menu' },
   { id: 'ajustes', sel: '[data-pace-topbar-ajustes]', redonda: true },
 ];
 
@@ -43,11 +52,18 @@ function paceVisitaElemento(sel) {
   return null;
 }
 
-/* El hueco: un círculo para el aro y el botón de Ajustes, un rectángulo con aire para el resto. */
+/* El hueco: un círculo para el aro y el botón de Ajustes, un rectángulo con aire para el resto.
+   Con `y`, el rectángulo abarca también esa segunda pieza (Estadísticas y Logros, uno al lado del otro). */
 function paceVisitaHueco(parada) {
   const el = parada && paceVisitaElemento(parada.sel);
   if (!el) return null;
-  const r = paceCaja(el);
+  let r = paceCaja(el);
+  const otra = parada.y && paceVisitaElemento(parada.y);
+  if (otra) {
+    const q = paceCaja(otra);
+    const izq = Math.min(r.left, q.left), arr = Math.min(r.top, q.top);
+    r = { left: izq, top: arr, width: Math.max(r.left + r.width, q.left + q.width) - izq, height: Math.max(r.top + r.height, q.top + q.height) - arr };
+  }
   if (parada.redonda) {
     const d = Math.max(r.width, r.height) + 12;
     return { left: r.left + r.width / 2 - d / 2, top: r.top + r.height / 2 - d / 2, width: d, height: d, radio: d / 2 };
@@ -140,7 +156,7 @@ function OnbVisita() {
           <div className="pace-meta">{tn('visita.paso', { n: paso + 1, total: paradas.length })}</div>
           <h2 id="pace-visita-titulo" style={onbVisitaStyles.titulo}>{t('visita.' + parada.id + '.titulo')}</h2>
           <p id="pace-visita-texto" style={onbVisitaStyles.texto}>
-            {parada.id === 'aro' ? tn('visita.aro.texto', { boton: t('focus.start') }) : t('visita.' + parada.id + '.texto')}
+            {parada.id === 'aro' ? tn('visita.aro.texto', { boton: t('focus.start') }) : t('visita.' + (parada.texto || parada.id) + '.texto')}
             {/* De la B (la pista de la home): lo que pasa al acabar el Foco, que la C no contaba. */}
             {parada.id === 'aro' ? ' ' + t('visita.aro.pausa') : null}
           </p>

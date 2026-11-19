@@ -1,0 +1,164 @@
+<title>La visita guiada, montada</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de papel y tinta, como las otras páginas para Ez: la A montada (seis paradas, tu día la
+   primera), las dos maneras de dar peso a tu día y la visita de antes, con fotos de la app (360 y 1280). */
+:root{
+  --paper:#F2EDE0;--card:#FBF8F1;
+  --ink:#1F1C17;--ink-2:#4A453C;--ink-3:#77705F;
+  --line:#C9C0A8;
+  --olive:#3E5A3A;--olive-soft:rgba(62,90,58,.12);
+  --terra:#A85E43;--terra-soft:rgba(168,94,67,.12);
+  --velo:rgba(31,28,23,.86);
+  --display:'EB Garamond',Georgia,'Times New Roman',serif;
+  --ui:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);--velo:rgba(0,0,0,.88);color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);--velo:rgba(0,0,0,.88);color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+main{max-width:920px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 72px}
+h1,h2,h3{font-family:var(--display);font-style:italic;font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(32px,6vw,44px)}
+h2{font-size:clamp(23px,4vw,28px);margin:44px 0 10px;padding-top:22px;border-top:1px solid var(--line)}
+h3{font-size:20px;margin:22px 0 6px}
+p,li{color:var(--ink-2);max-width:68ch}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 12px;padding-left:22px}
+li{margin-bottom:6px}
+strong{color:var(--ink);font-weight:500}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.lead{font-family:var(--display);font-size:21px;color:var(--ink);max-width:62ch;margin-top:14px}
+.reco{background:var(--olive-soft);border:1px solid var(--olive);border-radius:10px;padding:14px 16px;margin:18px 0 0}
+.reco p{margin:0;color:var(--ink)}
+.letra{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--paper);font-family:var(--display);font-style:italic;font-size:19px;margin-right:10px;vertical-align:-4px}
+.costo{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin:12px 0 4px}
+.costo div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
+.costo .t{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px}
+.costo p{margin:0;font-size:15px}
+.tira{display:flex;gap:12px;overflow-x:auto;padding:6px 2px 12px;scroll-snap-type:x proximity}
+.tira figure{margin:0;flex:0 0 auto;scroll-snap-align:start}
+.tira.movil figure{width:min(200px,46vw)}
+.tira.movil.dos figure{width:min(240px,44vw)}
+.tira.pc figure{width:min(440px,84vw)}
+.tira img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:10px;background:var(--card);cursor:zoom-in}
+.tira.movil img{border-radius:14px}
+figcaption{font-size:13px;color:var(--ink-3);margin-top:6px;line-height:1.4}
+figcaption b{color:var(--ink);font-weight:500}
+.ancho{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin:14px 0 2px}
+.idioma{display:flex;gap:6px;margin:18px 0 0;flex-wrap:wrap;align-items:center;font-size:14px;color:var(--ink-3)}
+.idioma button{font:inherit;font-size:13px;padding:5px 14px;border-radius:999px;border:1px solid var(--line);background:none;color:var(--ink-2);cursor:pointer}
+.idioma button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+button:focus-visible,img:focus-visible{outline:2px solid var(--olive);outline-offset:2px}
+.como{margin:14px 0 0;color:var(--ink);font-size:16px}
+.contesta{margin-top:44px;padding:18px 18px;border:1px solid var(--ink);border-radius:12px;background:var(--card)}
+.contesta p{margin:0;color:var(--ink);font-size:17px}
+#grande{position:fixed;inset:0;background:var(--velo);display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:20;cursor:zoom-out}
+#grande img{max-width:100%;max-height:100%;border-radius:12px}
+@media (prefers-reduced-motion: no-preference){.tira{scroll-behavior:smooth}}
+</style>
+
+<main>
+  <div class="eyebrow">PACE · visita guiada · 19 nov.</div>
+  <h1>La visita guiada, montada</h1>
+  <p class="lead">Elegiste la A y que construir tu día fuera importante. Está montada en su rama: seis paradas, y tu día es la primera.</p>
+  <div class="reco"><p><span class="letra">A</span><strong>Tu día va la primera.</strong> Es la parada que ve todo el mundo, también quien salta la visita en cuanto sale, y dice cómo se construye el día: «Elige cuánto trabajas hoy y PACE reparte tus pausas por la jornada».</p></div>
+  <p class="como">Si te vale, contesta <strong>así</strong>. Si prefieres tu día al final, con un botón que prepara la jornada, contesta <strong>la otra</strong>: es un cambio pequeño.</p>
+  <div class="idioma" role="group" aria-label="Idioma de las fotos">Fotos en
+    <button type="button" id="es" aria-pressed="true">español</button>
+    <button type="button" id="en" aria-pressed="false">inglés</button>
+  </div>
+
+  <h2>Las seis paradas</h2>
+  <p>Al acabar la bienvenida: tu día, el aro, las actividades, Estadísticas y logros, el menú y Ajustes. Cada una se puede saltar y desde Ajustes se repite. Si una no se ve (con un día elegido, las actividades no están en la home), se salta y la cuenta lo dice.</p>
+  <div class="ancho">Móvil · 360 × 640</div>
+  <div class="tira movil" data-fotos="M-360" data-pies="1 · Empieza por tu día|2 · El aro, con los avisos|3 · Actividades|4 · Estadísticas y logros, nueva|5 · El menú, nueva|6 · Ajustes, con la copia"></div>
+  <div class="ancho">Ordenador · 1280 × 800</div>
+  <div class="tira pc" data-fotos="M-1280" data-pies="1 · Empieza por tu día|2 · El aro, con los avisos|3 · Actividades|4 · Estadísticas y logros, nueva|5 · A la izquierda, nueva|6 · Ajustes, con la copia"></div>
+  <h3>Lo que dice ahora y antes no</h3>
+  <ul>
+    <li><strong>Tu día</strong>: cómo se prepara, que cada mañana te lo propone según tu semana y qué hace «Al calendario».</li>
+    <li><strong>El aro</strong>: que la primera vez pide permiso para avisarte aunque estés en otra app.</li>
+    <li><strong>Estadísticas y logros</strong>: los dos iconos de arriba, que no tienen nombre a la vista.</li>
+    <li><strong>El menú</strong>: en el móvil, las tres rayas; en el ordenador, la columna de la izquierda.</li>
+    <li><strong>Ajustes</strong>: que PACE lo guarda todo en el aparato y que en «Tus datos» se hace una copia.</li>
+  </ul>
+
+  <h2>Dos maneras de dar peso a tu día</h2>
+  <p>Montada, la primera. La otra la he pintado solo para que las compares: tu día al final, y su botón, en vez de «Entendido», dice «Preparar jornada» y abriría la pregunta del día.</p>
+  <div class="ancho">Móvil · 360 × 640</div>
+  <div class="tira movil dos" data-fotos="dos-360" data-pies="Montada · la primera, 1 de 6|La otra · la última, con su botón"></div>
+  <div class="ancho">Ordenador · 1280 × 800</div>
+  <div class="tira pc" data-fotos="dos-1280" data-pies="Montada · la primera, 1 de 6|La otra · la última, con su botón"></div>
+  <div class="costo">
+    <div><div class="t">La primera (montada)</div><p>La ve todo el mundo. El resto de la visita se entiende a partir de ahí: las pausas que reparte son las que luego propone el aro.</p></div>
+    <div><div class="t">La última</div><p>Acaba la visita haciendo algo: un toque y el día queda preparado. Pero quien salta la visita antes no llega a verla.</p></div>
+  </div>
+
+  <h2>La visita de antes</h2>
+  <p>Cuatro paradas: el aro, las actividades, tu día (la tercera) y Ajustes.</p>
+  <div class="ancho">Móvil · 360 × 640</div>
+  <div class="tira movil" data-fotos="hoy-360" data-pies="El aro|Actividades|Tu día|Ajustes"></div>
+
+  <h2>Lo que no he probado</h2>
+  <ul>
+    <li>Medido: las seis tarjetas caben y no tapan lo que enseñan a 360 × 640, 360 × 740 y 1280 × 800, en español e inglés, y la prueba de la visita lo vigila. Con la letra grande del móvil, sin medir.</li>
+    <li>La suite entera no la he pasado: la pasa la coordinadora antes de juntar con main.</li>
+    <li>El botón de «la otra» no está montado: su foto es la app cambiada solo en el navegador de prueba.</li>
+    <li>La tarjeta de tu día del ordenador va a cambiar con el encargo de limpiarla; los textos de la visita valen igual.</li>
+  </ul>
+
+  <div class="contesta"><p>Contesta <strong>así</strong> para dejarla como está, o <strong>la otra</strong> para llevar tu día al final con su botón.</p></div>
+</main>
+<div id="grande" hidden><img alt=""></div>
+
+<script>
+(function () {
+  var lang = 'es';
+  var seis = [1, 2, 3, 4, 5, 6];
+  var fotos = {
+    'hoy-360': ['hoy-360-L-1', 'hoy-360-L-2', 'hoy-360-L-3', 'hoy-360-L-4'],
+    'M-360': seis.map(function (k) { return 'M-360-L-' + k; }),
+    'M-1280': seis.map(function (k) { return 'M-1280-L-' + k; }),
+    'dos-360': ['M-360-L-1', 'U-360-L'],
+    'dos-1280': ['M-1280-L-1', 'U-1280-L']
+  };
+  function pintar() {
+    document.querySelectorAll('[data-fotos]').forEach(function (tira) {
+      var pies = tira.getAttribute('data-pies').split('|');
+      var lista = fotos[tira.getAttribute('data-fotos')];
+      tira.innerHTML = lista.map(function (n, i) {
+        return '<figure><img loading="lazy" tabindex="0" src="fotos/' + n.replace('-L', '-' + lang) + '.webp" alt="' + pies[i] + '"><figcaption><b>' + pies[i] + '</b></figcaption></figure>';
+      }).join('');
+    });
+  }
+  pintar();
+  ['es', 'en'].forEach(function (l) {
+    document.getElementById(l).addEventListener('click', function () {
+      lang = l;
+      document.getElementById('es').setAttribute('aria-pressed', String(l === 'es'));
+      document.getElementById('en').setAttribute('aria-pressed', String(l === 'en'));
+      pintar();
+    });
+  });
+  var grande = document.getElementById('grande');
+  function abrir(img) { grande.querySelector('img').src = img.src; grande.querySelector('img').alt = img.alt; grande.hidden = false; }
+  document.addEventListener('click', function (e) {
+    if (e.target.matches('.tira img')) abrir(e.target);
+    else if (!grande.hidden && grande.contains(e.target)) grande.hidden = true;
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') grande.hidden = true;
+    if (e.key === 'Enter' && e.target.matches && e.target.matches('.tira img')) abrir(e.target);
+  });
+})();
+</script>

@@ -1,0 +1,282 @@
+[
+ {
+  "w": 360,
+  "lang": "es",
+  "k": 1,
+  "id": "dia",
+  "meta": "1 de 6",
+  "dentro": true,
+  "tarjetaAlto": 195,
+  "pisaHueco": 0
+ },
+ {
+  "w": 360,
+  "lang": "es",
+  "k": 2,
+  "id": "aro",
+  "meta": "2 de 6",
+  "dentro": true,
+  "tarjetaAlto": 195,
+  "pisaHueco": 0
+ },
+ {
+  "w": 360,
+  "lang": "es",
+  "k": 3,
+  "id": "act",
+  "meta": "3 de 6",
+  "dentro": true,
+  "tarjetaAlto": 158,
+  "pisaHueco": 0
+ },
+ {
+  "w": 360,
+  "lang": "es",
+  "k": 4,
+  "id": "arriba",
+  "meta": "4 de 6",
+  "dentro": true,
+  "tarjetaAlto": 177,
+  "pisaHueco": 0
+ },
+ {
+  "w": 360,
+  "lang": "es",
+  "k": 5,
+  "id": "cajon",
+  "meta": "5 de 6",
+  "dentro": true,
+  "tarjetaAlto": 177,
+  "pisaHueco": 0
+ },
+ {
+  "w": 360,
+  "lang": "es",
+  "k": 6,
+  "id": "ajustes",
+  "meta": "6 de 6",
+  "dentro": true,
+  "tarjetaAlto": 177,
+  "pisaHueco": 0
+ },
+ {
+  "w": 360,
+  "lang": "es",
+  "otra": "ultima",
+  "id": "dia",
+  "meta": "6 de 6",
+  "dentro": true,
+  "tarjetaAlto": 195,
+  "pisaHueco": 0
+ },
+ {
+  "w": 1280,
+  "lang": "es",
+  "k": 1,
+  "id": "dia",
+  "meta": "1 de 6",
+  "dentro": true,
+  "tarjetaAlto": 195,
+  "pisaHueco": 0
+ },
+ {
+  "w": 1280,
+  "lang": "es",
+  "k": 2,
+  "id": "aro",
+  "meta": "2 de 6",
+  "dentro": true,
+  "tarjetaAlto": 195,
+  "pisaHueco": 0
+ },
+ {
+  "w": 1280,
+  "lang": "es",
+  "k": 3,
+  "id": "act",
+  "meta": "3 de 6",
+  "dentro": true,
+  "tarjetaAlto": 158,
+  "pisaHueco": 0
+ },
+ {
+  "w": 1280,
+  "lang": "es",
+  "k": 4,
+  "id": "arriba",
+  "meta": "4 de 6",
+  "dentro": true,
+  "tarjetaAlto": 177,
+  "pisaHueco": 0
+ },
+ {
+  "w": 1280,
+  "lang": "es",
+  "k": 5,
+  "id": "columna",
+  "meta": "5 de 6",
+  "dentro": true,
+  "tarjetaAlto": 177,
+  "pisaHueco": 0
+ },
+ {
+  "w": 1280,
+  "lang": "es",
+  "k": 6,
+  "id": "ajustes",
+  "meta": "6 de 6",
+  "dentro": true,
+  "tarjetaAlto": 177,
+  "pisaHueco": 0
+ },
+ {
+  "w": 1280,
+  "lang": "es",
+  "otra": "ultima",
+  "id": "dia",
+  "meta": "6 de 6",
+  "dentro": true,
+  "tarjetaAlto": 195,
+  "pisaHueco": 0
+ },
+ {
+  "w": 360,
+  "lang": "en",
+  "k": 1,
+  "id": "dia",
+  "meta": "1 of 6",
+  "dentro": true,
+  "tarjetaAlto": 214,
+  "pisaHueco": 0
+ },
+ {
+  "w": 360,
+  "lang": "en",
+  "k": 2,
+  "id": "aro",
+  "meta": "2 of 6",
+  "dentro": true,
+  "tarjetaAlto": 195,
+  "pisaHueco": 0
+ },
+ {
+  "w": 360,
+  "lang": "en",
+  "k": 3,
+  "id": "act",
+  "meta": "3 of 6",
+  "dentro": true,
+  "tarjetaAlto": 158,
+  "pisaHueco": 0
+ },
+ {
+  "w": 360,
+  "lang": "en",
+  "k": 4,
+  "id": "arriba",
+  "meta": "4 of 6",
+  "dentro": true,
+  "tarjetaAlto": 177,
+  "pisaHueco": 0
+ },
+ {
+  "w": 360,
+  "lang": "en",
+  "k": 5,
+  "id": "cajon",
+  "meta": "5 of 6",
+  "dentro": true,
+  "tarjetaAlto": 158,
+  "pisaHueco": 0
+ },
+ {
+  "w": 360,
+  "lang": "en",
+  "k": 6,
+  "id": "ajustes",
+  "meta": "6 of 6",
+  "dentro": true,
+  "tarjetaAlto": 177,
+  "pisaHueco": 0
+ },
+ {
+  "w": 360,
+  "lang": "en",
+  "otra": "ultima",
+  "id": "dia",
+  "meta": "6 of 6",
+  "dentro": true,
+  "tarjetaAlto": 214,
+  "pisaHueco": 0
+ },
+ {
+  "w": 1280,
+  "lang": "en",
+  "k": 1,
+  "id": "dia",
+  "meta": "1 of 6",
+  "dentro": true,
+  "tarjetaAlto": 214,
+  "pisaHueco": 0
+ },
+ {
+  "w": 1280,
+  "lang": "en",
+  "k": 2,
+  "id": "aro",
+  "meta": "2 of 6",
+  "dentro": true,
+  "tarjetaAlto": 195,
+  "pisaHueco": 0
+ },
+ {
+  "w": 1280,
+  "lang": "en",
+  "k": 3,
+  "id": "act",
+  "meta": "3 of 6",
+  "dentro": true,
+  "tarjetaAlto": 158,
+  "pisaHueco": 0
+ },
+ {
+  "w": 1280,
+  "lang": "en",
+  "k": 4,
+  "id": "arriba",
+  "meta": "4 of 6",
+  "dentro": true,
+  "tarjetaAlto": 177,
+  "pisaHueco": 0
+ },
+ {
+  "w": 1280,
+  "lang": "en",
+  "k": 5,
+  "id": "columna",
+  "meta": "5 of 6",
+  "dentro": true,
+  "tarjetaAlto": 158,
+  "pisaHueco": 0
+ },
+ {
+  "w": 1280,
+  "lang": "en",
+  "k": 6,
+  "id": "ajustes",
+  "meta": "6 of 6",
+  "dentro": true,
+  "tarjetaAlto": 177,
+  "pisaHueco": 0
+ },
+ {
+  "w": 1280,
+  "lang": "en",
+  "otra": "ultima",
+  "id": "dia",
+  "meta": "6 of 6",
+  "dentro": true,
+  "tarjetaAlto": 214,
+  "pisaHueco": 0
+ }
+]

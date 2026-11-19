@@ -17,12 +17,19 @@ const { test, expect } = require('@playwright/test');
 const { capturarErrores, sembrar, irAlArtefacto, RUTA_ARTEFACTO } = require('./helpers');
 
 const VISITA = '[role=dialog][data-pace-visita]';
+/* Lo que enseña cada parada; con dos piezas, el hueco las rodea a las dos. */
 const SITIO = {
-  aro: '[data-pace-dial-ring]',
-  act: '[data-pace-activitybar-grid]',
-  dia: '[data-pace-ritmo-tarjeta], [data-pace-ritmo-panel]',
-  ajustes: '[data-pace-topbar-ajustes]',
+  aro: ['[data-pace-dial-ring]'],
+  act: ['[data-pace-activitybar-grid]'],
+  dia: ['[data-pace-ritmo-tarjeta], [data-pace-ritmo-panel]'],
+  arriba: ['[data-pace-topbar-stats]', '[data-pace-topbar-logros]'],
+  cajon: ['[data-pace-sidebar-open]'],
+  columna: ['[data-pace-sidebar]'],
+  ajustes: ['[data-pace-topbar-ajustes]'],
 };
+/* El menú es el botón de las tres rayas en el móvil y la columna de la izquierda en el ordenador. */
+const ORDEN_MOVIL = ['dia', 'aro', 'act', 'arriba', 'cajon', 'ajustes'];
+const ORDEN_PC = ['dia', 'aro', 'act', 'arriba', 'columna', 'ajustes'];
 
 async function hastaLaVisita(page) {
   await page.goto(RUTA_ARTEFACTO);   // sin sembrar: primera vez de la vida
@@ -49,11 +56,11 @@ async function medirParada(page) {
     const id = raiz.getAttribute('data-pace-visita');
     const t = document.querySelector('[data-pace-visita-tarjeta]').getBoundingClientRect();
     const h = document.querySelector('[data-pace-visita-hueco]').getBoundingClientRect();
-    const el = [...document.querySelectorAll(sitios[id])].find((e) => e.getBoundingClientRect().width > 0);
-    const r = el.getBoundingClientRect();
-    const rodea = id === 'aro' || id === 'ajustes'
+    const cajas = sitios[id].map((sel) => [...document.querySelectorAll(sel)].find((e) => e.getBoundingClientRect().width > 0).getBoundingClientRect());
+    const r = cajas[0];
+    const rodea = id === 'aro' || id === 'ajustes' || id === 'cajon'
       ? Math.hypot(h.x + h.width / 2 - (r.x + r.width / 2), h.y + h.height / 2 - (r.y + r.height / 2)) < 2 && h.width >= Math.max(r.width, r.height)
-      : h.left <= r.left && h.top <= r.top && h.right >= r.right && h.bottom >= r.bottom;
+      : cajas.every((c) => h.left <= c.left && h.top <= c.top && h.right >= c.right && h.bottom >= c.bottom);
     return {
       id, rodea,
       meta: raiz.querySelector('.pace-meta').textContent,
@@ -65,30 +72,52 @@ async function medirParada(page) {
   }, SITIO);
 }
 
-for (const v of [{ width: 360, height: 740 }, { width: 1280, height: 800 }]) {
+/* 360 × 640: el móvil bajo, donde la tarjeta de tu día y la de la visita compiten por el alto. */
+for (const v of [{ width: 360, height: 640 }, { width: 360, height: 740 }, { width: 1280, height: 800 }]) {
   test.describe('a ' + v.width + ' × ' + v.height, () => {
     test.use({ viewport: v });
+    const ORDEN = v.width < 700 ? ORDEN_MOVIL : ORDEN_PC;
 
-    test('al cerrar la bienvenida, la visita enseña el aro, Actividades, tu día y Ajustes, y «Entendido» devuelve la home', async ({ page }) => {
+    test('al cerrar la bienvenida, la visita empieza por tu día y sigue por el aro, Actividades, Estadísticas y logros, el menú y Ajustes, y «Entendido» devuelve la home', async ({ page }) => {
       const errores = capturarErrores(page);
       await hastaLaVisita(page);
       const vistas = [];
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < ORDEN.length; i++) {
         const m = await medirParada(page);
         vistas.push(m.id);
-        expect(m.meta).toBe((i + 1) + ' de 4');
+        expect(m.meta).toBe((i + 1) + ' de ' + ORDEN.length);
         expect(m.rodea, 'el hueco de «' + m.titulo + '» no rodea lo que enseña').toBe(true);
         expect(m.dentro, 'la tarjeta de «' + m.titulo + '» se sale de la ventana').toBe(true);
         expect(m.pisa, 'la tarjeta de «' + m.titulo + '» tapa lo que enseña').toBe(false);
+        if (m.id === 'dia') {
+          /* Ez: «lo de construir tu día debería ser importante». Va la primera y dice cómo se prepara. */
+          expect(m.titulo).toBe('Empieza por tu día');
+          expect(m.texto).toContain('Elige cuánto trabajas hoy');
+          expect(m.texto).toContain('«Al calendario» lo lleva a tu calendario');
+        }
         if (m.id === 'aro') {
           /* De la B: lo que pasa al acabar el Foco, con el nombre del botón de verdad. */
           expect(m.texto).toContain('toca «Empezar foco»');
-          expect(m.texto).toContain('Al acabar, PACE te propone una pausa corta: moverte, estirar o respirar.');
+          /* El permiso del navegador o del móvil salía de golpe al empezar el primer Foco, sin decir para qué. */
+          expect(m.texto).toContain('Al acabar te propone una pausa corta y, la primera vez, te pide permiso para avisarte aunque estés en otra app.');
         }
-        await expect(page.locator('[data-pace-visita-siguiente]')).toHaveText(i === 3 ? 'Entendido' : 'Siguiente');
+        if (m.id === 'arriba') {
+          /* Los dos iconos de arriba no tienen nombre a la vista: la visita dice qué son. */
+          expect(m.titulo).toBe('Estadísticas y logros');
+          expect(m.texto).toContain('sin compararte con nadie');
+        }
+        if (m.id === 'ajustes') {
+          /* PACE no tiene cuenta: si se borra el navegador o se cambia de móvil, sin copia se pierde todo. */
+          expect(m.texto).toContain('PACE lo guarda todo en este aparato: en «Tus datos» haces una copia.');
+        }
+        if (m.id === 'cajon' || m.id === 'columna') {
+          expect(m.titulo).toBe(m.id === 'cajon' ? 'El menú' : 'A la izquierda');
+          expect(m.texto).toContain('las bibliotecas de Respira, Estira y Mueve');
+        }
+        await expect(page.locator('[data-pace-visita-siguiente]')).toHaveText(i === ORDEN.length - 1 ? 'Entendido' : 'Siguiente');
         await page.locator('[data-pace-visita-siguiente]').click();
       }
-      expect(vistas).toEqual(['aro', 'act', 'dia', 'ajustes']);
+      expect(vistas).toEqual(ORDEN);
       await expect(page.locator(VISITA)).toHaveCount(0);
 
       /* La home vuelve a ser de la persona: lo que hay en el centro de «Empezar foco» es el botón. */
@@ -104,7 +133,7 @@ test('la visita es un diálogo: el foco entra, Tab no sale, los atajos callan y 
   await hastaLaVisita(page);
   const raiz = page.locator(VISITA);
   await expect(raiz).toHaveAttribute('aria-modal', 'true');
-  await expect(raiz).toHaveAccessibleName('El aro');
+  await expect(raiz).toHaveAccessibleName('Empieza por tu día');
   const dentro = () => page.evaluate(() => !!document.activeElement.closest('[data-pace-visita]'));
   expect(await dentro(), 'el foco no entró en la visita').toBe(true);
   for (let i = 0; i < 5; i++) {
@@ -120,7 +149,7 @@ test('la visita es un diálogo: el foco entra, Tab no sale, los atajos callan y 
 test('«Saltar la visita» la cierra en cualquier parada', async ({ page }) => {
   await hastaLaVisita(page);
   await page.locator('[data-pace-visita-siguiente]').click();
-  await expect(page.locator(VISITA)).toHaveAttribute('data-pace-visita', 'act');
+  await expect(page.locator(VISITA)).toHaveAttribute('data-pace-visita', 'aro');
   await page.locator('[data-pace-visita-saltar]').click();
   await expect(page.locator(VISITA)).toHaveCount(0);
 });
@@ -136,14 +165,15 @@ test('desde Ajustes, «Visita guiada» la repite; una parada cuyo sitio no se ve
   await expect(page.locator('[data-pace-tweaks-panel]'), 'Ajustes se quedó abierto debajo de la visita').toHaveCount(0);
   await page.locator(VISITA).waitFor({ state: 'visible' });
 
+  const quedan = ORDEN_PC.filter((id) => id !== 'act');
   const vistas = [];
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < quedan.length; i++) {
     const m = await medirParada(page);
     vistas.push(m.id);
-    expect(m.meta).toBe((i + 1) + ' de 3');
+    expect(m.meta).toBe((i + 1) + ' de ' + quedan.length);
     await page.locator('[data-pace-visita-siguiente]').click();
   }
-  expect(vistas).toEqual(['aro', 'dia', 'ajustes']);
+  expect(vistas).toEqual(quedan);
   await expect(page.locator(VISITA)).toHaveCount(0);
   expect(errores).toEqual([]);
 });
@@ -151,12 +181,34 @@ test('desde Ajustes, «Visita guiada» la repite; una parada cuyo sitio no se ve
 test.describe('en inglés', () => {
   test.use({ locale: 'en-GB', viewport: { width: 360, height: 740 } });
 
-  test('la visita habla inglés, con el botón del aro por su nombre', async ({ page }) => {
+  test('la visita habla inglés: empieza por tu día y nombra el botón del aro', async ({ page }) => {
     await hastaLaVisita(page);
+    const d = await medirParada(page);
+    expect(d.titulo).toBe('Start with your day');
+    expect(d.meta).toBe('1 of ' + ORDEN_MOVIL.length);
+    expect(d.texto).toContain('Choose how long you work today');
+    await page.locator('[data-pace-visita-siguiente]').click();
     const m = await medirParada(page);
     expect(m.titulo).toBe('The ring');
-    expect(m.meta).toBe('1 of 4');
     expect(m.texto).toContain('tap “Start Focus”');
     await expect(page.locator('[data-pace-visita-saltar]')).toHaveText('Skip the tour');
+  });
+});
+
+/* El inglés es más largo: en el móvil bajo, ninguna tarjeta se sale ni tapa lo que enseña. */
+test.describe('en inglés a 360 × 640', () => {
+  test.use({ locale: 'en-GB', viewport: { width: 360, height: 640 } });
+
+  test('las seis paradas caben sin tapar lo que enseñan', async ({ page }) => {
+    await hastaLaVisita(page);
+    for (let i = 0; i < ORDEN_MOVIL.length; i++) {
+      const m = await medirParada(page);
+      expect(m.id).toBe(ORDEN_MOVIL[i]);
+      expect(m.rodea, 'el hueco de «' + m.titulo + '» no rodea lo que enseña').toBe(true);
+      expect(m.dentro, 'la tarjeta de «' + m.titulo + '» se sale de la ventana').toBe(true);
+      expect(m.pisa, 'la tarjeta de «' + m.titulo + '» tapa lo que enseña').toBe(false);
+      await page.locator('[data-pace-visita-siguiente]').click();
+    }
+    await expect(page.locator(VISITA)).toHaveCount(0);
   });
 });
