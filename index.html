@@ -3930,7 +3930,12 @@ Object.assign(window.PACE_STRINGS.es, {
 
   'settings.notify': 'Aviso al terminar',
   'settings.notify.sub': 'Foco · si la pestaña está detrás',
-  'settings.notify.blocked': 'El navegador tiene las notificaciones bloqueadas para este sitio.',
+
+  'settings.notify.blocked.chrome': 'Las notificaciones de este sitio están bloqueadas. Para quitarlo: toca el icono a la izquierda de la dirección, «Notificaciones», «Permitir», y recarga.',
+  'settings.notify.blocked.edge': 'Las notificaciones de este sitio están bloqueadas. Para quitarlo: toca el candado a la izquierda de la dirección, «Permisos para este sitio», «Notificaciones», «Permitir», y recarga.',
+  'settings.notify.blocked.firefox': 'Las notificaciones de este sitio están bloqueadas. Para quitarlo: toca el icono a la izquierda de la dirección, quita el bloqueo de «Enviar notificaciones» y recarga.',
+  'settings.notify.blocked.safari': 'Las notificaciones de este sitio están bloqueadas. Para quitarlo: en Safari, Ajustes › Sitios web › Notificaciones, elige «Permitir» para PACE y recarga.',
+  'settings.notify.blocked.sigue': 'Mientras, la pestaña y la campana siguen avisando al acabar el Foco.',
   'settings.notify.sub.app': 'Foco y pausa · si la app está en segundo plano',
   'settings.notify.blocked.android': 'Los avisos de PACE están desactivados en los ajustes de Android.',
   'settings.notify.blocked.ios': 'Los avisos de PACE están desactivados en los ajustes del iPhone.',
@@ -4048,7 +4053,11 @@ Object.assign(window.PACE_STRINGS.en, {
 
   'settings.notify': 'Alert at the end',
   'settings.notify.sub': 'Focus · if the tab is in the background',
-  'settings.notify.blocked': 'Notifications are blocked for this site in your browser.',
+  'settings.notify.blocked.chrome': 'Notifications are blocked for this site. To allow them: click the icon to the left of the address, “Notifications”, “Allow”, then reload.',
+  'settings.notify.blocked.edge': 'Notifications are blocked for this site. To allow them: click the lock to the left of the address, “Permissions for this site”, “Notifications”, “Allow”, then reload.',
+  'settings.notify.blocked.firefox': 'Notifications are blocked for this site. To allow them: click the icon to the left of the address, clear the block on “Send Notifications”, then reload.',
+  'settings.notify.blocked.safari': 'Notifications are blocked for this site. To allow them: in Safari, Settings › Websites › Notifications, choose “Allow” for PACE, then reload.',
+  'settings.notify.blocked.sigue': 'Meanwhile, the tab and the bell still tell you when Focus ends.',
   'settings.notify.sub.app': 'Focus and break · if the app is in the background',
   'settings.notify.blocked.android': 'PACE notifications are turned off in Android settings.',
   'settings.notify.blocked.ios': 'PACE notifications are turned off in iPhone settings.',
@@ -46284,6 +46293,16 @@ const { useEffect: useEffectTW, useState: useStateTW, useRef: useRefTW } = React
 
 
 
+
+
+function paceNavegador() {
+  const ua = navigator && navigator.userAgent || '';
+  if (/Edg\//.test(ua)) return 'edge';
+  if (/Firefox\//.test(ua)) return 'firefox';
+  if (/Safari\//.test(ua) && !/(Chrome|Chromium|CriOS)\//.test(ua)) return 'safari';
+  return 'chrome';
+}
+
 function TweaksPanel(_ref) {let { open, onClose } = _ref;
   const [state, set] = usePace();
   const { t, tn } = useT();
@@ -46581,7 +46600,8 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
 
     })(),
     canNotify && permisoAviso() === 'denied' &&
-    React.createElement("div", { className: "pace-aj-nota" }, t(avisoNativo ? 'settings.notify.blocked.' + plataforma : 'settings.notify.blocked')),
+    React.createElement("div", { className: "pace-aj-nota", "data-pace-aj-aviso-bloqueado": true }, avisoNativo ? t('settings.notify.blocked.' + plataforma) :
+    t('settings.notify.blocked.' + paceNavegador()) + ' ' + t('settings.notify.blocked.sigue')),
 
     falloAviso && state.notifyFocusEnd && permisoAviso() === 'granted' &&
     React.createElement("div", { className: "pace-aj-nota", "data-pace-aj-aviso-fallo": true }, t('settings.notify.fallo.' + plataforma)),
@@ -46628,7 +46648,7 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
 }
 
 Object.assign(window, { TweaksPanel });
-;Object.assign(window, { TweaksPanel });
+;Object.assign(window, { paceNavegador, TweaksPanel });
 })();
 </script>
 

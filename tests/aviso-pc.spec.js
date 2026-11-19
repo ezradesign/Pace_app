@@ -147,3 +147,40 @@ test('aviso-pc · campana · al acabar el Foco la campana da tres toques', async
   const toques = golpes.filter((g, i) => i === 0 || g - golpes[i - 1] > 0.5).length;
   expect(toques, 'la campana del final dio ' + toques + ' toque(s): ' + JSON.stringify(golpes)).toBe(3);
 });
+
+/* 1.2A · Con el permiso bloqueado, la nota de Ajustes dice cómo quitarlo en tu navegador y que la
+   pestaña y la campana siguen avisando. Antes solo decía que estaba bloqueado. */
+const notaBloqueo = async (page) => {
+  await page.getByRole('button', { name: /^(Abrir ajustes|Open settings)$/ }).click();
+  const nota = page.locator('.pace-aj-nota').first();
+  await nota.waitFor({ state: 'visible' });
+  return (await nota.innerText()).replace(/\s+/g, ' ');
+};
+const NAVEGADORES = [
+  ['Chrome', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36', '«Notificaciones», «Permitir»'],
+  ['Edge', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0', '«Permisos para este sitio»'],
+  ['Firefox', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:151.0) Gecko/20100101 Firefox/151.0', '«Enviar notificaciones»'],
+  ['Safari', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/19.0 Safari/605.1.15', 'Ajustes › Sitios web › Notificaciones'],
+];
+for (const [nombre, ua, pasos] of NAVEGADORES) {
+  test(`aviso-pc · 1.2A · ${nombre} · con el permiso bloqueado, la nota dice cómo quitarlo y que la pestaña y la campana siguen`, async ({ browser }) => {
+    const context = await browser.newContext({ userAgent: ua, viewport: { width: 1280, height: 720 } });
+    const page = await context.newPage();
+    await sembrar(context, { notifyFocusEnd: true });
+    await navegadorConAvisos(context, { permiso: 'denied' });
+    await irAlArtefacto(page);
+    const texto = await notaBloqueo(page);
+    expect(texto, 'la nota no dice cómo desbloquearlo en ' + nombre).toContain(pasos);
+    expect(texto).toContain('la pestaña y la campana siguen avisando');
+    await context.close();
+  });
+}
+
+test('aviso-pc · 1.2A · en inglés, la nota dice lo mismo en inglés', async ({ page, context }) => {
+  await sembrar(context, { notifyFocusEnd: true, lang: 'en' });
+  await navegadorConAvisos(context, { permiso: 'denied' });
+  await irAlArtefacto(page);
+  const texto = await notaBloqueo(page);
+  expect(texto).toContain('“Allow”');
+  expect(texto).toContain('the tab and the bell still tell you');
+});

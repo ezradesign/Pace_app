@@ -73,7 +73,12 @@ Object.assign(window.PACE_STRINGS.es, {
     // Sesiones: cada fila dice de que modulo es
     'settings.notify':               'Aviso al terminar',
     'settings.notify.sub':           'Foco · si la pestaña está detrás',
-    'settings.notify.blocked':       'El navegador tiene las notificaciones bloqueadas para este sitio.',
+    /* Con el permiso bloqueado, cómo quitarlo en cada navegador (Ez, 1.2A del 19 nov. 2026). */
+    'settings.notify.blocked.chrome': 'Las notificaciones de este sitio están bloqueadas. Para quitarlo: toca el icono a la izquierda de la dirección, «Notificaciones», «Permitir», y recarga.',
+    'settings.notify.blocked.edge':  'Las notificaciones de este sitio están bloqueadas. Para quitarlo: toca el candado a la izquierda de la dirección, «Permisos para este sitio», «Notificaciones», «Permitir», y recarga.',
+    'settings.notify.blocked.firefox': 'Las notificaciones de este sitio están bloqueadas. Para quitarlo: toca el icono a la izquierda de la dirección, quita el bloqueo de «Enviar notificaciones» y recarga.',
+    'settings.notify.blocked.safari': 'Las notificaciones de este sitio están bloqueadas. Para quitarlo: en Safari, Ajustes › Sitios web › Notificaciones, elige «Permitir» para PACE y recarga.',
+    'settings.notify.blocked.sigue': 'Mientras, la pestaña y la campana siguen avisando al acabar el Foco.',
     'settings.notify.sub.app':       'Foco y pausa · si la app está en segundo plano',
     'settings.notify.blocked.android': 'Los avisos de PACE están desactivados en los ajustes de Android.',
     'settings.notify.blocked.ios':   'Los avisos de PACE están desactivados en los ajustes del iPhone.',
@@ -191,7 +196,11 @@ Object.assign(window.PACE_STRINGS.en, {
     // Sessions
     'settings.notify':               'Alert at the end',
     'settings.notify.sub':           'Focus · if the tab is in the background',
-    'settings.notify.blocked':       'Notifications are blocked for this site in your browser.',
+    'settings.notify.blocked.chrome': 'Notifications are blocked for this site. To allow them: click the icon to the left of the address, “Notifications”, “Allow”, then reload.',
+    'settings.notify.blocked.edge':  'Notifications are blocked for this site. To allow them: click the lock to the left of the address, “Permissions for this site”, “Notifications”, “Allow”, then reload.',
+    'settings.notify.blocked.firefox': 'Notifications are blocked for this site. To allow them: click the icon to the left of the address, clear the block on “Send Notifications”, then reload.',
+    'settings.notify.blocked.safari': 'Notifications are blocked for this site. To allow them: in Safari, Settings › Websites › Notifications, choose “Allow” for PACE, then reload.',
+    'settings.notify.blocked.sigue': 'Meanwhile, the tab and the bell still tell you when Focus ends.',
     'settings.notify.sub.app':       'Focus and break · if the app is in the background',
     'settings.notify.blocked.android': 'PACE notifications are turned off in Android settings.',
     'settings.notify.blocked.ios':   'PACE notifications are turned off in iPhone settings.',
