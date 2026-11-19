@@ -501,42 +501,6 @@
   "scrollHome": 0
  },
  {
-  "op": "B",
-  "w": 360,
-  "lang": "en",
-  "k": 1,
-  "id": "stats",
-  "cabe": false,
-  "falta": "stats"
- },
- {
-  "op": "B",
-  "w": 360,
-  "lang": "en",
-  "k": 2,
-  "id": "logros",
-  "cabe": true,
-  "scrollHome": 0
- },
- {
-  "op": "B",
-  "w": 360,
-  "lang": "en",
-  "k": 3,
-  "id": "ajustes",
-  "cabe": true,
-  "scrollHome": 0
- },
- {
-  "op": "B",
-  "w": 360,
-  "lang": "en",
-  "k": 4,
-  "id": "dia",
-  "cabe": true,
-  "scrollHome": 0
- },
- {
   "op": "hoy",
   "w": 1280,
   "lang": "en",
@@ -681,12 +645,48 @@
  },
  {
   "op": "B",
+  "w": 360,
+  "lang": "en",
+  "k": 1,
+  "id": "stats",
+  "cabe": true,
+  "scrollHome": 0
+ },
+ {
+  "op": "B",
+  "w": 360,
+  "lang": "en",
+  "k": 2,
+  "id": "logros",
+  "cabe": true,
+  "scrollHome": 0
+ },
+ {
+  "op": "B",
+  "w": 360,
+  "lang": "en",
+  "k": 3,
+  "id": "ajustes",
+  "cabe": true,
+  "scrollHome": 0
+ },
+ {
+  "op": "B",
+  "w": 360,
+  "lang": "en",
+  "k": 4,
+  "id": "dia",
+  "cabe": true,
+  "scrollHome": 0
+ },
+ {
+  "op": "B",
   "w": 1280,
   "lang": "en",
   "k": 1,
   "id": "stats",
-  "cabe": false,
-  "falta": "stats"
+  "cabe": true,
+  "scrollHome": 0
  },
  {
   "op": "B",

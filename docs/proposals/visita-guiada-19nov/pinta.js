@@ -127,7 +127,7 @@ function pintarLineaB([sitio, lang]) {
   const vis1 = (s) => [...document.querySelectorAll(s)].find((x) => x.getBoundingClientRect().width > 0);
   const hoja = (raiz, re) => [...raiz.querySelectorAll('p, div, span, h2, h3')].find((x) => x.children.length === 0 && re.test(x.textContent.trim()) && x.getBoundingClientRect().width > 0);
   let destino = null;
-  if (sitio === 'stats') destino = hoja(document, /^(Métricas suaves|Gentle|Soft)/);
+  if (sitio === 'stats') destino = hoja(document, /^(Métricas suaves|A gentle look|Gentle|Soft)/);
   if (sitio === 'logros') destino = hoja(document, /^(Sellos de libreta|Field|Stamps)/i);
   if (sitio === 'ajustes') { const pan = vis1('[data-pace-tweaks-panel]'); destino = pan && hoja(pan, /^(Ajustes|Settings)$/); }
   if (sitio === 'dia') { const pan = vis1('[data-pace-ritmo-panel]') || vis1('[data-pace-ritmo-tarjeta]'); destino = pan && hoja(pan, /^(·\s*)?(como cada|like every|Hoy, como cada|Today, like every)/i); }
