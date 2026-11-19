@@ -4524,6 +4524,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.resumen': '{f} de foco · {p} pausas · {v}',
   'ritmo.resumen.una': '{f} de foco · 1 pausa · {v}',
   'ritmo.vasos': '{v} de {m} vasos',
+  'ritmo.vasos.jornada': '{v} vasos en la jornada',
+  'ritmo.vasos.jornada.uno': '1 vaso en la jornada',
   'ritmo.ahora': 'Ahora',
   'ritmo.luego': 'Luego',
   'ritmo.fila.bloque': 'Foco · bloque {n} de {m}',
@@ -4724,6 +4726,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.resumen': '{f} of focus · {p} breaks · {v}',
   'ritmo.resumen.una': '{f} of focus · 1 break · {v}',
   'ritmo.vasos': '{v} of {m} glasses',
+  'ritmo.vasos.jornada': '{v} glasses over the day',
+  'ritmo.vasos.jornada.uno': '1 glass over the day',
   'ritmo.ahora': 'Now',
   'ritmo.luego': 'Next',
   'ritmo.fila.bloque': 'Focus · block {n} of {m}',
@@ -50449,8 +50453,11 @@ function ritmoMetaVasos(s) {
 
 
 
-function ritmoResumen(m, tn, meta) {
-  const vasos = tn('ritmo.vasos', { v: m.vasos, m: meta || m.vasos });
+
+
+function ritmoResumen(m, tn, meta, jornada) {
+  const vasos = jornada ? tn(m.vasos === 1 ? 'ritmo.vasos.jornada.uno' : 'ritmo.vasos.jornada', { v: m.vasos }) :
+  tn('ritmo.vasos', { v: m.vasos, m: meta || m.vasos });
   return tn(m.pausas === 1 ? 'ritmo.resumen.una' : 'ritmo.resumen', { f: ritmoDuracion(m.focoMin), p: m.pausas, v: vasos });
 }
 
@@ -51472,8 +51479,9 @@ function RitmoHoja(_ref2) {let { open, onClose, plan, state } = _ref2;
     React.createElement("div", { className: "pace-rt-sub pace-rt-frase" },
     React.createElement(RitmoFraseMenu, { plan: plan, horario: R.horario, plantilla: "ritmo.frase.menu", capital: true })
     ),
-    React.createElement("div", { className: "pace-rt-sub" }, ritmoResumen(plan.m, tn, ritmoMetaVasos(state))),
-    React.createElement("div", { style: { marginTop: 12 } }, React.createElement(RitmoContexto, null)),
+    React.createElement("div", { className: "pace-rt-sub" }, ritmoResumen(plan.m, tn, ritmoMetaVasos(state), true)),
+
+    React.createElement("div", { className: "pace-rt-sub", "data-pace-ritmo-ctx": true }, t('ritmo.ctx.mesa') + ' · ' + t('ritmo.ctx.material')),
     React.createElement(RitmoLista, { plan: plan }),
 
 
