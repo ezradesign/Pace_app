@@ -15096,7 +15096,9 @@ function ritmoBloqueEmpezado(minutos) {
   if (p && p.actual && (t !== p.actual.desde || otraDuracion || p.pausaPasada)) {
     var antes = p.m.items.slice(0, p.m.items.indexOf(p.actual));
 
-    if (antes.some(function (x) {return x.tipo === 'comida' && x.desde > t;})) antes = antes.filter(function (x) {return x.desde < t;});
+
+
+    if (antes.some(function (x) {return x.tipo === 'comida' && x.desde > t;})) antes = antes.filter(function (x) {return x.desde < t || x === p.pausa;});
 
     while (p.pausaPasada && antes.length && antes[antes.length - 1].tipo === 'libre') antes.pop();
 

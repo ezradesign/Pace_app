@@ -154,7 +154,9 @@ function ritmoBloqueEmpezado(minutos) {
   if (p && p.actual && (t !== p.actual.desde || otraDuracion || p.pausaPasada)) {
     var antes = p.m.items.slice(0, p.m.items.indexOf(p.actual));
     /* Empezado antes de comer (S7), la comida aún no ha pasado: no va a la historia, y se sirve detrás. */
-    if (antes.some(function (x) { return x.tipo === 'comida' && x.desde > t; })) antes = antes.filter(function (x) { return x.desde < t; });
+    /* La pausa abierta que se salta en el mismo minuto en que se abrió sí es historia: fuera, su
+       «saltada» (va por orden) caía en la pausa siguiente, la de la tarde. */
+    if (antes.some(function (x) { return x.tipo === 'comida' && x.desde > t; })) antes = antes.filter(function (x) { return x.desde < t || x === p.pausa; });
     /* Leído tras la pausa (S11), el hueco hasta ahora no es historia: lo vuelve a pintar ritmoMenu. */
     while (p.pausaPasada && antes.length && antes[antes.length - 1].tipo === 'libre') antes.pop();
     /* Empezado en plena comida (te la saltas, o vuelves antes), la comida dura hasta ahora: entera,
