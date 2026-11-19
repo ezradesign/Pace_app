@@ -92,13 +92,19 @@ function useCountdown(durationSec, onComplete, modo) {
       else forceTick(n => n + 1);
     };
     const id = setInterval(check, 1000);
+    /* EL FINAL, A SU HORA: un solo `setTimeout` a la hora de `endsAt`. Con la pestaña oculta más
+       de cinco minutos, Chrome despierta el `setInterval` de arriba una vez por minuto (va
+       encadenado) y la campana y el aviso llegaban hasta un minuto tarde; un temporizador suelto
+       no entra en ese freno (tests/aviso-pc.spec.js). */
+    const fin = endsAtRef.current == null ? null : setTimeout(check, Math.max(0, endsAtRef.current - Date.now()) + 20);
     const onVis = () => { if (document.visibilityState === 'visible') check(); };
     document.addEventListener('visibilitychange', onVis);
     return () => {
       clearInterval(id);
+      if (fin != null) clearTimeout(fin);
       document.removeEventListener('visibilitychange', onVis);
     };
-  }, [status, complete]);
+  }, [status, complete, endsAtRef.current]);
 
   // Reset por cambio de reloj (home: cambio de modo o de minutos) -> idle.
   useEffectUC(() => {

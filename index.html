@@ -27124,13 +27124,19 @@ function useCountdown(durationSec, onComplete, modo) {
       forceTick((n) => n + 1);
     };
     const id = setInterval(check, 1000);
+
+
+
+
+    const fin = endsAtRef.current == null ? null : setTimeout(check, Math.max(0, endsAtRef.current - Date.now()) + 20);
     const onVis = () => {if (document.visibilityState === 'visible') check();};
     document.addEventListener('visibilitychange', onVis);
     return () => {
       clearInterval(id);
+      if (fin != null) clearTimeout(fin);
       document.removeEventListener('visibilitychange', onVis);
     };
-  }, [status, complete]);
+  }, [status, complete, endsAtRef.current]);
 
 
   useEffectUC(() => {
@@ -27331,7 +27337,9 @@ function maybeNotifyFocusEnd(opts) {
       icon: '/icons/icon-192.png',
       badge: '/icons/icon-192.png',
       tag,
-      silent: true
+      silent: true,
+
+      requireInteraction: true
     };
     const fallback = () => {try {new Notification(title, nOpts);} catch (e) {}};
     if (navigator.serviceWorker && navigator.serviceWorker.getRegistration) {
