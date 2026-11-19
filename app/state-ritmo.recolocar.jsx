@@ -149,6 +149,12 @@ function ritmoBloqueEmpezado(minutos) {
     if (antes.some(function (x) { return x.tipo === 'comida' && x.desde > t; })) antes = antes.filter(function (x) { return x.desde < t; });
     /* Leído tras la pausa (S11), el hueco hasta ahora no es historia: lo vuelve a pintar ritmoMenu. */
     while (p.pausaPasada && antes.length && antes[antes.length - 1].tipo === 'libre') antes.pop();
+    /* Empezado en plena comida (te la saltas, o vuelves antes), la comida dura hasta ahora: entera,
+       el bloque iba pintado encima y Estadísticas contaba la hora. Con 0 min se queda (saltada a su
+       hora): sin ella, lo que quedaba de comida volvía detrás del bloque. */
+    antes = antes.map(function (x) {
+      return x.tipo === 'comida' && x.desde <= t && x.desde + x.dur > t ? Object.assign({}, x, { dur: t - x.desde }) : x;
+    });
     cambios.pasado = ritmoCongelar(antes);
     cambios.desde = t;
     cambios.primerBloque = mins || p.actual.dur;

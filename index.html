@@ -15091,6 +15091,12 @@ function ritmoBloqueEmpezado(minutos) {
     if (antes.some(function (x) {return x.tipo === 'comida' && x.desde > t;})) antes = antes.filter(function (x) {return x.desde < t;});
 
     while (p.pausaPasada && antes.length && antes[antes.length - 1].tipo === 'libre') antes.pop();
+
+
+
+    antes = antes.map(function (x) {
+      return x.tipo === 'comida' && x.desde <= t && x.desde + x.dur > t ? Object.assign({}, x, { dur: t - x.desde }) : x;
+    });
     cambios.pasado = ritmoCongelar(antes);
     cambios.desde = t;
     cambios.primerBloque = mins || p.actual.dur;
