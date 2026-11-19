@@ -261,8 +261,8 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
       if (guided && elapsed >= v1RepTarget(step) * repSec) {
         darSerie(v1RepTarget(step)); try { playSound('move.rep', v1VozRep(v1RepTarget(step), repSec, true, v1RepTarget(step))); } catch (e) {}
         advanceStep();
-      } else if (suena && elapsed % repSec === 0) {
-        try { playSound('move.rep', v1VozRep(elapsed / repSec, repSec, false, v1RepTarget(step))); } catch (e) {}
+      } else if (suena && elapsed % repSec === 0) {   // en un cambio dentro del paso, su señal y no la madera (MoveSessionV1.cambios.jsx)
+        const cb = v1CambioAhora(step, elapsed); try { if (cb) playSound('move.side', v1CambioSonido(cb)); else playSound('move.rep', v1VozRep(elapsed / repSec, repSec, false, v1RepTarget(step))); } catch (e) {}
       }
       return;
     }
@@ -271,6 +271,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     // Los últimos 3 segundos de cada paso con reloj y de cada descanso suenan a madera, uno
     // por segundo, para seguir la rutina sin mirar (opción A). Silencio si soundOn está apagado.
     if (suena && effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) { try { playSound('move.warn', v1VozCuenta(effDur - elapsed)); } catch (e) {} }
+    if (suena && step.mode === 'timed' && v1CambioAhora(step, elapsed)) { try { playSound('move.side', v1CambioSonido(v1CambioAhora(step, elapsed))); } catch (e) {} }
     if (elapsed >= effDur) {
       if (!auto) {
         // Sin Auto la cuenta se queda en 0 y suena una vez: lo que sigue lo decide «›».
@@ -451,7 +452,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   const careText = (inWork && !isRest) ? tInstr(stepIdx, 'care') : undefined;
   const sideLead = (inWork && step.mode === 'perSide')
     ? t(side === 0 ? 'session.sideLeft' : 'session.sideRight')
-    : null;
+    : inWork ? v1CambioPalabra(step, elapsed, t, auto) : null;   // el tramo de un paso con cambios (Ez, 1A del 16 nov.)
 
   /* Lo que va del ejercicio, para el aro del dibujo. Colocarse y cambiar de lado no son el
      ejercicio: el aro se queda vacío y empieza a dibujarse cuando empieza el trabajo (Ez). */
@@ -475,7 +476,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
         textos={{ prev: t('move.prev'), pause: t('session.pause'), resume: t('session.resume') }} autoAbajo={autoAbajo ? autoBoton : null} />}
       hint={t('session.hint')}
     >
-      <CuerpoV1 routine={routine} stepIdx={stepIdx} step={step} side={side} phase={phase} elapsed={elapsed} paused={paused}
+      <CuerpoV1 routine={routine} stepIdx={stepIdx} step={step} side={side} phase={phase} elapsed={elapsed} paused={paused} ladoCambio={inWork ? v1CambioLado(step, elapsed, auto) : null}
         accent={accent} stepAccent={stepAccent} stepAccentSoft={stepAccentSoft} lang={lang}
         t={t} tn={tn} tStep={tStep} tInstr={tInstr}
         kicker={kicker} cueText={cueText} sideLead={sideLead} careText={careText}

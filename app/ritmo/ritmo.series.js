@@ -10,7 +10,8 @@
        (Ez, 20 oct.: «B · Se quita»);
      · la larga: Respira y una Estira de pie;
      · las cortas, la cadencia de siempre (`it.n`: la de antes de la larga, Mueve; las
-       demás, Estira); y si la anterior fue sentada o la saltaste, esta, de pie;
+       demás, Estira); y si la anterior fue sentada o la saltaste, esta, de pie, aunque
+       sea repitiendo una de pie ya hecha hoy (Ez, 2.3 A del 16 nov.);
      · el jueves, la última corta antes de comer es Respira (el acento que se queda);
      · el cierre rota entre los Respira lentos de 5 min o menos.
      Si el módulo no tiene nada mejor para la parada (de pie, corto, sin cargar una zona,
@@ -257,7 +258,15 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
     var t0 = base;
     var sinDescanso = t0.filter(function (r) { return !descansa[r.id]; });
     if (sinDescanso.length) t0 = sinDescanso;
-    if (c.sentada || c.firme) { var dePie = t0.filter(function (r) { return ritmoSeriesDePie(r.id); }); if (dePie.length) t0 = dePie; }
+    /* ANTES REPETIR UNA DE PIE QUE SERVIR OTRA SENTADA (Ez, 2.3 A del 16 nov. 2026): sin pagar,
+       «Para empezar» tiene cinco de pie y con el aro corto se acaban a media mañana (medido: dos
+       sentadas seguidas 16 días de 20). Si no queda ninguna de pie sin hacer hoy, vuelve una de
+       pie ya hecha; el orden desempata por la que salió antes. */
+    if (c.sentada || c.firme) {
+      var dePie = t0.filter(function (r) { return ritmoSeriesDePie(r.id); });
+      if (!dePie.length) dePie = pool.filter(function (r) { return ritmoSeriesDePie(r.id) && !descansa[r.id]; });
+      if (dePie.length) t0 = dePie;
+    }
     if (nuevo) entero(alcanzaNueva);
     if (cabe) entero(alcanza);
     if (c.corta) { var cortos = t0.filter(function (r) { return (r.min || 0) <= c.corta; }); if (cortos.length) t0 = cortos; }
@@ -362,8 +371,9 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
          última vez, o la pausa es corta y aquí no hay nada tan corto: el otro módulo, si
          tiene algo mejor. Un módulo vacío sirve el otro. */
       var nota = function (z) {
-        /* la primera es Mueve: solo cambia si el cuerpo entero no cabría */
-        return !z ? 9 : (primera ? (z.deja >= 8 ? 8 : 0) : z.deja + z.carga / 2) + (c.corta && (z.r.min || 0) > c.corta ? 4 : 0) + (c.levantar && !ritmoSeriesDePie(z.r.id) ? 2 : 0) + (z.hoy ? 3 : 0) + (z.aqui ? 1 : 0);
+        /* la primera es Mueve: solo cambia si el cuerpo entero no cabría. Si toca levantarse,
+           sentarse pesa más que repetir (4 frente a 3, la 2.3 A de Ez del 16 nov.) */
+        return !z ? 9 : (primera ? (z.deja >= 8 ? 8 : 0) : z.deja + z.carga / 2) + (c.corta && (z.r.min || 0) > c.corta ? 4 : 0) + (c.levantar && !ritmoSeriesDePie(z.r.id) ? 4 : 0) + (z.hoy ? 3 : 0) + (z.aqui ? 1 : 0);
       };
       if (modulo !== 'respira' && (!x || ((c.levantar || c.corta || x.hoy || (primera ? x.deja >= 8 : x.deja || x.carga > 1)) && nota(x) > 0))) {
         var otro = modulo === 'mueve' ? 'estira' : 'mueve';

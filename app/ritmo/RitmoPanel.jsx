@@ -301,14 +301,15 @@ function RitmoMovil({ state, plan, onVer }) {
      descriptor, que ya está en el aro, así que no añade alto. */
   const empezado = typeof usePaceFocoEmpezado === 'function' ? usePaceFocoEmpezado() : true;
   const descriptor = plan.hechos === 0 && !empezado ? t('ritmo.frase.movil.empieza')
-    : typeof getFocusDescriptorKey === 'function' ? t(getFocusDescriptorKey(b.dur)) : '';
+    : b && typeof getFocusDescriptorKey === 'function' ? t(getFocusDescriptorKey(b.dur)) : '';
   /* Con la pausa abierta (s193), «Ahora» es la parada y «Luego» el bloque; acabado su rato, ya no (S11 A). */
   const filaBloque = (rotulo) => (
     <RitmoFila rotulo={<React.Fragment>{t(rotulo)}<br />{ritmoHora(b.desde)}</React.Fragment>} luego={rotulo === 'ritmo.luego'}
       modulo="foco" nombre={tn('ritmo.fila.bloque', { n: plan.hechos + 1, m: plan.total })}
       meta={b.dur + ' min · ' + descriptor} />
   );
-  const luego = ritmoDetras(plan.m, b);
+  /* Tras el último bloque, con el cierre contando, no hay bloque: solo la fila «Ahora» del cierre. */
+  const luego = b ? ritmoDetras(plan.m, b) : null;
   const conPausa = !!(plan.pausa && !plan.pausaPasada);
   /* Las filas cambian: el motor de la home decide YA, antes de pintar, si «Luego» cabe (Ez, 1 A2;
      home-geometry.medidas.js). Así no se ve un fotograma con «Luego» que luego se esconde. */
@@ -316,7 +317,7 @@ function RitmoMovil({ state, plan, onVer }) {
     if (typeof window.paceHomeGeometriaYa === 'function') window.paceHomeGeometriaYa();
   }, [conPausa, !!luego, plan.hechos, plan.m.opcion]);
   const filas = conPausa
-    ? <React.Fragment><RitmoFilaParada it={plan.pausa} rotulo="ritmo.ahora" corta />{filaBloque('ritmo.luego')}</React.Fragment>
+    ? <React.Fragment><RitmoFilaParada it={plan.pausa} rotulo="ritmo.ahora" corta />{b ? filaBloque('ritmo.luego') : null}</React.Fragment>
     : <React.Fragment>{filaBloque('ritmo.ahora')}{luego ? <RitmoFilaParada it={luego} rotulo="ritmo.luego" corta /> : null}</React.Fragment>;
   return (
     <div className="pace-rt-panel pace-rt-mov" data-pace-ritmo-estado="menu">

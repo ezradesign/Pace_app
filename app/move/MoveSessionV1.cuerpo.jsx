@@ -36,6 +36,8 @@ function v1Reservas(routine, t, tn, tStep, tInstr) {
       pon(cues, { lead: t('session.sideLeft'), text: action });
       pon(cues, { lead: t('session.sideRight'), text: action });
     }
+    /* La palabra de cada tramo de un paso con cambios (Ez, 1A del 16 nov.; MoveSessionV1.cambios.jsx). */
+    if (action && typeof v1CambiosPalabras === 'function') v1CambiosPalabras(st, t).forEach((w) => pon(cues, { lead: w, text: action }));
     const care = st.mode !== 'rest' ? tInstr(i, 'care') : null;
     if (care) pon(colas, { care });
     /* Las dos frases de colocarse, con «Auto» y sin él: cambiarlo no mueve nada. */
@@ -204,7 +206,7 @@ function CuerpoV1(p) {
       {...(justo ? { 'data-pace-v1-justo': '' } : {})}>
       <div ref={cuerpoRef} data-pace-v1-body className="pace-v1" {...(p.paused ? { 'data-pace-v1-en-pausa': '' } : {})}>
         <div ref={glifoRef} data-pace-v1-glyph className="pace-v1-glifo" style={{ width: aro, height: aro }}>
-          <StepGlyph stepName={step.name} accent={stepAccent} accentSoft={stepAccentSoft} size={glifo} side={v1LadoGlifo(step, p.phase, side)} />
+          <StepGlyph stepName={step.name} accent={stepAccent} accentSoft={stepAccentSoft} size={glifo} side={p.ladoCambio != null ? p.ladoCambio : v1LadoGlifo(step, p.phase, side)} />
           <AroV1 fraccion={p.fraccion} accent={stepAccent} px={aro} />
         </div>
         <div data-pace-v1-kicker style={{ color: stepAccent }}>{p.kicker || null}</div>

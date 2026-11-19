@@ -1,0 +1,4875 @@
+{
+  "hoy": {
+    "fase": "work",
+    "rotulo": null,
+    "nombre": "Círculos de brazos",
+    "texto": "De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. Luego, el otro.",
+    "numero": "5",
+    "etiqueta": "de 16 reps",
+    "fuerte": null,
+    "altoTexto": 45,
+    "dibujo": 150,
+    "scroll": 0
+  },
+  "a": {
+    "fase": "work",
+    "rotulo": null,
+    "nombre": "Círculos de brazos",
+    "texto": "Atrás. De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. Luego, el otro.",
+    "numero": "5",
+    "etiqueta": "de 16 reps",
+    "fuerte": null,
+    "altoTexto": 45,
+    "dibujo": 150,
+    "scroll": 0
+  },
+  "b": {
+    "fase": "work",
+    "rotulo": "Brazo 1 · atrás",
+    "nombre": "Círculos de brazos",
+    "texto": "De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. Luego, el otro.",
+    "numero": "5",
+    "etiqueta": "de 16 reps",
+    "fuerte": null,
+    "altoTexto": 45,
+    "dibujo": 150,
+    "scroll": 0
+  },
+  "c": {
+    "fase": "change",
+    "rotulo": "Cambia de lado",
+    "nombre": "Círculos de brazos",
+    "texto": "De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. Luego, el otro.",
+    "numero": "9",
+    "etiqueta": "para empezar",
+    "fuerte": "Ahora: Derecha",
+    "altoTexto": 45,
+    "dibujo": 144,
+    "scroll": 0
+  },
+  "a9": {
+    "fase": "work",
+    "rotulo": null,
+    "nombre": "Círculos de brazos",
+    "texto": "Otro brazo, adelante. De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. Luego, el otro.",
+    "numero": "9",
+    "etiqueta": "de 16 reps",
+    "fuerte": null,
+    "altoTexto": 67,
+    "dibujo": 150,
+    "scroll": 0
+  },
+  "cierre": {
+    "pintarA": false,
+    "empezada": {
+      "aro": "Bloque 1 de 2",
+      "cta": "Pausar foco",
+      "seguir": null,
+      "panel": "Jornada entera · de 9:00 a 17:00 · hoy de 15:10 a 17:001 h 40 min de foco · 1 pausa · 1 de 8 vasosCambiarAl calendarioJunto a la mesaSin material, a veces pared o mesaHoy voy por libreAhora15:55Piernas sin pasos3 min · Mueve16:55Diafragmática5 min · RespiraJornada enteraDe 9:00 a 17:00 · hoy de 15:10 a 17:00CambiarHoy voy por libreVer todoAhora15:10Foco · bloque 1 de 245 min · Trabajo en profundidadLuego15:55Piernas sin pasos3 min · Piernas: sin mover hoyOtra",
+      "terminado": false,
+      "pausa": null,
+      "cierre": {
+        "desde": 1015,
+        "dur": 5,
+        "plato": "Diafragmática"
+      }
+    },
+    "pausa1": {
+      "aro": "Pausa corta",
+      "cta": "Hacer la pausa",
+      "seguir": "Empezar ya el bloque 2",
+      "panel": "Jornada entera · de 9:00 a 17:00 · hoy de 15:10 a 17:001 h 40 min de foco · 1 pausa · 1 de 8 vasosCambiarAl calendarioJunto a la mesaSin material, a veces pared o mesaHoy voy por libreAhora15:55Piernas sin pasos3 min · Mueve16:55Diafragmática5 min · RespiraJornada enteraDe 9:00 a 17:00 · hoy de 15:10 a 17:00CambiarHoy voy por libreVer todoAhora15:55Piernas sin pasos3 min · Piernas: sin mover hoyOtraLuego16:00Foco · bloque 2 de 255 min · Trabajo en profundidad",
+      "terminado": false,
+      "pausa": "pausa",
+      "cierre": {
+        "desde": 1015,
+        "dur": 5,
+        "plato": "Diafragmática"
+      }
+    },
+    "ventana": "×Bloque 2 de 2 · hechoTu pausa16:50 · Lo que toca ahora.Para cerrar, despacioDiafragmática5minRespiray un vaso de aguaHacer la pausaHidrátate· un vaso ahora›Ahora no",
+    "hoy": {
+      "aro": "Jornada cerrada",
+      "cta": "Seguir por libre",
+      "seguir": null,
+      "panel": "Jornada cerrada1 h 40 min de foco. Lo que queda del día es tuyo.CambiarHoy voy por libre",
+      "terminado": true,
+      "pausa": "cierre",
+      "cierre": {
+        "desde": 1010,
+        "dur": 5,
+        "plato": "Diafragmática"
+      }
+    }
+  },
+  "dePie": {
+    "completo-10": {
+      "pausasPorDia": 11,
+      "sentadasPct": 44,
+      "maxSeguidas": 1,
+      "diasSegunMaxSeguidas": {
+        "1": 20
+      },
+      "largasConEstiraSentada": 0,
+      "peor": {
+        "dia": "2026-11-16",
+        "max": 1,
+        "linea": [
+          {
+            "hora": "9:30",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Piernas sin pasos"
+            ]
+          },
+          {
+            "hora": "10:05",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Empuje sencillo"
+            ]
+          },
+          {
+            "hora": "10:40",
+            "larga": true,
+            "pie": true,
+            "platos": [
+              "Coherente 432",
+              "Espalda de pie"
+            ]
+          },
+          {
+            "hora": "11:25",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Cuello suave"
+            ]
+          },
+          {
+            "hora": "12:00",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Cadena posterior"
+            ]
+          },
+          {
+            "hora": "12:35",
+            "larga": true,
+            "pie": true,
+            "platos": [
+              "Coherente 6·6",
+              "Brazos libres"
+            ]
+          },
+          {
+            "hora": "13:20",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Manos y muñecas"
+            ]
+          },
+          {
+            "hora": "13:55",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Piernas en pausa"
+            ]
+          },
+          {
+            "comida": "14:00"
+          },
+          {
+            "hora": "15:30",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Manos y antebrazos"
+            ]
+          },
+          {
+            "hora": "16:05",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Hombros"
+            ]
+          },
+          {
+            "hora": "16:40",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Escritorio express"
+            ]
+          }
+        ]
+      }
+    },
+    "completo-15": {
+      "pausasPorDia": 11,
+      "sentadasPct": 44,
+      "maxSeguidas": 1,
+      "diasSegunMaxSeguidas": {
+        "1": 20
+      },
+      "largasConEstiraSentada": 0,
+      "peor": {
+        "dia": "2026-11-16",
+        "max": 1,
+        "linea": [
+          {
+            "hora": "9:30",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Piernas sin pasos"
+            ]
+          },
+          {
+            "hora": "10:05",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Empuje sencillo"
+            ]
+          },
+          {
+            "hora": "10:40",
+            "larga": true,
+            "pie": true,
+            "platos": [
+              "Coherente 432",
+              "Espalda de pie"
+            ]
+          },
+          {
+            "hora": "11:25",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Cuello suave"
+            ]
+          },
+          {
+            "hora": "12:00",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Cadena posterior"
+            ]
+          },
+          {
+            "hora": "12:35",
+            "larga": true,
+            "pie": true,
+            "platos": [
+              "Coherente 6·6",
+              "Brazos libres"
+            ]
+          },
+          {
+            "hora": "13:20",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Manos y muñecas"
+            ]
+          },
+          {
+            "hora": "13:55",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Piernas en pausa"
+            ]
+          },
+          {
+            "comida": "14:00"
+          },
+          {
+            "hora": "15:30",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Manos y antebrazos"
+            ]
+          },
+          {
+            "hora": "16:05",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Hombros"
+            ]
+          },
+          {
+            "hora": "16:40",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Escritorio express"
+            ]
+          }
+        ]
+      }
+    },
+    "completo-25": {
+      "pausasPorDia": 12,
+      "sentadasPct": 40,
+      "maxSeguidas": 1,
+      "diasSegunMaxSeguidas": {
+        "1": 20
+      },
+      "largasConEstiraSentada": 0,
+      "peor": {
+        "dia": "2026-11-16",
+        "max": 1,
+        "linea": [
+          {
+            "hora": "9:25",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Piernas sin pasos"
+            ]
+          },
+          {
+            "hora": "9:55",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Empuje sencillo"
+            ]
+          },
+          {
+            "hora": "10:25",
+            "larga": true,
+            "pie": true,
+            "platos": [
+              "Coherente 432",
+              "Espalda de pie"
+            ]
+          },
+          {
+            "hora": "11:05",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Cuello suave"
+            ]
+          },
+          {
+            "hora": "11:35",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Cadena posterior"
+            ]
+          },
+          {
+            "hora": "12:05",
+            "larga": true,
+            "pie": true,
+            "platos": [
+              "Coherente 6·6",
+              "Brazos libres"
+            ]
+          },
+          {
+            "hora": "12:45",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Manos y muñecas"
+            ]
+          },
+          {
+            "hora": "13:15",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Piernas en pausa"
+            ]
+          },
+          {
+            "hora": "13:45",
+            "larga": true,
+            "pie": true,
+            "platos": [
+              "Exhalación 4·6",
+              "Hombros"
+            ]
+          },
+          {
+            "comida": "14:00"
+          },
+          {
+            "hora": "15:25",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Manos y antebrazos"
+            ]
+          },
+          {
+            "hora": "15:55",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Espalda de oficina"
+            ]
+          },
+          {
+            "hora": "16:25",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Glúteos en la silla"
+            ]
+          }
+        ]
+      }
+    },
+    "completo-45": {
+      "pausasPorDia": 7,
+      "sentadasPct": 42,
+      "maxSeguidas": 1,
+      "diasSegunMaxSeguidas": {
+        "1": 20
+      },
+      "largasConEstiraSentada": 0,
+      "peor": {
+        "dia": "2026-11-16",
+        "max": 1,
+        "linea": [
+          {
+            "hora": "9:45",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Piernas sin pasos"
+            ]
+          },
+          {
+            "hora": "10:35",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Empuje sencillo"
+            ]
+          },
+          {
+            "hora": "11:25",
+            "larga": true,
+            "pie": true,
+            "platos": [
+              "Coherente 432",
+              "Espalda de pie"
+            ]
+          },
+          {
+            "hora": "12:25",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Cuello suave"
+            ]
+          },
+          {
+            "hora": "13:15",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Cadena posterior"
+            ]
+          },
+          {
+            "comida": "14:00"
+          },
+          {
+            "hora": "15:45",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Manos y muñecas"
+            ]
+          },
+          {
+            "hora": "16:20",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Brazos libres"
+            ]
+          }
+        ]
+      }
+    },
+    "gratis-10": {
+      "pausasPorDia": 11,
+      "sentadasPct": 47,
+      "maxSeguidas": 3,
+      "diasSegunMaxSeguidas": {
+        "2": 16,
+        "3": 4
+      },
+      "largasConEstiraSentada": 20,
+      "peor": {
+        "dia": "2026-11-19",
+        "max": 3,
+        "linea": [
+          {
+            "hora": "9:30",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Empuje sencillo"
+            ]
+          },
+          {
+            "hora": "10:05",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Piernas sin pasos"
+            ]
+          },
+          {
+            "hora": "10:40",
+            "larga": true,
+            "pie": true,
+            "platos": [
+              "Coherente 6·6",
+              "Brazos libres"
+            ]
+          },
+          {
+            "hora": "11:25",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Cuello suave"
+            ]
+          },
+          {
+            "hora": "12:00",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Piernas en pausa"
+            ]
+          },
+          {
+            "hora": "12:35",
+            "larga": true,
+            "pie": false,
+            "platos": [
+              "Exhalación 4·6",
+              "Manos y muñecas"
+            ]
+          },
+          {
+            "hora": "13:20",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Tronco sentado"
+            ]
+          },
+          {
+            "hora": "13:55",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Coherente 5·5"
+            ]
+          },
+          {
+            "comida": "14:00"
+          },
+          {
+            "hora": "15:30",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Cuello suave"
+            ]
+          },
+          {
+            "hora": "16:05",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Empuje sencillo"
+            ]
+          },
+          {
+            "hora": "16:40",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Manos y muñecas"
+            ]
+          }
+        ]
+      }
+    },
+    "gratis-15": {
+      "pausasPorDia": 11,
+      "sentadasPct": 47,
+      "maxSeguidas": 3,
+      "diasSegunMaxSeguidas": {
+        "2": 16,
+        "3": 4
+      },
+      "largasConEstiraSentada": 20,
+      "peor": {
+        "dia": "2026-11-19",
+        "max": 3,
+        "linea": [
+          {
+            "hora": "9:30",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Empuje sencillo"
+            ]
+          },
+          {
+            "hora": "10:05",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Piernas sin pasos"
+            ]
+          },
+          {
+            "hora": "10:40",
+            "larga": true,
+            "pie": true,
+            "platos": [
+              "Coherente 6·6",
+              "Brazos libres"
+            ]
+          },
+          {
+            "hora": "11:25",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Cuello suave"
+            ]
+          },
+          {
+            "hora": "12:00",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Piernas en pausa"
+            ]
+          },
+          {
+            "hora": "12:35",
+            "larga": true,
+            "pie": false,
+            "platos": [
+              "Exhalación 4·6",
+              "Manos y muñecas"
+            ]
+          },
+          {
+            "hora": "13:20",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Tronco sentado"
+            ]
+          },
+          {
+            "hora": "13:55",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Coherente 5·5"
+            ]
+          },
+          {
+            "comida": "14:00"
+          },
+          {
+            "hora": "15:30",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Cuello suave"
+            ]
+          },
+          {
+            "hora": "16:05",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Empuje sencillo"
+            ]
+          },
+          {
+            "hora": "16:40",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Manos y muñecas"
+            ]
+          }
+        ]
+      }
+    },
+    "gratis-25": {
+      "pausasPorDia": 12,
+      "sentadasPct": 43,
+      "maxSeguidas": 3,
+      "diasSegunMaxSeguidas": {
+        "2": 16,
+        "3": 4
+      },
+      "largasConEstiraSentada": 20,
+      "peor": {
+        "dia": "2026-11-19",
+        "max": 3,
+        "linea": [
+          {
+            "hora": "9:25",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Empuje sencillo"
+            ]
+          },
+          {
+            "hora": "9:55",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Piernas sin pasos"
+            ]
+          },
+          {
+            "hora": "10:25",
+            "larga": true,
+            "pie": true,
+            "platos": [
+              "Coherente 6·6",
+              "Brazos libres"
+            ]
+          },
+          {
+            "hora": "11:05",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Cuello suave"
+            ]
+          },
+          {
+            "hora": "11:35",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Piernas en pausa"
+            ]
+          },
+          {
+            "hora": "12:05",
+            "larga": true,
+            "pie": false,
+            "platos": [
+              "Exhalación 4·6",
+              "Manos y muñecas"
+            ]
+          },
+          {
+            "hora": "12:45",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Tronco sentado"
+            ]
+          },
+          {
+            "hora": "13:15",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Coherente 5·5"
+            ]
+          },
+          {
+            "hora": "13:45",
+            "larga": true,
+            "pie": true,
+            "platos": [
+              "Diafragmática",
+              "Brazos libres"
+            ]
+          },
+          {
+            "comida": "14:00"
+          },
+          {
+            "hora": "15:25",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Cuello suave"
+            ]
+          },
+          {
+            "hora": "15:55",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Piernas sin pasos"
+            ]
+          },
+          {
+            "hora": "16:25",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Manos y muñecas"
+            ]
+          }
+        ]
+      }
+    },
+    "gratis-45": {
+      "pausasPorDia": 7,
+      "sentadasPct": 43,
+      "maxSeguidas": 2,
+      "diasSegunMaxSeguidas": {
+        "1": 4,
+        "2": 16
+      },
+      "largasConEstiraSentada": 0,
+      "peor": {
+        "dia": "2026-11-16",
+        "max": 2,
+        "linea": [
+          {
+            "hora": "9:45",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Piernas sin pasos"
+            ]
+          },
+          {
+            "hora": "10:35",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Empuje sencillo"
+            ]
+          },
+          {
+            "hora": "11:25",
+            "larga": true,
+            "pie": true,
+            "platos": [
+              "Coherente 6·6",
+              "Piernas en pausa"
+            ]
+          },
+          {
+            "hora": "12:25",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Cuello suave"
+            ]
+          },
+          {
+            "hora": "13:15",
+            "larga": false,
+            "pie": true,
+            "platos": [
+              "Brazos libres"
+            ]
+          },
+          {
+            "comida": "14:00"
+          },
+          {
+            "hora": "15:45",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Manos y muñecas"
+            ]
+          },
+          {
+            "hora": "16:20",
+            "larga": false,
+            "pie": false,
+            "platos": [
+              "Tronco sentado"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "opcion1": {
+    "pasos": [
+      {
+        "rutina": "move.shoulder.circles",
+        "paso": "Círculos de brazos",
+        "a": [
+          "Atrás",
+          "Otro brazo",
+          "Atrás"
+        ],
+        "b": [
+          "Brazo 1 · adelante",
+          "Brazo 1 · atrás",
+          "Brazo 2 · adelante",
+          "Brazo 2 · atrás"
+        ],
+        "tallas": {
+          "360×640": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 150,
+              "nombreY": 235,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 150,
+              "nombreY": 235,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 79,
+            "A": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 150,
+              "nombreY": 235,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×740": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 232,
+              "nombreY": 319,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 232,
+              "nombreY": 319,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 79,
+            "A": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 232,
+              "nombreY": 319,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×640, letra al 115 %": {
+            "hoy": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 134,
+              "nombreY": 223,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 134,
+              "nombreY": 223,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "corre": 94,
+            "A": {
+              "pila": 77,
+              "lineas": 3,
+              "dibujo": 134,
+              "nombreY": 223,
+              "rotulo": 17,
+              "scroll": 0
+            }
+          }
+        }
+      },
+      {
+        "rutina": "move.hamstrings.standing",
+        "paso": "Círculos de tobillo",
+        "a": [
+          "Al revés",
+          "Otro pie",
+          "Al revés"
+        ],
+        "b": [
+          "Pie 1",
+          "Pie 1 · al revés",
+          "Pie 2",
+          "Pie 2 · al revés"
+        ],
+        "tallas": {
+          "360×640": {
+            "hoy": {
+              "pila": 67,
+              "lineas": 2,
+              "dibujo": 141,
+              "nombreY": 226,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 67,
+              "lineas": 2,
+              "dibujo": 141,
+              "nombreY": 226,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 73,
+            "A": {
+              "pila": 67,
+              "lineas": 2,
+              "dibujo": 141,
+              "nombreY": 226,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×740": {
+            "hoy": {
+              "pila": 67,
+              "lineas": 2,
+              "dibujo": 204,
+              "nombreY": 291,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 67,
+              "lineas": 2,
+              "dibujo": 204,
+              "nombreY": 291,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 73,
+            "A": {
+              "pila": 67,
+              "lineas": 2,
+              "dibujo": 204,
+              "nombreY": 291,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×640, letra al 115 %": {
+            "hoy": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 147,
+              "nombreY": 237,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 147,
+              "nombreY": 237,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "corre": 77,
+            "A": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 147,
+              "nombreY": 237,
+              "rotulo": 17,
+              "scroll": 0
+            }
+          }
+        }
+      },
+      {
+        "rutina": "move.wrists",
+        "paso": "Círculos de muñeca",
+        "a": [
+          "Al revés"
+        ],
+        "b": [
+          "Un sentido",
+          "Al revés"
+        ],
+        "tallas": {
+          "360×640": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 144,
+              "nombreY": 229,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 144,
+              "nombreY": 229,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 58,
+            "A": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 144,
+              "nombreY": 229,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×740": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 226,
+              "nombreY": 313,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 226,
+              "nombreY": 313,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 58,
+            "A": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 226,
+              "nombreY": 313,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×640, letra al 115 %": {
+            "hoy": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 127,
+              "nombreY": 216,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 127,
+              "nombreY": 216,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "corre": 65,
+            "A": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 127,
+              "nombreY": 216,
+              "rotulo": 17,
+              "scroll": 0
+            }
+          }
+        }
+      },
+      {
+        "rutina": "move.desk.quick",
+        "paso": "Giro sentado",
+        "a": [
+          "Al otro lado"
+        ],
+        "b": [
+          "Un lado",
+          "Al otro lado"
+        ],
+        "tallas": {
+          "360×640": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 169,
+              "nombreY": 254,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 169,
+              "nombreY": 254,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 84,
+            "A": {
+              "pila": 67,
+              "lineas": 3,
+              "dibujo": 147,
+              "nombreY": 232,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×740": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 232,
+              "nombreY": 319,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 232,
+              "nombreY": 319,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 84,
+            "A": {
+              "pila": 67,
+              "lineas": 3,
+              "dibujo": 210,
+              "nombreY": 297,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×640, letra al 115 %": {
+            "hoy": {
+              "pila": 77,
+              "lineas": 3,
+              "dibujo": 134,
+              "nombreY": 223,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 77,
+              "lineas": 3,
+              "dibujo": 134,
+              "nombreY": 223,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "corre": 75,
+            "A": {
+              "pila": 77,
+              "lineas": 3,
+              "dibujo": 134,
+              "nombreY": 223,
+              "rotulo": 17,
+              "scroll": 0
+            }
+          }
+        }
+      },
+      {
+        "rutina": "move.desk.quick",
+        "paso": "Círculos de tobillo",
+        "a": [
+          "Otro pie"
+        ],
+        "b": [
+          "Pie 1",
+          "Pie 2"
+        ],
+        "tallas": {
+          "360×640": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 169,
+              "nombreY": 254,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 169,
+              "nombreY": 254,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 72,
+            "A": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 169,
+              "nombreY": 254,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×740": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 232,
+              "nombreY": 319,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 232,
+              "nombreY": 319,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 72,
+            "A": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 232,
+              "nombreY": 319,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×640, letra al 115 %": {
+            "hoy": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 154,
+              "nombreY": 243,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 154,
+              "nombreY": 243,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "corre": 85,
+            "A": {
+              "pila": 77,
+              "lineas": 2,
+              "dibujo": 154,
+              "nombreY": 243,
+              "rotulo": 17,
+              "scroll": 0
+            }
+          }
+        }
+      },
+      {
+        "rutina": "extra.pausa.suelo",
+        "paso": "Gateo con rodillas",
+        "a": [
+          "Atrás"
+        ],
+        "b": [
+          "Adelante",
+          "Atrás"
+        ],
+        "tallas": {
+          "360×640": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 163,
+              "nombreY": 248,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 163,
+              "nombreY": 248,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 26,
+            "A": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 163,
+              "nombreY": 248,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×740": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 226,
+              "nombreY": 313,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 226,
+              "nombreY": 313,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 26,
+            "A": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 226,
+              "nombreY": 313,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×640, letra al 115 %": {
+            "hoy": {
+              "pila": 52,
+              "lineas": 2,
+              "dibujo": 127,
+              "nombreY": 220,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 52,
+              "lineas": 2,
+              "dibujo": 127,
+              "nombreY": 220,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "corre": 78,
+            "A": {
+              "pila": 77,
+              "lineas": 3,
+              "dibujo": 147,
+              "nombreY": 237,
+              "rotulo": 17,
+              "scroll": 0
+            }
+          }
+        }
+      },
+      {
+        "rutina": "extra.pausa.suelo",
+        "paso": "Desliza el talón",
+        "a": [
+          "Otra pierna"
+        ],
+        "b": [
+          "Pierna 1",
+          "Pierna 2"
+        ],
+        "tallas": {
+          "360×640": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 163,
+              "nombreY": 248,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 163,
+              "nombreY": 248,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 73,
+            "A": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 163,
+              "nombreY": 248,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×740": {
+            "hoy": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 226,
+              "nombreY": 313,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 226,
+              "nombreY": 313,
+              "rotulo": 14,
+              "scroll": 0
+            },
+            "corre": 73,
+            "A": {
+              "pila": 45,
+              "lineas": 2,
+              "dibujo": 226,
+              "nombreY": 313,
+              "rotulo": 14,
+              "scroll": 0
+            }
+          },
+          "360×640, letra al 115 %": {
+            "hoy": {
+              "pila": 52,
+              "lineas": 2,
+              "dibujo": 152,
+              "nombreY": 242,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "B": {
+              "pila": 52,
+              "lineas": 2,
+              "dibujo": 152,
+              "nombreY": 242,
+              "rotulo": 17,
+              "scroll": 0
+            },
+            "corre": 90,
+            "A": {
+              "pila": 77,
+              "lineas": 3,
+              "dibujo": 127,
+              "nombreY": 216,
+              "rotulo": 17,
+              "scroll": 0
+            }
+          }
+        }
+      }
+    ],
+    "duraciones": {
+      "move.shoulder.circles": {
+        "nombre": "Brazos libres",
+        "declarado": 2,
+        "fichaHoy": "2–3",
+        "fichaC": "2–3",
+        "segHoy": [
+          139,
+          139
+        ],
+        "segC": [
+          149,
+          149
+        ],
+        "partidos": [
+          "Círculos de brazos"
+        ]
+      },
+      "move.hamstrings.standing": {
+        "nombre": "Piernas en pausa",
+        "declarado": 3,
+        "fichaHoy": "2–3",
+        "fichaC": "2–3",
+        "segHoy": [
+          128,
+          128
+        ],
+        "segC": [
+          138,
+          138
+        ],
+        "partidos": [
+          "Círculos de tobillo"
+        ]
+      },
+      "move.wrists": {
+        "nombre": "Manos y muñecas",
+        "declarado": 2,
+        "fichaHoy": "1–2",
+        "fichaC": "1–2",
+        "segHoy": [
+          115,
+          115
+        ],
+        "segC": [
+          115,
+          115
+        ],
+        "partidos": []
+      },
+      "move.desk.quick": {
+        "nombre": "Escritorio express",
+        "declarado": 2,
+        "fichaHoy": "2–3",
+        "fichaC": "2–3",
+        "segHoy": [
+          157,
+          157
+        ],
+        "segC": [
+          177,
+          177
+        ],
+        "partidos": [
+          "Giro sentado",
+          "Círculos de tobillo"
+        ]
+      },
+      "extra.pausa.suelo": {
+        "nombre": "Fuerza en suelo",
+        "declarado": 3,
+        "fichaHoy": "2–3",
+        "fichaC": "3–4",
+        "segHoy": [
+          173,
+          173
+        ],
+        "segC": [
+          183,
+          183
+        ],
+        "partidos": [
+          "Desliza el talón"
+        ]
+      }
+    }
+  },
+  "montado": {
+    "cierre": {
+      "aro": "Para cerrar",
+      "cta": "Hacer la pausa",
+      "seguir": "Cerrar la jornada",
+      "panel": "Jornada entera · de 9:00 a 17:00 · hoy de 15:10 a 16:551 h 40 min de foco · 1 pausa · 1 de 8 vasosCambiarAl calendarioJunto a la mesaSin material, a veces pared o mesaHoy voy por libre15:55Piernas sin pasossaltadaAhora16:50Diafragmática5 min · RespiraJornada enteraDe 9:00 a 17:00 · hoy de 15:10 a 16:55CambiarHoy voy por libreVer todoAhora16:50Diafragmática5 min · Para cerrar, despacioOtra",
+      "terminado": true,
+      "pausa": "cierre",
+      "cierre": {
+        "desde": 1010,
+        "dur": 5,
+        "plato": "Diafragmática"
+      }
+    },
+    "dePie": {
+      "completo-10": {
+        "pausasPorDia": 11,
+        "sentadasPct": 44,
+        "maxSeguidas": 1,
+        "diasSegunMaxSeguidas": {
+          "1": 20
+        },
+        "largasConEstiraSentada": 0,
+        "peor": {
+          "dia": "2026-11-16",
+          "max": 1,
+          "linea": [
+            {
+              "hora": "9:30",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            },
+            {
+              "hora": "10:05",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "hora": "10:40",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 432",
+                "Espalda de pie"
+              ]
+            },
+            {
+              "hora": "11:25",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            },
+            {
+              "hora": "12:00",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Cadena posterior"
+              ]
+            },
+            {
+              "hora": "12:35",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 6·6",
+                "Brazos libres"
+              ]
+            },
+            {
+              "hora": "13:20",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y muñecas"
+              ]
+            },
+            {
+              "hora": "13:55",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "comida": "14:00"
+            },
+            {
+              "hora": "15:30",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y antebrazos"
+              ]
+            },
+            {
+              "hora": "16:05",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Hombros"
+              ]
+            },
+            {
+              "hora": "16:40",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Escritorio express"
+              ]
+            }
+          ]
+        }
+      },
+      "completo-15": {
+        "pausasPorDia": 11,
+        "sentadasPct": 44,
+        "maxSeguidas": 1,
+        "diasSegunMaxSeguidas": {
+          "1": 20
+        },
+        "largasConEstiraSentada": 0,
+        "peor": {
+          "dia": "2026-11-16",
+          "max": 1,
+          "linea": [
+            {
+              "hora": "9:30",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            },
+            {
+              "hora": "10:05",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "hora": "10:40",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 432",
+                "Espalda de pie"
+              ]
+            },
+            {
+              "hora": "11:25",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            },
+            {
+              "hora": "12:00",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Cadena posterior"
+              ]
+            },
+            {
+              "hora": "12:35",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 6·6",
+                "Brazos libres"
+              ]
+            },
+            {
+              "hora": "13:20",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y muñecas"
+              ]
+            },
+            {
+              "hora": "13:55",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "comida": "14:00"
+            },
+            {
+              "hora": "15:30",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y antebrazos"
+              ]
+            },
+            {
+              "hora": "16:05",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Hombros"
+              ]
+            },
+            {
+              "hora": "16:40",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Escritorio express"
+              ]
+            }
+          ]
+        }
+      },
+      "completo-25": {
+        "pausasPorDia": 12,
+        "sentadasPct": 40,
+        "maxSeguidas": 1,
+        "diasSegunMaxSeguidas": {
+          "1": 20
+        },
+        "largasConEstiraSentada": 0,
+        "peor": {
+          "dia": "2026-11-16",
+          "max": 1,
+          "linea": [
+            {
+              "hora": "9:25",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            },
+            {
+              "hora": "9:55",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "hora": "10:25",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 432",
+                "Espalda de pie"
+              ]
+            },
+            {
+              "hora": "11:05",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            },
+            {
+              "hora": "11:35",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Cadena posterior"
+              ]
+            },
+            {
+              "hora": "12:05",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 6·6",
+                "Brazos libres"
+              ]
+            },
+            {
+              "hora": "12:45",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y muñecas"
+              ]
+            },
+            {
+              "hora": "13:15",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "hora": "13:45",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Exhalación 4·6",
+                "Hombros"
+              ]
+            },
+            {
+              "comida": "14:00"
+            },
+            {
+              "hora": "15:25",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y antebrazos"
+              ]
+            },
+            {
+              "hora": "15:55",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Espalda de oficina"
+              ]
+            },
+            {
+              "hora": "16:25",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Glúteos en la silla"
+              ]
+            }
+          ]
+        }
+      },
+      "completo-45": {
+        "pausasPorDia": 7,
+        "sentadasPct": 42,
+        "maxSeguidas": 1,
+        "diasSegunMaxSeguidas": {
+          "1": 20
+        },
+        "largasConEstiraSentada": 0,
+        "peor": {
+          "dia": "2026-11-16",
+          "max": 1,
+          "linea": [
+            {
+              "hora": "9:45",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            },
+            {
+              "hora": "10:35",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "hora": "11:25",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 432",
+                "Espalda de pie"
+              ]
+            },
+            {
+              "hora": "12:25",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            },
+            {
+              "hora": "13:15",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Cadena posterior"
+              ]
+            },
+            {
+              "comida": "14:00"
+            },
+            {
+              "hora": "15:45",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y muñecas"
+              ]
+            },
+            {
+              "hora": "16:20",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Brazos libres"
+              ]
+            }
+          ]
+        }
+      },
+      "gratis-10": {
+        "pausasPorDia": 11,
+        "sentadasPct": 36,
+        "maxSeguidas": 1,
+        "diasSegunMaxSeguidas": {
+          "1": 20
+        },
+        "largasConEstiraSentada": 0,
+        "peor": {
+          "dia": "2026-11-16",
+          "max": 1,
+          "linea": [
+            {
+              "hora": "9:30",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            },
+            {
+              "hora": "10:05",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "hora": "10:40",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 6·6",
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "hora": "11:25",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            },
+            {
+              "hora": "12:00",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Brazos libres"
+              ]
+            },
+            {
+              "hora": "12:35",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Exhalación 4·6",
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "hora": "13:20",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y muñecas"
+              ]
+            },
+            {
+              "hora": "13:55",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "comida": "14:00"
+            },
+            {
+              "hora": "15:30",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Tronco sentado"
+              ]
+            },
+            {
+              "hora": "16:05",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            },
+            {
+              "hora": "16:40",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            }
+          ]
+        }
+      },
+      "gratis-15": {
+        "pausasPorDia": 11,
+        "sentadasPct": 36,
+        "maxSeguidas": 1,
+        "diasSegunMaxSeguidas": {
+          "1": 20
+        },
+        "largasConEstiraSentada": 0,
+        "peor": {
+          "dia": "2026-11-16",
+          "max": 1,
+          "linea": [
+            {
+              "hora": "9:30",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            },
+            {
+              "hora": "10:05",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "hora": "10:40",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 6·6",
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "hora": "11:25",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            },
+            {
+              "hora": "12:00",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Brazos libres"
+              ]
+            },
+            {
+              "hora": "12:35",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Exhalación 4·6",
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "hora": "13:20",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y muñecas"
+              ]
+            },
+            {
+              "hora": "13:55",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "comida": "14:00"
+            },
+            {
+              "hora": "15:30",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Tronco sentado"
+              ]
+            },
+            {
+              "hora": "16:05",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            },
+            {
+              "hora": "16:40",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            }
+          ]
+        }
+      },
+      "gratis-25": {
+        "pausasPorDia": 12,
+        "sentadasPct": 33,
+        "maxSeguidas": 1,
+        "diasSegunMaxSeguidas": {
+          "1": 20
+        },
+        "largasConEstiraSentada": 0,
+        "peor": {
+          "dia": "2026-11-16",
+          "max": 1,
+          "linea": [
+            {
+              "hora": "9:25",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            },
+            {
+              "hora": "9:55",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "hora": "10:25",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 6·6",
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "hora": "11:05",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            },
+            {
+              "hora": "11:35",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Brazos libres"
+              ]
+            },
+            {
+              "hora": "12:05",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Exhalación 4·6",
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "hora": "12:45",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y muñecas"
+              ]
+            },
+            {
+              "hora": "13:15",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "hora": "13:45",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 5·5",
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "comida": "14:00"
+            },
+            {
+              "hora": "15:25",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Tronco sentado"
+              ]
+            },
+            {
+              "hora": "15:55",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "hora": "16:25",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            }
+          ]
+        }
+      },
+      "gratis-45": {
+        "pausasPorDia": 7,
+        "sentadasPct": 31,
+        "maxSeguidas": 1,
+        "diasSegunMaxSeguidas": {
+          "1": 20
+        },
+        "largasConEstiraSentada": 0,
+        "peor": {
+          "dia": "2026-11-16",
+          "max": 1,
+          "linea": [
+            {
+              "hora": "9:45",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            },
+            {
+              "hora": "10:35",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Empuje sencillo"
+              ]
+            },
+            {
+              "hora": "11:25",
+              "larga": true,
+              "pie": true,
+              "platos": [
+                "Coherente 6·6",
+                "Piernas en pausa"
+              ]
+            },
+            {
+              "hora": "12:25",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Cuello suave"
+              ]
+            },
+            {
+              "hora": "13:15",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Brazos libres"
+              ]
+            },
+            {
+              "comida": "14:00"
+            },
+            {
+              "hora": "15:45",
+              "larga": false,
+              "pie": false,
+              "platos": [
+                "Manos y muñecas"
+              ]
+            },
+            {
+              "hora": "16:20",
+              "larga": false,
+              "pie": true,
+              "platos": [
+                "Piernas sin pasos"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "aCorta": [
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "id": "move.shoulder.circles",
+      "i": 0,
+      "lang": "es",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 150,
+        "texto": "De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. Luego, el otro."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Atrás",
+            "Otro brazo"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 150,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Atrás",
+            "Cambia"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 150,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "id": "move.shoulder.circles",
+      "i": 0,
+      "lang": "es",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232,
+        "texto": "De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. Luego, el otro."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Atrás",
+            "Otro brazo"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Atrás",
+            "Cambia"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "id": "move.shoulder.circles",
+      "i": 0,
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 134,
+        "texto": "De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. Luego, el otro."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Atrás",
+            "Otro brazo"
+          ],
+          "lineas": [
+            3,
+            3
+          ],
+          "pila": 77,
+          "dibujo": 134,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": false
+        },
+        {
+          "palabras": [
+            "Atrás",
+            "Cambia"
+          ],
+          "lineas": [
+            3,
+            3
+          ],
+          "pila": 77,
+          "dibujo": 134,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": false
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "id": "move.shoulder.circles",
+      "i": 0,
+      "lang": "en",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 169,
+        "texto": "Standing, arm straight: eight slow circles, four forward and four back. Then the other arm."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Back",
+            "Other arm"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Back",
+            "Switch"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "id": "move.shoulder.circles",
+      "i": 0,
+      "lang": "en",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232,
+        "texto": "Standing, arm straight: eight slow circles, four forward and four back. Then the other arm."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Back",
+            "Other arm"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Back",
+            "Switch"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "id": "move.shoulder.circles",
+      "i": 0,
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 52,
+        "dibujo": 134,
+        "texto": "Standing, arm straight: eight slow circles, four forward and four back. Then the other arm."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Back",
+            "Other arm"
+          ],
+          "lineas": [
+            3,
+            3
+          ],
+          "pila": 77,
+          "dibujo": 154,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": false
+        },
+        {
+          "palabras": [
+            "Back",
+            "Switch"
+          ],
+          "lineas": [
+            3,
+            3
+          ],
+          "pila": 77,
+          "dibujo": 154,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": false
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Piernas en pausa",
+      "id": "move.hamstrings.standing",
+      "i": 2,
+      "lang": "es",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 67,
+        "dibujo": 141,
+        "texto": "Círculos con el tobillo: cuatro en cada sentido con un pie, y luego con el otro."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al revés",
+            "Otro pie"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 67,
+          "dibujo": 141,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Al revés",
+            "Cambia"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 67,
+          "dibujo": 141,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Piernas en pausa",
+      "id": "move.hamstrings.standing",
+      "i": 2,
+      "lang": "es",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 67,
+        "dibujo": 204,
+        "texto": "Círculos con el tobillo: cuatro en cada sentido con un pie, y luego con el otro."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al revés",
+            "Otro pie"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 67,
+          "dibujo": 204,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Al revés",
+            "Cambia"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 67,
+          "dibujo": 204,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Piernas en pausa",
+      "id": "move.hamstrings.standing",
+      "i": 2,
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 147,
+        "texto": "Círculos con el tobillo: cuatro en cada sentido con un pie, y luego con el otro."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al revés",
+            "Otro pie"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 77,
+          "dibujo": 147,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Al revés",
+            "Cambia"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 77,
+          "dibujo": 147,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Piernas en pausa",
+      "id": "move.hamstrings.standing",
+      "i": 2,
+      "lang": "en",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163,
+        "texto": "Ankle circles: four each way with one foot, then with the other."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Reverse",
+            "Other foot"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 163,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Reverse",
+            "Switch"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 163,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Piernas en pausa",
+      "id": "move.hamstrings.standing",
+      "i": 2,
+      "lang": "en",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226,
+        "texto": "Ankle circles: four each way with one foot, then with the other."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Reverse",
+            "Other foot"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 226,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Reverse",
+            "Switch"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 45,
+          "dibujo": 226,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Piernas en pausa",
+      "id": "move.hamstrings.standing",
+      "i": 2,
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 147,
+        "texto": "Ankle circles: four each way with one foot, then with the other."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Reverse",
+            "Other foot"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 77,
+          "dibujo": 147,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Reverse",
+            "Switch"
+          ],
+          "lineas": [
+            2,
+            2
+          ],
+          "pila": 77,
+          "dibujo": 147,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Manos y muñecas",
+      "id": "move.wrists",
+      "i": 1,
+      "lang": "es",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 144,
+        "texto": "Círculos pequeños con las manos, despacio: cuatro en cada sentido."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al revés"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 144,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Manos y muñecas",
+      "id": "move.wrists",
+      "i": 1,
+      "lang": "es",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226,
+        "texto": "Círculos pequeños con las manos, despacio: cuatro en cada sentido."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al revés"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 226,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Manos y muñecas",
+      "id": "move.wrists",
+      "i": 1,
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 127,
+        "texto": "Círculos pequeños con las manos, despacio: cuatro en cada sentido."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al revés"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 77,
+          "dibujo": 127,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Manos y muñecas",
+      "id": "move.wrists",
+      "i": 1,
+      "lang": "en",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163,
+        "texto": "Small, slow circles with your hands: four in each direction."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Reverse"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 163,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Manos y muñecas",
+      "id": "move.wrists",
+      "i": 1,
+      "lang": "en",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226,
+        "texto": "Small, slow circles with your hands: four in each direction."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Reverse"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 226,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Manos y muñecas",
+      "id": "move.wrists",
+      "i": 1,
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 147,
+        "texto": "Small, slow circles with your hands: four in each direction."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Reverse"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 77,
+          "dibujo": 147,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 1,
+      "lang": "es",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 169,
+        "texto": "Círculos pequeños con las manos, despacio: cuatro en cada sentido."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al revés"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 1,
+      "lang": "es",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232,
+        "texto": "Círculos pequeños con las manos, despacio: cuatro en cada sentido."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al revés"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 1,
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 154,
+        "texto": "Círculos pequeños con las manos, despacio: cuatro en cada sentido."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al revés"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 77,
+          "dibujo": 154,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 1,
+      "lang": "en",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 169,
+        "texto": "Small, slow circles with your hands: four in each direction."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Reverse"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 1,
+      "lang": "en",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232,
+        "texto": "Small, slow circles with your hands: four in each direction."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Reverse"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de muñeca · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 1,
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 154,
+        "texto": "Small, slow circles with your hands: four in each direction."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Reverse"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 77,
+          "dibujo": 154,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Giro sentado · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 2,
+      "lang": "es",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 169,
+        "texto": "Gira el tronco hacia el respaldo, con una mano apoyada en él, sin tirar. Luego, al otro lado."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al otro lado"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 67,
+          "dibujo": 147,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": false
+        },
+        {
+          "palabras": [
+            "Otro lado"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Cambia"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Giro sentado · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 2,
+      "lang": "es",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232,
+        "texto": "Gira el tronco hacia el respaldo, con una mano apoyada en él, sin tirar. Luego, al otro lado."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al otro lado"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 67,
+          "dibujo": 210,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": false
+        },
+        {
+          "palabras": [
+            "Otro lado"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Cambia"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Giro sentado · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 2,
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 3,
+        "pila": 77,
+        "dibujo": 134,
+        "texto": "Gira el tronco hacia el respaldo, con una mano apoyada en él, sin tirar. Luego, al otro lado."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Al otro lado"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 134,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Otro lado"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 134,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Cambia"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 134,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Giro sentado · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 2,
+      "lang": "en",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 169,
+        "texto": "Turn your trunk toward the backrest, one hand resting on it, no pulling. Then the other side."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Other side"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Switch"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Giro sentado · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 2,
+      "lang": "en",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232,
+        "texto": "Turn your trunk toward the backrest, one hand resting on it, no pulling. Then the other side."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Other side"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Switch"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Giro sentado · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 2,
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 3,
+        "pila": 77,
+        "dibujo": 154,
+        "texto": "Turn your trunk toward the backrest, one hand resting on it, no pulling. Then the other side."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Other side"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 154,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Switch"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 154,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 3,
+      "lang": "es",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 169,
+        "texto": "Bajo la mesa, levanta un pie y dibuja círculos con el tobillo. Cambia a mitad."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Otro pie"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Cambia"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 3,
+      "lang": "es",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232,
+        "texto": "Bajo la mesa, levanta un pie y dibuja círculos con el tobillo. Cambia a mitad."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Otro pie"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Cambia"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 3,
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 154,
+        "texto": "Bajo la mesa, levanta un pie y dibuja círculos con el tobillo. Cambia a mitad."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Otro pie"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 77,
+          "dibujo": 154,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Cambia"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 77,
+          "dibujo": 154,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 3,
+      "lang": "en",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 169,
+        "texto": "Under the desk, lift one foot and draw circles with your ankle. Switch halfway."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Other foot"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Switch"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 169,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 3,
+      "lang": "en",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232,
+        "texto": "Under the desk, lift one foot and draw circles with your ankle. Switch halfway."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Other foot"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Switch"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 232,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Círculos de tobillo · Escritorio express",
+      "id": "move.desk.quick",
+      "i": 3,
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 154,
+        "texto": "Under the desk, lift one foot and draw circles with your ankle. Switch halfway."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Other foot"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 77,
+          "dibujo": 154,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Switch"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 77,
+          "dibujo": 154,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 4,
+      "lang": "es",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163,
+        "texto": "Cuatro pasos cortos adelante, despacio, mano y rodilla contrarias. Luego, cuatro atrás."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Atrás"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 163,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 4,
+      "lang": "es",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226,
+        "texto": "Cuatro pasos cortos adelante, despacio, mano y rodilla contrarias. Luego, cuatro atrás."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Atrás"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 226,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 4,
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 52,
+        "dibujo": 127,
+        "texto": "Cuatro pasos cortos adelante, despacio, mano y rodilla contrarias. Luego, cuatro atrás."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Atrás"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 147,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": false
+        }
+      ]
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 4,
+      "lang": "en",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163,
+        "texto": "Crawl four short steps forward, slowly, moving opposite hand and knee. Then four back."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Back"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 163,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 4,
+      "lang": "en",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226,
+        "texto": "Crawl four short steps forward, slowly, moving opposite hand and knee. Then four back."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Back"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 226,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 4,
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 3,
+        "pila": 77,
+        "dibujo": 147,
+        "texto": "Crawl four short steps forward, slowly, moving opposite hand and knee. Then four back."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Back"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 147,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 3,
+      "lang": "es",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163,
+        "texto": "Desliza un talón por el suelo sin mover la pelvis, y vuelve. Tres con cada pierna."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Otra pierna"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 163,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Cambia"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 163,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 3,
+      "lang": "es",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226,
+        "texto": "Desliza un talón por el suelo sin mover la pelvis, y vuelve. Tres con cada pierna."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Otra pierna"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 226,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Cambia"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 226,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 3,
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 52,
+        "dibujo": 152,
+        "texto": "Desliza un talón por el suelo sin mover la pelvis, y vuelve. Tres con cada pierna."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Otra pierna"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 127,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": false
+        },
+        {
+          "palabras": [
+            "Cambia"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 127,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": false
+        }
+      ]
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 3,
+      "lang": "en",
+      "talla": "640",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163,
+        "texto": "Slide one heel along the floor without moving your pelvis, then back. Three with each leg."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Other leg"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 163,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Switch"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 163,
+          "scroll": 0,
+          "pisa": -6,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 3,
+      "lang": "en",
+      "talla": "740",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226,
+        "texto": "Slide one heel along the floor without moving your pelvis, then back. Three with each leg."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Other leg"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 226,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        },
+        {
+          "palabras": [
+            "Switch"
+          ],
+          "lineas": [
+            2
+          ],
+          "pila": 45,
+          "dibujo": 226,
+          "scroll": 0,
+          "pisa": -7,
+          "cumple": true
+        }
+      ]
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "id": "extra.pausa.suelo",
+      "i": 3,
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 147,
+        "texto": "Slide one heel along the floor without moving your pelvis, then back. Three with each leg."
+      },
+      "juegos": [
+        {
+          "palabras": [
+            "Other leg"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 147,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": false
+        },
+        {
+          "palabras": [
+            "Switch"
+          ],
+          "lineas": [
+            3
+          ],
+          "pila": 77,
+          "dibujo": 147,
+          "scroll": 0,
+          "pisa": -4,
+          "cumple": false
+        }
+      ]
+    }
+  ],
+  "aCortaAlternativas": [
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "lang": "es",
+      "talla": "640",
+      "texto": "De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 150
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 150
+      },
+      "conPalabra": {
+        "palabras": [
+          "Atrás",
+          "Otro brazo"
+        ],
+        "lineas": [
+          2,
+          2
+        ],
+        "pila": 45,
+        "dibujo": 150,
+        "scroll": 0,
+        "pisa": -6
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "lang": "es",
+      "talla": "740",
+      "texto": "De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232
+      },
+      "conPalabra": {
+        "palabras": [
+          "Atrás",
+          "Otro brazo"
+        ],
+        "lineas": [
+          2,
+          2
+        ],
+        "pila": 45,
+        "dibujo": 232,
+        "scroll": 0,
+        "pisa": -7
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "texto": "De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 134
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 134
+      },
+      "conPalabra": {
+        "palabras": [
+          "Atrás",
+          "Otro brazo"
+        ],
+        "lineas": [
+          2,
+          2
+        ],
+        "pila": 77,
+        "dibujo": 134,
+        "scroll": 0,
+        "pisa": -4
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "lang": "en",
+      "talla": "640",
+      "texto": "Standing, arm straight: eight slow circles, four forward and four back.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 169
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 169
+      },
+      "conPalabra": {
+        "palabras": [
+          "Back",
+          "Other arm"
+        ],
+        "lineas": [
+          2,
+          2
+        ],
+        "pila": 45,
+        "dibujo": 169,
+        "scroll": 0,
+        "pisa": -6
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "lang": "en",
+      "talla": "740",
+      "texto": "Standing, arm straight: eight slow circles, four forward and four back.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 232
+      },
+      "conPalabra": {
+        "palabras": [
+          "Back",
+          "Other arm"
+        ],
+        "lineas": [
+          2,
+          2
+        ],
+        "pila": 45,
+        "dibujo": 232,
+        "scroll": 0,
+        "pisa": -7
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Círculos de brazos · Brazos libres",
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "texto": "Standing, arm straight: eight slow circles, four forward and four back.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 52,
+        "dibujo": 134
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 52,
+        "dibujo": 134
+      },
+      "conPalabra": {
+        "palabras": [
+          "Back",
+          "Other arm"
+        ],
+        "lineas": [
+          2,
+          2
+        ],
+        "pila": 52,
+        "dibujo": 134,
+        "scroll": 0,
+        "pisa": -6
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "lang": "es",
+      "talla": "640",
+      "texto": "Cuatro pasos cortos adelante y cuatro atrás, despacio, mano y rodilla contrarias.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163
+      },
+      "conPalabra": {
+        "palabras": [
+          "Atrás"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 45,
+        "dibujo": 163,
+        "scroll": 0,
+        "pisa": -6
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "lang": "es",
+      "talla": "740",
+      "texto": "Cuatro pasos cortos adelante y cuatro atrás, despacio, mano y rodilla contrarias.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226
+      },
+      "conPalabra": {
+        "palabras": [
+          "Atrás"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 45,
+        "dibujo": 226,
+        "scroll": 0,
+        "pisa": -7
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "texto": "Cuatro pasos cortos adelante y cuatro atrás, despacio, mano y rodilla contrarias.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 52,
+        "dibujo": 127
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 52,
+        "dibujo": 127
+      },
+      "conPalabra": {
+        "palabras": [
+          "Atrás"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 52,
+        "dibujo": 127,
+        "scroll": 0,
+        "pisa": -6
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "lang": "en",
+      "talla": "640",
+      "texto": "Crawl four short steps forward, slowly, moving opposite hand and knee. Then four back.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163
+      },
+      "conPalabra": {
+        "palabras": [
+          "Back"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 45,
+        "dibujo": 163,
+        "scroll": 0,
+        "pisa": -6
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "lang": "en",
+      "talla": "740",
+      "texto": "Crawl four short steps forward, slowly, moving opposite hand and knee. Then four back.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226
+      },
+      "conPalabra": {
+        "palabras": [
+          "Back"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 45,
+        "dibujo": 226,
+        "scroll": 0,
+        "pisa": -7
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Gateo con rodillas · Fuerza en suelo",
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "texto": "Crawl four short steps forward, slowly, moving opposite hand and knee. Then four back.",
+      "hoy": {
+        "lineas": 3,
+        "pila": 77,
+        "dibujo": 147
+      },
+      "sinPalabra": {
+        "lineas": 3,
+        "pila": 77,
+        "dibujo": 147
+      },
+      "conPalabra": {
+        "palabras": [
+          "Back"
+        ],
+        "lineas": [
+          3
+        ],
+        "pila": 77,
+        "dibujo": 147,
+        "scroll": 0,
+        "pisa": -4
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "lang": "es",
+      "talla": "640",
+      "texto": "Desliza un talón por el suelo sin mover la pelvis, y vuelve.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163
+      },
+      "conPalabra": {
+        "palabras": [
+          "Otra pierna"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 45,
+        "dibujo": 163,
+        "scroll": 0,
+        "pisa": -6
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "lang": "es",
+      "talla": "740",
+      "texto": "Desliza un talón por el suelo sin mover la pelvis, y vuelve.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226
+      },
+      "conPalabra": {
+        "palabras": [
+          "Otra pierna"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 45,
+        "dibujo": 226,
+        "scroll": 0,
+        "pisa": -7
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "lang": "es",
+      "talla": "640 · letra 115 %",
+      "texto": "Desliza un talón por el suelo sin mover la pelvis, y vuelve.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 52,
+        "dibujo": 152
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 52,
+        "dibujo": 152
+      },
+      "conPalabra": {
+        "palabras": [
+          "Otra pierna"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 52,
+        "dibujo": 152,
+        "scroll": 0,
+        "pisa": -4
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "lang": "en",
+      "talla": "640",
+      "texto": "Slide one heel along the floor without moving your pelvis, then back.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 163
+      },
+      "conPalabra": {
+        "palabras": [
+          "Other leg"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 45,
+        "dibujo": 163,
+        "scroll": 0,
+        "pisa": -6
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "lang": "en",
+      "talla": "740",
+      "texto": "Slide one heel along the floor without moving your pelvis, then back.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 45,
+        "dibujo": 226
+      },
+      "conPalabra": {
+        "palabras": [
+          "Other leg"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 45,
+        "dibujo": 226,
+        "scroll": 0,
+        "pisa": -7
+      },
+      "cumple": true
+    },
+    {
+      "paso": "Desliza el talón · Fuerza en suelo",
+      "lang": "en",
+      "talla": "640 · letra 115 %",
+      "texto": "Slide one heel along the floor without moving your pelvis, then back.",
+      "hoy": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 147
+      },
+      "sinPalabra": {
+        "lineas": 2,
+        "pila": 77,
+        "dibujo": 147
+      },
+      "conPalabra": {
+        "palabras": [
+          "Other leg"
+        ],
+        "lineas": [
+          2
+        ],
+        "pila": 77,
+        "dibujo": 147,
+        "scroll": 0,
+        "pisa": -4
+      },
+      "cumple": true
+    }
+  ]
+}

@@ -110,8 +110,6 @@ con mucho abierto: a «¿qué toca?», una sola cosa.
 ## Deuda conocida, sin fecha
 
 - A 320×568 la home del móvil pide scroll (Ez lo acepta) · las escenas con scroll anteriores a v0.130.0.
-- En «A tu ritmo»: el cierre que nunca es «Ahora», la lectura C (espera semanas de datos en `origin`) y la tarde sin
-  rutinas de pie con el aro a 10 o 15.
 - El aviso a mitad de un bloque largo (la segunda parte de ChatGPT del 22 oct.) · N9, la barra lateral durante un Foco
   (falta el vídeo de Ez) · los botones de verdad del aviso fijo de Android (la C de N4).
 - Riesgo aceptado (Ez, 22 oct.): dos pestañas que apuntan algo a la vez, lo mide `tests/pestanas-estado.spec.js`.

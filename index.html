@@ -3150,6 +3150,14 @@ Object.assign(window.PACE_STRINGS.es, {
   'session.placeCountdown': 'para empezar',
   'session.sideLeft': 'Izquierda',
   'session.sideRight': 'Derecha',
+
+
+  'move.cambio.alReves': 'Al revés',
+  'move.cambio.otroPie': 'Otro pie',
+  'move.cambio.otroLado': 'Otro lado',
+  'move.cambio.atras': 'Atrás',
+  'move.cambio.otroBrazo': 'Otro brazo',
+  'move.cambio.otraPierna': 'Otra pierna',
   'session.sideChange': 'Cambia de lado',
   'session.sideNext': 'Ahora: {side}',
   'session.skip': 'Saltar',
@@ -3314,6 +3322,12 @@ Object.assign(window.PACE_STRINGS.en, {
   'session.placeCountdown': 'to start',
   'session.sideLeft': 'Left',
   'session.sideRight': 'Right',
+  'move.cambio.alReves': 'Reverse',
+  'move.cambio.otroPie': 'Other foot',
+  'move.cambio.otroLado': 'Other side',
+  'move.cambio.atras': 'Back',
+  'move.cambio.otroBrazo': 'Other arm',
+  'move.cambio.otraPierna': 'Other leg',
   'session.sideChange': 'Switch sides',
   'session.sideNext': 'Now: {side}',
   'session.skip': 'Skip',
@@ -4591,6 +4605,11 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.pausa.ya': 'Empezar ya el bloque {n}',
 
 
+  'ritmo.aro.cierre': 'Para cerrar',
+  'ritmo.cierre.luego': 'Luego, la jornada cerrada',
+  'ritmo.pausa.cerrar': 'Cerrar la jornada',
+
+
   'notify.ritmo.titulo': 'Tu pausa: {plato} · {min} min',
   'notify.ritmo.larga': 'Tu pausa larga: {plato} · {min} min',
   'notify.ritmo.cierre': 'Para cerrar: {plato} · {min} min',
@@ -4785,6 +4804,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.sigue.cta': 'Continue with {modulo}',
   'ritmo.pausa.luego': 'Then, block {n} of {m}',
   'ritmo.pausa.ya': 'Start block {n} now',
+  'ritmo.aro.cierre': 'Wind down',
+  'ritmo.cierre.luego': 'Then, your day is done',
+  'ritmo.pausa.cerrar': 'Close the day',
   'notify.ritmo.titulo': 'Your break: {plato} · {min} min',
   'notify.ritmo.larga': 'Your long break: {plato} · {min} min',
   'notify.ritmo.cierre': 'Wind down: {plato} · {min} min',
@@ -5722,7 +5744,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.pausa.suelo.s2.instruction.care': 'If your lower back hurts, lift less or stop.',
   'extra.pausa.suelo.s3.name': 'Heel slide',
   'extra.pausa.suelo.s3.instruction.setup': 'On your back, knees bent, without pressing your lower back into the floor.',
-  'extra.pausa.suelo.s3.instruction.action': 'Slide one heel along the floor without moving your pelvis, then back. Three with each leg.',
+  'extra.pausa.suelo.s3.instruction.action': 'Slide one heel along the floor without moving your pelvis, then back.',
   'extra.pausa.suelo.s3.instruction.care': 'No need to straighten your leg fully. If your back starts to arch more, shorten the slide.',
   'extra.pausa.suelo.s4.name': 'Knee crawl',
   'extra.pausa.suelo.s4.instruction.setup': 'On all fours: hands under shoulders, knees under hips.',
@@ -5963,7 +5985,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.shoulder.circles.desc': 'Circles, the wall and a shoulder turn.',
   'move.shoulder.circles.code': 'Shoulders',
   'move.shoulder.circles.s0.name': 'Arm circles',
-  'move.shoulder.circles.s0.instruction.action': 'Standing, arm straight: eight slow circles, four forward and four back. Then the other arm.',
+  'move.shoulder.circles.s0.instruction.action': 'Standing, arm straight: eight slow circles, four forward and four back.',
   'move.shoulder.circles.s0.instruction.care': 'Start small. Make the circle bigger only if your trunk stays still.',
   'move.shoulder.circles.s1.name': 'Scapular wall slides',
   'move.shoulder.circles.s1.instruction.setup': 'Back to the wall, feet a step forward. Arms in a W: elbows bent, hands up.',
@@ -12036,6 +12058,7 @@ Object.assign(window, { semanaISO, SEMANA_TEMAS, SEMANA_ACENTOS, semanaDe, seman
 
 
 
+
 var RITMO_SERIES_META = {
 
 
@@ -12244,7 +12267,15 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
     var t0 = base;
     var sinDescanso = t0.filter(function (r) {return !descansa[r.id];});
     if (sinDescanso.length) t0 = sinDescanso;
-    if (c.sentada || c.firme) {var dePie = t0.filter(function (r) {return ritmoSeriesDePie(r.id);});if (dePie.length) t0 = dePie;}
+
+
+
+
+    if (c.sentada || c.firme) {
+      var dePie = t0.filter(function (r) {return ritmoSeriesDePie(r.id);});
+      if (!dePie.length) dePie = pool.filter(function (r) {return ritmoSeriesDePie(r.id) && !descansa[r.id];});
+      if (dePie.length) t0 = dePie;
+    }
     if (nuevo) entero(alcanzaNueva);
     if (cabe) entero(alcanza);
     if (c.corta) {var cortos = t0.filter(function (r) {return (r.min || 0) <= c.corta;});if (cortos.length) t0 = cortos;}
@@ -12350,7 +12381,8 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
 
       var nota = function (z) {
 
-        return !z ? 9 : (primera ? z.deja >= 8 ? 8 : 0 : z.deja + z.carga / 2) + (c.corta && (z.r.min || 0) > c.corta ? 4 : 0) + (c.levantar && !ritmoSeriesDePie(z.r.id) ? 2 : 0) + (z.hoy ? 3 : 0) + (z.aqui ? 1 : 0);
+
+        return !z ? 9 : (primera ? z.deja >= 8 ? 8 : 0 : z.deja + z.carga / 2) + (c.corta && (z.r.min || 0) > c.corta ? 4 : 0) + (c.levantar && !ritmoSeriesDePie(z.r.id) ? 4 : 0) + (z.hoy ? 3 : 0) + (z.aqui ? 1 : 0);
       };
       if (modulo !== 'respira' && (!x || (c.levantar || c.corta || x.hoy || (primera ? x.deja >= 8 : x.deja || x.carga > 1)) && nota(x) > 0)) {
         var otro = modulo === 'mueve' ? 'estira' : 'mueve';
@@ -15526,6 +15558,10 @@ Object.assign(window, {
 
 
 
+
+
+
+
 function ritmoPausaAbierta(s) {
   var st = s || getState();
   var p = ritmoPlan(st);
@@ -15691,7 +15727,7 @@ function ritmoSinPausa(s) {
 
 function ritmoPausaEmpieza(fin) {
   var a = ritmoPausaAbierta();
-  if (!a || a.it.tipo !== 'pausa') return;
+  if (!a || a.it.tipo !== 'pausa' && a.it.tipo !== 'cierre') return;
   var ahora = Date.now();
   var hasta = (typeof fin === 'number' && fin > 0 && fin <= ahora ? fin : ahora) + a.it.dur * 60000;
   if (hasta <= ahora) return;
@@ -15723,13 +15759,21 @@ function ritmoParadaHasta(fin) {
 
 
 
+
 function ritmoPausaCuenta(s) {
   var r = s && s.ritmo || {};
   var hasta = r.dia && r.dia.pausaHasta;
   if (!(typeof hasta === 'number' && hasta > 0)) return null;
   var a = ritmoPausaAbierta(s);
-  if (!a || a.it.tipo !== 'pausa') return null;
-  return { modo: a.it.larga ? 'larga' : 'pausa', hasta: hasta, n: a.p.hechos + 1, de: a.p.total, dur: a.it.dur };
+  if (!a || a.it.tipo !== 'pausa' && a.it.tipo !== 'cierre') return null;
+  return { modo: a.it.larga ? 'larga' : 'pausa', hasta: hasta, n: a.p.hechos + 1, de: a.p.total, dur: a.it.dur, cierre: a.it.tipo === 'cierre' };
+}
+
+
+
+function ritmoCierreEnCurso(s) {
+  var c = ritmoPausaCuenta(s);
+  return !!c && c.cierre && s.focusMode === c.modo && c.hasta > Date.now();
 }
 
 
@@ -15768,9 +15812,9 @@ function ritmoPausaCerrarConElDia() {
 Object.assign(window, {
   ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta,
   ritmoSesionesHoy, ritmoMinutosHechos, ritmoMetaHecha, RITMO_MODULO_SESION,
-  ritmoPausaEmpieza, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia, ritmoParadaHasta
+  ritmoPausaEmpieza, ritmoPausaCuenta, ritmoCierreEnCurso, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia, ritmoParadaHasta
 });
-;Object.assign(window, { ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, RITMO_METAS_DE_FIN, ritmoSigueCierre, ritmoPausaHecha, ritmoSesionesHoy, RITMO_MODULO_SESION, ritmoMinutosHechos, ritmoMetaHecha, ritmoPausaPorTuCuenta, ritmoSinPausa, ritmoPausaEmpieza, ritmoParadaHasta, ritmoPausaCuenta, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia });
+;Object.assign(window, { ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, RITMO_METAS_DE_FIN, ritmoSigueCierre, ritmoPausaHecha, ritmoSesionesHoy, RITMO_MODULO_SESION, ritmoMinutosHechos, ritmoMetaHecha, ritmoPausaPorTuCuenta, ritmoSinPausa, ritmoPausaEmpieza, ritmoParadaHasta, ritmoPausaCuenta, ritmoCierreEnCurso, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia });
 })();
 </script>
   <!-- Las pausas con bloques cortos (22 oct. 2026): la invitación, «a mi ritmo» o tras cada bloque, y sin día. -->
@@ -23371,6 +23415,7 @@ function paceCierreSigue() {
     const s = getState();
     const p = typeof ritmoPausaCuenta === 'function' ? ritmoPausaCuenta(s) : null;
     if (p) {
+      if (p.cierre) return null;
       const ms = p.hasta - Date.now();
       return ms > 0 ? { tipo: 'jornada', min: Math.max(1, Math.ceil(ms / 60000)), n: p.n } : null;
     }
@@ -33648,7 +33693,7 @@ function aroJornada(_ref) {let { state, t, tn, aro, enPausaRitmo, pausaRitmo, st
       },
       fila:
       React.createElement("button", { type: "button", className: "pace-aro-seguir", "data-pace-aro-seguir": true, onClick: empezarYa },
-      tn('ritmo.pausa.ya', { n: pausaRitmo.n })
+      pausaRitmo.cierre ? t('ritmo.pausa.cerrar') : tn('ritmo.pausa.ya', { n: pausaRitmo.n })
       )
 
     };
@@ -33744,7 +33789,8 @@ function useAvisosNativos(_ref) {let { state, running, endsAt, pausaRitmo, enPau
     if (typeof paceNativoPausa !== 'function') return;
     let pausa = null;
     if (running && endsAt && state.notifyFocusEnd) {
-      if (state.focusMode !== 'foco') pausa = { hasta: endsAt, n: ritmoN, total: ritmoN ? pausaRitmo.de : null };else
+
+      if (state.focusMode !== 'foco') pausa = enPausaRitmo && pausaRitmo.cierre ? null : { hasta: endsAt, n: ritmoN, total: ritmoN ? pausaRitmo.de : null };else
       if (typeof ritmoPausaTrasBloque === 'function') pausa = ritmoPausaTrasBloque(getState(), endsAt);
     }
     paceNativoPausa(pausa ? pausa.hasta : null, pausa && {
@@ -34060,7 +34106,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
   const modeLabel = aro ? aro.label : cerrada ? cerrada.label : state.focusMode === 'foco' ? t('focus.manual.label') :
-  state.focusMode === 'pausa' ? t('focus.mode.pause') :
+  enPausaRitmo && pausaRitmo.cierre ? t('ritmo.aro.cierre') : state.focusMode === 'pausa' ? t('focus.mode.pause') :
   t('focus.mode.long');
 
   const isFocoMode = state.focusMode === 'foco';
@@ -34082,7 +34128,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
   const subtitle = bloques.subtitulo ? bloques.subtitulo :
-  enPausaRitmo ? tn('ritmo.pausa.luego', { n: pausaRitmo.n, m: pausaRitmo.de }) :
+  enPausaRitmo ? pausaRitmo.cierre ? t('ritmo.cierre.luego') : tn('ritmo.pausa.luego', { n: pausaRitmo.n, m: pausaRitmo.de }) :
   aro && aroPausaTerminada(state) ? t('ritmo.aro.pausaTerminada') : cerrada && cerrada.sub ? cerrada.sub :
   isFocoMode ?
   isCompleted ? t('focus.cycleComplete') : t(getFocusDescriptorKey(state.focusMinutes)) :
@@ -34138,7 +34184,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
     restore(pausaRitmo.hasta);
   }, [enPausaRitmo, pausaHuerfana, pausaRitmo && pausaRitmo.hasta, status]);
   const seguirTrasPausaRef = useRefFT(false);
-  const empezarYa = () => {seguirTrasPausaRef.current = true;reset();ritmoPausaAcabada();};
+  const empezarYa = () => {seguirTrasPausaRef.current = !pausaRitmo.cierre;reset();ritmoPausaAcabada();};
   useEffectFT(() => {
     if (!seguirTrasPausaRef.current || state.focusMode !== 'foco' || status !== 'idle') return;
     seguirTrasPausaRef.current = false;
@@ -34175,7 +34221,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
   let ctaLabel, ctaAction;
   if (enPausaRitmo) {
-    ctaLabel = tn('ritmo.pausa.ya', { n: pausaRitmo.n });
+    ctaLabel = pausaRitmo.cierre ? t('ritmo.pausa.cerrar') : tn('ritmo.pausa.ya', { n: pausaRitmo.n });
     ctaAction = empezarYa;
   } else if (running) {
     ctaLabel = t('focus.pause');
@@ -36272,19 +36318,24 @@ var MOVE_ROUTINES = {
           care: 'Si la lumbar molesta, sube menos o termina.' } },
 
 
+
+
+
       { name: 'Desliza el talón', mode: 'reps', reps: 6, dur: 24,
         tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+        cambios: [{ en: 3, que: 'lado', dice: 'otraPierna' }],
         instruction: {
           setup: 'Boca arriba, rodillas dobladas, sin aplastar la zona lumbar contra el suelo.',
-          action: 'Desliza un talón por el suelo sin mover la pelvis, y vuelve. Tres con cada pierna.',
+          action: 'Desliza un talón por el suelo sin mover la pelvis, y vuelve.',
           care: 'No hace falta estirar la pierna del todo. Si la espalda se arquea más, acorta el recorrido.' } },
 
 
       { name: 'Gateo con rodillas', mode: 'reps', reps: 8, dur: 24,
         tempo: { down: 1, hold: 0, up: 2 }, completion: { mode: 'guided' },
+        cambios: [{ en: 4, que: 'sentido', dice: 'atras' }],
         instruction: {
           setup: 'A cuatro apoyos: manos bajo los hombros, rodillas bajo las caderas.',
-          action: 'Cuatro pasos cortos adelante, despacio, mano y rodilla contrarias. Luego, cuatro atrás.',
+          action: 'Cuatro pasos cortos adelante y cuatro atrás, despacio, mano y rodilla contrarias.',
           care: 'Las rodillas siguen en el suelo. Si las muñecas molestan, para.' } }]
     }]
 
@@ -37894,6 +37945,82 @@ Object.assign(window, { v1VozCuenta, v1VozRep, v1VozEntrada, v1VozGo, v1VozLado,
 ;Object.assign(window, { V1_VOZ_CUENTA, v1VozCuenta, v1VozRep, v1VozEntrada, v1VozGo, v1VozLado, v1VozCalla, v1VozPrecarga });
 })();
 </script>
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function v1CambioSeg(step, c) {
+  return step.mode === 'reps' ? c.en * v1RepSeconds(step) : c.en;
+}
+
+
+function v1CambiosPasados(step, elapsed) {
+  const cs = step && Array.isArray(step.cambios) ? step.cambios : [];
+  return cs.filter((c) => elapsed >= v1CambioSeg(step, c));
+}
+
+
+function v1CambioAhora(step, elapsed) {
+  const cs = step && Array.isArray(step.cambios) ? step.cambios : [];
+  return cs.find((c) => v1CambioSeg(step, c) === elapsed) || null;
+}
+
+
+function v1CambioSonido(c) {
+  return c && c.que === 'lado' && typeof v1VozLado === 'function' ? v1VozLado() : undefined;
+}
+
+
+function v1CambiosVivos(step, auto) {
+  return !!(step && step.cambios) && (auto || step.mode !== 'reps');
+}
+
+
+function v1CambioPalabra(step, elapsed, t, auto) {
+  if (!v1CambiosVivos(step, auto)) return null;
+  const pasados = v1CambiosPasados(step, elapsed);
+  const ultimo = pasados[pasados.length - 1];
+  return ultimo && ultimo.dice ? t('move.cambio.' + ultimo.dice) : null;
+}
+
+
+function v1CambiosPalabras(step, t) {
+  const cs = step && Array.isArray(step.cambios) ? step.cambios : [];
+  return cs.filter((c) => c.dice).map((c) => t('move.cambio.' + c.dice)).filter((w, i, a) => a.indexOf(w) === i);
+}
+
+
+function v1CambioLado(step, elapsed, auto) {
+  if (!v1CambiosVivos(step, auto)) return null;
+  return v1CambiosPasados(step, elapsed).filter((c) => c.que === 'lado').length % 2;
+}
+
+Object.assign(window, { v1CambioSeg, v1CambiosPasados, v1CambioAhora, v1CambioSonido, v1CambiosVivos, v1CambioPalabra, v1CambiosPalabras, v1CambioLado });
+;Object.assign(window, { v1CambioSeg, v1CambiosPasados, v1CambioAhora, v1CambioSonido, v1CambiosVivos, v1CambioPalabra, v1CambiosPalabras, v1CambioLado });
+})();
+</script>
   <!-- El mando de tres y el cuerpo del runner (opción A del runner guiado): antes de su consumidor. -->
   <script>
 ;(function () {
@@ -38008,6 +38135,8 @@ function v1Reservas(routine, t, tn, tStep, tInstr) {
       pon(cues, { lead: t('session.sideLeft'), text: action });
       pon(cues, { lead: t('session.sideRight'), text: action });
     }
+
+    if (action && typeof v1CambiosPalabras === 'function') v1CambiosPalabras(st, t).forEach((w) => pon(cues, { lead: w, text: action }));
     const care = st.mode !== 'rest' ? tInstr(i, 'care') : null;
     if (care) pon(colas, { care });
 
@@ -38176,7 +38305,7 @@ function CuerpoV1(p) {
     justo ? { 'data-pace-v1-justo': '' } : {}),
     React.createElement("div", _extends({ ref: cuerpoRef, "data-pace-v1-body": true, className: "pace-v1" }, p.paused ? { 'data-pace-v1-en-pausa': '' } : {}),
     React.createElement("div", { ref: glifoRef, "data-pace-v1-glyph": true, className: "pace-v1-glifo", style: { width: aro, height: aro } },
-    React.createElement(StepGlyph, { stepName: step.name, accent: stepAccent, accentSoft: stepAccentSoft, size: glifo, side: v1LadoGlifo(step, p.phase, side) }),
+    React.createElement(StepGlyph, { stepName: step.name, accent: stepAccent, accentSoft: stepAccentSoft, size: glifo, side: p.ladoCambio != null ? p.ladoCambio : v1LadoGlifo(step, p.phase, side) }),
     React.createElement(AroV1, { fraccion: p.fraccion, accent: stepAccent, px: aro })
     ),
     React.createElement("div", { "data-pace-v1-kicker": true, style: { color: stepAccent } }, p.kicker || null),
@@ -38859,7 +38988,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
         darSerie(v1RepTarget(step));try {playSound('move.rep', v1VozRep(v1RepTarget(step), repSec, true, v1RepTarget(step)));} catch (e) {}
         advanceStep();
       } else if (suena && elapsed % repSec === 0) {
-        try {playSound('move.rep', v1VozRep(elapsed / repSec, repSec, false, v1RepTarget(step)));} catch (e) {}
+        const cb = v1CambioAhora(step, elapsed);try {if (cb) playSound('move.side', v1CambioSonido(cb));else playSound('move.rep', v1VozRep(elapsed / repSec, repSec, false, v1RepTarget(step)));} catch (e) {}
       }
       return;
     }
@@ -38868,6 +38997,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
 
     if (suena && effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) {try {playSound('move.warn', v1VozCuenta(effDur - elapsed));} catch (e) {}}
+    if (suena && step.mode === 'timed' && v1CambioAhora(step, elapsed)) {try {playSound('move.side', v1CambioSonido(v1CambioAhora(step, elapsed)));} catch (e) {}}
     if (elapsed >= effDur) {
       if (!auto) {
 
@@ -39048,7 +39178,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   const careText = inWork && !isRest ? tInstr(stepIdx, 'care') : undefined;
   const sideLead = inWork && step.mode === 'perSide' ?
   t(side === 0 ? 'session.sideLeft' : 'session.sideRight') :
-  null;
+  inWork ? v1CambioPalabra(step, elapsed, t, auto) : null;
 
 
 
@@ -39072,7 +39202,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
         textos: { prev: t('move.prev'), pause: t('session.pause'), resume: t('session.resume') }, autoAbajo: autoAbajo ? autoBoton : null }),
       hint: t('session.hint') },
 
-    React.createElement(CuerpoV1, { routine: routine, stepIdx: stepIdx, step: step, side: side, phase: phase, elapsed: elapsed, paused: paused,
+    React.createElement(CuerpoV1, { routine: routine, stepIdx: stepIdx, step: step, side: side, phase: phase, elapsed: elapsed, paused: paused, ladoCambio: inWork ? v1CambioLado(step, elapsed, auto) : null,
       accent: accent, stepAccent: stepAccent, stepAccentSoft: stepAccentSoft, lang: lang,
       t: t, tn: tn, tStep: tStep, tInstr: tInstr,
       kicker: kicker, cueText: cueText, sideLead: sideLead, careText: careText,
@@ -39156,10 +39286,15 @@ const EXTRA_ROUTINES = {
       desc: 'Círculos, la pared y el giro del hombro.', min: 2,
       position: ['standing'], equipment: ['wall'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
+
+
+
+
       { name: 'Círculos de brazos', mode: 'reps', reps: 16, dur: 64,
         tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+        cambios: [{ en: 4, que: 'sentido', dice: 'atras' }, { en: 8, que: 'lado', dice: 'otroBrazo' }, { en: 12, que: 'sentido', dice: 'atras' }],
         instruction: {
-          action: 'De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. Luego, el otro.',
+          action: 'De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás.',
           care: 'Empieza pequeño. Haz el círculo más grande solo si el tronco sigue quieto.' } },
       { name: 'Deslizamientos en pared', mode: 'reps', reps: 6, dur: 36,
         tempo: { down: 3, hold: 0, up: 3 }, completion: { mode: 'guided' },
@@ -39191,6 +39326,7 @@ const EXTRA_ROUTINES = {
           care: 'Suave: no es un ejercicio de fuerza.' } },
       { name: 'Círculos de muñeca', mode: 'reps', reps: 8, dur: 32,
         tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+        cambios: [{ en: 4, que: 'sentido', dice: 'alReves' }],
         instruction: {
           setup: 'Sentado, antebrazos cómodos.',
           action: 'Círculos pequeños con las manos, despacio: cuatro en cada sentido.',
@@ -39245,6 +39381,7 @@ const EXTRA_ROUTINES = {
           care: 'Sin rebotes. Sal despacio.' } },
       { name: 'Círculos de tobillo', mode: 'reps', reps: 16, dur: 32,
         tempo: { down: 1, hold: 0, up: 1 }, completion: { mode: 'guided' },
+        cambios: [{ en: 4, que: 'sentido', dice: 'alReves' }, { en: 8, que: 'lado', dice: 'otroPie' }, { en: 12, que: 'sentido', dice: 'alReves' }],
         instruction: {
           setup: 'Siéntate y levanta un poco un pie.',
           action: 'Círculos con el tobillo: cuatro en cada sentido con un pie, y luego con el otro.',
@@ -39294,15 +39431,18 @@ const EXTRA_ROUTINES = {
 
       { name: 'Círculos de muñeca', mode: 'reps', reps: 8, dur: 32,
         tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+        cambios: [{ en: 4, que: 'sentido', dice: 'alReves' }],
         instruction: {
           setup: 'Sentado, antebrazos cómodos.',
           action: 'Círculos pequeños con las manos, despacio: cuatro en cada sentido.',
           care: 'Sin apretar los puños ni buscar el máximo.' } },
       { name: 'Giro sentado', mode: 'timed', dur: 20,
+        cambios: [{ en: 10, que: 'lado', dice: 'otroLado' }],
         instruction: {
           action: 'Gira el tronco hacia el respaldo, con una mano apoyada en él, sin tirar. Luego, al otro lado.',
           care: 'Gira solo hasta donde vaya suelto. El giro nace del tronco, no del cuello.' } },
       { name: 'Círculos de tobillo', mode: 'timed', dur: 20,
+        cambios: [{ en: 10, que: 'lado', dice: 'otroPie' }],
         instruction: {
           action: 'Bajo la mesa, levanta un pie y dibuja círculos con el tobillo. Cambia a mitad.',
           care: 'Círculos lentos y cómodos, sin forzar ni mover toda la pierna.' } },
@@ -51772,14 +51912,15 @@ function RitmoMovil(_ref0) {let { state, plan, onVer } = _ref0;
 
   const empezado = typeof usePaceFocoEmpezado === 'function' ? usePaceFocoEmpezado() : true;
   const descriptor = plan.hechos === 0 && !empezado ? t('ritmo.frase.movil.empieza') :
-  typeof getFocusDescriptorKey === 'function' ? t(getFocusDescriptorKey(b.dur)) : '';
+  b && typeof getFocusDescriptorKey === 'function' ? t(getFocusDescriptorKey(b.dur)) : '';
 
   const filaBloque = (rotulo) =>
   React.createElement(RitmoFila, { rotulo: React.createElement(React.Fragment, null, t(rotulo), React.createElement("br", null), ritmoHora(b.desde)), luego: rotulo === 'ritmo.luego',
     modulo: "foco", nombre: tn('ritmo.fila.bloque', { n: plan.hechos + 1, m: plan.total }),
     meta: b.dur + ' min · ' + descriptor });
 
-  const luego = ritmoDetras(plan.m, b);
+
+  const luego = b ? ritmoDetras(plan.m, b) : null;
   const conPausa = !!(plan.pausa && !plan.pausaPasada);
 
 
@@ -51787,7 +51928,7 @@ function RitmoMovil(_ref0) {let { state, plan, onVer } = _ref0;
     if (typeof window.paceHomeGeometriaYa === 'function') window.paceHomeGeometriaYa();
   }, [conPausa, !!luego, plan.hechos, plan.m.opcion]);
   const filas = conPausa ?
-  React.createElement(React.Fragment, null, React.createElement(RitmoFilaParada, { it: plan.pausa, rotulo: "ritmo.ahora", corta: true }), filaBloque('ritmo.luego')) :
+  React.createElement(React.Fragment, null, React.createElement(RitmoFilaParada, { it: plan.pausa, rotulo: "ritmo.ahora", corta: true }), b ? filaBloque('ritmo.luego') : null) :
   React.createElement(React.Fragment, null, filaBloque('ritmo.ahora'), luego ? React.createElement(RitmoFilaParada, { it: luego, rotulo: "ritmo.luego", corta: true }) : null);
   return (
     React.createElement("div", { className: "pace-rt-panel pace-rt-mov", "data-pace-ritmo-estado": "menu" },
@@ -53255,7 +53396,8 @@ function RitmoHome(_ref) {let { onOpenLibrary, onOpenHydrate } = _ref;
 
     React.createElement("div", { "data-pace-ritmo-panel": true },
     !plan ? React.createElement(RitmoPregunta, { state: state }) :
-    plan.terminado ? React.createElement(RitmoHecho, { plan: plan }) :
+
+    plan.terminado && !(typeof ritmoCierreEnCurso === 'function' && ritmoCierreEnCurso(state)) ? React.createElement(RitmoHecho, { plan: plan }) :
 
     React.createElement(React.Fragment, null,
     React.createElement(RitmoEscritorio, { state: state, plan: plan }),
