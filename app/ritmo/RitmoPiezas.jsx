@@ -55,7 +55,8 @@ function ritmoMetaVasos(s) {
    la meta). «6 de TUS 8 vasos» partía el título del día en dos líneas de 1536 px de ancho
    para arriba (medido en nueve pantallas); «6 de 8» deja la cabecera como estaba. */
 /* `jornada` (la hoja de «Ver todo», Ez, 10A del 18 nov. 2026): «6 vasos en la jornada». Ahí «6 de 8»
-   se leía como «te faltan dos»; la cabecera del escritorio sigue con la meta. */
+   se leía como «te faltan dos». Hoy es el único sitio que lo dice: la cabecera del escritorio ya no
+   lleva el resumen (Ez, encargo 3 del 19 nov.), así que la forma «6 de 8» no se pinta en ninguna parte. */
 function ritmoResumen(m, tn, meta, jornada) {
   const vasos = jornada ? tn(m.vasos === 1 ? 'ritmo.vasos.jornada.uno' : 'ritmo.vasos.jornada', { v: m.vasos })
     : tn('ritmo.vasos', { v: m.vasos, m: meta || m.vasos });

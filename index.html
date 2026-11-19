@@ -49997,37 +49997,25 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
 .pace-rt-porlibre:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
 .pace-rt-pie { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
 .pace-rt-der { display: flex; gap: 14px; align-items: center; }
-/* La parte derecha de la cabecera del menú (escritorio, s195): el RESUMEN del día con
-   «Cambiar» y los chips con la píldora. Antes el resumen era un absoluto a 21 px sobre la
-   línea —la misma banda donde la etiqueta «AHORA» se ancla al bloque de ahora— y se
-   pisaban en cuanto el bloque actual caía en el último cuarto del día, en los nueve
-   viewports de escritorio medidos. En la cabecera no comparte banda con nada.
+/* La parte derecha de la cabecera del menú (escritorio): «Cambiar» y «Al calendario», y la
+   píldora «Hoy voy por libre». No van sobre la línea, donde «AHORA» se ancla al bloque de
+   ahora y se pisaban al final del día (s195). Sin el resumen del día ni la etiqueta del
+   material (Ez, encargo 3 del 19 nov. 2026): con ellos, la columna medía 246 px y la frase
+   de la jornada entera llegando tarde partía «a 20:00» a 1280 y 1366.
    Dos formas según lo ancho que sea el PANEL (container query, porque el panel cambia de
-   ancho también al plegar la barra lateral): con sitio, todo en la fila del título
-   (resumen · chips · píldora) y el panel no crece ni un píxel; sin sitio, dos filas a la
-   derecha, chips arriba y resumen debajo (+19 px). Medido en es: resumen 246 + 14 + chips
-   327 = 587 a la derecha; el título de «Una hora» llegando tarde mide 451 y el de la
-   jornada entera unos 400. El corte va en 1000 px de contenido: por encima, al título le
-   quedan al menos 397 y como mucho se parte en dos líneas (lo que cuesta lo mismo que la
-   columna); por debajo (1366 → 962, 1280 → 876, 1024 → 620) la fila del título ya no da
-   para las dos cosas. 1536×704 (1132) y 1440×789 (1036) van en fila. */
+   ancho también al plegar la barra lateral): con 1000 px o más, todo en la fila del título;
+   por debajo (1366 → 962, 1280 → 876, 1024 → 620), la píldora arriba y los enlaces debajo,
+   que deja más ancho a la frase. */
 .pace-rt-panel { container-type: inline-size; }
 .pace-rt-der-col { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
 .pace-rt-der-col .pace-rt-sobre { order: 2; }
 .pace-rt-sobre { display: flex; align-items: center; justify-content: flex-end; gap: 14px; }
-.pace-rt-sobre .pace-rt-meta { font-size: 9px; letter-spacing: 0.14em; }
 /* La línea de los lunes (ritmo.lunes.jsx): bajo el resumen y sin ancho propio, o el título se encoge (DECISIONES, 11 nov.). */
 .pace-rt-sobre:has(.pace-rt-lunes) { flex-wrap: wrap; row-gap: 2px; }
 .pace-rt-lunes { flex-basis: 100%; contain: inline-size; text-align: right; background: none; border: 0; padding: 0; margin: 0 0 0 -14px; font-family: var(--font-display); font-style: italic; font-size: 15px; color: var(--ink-2); cursor: pointer; white-space: nowrap; } .pace-rt-lunes:hover { color: var(--ink); }
 @container (min-width: 1000px) {
   .pace-rt-der-col { flex-direction: row; align-items: center; gap: 14px; }
   .pace-rt-der-col .pace-rt-sobre { order: 0; }
-  /* En la fila del título, «Sin material, a veces pared o mesa» (Ez, 3B del 30 oct.) va sola y en dos
-     líneas: junto a «Junto a la mesa» y en una línea se comía 126 px y el título de la jornada se
-     partía en dos o tres líneas a 1440, 1536 y 1920, con el panel 24 px más alto (medido). Ya dice
-     «mesa»; en las dos filas de debajo de 1000 y en la hoja del móvil van las dos, en una línea. */
-  .pace-rt-esc .pace-rt-ctx .pace-rt-ctx-mesa { display: none; }
-  .pace-rt-esc .pace-rt-ctx .pace-rt-ctx-material { white-space: normal; max-width: 13em; text-align: center; line-height: 1.15; padding: 2px 9px; }
 }
 
 /* LAS OPCIONES */
@@ -50040,10 +50028,6 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
 .pace-rt-chip b { display: block; font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 16px; color: var(--ink); line-height: 1.1; }
 .pace-rt-chip > span { display: block; font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--ink-2); margin-top: 4px; }   /* s195c: la hora en itálica, como en la tarjeta por libre */
 
-/* EL CONTEXTO (fijo por ahora: el onboarding contextual es la Fase 8) */
-.pace-rt-ctx { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
-.pace-rt-ctx span { font-size: 10px; letter-spacing: 0.08em; color: var(--ink-2); border: 1px solid var(--line);
-  border-radius: var(--r-pill); padding: 3px 9px; white-space: nowrap; }
 
 /* EL HORARIO se edita dentro de la frase: un botón con aspecto de texto subrayado que abre
    su paso a paso (RitmoHoraPaso); el <select> de los bloques y del calendario lleva la misma
@@ -50477,6 +50461,7 @@ function ritmoModulo(modulo, t) {
 function ritmoMetaVasos(s) {
   return (s || {}).water && s.water.goal || 8;
 }
+
 
 
 
@@ -51071,16 +51056,6 @@ const { useState: useStateRP, useLayoutEffect: useLayoutEffectRP } = React;
 
 var RITMO_OPCIONES_UI = ['1h', '2h', 'media', 'jornada'];
 
-function RitmoContexto() {
-  const { t } = useT();
-  return (
-    React.createElement("div", { className: "pace-rt-ctx" },
-    React.createElement("span", { className: "pace-rt-ctx-mesa" }, t('ritmo.ctx.mesa')),
-    React.createElement("span", { className: "pace-rt-ctx-material" }, t('ritmo.ctx.material'))
-    ));
-
-}
-
 
 
 
@@ -51096,12 +51071,12 @@ function RitmoLibre(_ref) {let { enlace } = _ref;
 
 
 
-function RitmoSobre(_ref2) {let { m } = _ref2;
-  const { t, tn } = useT();
-  const [st] = usePace();
+
+
+function RitmoSobre() {
+  const { t } = useT();
   return (
     React.createElement("div", { className: "pace-rt-sobre", "data-pace-ritmo-resumen": true },
-    React.createElement("span", { className: "pace-rt-meta" }, ritmoResumen(m, tn, ritmoMetaVasos(st))),
     React.createElement("button", { className: "pace-rt-enlace", onClick: ritmoPreguntar }, t('ritmo.cambiar')),
     React.createElement(RitmoAlCalendario, null),
     typeof RitmoLunes === 'function' ? React.createElement(RitmoLunes, null) : null
@@ -51118,7 +51093,7 @@ function RitmoSobre(_ref2) {let { m } = _ref2;
 
 
 
-function RitmoChips(_ref3) {let { state, editarMedia, tuyo } = _ref3;
+function RitmoChips(_ref2) {let { state, editarMedia, tuyo } = _ref2;
   const { t, tn } = useT();
   const [inicioAbierto, setInicioAbierto] = useStateRP(false);
   const horario = editarMedia ? ritmoDe(state).horario : null;
@@ -51163,7 +51138,7 @@ function ritmoSub(op, m, vacia, t, tn) {
   return tn('ritmo.hasta', { h: ritmoHora(m.hasta) });
 }
 
-function RitmoPregunta(_ref4) {let { state } = _ref4;
+function RitmoPregunta(_ref3) {let { state } = _ref3;
   const { t, tn } = useT();
   const R = ritmoDe(state);
 
@@ -51224,7 +51199,7 @@ function RitmoPregunta(_ref4) {let { state } = _ref4;
 
 
 
-function RitmoDiaLinea(_ref5) {let { horario } = _ref5;
+function RitmoDiaLinea(_ref4) {let { horario } = _ref4;
   const { t } = useT();
   const h = ritmoHuecos(horario);
   const come = !horario.sinComida;
@@ -51257,7 +51232,7 @@ function RitmoDiaLinea(_ref5) {let { horario } = _ref5;
 
 
 
-function RitmoFraseMenu(_ref6) {let { plan, horario, plantilla, capital } = _ref6;
+function RitmoFraseMenu(_ref5) {let { plan, horario, plantilla, capital } = _ref5;
   const { t, tn } = useT();
   const m = plan.m;
   const huecos = ritmoHuecos(horario);
@@ -51284,7 +51259,7 @@ function RitmoFraseMenu(_ref6) {let { plan, horario, plantilla, capital } = _ref
 
 }
 
-function RitmoEscritorio(_ref7) {let { state, plan } = _ref7;
+function RitmoEscritorio(_ref6) {let { state, plan } = _ref6;
   const { t } = useT();
   const R = ritmoDe(state);
   return (
@@ -51297,8 +51272,8 @@ function RitmoEscritorio(_ref7) {let { state, plan } = _ref7;
     )
     ),
     React.createElement("div", { className: "pace-rt-der-col" },
-    React.createElement(RitmoSobre, { m: plan.m }),
-    React.createElement("div", { className: "pace-rt-der" }, React.createElement(RitmoContexto, null), React.createElement(RitmoLibre, null))
+    React.createElement(RitmoSobre, null),
+    React.createElement("div", { className: "pace-rt-der" }, React.createElement(RitmoLibre, null))
     )
     ),
     React.createElement(RitmoLinea, { plan: plan })
@@ -51308,7 +51283,7 @@ function RitmoEscritorio(_ref7) {let { state, plan } = _ref7;
 
 
 
-function RitmoFila(_ref8) {let { rotulo, modulo, nombre, meta, claves, luego, hecha } = _ref8;
+function RitmoFila(_ref7) {let { rotulo, modulo, nombre, meta, claves, luego, hecha } = _ref7;
   const { t } = useT();
   return (
     React.createElement("div", { className: "pace-rt-fila", "data-pace-ritmo-luego": luego ? '' : undefined },
@@ -51327,7 +51302,7 @@ function RitmoFila(_ref8) {let { rotulo, modulo, nombre, meta, claves, luego, he
 
 
 
-function RitmoFilaParada(_ref9) {let { it, rotulo, corta, hecha } = _ref9;
+function RitmoFilaParada(_ref8) {let { it, rotulo, corta, hecha } = _ref8;
   const { t, tn, lang } = useT();
   const cab = React.createElement(React.Fragment, null, t(rotulo), React.createElement("br", null), ritmoHora(it.desde));
   const luego = rotulo === 'ritmo.luego';
@@ -51343,7 +51318,7 @@ function RitmoFilaParada(_ref9) {let { it, rotulo, corta, hecha } = _ref9;
     claves: it.platos.map((p) => p.clave), hecha: hecha });
 }
 
-function RitmoMovil(_ref0) {let { state, plan, onVer } = _ref0;
+function RitmoMovil(_ref9) {let { state, plan, onVer } = _ref9;
   const { t, tn } = useT();
   const R = ritmoDe(state);
   const b = plan.actual;
@@ -51396,7 +51371,7 @@ function RitmoMovil(_ref0) {let { state, plan, onVer } = _ref0;
 
 }
 
-function RitmoHecho(_ref1) {let { plan } = _ref1;
+function RitmoHecho(_ref0) {let { plan } = _ref0;
   const { t, tn } = useT();
   return (
     React.createElement("div", { className: "pace-rt-panel", "data-pace-ritmo-estado": "hecho" },
@@ -51419,10 +51394,10 @@ function RitmoHecho(_ref1) {let { plan } = _ref1;
 }
 
 Object.assign(window, {
-  RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub,
+  RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub,
   RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho
 });
-;Object.assign(window, { RITMO_OPCIONES_UI, RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, ritmoSub, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho });
+;Object.assign(window, { RITMO_OPCIONES_UI, RitmoLibre, RitmoSobre, RitmoChips, ritmoSub, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho });
 })();
 </script>
   <script>
@@ -52654,7 +52629,7 @@ Object.assign(window, { ritmoCartaStyles, RitmoCartaLeida, RitmoCartaVentana, ri
    «Los lunes, PACE completo te escribe tu semana ›», y tocarla abre la invitación. Solo los lunes:
    todos los días sería pedir la compra cada vez que se abre la app.
 
-   DÓNDE: en el ordenador, en la fila del resumen del día (`RitmoSobre`, RitmoPanel.jsx). En el
+   DÓNDE: en el ordenador, en la fila de «Cambiar» y «Al calendario» (`RitmoSobre`, RitmoPanel.jsx). En el
    móvil la home no tiene sitio (se pasaba 2 px a 360×740), y va en DOS sitios a la vez: en el
    sobre de arriba, donde llegaría la carta (cerrado hasta que se abre ese lunes), y en una fila
    del cajón bajo «Tus rutinas» (`SidebarFooter`). El sobre y la fila no salen en el ordenador.
