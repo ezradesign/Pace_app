@@ -37,6 +37,8 @@ strong{color:var(--ink);font-weight:500}
 .t{font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin:18px 0 6px}
 .t.hoy{color:var(--terra)}.t.luego{color:var(--olive)}
 .fotos{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));margin:12px 0 16px}
+.fotos.anchas{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.opcion a{color:var(--olive)}
 figure{margin:0;min-width:0}
 figure img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:6px}
 figcaption{font-size:13px;color:var(--ink-3);margin-top:6px}
@@ -65,10 +67,18 @@ td.mal{color:var(--terra)}td.bien{color:var(--olive)}
 </style>
 
 <main>
-  <div class="eyebrow">PACE · 16-17 de noviembre de 2026 · elegidas 1A, 2.1 A y 2.3 A, montadas en su rama</div>
+  <div class="eyebrow">PACE · 16-19 de noviembre de 2026 · elegidas 1A, 2.1 A y 2.3 A, montadas en su rama</div>
   <h1>Tres arreglos menores</h1>
   <p class="lead">Tres cosas pequeñas que quedan antes de v1. En cada una, qué pasa hoy, qué cambiaría y cuánto trabajo
-    es. Las fotos son de la app de verdad (la 0.207.0) a 360 × 640; las opciones están pintadas encima.</p>
+    es. Las fotos de «hoy» y de las opciones son de la 0.207.0, con las opciones pintadas encima; las de «Montada», de la
+    rama tal cual, sin nada pintado.</p>
+  <div class="opcion rec" id="estado">
+    <p><span class="letra">Cómo está · 19 nov.</span><span class="sello">Esperando la suite</span></p>
+    <p>Todo montado en su rama, con la 0.211.0 de main ya dentro. Los tres pasos de la 1 que no cabían, montados con tu
+      sí de hoy. Falta la suite entera: va cuando acabe la de la voz (dos a la vez dan rojas falsas). Con ella en verde,
+      lista para juntar.</p>
+    <p>Una cosa que mirar: <a href="#auto">con «Auto» apagado</a>, dos de esos textos ya no dicen que hay que cambiar.</p>
+  </div>
   <p>Al final, una tabla con lo que pide tu letra y lo que no tiene nada que elegir.</p>
 
   <!-- ================================================================== -->
@@ -91,8 +101,8 @@ td.mal{color:var(--terra)}td.bien{color:var(--olive)}
   <p class="nota">Otros tres pasos dicen «tres (o cuatro) a cada lado» sin decir si se alterna: Rotación lenta (Cuello
     suave), Rotación torácica (Tronco sentado) e Inclinación de tronco (Columna · ondas). Propongo que digan
     «alternando», una vez a cada lado: así no hay cambio que avisar. Los que ya alternan y lo dicen (90/90, Puente con
-    marcha, Sentadilla lateral) se quedan como están. <b>Sin montar:</b> «alternando» alarga esos tres textos, y con tu
-    condición hay que medirlo antes; si lo quieres, se mide como lo demás.</p>
+    marcha, Sentadilla lateral) se quedan como están. <b>No se montan</b> (19 nov.): esos tres textos se quedan como
+    están.</p>
 
   <div class="t luego">Con la voz de Mueve y Estira (ya en main, 0.208.0)</div>
   <p>La voz y la vibración de Mueve y Estira (en su rama) ya dicen «Izquierda», «Derecha» y «Cambia de lado», y vibran dos
@@ -116,39 +126,60 @@ td.mal{color:var(--terra)}td.bien{color:var(--olive)}
     <tr><td>Círculos de muñeca · Escritorio express</td><td>«Al revés.» / «Reverse.»</td><td class="bien">Sí</td></tr>
     <tr><td>Giro sentado · Escritorio express</td><td>«Otro lado.» / «Other side.»</td><td class="bien">Sí («Al otro lado.» lo pasaba de dos a tres líneas a 640 y 740, y el dibujo encogía 22 px)</td></tr>
     <tr><td>Círculos de tobillo · Escritorio express</td><td>«Otro pie.» / «Other foot.»</td><td class="bien">Sí</td></tr>
-    <tr><td>Círculos de brazos · Brazos libres</td><td>«Atrás.» «Otro brazo.» / «Back.» «Other arm.»</td><td class="mal">No, con la letra al 115 %: dos líneas pasan a tres en los dos idiomas, también con la palabra más corta («Atrás.», «Back.»)</td></tr>
-    <tr><td>Gateo con rodillas · Fuerza en suelo</td><td>«Atrás.» / «Back.»</td><td class="mal">No, con la letra al 115 % en castellano: dos líneas pasan a tres (y el dibujo cambia 20 px). En inglés, sí</td></tr>
-    <tr><td>Desliza el talón · Fuerza en suelo</td><td>«Otra pierna.» / «Other leg.»</td><td class="mal">No, con la letra al 115 %: dos líneas pasan a tres en los dos idiomas, también con «Cambia.» y «Switch.»</td></tr>
+    <tr><td>Círculos de brazos · Brazos libres</td><td>«Atrás.» «Otro brazo.» / «Back.» «Other arm.»</td><td class="bien">Sí, con el texto nuevo. Con el de antes, no: con la letra al 115 % pasaba de dos a tres líneas en los dos idiomas</td></tr>
+    <tr><td>Gateo con rodillas · Fuerza en suelo</td><td>«Atrás.» / «Back.»</td><td class="bien">Sí, con el texto nuevo. Con el de antes, no en castellano: con la letra al 115 % pasaba de dos a tres líneas (y el dibujo cambiaba 20 px)</td></tr>
+    <tr><td>Desliza el talón · Fuerza en suelo</td><td>«Otra pierna.» / «Other leg.»</td><td class="bien">Sí, con el texto nuevo. Con el de antes, no: con la letra al 115 % pasaba de dos a tres líneas en los dos idiomas</td></tr>
   </table></div>
 
   <div class="t luego">Montado así (en su rama)</div>
-  <p>En los cinco que cumplen, la palabra del tramo abre el texto, como «Izquierda.» en los pasos por lados, y en el
-    cambio de pie o de lado el dibujo se da la vuelta. En los ocho, en el momento del cambio, la señal: los dos cuencos y
-    dos toques de vibración, y con la voz, «Cambia de lado» en el cambio de lado (el de sentido no tiene palabra grabada:
-    suenan los cuencos). <strong>Los tres que no caben van sin palabra</strong>, solo con la señal: su pantalla no cambia
-    en nada. Con «Auto» apagado, en los pasos de repeticiones no hay palabra, porque el reloj no sabe por cuál vas.</p>
+  <p>En los ocho pasos la palabra del tramo abre el texto, como «Izquierda.» en los pasos por lados, y en el cambio de
+    pie o de lado el dibujo se da la vuelta. En el momento del cambio, la señal: los dos cuencos y dos toques de
+    vibración, y con la voz, «Cambia de lado» en el cambio de lado (el de sentido no tiene palabra grabada: suenan los
+    cuencos). En los tres que no cabían, el texto ya no dice lo que dice la palabra (abajo).</p>
   <div class="fotos">
     <figure class="rec"><img src="fotos/1-montada-tobillo.jpg" alt="Montada: Círculos de tobillo en la repetición 9, el texto empieza con «Otro pie.» y el dibujo dado la vuelta" loading="lazy"><figcaption><b>Montada</b> · Piernas en pausa, repetición 9: «Otro pie.» y el dibujo, del otro lado</figcaption></figure>
     <figure class="rec"><img src="fotos/1-montada-giro.jpg" alt="Montada: Giro sentado a los 11 segundos, el texto empieza con «Otro lado.»" loading="lazy"><figcaption><b>Montada</b> · Giro sentado, tras el cambio: «Otro lado.»</figcaption></figure>
+    <figure class="rec"><img src="fotos/1-montada-brazos.jpg" alt="Montada: Círculos de brazos en la repetición 9, el texto empieza con «Otro brazo.» y sigue en dos líneas" loading="lazy"><figcaption><b>Montada</b> · Brazos libres, repetición 9: «Otro brazo.», en dos líneas</figcaption></figure>
+    <figure class="rec"><img src="fotos/1-montada-gateo.jpg" alt="Montada: Gateo con rodillas en la repetición 5, el texto empieza con «Atrás.» y sigue en dos líneas" loading="lazy"><figcaption><b>Montada</b> · Fuerza en suelo, gateo en la 5: «Atrás.»</figcaption></figure>
+    <figure class="rec"><img src="fotos/1-montada-talon.jpg" alt="Montada: Desliza el talón en la repetición 4, el texto empieza con «Otra pierna.» y sigue en dos líneas" loading="lazy"><figcaption><b>Montada</b> · Fuerza en suelo, talón en la 4: «Otra pierna.»</figcaption></figure>
   </div>
-  <p class="nota"><b>Probado:</b> una prueba nueva (20 casos) recorre cada tramo de los ocho pasos y cae si el texto de
-    alguno cambia de líneas, de hueco o de dibujo, en castellano, en inglés y con la letra al 115 %; con «Al otro lado»
-    en vez de «Otro lado» cae, como debe («el texto cambió de líneas: 2 → 3»). También mira la vibración del cambio y
-    «Cambia de lado» en la voz. Las 36 pruebas vecinas del runner, la voz, los dibujos y el catálogo, en verde. Sin
-    probar: oírlo y notarlo en un móvil.</p>
+  <p class="nota">Los tres nuevos en el ordenador, a 1280 × 800:</p>
+  <div class="fotos anchas">
+    <figure class="rec"><img src="fotos/1-montada-brazos-1280.jpg" alt="Montada a 1280 px: Círculos de brazos con «Otro brazo.» delante del texto" loading="lazy"><figcaption><b>1280</b> · Círculos de brazos, en la 9</figcaption></figure>
+    <figure class="rec"><img src="fotos/1-montada-gateo-1280.jpg" alt="Montada a 1280 px: Gateo con rodillas con «Atrás.» delante del texto" loading="lazy"><figcaption><b>1280</b> · Gateo con rodillas, en la 5</figcaption></figure>
+    <figure class="rec"><img src="fotos/1-montada-talon-1280.jpg" alt="Montada a 1280 px: Desliza el talón con «Otra pierna.» delante del texto" loading="lazy"><figcaption><b>1280</b> · Desliza el talón, en la 4</figcaption></figure>
+  </div>
+  <p class="nota"><b>Probado:</b> una prueba (50 casos) recorre cada tramo de los ocho pasos en los seis tamaños y cae
+    si el texto de alguno cambia de líneas, de hueco o de dibujo. Con el texto de antes en los tres, cae, como debe
+    (cinco casos, «el texto cambió de líneas: 2 → 3» con la letra al 115 %); con el nuevo, en verde, y cada tramo con
+    las mismas líneas, hueco y dibujo que el paso sin palabra. También mira la vibración del cambio y «Cambia de lado»
+    en la voz. Suite entera: <span id="suite-1">esperando su turno</span>. Sin probar: oírlo y notarlo en un móvil.</p>
 
-  <div class="t hoy">Para los tres que no caben: pide tu sí</div>
+  <div class="t luego">Los tres que no cabían: montados con tu sí (19 nov.)</div>
   <p>Sin tocar el formato, la palabra cabe si el texto deja de decir lo que la palabra ya dice. Medido igual, en los
-    seis tamaños, <strong>cumple en los tres</strong>: el texto nuevo tiene las mismas líneas que el de hoy, con y sin la
-    palabra, y ni el hueco del texto ni el dibujo cambian.</p>
+    seis tamaños, <strong>cumple en los tres</strong>: el texto nuevo tiene las mismas líneas que el de antes, con y sin
+    la palabra, y ni el hueco del texto ni el dibujo cambian.</p>
   <div class="tabla"><table>
-    <tr><th>Paso</th><th>Texto de hoy</th><th>Texto con la palabra</th></tr>
-    <tr><td>Círculos de brazos</td><td>De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. <b>Luego, el otro.</b></td><td>De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. (y en la 5, «Atrás.»; en la 9, «Otro brazo.»)</td></tr>
+    <tr><th>Paso</th><th>Texto de antes</th><th>Texto montado</th></tr>
+    <tr><td>Círculos de brazos</td><td>De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. <b>Luego, el otro.</b></td><td>De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. (y en la 5 y en la 13, «Atrás.»; en la 9, «Otro brazo.»)</td></tr>
     <tr><td>Gateo con rodillas</td><td>Cuatro pasos cortos adelante, despacio, mano y rodilla contrarias. <b>Luego, cuatro atrás.</b></td><td>Cuatro pasos cortos adelante y cuatro atrás, despacio, mano y rodilla contrarias. (y en la 5, «Atrás.»)</td></tr>
     <tr><td>Desliza el talón</td><td>Desliza un talón por el suelo sin mover la pelvis, y vuelve. <b>Tres con cada pierna.</b></td><td>Desliza un talón por el suelo sin mover la pelvis, y vuelve. (y en la 4, «Otra pierna.»)</td></tr>
   </table></div>
   <p class="nota">En inglés, lo mismo: «Then the other arm.» y «Three with each leg.» salen del texto; el del gateo en
-    inglés ya cabía. Si dices que no, se quedan como están montados: solo con la señal.</p>
+    inglés ya cabía y se queda como estaba.</p>
+
+  <div class="opcion" id="auto">
+    <p><span class="letra">Ojo · con «Auto» apagado</span></p>
+    <p>«Auto» viene encendido. Si alguien lo apaga, las repeticiones van a su ritmo y la app no sabe por cuál va: en los
+      pasos de repeticiones no sale la palabra, no suenan los cuencos y el dibujo no se da la vuelta. Eso ya era así en
+      los cinco de antes.</p>
+    <p>Lo nuevo: en <strong>Círculos de brazos</strong> y <strong>Desliza el talón</strong> el texto ya no dice «Luego,
+      el otro» ni «Tres con cada pierna», así que con «Auto» apagado <strong>nada dice que hay que cambiar de brazo o
+      de pierna</strong>. El gateo sí lo sigue diciendo («cuatro adelante y cuatro atrás»).</p>
+    <p>Si te parece poco, hay arreglo: con «Auto» apagado, enseñar el texto de antes, que sin palabra ya cabía. Habría
+      que medirlo con tu condición, como lo demás. Mi recomendación: hacerlo, porque es poco trabajo y nadie se queda sin
+      saber que cambia. Si no dices nada, se queda como está.</p>
+  </div>
   <p class="nota">La comparación con la B y la C, ya sin uso, se queda en la versión anterior de esta página (en el
     historial de la rama).</p>
 
@@ -296,21 +327,22 @@ td.mal{color:var(--terra)}td.bien{color:var(--olive)}
       justo al acabar el último bloque, puestas al día con su porqué (ahora pasan); una de ellas, «cerrado por la hora», se
       pasó del minuto con la máquina cargada y sola pasa 3 de 3.</li>
     <li><code>verify</code> pasa. Una regla nueva en <code>DECISIONES_TECNICAS_VIGENTES.md</code> por cada arreglo.</li>
-    <li>Sin probar: en un móvil de verdad, y la suite entera (la corre la coordinadora al juntar).</li>
+    <li>Suite entera, con la 0.211.0 de main dentro: <span id="suite-2">esperando su turno</span>.</li>
+    <li>Sin probar: en un móvil de verdad.</li>
   </ul>
 
   <!-- ================================================================== -->
   <h2>Lo que pide tu letra</h2>
   <div class="tabla"><table class="resumen">
     <tr><th>Arreglo</th><th>Letra</th><th></th></tr>
-    <tr><td>1 · Cambios a mitad de un paso</td><td>A</td><td class="bien">elegida · montada en cinco pasos con palabra y en tres solo con la señal; el texto de esos tres, pide tu sí</td></tr>
+    <tr><td>1 · Cambios a mitad de un paso</td><td>A</td><td class="bien">elegida · montada en los ocho pasos; el texto de tres, acortado con tu sí del 19 nov.</td></tr>
     <tr><td>2.1 · El cierre que nunca es «Ahora»</td><td>A</td><td class="bien">elegida · montada</td></tr>
     <tr><td>2.2 · La lectura C</td><td>—</td><td class="bien">montada (STATE)</td></tr>
     <tr><td>2.3 · La tarde sin rutinas de pie</td><td>A</td><td class="bien">elegida · montada</td></tr>
     <tr><td>3 · Las cifras de CONTENT.md</td><td>—</td><td class="bien">montada</td></tr>
   </table></div>
-  <p>Lo único que espera tu sí: el texto de los tres pasos de la 1 que no caben con su palabra (arriba). Y, si los
-    quieres, los «alternando».</p>
+  <p>Nada espera tu letra para juntarla. Solo, si quieres, el arreglo de <a href="#auto">«Auto» apagado</a> en
+    Círculos de brazos y Desliza el talón.</p>
   <p class="nota">Fotos y medidas: <code>node docs/proposals/menores-16nov/genera.js</code>, con el <code>index.html</code>
     recién compilado (puerto 8885). Lo medido está en <code>medidas.json</code>.</p>
 </main>
