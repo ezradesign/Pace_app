@@ -20,6 +20,12 @@ La primera copia, https://claude.ai/artifact/VV5XLipvC497TC1ceFMG73, se publicó
 Comprobado: las cuatro specs nuevas, `ritmo-fijar-lo-hecho`, `ritmo-cambiar-en-marcha` y `ritmo-comida-bloque`
 con `--workers=1`, y `npm run verify` en verde. **La suite entera no se ha corrido** (la pasa la coordinadora).
 
+5. `72c8316a` · Con la jornada cerrada, «Seguir por libre» arrancaba un Foco y la tarjeta seguía «Jornada
+   cerrada». Ez eligió la A («home, sin arrancar»): ahora es `ritmoPorLibre` con el aro a cero. Prueba:
+   `tests/cerrada-seguir-libre.spec.js` (1280 y 360, es y en, caía antes); puestas al día `aro-jornada` y
+   `foco-libre-minutos`. Vecinas en verde con `--workers=1`: abierta-horas, aro-jornada, foco-libre-minutos,
+   husos-noche y jornada-cerrada-hora; `npm run verify` en verde. Sección 5 de la página (versión 2).
+
 ## Preguntas para Ez (en la página, con letras)
 
 P1 «Cambiar» a media mañana borra lo hecho · P2 cómo se ve la comida saltada · P3 si la saltada vuelve ·
