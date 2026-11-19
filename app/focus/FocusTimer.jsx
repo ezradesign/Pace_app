@@ -346,7 +346,8 @@ function FocusTimer({ onFinish }) {
     ctaAction = handleNormalStart;
   }
   /* Con «A tu ritmo», el aro es el paso actual: lo que eso cambia, en FocusTimer.jornada.jsx. */
-  const jornada = aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa });
+  const porLibre = () => { reset(); ritmoPorLibre(); };
+  const jornada = aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa, porLibre });
   if (jornada.cta) { ctaLabel = jornada.cta.label; ctaAction = jornada.cta.action || ctaAction; }
 
   /* Dots de ciclo (4 puntitos + etiqueta «CICLO N / 4»).

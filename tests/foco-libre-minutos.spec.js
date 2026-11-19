@@ -43,6 +43,11 @@ test('en el acto, al acabar el último bloque: «Seguir por libre» empieza con 
   await expect(vis(page, '[data-pace-dial-label]'), 'GUARD: el día se cerró').toHaveText('Jornada cerrada');
   expect(await minutos(page), 'se quedaba con los 25 del último bloque').toBe(15);
   await expect(vis(page, '[data-pace-dial-number]')).toHaveText('15:00');
+  /* «Seguir por libre» deja el aro parado en Foco manual (Ez, A del 19 nov. 2026); el Foco empieza
+     al tocarlo otra vez, y con tus minutos. */
+  await vis(page, '[data-pace-cta]').click();
+  await page.waitForTimeout(300);
+  await expect(vis(page, '[data-pace-dial-number]')).toHaveText('15:00');
   await vis(page, '[data-pace-cta]').click();
   await page.waitForTimeout(300);
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('pace.timer.v1')).minutes)).toBe(15);

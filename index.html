@@ -33665,7 +33665,7 @@ function aroCerrado(s, t, tn) {
 
 
 
-function aroJornada(_ref) {let { state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa } = _ref;
+function aroJornada(_ref) {let { state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa, porLibre } = _ref;
   if (enPausaRitmo) {
     const plato = aroPlatoPendiente(state);
     if (!plato) return {};
@@ -33684,8 +33684,10 @@ function aroJornada(_ref) {let { state, t, tn, aro, enPausaRitmo, pausaRitmo, st
   }
   if (!aro) {
 
+
+
     const c = state.focusMode === 'foco' && status !== 'running' && status !== 'paused' ? aroCerrado(state, t, tn) : null;
-    return c && c.cta ? { cta: { label: c.cta } } : {};
+    return c && c.cta ? { cta: { label: c.cta, action: porLibre } } : {};
   }
   const despues = aroDespues(state, t, tn);
   return {
@@ -34220,7 +34222,8 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
     ctaAction = handleNormalStart;
   }
 
-  const jornada = aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa });
+  const porLibre = () => {reset();ritmoPorLibre();};
+  const jornada = aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa, porLibre });
   if (jornada.cta) {ctaLabel = jornada.cta.label;ctaAction = jornada.cta.action || ctaAction;}
 
 
