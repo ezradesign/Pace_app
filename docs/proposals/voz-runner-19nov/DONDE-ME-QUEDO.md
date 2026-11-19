@@ -42,3 +42,5 @@ Página: https://claude.ai/artifact/U8qW3hFxwdsUDRDiBJdkwo (recomendado 1A · 2A
   repetirla: `PACE_E2E_PORT=8925 npm run test:e2e`, sin otra suite a la vez.
 - Cuando Ez conteste: 1A se hace en `v1VozCuenta` (pasar dónde empieza la cuenta: `V1_PREP_SECONDS`,
   `totalesRef.current.place/change`) y devolver `null` si empieza en más de 3 y menos de 6; con su prueba.
+
+- Página en 5iWBf (19 nov., 13:25, la coordinadora): https://claude.ai/artifact/HK1v4xCyvV6TH7U2MC1xoX, par de U8qW3h… apuntado en `hoja-ids-cuentas.js`. Suite entera relanzada por la coordinadora en el **8926** (la del 8925 murió a las 12:59 al cambiar de cuenta).
