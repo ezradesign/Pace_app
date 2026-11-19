@@ -1,41 +1,54 @@
 # La visita guiada, más completa: dónde me quedo (19 nov.)
 
-Ez preguntó: «¿podríamos hacer la visita guiada más completa?». Hay una maqueta con tres opciones,
-pintadas sobre la 0.211.0 y **sin montar nada en `app/`**.
+Ez eligió (literal): «la A pero me parece que lo de construir tu día debería ser importante».
+**Está montada en esta rama** (`claude/visita-guiada-19nov`), sin bump y sin juntar con `main`.
+
+## Lo montado
+
+La visita tiene seis paradas y **tu día es la primera**:
+
+1. **Empieza por tu día** (`dia`): «Elige cuánto trabajas hoy y PACE reparte tus pausas…», que cada mañana
+   te lo propone según tu semana y qué hace «Al calendario».
+2. **El aro**: y que la primera vez pide permiso para avisar.
+3. **Actividades**: como antes.
+4. **Estadísticas y logros** (`arriba`, nueva): el hueco abarca los dos iconos (`y` en la parada;
+   `data-pace-topbar-stats` y `data-pace-topbar-logros` en `TopBar.jsx`).
+5. **El menú** (`cajon`, móvil, el botón de las tres rayas) o **A la izquierda** (`columna`, ordenador):
+   solo se pinta uno de los dos; comparten `visita.menu.texto`.
+6. **Ajustes**: que PACE lo guarda todo en el aparato y que en «Tus datos» se hace una copia.
+
+Commits: tu día primero, Estadísticas y logros, el menú, los tres textos; cada uno con su prueba vista caer
+antes. `tests/bienvenida-visita.spec.js` mira 360 × 640, 360 × 740 y 1280 × 800, y una vuelta entera en
+inglés a 360 × 640. `verify.integridad`: 1290 claves (+5). `npm run verify` en verde. **La suite entera
+no la he pasado**: la pasa la coordinadora antes de juntar.
+
+Un texto más largo del aro («La primera vez que empiezas, te pide permiso…») no cabía a 360 × 640 y tapaba
+el aro: se quedó la frase de la maqueta.
+
+## La otra manera (sin montar)
+
+Tu día la última, con «Y ahora, tu día» y el botón «Preparar jornada» en vez de «Entendido», que abriría la
+pregunta del día. Pintada al vuelo en `monta.js` (fotos `U-*`). Si Ez dice «la otra»: mover la fila `dia` al
+final de `PACE_VISITA_PARADAS`, cambiar el título y que el botón de esa última parada llame a
+`ritmoAbrirPregunta` (el que usa «Preparar jornada» en `RitmoTarjeta.jsx`) al cerrar, con su prueba.
 
 ## La página
 
-- **Cuenta 5iWBf**: https://claude.ai/artifact/XjFDL77p2tykyvVtZU5FJU (versión 1, id 1795090864-6e3b).
-  Es privada: Ez la abre con su cuenta.
-- **Cuenta EcLj6: falta su par.** Para publicarlo desde esa cuenta: Artifact con
+- **Cuenta EcLj6 (nueva, con lo montado)**: https://claude.ai/artifact/BfPMCqdYBefjo5ZF6dJCB4
+  (versión 1, id 1795097463-3f59). Privada: Ez la abre con su cuenta.
+- **Cuenta 5iWBf: queda por republicar** https://claude.ai/artifact/XjFDL77p2tykyvVtZU5FJU, que sigue
+  enseñando las tres opciones A, B y C. Para ponerla al día desde esa cuenta: Artifact con `url` = esa,
   `file_path` = `docs/proposals/visita-guiada-19nov/index.html`, `root` = `docs/proposals/visita-guiada-19nov`
-  y en `files` las 64 fotos que usa (hoy-360, A-360/1280, B-360/1280, C-360/1280 y Cdia-360/1280, en es y en).
-  Las hoy-1280 no las usa la página.
-
-## Lo que enseña
-
-- **Hoy**: las cuatro paradas de la visita (el aro, actividades, tu día, Ajustes) y cinco cosas que se salta
-  (los dos iconos de arriba, el menú, el calendario, los avisos y la copia).
-- **A · seis paradas (recomendada)**: la misma visita con «Estadísticas y logros», «El menú» (en el
-  ordenador, «A la izquierda») y tres textos más claros (avisos, calendario, copia).
-- **B · una línea la primera vez**: la visita se queda igual; en Estadísticas, Logros, Ajustes y al preparar la
-  jornada, la primera vez sale una línea bajo el título con «Entendido».
-- **C · visitas por temas**: en Ajustes › Visita guiada, una lista con cuatro visitas cortas.
-- Arriba y abajo: «Contesta con una letra: A, B o C. Se pueden juntar».
-
-## Medidas
-
-`medidas.json`: todas las paradas de A y C caben y no tapan lo que enseñan, a 360 × 640 y 1280 × 800, en es y
-en. El «no cabe» de la B en inglés en Estadísticas era del guion (buscaba «Gentle» y la frase es «A gentle
-look at your activity…»): arreglado en `pinta.js`, las cuatro líneas de la B caben en los dos idiomas.
-Sin medir: la letra grande del móvil (se mide al montar).
+  y en `files` las 36 fotos que usa: `M-360` y `M-1280` (1 a 6), `U-360` y `U-1280`, y `hoy-360` (1 a 4),
+  todas en es y en.
+- La página pregunta: «así» (como está) o «la otra».
 
 ## Rehacer las fotos
 
-Con el `index.html` de la 0.211.0 servido en un puerto (aquí, 8955):
-`PUERTO=8955 SOLO=hoy,A,B,C IDIOMAS=es,en node docs/proposals/visita-guiada-19nov/pinta.js`
-(`SOLO` e `IDIOMAS` limitan lo que se repite). `recorre.js` saca las capturas de `hoy/`.
+Con el `index.html` de esta rama servido en un puerto (aquí, 8955, que sirve los archivos del worktree):
+`PUERTO=8955 node docs/proposals/visita-guiada-19nov/monta.js` → `fotos/M-*`, `fotos/U-*` y
+`medidas-montada.json` (todas `ok`). `pinta.js` y `recorre.js` son de la maqueta de las tres opciones.
 
 ## Lo que sigue
 
-Ez elige letra. Montarla es otra rama y le toca a la coordinadora juntarla en `main`.
+Ez contesta «así» o «la otra». Luego la coordinadora pasa la suite entera, hace el bump y la junta en `main`.
