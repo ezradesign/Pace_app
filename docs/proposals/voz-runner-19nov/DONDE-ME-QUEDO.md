@@ -45,3 +45,18 @@ Página: https://claude.ai/artifact/U8qW3hFxwdsUDRDiBJdkwo (recomendado 1A · 2A
 
 - Página en 5iWBf (19 nov., 13:25, la coordinadora): https://claude.ai/artifact/HK1v4xCyvV6TH7U2MC1xoX, par de U8qW3h… apuntado en `hoja-ids-cuentas.js`. Suite entera relanzada por la coordinadora en el **8926** (la del 8925 murió a las 12:59 al cambiar de cuenta).
 - **Suite entera en el 8926 (19 nov., 13:05-13:50): 1744 en verde, 2 saltadas a propósito, 0 rojas** (log en `suite-19nov.log` de esta carpeta). Ez eligió «1A + 2A + 3A» (19 nov.): falta montar la 1A con su prueba.
+
+## La 1A, montada (19 nov., tarde)
+
+- `97ea5420` las cuentas que empiezan en 4 o 5 (entrada, colocarse 5 s, cambio de lado 5 s) van sin voz, a
+  madera en 3, 2, 1: `v1VozCuenta(n, desde)` recibe `V1_PREP_SECONDS`, `totalesRef.current.place/change`
+  o `effDur`. La vuelta de la pausa (empieza en 3) y las cuentas largas (2A) siguen con voz. La 2A y la 3A
+  ya eran así: nada que tocar.
+- Prueba nueva `tests/voz-cuenta-cinco.spec.js` (cinco-1 con «Manos y muñecas», cinco-2 con la función),
+  las dos vistas caer antes del arreglo. `voz-1` y `sincro-2` puestas al día (la entrada ya no dice
+  «tres»). `MINIMO_PRUEBAS` = 1701. Las 25 de voz en verde en el 8926 y `npm run verify` en verde.
+  **La suite entera no se ha pasado tras la 1A**: la pasa la coordinadora antes de juntar.
+- Página en EcLj6 republicada con la 1A montada: https://claude.ai/artifact/U8qW3hFxwdsUDRDiBJdkwo.
+  **Falta republicar su par de 5iWBf** (`HK1v4xCyvV6TH7U2MC1xoX`) desde esa cuenta con el `index.html`
+  de esta carpeta.
+- Sin bump, sin juntar con `main`: eso, con el «júntalo» de Ez.
