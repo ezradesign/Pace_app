@@ -51304,7 +51304,9 @@ function RitmoEscritorio(_ref7) {let { state, plan } = _ref7;
 
 }
 
-function RitmoFila(_ref8) {let { rotulo, modulo, nombre, meta, claves, luego } = _ref8;
+
+
+function RitmoFila(_ref8) {let { rotulo, modulo, nombre, meta, claves, luego, hecha } = _ref8;
   const { t } = useT();
   return (
     React.createElement("div", { className: "pace-rt-fila", "data-pace-ritmo-luego": luego ? '' : undefined },
@@ -51313,6 +51315,7 @@ function RitmoFila(_ref8) {let { rotulo, modulo, nombre, meta, claves, luego } =
     React.createElement("div", { className: "pace-rt-n" }, React.createElement(RitmoGlifo, { modulo: modulo }), nombre),
     React.createElement("div", { className: "pace-rt-m" }, meta)
     ),
+    hecha ? React.createElement("span", { className: "pace-rt-sub", "data-pace-ritmo-hecha": true }, t('ritmo.hecha')) :
     claves ?
     React.createElement("button", { type: "button", className: "pace-rt-otra", "data-pace-ritmo-otra": true, onClick: () => ritmoOtra(claves) }, t('ritmo.otra')) :
     React.createElement("span", null)
@@ -51322,7 +51325,7 @@ function RitmoFila(_ref8) {let { rotulo, modulo, nombre, meta, claves, luego } =
 
 
 
-function RitmoFilaParada(_ref9) {let { it, rotulo, corta } = _ref9;
+function RitmoFilaParada(_ref9) {let { it, rotulo, corta, hecha } = _ref9;
   const { t, tn, lang } = useT();
   const cab = React.createElement(React.Fragment, null, t(rotulo), React.createElement("br", null), ritmoHora(it.desde));
   const luego = rotulo === 'ritmo.luego';
@@ -51335,7 +51338,7 @@ function RitmoFilaParada(_ref9) {let { it, rotulo, corta } = _ref9;
   if (!it.platos || !it.platos.length) return null;
   return React.createElement(RitmoFila, { rotulo: cab, luego: luego, modulo: it.platos[0].modulo, nombre: ritmoPlatos(it, t, lang),
     meta: React.createElement(RitmoMetaGota, { texto: ritmoMetaPlato(it, t, tn, corta), agua: it.agua }),
-    claves: it.platos.map((p) => p.clave) });
+    claves: it.platos.map((p) => p.clave), hecha: hecha });
 }
 
 function RitmoMovil(_ref0) {let { state, plan, onVer } = _ref0;
@@ -51363,7 +51366,8 @@ function RitmoMovil(_ref0) {let { state, plan, onVer } = _ref0;
     if (typeof window.paceHomeGeometriaYa === 'function') window.paceHomeGeometriaYa();
   }, [conPausa, !!luego, plan.hechos, plan.m.opcion]);
   const filas = conPausa ?
-  React.createElement(React.Fragment, null, React.createElement(RitmoFilaParada, { it: plan.pausa, rotulo: "ritmo.ahora", corta: true }), filaBloque('ritmo.luego')) :
+  React.createElement(React.Fragment, null, React.createElement(RitmoFilaParada, { it: plan.pausa, rotulo: "ritmo.ahora", corta: true,
+    hecha: (plan.estados || {})[ritmoOrdinal(plan.m, plan.pausa)] === 'hecha' }), filaBloque('ritmo.luego')) :
   React.createElement(React.Fragment, null, filaBloque('ritmo.ahora'), luego ? React.createElement(RitmoFilaParada, { it: luego, rotulo: "ritmo.luego", corta: true }) : null);
   return (
     React.createElement("div", { className: "pace-rt-panel pace-rt-mov", "data-pace-ritmo-estado": "menu" },

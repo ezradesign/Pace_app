@@ -257,7 +257,9 @@ function RitmoEscritorio({ state, plan }) {
   );
 }
 
-function RitmoFila({ rotulo, modulo, nombre, meta, claves, luego }) {
+/* `hecha`: la pausa de ahora ya está hecha. Dice «hecha» en vez de ofrecer «Otra», que la hacía
+   parecer pendiente (Ez, 10A del 18 nov. 2026). */
+function RitmoFila({ rotulo, modulo, nombre, meta, claves, luego, hecha }) {
   const { t } = useT();
   return (
     <div className="pace-rt-fila" data-pace-ritmo-luego={luego ? '' : undefined}>
@@ -266,7 +268,8 @@ function RitmoFila({ rotulo, modulo, nombre, meta, claves, luego }) {
         <div className="pace-rt-n"><RitmoGlifo modulo={modulo} />{nombre}</div>
         <div className="pace-rt-m">{meta}</div>
       </div>
-      {claves
+      {hecha ? <span className="pace-rt-sub" data-pace-ritmo-hecha>{t('ritmo.hecha')}</span>
+        : claves
         ? <button type="button" className="pace-rt-otra" data-pace-ritmo-otra onClick={() => ritmoOtra(claves)}>{t('ritmo.otra')}</button>
         : <span />}
     </div>
@@ -275,7 +278,7 @@ function RitmoFila({ rotulo, modulo, nombre, meta, claves, luego }) {
 
 /* La fila de una parada (pausa o comida) con su rótulo («Ahora» o «Luego»). `corta`:
    en el móvil, la meta sin el nombre del módulo (ritmoMetaPlato). */
-function RitmoFilaParada({ it, rotulo, corta }) {
+function RitmoFilaParada({ it, rotulo, corta, hecha }) {
   const { t, tn, lang } = useT();
   const cab = <React.Fragment>{t(rotulo)}<br />{ritmoHora(it.desde)}</React.Fragment>;
   const luego = rotulo === 'ritmo.luego';
@@ -288,7 +291,7 @@ function RitmoFilaParada({ it, rotulo, corta }) {
   if (!it.platos || !it.platos.length) return null;
   return <RitmoFila rotulo={cab} luego={luego} modulo={it.platos[0].modulo} nombre={ritmoPlatos(it, t, lang)}
     meta={<RitmoMetaGota texto={ritmoMetaPlato(it, t, tn, corta)} agua={it.agua} />}
-    claves={it.platos.map((p) => p.clave)} />;
+    claves={it.platos.map((p) => p.clave)} hecha={hecha} />;
 }
 
 function RitmoMovil({ state, plan, onVer }) {
@@ -316,7 +319,8 @@ function RitmoMovil({ state, plan, onVer }) {
     if (typeof window.paceHomeGeometriaYa === 'function') window.paceHomeGeometriaYa();
   }, [conPausa, !!luego, plan.hechos, plan.m.opcion]);
   const filas = conPausa
-    ? <React.Fragment><RitmoFilaParada it={plan.pausa} rotulo="ritmo.ahora" corta />{filaBloque('ritmo.luego')}</React.Fragment>
+    ? <React.Fragment><RitmoFilaParada it={plan.pausa} rotulo="ritmo.ahora" corta
+        hecha={(plan.estados || {})[ritmoOrdinal(plan.m, plan.pausa)] === 'hecha'} />{filaBloque('ritmo.luego')}</React.Fragment>
     : <React.Fragment>{filaBloque('ritmo.ahora')}{luego ? <RitmoFilaParada it={luego} rotulo="ritmo.luego" corta /> : null}</React.Fragment>;
   return (
     <div className="pace-rt-panel pace-rt-mov" data-pace-ritmo-estado="menu">
