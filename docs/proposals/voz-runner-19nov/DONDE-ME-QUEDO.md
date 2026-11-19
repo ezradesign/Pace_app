@@ -44,3 +44,4 @@ Página: https://claude.ai/artifact/U8qW3hFxwdsUDRDiBJdkwo (recomendado 1A · 2A
   `totalesRef.current.place/change`) y devolver `null` si empieza en más de 3 y menos de 6; con su prueba.
 
 - Página en 5iWBf (19 nov., 13:25, la coordinadora): https://claude.ai/artifact/HK1v4xCyvV6TH7U2MC1xoX, par de U8qW3h… apuntado en `hoja-ids-cuentas.js`. Suite entera relanzada por la coordinadora en el **8926** (la del 8925 murió a las 12:59 al cambiar de cuenta).
+- **Suite entera en el 8926 (19 nov., 13:05-13:50): 1744 en verde, 2 saltadas a propósito, 0 rojas** (log en `suite-19nov.log` de esta carpeta). Ez eligió «1A + 2A + 3A» (19 nov.): falta montar la 1A con su prueba.
