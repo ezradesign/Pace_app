@@ -4,6 +4,23 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de noviembre de 2026, 10:20, v0.204.0 en `main` y los cuatro arreglos de S3 y S4 en su rama.
 
+## AL RELEVO (19 nov., 12:00, cuenta EcLj6 con las 5 h al 100 %; se reponen a las 14:40): empieza aquí; manda sobre todo lo de abajo
+
+- **`main` = `origin/main` = 0.211.0 + un apunte de docs, en verde entero** (CI, iOS y Android de 965698d9). Los textos largos, FUERA (Ez); la rama no se junta.
+- **Cinco sesiones de encargo, cada una en su worktree y su rama, con `DONDE-ME-QUEDO.md` en su carpeta de `docs/proposals/`.** Se cortaron por uso (o por red, ENOTFOUND: se reanudan). Para seguir: abrir una sesión en cada worktree (`start_session` con `cwd`) y que lea su `DONDE-ME-QUEDO.md` y `git log`; si su suite murió, se repite en su puerto. Antes, `git status` en el worktree: lo que esté sin commit se guarda con un commit «wip» y push.
+  1. **Arreglos del recorrido** (`claude/arreglos-tester-18nov`, `.claude/worktrees/recorrido-tester-17nov-ad87f9`, puerto 8915): 2A, 1A, 8A y el resto de 10A montadas; corría la suite entera (una roja de geometría a 1366 × 657, por repetir sola). Falta: cifra de la suite, la 11A como PREGUNTA en la página (nombres raros: «Coherente 432», «Gemelos subrepticios», «FOCO MANUAL»), y publicar la página «Montado y para elegir» en esta cuenta. Luego, el «júntalo» de Ez.
+  2. **Voz de los ejercicios** (`claude/voz-runner-19nov`, `.claude/worktrees/voz-runner-19nov`, puerto 8925; Ez: la voz dice tarde el número de la repetición, y la cuenta atrás de 5 a 1 con voz solo en 3: mejor sin voz si no puede contarla entera). Corría su suite entera. Lo que sea decisión de Ez, en página con opciones.
+  3. **Arreglos menores** (`claude/menores-valorar-16nov-87ef7b`, su worktree `menores-valorar-16nov-87ef7b`, puerto 8935): Ez dio el sí (19 nov.) a los textos de Círculos de brazos, Gateo con rodillas y Desliza el talón (los «alternando», NO). Juntar `main`, montarlos con su prueba vista caer, suite entera y página «lista para juntar».
+  4. **Caza de bugs y mejoras** (`claude/caza-19nov-c2077c`, puerto 8945): recorrido de la app; página con los hallazgos comprobados y letras. No monta nada.
+  5. **Visita guiada más completa** (`claude/visita-guiada-19nov`, puerto 8955; Ez: «¿podríamos hacer la visita guiada más completa?»): dos o tres opciones pintadas sobre la app con recomendación. No monta nada.
+- **Las suites, de una en una** (dos a la vez dan rojas falsas). Dos suites huérfanas colgadas en el 8835 no se dejan matar: cada una usa su puerto.
+- **Regla de uso (Ez, 19 nov.):** al 93 % de la ventana que llegue antes, WIP con push de cada sesión; al 95 %, relevo con su prompt.
+- Las rojas del CI de madrugada sobre la 0.210.0 (`sello-aro.spec.js:107`, `voz-cuerpo-fila.spec.js:141`) no salieron en el CI de la 0.211.0; si vuelven, hacerlas fiables tras juntar los arreglos y la voz.
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (19 nov., 12:00)» de arriba del todo de docs/traspaso/LEEME.md, y sigue como coordinadora. main está en la 0.211.0 con GitHub en verde. Retoma las cinco sesiones de encargo en sus worktrees (arreglos del recorrido, voz de los ejercicios, arreglos menores, caza de bugs y visita guiada), cada una desde su DONDE-ME-QUEDO.md, con las suites de una en una; y tráeme sus páginas para que elija antes de juntar nada. Haz pocas vueltas.
+```
+
 ## AL RELEVO (18 nov., 21:00, cuenta 5iWBf con la SEMANA al 96 %): empieza aquí; manda sobre todo lo de abajo
 
 - **`origin/main` = 0.210.0, en verde entero.** **`main` LOCAL lleva la 0.211.0 SIN SUBIR**: la unión de la compra en las tiendas (`claude/cobro-tiendas-montaje-18nov`, con el «Móntalo» de Ez; código propio, apagada hasta las altas), el bump, el build, CHANGELOG y STATE, y un arreglo que destapó su suite: `paceConservarAlImportar` (`app/state-entitlement.jsx`) ya no escribe `tiendaUltima: null` (la copia que va y vuelve cambiaba el estado); `tests/copia-ida-vuelta.spec.js` y `tests/compra-apps.spec.js`, al día. Mínimo de pruebas 1695.
