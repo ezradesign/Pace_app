@@ -92,9 +92,17 @@ function ritmoFijarLoHecho(nuevo) {
   var s = getState(), R = ritmoDe(s);
   if (!R.dia || R.libre) return;
   var p = ritmoPlanBase(s);
-  if (!p || p.hechos < 1 || !p.actual || ritmoPasadaLaSalida(p)) return;
+  if (!p || !p.actual || ritmoPasadaLaSalida(p)) return;
   var corre = typeof ritmoFocoCorriendo === 'function' && ritmoFocoCorriendo();
-  var comida = !corre && p.pausa && p.pausa.tipo === 'comida' ? p.pausa : null;
+  /* EL PRIMER BLOQUE EN MARCHA también se guarda, a su hora y con los minutos del aro, como al
+     elegir con un Foco empezado (ritmoFocoDelDiaNuevo): sin nada hecho, adelantar la comida lo
+     recortaba en la línea mientras el aro seguía, y al acabar la comida encogía. */
+  if (p.hechos < 1) {
+    var v = corre && !R.dia.pasado ? ritmoFocoDelDiaNuevo() : null;
+    if (v) ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, { pasado: [], desde: v.desde, primerBloque: v.min }) } : {}; });
+    return;
+  }
+  var comida =!corre && p.pausa && p.pausa.tipo === 'comida' ? p.pausa : null;
   var hasta = corre ? p.actual : comida ? p.m.focos[p.hechos - 1] : (p.pausa || p.m.focos[p.hechos - 1]);
   var corte = p.m.items.indexOf(hasta) + (corre ? 0 : 1);
   var ya = (R.dia.pasado || []).length;
