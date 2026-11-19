@@ -18,7 +18,7 @@
 #   e2e    -> `npm run test:e2e`, el checklist de cierre EJECUTADO en un
 #             navegador de verdad. Cubre el primer hueco que el verify declara
 #             («no abre navegador, no monta la app, no pulsa nada»). Desde el
-#             11 nov. 2026 va en cinco trozos a la vez, `e2e (1/5)` a `e2e (5/5)`.
+#             11 nov. 2026 va en seis trozos a la vez (desde el 19 nov. 2026, con 1870 pruebas), `e2e (1/6)` a `e2e (6/6)`.
 #   e2e-safari (9 oct. 2026) -> el proyecto webkit de esa misma suite, aparte
 #             porque sus librerias salen de `apt` (ver el job).
 # Los dos siguen la misma regla: INVOCAN un comando que corre igual en local.
@@ -166,18 +166,18 @@ jobs:
   # en 13,3. El repo es publico: mas trozos no cuestan minutos.
   # QUIEN LO VIGILA: `scripts/verify.ci.js` cuenta las pruebas de cada trozo
   # con `--list` y falla si alguno pasa del tope; entonces se sube `trozo` y el
-  # `/5`, nunca el `timeout-minutes`. En local se reproduce un trozo con
-  # `npm run test:e2e -- --project=chromium --shard=1/5`.
+  # `/6`, nunca el `timeout-minutes`. En local se reproduce un trozo con
+  # `npm run test:e2e -- --project=chromium --shard=1/6`.
   # `fail-fast: false`: si un trozo cae, los otros terminan y dicen lo suyo.
   # ==========================================================================
   e2e:
-    name: e2e (${{ matrix.trozo }}/5)
+    name: e2e (${{ matrix.trozo }}/6)
     runs-on: ubuntu-latest
     needs: verify
     strategy:
       fail-fast: false
       matrix:
-        trozo: [1, 2, 3, 4, 5]
+        trozo: [1, 2, 3, 4, 5, 6]
     # 25 desde v0.151.0: con las pruebas de la caza, la suite tardaba 13,7 min
     # y el job llegó a los 15 justo al guardar la cache, con todos los pasos en
     # verde; GitHub lo dio por cancelado. El proyecto webkit va en e2e-safari.
@@ -259,7 +259,7 @@ jobs:
       # El servidor lo levanta y lo tumba la propia configuracion (`webServer`
       # -> `.claude/static-server.js`), asi que aqui no hay que orquestar nada.
       - name: npm run test:e2e (chromium, trozo ${{ matrix.trozo }} de 5)
-        run: npm run test:e2e -- --project=chromium --shard=${{ matrix.trozo }}/5
+        run: npm run test:e2e -- --project=chromium --shard=${{ matrix.trozo }}/6
 
       # Diagnostico, no comprobacion: si algo se pone rojo, la traza dice donde
       # sin tener que reproducirlo a ciegas. Un nombre por trozo: dos artefactos
