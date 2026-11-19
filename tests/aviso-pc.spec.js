@@ -226,3 +226,48 @@ test('aviso-pc · 2B · la tira cuenta el Foco, «Pausar» y «Continuar» manda
   await expect(tira(page)).toHaveAttribute('data-fin', '');
   await expect(tira(page)).toContainText('Foco terminado');
 });
+
+/* 2.2A · El botón «Miniventana», discreto, en la fila de «Pausar»: solo mientras corre un Foco, solo
+   donde hay miniventana y no cuando ya está abierta. */
+const botonMini = (page) => page.getByRole('button', { name: 'Abrir la miniventana, encima de todas las ventanas' });
+
+test('aviso-pc · 2.2A · el botón sale junto a «Pausar» solo mientras corre un Foco y abre la tira', async ({ page, context }) => {
+  await sembrar(context, { soundOn: false, notifyFocusEnd: false, focusMinutes: 5 });
+  await miniventanaFalsa(context);
+  await context.clock.install({ time: ARRANQUE });
+  await irAlArtefacto(page);
+  await expect(botonMini(page), 'con el aro parado no hay botón').toHaveCount(0);
+  await empezarFoco(page);
+  await expect(botonMini(page)).toBeVisible();
+  const fila = await page.evaluate(() => {
+    const b = [...document.querySelectorAll('button')].find((x) => x.getAttribute('aria-label') === 'Abrir la miniventana, encima de todas las ventanas');
+    return b.parentElement.contains(document.querySelector('[data-pace-cta]'));
+  });
+  expect(fila, 'el botón no va en la fila de «Pausar»').toBe(true);
+  await botonMini(page).click();
+  await expect(tira(page)).toContainText(/0[45]:\d\d/);
+  await expect(botonMini(page), 'con la tira abierta el botón sobra').toHaveCount(0);
+  await cta(page).click();
+  await expect(cta(page)).toHaveText('Continuar');
+});
+
+test('aviso-pc · 2.2A · sin miniventana en el navegador, no hay botón', async ({ page, context }) => {
+  await sembrar(context, { soundOn: false, notifyFocusEnd: false, focusMinutes: 5 });
+  await context.addInitScript(() => { try { delete Window.prototype.documentPictureInPicture; delete window.documentPictureInPicture; } catch (e) {} });
+  await context.clock.install({ time: ARRANQUE });
+  await irAlArtefacto(page);
+  expect(await page.evaluate(() => 'documentPictureInPicture' in window)).toBe(false);
+  await empezarFoco(page);
+  await expect(botonMini(page)).toHaveCount(0);
+});
+
+test('aviso-pc · 2.2A · en la pausa no hay botón', async ({ page, context }) => {
+  await sembrar(context, { soundOn: false, notifyFocusEnd: false });
+  await miniventanaFalsa(context);
+  await context.clock.install({ time: ARRANQUE });
+  await irAlArtefacto(page);
+  await page.locator('[data-pace-tabs] button').filter({ hasText: 'Pausa' }).first().click();
+  await cta(page).click();
+  await expect(cta(page)).toHaveText('Pausar');
+  await expect(botonMini(page)).toHaveCount(0);
+});

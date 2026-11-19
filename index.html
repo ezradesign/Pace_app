@@ -2596,6 +2596,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'mini.fin': 'Foco terminado',
   'mini.fin.sub': 'Vuelve a PACE para tu pausa',
   'mini.volver': 'Volver',
+  'mini.abrir': 'Miniventana',
+  'mini.abrir.aria': 'Abrir la miniventana, encima de todas las ventanas',
   'focus.continue': 'Continuar',
   'focus.startAnother': 'Empezar otro ciclo',
   'focus.cycleComplete': 'Ciclo completado',
@@ -2816,6 +2818,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'mini.fin': 'Focus done',
   'mini.fin.sub': 'Back to PACE for your break',
   'mini.volver': 'Back',
+  'mini.abrir': 'Mini window',
+  'mini.abrir.aria': 'Open the mini window, on top of every window',
   'focus.continue': 'Continue',
   'focus.startAnother': 'Start another cycle',
   'focus.cycleComplete': 'Cycle complete',
@@ -34477,6 +34481,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   ctaLabel
   ),
   bloques.seguir,
+  running && state.focusMode === 'foco' && mini.puede && !mini.abierta && React.createElement("button", { type: "button", onClick: paceMiniAbrir, style: focusStyles.resetTextBtn, "aria-label": t('mini.abrir.aria') }, t('mini.abrir')),
 
 
 

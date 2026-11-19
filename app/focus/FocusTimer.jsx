@@ -376,6 +376,7 @@ function FocusTimer({ onFinish }) {
         {ctaLabel}
       </button>
       {bloques.seguir}
+      {running && state.focusMode === 'foco' && mini.puede && !mini.abierta && <button type="button" onClick={paceMiniAbrir} style={focusStyles.resetTextBtn} aria-label={t('mini.abrir.aria')}>{t('mini.abrir')}</button>}
       {/* Reset RE-JERARQUIZADO (s124): oculto en idle/running/completed; en
           paused es una acción TEXTUAL secundaria «Reiniciar bloque» (no botón
           circular). Va EN FILA junto al CTA para NO añadir altura al interior
