@@ -117,9 +117,16 @@ test.describe('Ocaso con bloques de verdad', () => {
 
   test('CONTROL: un bloque empezado a las 17:05, después de la salida, deja el día fuera', async ({ page, context }) => {
     await abrir(page, context, JORNADA('2026-11-16'), new Date('2026-11-16T17:05:00'));
+    /* Pasada la salida, el primer toque es «Seguir por libre», que vuelve a la home sin arrancar
+       (Ez, A del 19 nov. 2026); el Foco se empieza desde ahí. */
+    await page.locator('[data-pace-dial-number]').first().waitFor({ state: 'visible' });
+    await expect(cta(page)).toHaveText('Seguir por libre');
+    await cta(page).click();
     await empezarFoco(page);
     await terminarBloque(page);
-    await expect.poll(() => ocaso(page)).toEqual({ tarde: '2026-11-16', dias: [] });
+    /* Con el día retirado ya no hay plan que diga «tarde»: lo que se vigila es que el día no cuenta. */
+    await expect.poll(() => ocaso(page).then((o) => o.dias)).toEqual([]);
+    expect(await page.evaluate(() => getState().ritmo.libre), 'GUARD: el día, por libre').toBe('2026-11-16');
   });
 
   test('un Foco empezado a las 23:50, tras una jornada cerrada a su hora, saca ese día al acabar a las 00:15', async ({ page, context }) => {

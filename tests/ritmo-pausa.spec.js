@@ -237,8 +237,13 @@ test('tras el último bloque, un Foco por libre acaba con «Ciclo completado» y
     return JSON.stringify({ pasado: d.pasado || null, desde: d.desde, pausa: d.pausa == null ? null : d.pausa });
   });
   await page.evaluate(() => setState({ focusMinutes: 3 }));
-  await vis(page, '[data-pace-cta]').first().click();
+  /* «Seguir por libre» del aro retira el día y no arranca (Ez, A del 19 nov. 2026), así que el Foco
+     libre se empieza por la otra puerta que lo arranca con el día aún puesto: «Seguir» de la ventana
+     (`pace:ritmo-seguir`). Es la guarda de ritmoBloqueTerminado lo que esta prueba vigila. */
+  await expect(vis(page, '[data-pace-cta]').first(), 'GUARD: el día cerrado').toHaveText('Seguir por libre');
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('pace:ritmo-seguir')));
   await page.waitForTimeout(250);
+  await expect(vis(page, '[data-pace-cta]').first(), 'GUARD: el Foco libre corre').toHaveText(/Pausar/);
   const antes = await diaDe();
   await terminarBloque(page);
   expect(await page.evaluate(() => new Date().getHours() * 60 + new Date().getMinutes()), 'GUARD: el Foco libre acabó pasada la salida').toBeLessThan(13 * 60);
