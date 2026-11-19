@@ -120,7 +120,8 @@ function TweaksPanel({ open, onClose }) {
     const alFallar = pidiendoBorrar && pidiendoBorrar.alFallar;
     setPidiendoBorrar(null);
     paceEventsWipeAll((r) => {
-      if (r && r.legacyWritten) location.reload();
+      /* En las apps, los avisos de entrada se van antes de recargar (ui/nativo.entrada.js). */
+      if (r && r.legacyWritten) paceEntradaQuitar().then(() => location.reload());
       else if (typeof alFallar === 'function') alFallar();
     });
   };
@@ -140,7 +141,13 @@ function TweaksPanel({ open, onClose }) {
      se pliega 34 px antes: donde antes cabía sin scroll, sigue cabiendo. Igual con la línea de la última
      copia (TweaksData.copia.jsx, Ez «A+B» del 16 nov.), que solo sale en la web sin instalar y mide 47 px:
      sin contarla, a 1280 × 940 con la fila sobraban 16 px y a 1440 × 900 en castellano, 22. */
-  const umbralBajo = () => 860 + (typeof premiumPlanEnAjustes === 'function' && premiumPlanEnAjustes() ? 34 : 0)
+  /* Durante la semana de prueba, la compra va en la línea pequeña de la fila de la prueba (Ez, 3B
+     del 16 nov.): la fila crece lo que mide esa línea, que en castellano va en dos (40 px).
+     La base es 890 y no 860 desde la 0.209.0: la línea bajo «Marca la fase» de la voz de Mueve y Estira
+     (13 px) y los ~15 px que ya faltaban antes. Medido al juntar la 0.209.0: con la semana de prueba y la
+     tienda abierta, la sección entera pide 976 px; con 933 de umbral, a 1280 × 940 sobraban 36. */
+  const umbralBajo = () => 890 + (typeof premiumPlanEnAjustes === 'function' && premiumPlanEnAjustes() ? 34 : 0)
+    + (typeof premiumPlanEnPrueba === 'function' && premiumPlanEnPrueba() ? 40 : 0)
     + (typeof paceWebSinInstalar === 'function' && paceWebSinInstalar() ? 47 : 0);
   const [bajo, setBajo] = useStateTW(() => paceLienzoAlto() < umbralBajo());
   useEffectTW(() => {

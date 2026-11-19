@@ -1,0 +1,58 @@
+{
+ "tarjeta-1280": {
+  "scroll": 0,
+  "aro": 479,
+  "tarjeta": 120,
+  "pisa": 0,
+  "dentro": true
+ },
+ "tarjeta-1536": {
+  "scroll": 0,
+  "aro": 372,
+  "tarjeta": 120,
+  "pisa": 0,
+  "dentro": true
+ },
+ "tarjeta-640": {
+  "scroll": 0,
+  "aro": 307,
+  "tarjeta": 118,
+  "pisa": 0,
+  "dentro": true
+ },
+ "tarjeta-740": {
+  "scroll": 0,
+  "aro": 331,
+  "tarjeta": 142,
+  "pisa": 0,
+  "dentro": true
+ },
+ "tarjeta-640-es-115": {
+  "scroll": 0,
+  "aro": 331,
+  "tarjeta": 118,
+  "pisa": 0,
+  "dentro": true
+ },
+ "tarjeta-640-en-115": {
+  "scroll": 0,
+  "aro": 331,
+  "tarjeta": 144,
+  "pisa": 0,
+  "dentro": true
+ },
+ "conectado-android-640": {
+  "scroll": 0,
+  "aro": 307,
+  "tarjeta": 118,
+  "pisa": 0,
+  "dentro": true
+ },
+ "conectado-ios-640": {
+  "scroll": 0,
+  "aro": 307,
+  "tarjeta": 118,
+  "pisa": 0,
+  "dentro": true
+ }
+}

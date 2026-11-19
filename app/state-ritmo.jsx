@@ -433,6 +433,7 @@ function ritmoElegir(opcion) {
   if (corre) Object.assign(dia, { desde: corre.desde, primerBloque: corre.min, pasado: [] });
   ritmoGuardar(function () { return { libre: null, dia: dia }; });
   ritmoSincronizar();
+  if (typeof calendarioAlElegir === 'function') calendarioAlElegir();   /* lo pedido antes de elegir, en este toque */
 }
 
 /* «Cambiar» y «Hoy es distinto» llevan a la pregunta entera: con `distinto`, tu semana

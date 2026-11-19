@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
         android:allowBackup="true"
@@ -33,6 +34,22 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
+
+        <!-- Reponer los avisos tras una actualizacion (novena pasada externa, n.º 9, 16 nov. 2026).
+             El receptor del complemento de avisos solo escucha el arranque del movil, y al actualizar
+             PACE desde Play Android puede quitar las alarmas puestas: el aviso de la manana o el de un
+             Foco en marcha no saldrian hasta abrir PACE. Se le suma MY_PACKAGE_REPLACED, que Android
+             manda solo a la app actualizada; el resto del receptor (clase, exported, directBootAware)
+             es el del complemento, que se funde con este (tools:node="merge"). Lo vigila
+             scripts/verify.android.js (chequeaManifiesto); que reponga de verdad, en un movil. -->
+        <receiver
+            android:name="com.capacitorjs.plugins.localnotifications.LocalNotificationRestoreReceiver"
+            android:exported="false"
+            tools:node="merge">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
     </application>
 
     <!-- Permissions -->

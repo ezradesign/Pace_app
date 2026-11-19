@@ -259,10 +259,10 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
       // y la madera corren igual; los 5 pilotos son guided → comportamiento intacto.
       const guided = v1CompletionMode(step) !== 'manual';
       if (guided && elapsed >= v1RepTarget(step) * repSec) {
-        darSerie(v1RepTarget(step)); try { playSound('move.rep', v1VozRep(v1RepTarget(step), repSec, true)); } catch (e) {}
+        darSerie(v1RepTarget(step)); try { playSound('move.rep', v1VozRep(v1RepTarget(step), repSec, true, v1RepTarget(step))); } catch (e) {}
         advanceStep();
       } else if (suena && elapsed % repSec === 0) {   // en un cambio dentro del paso, su señal y no la madera (MoveSessionV1.cambios.jsx)
-        const cb = v1CambioAhora(step, elapsed); try { if (cb) playSound('move.side', v1CambioSonido(cb)); else playSound('move.rep', v1VozRep(elapsed / repSec, repSec)); } catch (e) {}
+        const cb = v1CambioAhora(step, elapsed); try { if (cb) playSound('move.side', v1CambioSonido(cb)); else playSound('move.rep', v1VozRep(elapsed / repSec, repSec, false, v1RepTarget(step))); } catch (e) {}
       }
       return;
     }

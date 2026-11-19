@@ -98,7 +98,7 @@ function calendarioSoloActivo(s) {
 /* Resuelve con el pase (web), null (Android) o false si no hay permiso vivo. */
 function calendarioAccesoSinGesto(destino) {
   if (destino === 'android') {
-    return paceAndroidCalendarioTienePermiso().then(function (ok) { return ok ? null : false; }, function () { return false; });
+    return paceMovilCalendarioTienePermiso().then(function (ok) { return ok ? null : false; }, function () { return false; });
   }
   return calendarioPaseSinGesto(destino).then(function (p) { return p || false; });
 }

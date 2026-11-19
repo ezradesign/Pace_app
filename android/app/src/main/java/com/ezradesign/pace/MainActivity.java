@@ -11,6 +11,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(PaceCalendario.class);
         registerPlugin(PaceAvisoFijo.class);
         registerPlugin(PaceValoracion.class);
+        registerPlugin(PaceCompras.class);
         registerPlugin(PaceBarras.class);
         super.onCreate(savedInstanceState);
     }

@@ -6,19 +6,31 @@
    se suena SOLO ese trozo, con un fundido de 5 ms a cada lado y el volumen que la iguala con Respira.
 
    CUANDO NO PUEDE, DEVUELVE false Y SUENA EL CUENCO O LA MADERA DE SIEMPRE: sin la palabra en la tabla (una
-   voz o un idioma sin grabar), sin descodificar todavía, sin Web Audio en marcha, o si la palabra no cabe
-   en lo que dura su momento (`max`). Solo Web Audio, sin `<audio>` de reserva: la rutina empieza con un
-   toque, así que el contexto ya corre, y un `<audio>` no sabe sonar un trozo con precisión.
+   voz o un idioma sin grabar), sin descodificar todavía, sin Web Audio, si la palabra no cabe en lo que
+   dura su momento (`max`) o si tendría que esperar demasiado en la fila. Nunca dice que sí sin sonar: una
+   palabra tirada en silencio deja la rutina muda. Solo Web Audio, sin `<audio>` de reserva: la rutina
+   empieza con un toque, así que el contexto ya corre, y un `<audio>` no sabe sonar un trozo con precisión.
+   Con el contexto suspendido (al volver del fondo) la palabra se programa igual: suena cuando arranca.
 
    LA COLA: la última repetición se dice entera y lo que viene después («Descansa», «Siguiente») espera a
-   que acabe la palabra, en vez de pisarla. Si tuviera que esperar más de 1,2 s, se deja: llegaría tarde.
+   que acabe la palabra, en vez de pisarla. Si tuviera que esperar más de 2 s, llegaría tarde: suena su tono.
+   (La palabra más larga ocupa 1,4 s y, tras la última repetición, deja 0,35: con menos, «Último paso» no
+   sonaba.)
+
+   LO QUE OCUPA UNA PALABRA es su trozo entero, de `a` a `b`, porque eso es lo que suena (la cola de la última
+   sílaba va de `fin` a `b`), más un hueco antes de la siguiente: 0,15 s, como Respira, y 0,35 s tras la
+   última repetición, para que «Descansa» no se lea pegado al número (Ez lo oyó montado el 16 nov.). Con eso
+   se mide también si cabe en su momento: medirlo con la palabra sola dejaba que cada número empujara al
+   siguiente.
 
    `var`/`function` a propósito: un `const` top-level no cruza la IIFE del artefacto. */
 
-var PACE_VOZ_CUERPO_MARGEN = 0.15;
-var PACE_VOZ_CUERPO_ESPERA = 1.2;
+var PACE_VOZ_CUERPO_HUECO = 0.15;
+var PACE_VOZ_CUERPO_TRAS_SERIE = 0.35;
+var PACE_VOZ_CUERPO_ESPERA = 2;
 var _paceVozCuerpoTomas = {};   // idioma.voz → { archivo: { buffer } }
 var _paceVozCuerpoLibre = 0;    // cuándo acaba (en el reloj del contexto) la palabra que suena
+var _paceVozCuerpoVivas = [];   // lo que suena o espera en la fila: [{ s, g }], para callarlo
 
 function paceVozCuerpoJuego() {
   var idioma = typeof paceVozIdioma === 'function' ? paceVozIdioma() : 'es';
@@ -42,25 +54,52 @@ function paceVozCuerpoPrecarga() {
   } catch (e) { /* sin voz suenan los cuencos */ }
 }
 
+/* LOS CUENCOS Y LAS MADERAS TAMBIÉN OCUPAN LA FILA: cuando una palabra no está o no cabe, suena su tono, y
+   la palabra que viene detrás no puede entrar encima. Lo que tapa cada uno, en segundos (Sound.jsx): la
+   madera, su golpe; el cuenco, el golpe y lo primero de su cola, no toda, que tarda segundos en irse y
+   haría llegar tarde a «Descansa». playSound llama aquí cuando suena el tono de Mueve o Estira. */
+var PACE_VOZ_CUERPO_TAPA = { 'move.rep': 0.12, 'move.warn': 0.12, 'move.go': 0.4, 'move.start': 0.6, 'move.rest': 0.8, 'move.side': 1 };
+function paceVozCuerpoOcupa(nombre) {
+  try {
+    var tapa = PACE_VOZ_CUERPO_TAPA[nombre];
+    var ctx = tapa && typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;
+    if (ctx) _paceVozCuerpoLibre = Math.max(_paceVozCuerpoLibre, ctx.currentTime + tapa + PACE_VOZ_CUERPO_HUECO);
+  } catch (e) { /* sin fila, la palabra entra cuando le toca */ }
+}
+
+/* Lo que ocupa una palabra con su hueco. ¿Cabe en `max`? */
+function paceVozCuerpoCabe(e, max) {
+  return !!e && (e.b - e.a) + PACE_VOZ_CUERPO_HUECO <= max;
+}
+
 /* Suena la palabra `palabra` (n1…n25, c3…c1, colocate, siguiente, ya, ultimo, izquierda, derecha, cambia,
-   descansa) si está y cabe en `max` segundos. true = suena o ya está en la cola. */
-function paceVozCuerpoIntenta(palabra, max) {
+   descansa) si está y cabe en `max` segundos. `op` es lo que pasa el runner (MoveSessionV1.voz.jsx):
+   `ultima`, la última repetición de una serie, y `serie`, las palabras de su serie. true = suena o ya está
+   en la cola.
+
+   UNA PALABRA CON `max` VA A SU HORA (los números y la cuenta atrás): no hace fila, porque una repetición
+   que empieza tarde se mete en la siguiente. Si la de antes aún suena, madera. Y LA SERIE SE DECIDE ENTERA:
+   si una de sus palabras no cabe, ninguna, para no oír unos números con voz y otros con madera. */
+function paceVozCuerpoIntenta(palabra, max, op) {
   try {
     if (typeof paceVozEncendida === 'function' && !paceVozEncendida()) return false;
     var j = paceVozCuerpoJuego();
     var e = j.palabras[palabra];
     if (!e) return false;
-    if (typeof max === 'number' && (e.fin - e.ini) + PACE_VOZ_CUERPO_MARGEN > max) return false;
+    var aSuHora = typeof max === 'number';
+    if (aSuHora && !paceVozCuerpoCabe(e, max)) return false;
+    if (aSuHora && op && op.serie && !op.serie.every(function (p) { return paceVozCuerpoCabe(j.palabras[p], max); })) return false;
     paceVozCuerpoPrecarga();
     var toma = (_paceVozCuerpoTomas[j.clave] || {})[e.archivo];
     if (!toma || !toma.buffer) return false;
     var ctx = typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;
     if (!ctx) return false;
-    if (ctx.state === 'suspended') { try { ctx.resume(); } catch (er) {} }
-    if (ctx.state !== 'running') return false;
+    if (ctx.state === 'closed') return false;
+    if (ctx.state !== 'running') { try { ctx.resume(); } catch (er) {} }   // suspendido o interrumpido: arranca y suena
     var ahora = ctx.currentTime;
+    if (aSuHora && _paceVozCuerpoLibre > ahora) return false;
     var t0 = Math.max(ahora, _paceVozCuerpoLibre);
-    if (t0 - ahora > PACE_VOZ_CUERPO_ESPERA) return true;   // llegaría tarde: se deja, sin tono encima
+    if (t0 - ahora > PACE_VOZ_CUERPO_ESPERA) return false;   // llegaría tarde: su tono, no el silencio
     var dur = Math.min(e.b, toma.buffer.duration) - e.a;
     if (!(dur > 0.02)) return false;
     var vol = typeof e.vol === 'number' ? e.vol : 1;
@@ -76,12 +115,38 @@ function paceVozCuerpoIntenta(palabra, max) {
     g.connect(ctx.destination);
     s.start(t0, e.a);
     s.stop(t0 + dur + 0.01);
-    s.onended = function () { try { g.disconnect(); } catch (er) {} };
-    _paceVozCuerpoLibre = t0 + (e.fin - e.a) + 0.05;
+    var viva = { s: s, g: g };
+    _paceVozCuerpoVivas.push(viva);
+    s.onended = function () {
+      try { g.disconnect(); } catch (er) {}
+      _paceVozCuerpoVivas = _paceVozCuerpoVivas.filter(function (v) { return v !== viva; });
+    };
+    _paceVozCuerpoLibre = t0 + dur + (op && op.ultima ? PACE_VOZ_CUERPO_TRAS_SERIE : PACE_VOZ_CUERPO_HUECO);
     return true;
   } catch (err) {
     return false;
   }
 }
 
-Object.assign(window, { paceVozCuerpoPrecarga: paceVozCuerpoPrecarga, paceVozCuerpoIntenta: paceVozCuerpoIntenta });
+/* AL PAUSAR, SALTAR O SALIR, la voz se calla: lo que suena sale con un fundido corto, lo que esperaba en la
+   fila ya no suena, y la fila queda vacía. Si no, al pausar la palabra seguía, y al saltar se apilaban las
+   de los pasos que pasaban (el runner llama aquí desde useV1Vuelta, MoveSessionV1.parts.jsx). */
+function paceVozCuerpoCalla() {
+  try {
+    var ctx = typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;
+    var ahora = ctx ? ctx.currentTime : 0;
+    _paceVozCuerpoVivas.forEach(function (v) {
+      try {
+        v.g.gain.cancelScheduledValues(ahora);
+        v.g.gain.setValueAtTime(v.g.gain.value, ahora);
+        v.g.gain.linearRampToValueAtTime(0, ahora + 0.02);
+        v.s.stop(ahora + 0.03);
+      } catch (e) { /* ya acabó */ }
+    });
+  } catch (err) { /* nada que callar */ }
+  _paceVozCuerpoVivas = [];
+  _paceVozCuerpoLibre = 0;
+}
+
+Object.assign(window, { paceVozCuerpoPrecarga: paceVozCuerpoPrecarga, paceVozCuerpoIntenta: paceVozCuerpoIntenta,
+  paceVozCuerpoOcupa: paceVozCuerpoOcupa, paceVozCuerpoCalla: paceVozCuerpoCalla });

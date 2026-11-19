@@ -183,6 +183,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'notify.entrada.jornada':        'Jornada de {inicio} a {salida}. Tu día ya está preparado.',
     'notify.entrada.media':          'Media jornada de {inicio} a {salida}. Tu día ya está preparado.',
     'notify.canal.entrada':          'Al empezar la jornada',
+    'notify.canal.entrada.mudo':     'Al empezar la jornada, sin sonido',
     'notify.canal.entrada.desc':     'Un aviso a tu hora de entrada, los días de jornada.',
     /* s198 · la red de error (ui/RedDeError.jsx): una parte, y la global. Sin
        absolutos (s151): «se puede recuperar», no «se recupera todo». */
@@ -371,6 +372,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'notify.entrada.jornada':        'Full day, {inicio} to {salida}. Your day is ready.',
     'notify.entrada.media':          'Half day, {inicio} to {salida}. Your day is ready.',
     'notify.canal.entrada':          'Start of your day',
+    'notify.canal.entrada.mudo':     'Start of your day, silent',
     'notify.canal.entrada.desc':     'A reminder at your start time, on workdays.',
     'red.parte.titulo':              'This section couldn’t load',
     'red.parte.texto':               'The rest of PACE keeps working and your data is safe. You can close it and carry on, or reload to try again.',

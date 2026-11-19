@@ -179,6 +179,35 @@ function pacePasoV1Avisado() {
   if (r && !r.avisado) setState({ pasoV1: Object.assign({}, r, { avisado: true }) });
 }
 
+/* CUANDO ACABA LA SEMANA (Ez, 2 A+B+C del 16 nov. 2026; auditoría fable-9nov, fila 18): nadie se
+   encuentra lo de pago cerrado sin aviso. La nota sale en tres sitios y NO se repite: una hoja al
+   abrir PACE, una sola vez (PremiumInvitacion); en el sobre de arriba (Sobre.finPrueba.js); y una
+   línea en la biblioteca (LibraryShell). Los tres miran la misma marca, `pasoV1.finVisto` (cuándo
+   se vio en cualquiera de ellos): sin ella, la hoja se abre y el sobre llega cerrado; con ella, la
+   hoja y la línea no vuelven, y el sobre la guarda como leída una semana. Va dentro de `pasoV1`,
+   así que viaja en la copia y `pacePasoV1Conservar` la mantiene. Quien tiene un código o una compra
+   no recibe nota. */
+var PACE_FIN_PRUEBA_EN_SOBRE = 7 * 86400000;
+
+/* El registro si la semana de quien ya usaba PACE acabó y no tiene PACE completo; si no, null. */
+function pacePasoV1Acabada() {
+  var r = pacePasoV1Leer();
+  if (!r || !r.previo || typeof r.hasta !== 'number' || Date.now() < r.hasta) return null;
+  if (window.hasPremiumEntitlement && window.hasPremiumEntitlement()) return null;
+  return r;
+}
+
+/* Lo mismo, solo si la nota aún no se ha visto en ningún sitio. */
+function pacePasoV1FinPorVer() {
+  var r = pacePasoV1Acabada();
+  return r && typeof r.finVisto !== 'number' ? r : null;
+}
+
+function pacePasoV1FinVisto() {
+  var r = pacePasoV1Leer();
+  if (r && typeof r.finVisto !== 'number') setState({ pasoV1: Object.assign({}, r, { finVisto: Date.now() }) });
+}
+
 /* AL IMPORTAR UNA COPIA, EL PASO A v1 DE AHORA SE QUEDA. Quien ya usaba PACE tiene su semana y
    su lista fijadas; la copia que entra lo pisa todo, y una de antes de v1 no trae `pasoV1`: el
    arranque siguiente lo calculaba otra vez y daba otra semana entera, una por cada vez que se
@@ -206,4 +235,5 @@ try { pacePasoV1(); } catch (e) {}
 Object.assign(window, {
   PACE_PASO_V1_DIAS, pacePasoV1, pacePasoV1Leer, pacePasoV1Rutinas, pacePruebaV1Vigente, pacePruebaV1Hasta, pacePasoV1Conserva,
   pacePasoV1PorAvisar, pacePasoV1Avisado, pacePasoV1Conservar,
+  PACE_FIN_PRUEBA_EN_SOBRE, pacePasoV1Acabada, pacePasoV1FinPorVer, pacePasoV1FinVisto,
 });

@@ -4,6 +4,42 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de noviembre de 2026, 10:20, v0.204.0 en `main` y los cuatro arreglos de S3 y S4 en su rama.
 
+## AL RELEVO (18 nov., 21:00, cuenta 5iWBf con la SEMANA al 96 %): empieza aquí; manda sobre todo lo de abajo
+
+- **`origin/main` = 0.210.0, en verde entero.** **`main` LOCAL lleva la 0.211.0 SIN SUBIR**: la unión de la compra en las tiendas (`claude/cobro-tiendas-montaje-18nov`, con el «Móntalo» de Ez; código propio, apagada hasta las altas), el bump, el build, CHANGELOG y STATE, y un arreglo que destapó su suite: `paceConservarAlImportar` (`app/state-entitlement.jsx`) ya no escribe `tiendaUltima: null` (la copia que va y vuelve cambiaba el estado); `tests/copia-ida-vuelta.spec.js` y `tests/compra-apps.spec.js`, al día. Mínimo de pruebas 1695.
+- **19 nov., 11:00 (cuenta EcLj6):** la suite de las 21:00 murió de noche (0xC0000142 al cerrarse su sesión); repetida con `PACE_E2E_PORT=8851`: **1740 en verde, 2 saltadas, exit=0**, y `verify` en verde. La 0.211.0 se sube a `main`. Quedan dos suites huérfanas colgadas en el 8835 (no se dejan matar: otro puerto). Los arreglos del recorrido, encargados a la sesión «Arreglos del recorrido: 1A, 2A, 8A, 10A y 11A» en su worktree; la 11A va como pregunta en la página, no montada.
+- **Los arreglos del recorrido** (`claude/arreglos-tester-18nov`, página A3Dc4VmgwvjkW7t6v4ZU8r): siete de las once letras montadas, su suite en verde; **faltan la 1, la 2, la 8, el resto de la 10 y la 11** (Ez dio 1A, 2A, 3B «atenuadas y no hecha las dos», 4A a 11A: la 11 también va). Después, su «júntalo».
+- **En espera por Ez:** los textos largos; su sí al texto de tres pasos de la 1A de los arreglos menores. **Lo de Ez:** la aprobación de Google, probar en sus móviles, testers, altas (Play, Apple, Google Cloud, Microsoft), «Avísame», ChatGPT del cobro, la décima de Fable.
+- **Uso en 5iWBf a las 21:00:** 5 h al 37 %, **semana al 96 %** (se repone el lunes 23 a las 18:00). Las páginas de 5iWBf dan 404 en la otra cuenta: se publican de nuevo desde su carpeta de `docs/proposals/` (o de la rama) y se apunta el par en `docs/traspaso/archivos/hoja-ids-cuentas.js`.
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (18 nov., 21:00)» de arriba del todo de docs/traspaso/LEEME.md, y sigue como coordinadora. main local lleva la 0.211.0 (la compra en las tiendas, apagada) juntada y sin subir, con su suite corriendo. Por este orden: mira cómo acabó la suite y cierra la 0.211.0 con push y GitHub en verde; encarga que se acaben los arreglos del recorrido (faltan la 1, 2, 8, 10 y 11) y enséñamelos antes de juntarlos. Haz pocas vueltas.
+```
+
+## AL RELEVO (18 nov., 14:30, cuenta 5iWBf con las 5 h al 97 % y la semana al 80 %): empieza aquí; manda sobre lo de abajo
+
+- **`main` = 0.210.0 con GitHub en verde entero** (CI, Android e iPhone, que compiló el calendario de Apple). **Ninguna sesión trabajando**; nada sin subir.
+- **18 nov., tarde (semana al 90 %):** Ez dio las letras. **Cobro:** «1A o 1b la que sea mejor y más estable y segura + todas las demás A»; la sesión eligió la B (código propio: la pieza de Capgo arreglaba fallos de compras esa misma semana) y lo **montó apagado** en `claude/cobro-tiendas-montaje-18nov` (7a170a09; `verify` y las compilaciones de Android e iPhone en verde); espera el «júntalo» y, para comprar de verdad, las altas. **Recorrido:** «1A + 2A + 3b atenuadas y no hecha las dos + 4A … 11A»; montado en `claude/arreglos-tester-18nov`, con su suite entera corriendo en la rama (puerto 8915); falta su cifra y el «júntalo». Lo de abajo de este bloque sobre «esperan letra» ya está contestado.
+- **Esperan letra de Ez:** el cobro en las tiendas (`claude/cobro-tiendas-17nov-2b41f7`, página JhA4axkRcfnVA75ggFYW7J, cinco preguntas, todo A recomendado; solo diseño) y los arreglos del recorrido de tester nuevo (`claude/arreglos-tester-18nov`, 06479fb5: siete fallos montados con su prueba y 11 preguntas, todo A; página A3Dc4VmgwvjkW7t6v4ZU8r; antes de juntar, la suite entera en la rama). Ez excluyó de ese recorrido «con el día servido, la home pierde Respira, Estira, Mueve e Hidrátate»: se queda como está.
+- **En espera por Ez:** los textos largos (`claude/textos-largos-17nov-5fb6a3`). **Falta su sí** al texto de tres pasos de la 1A de los arreglos menores (`claude/menores-valorar-16nov-87ef7b`).
+- **Lo de Ez:** la aprobación de Google de la cerrada (después, la 0.210.0 como actualización), probar en sus móviles (pasos en F1thKAvbpuoeykFZao125K y Cp7RUbjtX21ZDzZeHYQ7JT), los testers, las altas de Play, Apple, Google Cloud y Microsoft, «Avísame», ChatGPT del cobro y la décima de Fable (`docs/audits/fable-17nov/encargo-decima.md`, a poner al día con la 0.210.0).
+- **Reglas de uso de Ez:** las sesiones llegan al 100 % con commit y push tras cada paso; al 95 %, relevo a la otra cuenta. Las páginas de esta cuenta dan 404 en la otra: se publican de nuevo desde su carpeta de `docs/proposals/` y se apunta el par en `docs/traspaso/archivos/hoja-ids-cuentas.js`.
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (18 nov., 14:30)» de arriba del todo de docs/traspaso/LEEME.md, y sigue como coordinadora. main está en la 0.210.0 con GitHub en verde. Publica en esta cuenta las páginas del cobro en las tiendas y de los arreglos del recorrido, apunta sus pares y tráeme sus preguntas para que elija. Haz pocas vueltas.
+```
+
+## 17 nov., tarde (cuenta 5iWBf): la 0.210.0. Manda sobre lo de abajo
+
+- **Ez (literal): «Solo el calendario»** y luego **«y si la voz arreglada, lo de los textos largos dejalo en stanby»**. Uniones 832fa7e3 (calendario, sin choques) y 98015a4f (`claude/voz-cuerpo-cola-17nov`; choque en el mínimo de pruebas, 1684, y en las decisiones). La primera suite se paró al llegar la voz (su servidor se quedó en el 8805: la buena fue por el 8815). Suite entera: **1726 en verde, 2 saltadas y 3 rojas de carga** que pasan solas 12 de 12.
+- **En espera:** los textos largos (tres letras: recomendadas 1A, 2A y 3B; Ez no las entendió a la primera y se le explicaron sin jerga). **Falta el sí de Ez** al texto de tres pasos de la 1A de los arreglos menores; lo demás de esa rama (2.1 A, 2.2, 2.3 A y `CONTENT.md`) está montado.
+
+## 17 nov. (cuenta 5iWBf): la 0.209.0. Manda sobre lo de abajo
+
+- **Ez (literal): «Júntalas»** para los avisos de la novena (`claude/avisos-novena-16nov-cdf66e`) y las maquetas 1A, 2 A+B+C y 3B (`claude/maquetas-4-16nov-90bbca`; la 4, «Déjala así»). Uniones af3ce9e4 y 95628082; choques en el censo (1236), el mínimo de pruebas (1668) y las decisiones, y un `DONDE-ME-QUEDO.md` suelto en la raíz que no debe estar en `main` (quitado). La suite destapó que «Tus datos» pedía scroll a 1280 × 940 en la semana de prueba: `umbralBajo` pasa a base 890 (la línea de «Marca la fase» de la voz) y la línea de la prueba a 40. Segunda suite: 1707 en verde, 2 saltadas y 2 rojas de carga que pasan solas.
+- **Ez oyó dos fallos de la voz** («Descansa» se monta y los números se descolocan) y trajo el análisis de Fable: comprobado (`b - fin` = 0,12 s en todas las palabras y la fila se libera en `fin` + 0,05). Arreglo en `claude/voz-cuerpo-cola-17nov` (seis commits), con las vecinas por acabar.
+- **Ramas listas o casi:** el calendario con todo A (`claude/calendario-vista-16nov-ee4f9e`, página Cp7RUbjtX21ZDzZeHYQ7JT), los arreglos menores con 1A, 2.1 A, 2.2, 2.3 A y `CONTENT.md` (`claude/menores-valorar-16nov-87ef7b`; falta el sí de Ez al texto de tres pasos) y los textos largos (`claude/textos-largos-17nov-5fb6a3`, tres letras de Ez). El encargo de la décima de Fable, en `docs/audits/fable-17nov/encargo-decima.md`.
+
 ## 16 nov., noche (cuenta 5iWBf): la 0.208.0, con la voz. Manda sobre lo de abajo
 
 - **Ez (literal): «Junta lo de la voz».** `claude/voz-cuerpo-15nov-21e284` ya traía `main` dentro (b81a2e91); unión sin choques, `verify`, bump a 0.208.0 y build. Suite entera: 1668 en verde, 2 saltadas a propósito y 5 rojas con la máquina muy cargada (1 h 12 min, con otras sesiones pasando pruebas), que pasan las cinco 3 de 3 solas.

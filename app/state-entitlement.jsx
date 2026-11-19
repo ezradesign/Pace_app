@@ -211,6 +211,49 @@ function paceGestionarCompra() {
   return !!(tienda && tienda.gestionar());
 }
 
+/* LAS TIENDAS DE LAS APPS (state-compra.apps.js) dicen además en qué punto están ('cerrada',
+   'cargando', 'error' o 'lista'), restauran, canjean los códigos de la tienda (Ez, 3A del 18 nov.)
+   y cuentan qué compra abre PACE completo. La de la web no: su compra vuelve con el código. */
+function paceTiendaEstado() {
+  const tienda = tiendaDelCanal();
+  if (!tienda) return 'cerrada';
+  if (typeof tienda.estado === 'function') return tienda.estado();
+  return tienda.listo() ? 'lista' : 'cerrada';
+}
+
+function paceTiendaReintentar() {
+  const tienda = tiendaDelCanal();
+  return tienda && tienda.reintentar ? Promise.resolve(tienda.reintentar()) : Promise.resolve('cerrada');
+}
+
+function paceTiendaPuedeRestaurar() {
+  const tienda = tiendaDelCanal();
+  return !!(tienda && tienda.puedeRestaurar && tienda.puedeRestaurar());
+}
+
+/* -> Promise<{ ok, plan: 'vida'|'mes'|null, motivo? }> */
+function paceRestaurarCompras() {
+  const tienda = tiendaDelCanal();
+  if (!tienda || !tienda.restaurar) return Promise.resolve({ ok: false, motivo: 'cerrada' });
+  return tienda.restaurar().then((r) => r || { ok: false, motivo: 'error' }, () => ({ ok: false, motivo: 'error' }));
+}
+
+function paceTiendaPuedeCanjear() {
+  const tienda = tiendaDelCanal();
+  return !!(tienda && tienda.puedeCanjear && tienda.puedeCanjear());
+}
+
+function paceTiendaCanjear() {
+  const tienda = tiendaDelCanal();
+  return !!(tienda && tienda.canjear && tienda.canjear());
+}
+
+/* La compra de la tienda que abre PACE completo ({ plan, hasta, renueva, prueba }), o null. */
+function paceCompraEstado() {
+  const tienda = tiendaDelCanal();
+  return (tienda && tienda.compra && tienda.compra()) || null;
+}
+
 /* AL IMPORTAR UNA COPIA, LO QUE ABRE PACE COMPLETO NO SE CAMBIA A CIEGAS: el código
    (`paceLicenciaConservar`, state-licencia.js) y la semana del día de v1 con las rutinas que se
    quedan (`pacePasoV1Conservar`, state-paso-v1.js). Las dos van dentro del estado y la copia lo
@@ -219,11 +262,19 @@ function paceGestionarCompra() {
 function paceConservarAlImportar(actual, entrante) {
   const licencia = window.paceLicenciaConservar ? window.paceLicenciaConservar(actual, entrante) : Promise.resolve(entrante);
   return Promise.resolve(licencia).then((e) => {
-    try { return window.pacePasoV1Conservar ? window.pacePasoV1Conservar(actual, e) : e; } catch (x) { return e; }
+    let x = e;
+    try { x = window.pacePasoV1Conservar ? window.pacePasoV1Conservar(actual, e) : e; } catch (err) { x = e; }
+    /* Lo último que dijo la tienda de ESTE móvil se queda: la copia de otro no trae su compra. Si este
+       móvil no tenía nada, la clave no se escribe (ni la de la copia ni un `null`): una copia que va y
+       vuelve deja el estado igual (tests/copia-ida-vuelta.spec.js). */
+    if (!x || typeof x !== 'object') return x;
+    const y = Object.assign({}, x);
+    if (actual && actual.tiendaUltima) y.tiendaUltima = actual.tiendaUltima; else delete y.tiendaUltima;
+    return y;
   });
 }
 
-/* La tercera fuente de PACE completo: lo que la tienda sabe que ya tienes (Play). */
+/* La tercera fuente de PACE completo: lo que la tienda sabe que ya tienes (Play o Apple). */
 function tieneCompraVigente() {
   const tienda = tiendaDelCanal();
   return !!(tienda && tienda.vigente && tienda.vigente());
@@ -232,5 +283,6 @@ function tieneCompraVigente() {
 Object.assign(window, {
   canAccessRoutine, canAccessPath, hasPremiumEntitlement, tieneLicenciaPremium, puedeMantenerCalendario, puedeAprender, puedeVariar, puedeCrearRutinas, PREMIUM_ABIERTO_HASTA_V1, paceAbiertoAhora,
   paceTiendaAbierta, paceTiendaPlanes, paceTiendaPrecios, paceBienvenidaCompleto, paceComprar, paceGestionarCompra, paceTiendaPuedeGestionar, tieneCompraVigente,
+  paceTiendaEstado, paceTiendaReintentar, paceTiendaPuedeRestaurar, paceRestaurarCompras, paceTiendaPuedeCanjear, paceTiendaCanjear, paceCompraEstado,
   paceConservarAlImportar, PACE_TEXTOS_V1, paceTextoV1,
 });

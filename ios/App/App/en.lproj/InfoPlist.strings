@@ -1,0 +1,3 @@
+/* Lo que dice la pregunta de iOS al pedir el calendario (Ez, 4A del 16 nov. 2026). Info.plist lleva la misma en castellano. */
+"NSCalendarsFullAccessUsageDescription" = "PACE reads when your meetings are so it can place your breaks around them, and adds your day to your calendar. It doesn’t keep titles or attendees.";
+"NSCalendarsUsageDescription" = "PACE reads when your meetings are so it can place your breaks around them, and adds your day to your calendar. It doesn’t keep titles or attendees.";

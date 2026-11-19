@@ -71,6 +71,7 @@ function RitmoTarjeta() {
           <div className="pace-rt-tarjeta-cab">
             <div className="pace-rt-tarjeta-t" data-pace-ritmo-tarjeta-titulo>{titulo}</div>
             <div className="pace-rt-tarjeta-enlaces">
+              <RitmoCalendarioTarjeta />
               <button className="pace-rt-enlace" data-pace-ritmo-ajustar onClick={ritmoAbrirPregunta}>{t('ritmo.tarjeta.ajustar')}</button>
               {conCaminos && (
                 <button className="pace-rt-enlace" data-pace-ritmo-caminos onClick={abrirCaminos}>{t('paths.library.viewAll')}</button>
@@ -98,7 +99,9 @@ function RitmoTarjeta() {
             </div>
           )}
           <div className="pace-rt-tm-t" data-pace-ritmo-tarjeta-titulo>{titulo}</div>
-          <RitmoEsquema />
+          {/* El calendario al final del esquema, como «Ver todo» al final de la línea del día
+              (Ez, 1A del 16 nov.): sin alto propio (RitmoCalendario.tarjeta.jsx). */}
+          <div className="pace-rt-esq-fila"><RitmoEsquema /><RitmoCalendarioTarjeta corto /></div>
           <div className="pace-rt-tm-pie">
             <span className="pace-rt-tm-nota">{nota}</span>
             {/* El botón mide 44 de alto para el dedo; la píldora que se ve, 34. */}
@@ -113,6 +116,8 @@ function RitmoTarjeta() {
           </div>
         </div>
       </div>
+      {/* La hoja del calendario, sin día: por portal, fuera de la tarjeta. */}
+      <RitmoCalendarioRaiz plan={null} />
     </div>
   );
 }

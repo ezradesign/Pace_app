@@ -28,7 +28,7 @@ function leer(ROOT, rel) {
 }
 
 /* Cuántas pruebas del proyecto chromium hay, con el `--list` de Playwright (no abre navegador). */
-var MINIMO_PRUEBAS = 1632;   // pruebas de Chromium en `--list` el 16 nov. 2026 (1624 de main y 8 de la voz de Mueve y Estira); solo sube
+var MINIMO_PRUEBAS = 1695;   // pruebas de Chromium en `--list` el 18 nov. 2026 (1684 de la 0.210.0 y 11 de la compra en las apps); solo sube
 
 function contarPruebas(ROOT) {
   var cli = path.join(ROOT, 'node_modules', '@playwright', 'test', 'cli.js');

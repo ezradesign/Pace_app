@@ -13,7 +13,8 @@
       "@capacitor/filesystem",
       "@capacitor/local-notifications",
       "@capacitor/share",
-      "@capacitor-community/keep-awake"
+      "@capacitor-community/keep-awake",
+      "@ebarooni/capacitor-calendar"
     ]
   },
   "plugins": {

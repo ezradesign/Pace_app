@@ -79,17 +79,35 @@ function RitmoCalendarioRaiz({ plan }) {
     window.addEventListener('pace:ritmo-calendario', abrir);
     return () => window.removeEventListener('pace:ritmo-calendario', abrir);
   }, []);
-  if (!abierta || !plan) return null;
+  /* Sin día también (Ez, 2A del 16 nov.): desde la tarjeta «¿Cuánto trabajas hoy?», para conectar
+     antes de elegir. La hoja lo sabe por `plan` null. */
+  if (!abierta) return null;
   return ReactDOM.createPortal(<RitmoCalendarioHoja plan={plan} onClose={() => setAbierta(false)} />, document.body);
 }
 
 var CAL_ERRORES = ['permiso', 'bloqueada', 'cerrada', 'denegado', 'pase', 'red', 'sin-dia'];
+
+/* EL CALENDARIO DEL MÓVIL EN EL IPHONE (Ez, 4A del 16 nov.): el destino es el mismo, 'android'
+   (nativo.calendario.js), pero la hoja lo llama «Calendario del iPhone» y manda a sus Ajustes. */
+function calendarioNombreDestino(destino) {
+  return destino === 'android' && typeof pacePlataformaNativa === 'function' && pacePlataformaNativa() === 'ios' ? 'iphone' : destino;
+}
 
 function ritmoCalendarioHecho(destino, r, t, tn) {
   let texto = destino === 'archivo' ? t('cal.hecho.archivo') : r.solo ? t('cal.hecho.solo') : r.n === 1 ? t('cal.hecho.uno') : tn('cal.hecho', { n: r.n });
   if (r.reuniones != null) {
     texto += ' ' + (r.reuniones === 0 ? t('cal.hecho.reuniones.ninguna')
       : r.reuniones === 1 ? t('cal.hecho.reuniones.una') : tn('cal.hecho.reuniones', { r: r.reuniones }));
+  }
+  return texto;
+}
+
+/* Lo que dice la hoja sin día al conectar: adónde irá el día y, si se leyeron, las reuniones. */
+function ritmoCalendarioConectado(r, t, tn) {
+  let texto = t(r.solo ? 'cal.sindia.hecho.solo' : 'cal.sindia.hecho');
+  if (r.reuniones != null) {
+    texto += ' ' + (r.reuniones === 0 ? t('cal.hecho.reuniones.ninguna')
+      : r.reuniones === 1 ? t('cal.sindia.reuniones.una') : tn('cal.sindia.reuniones', { r: r.reuniones }));
   }
   return texto;
 }
@@ -132,16 +150,18 @@ function RitmoCalendarioHoja({ plan, onClose }) {
   useEffectRC(() => {
     if (!android) return undefined;
     let vivo = true;
-    paceAndroidCalendarioTienePermiso()
-      .then((ok) => (ok ? paceAndroidCalendarios() : null))
+    paceMovilCalendarioTienePermiso()
+      .then((ok) => (ok ? paceMovilCalendarios() : null))
       .then((l) => { if (vivo && l) setCalendarios(l); });
     return () => { vivo = false; };
   }, [android]);
 
-  const evs = calendarioEventos(plan.m, ritmoAhoraExacto(), t, tn, lang);
-  let resumen = !evs.length ? t('cal.resumen.nada')
+  /* SIN DÍA (desde la tarjeta): «Conectar» da el permiso y lee las reuniones, y el día llega al elegir. */
+  const sinDia = !plan;
+  const evs = sinDia ? [] : calendarioEventos(plan.m, ritmoAhoraExacto(), t, tn, lang);
+  let resumen = sinDia ? t('cal.sindia.resumen') : !evs.length ? t('cal.resumen.nada')
     : tn(evs.length === 1 ? 'cal.resumen.uno' : 'cal.resumen', { n: evs.length, a: ritmoHora(evs[0].desde), b: ritmoHora(evs[evs.length - 1].hasta) });
-  if (solo) {
+  if (solo && !sinDia) {
     const q = solo.quedan;
     resumen = calendarioSoloPorDetras(solo) || calendarioSoloCaso(solo) === 'fallo'
       ? (solo.alDia ? tn('cal.solo.resumen.pendiente', { h: ritmoCalendarioHoraMs(solo.alDia) }) : t('cal.solo.resumen.pendiente.sin'))
@@ -151,7 +171,7 @@ function RitmoCalendarioHoja({ plan, onClose }) {
   const fallo = (e) => {
     setTrabajo(null);
     const motivo = e && CAL_ERRORES.indexOf(e.message) !== -1 ? e.message : 'red';
-    setAviso({ tipo: 'error', texto: t('cal.error.' + motivo) });
+    setAviso({ tipo: 'error', texto: t('cal.error.' + motivo + (motivo === 'permiso' && calendarioNombreDestino('android') === 'iphone' ? '.ios' : '')) });
   };
 
   /* SIN NADA DELANTE del primer paso: la ventana del permiso se abre dentro de este clic. */
@@ -159,11 +179,21 @@ function RitmoCalendarioHoja({ plan, onClose }) {
     setAviso(null);
     setTrabajo(destino);
     const conectado = calendarioConectado(destino);
+    if (sinDia) {
+      calendarioConectar(destino, { reuniones, mantener: puede && mantener, calendarioId: calId || null })
+        .then((r) => {
+          setTrabajo(null);
+          setAviso({ tipo: 'ok', texto: ritmoCalendarioConectado(r, t, tn) });
+          if (destino === 'android' && !calendarios) paceMovilCalendarios().then((l) => { if (l) setCalendarios(l); });
+        })
+        .catch(fallo);
+      return;
+    }
     calendarioLlevar(destino, { reuniones: conectado && reuniones, mantener: conectado && puede && mantener, calendarioId: calId || null, t, tn, lang })
       .then((r) => {
         setTrabajo(null);
         setAviso({ tipo: 'ok', texto: ritmoCalendarioHecho(destino, r, t, tn) });
-        if (destino === 'android' && !calendarios) paceAndroidCalendarios().then((l) => { if (l) setCalendarios(l); });
+        if (destino === 'android' && !calendarios) paceMovilCalendarios().then((l) => { if (l) setCalendarios(l); });
       })
       .catch(fallo);
   };
@@ -193,11 +223,17 @@ function RitmoCalendarioHoja({ plan, onClose }) {
 
   const boton = (destino) => {
     if (destino === 'archivo') return t(compartir ? 'cal.btn.compartir' : 'cal.btn.descargar');
+    if (sinDia) return t('cal.btn.conectar');
     if (destino === 'android') return t('cal.btn.anadir');
     return t(calendarioPaseGuardado(destino) ? 'cal.btn.anadir' : 'cal.btn.conectar');
   };
   const sub = (destino) => {
+    if (sinDia && solo && destino === solo.destino) return t(solo.conAcceso ? 'cal.sindia.conectado' : 'cal.sindia.permiso');
+    if (sinDia && destino === c.destino && destino !== 'archivo' && calendarioConectadoAhora()) return t('cal.sindia.conectado');
     if (solo && destino === solo.destino) return ritmoCalendarioSoloSub(solo, t, tn);
+    if (sinDia && destino === 'archivo') {
+      return t(c.alElegir !== 'archivo' ? 'cal.sindia.archivo' : compartir ? 'cal.sindia.archivo.listo.app' : 'cal.sindia.archivo.listo');
+    }
     if (destino === 'archivo') return t(compartir ? 'cal.dest.archivo.sub.app' : 'cal.dest.archivo.sub');
     if (destino === 'android' && calendarios && calendarios.length > 1) {
       return (
@@ -210,11 +246,26 @@ function RitmoCalendarioHoja({ plan, onClose }) {
         </React.Fragment>
       );
     }
-    return t('cal.dest.' + destino + '.sub');
+    return t('cal.dest.' + calendarioNombreDestino(destino) + '.sub');
   };
 
   const accion = (destino) => {
-    if (solo && destino === solo.destino) {
+    /* SIN DÍA, EL ARCHIVO ES «AL ELEGIR» (Ez, 3A del 16 nov.): sin día no hay nada que descargar,
+       así que se apunta, y `calendarioAlElegir` lo da en el toque de la loseta. Se deshace aquí. */
+    if (sinDia && destino === 'archivo') {
+      const marcado = c.alElegir === 'archivo';
+      return (
+        <button type="button" className={'pace-rt-cal-btn' + (!marcado && !conectados.length ? ' pace-rt-lleno' : '')} data-pace-cal-alelegir={marcado ? 'si' : 'no'}
+          disabled={!!trabajo} onClick={() => {
+            calendarioGuardarAjustes({ alElegir: marcado ? null : 'archivo' });
+            setAviso(marcado ? null : { tipo: 'ok', texto: t('cal.sindia.archivo.hecho') });
+          }}>
+          {t(marcado ? 'cal.btn.alelegir.cancelar' : 'cal.btn.alelegir')}
+        </button>
+      );
+    }
+    /* Sin día y sin permiso vivo (el pase de Google caducó), la fila vuelve a ofrecer «Conectar». */
+    if (solo && destino === solo.destino && !(sinDia && !solo.conAcceso)) {
       /* mientras «Reintentar» escribe, el motor está trabajando: el botón sigue en su sitio */
       const reintentar = calendarioSoloCaso(solo) === 'fallo' || (trabajo === 'poner' && !calendarioSoloPorDetras(solo));
       return calendarioSoloPorDetras(solo) || reintentar
@@ -227,7 +278,7 @@ function RitmoCalendarioHoja({ plan, onClose }) {
     }
     return (
       <button type="button" className={'pace-rt-cal-btn' + (destino !== 'archivo' ? ' pace-rt-lleno' : '')}
-        disabled={!!trabajo || !evs.length} onClick={() => llevar(destino)}>
+        disabled={!!trabajo || (!evs.length && !(sinDia && destino !== 'archivo'))} onClick={() => llevar(destino)}>
         {trabajo === destino ? t('cal.trabajando') : boton(destino)}
       </button>
     );
@@ -236,7 +287,7 @@ function RitmoCalendarioHoja({ plan, onClose }) {
   const fila = (destino) => (
     <div key={destino} className="pace-rt-cal-dest" data-pace-cal-destino={destino} data-pace-cal-solo={solo && destino === solo.destino ? 'si' : undefined}>
       <div style={{ minWidth: 0 }}>
-        <div className="pace-rt-cal-n">{t('cal.dest.' + destino)}</div>
+        <div className="pace-rt-cal-n">{t('cal.dest.' + calendarioNombreDestino(destino))}</div>
         <div className="pace-rt-cal-s">{sub(destino)}</div>
       </div>
       {accion(destino)}
@@ -288,7 +339,7 @@ function RitmoCalendarioHoja({ plan, onClose }) {
   } else if (calendarioSoloPorDetras(solo) || calendarioSoloCaso(solo) === 'fallo') {
     nota = (
       <div className="pace-rt-cal-aviso" role="status" data-pace-cal-aviso="nota">
-        {t(calendarioSoloPorDetras(solo) ? 'cal.solo.nota.' + solo.destino : 'cal.solo.nota.fallo')}
+        {t(calendarioSoloPorDetras(solo) ? 'cal.solo.nota.' + calendarioNombreDestino(solo.destino) : 'cal.solo.nota.fallo')}
         <button type="button" className="pace-rt-enlace" data-pace-cal-desconectar onClick={() => setPreguntar(true)}>{t('cal.btn.desconectar')}</button>
       </div>
     );
@@ -299,7 +350,9 @@ function RitmoCalendarioHoja({ plan, onClose }) {
       <div data-pace-ritmo data-pace-cal style={{ textAlign: 'left' }}>
         <div className="pace-rt-cal-resumen" data-pace-cal-resumen>{resumen}</div>
         {/* Ya se mantiene solo: lo que se mueva en el calendario vuelve a su sitio (Ez, 12A del 30 oct.). */}
-        {solo ? <div className="pace-rt-cal-cambiar" data-pace-cal-cambiar>{t('cal.solo.cambiar')}</div> : null}
+        {solo && !sinDia ? <div className="pace-rt-cal-cambiar" data-pace-cal-cambiar>{t('cal.solo.cambiar')}</div> : null}
+        {/* Sin ningún calendario que conectar (la web sin las altas, Ez 3A): solo el archivo, y se dice. */}
+        {sinDia && !conectados.length ? <div className="pace-rt-cal-cambiar" data-pace-cal-sindia-nota>{t(compartir ? 'cal.sindia.app' : 'cal.sindia.web')}</div> : null}
         {conectados.map(fila)}
         {conectados.length ? (
           <label className="pace-rt-cal-chk">
@@ -308,7 +361,8 @@ function RitmoCalendarioHoja({ plan, onClose }) {
           </label>
         ) : null}
         {casillaMantener}
-        {fila('archivo')}
+        {/* Ya conectado, sin día la hoja enseña solo ese destino: el archivo al elegir sería el día dos veces. */}
+        {sinDia && calendarioConectadoAhora() ? null : fila('archivo')}
         {nota}
         <div className="pace-rt-pie" style={{ justifyContent: 'flex-end' }}>
           <Button variant="primary" onClick={onClose}>{t('ritmo.listo')}</Button>
@@ -318,4 +372,4 @@ function RitmoCalendarioHoja({ plan, onClose }) {
   );
 }
 
-Object.assign(window, { RitmoAlCalendario, RitmoCalendarioRaiz, RitmoCalendarioHoja, ritmoCalendarioAbrir });
+Object.assign(window, { RitmoAlCalendario, RitmoCalendarioRaiz, RitmoCalendarioHoja, ritmoCalendarioAbrir, useCalendarioSolo });

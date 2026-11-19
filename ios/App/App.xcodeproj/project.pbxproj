@@ -19,6 +19,9 @@
 		7ACE00000000000000000001 /* PaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACE00000000000000000002 /* PaceViewController.swift */; };
 		7ACE00000000000000000003 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 7ACE00000000000000000004 /* PrivacyInfo.xcprivacy */; };
 		7ACE00000000000000000005 /* PaceValoracion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACE00000000000000000006 /* PaceValoracion.swift */; };
+		7ACE00000000000000000007 /* PaceCalendario.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACE00000000000000000008 /* PaceCalendario.swift */; };
+		7ACE0000000000000000000D /* PaceCompras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACE0000000000000000000E /* PaceCompras.swift */; };
+		7ACE00000000000000000009 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7ACE0000000000000000000A /* InfoPlist.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +39,10 @@
 		7ACE00000000000000000002 /* PaceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaceViewController.swift; sourceTree = "<group>"; };
 		7ACE00000000000000000004 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		7ACE00000000000000000006 /* PaceValoracion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaceValoracion.swift; sourceTree = "<group>"; };
+		7ACE00000000000000000008 /* PaceCalendario.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaceCalendario.swift; sourceTree = "<group>"; };
+		7ACE0000000000000000000E /* PaceCompras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaceCompras.swift; sourceTree = "<group>"; };
+		7ACE0000000000000000000B /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		7ACE0000000000000000000C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +80,8 @@
 				9582B6822FE993A50072D4E8 /* SceneDelegate.swift */,
 				7ACE00000000000000000002 /* PaceViewController.swift */,
 				7ACE00000000000000000006 /* PaceValoracion.swift */,
+				7ACE00000000000000000008 /* PaceCalendario.swift */,
+				7ACE0000000000000000000E /* PaceCompras.swift */,
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
 				7ACE00000000000000000004 /* PrivacyInfo.xcprivacy */,
@@ -80,6 +89,7 @@
 				504EC30E1FED79650016851F /* Assets.xcassets */,
 				504EC3101FED79650016851F /* LaunchScreen.storyboard */,
 				504EC3131FED79650016851F /* Info.plist */,
+				7ACE0000000000000000000A /* InfoPlist.strings */,
 				2FAD9762203C412B000D30F8 /* config.xml */,
 				50B271D01FEDC1A000F3C39B /* public */,
 			);
@@ -159,6 +169,7 @@
 				504EC30D1FED79650016851F /* Main.storyboard in Resources */,
 				2FAD9763203C412B000D30F8 /* config.xml in Resources */,
 				7ACE00000000000000000003 /* PrivacyInfo.xcprivacy in Resources */,
+				7ACE00000000000000000009 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,6 +184,8 @@
 				9582B6832FE993A70072D4E8 /* SceneDelegate.swift in Sources */,
 				7ACE00000000000000000001 /* PaceViewController.swift in Sources */,
 				7ACE00000000000000000005 /* PaceValoracion.swift in Sources */,
+				7ACE00000000000000000007 /* PaceCalendario.swift in Sources */,
+				7ACE0000000000000000000D /* PaceCompras.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,6 +206,15 @@
 				504EC3111FED79650016851F /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		7ACE0000000000000000000A /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7ACE0000000000000000000B /* es */,
+				7ACE0000000000000000000C /* en */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
