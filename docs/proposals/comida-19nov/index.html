@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La comida, revisada</title>
+<style>
+:root { --fondo:#f3ece0; --papel:#faf6ee; --tinta:#2b2620; --suave:#6b6255; --oliva:#55603f; --terracota:#b0603f; --linea:#ddd3c2; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fondo:#1f1c18; --papel:#29251f; --tinta:#eee6d8; --suave:#b3a895; --oliva:#a9b78c; --terracota:#e09572; --linea:#3d372e; } }
+:root[data-theme="dark"] { --fondo:#1f1c18; --papel:#29251f; --tinta:#eee6d8; --suave:#b3a895; --oliva:#a9b78c; --terracota:#e09572; --linea:#3d372e; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--fondo); color:var(--tinta); font:16px/1.55 Georgia, 'Iowan Old Style', serif; }
+main { max-width:920px; margin:0 auto; padding:32px 16px 64px; }
+h1, h2 { font-style:italic; font-weight:normal; }
+h1 { font-size:2.1rem; margin:0 0 6px; }
+h2 { font-size:1.4rem; margin:40px 0 8px; border-top:1px solid var(--linea); padding-top:24px; }
+.sub { color:var(--suave); margin:0 0 20px; }
+.caja { background:var(--papel); border:1px solid var(--linea); border-radius:12px; padding:16px 18px; margin:14px 0; }
+.par { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:12px 0; }
+@media (max-width:640px) { .par { grid-template-columns:1fr; } }
+figure { margin:0; }
+figure img { width:100%; height:auto; border:1px solid var(--linea); border-radius:8px; display:block; }
+figcaption { font-size:.85rem; color:var(--suave); margin-top:4px; }
+.hecho { color:var(--oliva); font-weight:bold; }
+.letra { display:inline-block; min-width:1.6em; font-weight:bold; color:var(--terracota); }
+.rec { color:var(--oliva); font-size:.85rem; }
+ul { padding-left:20px; }
+</style>
+</head>
+<body>
+<main>
+<h1>La comida de la jornada, revisada</h1>
+<p class="sub">19 nov. · rama <code>claude/comida-19nov</code> · sin juntar con main. Probado a 1280 px en castellano y a 360 px en inglés, con el reloj movido a mano.</p>
+
+<div class="caja">
+<b>En corto:</b> cuatro fallos arreglados (cada uno con su prueba, que fallaba antes del arreglo) y cinco preguntas para ti. Lo demás que miré está bien: recargar en plena comida, la media jornada (no lleva comida), comer antes con el día sin empezar y la medianoche (la comida va de 11:00 a 17:00, no la cruza).
+</div>
+
+<h2>1 · Cambiar la hora de comer justo antes de comer no hacía nada</h2>
+<p>Al acabar el bloque de antes de comer, si cambiabas la hora de la comida (o lo que dura), la frase decía la hora nueva y la línea seguía con la vieja. La app daba la comida por «hecha» antes de empezar. <span class="hecho">Arreglado:</span> ahora la comida se mueve, y en plena comida acortarla la acaba antes. Cambiar otra cosa a mitad de comida no la parte.</p>
+<div class="par">
+<figure><img src="fotos/1-hora-1280-es-antes.png" alt="Antes: la comida sigue a las 14:00"><figcaption>Antes: pides 14:30 y la línea sigue en 14:00.</figcaption></figure>
+<figure><img src="fotos/1-hora-1280-es-despues.png" alt="Después: la comida a las 14:30"><figcaption>Ahora: la comida a las 14:30.</figcaption></figure>
+</div>
+
+<h2>2 · Saltarte la comida la contaba entera y pintaba el bloque encima</h2>
+<p>Con la comida de 14:00 a 15:00, si empezabas el bloque a las 14:05 (o volvías a las 14:40), la línea seguía con la comida hasta las 15:00 y el bloque encima, y Estadísticas contaba una hora entera. <span class="hecho">Arreglado:</span> la comida dura lo que duró: hasta que vuelves al foco.</p>
+<div class="par">
+<figure><img src="fotos/2-saltada-1280-es-antes.png" alt="Antes: comida hasta las 15:00"><figcaption>Antes: la comida a rayas hasta las 15:00 y el bloque detrás.</figcaption></figure>
+<figure><img src="fotos/2-saltada-1280-es-despues.png" alt="Después: el bloque empieza a las 14:05"><figcaption>Ahora: comida hasta las 14:05 y el bloque, «ahora».</figcaption></figure>
+</div>
+
+<h2>3 · Adelantar la comida con el primer bloque en marcha</h2>
+<p>Con el primer bloque del día corriendo, adelantar la comida cortaba ese bloque en la línea y ponía la comida «ahora» mientras el reloj seguía contando. Al acabar, la comida encogía. <span class="hecho">Arreglado:</span> el bloque que corre se respeta y la comida va detrás, entera.</p>
+<div class="par">
+<figure><img src="fotos/3-primer-bloque-1280-es-antes.png" alt="Antes"><figcaption>Antes: «comida ahora» con el reloj aún en marcha.</figcaption></figure>
+<figure><img src="fotos/3-primer-bloque-1280-es-despues.png" alt="Después"><figcaption>Ahora: el bloque hasta las 13:15 y luego la comida.</figcaption></figure>
+</div>
+
+<h2>4 · La pausa de antes de comer desaparecía</h2>
+<p>Si al acabar el bloque de las 13:45 pulsabas «Ahora no» y «Empezar ya el bloque 2» en el mismo minuto, esa pausa se borraba de la línea y de Estadísticas, y la que salía como «saltada» era una de la tarde, antes de llegar. <span class="hecho">Arreglado:</span> se queda en su sitio, como saltada.</p>
+<div class="par">
+<figure><img src="fotos/4-pausa-stats-1280-es-antes.png" alt="Antes"><figcaption>Antes: Hoy sin la pausa de las 13:45.</figcaption></figure>
+<figure><img src="fotos/4-pausa-stats-1280-es-despues.png" alt="Después"><figcaption>Ahora: la pausa de las 13:45 está.</figcaption></figure>
+</div>
+
+<h2>Preguntas para ti</h2>
+
+<div class="caja">
+<p><b>P1 · «Cambiar» a media mañana borra lo hecho.</b> Para apagar «comes» o tocar las horas con el día ya empezado, «Cambiar» te lleva a la pregunta. Al elegir otra vez «Jornada entera», el día vuelve a empezar: los bloques de la mañana salen de la línea y vuelve a «Bloque 1 de 7».</p>
+<div class="par">
+<figure><img src="fotos/5-cambiar-antes-de-pulsar-1280-es-antes.png" alt="Antes de Cambiar"><figcaption>Con dos bloques hechos…</figcaption></figure>
+<figure><img src="fotos/5-cambiar-tras-elegir-1280-es-antes.png" alt="Tras elegir otra vez"><figcaption>…tras «Cambiar» y volver a elegir: «Bloque 1 de 7».</figcaption></figure>
+</div>
+<p><span class="letra">A</span> Lo hecho se queda: la línea sigue con la mañana y la cuenta sigue en el bloque 3. <span class="rec">Recomendada</span><br>
+<span class="letra">B</span> Como ahora: elegir otra vez es empezar de cero desde ahora.</p>
+</div>
+
+<div class="caja">
+<p><b>P2 · Cómo se ve una comida que te saltas.</b> Ahora queda en la línea con lo que duró (o 0 min) y pone «Lejos de la pantalla».</p>
+<p><span class="letra">A</span> Pone «saltada», como las pausas. <span class="rec">Recomendada</span><br>
+<span class="letra">B</span> Desaparece de la línea.<br>
+<span class="letra">C</span> Como ahora.</p>
+</div>
+
+<div class="caja">
+<p><b>P3 · ¿La comida que te saltas vuelve más tarde?</b></p>
+<p><span class="letra">A</span> No: saltada es saltada; si quieres comer luego, mueves la hora. Es lo que hace ahora. <span class="rec">Recomendada</span><br>
+<span class="letra">B</span> Lo que queda de su hora se sirve al acabar el bloque.</p>
+</div>
+
+<div class="caja">
+<p><b>P4 · «Ir a comer» antes de su hora.</b> Si el bloque acaba a las 13:45 y la comida es a las 14:00, pulsar «Ir a comer» no mueve la comida: la línea sigue diciendo 14:00.</p>
+<p><span class="letra">A</span> La comida empieza al pulsar y dura lo de siempre. <span class="rec">Recomendada</span><br>
+<span class="letra">B</span> Sigue a su hora, como ahora.</p>
+</div>
+
+<div class="caja">
+<p><b>P5 · Ya ha pasado la hora de comer y no has vuelto.</b> A las 15:10 la línea sigue con «ahora» en la comida y el bloque a las 15:00. Tras una pausa, en cambio, el día ya se lee desde ahora.</p>
+<p><span class="letra">A</span> Igual que tras una pausa: el resto del día, desde ahora. <span class="rec">Recomendada</span><br>
+<span class="letra">B</span> Como ahora: se recoloca al pulsar «Empezar bloque».</p>
+</div>
+
+<p class="sub">Para contestar basta con las letras, por ejemplo «P1 A, P2 A, P3 A, P4 A, P5 A».</p>
+</main>
+</body>
+</html>
