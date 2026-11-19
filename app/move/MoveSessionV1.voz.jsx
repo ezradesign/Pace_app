@@ -8,10 +8,16 @@
 
    Va aparte porque el runner roza las 500 líneas. `function` a propósito: un `const` no cruza la IIFE. */
 
-/* El «tres, dos, uno» del final de cualquier cuenta: van de segundo en segundo, así que caben las tres en
-   1 s o suenan las tres a madera (Sound.voz.cuerpo.js decide la serie entera). */
+/* El «tres, dos, uno» del final de una cuenta: van de segundo en segundo, así que caben las tres en 1 s o
+   suenan las tres a madera (Sound.voz.cuerpo.js decide la serie entera). `desde` es el número con el que
+   empezó la cuenta en pantalla. LAS QUE EMPIEZAN EN 4 O 5 VAN SIN VOZ (Ez, 1A del 19 nov. 2026): la entrada,
+   colocarse y el cambio de lado de 5 s. La pantalla dice 5, 4, 3, 2, 1 y la voz no tiene «cinco» ni
+   «cuatro»: callaba en el 5 y el 4 y hablaba en el 3, una cuenta a medias. Suenan a madera en el 3, el 2 y
+   el 1. Las que empiezan en 3 o menos (la vuelta de la pausa) y las largas (el final de un paso con reloj
+   o de un descanso, o una cuenta con «+15 s») siguen con su «tres, dos, uno». */
 var V1_VOZ_CUENTA = ['c3', 'c2', 'c1'];
-function v1VozCuenta(n) {
+function v1VozCuenta(n, desde) {
+  if (desde > 3 && desde < 6) return null;
   return n >= 1 && n <= 3 ? { voz: 'c' + n, max: 1, serie: V1_VOZ_CUENTA, primera: n === 3 } : null;
 }
 

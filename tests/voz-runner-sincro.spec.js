@@ -135,20 +135,19 @@ test('sincro-1b · lo mismo en inglés con bradford (Estira, «Cuello suave», r
   expect(ingles).toBe('en');
 });
 
-test('sincro-2 · la cuenta de entrada con el audio aún arrancando: «tres, dos, uno» enteros y cada uno cuando se ve', async ({ page, context }) => {
+/* La entrada cuenta desde 5 y va sin voz, a madera (1A del 19 nov.): la primera palabra es «Colócate». */
+test('sincro-2 · la entrada con el audio aún arrancando: sin voz en la cuenta, y «Colócate» entero cuando se ve', async ({ page, context }) => {
   test.setTimeout(90000);
   await prepararVoz(page, context, { arranque: 0.5 });
   await abrirRutina(page, 'Mueve', 'extra.chair.squats');
-  await correr(page, 8, () => !!document.querySelector('[data-pace-v1-raiz]'));
+  await correr(page, 8, () => window.__llamadas.some((l) => l.p === 'colocate'));
   const r = await page.evaluate(() => ({ llamadas: window.__llamadas, pantalla: window.__pantalla }));
-  const cuenta = r.llamadas.filter((l) => /^c\d$/.test(l.p)).slice(0, 3);
-  expect(cuenta.map((l) => l.p)).toEqual(['c3', 'c2', 'c1']);
-  expect(cuenta.map((l) => l.r), 'la cuenta de entrada sonó a medias').toEqual([true, true, true]);
-  for (const w of cuenta) {
-    const visto = enPantalla(r.pantalla, w.suena);
-    expect(visto && visto.v).toBe(w.p.slice(1));
-    expect(w.suena - visto.t, '«' + w.p + '» suena ' + (w.suena - visto.t).toFixed(2) + ' s después de verse').toBeLessThan(0.1);
-  }
+  expect(r.llamadas.map((l) => l.p)[0], 'la entrada pidió voz').toBe('colocate');
+  const w = r.llamadas[0];
+  expect(w.r, '«Colócate» no sonó').toBe(true);
+  const visto = enPantalla(r.pantalla, w.suena);
+  expect(visto && visto.fase).toBe('place');
+  expect(w.suena - visto.t, '«Colócate» suena ' + (w.suena - visto.t).toFixed(2) + ' s después de verse').toBeLessThan(0.1);
 });
 
 test('sincro-3 · una cuenta no sale a medias: si su primera palabra va a madera, todas; y un tic algo tarde no tira la siguiente', async ({ page, context }) => {

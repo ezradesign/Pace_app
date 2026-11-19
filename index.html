@@ -37858,8 +37858,14 @@ Object.assign(window, {
 
 
 
+
+
+
+
+
 var V1_VOZ_CUENTA = ['c3', 'c2', 'c1'];
-function v1VozCuenta(n) {
+function v1VozCuenta(n, desde) {
+  if (desde > 3 && desde < 6) return null;
   return n >= 1 && n <= 3 ? { voz: 'c' + n, max: 1, serie: V1_VOZ_CUENTA, primera: n === 3 } : null;
 }
 
@@ -38833,7 +38839,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
 
   useEffectV1(() => {
-    if (stage === 'prep' && prepCount > 0 && prepCount <= 3) {try {playSound('move.warn', v1VozCuenta(prepCount));} catch (e) {}}
+    if (stage === 'prep' && prepCount > 0 && prepCount <= 3) {try {playSound('move.warn', v1VozCuenta(prepCount, V1_PREP_SECONDS));} catch (e) {}}
   }, [prepCount]);
 
 
@@ -38851,7 +38857,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   useSesionAlOcultar(stage === 'run', vuelta.pausar);
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'place') return;
-    if (placeLeft > 0 && placeLeft <= 3) {try {playSound('move.warn', v1VozCuenta(placeLeft));} catch (e) {}}
+    if (placeLeft > 0 && placeLeft <= 3) {try {playSound('move.warn', v1VozCuenta(placeLeft, totalesRef.current.place));} catch (e) {}}
   }, [placeLeft]);
 
 
@@ -38902,7 +38908,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     const effDur = v1StepDur(step);
 
 
-    if (suena && effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) {try {playSound('move.warn', v1VozCuenta(effDur - elapsed));} catch (e) {}}
+    if (suena && effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) {try {playSound('move.warn', v1VozCuenta(effDur - elapsed, effDur));} catch (e) {}}
     if (elapsed >= effDur) {
       if (!auto) {
 
@@ -38921,7 +38927,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   useRelojSesion(stage === 'run' && phase === 'change' && !paused, (n) => setChangeLeft((c) => Math.max(0, c - n)), [stepIdx]);
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'change') return;
-    if (changeLeft > 0 && changeLeft <= 3) {try {playSound('move.warn', v1VozCuenta(changeLeft));} catch (e) {}}
+    if (changeLeft > 0 && changeLeft <= 3) {try {playSound('move.warn', v1VozCuenta(changeLeft, totalesRef.current.change));} catch (e) {}}
   }, [changeLeft]);
   useEffectV1(() => {
     if (stage === 'run' && phase === 'change' && changeLeft <= 0 && auto && !paused) onSideReady();
