@@ -12,7 +12,8 @@
        se superponga o cambie el formato». Solo llevan palabra los pasos en los que, a 360 × 640 y
        740, con la letra al 115 % y en los dos idiomas, no añade ninguna línea ni cambia el dibujo
        (medido en docs/proposals/menores-16nov/genera.a-corta.js; lo vigila tests/runner-cambios.spec.js).
-       Los demás llevan solo la señal. La palabra se reserva en la pila del texto (MoveSessionV1.cuerpo.jsx),
+       Los demás llevan solo la señal. Círculos de brazos, Gateo con rodillas y Desliza el talón caben
+       porque su texto ya no dice lo que dice la palabra (Ez, 19 nov.). La palabra se reserva en la pila del texto (MoveSessionV1.cuerpo.jsx),
        así que nada salta al cambiar;
      · EN EL CAMBIO DE LADO EL DIBUJO SE DA LA VUELTA, como en los pasos por lados.
    Con «Auto» apagado las repeticiones van a tu ritmo y el reloj no sabe por cuál vas: ni palabra ni

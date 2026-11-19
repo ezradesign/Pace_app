@@ -208,7 +208,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.shoulder.circles.desc':              'Circles, the wall and a shoulder turn.',
   'move.shoulder.circles.code':              'Shoulders',
   'move.shoulder.circles.s0.name':           'Arm circles',
-  'move.shoulder.circles.s0.instruction.action': 'Standing, arm straight: eight slow circles, four forward and four back. Then the other arm.',
+  'move.shoulder.circles.s0.instruction.action': 'Standing, arm straight: eight slow circles, four forward and four back.',
   'move.shoulder.circles.s0.instruction.care': 'Start small. Make the circle bigger only if your trunk stays still.',
   'move.shoulder.circles.s1.name':           'Scapular wall slides',
   'move.shoulder.circles.s1.instruction.setup': 'Back to the wall, feet a step forward. Arms in a W: elbows bent, hands up.',

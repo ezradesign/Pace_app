@@ -97,8 +97,9 @@ test('las cinco fichas corregidas dicen lo que faltaba', () => {
   const muneca = paso('Estiramiento de muñeca');
   expect(muneca.length).toBe(2);
   for (const p of muneca) expect(p).toMatch(/Diez segundos palma abajo y diez palma arriba/);
-  /* Círculos de brazos: el otro brazo. */
-  for (const p of paso('Círculos de brazos')) expect(p).toMatch(/Luego, el otro/);
+  /* Círculos de brazos: el otro brazo. Desde el 19 nov. (Ez, 1A) lo dice la palabra del tramo, «Otro
+     brazo.», y no el texto: con las dos, el texto pasaba a tres líneas con la letra al 115 %. */
+  for (const p of paso('Círculos de brazos')) expect(p).toMatch(/dice: 'otroBrazo'/);
   /* Remo con banda: banda larga, y cómo no hacerse daño con ella. */
   for (const p of paso('Remo con banda')) expect(p).toMatch(/banda larga[^]*no la sueltes tensa/);
   /* Gateo: los cuatro de vuelta. Desliza el talón: la pelvis quieta manda sobre el recorrido. */

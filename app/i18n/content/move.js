@@ -325,7 +325,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.pausa.suelo.s2.instruction.care':   'If your lower back hurts, lift less or stop.',
   'extra.pausa.suelo.s3.name':               'Heel slide',
   'extra.pausa.suelo.s3.instruction.setup':  'On your back, knees bent, without pressing your lower back into the floor.',
-  'extra.pausa.suelo.s3.instruction.action': 'Slide one heel along the floor without moving your pelvis, then back. Three with each leg.',
+  'extra.pausa.suelo.s3.instruction.action': 'Slide one heel along the floor without moving your pelvis, then back.',
   'extra.pausa.suelo.s3.instruction.care':   'No need to straighten your leg fully. If your back starts to arch more, shorten the slide.',
   'extra.pausa.suelo.s4.name':               'Knee crawl',
   'extra.pausa.suelo.s4.instruction.setup':  'On all fours: hands under shoulders, knees under hips.',

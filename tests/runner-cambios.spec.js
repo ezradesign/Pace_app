@@ -5,12 +5,13 @@
  * vibra dos veces y, si es de lado, la voz dice «Cambia de lado»; y el texto empieza con la palabra
  * del tramo, como «Izquierda.» en los pasos por lados. CON LA CONDICIÓN DE EZ: «que nada modifique las
  * líneas o se superponga o cambie el formato». Por eso:
- *   · en los cinco pasos con palabra, el texto tiene en cada tramo las mismas líneas que sin ella, y ni
- *     el hueco del texto ni el dibujo cambian de tamaño (360 × 640, en castellano y en inglés, y con la
- *     letra al 115 % en castellano). Esta es la prueba que cae si una palabra o un texto nuevo añade
- *     una línea;
- *   · los tres que no caben con la letra al 115 % (Círculos de brazos, Gateo con rodillas, Desliza el
- *     talón) no llevan palabra: solo la señal (docs/proposals/menores-16nov/, alternativa para Ez);
+ *   · en los ocho pasos, el texto tiene en cada tramo las mismas líneas que sin la palabra, y ni el
+ *     hueco del texto ni el dibujo cambian de tamaño, en los seis tamaños de la condición de Ez: 360 × 640
+ *     y 740 y con la letra al 115 %, en castellano y en inglés. Esta es la prueba que cae si una palabra
+ *     o un texto nuevo añade una línea;
+ *   · tres de ellos (Círculos de brazos, Gateo con rodillas, Desliza el talón) solo caben porque su
+ *     texto ya no dice lo que dice la palabra («Luego, el otro», «Tres con cada pierna»; Ez, 19 nov.).
+ *     Con el texto de antes y la palabra delante, esta prueba cae con la letra al 115 %;
  *   · la señal: vibra dos veces en el cambio y la voz dice «Cambia de lado» en el de pie.
  * Contra la 0.208.0 cae: ningún paso llevaba palabra ni sonaba nada distinto en el cambio.
  */
@@ -29,12 +30,13 @@ const CON_PALABRA = [
   { id: 'move.desk.quick', i: 1, en: [4], es: ['Al revés'], ing: ['Reverse'] },
   { id: 'move.desk.quick', i: 2, en: [10], es: ['Otro lado'], ing: ['Other side'] },
   { id: 'move.desk.quick', i: 3, en: [10], es: ['Otro pie'], ing: ['Other foot'] },
+  { id: 'move.shoulder.circles', i: 0, en: [4, 8, 12], es: ['Atrás', 'Otro brazo', 'Atrás'], ing: ['Back', 'Other arm', 'Back'] },
+  { id: 'extra.pausa.suelo', i: 4, en: [4], es: ['Atrás'], ing: ['Back'] },
+  { id: 'extra.pausa.suelo', i: 3, en: [3], es: ['Otra pierna'], ing: ['Other leg'] },
 ];
-const SIN_PALABRA = [
-  { id: 'move.shoulder.circles', i: 0, en: [4, 8, 12] },
-  { id: 'extra.pausa.suelo', i: 4, en: [4] },
-  { id: 'extra.pausa.suelo', i: 3, en: [3] },
-];
+/* Los seis tamaños de la condición de Ez (docs/proposals/menores-16nov/genera.a-corta.js). */
+const TAMANOS = [];
+for (const lang of ['es', 'en']) for (const t of [{ alto: 640 }, { alto: 740 }, { alto: 640, letra: 1.15 }]) TAMANOS.push(Object.assign({ lang }, t));
 
 async function abrirPaso(browser, { id, i }, { lang, alto, letra, extra }) {
   const context = await browser.newContext({ viewport: { width: 360, height: alto || 640 }, isMobile: true, hasTouch: true,
@@ -100,10 +102,10 @@ async function tramos(page, paso) {
   return out;
 }
 
-/* Una prueba por paso y configuración: las tres seguidas no cabían en el minuto con la máquina cargada. */
+/* Una prueba por paso y tamaño: seguidas no cabían en el minuto con la máquina cargada. */
 for (const paso of CON_PALABRA) {
-  for (const cfg of [{ lang: 'es' }, { lang: 'en' }, { lang: 'es', letra: 1.15 }]) {
-    const donde = cfg.lang + (cfg.letra ? ', letra al 115 %' : '');
+  for (const cfg of TAMANOS) {
+    const donde = cfg.lang + ', 360 × ' + cfg.alto + (cfg.letra ? ', letra al 115 %' : '');
     test('con palabra · ' + paso.id + ' paso ' + (paso.i + 1) + ' (' + donde + '): la palabra de cada tramo, sin una línea más ni un píxel de dibujo menos', async ({ browser }) => {
       const { context, page } = await abrirPaso(browser, paso, cfg);
       const errores = capturarErrores(page);
@@ -120,19 +122,9 @@ for (const paso of CON_PALABRA) {
   }
 }
 
-for (const paso of SIN_PALABRA) {
-  test('sin palabra · ' + paso.id + ' paso ' + (paso.i + 1) + ', de los que no caben con la letra al 115 %: ni palabra ni una línea distinta', async ({ browser }) => {
-    const { context, page } = await abrirPaso(browser, paso, { lang: 'es' });
-    const t = await tramos(page, paso);
-    expect(t.every((x) => x.palabra === null), paso.id + ': lleva palabra').toBe(true);
-    expect(new Set(t.map((x) => x.lineas + '/' + x.dibujo)).size, paso.id + ': algo cambió de tamaño').toBe(1);
-    await context.close();
-  });
-}
-
 test('la señal del cambio de sentido: dos vibraciones, las del cambio de lado', async ({ browser }) => {
   /* Brazos libres, repetición 5 (el primer cambio, de sentido): el sonido apagado, así que vibra (vibra.js). */
-  const a = await abrirPaso(browser, SIN_PALABRA[0], { lang: 'es' });
+  const a = await abrirPaso(browser, CON_PALABRA[5], { lang: 'es' });
   await a.page.evaluate(() => { window.__vib = []; navigator.vibrate = (p) => { window.__vib.push(JSON.stringify(p)); return true; }; });
   const seg = await a.page.evaluate(() => window.v1RepSeconds(window.resolveBodyRoutine('move.shoulder.circles').routine.steps[0]));
   await a.page.clock.runFor((4 * seg + 1) * 1000);

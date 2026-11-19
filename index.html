@@ -3155,6 +3155,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'move.cambio.alReves': 'Al revés',
   'move.cambio.otroPie': 'Otro pie',
   'move.cambio.otroLado': 'Otro lado',
+  'move.cambio.atras': 'Atrás',
+  'move.cambio.otroBrazo': 'Otro brazo',
+  'move.cambio.otraPierna': 'Otra pierna',
   'session.sideChange': 'Cambia de lado',
   'session.sideNext': 'Ahora: {side}',
   'session.skip': 'Saltar',
@@ -3322,6 +3325,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.cambio.alReves': 'Reverse',
   'move.cambio.otroPie': 'Other foot',
   'move.cambio.otroLado': 'Other side',
+  'move.cambio.atras': 'Back',
+  'move.cambio.otroBrazo': 'Other arm',
+  'move.cambio.otraPierna': 'Other leg',
   'session.sideChange': 'Switch sides',
   'session.sideNext': 'Now: {side}',
   'session.skip': 'Skip',
@@ -5738,7 +5744,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.pausa.suelo.s2.instruction.care': 'If your lower back hurts, lift less or stop.',
   'extra.pausa.suelo.s3.name': 'Heel slide',
   'extra.pausa.suelo.s3.instruction.setup': 'On your back, knees bent, without pressing your lower back into the floor.',
-  'extra.pausa.suelo.s3.instruction.action': 'Slide one heel along the floor without moving your pelvis, then back. Three with each leg.',
+  'extra.pausa.suelo.s3.instruction.action': 'Slide one heel along the floor without moving your pelvis, then back.',
   'extra.pausa.suelo.s3.instruction.care': 'No need to straighten your leg fully. If your back starts to arch more, shorten the slide.',
   'extra.pausa.suelo.s4.name': 'Knee crawl',
   'extra.pausa.suelo.s4.instruction.setup': 'On all fours: hands under shoulders, knees under hips.',
@@ -5979,7 +5985,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.shoulder.circles.desc': 'Circles, the wall and a shoulder turn.',
   'move.shoulder.circles.code': 'Shoulders',
   'move.shoulder.circles.s0.name': 'Arm circles',
-  'move.shoulder.circles.s0.instruction.action': 'Standing, arm straight: eight slow circles, four forward and four back. Then the other arm.',
+  'move.shoulder.circles.s0.instruction.action': 'Standing, arm straight: eight slow circles, four forward and four back.',
   'move.shoulder.circles.s0.instruction.care': 'Start small. Make the circle bigger only if your trunk stays still.',
   'move.shoulder.circles.s1.name': 'Scapular wall slides',
   'move.shoulder.circles.s1.instruction.setup': 'Back to the wall, feet a step forward. Arms in a W: elbows bent, hands up.',
@@ -36314,21 +36320,22 @@ var MOVE_ROUTINES = {
 
 
 
+
       { name: 'Desliza el talón', mode: 'reps', reps: 6, dur: 24,
         tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
-        cambios: [{ en: 3, que: 'lado' }],
+        cambios: [{ en: 3, que: 'lado', dice: 'otraPierna' }],
         instruction: {
           setup: 'Boca arriba, rodillas dobladas, sin aplastar la zona lumbar contra el suelo.',
-          action: 'Desliza un talón por el suelo sin mover la pelvis, y vuelve. Tres con cada pierna.',
+          action: 'Desliza un talón por el suelo sin mover la pelvis, y vuelve.',
           care: 'No hace falta estirar la pierna del todo. Si la espalda se arquea más, acorta el recorrido.' } },
 
 
       { name: 'Gateo con rodillas', mode: 'reps', reps: 8, dur: 24,
         tempo: { down: 1, hold: 0, up: 2 }, completion: { mode: 'guided' },
-        cambios: [{ en: 4, que: 'sentido' }],
+        cambios: [{ en: 4, que: 'sentido', dice: 'atras' }],
         instruction: {
           setup: 'A cuatro apoyos: manos bajo los hombros, rodillas bajo las caderas.',
-          action: 'Cuatro pasos cortos adelante, despacio, mano y rodilla contrarias. Luego, cuatro atrás.',
+          action: 'Cuatro pasos cortos adelante y cuatro atrás, despacio, mano y rodilla contrarias.',
           care: 'Las rodillas siguen en el suelo. Si las muñecas molestan, para.' } }]
     }]
 
@@ -37963,6 +37970,7 @@ Object.assign(window, { v1VozCuenta, v1VozRep, v1VozEntrada, v1VozGo, v1VozLado,
 
 
 
+
 function v1CambioSeg(step, c) {
   return step.mode === 'reps' ? c.en * v1RepSeconds(step) : c.en;
 }
@@ -39284,9 +39292,9 @@ const EXTRA_ROUTINES = {
 
       { name: 'Círculos de brazos', mode: 'reps', reps: 16, dur: 64,
         tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
-        cambios: [{ en: 4, que: 'sentido' }, { en: 8, que: 'lado' }, { en: 12, que: 'sentido' }],
+        cambios: [{ en: 4, que: 'sentido', dice: 'atras' }, { en: 8, que: 'lado', dice: 'otroBrazo' }, { en: 12, que: 'sentido', dice: 'atras' }],
         instruction: {
-          action: 'De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. Luego, el otro.',
+          action: 'De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás.',
           care: 'Empieza pequeño. Haz el círculo más grande solo si el tronco sigue quieto.' } },
       { name: 'Deslizamientos en pared', mode: 'reps', reps: 6, dur: 36,
         tempo: { down: 3, hold: 0, up: 3 }, completion: { mode: 'guided' },

@@ -58,13 +58,13 @@ const EXTRA_ROUTINES = {
         steps: [
           /* `cambios` (Ez, 1A del 16 nov. 2026; MoveSessionV1.cambios.jsx): dónde cambia el paso de
              sentido o de lado, en repeticiones hechas (o en segundos, con reloj), y `dice`, la palabra
-             que abre el texto en ese tramo. Este va sin palabra: con la letra al 115 % no cabe sin
-             pasar a tres líneas, y Ez no quiere que nada cambie de líneas. */
+             que abre el texto en ese tramo. Aquí la palabra solo cabe sin pasar a tres líneas con la
+             letra al 115 % porque el texto ya no dice «Luego, el otro», que dice ella (Ez, 19 nov.). */
           { name: 'Círculos de brazos', mode: 'reps', reps: 16, dur: 64,
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
-            cambios: [{ en: 4, que: 'sentido' }, { en: 8, que: 'lado' }, { en: 12, que: 'sentido' }],
+            cambios: [{ en: 4, que: 'sentido', dice: 'atras' }, { en: 8, que: 'lado', dice: 'otroBrazo' }, { en: 12, que: 'sentido', dice: 'atras' }],
             instruction: {
-              action: 'De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás. Luego, el otro.',
+              action: 'De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás.',
               care: 'Empieza pequeño. Haz el círculo más grande solo si el tronco sigue quieto.' } },
           { name: 'Deslizamientos en pared', mode: 'reps', reps: 6, dur: 36,
             tempo: { down: 3, hold: 0, up: 3 }, completion: { mode: 'guided' },
