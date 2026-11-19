@@ -52,6 +52,22 @@ Una por commit con su prueba vista caer; al final, la suite entera con PACE_E2E_
 - Página en la cuenta EcLj6: https://claude.ai/artifact/2kQ1KXrcdsNjZ9uhP8D5Uv (par de A3Dc… en hoja-ids-cuentas.js).
 - Hecho todo el encargo. Espera a Ez: las letras de la 11 y el «júntalo».
 
+## La 11 y la tarjeta limpia (19 nov., tarde)
+- 11 9979588e, con las letras de Ez («11.1 b + 11.2 A + 11.3 dejar foco manual + 11.4 A + 11.5 A + 11.6 A»): Coherente 432 Hz,
+  Gemelos bajo la mesa, grupo «Sin levantarte» (id `sigilo`), Antídoto a la silla, Recolocar la postura; FOCO MANUAL se queda.
+  En: Coherent 432 Hz, Calf Raises Under the Desk, Without standing up; Chair Antidote y Posture Reset no cambian (los nombres de
+  rutina en inglés van en mayúsculas de título, como los demás). CONTENT.md al día. tests/textos-nombres.spec.js vista caer.
+  «Calf Raises Under the Desk» va en dos líneas en el cierre y a 1536x701 «Not now» pisaba «Back to Home» (cierre-sin-pisar en
+  inglés, roja de verdad): el dibujo del cierre cede ahora hasta 32 px (SessionShell.responsive.js).
+- Encargo 3 eefb4417: la tarjeta «Jornada entera» del ordenador sin la etiqueta del material ni el resumen («5 de 8 vasos»);
+  la frase del día en una línea a 1280, 1366 y 1920, es y en (antes partía a 1280 y 1920). Solo el ordenador: «Ver todo» del
+  móvil sigue con los dos. tests/jornada-limpia.spec.js vista caer; textos-honestos, sidebar-cuaderno y ritmo-linea al día.
+- Pruebas (PACE_E2E_PORT=8915, --workers=1, solo las tocadas): la 11, 68 (67 verdes + la del cierre, arreglada y repetida en
+  verde); la tarjeta, 55 verdes en siete archivos. verify en verde. MINIMO_PRUEBAS 1729. La suite entera NO se corrió (la pasa
+  la coordinadora antes de juntar). Fotos: fotos/once-*.webp y fotos/jornada-{antes,despues}-*.webp (medidas en jornada-medidas.jsonl).
+- Página EcLj6 2kQ1KXrcdsNjZ9uhP8D5Uv, versión 2, con todo. **Falta republicar el par de 5iWBf (A3Dc4VmgwvjkW7t6v4ZU8r)**
+  desde esta carpeta (apuntado en hoja-ids-cuentas.js). Espera a Ez: el «júntalo».
+
 ## Falta (por orden)
 - 2A «Preparar jornada» en un toque: el botón de la tarjeta corta (RitmoTarjeta.jsx, data-pace-ritmo-comienza)
   llama a ritmoComenzarHabitual si hay día habitual; y hace falta «Hoy es distinto» en la tarjeta corta, que hoy

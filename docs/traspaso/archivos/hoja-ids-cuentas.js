@@ -38,7 +38,7 @@ const pares = [
   ['8Pgz18Qv7qMcwXCGQcJVgw', '7mLHvjUkuyUzthehEtgLNg'], // «La octava, segunda parte», con la letra A o B
   ['PJye6h3hhiqgjUMRmbUe1h', 'AT8X9QryL4KtDetYTivxzA'], // «La octava, tercera parte» (la B, las siete pruebas y los doce ciertos)
   ['HeMyYYPyDuopL7oYYu5kpS', 'R1mmsxTzYjmFQGynxJYXxP'], // «Antes de los testers» (la valoración, el fin de la pausa, P3 montada y las tres formas de la P4)
-  ['2kQ1KXrcdsNjZ9uhP8D5Uv', 'A3Dc4VmgwvjkW7t6v4ZU8r'], // «Montado y para elegir» del recorrido de tester (19 nov.: 2A 1A 8A 10A y la 11)
+  ['2kQ1KXrcdsNjZ9uhP8D5Uv', 'A3Dc4VmgwvjkW7t6v4ZU8r'], // «Montado y para elegir» del recorrido de tester (19 nov.: 2A 1A 8A 10A, la 11 montada y la tarjeta limpia). EcLj6 al día (versión 2); la de 5iWBf, A3Dc…, queda por republicar desde docs/proposals/arreglos-tester-18nov
 ];
 
 const [de, hacia] = a === 'EcLj6' ? [1, 0] : [0, 1];
