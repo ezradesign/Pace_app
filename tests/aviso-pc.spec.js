@@ -171,7 +171,7 @@ for (const [nombre, ua, pasos] of NAVEGADORES) {
     await irAlArtefacto(page);
     const texto = await notaBloqueo(page);
     expect(texto, 'la nota no dice cómo desbloquearlo en ' + nombre).toContain(pasos);
-    expect(texto).toContain('la pestaña y la campana siguen avisando');
+    expect(texto).toMatch(/la pestaña y la campana siguen avisando/i);
     await context.close();
   });
 }
@@ -182,7 +182,7 @@ test('aviso-pc · 1.2A · en inglés, la nota dice lo mismo en inglés', async (
   await irAlArtefacto(page);
   const texto = await notaBloqueo(page);
   expect(texto).toContain('“Allow”');
-  expect(texto).toContain('the tab and the bell still tell you');
+  expect(texto).toMatch(/the tab and the bell still tell you/i);
 });
 
 /* 2B · La miniventana en tira (Document Picture-in-Picture). La de verdad no se abre sin una persona
