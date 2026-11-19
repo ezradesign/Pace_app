@@ -7,8 +7,10 @@
  *  · el aro con el horario abierto mide lo mismo que con las actividades, también al recargar
  *    con el horario ya abierto (app/main/home-geometry.horario.js lo recuerda);
  *  · el panel lo corta a la misma altura que las actividades;
- *  · los otros dos estados no se mueven: siguen la regla de siempre del solape, y miden lo de
- *    la 0.197.0 (447 y 515 px a 1920×860; 372 y 426 a 1536×710);
+ *  · los otros dos estados siguen la regla de siempre del solape. Con las actividades miden lo de
+ *    la 0.197.0 (447 px a 1920×860, 372 a 1536×710); con la rutina elegida, 524 y 433: la tarjeta
+ *    de la jornada del ordenador perdió la etiqueta del material y el resumen del día (Ez, encargo 3
+ *    del 19 nov. 2026), es más baja, y el aro gana ese sitio (antes 515 y 426);
  *  · nada de scroll, y el móvil no cambia.
  */
 'use strict';
@@ -18,8 +20,9 @@ const { sembrar, irAlArtefacto, capturarErrores } = require('./helpers');
 
 const HOY = '2026-11-10';
 const vis = (page, sel) => page.locator(sel).filter({ visible: true }).first();
-/* Lo de la 0.197.0, medido en pantalla (la home crece con el lienzo a 1920×860). */
-const HOY_MIDE = { 1920: { con: 447, rutina: 515 }, 1536: { con: 372, rutina: 426 } };
+/* Medido en pantalla (la home crece con el lienzo a 1920×860): con las actividades, lo de la 0.197.0;
+   con la rutina elegida, lo de la tarjeta limpia del 19 nov. */
+const HOY_MIDE = { 1920: { con: 447, rutina: 524 }, 1536: { con: 372, rutina: 433 } };
 
 async function abrir(page, context, w, h, lang) {
   await page.setViewportSize({ width: w, height: h });
@@ -86,7 +89,7 @@ for (const [w, h] of [[1920, 860], [1536, 710]]) {
     await page.waitForTimeout(400);
     const rut = await medir(page);
     expect(rut.solape, 'con la rutina elegida, el solape de siempre').toBe(rut.solapeDeSiempre);
-    expect(Math.abs(rut.aro - HOY_MIDE[w].rutina), `con la rutina elegida mide lo de la 0.197.0 (${HOY_MIDE[w].rutina})`).toBeLessThanOrEqual(2);
+    expect(Math.abs(rut.aro - HOY_MIDE[w].rutina), `con la rutina elegida mide lo de la tarjeta limpia (${HOY_MIDE[w].rutina})`).toBeLessThanOrEqual(2);
     expect(rut.scroll).toBeLessThanOrEqual(0);
     expect(errores).toEqual([]);
   });
