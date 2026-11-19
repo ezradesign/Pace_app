@@ -8019,9 +8019,10 @@ function loadState(estricto) {
     }
 
     const merged = rolloverIfNeeded({ ...defaultState, ...parsed });
-    if (parsed.sidebarCollapsed === undefined && isMobileViewport()) {
-      return { ...merged, sidebarCollapsed: true };
-    }
+
+
+
+    if (isMobileViewport()) return { ...merged, sidebarCollapsed: true };
     return merged;
   } catch (e) {
     if (estricto) throw e;

@@ -34,7 +34,7 @@
    `scripts/audit/banco-sidebar-movil-s182.js`, y eso no es un aserto.
 */
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto } = require('./helpers');
+const { sembrar, irAlArtefacto, abrirCajon } = require('./helpers');
 
 /* El suelo NO se copia aquí: se le pregunta a la app, que lo publica en
    `window.SUELO_CAJON`. Copiar el número deja el aserto verde el día que
@@ -62,7 +62,7 @@ const ABIERTA = {
 async function abrir(page, context) {
   await sembrar(context, ABIERTA);
   await irAlArtefacto(page);
-  await page.waitForSelector('[data-pace-sidebar]');
+  await abrirCajon(page);
   /* El alto natural depende de las métricas de la fuente: medir antes de que
      asienten da otra escala (rojo intermitente de s181, y era del PRODUCTO). */
   await page.evaluate(() => document.fonts.ready);
@@ -214,7 +214,7 @@ test.describe('la composición es la misma en todo móvil', () => {
       await sembrar(ctx, ABIERTA);
       const page = await ctx.newPage();
       await irAlArtefacto(page);
-      await page.waitForSelector('[data-pace-sidebar]');
+      await abrirCajon(page);
       await page.evaluate(() => document.fonts.ready);
       await page.waitForTimeout(150);
       altos.push((await sonda(page)).cajaLayout);
