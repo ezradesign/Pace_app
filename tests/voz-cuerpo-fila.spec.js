@@ -129,7 +129,7 @@ test('fila-3 · un número no espera en la fila: si la palabra de antes aún sue
     window.__reloj = 1000;
     window.paceVozCuerpoIntenta('cambia');
     window.__reloj = 1000.3;
-    const op = window.v1VozRep(3, 4, false, 12);
+    const op = window.v1VozRep(3, 4, 12);
     const dijo = window.paceVozCuerpoIntenta(op.voz, op.max, op);
     const l = window.__llamadas[window.__llamadas.length - 1];
     return { dijo, ini: l.f >= 0 ? window.__fuentes[l.f].t : null };
@@ -143,9 +143,9 @@ test('fila-4 · la serie se decide entera: o todos los números con voz o todos 
   const r = await page.evaluate(() => {
     const una = (repSec) => {
       const dichos = [];
-      for (let n = 1; n <= 12; n++) {
+      for (let n = 2; n <= 12; n++) {
         window.__reloj = 2000 + n * 10 + repSec * 100;
-        const op = window.v1VozRep(n, repSec, false, 12);
+        const op = window.v1VozRep(n, repSec, 12);
         dichos.push(window.paceVozCuerpoIntenta(op.voz, op.max, op));
       }
       return dichos;

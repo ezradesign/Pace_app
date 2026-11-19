@@ -14,6 +14,7 @@ if (!entrada || !salida || !['EcLj6', '5iWBf'].includes(a)) {
 // Pares [EcLj6, 5iWBf]. Uno por página que existe en las dos cuentas; la hoja misma es el primero.
 const pares = [
   ['EcLj6io4wM9pGjtQ5wd1CT', '5iWBfHE7kD3dUVocdskmb6'], // la hoja, «PACE hasta v1»
+  ['U8qW3hFxwdsUDRDiBJdkwo', 'HK1v4xCyvV6TH7U2MC1xoX'], // «Voz en las cuentas de 5» (voz del runner, 19 nov.)
   ['G4kprWWqpUfjEbGnvhVh1c', '5P7oysx4zRBMe7qvhRjFgZ'], ['JwFknwwkJhmypQwiZ7npnB', 'E3tcsR3FnywQNmnCpymxrp'],
   ['VDdAWeb8msGvckeGXxFjWV', '9MnNL8b5BYWcX9Fsa7vnAa'], ['Mk11GDb9JBDGXyTrynbaYY', '56cDi1KJYKS4gKqnFKouJP'],
   ['7Hj5sHmFuuzVP5QFntqdN7', '9BKgTENwuTjts4Wa1N7ZYd'], ['MVctqCpaCguGyZjmQgErx1', 'Mtv9tKsUy9qWgJgKwfD788'],

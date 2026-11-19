@@ -203,7 +203,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   // La cuenta de la preparación también suena a madera en sus 3 últimos segundos. Va aparte, con
   // [prepCount] solo: con [paused] en las dependencias sonaría otra vez al pausar y reanudar.
   useEffectV1(() => {
-    if (stage === 'prep' && prepCount > 0 && prepCount <= 3) { try { playSound('move.warn', v1VozCuenta(prepCount)); } catch (e) {} }
+    if (stage === 'prep' && prepCount > 0 && prepCount <= 3) { try { playSound('move.warn', v1VozCuenta(prepCount, V1_PREP_SECONDS)); } catch (e) {} }
   }, [prepCount]);
 
   // Relojes por fase — patrón s113: los intervalos SOLO decrementan/incrementan
@@ -221,7 +221,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   useSesionAlOcultar(stage === 'run', vuelta.pausar); // s200: politica en SESION_AL_OCULTAR
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'place') return;
-    if (placeLeft > 0 && placeLeft <= 3) { try { playSound('move.warn', v1VozCuenta(placeLeft)); } catch (e) {} }
+    if (placeLeft > 0 && placeLeft <= 3) { try { playSound('move.warn', v1VozCuenta(placeLeft, totalesRef.current.place)); } catch (e) {} }
   }, [placeLeft]);
   // Al llegar a 0 empieza solo; sin Auto, espera a «›», y si se enciende Auto ahí, sigue. En pausa,
   // encender Auto solo cambia la preferencia: lo que toque pasa al reanudar.
@@ -258,11 +258,13 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
       // ('manual' reservado, sin piloto: quedaría en «Terminar antes»). El pulso
       // y la madera corren igual; los 5 pilotos son guided → comportamiento intacto.
       const guided = v1CompletionMode(step) !== 'manual';
+      // La madera marca el paso de una repetición a la siguiente, y la voz dice la que empieza, que es
+      // la que pone la pantalla (MoveSessionV1.voz.jsx). Al acabar la serie suena el paso que sigue.
       if (guided && elapsed >= v1RepTarget(step) * repSec) {
-        darSerie(v1RepTarget(step)); try { playSound('move.rep', v1VozRep(v1RepTarget(step), repSec, true, v1RepTarget(step))); } catch (e) {}
+        darSerie(v1RepTarget(step));
         advanceStep();
       } else if (suena && elapsed % repSec === 0) {   // en un cambio dentro del paso, su señal y no la madera (MoveSessionV1.cambios.jsx)
-        const cb = v1CambioAhora(step, elapsed); try { if (cb) playSound('move.side', v1CambioSonido(cb)); else playSound('move.rep', v1VozRep(elapsed / repSec, repSec, false, v1RepTarget(step))); } catch (e) {}
+        const cb = v1CambioAhora(step, elapsed); try { if (cb) playSound('move.side', v1CambioSonido(cb)); else playSound('move.rep', v1VozRep(elapsed / repSec + 1, repSec, v1RepTarget(step))); } catch (e) {}
       }
       return;
     }
@@ -270,7 +272,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     const effDur = v1StepDur(step);
     // Los últimos 3 segundos de cada paso con reloj y de cada descanso suenan a madera, uno
     // por segundo, para seguir la rutina sin mirar (opción A). Silencio si soundOn está apagado.
-    if (suena && effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) { try { playSound('move.warn', v1VozCuenta(effDur - elapsed)); } catch (e) {} }
+    if (suena && effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) { try { playSound('move.warn', v1VozCuenta(effDur - elapsed, effDur)); } catch (e) {} }
     if (suena && step.mode === 'timed' && v1CambioAhora(step, elapsed)) { try { playSound('move.side', v1CambioSonido(v1CambioAhora(step, elapsed))); } catch (e) {} }
     if (elapsed >= effDur) {
       if (!auto) {
@@ -290,7 +292,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   useRelojSesion(stage === 'run' && phase === 'change' && !paused, n => setChangeLeft(c => Math.max(0, c - n)), [stepIdx]);
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'change') return;
-    if (changeLeft > 0 && changeLeft <= 3) { try { playSound('move.warn', v1VozCuenta(changeLeft)); } catch (e) {} }
+    if (changeLeft > 0 && changeLeft <= 3) { try { playSound('move.warn', v1VozCuenta(changeLeft, totalesRef.current.change)); } catch (e) {} }
   }, [changeLeft]);
   useEffectV1(() => {
     if (stage === 'run' && phase === 'change' && changeLeft <= 0 && auto && !paused) onSideReady();

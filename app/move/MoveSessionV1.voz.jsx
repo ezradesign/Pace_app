@@ -8,22 +8,31 @@
 
    Va aparte porque el runner roza las 500 líneas. `function` a propósito: un `const` no cruza la IIFE. */
 
-/* El «tres, dos, uno» del final de cualquier cuenta: van de segundo en segundo, así que caben las tres en
-   1 s o suenan las tres a madera (Sound.voz.cuerpo.js decide la serie entera). */
+/* El «tres, dos, uno» del final de una cuenta: van de segundo en segundo, así que caben las tres en 1 s o
+   suenan las tres a madera (Sound.voz.cuerpo.js decide la serie entera). `desde` es el número con el que
+   empezó la cuenta en pantalla. LAS QUE EMPIEZAN EN 4 O 5 VAN SIN VOZ (Ez, 1A del 19 nov. 2026): la entrada,
+   colocarse y el cambio de lado de 5 s. La pantalla dice 5, 4, 3, 2, 1 y la voz no tiene «cinco» ni
+   «cuatro»: callaba en el 5 y el 4 y hablaba en el 3, una cuenta a medias. Suenan a madera en el 3, el 2 y
+   el 1. Las que empiezan en 3 o menos (la vuelta de la pausa) y las largas (el final de un paso con reloj
+   o de un descanso, o una cuenta con «+15 s») siguen con su «tres, dos, uno». */
 var V1_VOZ_CUENTA = ['c3', 'c2', 'c1'];
-function v1VozCuenta(n) {
-  return n >= 1 && n <= 3 ? { voz: 'c' + n, max: 1, serie: V1_VOZ_CUENTA } : null;
+function v1VozCuenta(n, desde) {
+  if (desde > 3 && desde < 6) return null;
+  return n >= 1 && n <= 3 ? { voz: 'c' + n, max: 1, serie: V1_VOZ_CUENTA, primera: n === 3 } : null;
 }
 
-/* Cada repetición guiada se cuenta al acabarla, si caben todos los números de la serie en lo que dura una
-   repetición; si no, la serie entera va a madera. La última se dice entera y lo que viene después espera a
-   que acabe (la cola de Sound.voz.cuerpo.js); con el tono no suena nada en la última, como siempre: en ese
-   momento ya suena el cuenco del paso. Una serie de más de 25 no tiene todos sus números: madera. */
-function v1VozRep(n, repSec, ultima, total) {
-  if (!(n >= 1 && n <= 25 && n === Math.floor(n))) return ultima ? { soloVoz: true } : null;
+/* LA VOZ DICE EL NÚMERO QUE LA PANTALLA ACABA DE PONER (Ez, 19 nov. 2026): la pantalla cuenta la
+   repetición que empieza (1 al entrar, 2 al acabar la primera…), y la voz contaba la que acababa: decía
+   «uno» con un 2 en pantalla, una repetición entera tarde. Ahora, al empezar la repetición `n` (de 2 a
+   `total`), suena «n» con su madera. La primera no tiene número: en ese instante ya suena la palabra del
+   paso («Ya», «Siguiente», «Último paso») o el cuenco. Y al acabar la última no suena nada: suena lo que
+   viene después. La serie son esos números y se decide entera: si uno no cabe en lo que dura una
+   repetición, toda a madera. Una serie de más de 25 no tiene todos sus números: madera. */
+function v1VozRep(n, repSec, total) {
+  if (!(n >= 2 && n <= 25 && n === Math.floor(n) && n <= total)) return null;
   const serie = [];
-  for (let k = 1; k <= (total || n); k++) serie.push('n' + k);
-  return ultima ? { voz: 'n' + n, max: repSec, serie, soloVoz: true, ultima: true } : { voz: 'n' + n, max: repSec, serie };
+  for (let k = 2; k <= total; k++) serie.push('n' + k);
+  return { voz: 'n' + n, max: repSec, serie, primera: n === 2, ultima: n === total };
 }
 
 /* Al entrar en un paso: «Descansa»; «Último paso» en el último con ejercicio (si la rutina tiene más de
@@ -58,8 +67,17 @@ function v1VozCalla() {
   try { if (typeof window.paceVozCuerpoCalla === 'function') window.paceVozCuerpoCalla(); } catch (e) { /* sin voz, nada */ }
 }
 
-/* La voz de la rutina se descodifica al abrirla, antes de la cuenta de entrada, como en Respira. */
+/* La voz de la rutina se descodifica al abrirla, antes de la cuenta de entrada, como en Respira. Y EL
+   AUDIO SE DESPIERTA YA, con el toque que abre la rutina: el contexto nacía con la primera madera de la
+   cuenta de entrada (el «tres»), y mientras arranca su reloj está parado. El «tres» sonaba medio segundo
+   tarde y el «dos» lo encontraba aún sonando: «tres, (madera), uno». Con sonido apagado no se crea. */
 function v1VozPrecarga() {
+  try {
+    const s = typeof getState === 'function' ? getState() : null;
+    const ctx = s && s.soundOn && typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;
+    const p = ctx && ctx.state !== 'running' && ctx.state !== 'closed' ? ctx.resume() : null;
+    if (p && typeof p.catch === 'function') p.catch(() => {});
+  } catch (e) { /* sin audio, nada que despertar */ }
   try { if (typeof window.paceVozCuerpoPrecarga === 'function') window.paceVozCuerpoPrecarga(); } catch (e) { /* sin voz, cuencos */ }
 }
 
