@@ -1,25 +1,42 @@
 # Caza del 19 nov. · dónde me quedo
 
-Rama `claude/caza-19nov-c2077c`. Solo propone: no hay nada montado en el código.
+Rama `claude/caza-19nov-c2077c`. Ez contestó: «todas sí a lo recomendado menos 6B + EL 10 SE QUEDA COMO ESTA».
+**Montado entero en la rama.** Ni bump, ni juntar, ni subir a main: la suite entera la pasa la coordinadora.
 
-## Qué hay
+## Hecho (un commit por hallazgo, cada uno con su prueba vista caer antes del arreglo)
 
-- `hallazgos.md`: los once hallazgos comprobados sobre la 0.211.0 (cinco fallos y seis detalles).
-- `fotos/`: una foto por hallazgo (las once que usa la página).
-- `guiones/`: los recorridos de Playwright que las sacaron (necesitan `lib.js` y un servidor en el puerto 8945).
-- `index.html`: **la página para Ez**, con once preguntas. Fallos 1, 2, 3 y el detalle 7 son «sí/no»; 4, 5, 6, 8, 9, 10 y 11 llevan A/B con la A recomendada.
-  Respuesta recomendada: `1 sí · 2 sí · 3 sí · 4A · 5A · 6A · 7 sí · 8A · 9A · 10A · 11A`.
+| Nº | Commit | Prueba |
+|---|---|---|
+| 1 · panel del móvil cerrado al abrir | `551c4f58` | `tests/caza-19nov-cajon.spec.js` (+ `abrirCajon` en helpers; sidebar-movil y sidebar-redesign lo abren a mano) |
+| 2 · el cajón es un diálogo | `74ae64d5` | `tests/caza-19nov-cajon.spec.js` |
+| 3 · el aviso en el idioma de ahora | `b88ed7d9` | `tests/caza-19nov-textos.spec.js` |
+| 4A · Ajustes sin scroll con avisos bloqueados (solo web) | `6aa71736` | `tests/caza-19nov-ajustes.spec.js` |
+| 5A · Privacidad y Seguridad en inglés (`#en`, «English ↓») | `92b834a9` | `tests/caza-19nov-ajustes.spec.js` |
+| 6B · losetas de noche apagadas, «Ya no cabe hoy» | `777ff465` | `tests/caza-19nov-noche.spec.js` (las de 1280 se ajustaron después de caer por no encontrar las losetas: esas tres no se vieron caer por el fallo) |
+| 7 · logros con «Foco» | — | **ya hecho en `claude/arreglos-tester-18nov` (a47d3bd5)**: no se duplica, llega al juntar |
+| 8A · «Después del Foco» con cero | `21afbbf0` | `tests/caza-19nov-textos.spec.js` |
+| 9A · «Otro» por encima de 180 se queda en 180 | `5ed5a1d6` | `tests/caza-19nov-textos.spec.js` |
+| 10 · «25·12 reps» | — | se queda como está |
+| 11A · línea del Mes en h y min | `c759f467` | `tests/caza-19nov-textos.spec.js` (+ stats-auditoria E3/E4 al día) |
 
-## Publicada
+- Censo de claves i18n: 1288 (+1 el 2, +1 el 6B, +1 el 8A; el 4A cambia una por otra).
+- `npm run verify` en verde con todo (tras el 11A).
+- Vecinas pasadas, todas con `--workers=1` en el 8945: sidebar-movil, sidebar-redesign, accesibilidad-teclado, sello-aro,
+  sello-espera, logros-i18n, premium-codigo, ajustes*, android-avisos, android-nativo, compra-apps, feedback-porque, sw-legales,
+  cabeceras, web-dist, 14 de «A tu ritmo» (la roja de `ritmo-pausa.spec.js:106` era de carga: sola y con su archivo, verde),
+  stats-ayuda, foco-minimo, foco-libre-minutos, stats-auditoria, caza-ingles, plurales.
+- Los dos wip de antes (fa816880 y 2aec6b79) siguen en la historia: se rehicieron como commits limpios y se juntaron con
+  un merge «ours» (`f6e97710`), porque el push forzado no estaba permitido. El árbol es el de `c759f467`.
 
-- Cuenta **5iWBf**: https://claude.ai/artifact/NmCXPrtbSuCt69NUnKUdPK (privada; las fotos van en `files`).
-- Cuenta **EcLj6**: **falta su par**. Para hacerlo, publicar `docs/proposals/caza-19nov/index.html` con las once fotos de `fotos/` en `files` (las rutas publicadas son `fotos/<nombre>.png`).
+## La página
+
+- `index.html` de esta carpeta: los once con lo elegido, foto de antes y después (`fotos/montaje/`) y su prueba.
+  Guion de las fotos: `guiones/montaje-fotos.js antes|despues`.
+- Cuenta **EcLj6**: https://claude.ai/artifact/2h8vx4y2YvrzaJV55cSavH (nueva, con lo montado).
+- Cuenta **5iWBf**: https://claude.ai/artifact/NmCXPrtbSuCt69NUnKUdPK (la propuesta) **queda por republicar** con este `index.html`.
 
 ## Lo que no se hizo
 
-- Las opciones de texto (4A, 6A/6B, 8A, 10A/10B, 11A/11B) van como maquetas de texto en la propia página, con borde de puntos; no están pintadas sobre la app. Se miden en el móvil al montar, en los dos idiomas.
-- No se corrió la suite (había otra corriendo) ni hizo falta: no se tocó código.
-
-## Siguiente paso
-
-Esperar la respuesta de Ez («1 sí 2 sí…»). Con ella, la coordinadora encarga el montaje en una rama aparte.
+- La suite entera (la pasa la coordinadora antes de juntar).
+- En Android y en el iPhone la nota de avisos bloqueados sigue como estaba; no se midió si allí pide scroll.
+- Las páginas de la web (inicio, /premium, /beta) enlazan /privacy y /safety sin `#en`; quien llega de ahí tiene el «English ↓».
