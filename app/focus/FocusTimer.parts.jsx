@@ -17,7 +17,8 @@ const { useState: useStateFP, useEffect: useEffectFP, useRef: useRefFP } = React
    (Enter o blur) aplica el valor y colapsa. Si el value actual no es
    preset, la pill muestra el número en lugar de "Otro" (estado activo).
    Rango FOCO_MINIMO (5)–180: por debajo de 5, «A tu ritmo» no puede repartir el día, así
-   que un 1–4 escrito se queda en 5 en vez de descartarse. */
+   que un 1–4 escrito se queda en 5 en vez de descartarse; y por encima, igual, en 180 (caza del
+   19 nov. 2026, Ez 9A: 999 se ignoraba sin decir nada y el reloj volvía a 25). */
 function MinutesPicker({ value, onChange }) {
   const { t, tn } = useT();
   const presets = [15, 25, 35, 45];
@@ -40,8 +41,8 @@ function MinutesPicker({ value, onChange }) {
 
   const commit = () => {
     const n = parseInt(draft, 10);
-    if (Number.isFinite(n) && n >= 1 && n <= 180) {
-      onChange(Math.max(FOCO_MINIMO, n));
+    if (Number.isFinite(n) && n >= 1) {
+      onChange(Math.min(180, Math.max(FOCO_MINIMO, n)));
     } else {
       setDraft(String(value)); // revert
     }

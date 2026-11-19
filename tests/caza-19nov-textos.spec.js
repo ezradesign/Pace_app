@@ -4,6 +4,7 @@
 
    3 · El aviso del sello y el del código salen en el idioma de ahora, no en el de cuando se abrió PACE.
    8 · «Tras 0 de tus 60 Focos, una pausa.» dice otra frase con cero (8A).
+   9 · «Otro» con más de 180 se queda en 180, igual que con menos de 5 sube a 5 (9A).
 */
 const { test, expect } = require('@playwright/test');
 const { sembrar, irAlArtefacto } = require('./helpers');
@@ -41,6 +42,21 @@ test.describe('3 · el aviso, en el idioma de ahora', () => {
     await expect(aviso).toContainText('PACE Complete is yours');
     await expect(aviso).toContainText('Code');
   });
+});
+
+test.describe('9 · «Otro» se queda en el límite por los dos lados', () => {
+  for (const [escrito, queda] of [['999', 180], ['181', 180], ['3', 5], ['90', 90]]) {
+    test(escrito + ' se queda en ' + queda, async ({ page, context }) => {
+      await sembrar(context, {});
+      await irAlArtefacto(page);
+      await page.getByRole('button', { name: 'Otro' }).click();
+      const campo = page.locator('input[type="number"]').first();
+      await campo.fill(escrito);
+      await campo.press('Enter');
+      await expect(page.locator('[data-pace-dial-number]')).toHaveText(String(queda).padStart(2, '0') + ':00');
+      expect(await page.evaluate(() => JSON.parse(localStorage.getItem('pace.state.v2')).focusMinutes)).toBe(queda);
+    });
+  }
 });
 
 /* «Qué te ayuda» sale de los eventos (stats-ayuda.js); aquí se le da el resultado hecho, que es lo que
