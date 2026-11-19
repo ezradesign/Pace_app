@@ -1,0 +1,330 @@
+<title>La caza del 19 nov.</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de papel y tinta, como las otras páginas para Ez: once hallazgos numerados (el número es
+   el de la respuesta, «1 sí 4A…»), cada uno con su foto de la 0.211.0, qué pasa, por qué importa y qué hacer. */
+:root{
+  --paper:#F2EDE0;--card:#FBF8F1;
+  --ink:#1F1C17;--ink-2:#4A453C;--ink-3:#77705F;
+  --line:#C9C0A8;
+  --olive:#3E5A3A;--olive-soft:rgba(62,90,58,.12);
+  --terra:#A85E43;--terra-soft:rgba(168,94,67,.12);
+  --sage:#5E7A57;--rose:#C2674E;--ochre:#9A7444;--water:#4F7FA0;
+  --velo:rgba(31,28,23,.86);
+  --display:'EB Garamond',Georgia,'Times New Roman',serif;
+  --ui:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);
+  --sage:#98B58B;--rose:#E8A98F;--ochre:#D2AE7C;--water:#8DB6D2;--velo:rgba(0,0,0,.88);color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);
+  --sage:#98B58B;--rose:#E8A98F;--ochre:#D2AE7C;--water:#8DB6D2;--velo:rgba(0,0,0,.88);color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+main{max-width:920px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 72px}
+h1,h2,h3{font-family:var(--display);font-style:italic;font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(32px,6vw,44px)}
+h2{font-size:clamp(23px,4vw,28px);margin:48px 0 4px;padding-top:22px;border-top:1px solid var(--line)}
+h3{font-size:22px;display:flex;gap:12px;align-items:baseline}
+p,li{color:var(--ink-2);max-width:68ch}
+p{margin:0 0 10px}
+strong{color:var(--ink);font-weight:500}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.lead{font-family:var(--display);font-size:21px;color:var(--ink);max-width:62ch;margin-top:14px}
+.sub{font-size:15px;color:var(--ink-3);margin:0 0 6px}
+.contesta{margin-top:20px;padding:16px 18px;border:1px solid var(--ink);border-radius:12px;background:var(--card)}
+.contesta p{margin:0;color:var(--ink);font-size:17px}
+.contesta p + p{margin-top:6px;font-size:15px;color:var(--ink-2)}
+.contesta code{font-family:var(--ui);font-weight:600;color:var(--ink);white-space:normal}
+.num{flex:0 0 auto;display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--ink);font-family:var(--display);font-style:normal;font-size:19px;color:var(--ink);transform:translateY(-2px)}
+.hz{margin-top:30px;padding-top:24px;border-top:1px dashed var(--line)}
+h2 + .sub + .hz,h2 + .hz{border-top:0;padding-top:4px}
+.cuerpo{display:grid;gap:18px 24px;grid-template-columns:minmax(0,1fr);margin-top:14px}
+.cuerpo.con-foto{grid-template-columns:180px minmax(0,1fr)}
+.cuerpo.con-tira{grid-template-columns:minmax(0,1fr)}
+.cuerpo > div{min-width:0}
+figure{margin:0}
+figure img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:14px;background:var(--card);cursor:zoom-in}
+.con-tira figure{max-width:560px}
+.con-tira figure img{border-radius:8px}
+figcaption{font-size:13px;color:var(--ink-3);margin-top:6px;line-height:1.4}
+.t{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin:12px 0 2px}
+.t:first-child{margin-top:0}
+.ops{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:8px}
+.ops li{display:flex;gap:12px;align-items:flex-start;max-width:none;margin:0;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+.ops li.reco{border-color:var(--olive);background:var(--olive-soft)}
+.ops li > div{min-width:0}
+.ops p{margin:0;color:var(--ink-2)}
+.letra{flex:0 0 auto;display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--paper);font-family:var(--display);font-style:italic;font-size:18px;margin-top:-2px}
+.tag{display:inline-block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--olive);border:1px solid var(--olive);border-radius:999px;padding:1px 9px;margin-left:6px;vertical-align:1px;white-space:nowrap}
+.sino{margin-top:8px;padding:10px 12px;border:1px solid var(--olive);border-radius:10px;background:var(--olive-soft)}
+.sino p{margin:0;color:var(--ink-2)}
+/* Maquetas de texto: cómo se leería la línea; no son fotos de la app. */
+.maq{margin-top:8px;padding:8px 12px;border:1px dashed var(--line);border-radius:10px;background:var(--paper);font-size:14px;color:var(--ink-2);overflow-wrap:anywhere}
+.maq .k{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:4px}
+.maq .rot{font-family:var(--display);font-style:italic;font-size:16px}
+.maq .caps{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.losetas{display:grid;grid-template-columns:repeat(2,minmax(0,150px));gap:8px}
+.loseta{border:1px solid var(--line);border-radius:10px;padding:6px 10px;background:var(--card)}
+.loseta .rot{display:block;color:var(--ink)}
+.loseta small{font-family:var(--display);font-style:italic;font-size:13px;color:var(--ink-3)}
+.loseta.off{opacity:.5}
+.fila{display:flex;gap:12px;align-items:center;justify-content:space-between;max-width:320px}
+.fila small{display:block;font-size:11px;color:var(--ink-3)}
+.punto{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--sage);margin-right:5px;vertical-align:1px}
+.interr{flex:0 0 auto;width:34px;height:20px;border-radius:999px;background:var(--line);position:relative}
+.interr::after{content:"";position:absolute;left:3px;top:3px;width:14px;height:14px;border-radius:50%;background:var(--card)}
+.foco{color:var(--sage)}.respira{color:var(--rose)}.cuerpo-c{color:var(--ochre)}
+.ok li{margin-bottom:4px}
+ul.ok,ul.nota{padding-left:22px;margin:8px 0 0}
+#grande{position:fixed;inset:0;background:var(--velo);display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:20;cursor:zoom-out}
+#grande img{max-width:100%;max-height:100%;border-radius:12px}
+img:focus-visible{outline:2px solid var(--olive);outline-offset:2px}
+@media (max-width:620px){
+  .cuerpo.con-foto{grid-template-columns:minmax(0,1fr)}
+  .cuerpo.con-foto figure{max-width:220px}
+}
+</style>
+
+<main>
+  <div class="eyebrow">PACE · caza de fallos · 19 nov. · 0.211.0</div>
+  <h1>Once cosas que arreglar</h1>
+  <p class="lead">He recorrido la 0.211.0 como quien la usa: en el móvil y en el ordenador, de noche, en inglés, sin conexión y con dos pestañas. Salen cinco fallos y seis detalles. No hay nada montado.</p>
+
+  <div class="contesta">
+    <p>Contesta en una línea, por ejemplo: <code>1 sí · 2 sí · 3 sí · 4A · 5A · 6A · 7 sí · 8A · 9A · 10A · 11A</code></p>
+    <p>Eso es todo lo recomendado; «todo lo recomendado» también vale. Lo que no quieras, «no».</p>
+  </div>
+
+  <h2>Fallos</h2>
+  <p class="sub">Cosas que hoy salen mal. Solo hay un arreglo razonable: dime sí o no.</p>
+
+  <section class="hz" id="h1">
+    <h3><span class="num">1</span>El panel del móvil se abre solo al volver</h3>
+    <div class="cuerpo con-foto">
+      <figure><img tabindex="0" src="fotos/cajon-tras-recargar.png" alt="La home del móvil con el panel abierto encima del reloj, nada más abrir PACE"><figcaption>360 × 640, nada más abrir PACE.</figcaption></figure>
+      <div>
+        <div class="t">Qué pasa</div>
+        <p>Si cierras PACE con el panel abierto, la vez siguiente arranca con el panel tapando el reloj. También le pasa a quien viene del ordenador, donde el panel se queda abierto: las testers de la 0.191.1 lo tienen guardado así.</p>
+        <div class="t">Por qué importa</div>
+        <p>Lo primero que ves no es el Foco, y hay que cerrar el panel cada vez.</p>
+        <div class="sino"><p><strong>¿Arreglar? Recomiendo sí.</strong> En el móvil, PACE abre siempre con el panel cerrado. En el ordenador sigue recordando cómo lo dejaste.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hz" id="h2">
+    <h3><span class="num">2</span>El panel no se cierra con el teclado</h3>
+    <div class="cuerpo con-foto">
+      <figure><img tabindex="0" src="fotos/cajon-esc-m.png" alt="El panel del móvil sigue abierto después de pulsar Escape"><figcaption>Después de pulsar Escape: sigue abierto.</figcaption></figure>
+      <div>
+        <div class="t">Qué pasa</div>
+        <p>En el móvil y en la tableta, con teclado o con lector de pantalla, Escape no cierra el panel. Y al tabular, el foco se va a los botones que quedan detrás sin verse, como «Ver estadísticas» o «Empezar foco».</p>
+        <div class="t">Por qué importa</div>
+        <p>Quien usa PACE sin dedo ni ratón (una tableta con teclado, o un lector porque no ve bien) se pierde. Las demás ventanas de PACE ya lo hacen bien; falta el panel.</p>
+        <div class="sino"><p><strong>¿Arreglar? Recomiendo sí.</strong> El panel se porta como las demás ventanas: Escape lo cierra, el tabulador se queda dentro y al cerrarlo vuelves al botón del menú.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hz" id="h3">
+    <h3><span class="num">3</span>El aviso del sello sale en el idioma de antes</h3>
+    <div class="cuerpo con-foto">
+      <figure><img tabindex="0" src="fotos/fm-4-fin.png" alt="Final de un Foco en inglés con el aviso New stamp · Primer paso"><figcaption>PACE en inglés: «New stamp · Primer paso».</figcaption></figure>
+      <div>
+        <div class="t">Qué pasa</div>
+        <p>Cambias de idioma sin recargar, aquí o en otra pestaña, y al ganar un sello el aviso sale mezclado: «New stamp · Primer paso». Lo mismo pasa con el aviso del código.</p>
+        <div class="t">Por qué importa</div>
+        <p>Es el momento que celebra un logro, y sale a medias en el otro idioma.</p>
+        <div class="sino"><p><strong>¿Arreglar? Recomiendo sí.</strong> El aviso mira el idioma en el momento de salir, no el de cuando se abrió PACE.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hz" id="h4">
+    <h3><span class="num">4</span>Ajustes del móvil pide scroll si los avisos están bloqueados</h3>
+    <div class="cuerpo con-foto">
+      <figure><img tabindex="0" src="fotos/aj-bloq-360x640-en.png" alt="Ajustes en inglés a 360 por 640 con la fila Tus datos cortada abajo"><figcaption>360 × 640 en inglés. En español, igual.</figcaption></figure>
+      <div>
+        <div class="t">Qué pasa</div>
+        <p>Si el navegador tiene bloqueados los avisos de PACE, bajo «Aviso al terminar» sale «Notificaciones bloqueadas…». Esa línea suma 12 px a 360 × 640, en los dos idiomas, y la última fila, «Tus datos», queda cortada. A 1280 × 720 suma 6 px.</p>
+        <div class="t">Por qué importa</div>
+        <p>Rompe tu regla de que los Ajustes del móvil caben sin scroll, y «Tus datos» es donde se hace la copia.</p>
+        <ul class="ops">
+          <li class="reco"><span class="letra">A</span><div><p><strong>Una línea más corta, en el sitio de la pequeña.</strong> <span class="tag">Recomendada</span> Sustituye a la línea pequeña que ya hay bajo «Aviso al terminar» y no suma altura.</p>
+            <div class="maq"><span class="k">Maqueta de texto</span><div class="fila"><div><span class="rot">Aviso al terminar</span><small><span class="punto"></span>Foco · bloqueados en este navegador</small></div><span class="interr"></span></div></div></div></li>
+          <li><span class="letra">B</span><div><p><strong>La línea se queda y Ajustes se aprieta.</strong> Cuando sale, las filas se juntan un poco, como ya pasa en pantallas bajas.</p></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="hz" id="h5">
+    <h3><span class="num">5</span>En inglés, Privacidad y Seguridad abren en español</h3>
+    <div class="cuerpo con-foto">
+      <figure><img tabindex="0" src="fotos/web_privacym-light-en.png" alt="La página de Privacidad en español, abierta desde PACE en inglés"><figcaption>Abierta desde PACE en inglés.</figcaption></figure>
+      <div>
+        <div class="t">Qué pasa</div>
+        <p>Con PACE en inglés, los enlaces a Privacidad y a Seguridad abren la página en español. El inglés está al final, unos 8000 px más abajo en el móvil, y nada lo dice.</p>
+        <div class="t">Por qué importa</div>
+        <p>Quien no lee español cree que no hay versión en inglés. Son las páginas que miran la tienda y la gente antes de pagar.</p>
+        <ul class="ops">
+          <li class="reco"><span class="letra">A</span><div><p><strong>La misma página, con salto al inglés.</strong> <span class="tag">Recomendada</span> Un enlace «English ↓» arriba, y la app en inglés abre directamente la parte en inglés.</p></div></li>
+          <li><span class="letra">B</span><div><p><strong>Una página aparte en inglés.</strong> Más limpia de leer, pero son dos páginas que hay que mantener iguales.</p></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <h2>Detalles</h2>
+  <p class="sub">Funcionan, pero se leen mal o confunden. Donde hay más de una manera, van con letra.</p>
+
+  <section class="hz" id="h6">
+    <h3><span class="num">6</span>De noche, dos losetas dicen lo mismo</h3>
+    <div class="cuerpo con-foto">
+      <figure><img tabindex="0" src="fotos/noche-2330.png" alt="Preparar jornada a las 23:30: Una hora y Dos horas dicen las dos Hasta las 0:00"><figcaption>A las 23:30.</figcaption></figure>
+      <div>
+        <div class="t">Qué pasa</div>
+        <p>A las 23:30, «Una hora» y «Dos horas» dicen las dos «Hasta las 0:00», y «Dos horas» da en realidad 30 min. A las 22:45, «Dos horas · Hasta las 0:00» es 1 h 15.</p>
+        <div class="t">Por qué importa</div>
+        <p>Eliges dos horas y te da media.</p>
+        <ul class="ops">
+          <li class="reco"><span class="letra">A</span><div><p><strong>Decir lo que dura de verdad.</strong> <span class="tag">Recomendada</span> Las dos siguen y se puede aprovechar la última media hora.</p>
+            <div class="maq"><span class="k">Maqueta de texto · 23:30</span><div class="losetas"><div class="loseta"><span class="rot">Una hora</span><small>Hasta las 0:00 · 30 min</small></div><div class="loseta"><span class="rot">Dos horas</span><small>Hasta las 0:00 · 30 min</small></div></div></div></div></li>
+          <li><span class="letra">B</span><div><p><strong>Apagar la que ya no cabe entera</strong>, como hoy «Jornada entera · Tu jornada ya terminó». A las 23:30 se apagarían las dos.</p>
+            <div class="maq"><span class="k">Maqueta de texto · 23:30</span><div class="losetas"><div class="loseta off"><span class="rot">Una hora</span><small>Ya no cabe hoy</small></div><div class="loseta off"><span class="rot">Dos horas</span><small>Ya no cabe hoy</small></div></div></div></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="hz" id="h7">
+    <h3><span class="num">7</span>Los logros dicen «Pomodoro»</h3>
+    <div class="cuerpo con-foto">
+      <figure><img tabindex="0" src="fotos/m-es-1-Ver_logros.png" alt="Logros: Primer paso, Completa tu primer Pomodoro"><figcaption>«Completa tu primer Pomodoro».</figcaption></figure>
+      <div>
+        <div class="t">Qué pasa</div>
+        <p>«Completa tu primer Pomodoro», «12 Pomodoros», «8 Pomodoros en un día». En el resto de la app se dice «Foco»: quitaste «pomodoro» del aro. En inglés pasa igual.</p>
+        <div class="t">Por qué importa</div>
+        <p>Dos nombres para lo mismo.</p>
+        <div class="sino"><p><strong>¿Cambiar? Recomiendo sí.</strong> «Completa tu primer Foco», «12 Focos», «8 Focos en un día», y en inglés la palabra que ya usa la app.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hz" id="h8">
+    <h3><span class="num">8</span>«Tras 0 de tus 60 Focos, una pausa»</h3>
+    <div class="cuerpo con-foto">
+      <figure><img tabindex="0" src="fotos/vet-16-9-m-st-Quteayuda.png" alt="Estadísticas, Qué te ayuda: Tras 0 de tus 60 Focos, una pausa"><figcaption>Estadísticas › Qué te ayuda.</figcaption></figure>
+      <div>
+        <div class="t">Qué pasa</div>
+        <p>Si nunca has parado justo después de un Foco, la tarjeta «Después del Foco» dice «Tras 0 de tus 60 Focos, una pausa».</p>
+        <div class="t">Por qué importa</div>
+        <p>Con el cero suena a error, aunque el dato sirve: dice que no estás parando.</p>
+        <ul class="ops">
+          <li class="reco"><span class="letra">A</span><div><p><strong>Otra frase cuando es cero.</strong> <span class="tag">Recomendada</span> Se queda el dato y se lee bien.</p>
+            <div class="maq"><span class="k">Maqueta de texto</span><span class="caps">Después del Foco</span><br><span class="rot" style="color:var(--ink)">Aún no has parado justo después de un Foco.</span></div></div></li>
+          <li><span class="letra">B</span><div><p><strong>No enseñar la tarjeta</strong> hasta que haya al menos una pausa después de un Foco.</p></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="hz" id="h9">
+    <h3><span class="num">9</span>«Otro» con más de 180 minutos no hace nada</h3>
+    <div class="cuerpo con-foto">
+      <figure><img tabindex="0" src="fotos/otro-999.png" alt="La home después de escribir 999 en Otro: el reloj sigue en 25:00"><figcaption>Tras escribir 999: vuelve a 25.</figcaption></figure>
+      <div>
+        <div class="t">Qué pasa</div>
+        <p>En «Otro», si escribes más de 180 (aquí 999), PACE lo ignora sin decir nada y vuelve a 25. Si escribes menos de 5, en cambio, lo sube a 5.</p>
+        <div class="t">Por qué importa</div>
+        <p>Parece que no funciona.</p>
+        <ul class="ops">
+          <li class="reco"><span class="letra">A</span><div><p><strong>Igual en los dos lados.</strong> <span class="tag">Recomendada</span> 999 se queda en 180, como 3 ya sube a 5.</p></div></li>
+          <li><span class="letra">B</span><div><p><strong>Decirlo.</strong> El número no cambia y debajo sale «Entre 5 y 180 min» hasta que lo corriges.</p></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="hz" id="h10">
+    <h3><span class="num">10</span>«25·12 reps» parece una multiplicación</h3>
+    <div class="cuerpo con-tira">
+      <figure><img tabindex="0" src="fotos/zoom-reps.png" alt="Detalle: 2 SETS · 25·12 REPS"><figcaption>Una rutina de Mueve, en inglés: «2 sets · 25·12 reps».</figcaption></figure>
+      <div>
+        <div class="t">Qué pasa</div>
+        <p>Una rutina de dos series con distintas repeticiones dice «2 series · 25·12 reps».</p>
+        <div class="t">Por qué importa</div>
+        <p>El punto se lee como «por»: 300 repeticiones.</p>
+        <ul class="ops">
+          <li class="reco"><span class="letra">A</span><div><p><strong>Con «y».</strong> <span class="tag">Recomendada</span> En inglés, «25 and 12 reps».</p><div class="maq"><span class="k">Maqueta de texto</span><span class="caps">2 series · 25 y 12 reps</span></div></div></li>
+          <li><span class="letra">B</span><div><p><strong>Con coma.</strong> Más corto.</p><div class="maq"><span class="k">Maqueta de texto</span><span class="caps">2 series · 25, 12 reps</span></div></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="hz" id="h11">
+    <h3><span class="num">11</span>El resumen del mes mezcla letras y usa decimales</h3>
+    <div class="cuerpo con-tira">
+      <figure><img tabindex="0" src="fotos/zoom-mes.png" alt="Detalle: Foco 20,6h · Respira 27min · Cuerpo 1,1h · 78 vasos"><figcaption>Estadísticas › Mes, la línea de abajo.</figcaption></figure>
+      <div>
+        <div class="t">Qué pasa</div>
+        <p>La línea dice «Foco 20,6h · Respira 27min · Cuerpo 1,1h · 78 vasos». El «78» va con la letra de los rótulos, no con la de las cifras, y las horas van en decimales.</p>
+        <div class="t">Por qué importa</div>
+        <p>«20,6h» obliga a hacer la cuenta (son 20 h 36 min), y el 78 parece un nombre.</p>
+        <ul class="ops">
+          <li class="reco"><span class="letra">A</span><div><p><strong>Horas y minutos, y el 78 como las demás cifras.</strong> <span class="tag">Recomendada</span></p>
+            <div class="maq"><span class="k">Maqueta de texto</span><span class="rot foco">Foco</span> 20 h 36 min · <span class="rot respira">Respira</span> 27 min · <span class="rot cuerpo-c">Cuerpo</span> 1 h 6 min · 78 vasos</div></div></li>
+          <li><span class="letra">B</span><div><p><strong>Solo el 78 y un espacio antes de la unidad.</strong> Las horas siguen en decimales.</p>
+            <div class="maq"><span class="k">Maqueta de texto</span><span class="rot foco">Foco</span> 20,6 h · <span class="rot respira">Respira</span> 27 min · <span class="rot cuerpo-c">Cuerpo</span> 1,1 h · 78 vasos</div></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <h2>Probado y sin problema</h2>
+  <ul class="ok">
+    <li>Ningún error en la consola en todo el recorrido.</li>
+    <li>Sin conexión funciona, Respira incluido.</li>
+    <li>Dos pestañas a la vez se ponen de acuerdo: Foco, agua e idioma.</li>
+    <li>La visita guiada entera, e Hidrátate por encima de la meta y a medianoche.</li>
+    <li>La web (inicio, /premium, /beta, /recuperar, /gracias, /desistir y la de error) a 360 y 1280, en español e inglés, clara y oscura, sin scroll de lado.</li>
+    <li>El gris claro del texto ya lo elegiste tú; no lo vuelvo a proponer.</li>
+  </ul>
+
+  <h2>Lo que no he probado</h2>
+  <ul class="nota">
+    <li>Nada está montado: las fotos son la 0.211.0 tal cual.</li>
+    <li>Las líneas con borde de puntos son maquetas de texto de esta página, no fotos de la app. Se miden en el móvil al montar, en los dos idiomas.</li>
+  </ul>
+
+  <div class="contesta">
+    <p>Contesta en una línea: <code>1 sí · 2 sí · 3 sí · 4A · 5A · 6A · 7 sí · 8A · 9A · 10A · 11A</code></p>
+    <p>Once preguntas. Cambia la letra o pon «no» donde no estés de acuerdo.</p>
+  </div>
+</main>
+<div id="grande" hidden><img alt=""></div>
+
+<script>
+(function () {
+  var grande = document.getElementById('grande');
+  function abrir(img) { grande.querySelector('img').src = img.src; grande.querySelector('img').alt = img.alt; grande.hidden = false; }
+  document.addEventListener('click', function (e) {
+    if (e.target.matches('figure img')) abrir(e.target);
+    else if (!grande.hidden && grande.contains(e.target)) grande.hidden = true;
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') grande.hidden = true;
+    if (e.key === 'Enter' && e.target.matches && e.target.matches('figure img')) abrir(e.target);
+  });
+})();
+</script>
