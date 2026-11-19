@@ -37910,7 +37910,16 @@ function v1VozCalla() {
 }
 
 
+
+
+
 function v1VozPrecarga() {
+  try {
+    const s = typeof getState === 'function' ? getState() : null;
+    const ctx = s && s.soundOn && typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;
+    const p = ctx && ctx.state !== 'running' && ctx.state !== 'closed' ? ctx.resume() : null;
+    if (p && typeof p.catch === 'function') p.catch(() => {});
+  } catch (e) {}
   try {if (typeof window.paceVozCuerpoPrecarga === 'function') window.paceVozCuerpoPrecarga();} catch (e) {}
 }
 

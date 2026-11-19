@@ -61,8 +61,17 @@ function v1VozCalla() {
   try { if (typeof window.paceVozCuerpoCalla === 'function') window.paceVozCuerpoCalla(); } catch (e) { /* sin voz, nada */ }
 }
 
-/* La voz de la rutina se descodifica al abrirla, antes de la cuenta de entrada, como en Respira. */
+/* La voz de la rutina se descodifica al abrirla, antes de la cuenta de entrada, como en Respira. Y EL
+   AUDIO SE DESPIERTA YA, con el toque que abre la rutina: el contexto nacía con la primera madera de la
+   cuenta de entrada (el «tres»), y mientras arranca su reloj está parado. El «tres» sonaba medio segundo
+   tarde y el «dos» lo encontraba aún sonando: «tres, (madera), uno». Con sonido apagado no se crea. */
 function v1VozPrecarga() {
+  try {
+    const s = typeof getState === 'function' ? getState() : null;
+    const ctx = s && s.soundOn && typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;
+    const p = ctx && ctx.state !== 'running' && ctx.state !== 'closed' ? ctx.resume() : null;
+    if (p && typeof p.catch === 'function') p.catch(() => {});
+  } catch (e) { /* sin audio, nada que despertar */ }
   try { if (typeof window.paceVozCuerpoPrecarga === 'function') window.paceVozCuerpoPrecarga(); } catch (e) { /* sin voz, cuencos */ }
 }
 
