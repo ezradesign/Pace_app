@@ -4,7 +4,24 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de noviembre de 2026, 10:20, v0.204.0 en `main` y los cuatro arreglos de S3 y S4 en su rama.
 
-## AL RELEVO (19 nov., 12:00, cuenta EcLj6 con las 5 h al 100 %; se reponen a las 14:40): empieza aquí; manda sobre todo lo de abajo
+## AL RELEVO (19 nov., 13:20, cuenta 5iWBf con la SEMANA al 98-100 %, hasta el 23 nov.): empieza aquí; manda sobre todo lo de abajo
+
+- **`main` = `origin/main` = 0.211.0 + docs, en verde.** No se ha juntado nada.
+- **Las suites de la voz y de los menores murieron a las 12:59 al cambiar de cuenta** (0xC0000142, 1004 rojas falsas): no cuentan. Quedan procesos colgados en 8835, 8925 y 8935 (y servidores en 8945 y 8955) que el modo auto no deja matar: **puertos nuevos, 8926 para la voz y 8936 para los menores.** Al cambiar otra vez de cuenta, lo que corra ahora muere también: repetirlo.
+- Las cinco, por orden (cada una con su `DONDE-ME-QUEDO.md` y su `git log`, que mandan sobre esto):
+  1. **Arreglos del recorrido: HECHO.** Página en las dos cuentas: EcLj6 `2kQ1KXrcdsNjZ9uhP8D5Uv`, 5iWBf `A3Dc4VmgwvjkW7t6v4ZU8r` (republicada a las 13:15). Espera a Ez: las letras de la 11 y el «júntalo».
+  2. **Voz de los ejercicios:** la coordinadora relanzó su suite entera en el **8926** a las 13:05, sin sesión (si se cambió de cuenta, murió: `PACE_E2E_PORT=8926 npm run test:e2e` en su worktree, sola). Página en EcLj6 `U8qW3hFxwdsUDRDiBJdkwo` (1A 2A 3A recomendadas); falta su cifra de la suite y su par en 5iWBf. Espera a Ez: sus tres letras.
+  3. **Arreglos menores:** sesión retomada a las 13:10 (`menores`): fotos y página; su suite en el **8936** solo DESPUÉS de la de la voz. Su página de 5iWBf es `BF18PgPNiZ2Qv6j9jhWEx3`; falta el par de EcLj6.
+  4. **Caza de bugs:** sesión retomada (`caza`) para hacer la página desde `hallazgos.md` (once hallazgos). Si no hay URL en su `DONDE-ME-QUEDO.md`, sigue ahí.
+  5. **Visita guiada:** lo sin commit, guardado (89dcdf11); sesión retomada (`visita`) para acabar y publicar. La B en inglés no cabía en Estadísticas.
+- Las páginas publicadas en 5iWBf necesitan su par en EcLj6 (republicar y apuntarlo en `docs/traspaso/archivos/hoja-ids-cuentas.js`).
+- Para seguir, lo de siempre: `git status` en cada worktree (lo sin commit, «wip» y push), `start_session` con `cwd` y que lea su `DONDE-ME-QUEDO.md`.
+
+```
+Retomamos PACE desde la otra cuenta. Lee CLAUDE.md, STATE.md y el bloque «AL RELEVO (19 nov., 13:20)» de arriba del todo de docs/traspaso/LEEME.md, y sigue como coordinadora. main está en la 0.211.0 con GitHub en verde. Retoma las sesiones de encargo que no acabaron (voz, arreglos menores, caza de bugs y visita guiada), cada una desde su DONDE-ME-QUEDO.md y su git log, con las suites de una en una (primero la voz); publica en esa cuenta las páginas que falten y tráemelas para que elija antes de juntar nada. Haz pocas vueltas.
+```
+
+## AL RELEVO (19 nov., 12:00, cuenta EcLj6 con las 5 h al 100 %; se reponen a las 14:40)
 
 - **`main` = `origin/main` = 0.211.0 + un apunte de docs, en verde entero** (CI, iOS y Android de 965698d9). Los textos largos, FUERA (Ez); la rama no se junta.
 - **Cinco sesiones de encargo, cada una en su worktree y su rama, con `DONDE-ME-QUEDO.md` en su carpeta de `docs/proposals/`.** Se cortaron por uso (o por red, ENOTFOUND: se reanudan). Para seguir: abrir una sesión en cada worktree (`start_session` con `cwd`) y que lea su `DONDE-ME-QUEDO.md` y `git log`; si su suite murió, se repite en su puerto. Antes, `git status` en el worktree: lo que esté sin commit se guarda con un commit «wip» y push.
