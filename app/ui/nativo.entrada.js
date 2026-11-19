@@ -58,6 +58,12 @@ function paceEntradaTexto(s, clave, vars) {
    empiezan hoy, y el de hoy cuenta si su hora de entrada aún no ha llegado. Los ids van por su
    puesto en esos siete días, así que siguen siendo del 10 al 16. */
 var PACE_ENTRADA_MADRUGADA = 4;
+function ritmoEntradaPrimera(r, dia) {
+  if (!r.semanaDesde || typeof parseLocalDateKey !== 'function') return false;
+  var d = parseLocalDateKey(r.semanaDesde);
+  if (!d) return false;
+  return Math.round((new Date(dia.getFullYear(), dia.getMonth(), dia.getDate()) - d) / 86400000) < 7;
+}
 function paceEntradaAvisos(s, ahora) {
   var out = [];
   try {
@@ -83,7 +89,8 @@ function paceEntradaAvisos(s, ahora) {
       out.push({
         id: PACE_ENTRADA_PRIMER_ID + i,
         at: at,
-        title: paceEntradaTexto(s, 'ritmo.manana.titulo', { dia: dias[n] || '' }),
+        /* «Hoy, viernes» la primera semana, como la tarjeta (ritmoTituloHabitual, Ez, 10A del 18 nov.) */
+        title: paceEntradaTexto(s, ritmoEntradaPrimera(r, dia) ? 'ritmo.manana.titulo.primera' : 'ritmo.manana.titulo', { dia: dias[n] || '' }),
         body: paceEntradaTexto(s, 'notify.entrada.' + tipo, { inicio: ritmoHora(desde), salida: ritmoHora(hasta) }),
       });
     }

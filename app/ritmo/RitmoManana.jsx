@@ -33,6 +33,7 @@ function RitmoComienzaHabitual() {
 
 function RitmoMananaMovil({ h }) {
   const { t, tn } = useT();
+  const [state] = usePace();
   const vista = { m: h.m, hechos: 0, actual: h.m.focos[0], estados: {} };
   return (
     <div className="pace-rt-panel pace-rt-mov" data-pace-ritmo-estado="habitual" data-pace-ritmo-habitual={h.opcion}>
@@ -42,7 +43,8 @@ function RitmoMananaMovil({ h }) {
         <div>
           <div className="pace-rt-titulo">
             {t('ritmo.opcion.' + h.opcion)}{' '}
-            <span className="pace-rt-habitual-como">{'· ' + tn('ritmo.manana.como', { dia: ritmoNombreDia(h.diaSemana, t) })}</span>
+            {/* La primera semana no hay «cada» que valga (Ez, 10A del 18 nov.: ritmoPrimeraSemana). */}
+            {ritmoPrimeraSemana(state) ? null : <span className="pace-rt-habitual-como">{'· ' + tn('ritmo.manana.como', { dia: ritmoNombreDia(h.diaSemana, t) })}</span>}
           </div>
           <div className="pace-rt-sub pace-rt-frase"><RitmoFraseMenu plan={vista} horario={h.horario} plantilla="ritmo.frase.movil" /></div>
         </div>

@@ -137,7 +137,7 @@ function RitmoPregunta({ state }) {
       <div className="pace-rt-panel pace-rt-esc" data-pace-ritmo-estado="pregunta">
         <div className="pace-rt-cab">
           <div>
-            <div className="pace-rt-titulo">{H ? tn('ritmo.manana.titulo', { dia }) : t('ritmo.pregunta')}</div>
+            <div className="pace-rt-titulo">{H ? ritmoTituloHabitual(state, H.diaSemana, t, tn) : t('ritmo.pregunta')}</div>
             {H ? null : <div className="pace-rt-sub">{t('ritmo.sub')}</div>}
             <div className="pace-rt-sub pace-rt-frase">{frase}</div>
             <div className="pace-rt-sub pace-rt-frase" data-pace-ritmo-frase-media>{fraseMedia}</div>

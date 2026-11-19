@@ -57,7 +57,7 @@ function RitmoTarjeta() {
   const { t, tn } = useT();
   if (state.paths && state.paths.current) return null;
   const H = ritmoHabitual(state);
-  const titulo = H ? tn('ritmo.manana.titulo', { dia: ritmoNombreDia(H.diaSemana, t) }) : t('ritmo.pregunta');
+  const titulo = H ? ritmoTituloHabitual(state, H.diaSemana, t, tn) : t('ritmo.pregunta');
   const nota = H ? t('ritmo.opcion.' + H.opcion) + ', ' + ritmoHora(H.m.desde) + '–' + ritmoHora(H.m.hasta) : t('ritmo.tarjeta.horas');
   const abrirCaminos = () => window.dispatchEvent(new CustomEvent('pace:open-paths-library'));
   const conCaminos = window.SHOW_CAMINOS !== false;
