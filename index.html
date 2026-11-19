@@ -4555,6 +4555,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.tramo': 'De {a} a {b}',
   'ritmo.frase.media': 'Media jornada: de {mediaInicio} a {mediaSalida}.',
   'ritmo.fuera': 'Tu jornada ya terminó',
+  'ritmo.nocabe': 'Ya no cabe hoy',
   'ritmo.libre': 'Hoy voy por libre',
   'ritmo.volver': 'Ponle ritmo al día',
   'ritmo.cambiar': 'Cambiar',
@@ -4753,6 +4754,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.tramo': 'From {a} to {b}',
   'ritmo.frase.media': 'Half day: from {mediaInicio} to {mediaSalida}.',
   'ritmo.fuera': 'Your workday is over',
+  'ritmo.nocabe': 'No longer fits today',
   'ritmo.libre': 'No plan today',
   'ritmo.volver': 'Give your day a rhythm',
   'ritmo.cambiar': 'Change',
@@ -51578,7 +51580,7 @@ function RitmoChips(_ref3) {let { state, editarMedia, tuyo } = _ref3;
     React.createElement("div", { className: "pace-rt-chips" },
     RITMO_OPCIONES_UI.map((op) => {
       const m = ritmoMenu(state, op, null, null);
-      const vacia = !m || !m.focos.length;
+      const vacia = ritmoOpcionVacia(op, m);
       if (horas && op === 'media' && vacia) {
         return (
           React.createElement("div", { key: op, className: "pace-rt-chip pace-rt-chip-horas", "data-pace-ritmo-opcion": op, "data-pace-ritmo-media-horas": true },
@@ -51607,8 +51609,21 @@ function RitmoChips(_ref3) {let { state, editarMedia, tuyo } = _ref3;
 
 
 
+function ritmoNoCabe(op, m) {
+  const forma = m && window.RITMO_FORMAS && RITMO_FORMAS[op];
+  return !!(forma && forma.reloj && m.desde + forma.reloj > 24 * 60);
+}
+function ritmoOpcionVacia(op, m) {
+  return !m || !m.focos.length || ritmoNoCabe(op, m);
+}
+
+
+
+
+
 
 function ritmoSub(op, m, vacia, t, tn) {
+  if (ritmoNoCabe(op, m)) return t('ritmo.nocabe');
   if (vacia) return t('ritmo.fuera');
   if (op === 'media' || op === 'jornada') return tn('ritmo.tramo', { a: ritmoHora(m.desde), b: ritmoHora(m.hasta) });
   return tn('ritmo.hasta', { h: ritmoHora(m.hasta) });
@@ -51865,10 +51880,10 @@ function RitmoHecho(_ref1) {let { plan } = _ref1;
 }
 
 Object.assign(window, {
-  RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub,
+  RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub, ritmoNoCabe, ritmoOpcionVacia,
   RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho
 });
-;Object.assign(window, { RITMO_OPCIONES_UI, RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, ritmoSub, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho });
+;Object.assign(window, { RITMO_OPCIONES_UI, RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, ritmoNoCabe, ritmoOpcionVacia, ritmoSub, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho });
 })();
 </script>
   <script>
@@ -52513,7 +52528,7 @@ function RitmoTarjeta() {
     React.createElement("div", { className: "pace-rt-losetas" },
     RITMO_OPCIONES_UI.map((op) => {
       const m = ritmoMenu(state, op, null, null);
-      const vacia = !m || !m.focos.length;
+      const vacia = ritmoOpcionVacia(op, m);
       return (
         React.createElement("button", { key: op, type: "button", className: "pace-rt-loseta", "data-pace-ritmo-loseta": op,
           disabled: vacia, onClick: () => ritmoElegir(op) },
