@@ -46,7 +46,11 @@ Una por commit con su prueba vista caer; al final, la suite entera con PACE_E2E_
 - 11: en la página, sin montar. A recomendada: Coherente con fondo · Gemelos bajo la mesa · FOCO · «Sin levantarte»
   (grupo Sigilo) · Antídoto a la silla · Recolocar la postura. Ez contesta 11.1 a 11.6.
 - Fotos nuevas: fotos/nuevo2-*.webp. La página se publica en la cuenta EcLj6 (la de A3Dc… es la otra, 5iWBf).
-- Suite entera en la rama: corriendo con PACE_E2E_PORT=8915, registro en Temp/suite-arreglos-19nov.log.
+- Suite entera en la rama (19 nov.): 1764 verdes, 2 saltadas, 4 rojas. pausa-la-de-antes era de la 2A (e1767429);
+  ritmo-panel 1366x657 y sello-cajon pasan solas; runner-cabe «cabe-2 · 4·7·8» cae también en main a la misma hora
+  (depende de la hora o la carga, no de la rama).
+- Página en la cuenta EcLj6: https://claude.ai/artifact/2kQ1KXrcdsNjZ9uhP8D5Uv (par de A3Dc… en hoja-ids-cuentas.js).
+- Hecho todo el encargo. Espera a Ez: las letras de la 11 y el «júntalo».
 
 ## Falta (por orden)
 - 2A «Preparar jornada» en un toque: el botón de la tarjeta corta (RitmoTarjeta.jsx, data-pace-ritmo-comienza)
