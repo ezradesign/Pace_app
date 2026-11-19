@@ -58,3 +58,20 @@ test('CONTROL · volver a su hora, a las 15:00, deja la comida entera', async ({
   await page.waitForTimeout(400);
   expect(await plan(page)).toMatch(/^f13:15\+45 c14:00\+60 f15:00\+45 /);
 });
+
+test('CONTROL · saltada, al recargar y al pasar la medianoche: la comida cortada se queda y no pasa al día siguiente', async ({ page, context }) => {
+  await enLaComida(page, context);
+  await hasta(page, '14:05');
+  await vis(page, '[data-pace-cta]').first().click();
+  await page.waitForTimeout(400);
+  await page.reload();
+  await page.locator('[data-pace-dial-number]').waitFor();
+  await page.waitForTimeout(400);
+  expect(await pasado(page), 'tras recargar').toBe('f13:15+45 c14:00+5');
+  expect(await sinSolapes(page)).toEqual([]);
+  await page.clock.fastForward(10 * 60 * 60 * 1000 + 5 * 60 * 1000);   /* 00:10 del día siguiente */
+  await page.reload();
+  await page.locator('[data-pace-dial-number]').waitFor();
+  await page.waitForTimeout(400);
+  expect(await page.evaluate(() => ritmoPlan(getState())), 'el día de ayer no sigue').toBeNull();
+});

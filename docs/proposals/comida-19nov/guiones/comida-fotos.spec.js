@@ -59,7 +59,7 @@ for (const [w, h, lang] of ANCHOS) {
       await seguir(page);
       await page.waitForTimeout(400);
       await foto(page, '4-pausa-linea-' + sufijo);
-      await page.getByRole('button', { name: lang === 'en' ? 'View statistics' : 'Ver estadísticas' }).first().click();
+      await page.getByRole('button', { name: lang === 'en' ? 'View stats' : 'Ver estadísticas' }).first().click();
       await page.locator('[data-pace-stats-vistas]').waitFor({ state: 'visible' });
       await esperarModalAsentado(page);
       await foto(page, '4-pausa-stats-' + sufijo);

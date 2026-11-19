@@ -2,9 +2,9 @@
 
 Rama `claude/comida-19nov`, cortada de `main` 0.211.0. Sin bump, sin juntar y sin subir a main.
 
-**Página para Ez:** https://claude.ai/artifact/VV5XLipvC497TC1ceFMG73 (id `VV5XLipvC497TC1ceFMG73`; publicada
-desde esta sesión, que debería ser la cuenta EcLj6; si no se abre desde ella, republicar `index.html` con las
-fotos que enlaza). Fuente: `docs/proposals/comida-19nov/index.html`.
+**Página para Ez, en la cuenta EcLj6:** https://claude.ai/artifact/5pqFkChL4VDDiuSrmrNW2b (id `5pqFkChL4VDDiuSrmrNW2b`).
+La primera copia, https://claude.ai/artifact/VV5XLipvC497TC1ceFMG73, se publicó con la sesión en la otra cuenta
+(5iWBf) y lleva el mismo contenido. Fuente: `docs/proposals/comida-19nov/index.html`, con sus fotos al lado.
 
 ## Arreglado (un commit por fallo, cada prueba vista caer antes)
 
@@ -27,14 +27,15 @@ P4 «Ir a comer» antes de su hora · P5 la comida ya pasada sin volver. Recomen
 
 ## Sin fallo
 
-Recargar en plena comida, la media jornada (no sirve comida), adelantar la comida con el día sin empezar, y la
+Recargar en plena comida o tras saltarla, pasar la medianoche con la comida saltada (control en
+`tests/comida-saltada.spec.js`), la media jornada (no sirve comida), adelantar la comida con el día sin empezar, y la
 medianoche (la comida va de 11:00 a 17:00).
 
 ## Fotos
 
 `fotos/*-antes.png` y `*-despues.png` (1280 es y 360 en); las saca `guiones/comida-fotos.spec.js` (copiarla a
-`tests/` y `FASE=antes|despues`). El caso 4 a 360 px no tiene foto: el botón de Estadísticas del móvil no se
-encontró y no lo perseguí.
+`tests/` y `FASE=antes|despues`). El caso 4 a 360 px se sacó con el código de `main` puesto un momento (el
+«antes») y con el de la rama (el «después»); el botón del móvil se llama «View stats».
 
 Faltan: `CHANGELOG.md` y `STATE.md` (van con el bump de la coordinadora) y una fila en
 `DECISIONES_TECNICAS_VIGENTES.md` si Ez da por buenas las reglas de los arreglos 1 y 2.
