@@ -4,6 +4,13 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de noviembre de 2026, 10:20, v0.204.0 en `main` y los cuatro arreglos de S3 y S4 en su rama.
 
+## AL RELEVO (19 nov., 15:55, cuenta EcLj6 con las 5 h al 98 %; se reponen a las 19:40; 5iWBf sin semana hasta el 23 nov.): empieza aquí
+
+- Nada juntado; `main` = 0.211.0 en verde. Todas las sesiones, paradas con push.
+- **Listas o montadas, con página en EcLj6:** menores (lista para juntar, 1795 en verde); recorrido 11 + tarjeta de jornada limpia (`claude/arreglos-tester-18nov`, 9979588e y eefb4417, página 2kQ1KXrcdsNjZ9uhP8D5Uv); voz 1A (97ea5420, U8qW3hFxwdsUDRDiBJdkwo); visita A con «tu día» primera (950458a7). Faltan sus pares en 5iWBf.
+- **Suites enteras en marcha de una en una** (script en el scratchpad de la coordinadora): recorrido 8917 (15:32), voz 8927, visita 8957. Si la app se reinicia, mueren: repetirlas.
+- **A medias, cada una con su `DONDE-ME-QUEDO.md`:** caza (1, 2, 3, 4A, 5A hechas; 6B, 8A, 9A, 11A en wip; la 7 llega con el recorrido); aviso del PC (Ez: «1a+ 1c + tres toques de campana / 1.2A + 2b + 2.2A aunque se abra sola es interesante»; hechas 1A, 1C y la campana de tres toques seguidos; faltan 1.2A, 2B y 2.2A); comida (`claude/comida-19nov`, cuatro fallos arreglados con su prueba, página por publicar).
+
 ## AL RELEVO (19 nov., 13:20, cuenta 5iWBf con la SEMANA al 98-100 %, hasta el 23 nov.): empieza aquí; manda sobre todo lo de abajo
 
 - **`main` = `origin/main` = 0.211.0 + docs, en verde.** No se ha juntado nada.
