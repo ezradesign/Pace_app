@@ -2193,6 +2193,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'sidebar.days': 'L,M,X,J,V,S,D',
   'sidebar.open.title': 'Abrir panel',
   'sidebar.open.aria': 'Abrir panel',
+  'sidebar.dialog.aria': 'Panel',
 
   'sidebar.today': 'Hoy',
 
@@ -2389,6 +2390,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.days': 'Mo,Tu,We,Th,Fr,Sa,Su',
   'sidebar.open.title': 'Open panel',
   'sidebar.open.aria': 'Open panel',
+  'sidebar.dialog.aria': 'Panel',
 
   'sidebar.today': 'Today',
   'sidebar.hoy.focus': '{x} of focus',
@@ -30243,7 +30245,7 @@ Object.assign(window, {
 </script>
   <script>
 ;(function () {
-
+function _extends() {return _extends = Object.assign ? Object.assign.bind() : function (n) {for (var e = 1; e < arguments.length; e++) {var t = arguments[e];for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);}return n;}, _extends.apply(null, arguments);}
 
 
 
@@ -30276,7 +30278,21 @@ function Sidebar() {
   const collapsed = !!state.sidebarCollapsed;
   const isMob = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches;
 
-  const toggle = () => set({ sidebarCollapsed: !collapsed });
+
+
+
+
+
+
+  const asideRef = React.useRef(null);
+  const enCajon = !collapsed && esCajon();
+  const plegar = () => {
+    if (enCajon) window.paceCajonDevolverFoco = true;
+    set({ sidebarCollapsed: true });
+  };
+  usePaceDialogo(asideRef, enCajon, { onEscape: plegar });
+
+  const toggle = () => collapsed ? set({ sidebarCollapsed: false }) : plegar();
 
 
 
@@ -30474,7 +30490,8 @@ function Sidebar() {
   const secciones = [seccionSemana, seccionHoy, seccionAccion, seccionBibliotecas, seccionLogro].filter(Boolean);
 
   return (
-    React.createElement("aside", { style: sidebarStyles.root, "data-pace-sidebar": true, "data-escalado": "0" },
+    React.createElement("aside", _extends({ ref: asideRef, style: enCajon ? { ...sidebarStyles.root, outline: 'none' } : sidebarStyles.root, "data-pace-sidebar": true, "data-escalado": "0" },
+    enCajon ? { role: 'dialog', 'aria-modal': 'true', 'aria-label': t('sidebar.dialog.aria'), tabIndex: -1 } : {}),
     React.createElement("button", { onClick: toggle, style: sidebarStyles.toggleFloating, "data-pace-sidebar-toggle": true, title: t('sidebar.collapse.title'), "aria-label": t('sidebar.collapse.aria') },
     React.createElement(ChevronLeftIcon, null)
     ),
@@ -30555,7 +30572,7 @@ function fechaCortaSidebar(lang) {
 }
 
 Object.assign(window, { Sidebar, fechaCortaSidebar, esCajon });
-;Object.assign(window, { Sidebar, esCajon, fechaCortaSidebar });
+;Object.assign(window, { _extends, Sidebar, esCajon, fechaCortaSidebar });
 })();
 </script>
   <script>
@@ -55296,8 +55313,17 @@ Object.assign(window, { ActivityBar, ABBreathe, ABStretch, ABMove, ABDrop, ABFoc
 
 function SidebarHandle(_ref) {let { onOpen } = _ref;
   const { t } = useT();
+
+
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    if (!window.paceCajonDevolverFoco) return;
+    window.paceCajonDevolverFoco = false;
+    try {ref.current.focus({ preventScroll: true });} catch (e) {}
+  }, []);
   return (
     React.createElement("button", {
+      ref: ref,
       "data-pace-sidebar-open": true,
       onClick: onOpen,
       title: t('sidebar.open.title'),

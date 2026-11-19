@@ -31,7 +31,21 @@ function Sidebar() {
   const collapsed = !!state.sidebarCollapsed;
   const isMob = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches;
 
-  const toggle = () => set({ sidebarCollapsed: !collapsed });
+  /* EN EL MÓVIL Y EN LA TABLETA VERTICAL, EL CAJÓN ES UN DIÁLOGO (caza del 19 nov. 2026, Ez «sí» a
+     la 2): tapa la home entera y con teclado o lector no se podía cerrar con Escape, y el tabulador
+     se iba a «Ver estadísticas» o «Empezar foco», que quedan detrás sin verse. Ahora se porta como
+     las demás ventanas (`usePaceDialogo`). Al cerrarlo a mano, el foco vuelve a «Abrir panel», que
+     se monta de nuevo al plegarse (SidebarHandle.jsx lee la marca). En el ordenador la barra
+     convive con la home y no es un diálogo. Los ganchos van antes del `return null` de plegada. */
+  const asideRef = React.useRef(null);
+  const enCajon = !collapsed && esCajon();
+  const plegar = () => {
+    if (enCajon) window.paceCajonDevolverFoco = true;
+    set({ sidebarCollapsed: true });
+  };
+  usePaceDialogo(asideRef, enCajon, { onEscape: plegar });
+
+  const toggle = () => (collapsed ? set({ sidebarCollapsed: false }) : plegar());
 
   /* LA ESCALA · la columna entera encoge para caber, en las DOS pieles.
      El motor vive en `Sidebar.escala.jsx` (s182): son ~200 lineas de
@@ -229,7 +243,8 @@ function Sidebar() {
   const secciones = [seccionSemana, seccionHoy, seccionAccion, seccionBibliotecas, seccionLogro].filter(Boolean);
 
   return (
-    <aside style={sidebarStyles.root} data-pace-sidebar data-escalado="0">
+    <aside ref={asideRef} style={enCajon ? { ...sidebarStyles.root, outline: 'none' } : sidebarStyles.root} data-pace-sidebar data-escalado="0"
+      {...(enCajon ? { role: 'dialog', 'aria-modal': 'true', 'aria-label': t('sidebar.dialog.aria'), tabIndex: -1 } : {})}>
       <button onClick={toggle} style={sidebarStyles.toggleFloating} data-pace-sidebar-toggle title={t('sidebar.collapse.title')} aria-label={t('sidebar.collapse.aria')}>
         <ChevronLeftIcon />
       </button>

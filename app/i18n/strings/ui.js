@@ -78,6 +78,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'sidebar.days':                  'L,M,X,J,V,S,D',
     'sidebar.open.title':            'Abrir panel',
     'sidebar.open.aria':             'Abrir panel',
+    'sidebar.dialog.aria':           'Panel',
     // Sidebar s180 — Hoy / accion / semana / ultimo logro / pie
     'sidebar.today':                 'Hoy',
     // El cuaderno de Hoy (8 oct. 2026): {x} son los minutos o los vasos con palabras
@@ -274,6 +275,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'sidebar.days':                  'Mo,Tu,We,Th,Fr,Sa,Su',
     'sidebar.open.title':            'Open panel',
     'sidebar.open.aria':             'Open panel',
+    'sidebar.dialog.aria':           'Panel',
     // Sidebar s180
     'sidebar.today':                 'Today',
     'sidebar.hoy.focus':             '{x} of focus',
