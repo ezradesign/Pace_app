@@ -66,6 +66,7 @@ function FocusTimer({ onFinish }) {
       /* En Android y en el iPhone, si el aviso del sistema ya avisó de este bloque, la campana es suya (A1). */
       const campana = () => { try { playSound('pomodoro.end'); } catch (e) {} };
       if (typeof paceNativoCampana === 'function') paceNativoCampana(finBloque, campana); else campana();
+      try { paceTabTerminado(); } catch (e) {}   // «● Foco terminado» en la pestaña si no lo mirabas
       /* s172 · `activeSeconds` ES el preset: la cuenta solo corre en 'running',
          asi que llegar a 0 es haber contado eso; lo pausado va en elapsed. */
       /* `fin`: el evento va a la hora a la que acabó, no a la de enterarse (el portátil cerrado,
@@ -155,7 +156,7 @@ function FocusTimer({ onFinish }) {
   /* En las apps (Android y iPhone) el aviso del fin del bloque y el del fin de la pausa los
      programa el sistema, porque con la app en el fondo esta cuenta no corre (FocusTimer.avisos.jsx). */
   useAvisosNativos({ state, running, endsAt, pausaRitmo, enPausaRitmo, t, tn, lang });
-  useTituloCuenta({ running, remaining, modo: state.focusMode, lang, t });   // «24:13 · Foco · PACE» en la pestaña
+  useTituloCuenta({ running, remaining, total: durationSec, modo: state.focusMode, lang, t });   // «24:13 · Foco · PACE» en la pestaña
   const ofertaExacta = useOfertaExacta({ state, set, status, t });   // en Android, «Avisos a su hora ›», una vez
 
   /* La barra de arriba pregunta antes de cambiar de modo con un Foco empezado, y con una pausa

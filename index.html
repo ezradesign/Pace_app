@@ -2592,6 +2592,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
   'focus.startPause': 'Empezar pausa',
   'focus.pause': 'Pausar',
+  'focus.tab.done': '● Foco terminado · PACE',
   'focus.continue': 'Continuar',
   'focus.startAnother': 'Empezar otro ciclo',
   'focus.cycleComplete': 'Ciclo completado',
@@ -2808,6 +2809,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'focus.start': 'Start Focus',
   'focus.startPause': 'Start break',
   'focus.pause': 'Pause',
+  'focus.tab.done': '● Focus done · PACE',
   'focus.continue': 'Continue',
   'focus.startAnother': 'Start another cycle',
   'focus.cycleComplete': 'Cycle complete',
@@ -33822,7 +33824,13 @@ Object.assign(window, { useAvisosNativos, useOfertaExacta });
 
 
 
-const { useEffect: useEffectTitulo } = React;
+
+
+
+
+
+
+const { useEffect: useEffectTitulo, useState: useStateTitulo } = React;
 
 function paceTituloCuenta(remaining, modo, t) {
   const seg = Math.max(0, Math.floor(remaining || 0));
@@ -33833,20 +33841,91 @@ function paceTituloCuenta(remaining, modo, t) {
   return dos(Math.floor(seg / 60)) + ':' + dos(seg % 60) + ' · ' + etiqueta + ' · PACE';
 }
 
-function useTituloCuenta(_ref) {let { running, remaining, modo, lang, t } = _ref;
+
+
+let _paceTabFin = false;
+function paceTabMirando() {
+  try {return document.visibilityState === 'visible' && document.hasFocus();} catch (e) {return true;}
+}
+function paceTabFinPon(on) {
+  if (_paceTabFin === !!on) return;
+  _paceTabFin = !!on;
+  try {window.dispatchEvent(new CustomEvent('pace:pestana-fin'));} catch (e) {}
+}
+
+function paceTabTerminado() {
+  if (!paceTabMirando()) paceTabFinPon(true);
+}
+(function paceTabVuelta() {
+  const mira = () => {if (_paceTabFin && paceTabMirando()) paceTabFinPon(false);};
+  ['visibilitychange', 'pointerdown', 'keydown'].forEach((e) => document.addEventListener(e, mira, true));
+  window.addEventListener('focus', mira);
+})();
+
+
+
+let _paceIconos = null,_paceIconoUltimo = null;
+function paceIconoPon(clave) {
+  try {
+    if (_paceIconoUltimo === clave) return;
+    if (!_paceIconos) {
+      _paceIconos = Array.prototype.map.call(document.querySelectorAll('link[rel~="icon"]'), (enlace) => ({ l: enlace, href: enlace.getAttribute('href') }));
+    }
+    _paceIconoUltimo = clave;
+    if (clave === null) {_paceIconos.forEach((o) => o.l.setAttribute('href', o.href));return;}
+    const c = document.createElement('canvas');
+    c.width = c.height = 64;
+    const g = c.getContext('2d');
+    if (!g) return;
+    g.fillStyle = '#F2EDE0';
+    g.beginPath();g.arc(32, 32, 31, 0, 2 * Math.PI);g.fill();
+    g.lineWidth = 7;
+    g.strokeStyle = '#C9C0A8';
+    g.beginPath();g.arc(32, 32, 21, 0, 2 * Math.PI);g.stroke();
+    if (clave === 'fin') {
+      g.strokeStyle = '#C97A5D';
+      g.beginPath();g.arc(32, 32, 21, 0, 2 * Math.PI);g.stroke();
+      g.fillStyle = '#C97A5D';
+      g.beginPath();g.arc(32, 32, 10, 0, 2 * Math.PI);g.fill();
+    } else {
+      g.strokeStyle = '#3E5A3A';
+      g.lineCap = 'round';
+      g.beginPath();g.arc(32, 32, 21, -Math.PI / 2, -Math.PI / 2 + Math.max(0.04, clave / 32) * 2 * Math.PI);g.stroke();
+    }
+    const url = c.toDataURL('image/png');
+    if (!_paceIconos.length) {
+      const nuevo = document.createElement('link');
+      nuevo.rel = 'icon';
+      document.head.appendChild(nuevo);
+      _paceIconos.push({ l: nuevo, href: null });
+    }
+    _paceIconos.forEach((o) => o.l.setAttribute('href', url));
+  } catch (e) {}
+}
+
+function useTituloCuenta(_ref) {let { running, remaining, total, modo, lang, t } = _ref;
+  const [fin, setFin] = useStateTitulo(_paceTabFin);
+  useEffectTitulo(() => {
+    const oye = () => setFin(_paceTabFin);
+    window.addEventListener('pace:pestana-fin', oye);
+    return () => window.removeEventListener('pace:pestana-fin', oye);
+  }, []);
   useEffectTitulo(() => {
     try {
-      document.title = running ? paceTituloCuenta(remaining, modo, t) : paceTituloApp(lang);
+      document.title = fin ? t('focus.tab.done') : running ? paceTituloCuenta(remaining, modo, t) : paceTituloApp(lang);
     } catch (e) {}
-  }, [running, remaining, modo, lang]);
+    const hecho = total > 0 ? 1 - Math.max(0, remaining) / total : 0;
+    paceIconoPon(fin ? 'fin' : running ? Math.min(32, Math.floor(hecho * 32)) : null);
+  }, [fin, running, remaining, total, modo, lang]);
 
   useEffectTitulo(() => () => {
     try {document.title = paceTituloApp(getState().lang);} catch (e) {}
+    paceIconoPon(null);
   }, []);
 }
 
-Object.assign(window, { useTituloCuenta, paceTituloCuenta });
-;Object.assign(window, { paceTituloCuenta, useTituloCuenta });
+Object.assign(window, { useTituloCuenta, paceTituloCuenta, paceTabTerminado });
+;Object.assign(window, { paceTituloCuenta, paceTabMirando, paceTabFinPon, paceTabTerminado, paceIconoPon, useTituloCuenta });
 })();
 </script>
   <script>
@@ -33919,6 +33998,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
       const campana = () => {try {playSound('pomodoro.end');} catch (e) {}};
       if (typeof paceNativoCampana === 'function') paceNativoCampana(finBloque, campana);else campana();
+      try {paceTabTerminado();} catch (e) {}
 
 
 
@@ -34008,7 +34088,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
   useAvisosNativos({ state, running, endsAt, pausaRitmo, enPausaRitmo, t, tn, lang });
-  useTituloCuenta({ running, remaining, modo: state.focusMode, lang, t });
+  useTituloCuenta({ running, remaining, total: durationSec, modo: state.focusMode, lang, t });
   const ofertaExacta = useOfertaExacta({ state, set, status, t });
 
 

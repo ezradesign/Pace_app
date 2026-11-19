@@ -77,6 +77,7 @@ Object.assign(window.PACE_STRINGS.es, {
        arriba ya dice cual de las dos es. */
     'focus.startPause':                'Empezar pausa',
     'focus.pause':                     'Pausar',
+    'focus.tab.done':                  '● Foco terminado · PACE',
     'focus.continue':                  'Continuar',
     'focus.startAnother':              'Empezar otro ciclo',
     'focus.cycleComplete':             'Ciclo completado',
@@ -293,6 +294,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'focus.start':                     'Start Focus',
     'focus.startPause':                'Start break',
     'focus.pause':                     'Pause',
+    'focus.tab.done':                  '● Focus done · PACE',
     'focus.continue':                  'Continue',
     'focus.startAnother':              'Start another cycle',
     'focus.cycleComplete':             'Cycle complete',

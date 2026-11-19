@@ -79,3 +79,43 @@ test('aviso-pc · 1A · con el reloj frenado de una pestaña oculta, el final ll
   const [aviso] = await page.evaluate(() => window.__avisos);
   expect(aviso.cuando - fin, 'el aviso llegó tarde').toBeLessThan(3000);
 });
+
+/* 1C · La pestaña. El icono es un aro que se llena (se ve también con la pestaña fijada) y, si el
+   Foco acaba sin mirarla, dice «● Foco terminado · PACE» en terracota hasta que vuelves. */
+const icono = (page) => page.evaluate(() => document.querySelector('link[rel~="icon"]').getAttribute('href'));
+
+test('aviso-pc · 1C · el icono se llena mientras corre y, si acaba sin mirarla, la pestaña dice «terminado» hasta volver', async ({ page, context }) => {
+  await sembrar(context, { soundOn: false, notifyFocusEnd: false, focusMinutes: 5 });
+  await navegadorConAvisos(context);
+  await context.clock.install({ time: ARRANQUE });
+  await irAlArtefacto(page);
+  const antes = await icono(page);
+  await empezarFoco(page);
+  await context.clock.fastForward(CINCO / 2);
+  await context.clock.runFor(1500);
+  const medio = await icono(page);
+  expect(medio, 'el icono no cambia mientras corre el Foco').not.toBe(antes);
+  expect(medio).toMatch(/^data:image\/png/);
+  await context.clock.fastForward(CINCO / 2 + 2000);
+  await context.clock.runFor(1500);
+  await expect(page, 'al acabar sin mirarla, la pestaña volvía al nombre sin decir nada').toHaveTitle('● Foco terminado · PACE');
+  const fin = await icono(page);
+  expect(fin).not.toBe(medio);
+  expect(fin).not.toBe(antes);
+  await page.evaluate(() => { window.__visible = true; document.dispatchEvent(new Event('visibilitychange')); });
+  await expect(page, 'al volver, la pestaña vuelve a su nombre').toHaveTitle('PACE · Foco · Cuerpo');
+  expect(await icono(page), 'al volver, el icono de siempre').toBe(antes);
+});
+
+test('aviso-pc · 1C · si lo estabas mirando, la pestaña no dice «terminado»', async ({ page, context }) => {
+  await sembrar(context, { soundOn: false, notifyFocusEnd: false, focusMinutes: 5 });
+  await navegadorConAvisos(context);
+  await context.clock.install({ time: ARRANQUE });
+  await irAlArtefacto(page);
+  await page.evaluate(() => { window.__visible = true; });
+  await empezarFoco(page);
+  await context.clock.fastForward(CINCO + 2000);
+  await context.clock.runFor(1500);
+  await expect(cta(page)).toHaveText('Empezar otro ciclo');
+  await expect(page).toHaveTitle('PACE · Foco · Cuerpo');
+});
