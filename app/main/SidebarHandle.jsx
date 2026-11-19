@@ -9,8 +9,17 @@
 
 function SidebarHandle({ onOpen }) {
   const { t } = useT();
+  /* Al cerrar el cajón del móvil a mano (Escape o su flecha), el foco vuelve aquí: este botón se
+     monta de nuevo al plegarse, así que el diálogo no lo encuentra para devolvérselo (Sidebar.jsx). */
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    if (!window.paceCajonDevolverFoco) return;
+    window.paceCajonDevolverFoco = false;
+    try { ref.current.focus({ preventScroll: true }); } catch (e) {}
+  }, []);
   return (
     <button
+      ref={ref}
       data-pace-sidebar-open
       onClick={onOpen}
       title={t('sidebar.open.title')}

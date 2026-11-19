@@ -199,8 +199,13 @@ function ToastHost() {
     }, durationMs + fadeMs);
   };
 
-  useEffectTO(() => {
-    return onToast((toast) => {
+  /* EL AVISO HABLA EN EL IDIOMA DE AHORA (caza del 19 nov. 2026, Ez «sí» a la 3). La suscripción se
+     hace una vez, y su función guardaba el `t` y el `lang` del primer pintado: tras cambiar de idioma
+     sin recargar, aquí o en otra pestaña, el sello salía «New stamp · Primer paso», y el del código,
+     en el idioma de antes. La suscripción llama siempre a la función del último pintado. */
+  const alRecibirRef = useRefTO(null);
+  useEffectTO(() => onToast((toast) => alRecibirRef.current(toast)), []);
+  alRecibirRef.current = (toast) => {
       // Resolver datos del logro
       if (toast.type === 'achievement') {
         const a = (window.ACHIEVEMENT_CATALOG || []).find(x => x.id === toast.id);
@@ -225,8 +230,7 @@ function ToastHost() {
             : t('premium.err.' + (toast.motivo || 'formato')) });
         siguienteRef.current();
       }
-    });
-  }, []);
+  };
 
   /* La línea del aro se esconde mientras haya un sello en su sitio, también durante el fundido. */
   const enAro = toasts.some(x => x.aro);

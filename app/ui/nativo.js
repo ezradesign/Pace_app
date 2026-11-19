@@ -126,7 +126,14 @@ function paceNativoEnlace(ruta) {
   return paceEsNativo() ? PACE_WEB_PUBLICA + ruta : ruta;
 }
 
+/* Privacidad y Seguridad (/privacy, /safety): con PACE en inglés, a su parte en inglés (#en). Las
+   páginas van en los dos idiomas con el español arriba, y el inglés quedaba ~8000 px más abajo sin
+   nada que lo dijera (caza del 19 nov. 2026, Ez 5A). */
+function paceEnlaceLegal(ruta, lang) {
+  return paceNativoEnlace(lang === 'en' ? ruta + '#en' : ruta);
+}
+
 Object.assign(window, {
   pacePlataformaNativa, paceEsNativo, paceNativoPlugin, paceNativoAvisos, paceNativoAvisoPermiso,
-  paceNativoAvisoPedir, paceNativoFoco, paceNativoPausa, paceNativoTextosFin, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace,
+  paceNativoAvisoPedir, paceNativoFoco, paceNativoPausa, paceNativoTextosFin, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace, paceEnlaceLegal,
 });

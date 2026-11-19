@@ -337,15 +337,20 @@ function TweaksPanel({ open, onClose }) {
         {canNotify && (() => {
           const avisoOn = !!state.notifyFocusEnd && permisoAviso() !== 'denied';
           const ponerAviso = (v) => { v ? enableNotify() : set({ notifyFocusEnd: false }); };
+          /* Bloqueados en el navegador, lo dice la línea pequeña de la fila y no una nota debajo: la
+             nota sumaba 12 px a 360 × 640 y 6 a 1280 × 720, y Ajustes pedía scroll (caza del 19 nov.,
+             Ez 4A). En las apps la nota sigue: dice dónde se activan. */
+          const subAviso = avisoNativo ? 'settings.notify.sub.app'
+            : (permisoAviso() === 'denied' ? 'settings.notify.sub.blocked' : 'settings.notify.sub');
           return (
-            <AjustesFila id="notify" nombre={t('settings.notify')} sub={t(avisoNativo ? 'settings.notify.sub.app' : 'settings.notify.sub')} modulo="focus"
+            <AjustesFila id="notify" nombre={t('settings.notify')} sub={t(subAviso)} modulo="focus"
               alTocar={() => ponerAviso(!avisoOn)}>
               <AjustesInterruptor on={avisoOn} aria={t('settings.notify')} onChange={ponerAviso} />
             </AjustesFila>
           );
         })()}
-        {canNotify && permisoAviso() === 'denied' && (
-          <div className="pace-aj-nota">{t(avisoNativo ? 'settings.notify.blocked.' + plataforma : 'settings.notify.blocked')}</div>
+        {canNotify && avisoNativo && permisoAviso() === 'denied' && (
+          <div className="pace-aj-nota">{t('settings.notify.blocked.' + plataforma)}</div>
         )}
         {falloAviso && state.notifyFocusEnd && permisoAviso() === 'granted' && (
           <div className="pace-aj-nota" data-pace-aj-aviso-fallo>{t('settings.notify.fallo.' + plataforma)}</div>

@@ -68,7 +68,7 @@ function RitmoChips({ state, editarMedia, tuyo }) {
     <div className="pace-rt-chips">
       {RITMO_OPCIONES_UI.map((op) => {
         const m = ritmoMenu(state, op, null, null);
-        const vacia = !m || !m.focos.length;
+        const vacia = ritmoOpcionVacia(op, m);
         if (horas && op === 'media' && vacia) {
           return (
             <div key={op} className="pace-rt-chip pace-rt-chip-horas" data-pace-ritmo-opcion={op} data-pace-ritmo-media-horas>
@@ -93,12 +93,25 @@ function RitmoChips({ state, editarMedia, tuyo }) {
   );
 }
 
+/* DE NOCHE, «UNA HORA» Y «DOS HORAS» QUE LA MEDIANOCHE CORTARÍA SE APAGAN (caza del 19 nov. 2026,
+   Ez 6B). El día acaba a las 0:00 (ritmo.regla.js), así que a las 23:30 las dos decían «Hasta las
+   0:00» y «Dos horas» daba 30 min; a las 22:45, 1 h 15. Se apaga la que no cabe entera, como ya se
+   apaga «Jornada entera» fuera de hora, y lo dice. Un chip y una loseta preguntan lo mismo aquí. */
+function ritmoNoCabe(op, m) {
+  const forma = m && window.RITMO_FORMAS && RITMO_FORMAS[op];
+  return !!(forma && forma.reloj && m.desde + forma.reloj > 24 * 60);
+}
+function ritmoOpcionVacia(op, m) {
+  return !m || !m.focos.length || ritmoNoCabe(op, m);
+}
+
 /* EL SUBTÍTULO de un chip o una loseta (s197). Las dos jornadas son HORARIOS —tuyos,
    editables— y lo dicen: «De 9:00 a 13:00». «Una hora» y «Dos horas» siguen con «Hasta
    las…» porque son un rato desde que pulsas, no un tramo. Decisión del usuario: «tienen
    que poder personalizarse, tanto la media jornada como la completa», así que el chip
    enseña TUS horas, no una duración. */
 function ritmoSub(op, m, vacia, t, tn) {
+  if (ritmoNoCabe(op, m)) return t('ritmo.nocabe');
   if (vacia) return t('ritmo.fuera');
   if (op === 'media' || op === 'jornada') return tn('ritmo.tramo', { a: ritmoHora(m.desde), b: ritmoHora(m.hasta) });
   return tn('ritmo.hasta', { h: ritmoHora(m.hasta) });
@@ -361,6 +374,6 @@ function RitmoHecho({ plan }) {
 }
 
 Object.assign(window, {
-  RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub,
+  RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub, ritmoNoCabe, ritmoOpcionVacia,
   RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho,
 });

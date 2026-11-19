@@ -2193,6 +2193,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'sidebar.days': 'L,M,X,J,V,S,D',
   'sidebar.open.title': 'Abrir panel',
   'sidebar.open.aria': 'Abrir panel',
+  'sidebar.dialog.aria': 'Panel',
 
   'sidebar.today': 'Hoy',
 
@@ -2389,6 +2390,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.days': 'Mo,Tu,We,Th,Fr,Sa,Su',
   'sidebar.open.title': 'Open panel',
   'sidebar.open.aria': 'Open panel',
+  'sidebar.dialog.aria': 'Panel',
 
   'sidebar.today': 'Today',
   'sidebar.hoy.focus': '{x} of focus',
@@ -3582,6 +3584,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'stats.ayuda.hora.fuente': '{n} Focos terminados',
   'stats.ayuda.tras': 'Después del Foco',
   'stats.ayuda.tras.frase': 'Tras {a} de tus {b} Focos, una pausa.',
+  'stats.ayuda.tras.cero': 'Aún no has parado justo después de un Foco.',
   'stats.ayuda.tras.franjas': 'Por la mañana, {ma} de {mb}. Por la tarde, {ta} de {tb}.',
   'stats.ayuda.tras.fuente': 'Una pausa en los 15 minutos siguientes',
 
@@ -3682,6 +3685,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'stats.ayuda.hora.fuente': '{n} Focus blocks finished',
   'stats.ayuda.tras': 'After Focus',
   'stats.ayuda.tras.frase': 'You took a break after {a} of your {b} Focus blocks.',
+  'stats.ayuda.tras.cero': 'You haven’t taken a break right after a Focus block yet.',
   'stats.ayuda.tras.franjas': 'In the morning, {ma} of {mb}. In the afternoon, {ta} of {tb}.',
   'stats.ayuda.tras.fuente': 'A break within the next 15 minutes',
 
@@ -3942,7 +3946,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
   'settings.notify': 'Aviso al terminar',
   'settings.notify.sub': 'Foco · si la pestaña está detrás',
-  'settings.notify.blocked': 'El navegador tiene las notificaciones bloqueadas para este sitio.',
+  'settings.notify.sub.blocked': 'Foco · bloqueados en este navegador',
   'settings.notify.sub.app': 'Foco y pausa · si la app está en segundo plano',
   'settings.notify.blocked.android': 'Los avisos de PACE están desactivados en los ajustes de Android.',
   'settings.notify.blocked.ios': 'Los avisos de PACE están desactivados en los ajustes del iPhone.',
@@ -4060,7 +4064,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
   'settings.notify': 'Alert at the end',
   'settings.notify.sub': 'Focus · if the tab is in the background',
-  'settings.notify.blocked': 'Notifications are blocked for this site in your browser.',
+  'settings.notify.sub.blocked': 'Focus · blocked in this browser',
   'settings.notify.sub.app': 'Focus and break · if the app is in the background',
   'settings.notify.blocked.android': 'PACE notifications are turned off in Android settings.',
   'settings.notify.blocked.ios': 'PACE notifications are turned off in iPhone settings.',
@@ -4577,6 +4581,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.tramo': 'De {a} a {b}',
   'ritmo.frase.media': 'Media jornada: de {mediaInicio} a {mediaSalida}.',
   'ritmo.fuera': 'Tu jornada ya terminó',
+  'ritmo.nocabe': 'Ya no cabe hoy',
   'ritmo.libre': 'Hoy voy por libre',
   'ritmo.volver': 'Ponle ritmo al día',
   'ritmo.cambiar': 'Cambiar',
@@ -4780,6 +4785,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.tramo': 'From {a} to {b}',
   'ritmo.frase.media': 'Half day: from {mediaInicio} to {mediaSalida}.',
   'ritmo.fuera': 'Your workday is over',
+  'ritmo.nocabe': 'No longer fits today',
   'ritmo.libre': 'No plan today',
   'ritmo.volver': 'Give your day a rhythm',
   'ritmo.cambiar': 'Change',
@@ -8051,9 +8057,9 @@ function loadState(estricto) {
     }
 
     const merged = rolloverIfNeeded({ ...defaultState, ...parsed });
-    if (parsed.sidebarCollapsed === undefined && isMobileViewport()) {
-      return { ...merged, sidebarCollapsed: true };
-    }
+
+
+    if (isMobileViewport()) return { ...merged, sidebarCollapsed: true };
     return merged;
   } catch (e) {
     if (estricto) throw e;
@@ -20799,11 +20805,18 @@ function paceNativoEnlace(ruta) {
   return paceEsNativo() ? PACE_WEB_PUBLICA + ruta : ruta;
 }
 
+
+
+
+function paceEnlaceLegal(ruta, lang) {
+  return paceNativoEnlace(lang === 'en' ? ruta + '#en' : ruta);
+}
+
 Object.assign(window, {
   pacePlataformaNativa, paceEsNativo, paceNativoPlugin, paceNativoAvisos, paceNativoAvisoPermiso,
-  paceNativoAvisoPedir, paceNativoFoco, paceNativoPausa, paceNativoTextosFin, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace
+  paceNativoAvisoPedir, paceNativoFoco, paceNativoPausa, paceNativoTextosFin, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace, paceEnlaceLegal
 });
-;Object.assign(window, { pacePlataformaNativa, paceEsNativo, paceNativoPlugin, paceNativoAvisos, paceNativoAvisoPermiso, paceNativoAvisoPedir, paceNativoFoco, paceNativoPausa, paceNativoTextosFin, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace });
+;Object.assign(window, { pacePlataformaNativa, paceEsNativo, paceNativoPlugin, paceNativoAvisos, paceNativoAvisoPermiso, paceNativoAvisoPedir, paceNativoFoco, paceNativoPausa, paceNativoTextosFin, paceNativoCampana, paceNativoAvisoFallo, paceNativoGuardarArchivo, paceNativoEnlace, paceEnlaceLegal });
 })();
 </script>
   <script>
@@ -23132,7 +23145,7 @@ Object.assign(window, { SessionPrep, sessionPrepCopy });
 const { useState: useStateSF, useRef: useRefSF, useEffect: useEffectSF } = React;
 
 function SessionFeedback(_ref) {let { routineId, kind = 'move', accent = 'var(--move)' } = _ref;
-  const { t } = useT();
+  const { t, lang } = useT();
 
   const [shouldShow] = useStateSF(() => {
     try {return shouldPromptRoutineFeedback(routineId);} catch (e) {return false;}
@@ -23208,7 +23221,7 @@ function SessionFeedback(_ref) {let { routineId, kind = 'move', accent = 'var(--
   const dolor =
   React.createElement(React.Fragment, null,
   t('session.feedback.dolor'), ' ',
-  React.createElement("a", { href: typeof paceNativoEnlace === 'function' ? paceNativoEnlace('/safety') : '/safety', target: "_blank", rel: "noopener",
+  React.createElement("a", { href: typeof paceEnlaceLegal === 'function' ? paceEnlaceLegal('/safety', lang) : '/safety', target: "_blank", rel: "noopener",
     "data-pace-fb-seguridad": true, style: sessionFeedbackStyles.deshacer }, t('settings.legal.safety')), "."
   );
 
@@ -25565,31 +25578,35 @@ function ToastHost() {
     }, durationMs + fadeMs);
   };
 
-  useEffectTO(() => {
-    return onToast((toast) => {
-
-      if (toast.type === 'achievement') {
-        const a = (window.ACHIEVEMENT_CATALOG || []).find((x) => x.id === toast.id);
-        if (!a) return;
-        colaRef.current.push({ ...toast,
-          title: tR('ach.item.' + a.id + '.title', a.title),
-          desc: tR('ach.item.' + a.id + '.desc', a.desc),
-          glyph: a.glyph, glyphSvg: a.glyphSvg, secreto: !!a.secret, exiting: false });
-        siguienteRef.current();
-      }
 
 
 
-      if (toast.type === 'licencia') {
-        colaRef.current.push({ ...toast, exiting: false, licencia: true, duracion: 6000,
-          eyebrow: t('premium.settings.code'),
-          title: t(toast.ok ? toast.mensual ? 'premium.ok.title.monthly' : 'premium.ok.title' : 'premium.err.title'),
-          desc: toast.ok ? t(toast.tester ? 'premium.ok.tester' : 'premium.ok.other') :
-          t('premium.err.' + (toast.motivo || 'formato')) });
-        siguienteRef.current();
-      }
-    });
-  }, []);
+
+  const alRecibirRef = useRefTO(null);
+  useEffectTO(() => onToast((toast) => alRecibirRef.current(toast)), []);
+  alRecibirRef.current = (toast) => {
+
+    if (toast.type === 'achievement') {
+      const a = (window.ACHIEVEMENT_CATALOG || []).find((x) => x.id === toast.id);
+      if (!a) return;
+      colaRef.current.push({ ...toast,
+        title: tR('ach.item.' + a.id + '.title', a.title),
+        desc: tR('ach.item.' + a.id + '.desc', a.desc),
+        glyph: a.glyph, glyphSvg: a.glyphSvg, secreto: !!a.secret, exiting: false });
+      siguienteRef.current();
+    }
+
+
+
+    if (toast.type === 'licencia') {
+      colaRef.current.push({ ...toast, exiting: false, licencia: true, duracion: 6000,
+        eyebrow: t('premium.settings.code'),
+        title: t(toast.ok ? toast.mensual ? 'premium.ok.title.monthly' : 'premium.ok.title' : 'premium.err.title'),
+        desc: toast.ok ? t(toast.tester ? 'premium.ok.tester' : 'premium.ok.other') :
+        t('premium.err.' + (toast.motivo || 'formato')) });
+      siguienteRef.current();
+    }
+  };
 
 
   const enAro = toasts.some((x) => x.aro);
@@ -25716,13 +25733,13 @@ function PremiumTiendaRenueva(_ref) {let { mes } = _ref;
 
 
 function PremiumTiendaPie(_ref2) {let { alRestaurar } = _ref2;
-  const { t, tn } = useT();
+  const { t, tn, lang } = useT();
   const [aviso, setAviso] = useStatePT(null);
   const [buscando, setBuscando] = useStatePT(false);
   const canal = premiumTiendaCanal();
   if (canal === 'web') return null;
   const tienda = t('premium.tienda.' + canal);
-  const privacidad = typeof paceNativoEnlace === 'function' ? paceNativoEnlace('/privacy') : '/privacy';
+  const privacidad = typeof paceEnlaceLegal === 'function' ? paceEnlaceLegal('/privacy', lang) : '/privacy';
   const restaurar = () => {
     if (buscando) return;
     setBuscando(true);setAviso(null);
@@ -27724,6 +27741,7 @@ const { useState: useStateFP, useEffect: useEffectFP, useRef: useRefFP } = React
 
 
 
+
 function MinutesPicker(_ref) {let { value, onChange } = _ref;
   const { t, tn } = useT();
   const presets = [15, 25, 35, 45];
@@ -27746,8 +27764,8 @@ function MinutesPicker(_ref) {let { value, onChange } = _ref;
 
   const commit = () => {
     const n = parseInt(draft, 10);
-    if (Number.isFinite(n) && n >= 1 && n <= 180) {
-      onChange(Math.max(FOCO_MINIMO, n));
+    if (Number.isFinite(n) && n >= 1) {
+      onChange(Math.min(180, Math.max(FOCO_MINIMO, n)));
     } else {
       setDraft(String(value));
     }
@@ -30297,7 +30315,7 @@ Object.assign(window, {
 </script>
   <script>
 ;(function () {
-
+function _extends() {return _extends = Object.assign ? Object.assign.bind() : function (n) {for (var e = 1; e < arguments.length; e++) {var t = arguments[e];for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);}return n;}, _extends.apply(null, arguments);}
 
 
 
@@ -30330,7 +30348,21 @@ function Sidebar() {
   const collapsed = !!state.sidebarCollapsed;
   const isMob = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches;
 
-  const toggle = () => set({ sidebarCollapsed: !collapsed });
+
+
+
+
+
+
+  const asideRef = React.useRef(null);
+  const enCajon = !collapsed && esCajon();
+  const plegar = () => {
+    if (enCajon) window.paceCajonDevolverFoco = true;
+    set({ sidebarCollapsed: true });
+  };
+  usePaceDialogo(asideRef, enCajon, { onEscape: plegar });
+
+  const toggle = () => collapsed ? set({ sidebarCollapsed: false }) : plegar();
 
 
 
@@ -30528,7 +30560,8 @@ function Sidebar() {
   const secciones = [seccionSemana, seccionHoy, seccionAccion, seccionBibliotecas, seccionLogro].filter(Boolean);
 
   return (
-    React.createElement("aside", { style: sidebarStyles.root, "data-pace-sidebar": true, "data-escalado": "0" },
+    React.createElement("aside", _extends({ ref: asideRef, style: enCajon ? { ...sidebarStyles.root, outline: 'none' } : sidebarStyles.root, "data-pace-sidebar": true, "data-escalado": "0" },
+    enCajon ? { role: 'dialog', 'aria-modal': 'true', 'aria-label': t('sidebar.dialog.aria'), tabIndex: -1 } : {}),
     React.createElement("button", { onClick: toggle, style: sidebarStyles.toggleFloating, "data-pace-sidebar-toggle": true, title: t('sidebar.collapse.title'), "aria-label": t('sidebar.collapse.aria') },
     React.createElement(ChevronLeftIcon, null)
     ),
@@ -30609,7 +30642,7 @@ function fechaCortaSidebar(lang) {
 }
 
 Object.assign(window, { Sidebar, fechaCortaSidebar, esCajon });
-;Object.assign(window, { Sidebar, esCajon, fechaCortaSidebar });
+;Object.assign(window, { _extends, Sidebar, esCajon, fechaCortaSidebar });
 })();
 </script>
   <script>
@@ -42884,10 +42917,14 @@ function statsTotalesDe(entry, t) {
   return statsSeries(t).map((s) => ({ key: s.key, label: s.label, color: s.color, valor: v[s.key], unidad: v[s.key] === 1 && s.unit1 ? s.unit1 : s.unit }));
 }
 
+
+
 function fmtTime(min, hourUnit, lang) {
-  if (min <= 0) return '0';
-  if (min < 60) return `${min}min`;
-  return `${statsNumero(min / 60, lang, 1)}${hourUnit}`;
+  const total = Math.round(min);
+  if (total <= 0) return '0';
+  if (total < 60) return `${total} min`;
+  const h = Math.floor(total / 60),resto = total % 60;
+  return `${statsNumero(h, lang)} ${hourUnit}` + (resto ? ` ${resto} min` : '');
 }
 
 
@@ -42908,7 +42945,8 @@ function StatsLineaTotales(_ref2) {let { entry } = _ref2;
     React.createElement("span", null, rotulo('var(--focus)', t('stats.month.total.focus')), ' ', fmtTime(v('focusMinutes'), h, lang)), punto,
     React.createElement("span", null, rotulo('var(--breathe)', t('stats.month.total.breathe')), ' ', fmtTime(v('breathMinutes'), h, lang)), punto,
     React.createElement("span", null, rotulo('var(--move)', t('stats.month.total.move')), ' ', fmtTime(v('moveMinutes'), h, lang)), punto,
-    React.createElement("span", null, rotulo('var(--hydrate)', statsNumero(agua, lang)), ' ', agua === 1 ? t('stats.unit.glasses.1') : t('stats.month.total.water'))
+
+    React.createElement("span", null, statsNumero(agua, lang), ' ', agua === 1 ? t('stats.unit.glasses.1') : t('stats.month.total.water'))
     ));
 
 }
@@ -43518,7 +43556,9 @@ function StatsAyudaTras(_ref5) {let { tras } = _ref5;
   const { t, tn } = useT();
   return (
     React.createElement(StatsAyudaTarjeta, { idea: "tras", color: "var(--move)", titulo: t('stats.ayuda.tras'), fuente: t('stats.ayuda.tras.fuente') },
-    React.createElement("div", { className: "pace-ay-frase" }, tn('stats.ayuda.tras.frase', { a: tras.a, b: tras.b })),
+
+
+    React.createElement("div", { className: "pace-ay-frase" }, tras.a === 0 ? t('stats.ayuda.tras.cero') : tn('stats.ayuda.tras.frase', { a: tras.a, b: tras.b })),
     tras.manana ?
     React.createElement("div", { className: "pace-ay-nota" }, tn('stats.ayuda.tras.franjas', { ma: tras.manana[0], mb: tras.manana[1], ta: tras.tarde[0], tb: tras.tarde[1] })) :
     null
@@ -45278,10 +45318,6 @@ function paceBajarJSON(payload, nombre, alAbrir) {
   return 'descargada';
 }
 
-function paceEnlaceLegal(ruta) {
-  return typeof paceNativoEnlace === 'function' ? paceNativoEnlace(ruta) : ruta;
-}
-
 function paceDiaArchivo() {
   return toISODate(new Date()).replace(/-/g, '');
 }
@@ -45441,9 +45477,9 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
     React.createElement("span", null, t(typeof paceEsNativo === 'function' && paceEsNativo() ? 'settings.foot.app' : 'settings.foot')),
     isWeb &&
     React.createElement("span", null,
-    React.createElement("a", { href: paceEnlaceLegal('/safety'), target: "_blank", rel: "noopener" }, t('settings.legal.safety')),
+    React.createElement("a", { href: paceEnlaceLegal('/safety', lang), target: "_blank", rel: "noopener" }, t('settings.legal.safety')),
     React.createElement("span", { style: { margin: '0 5px' } }, "\xB7"),
-    React.createElement("a", { href: paceEnlaceLegal('/privacy'), target: "_blank", rel: "noopener" }, t('settings.legal.privacy'))
+    React.createElement("a", { href: paceEnlaceLegal('/privacy', lang), target: "_blank", rel: "noopener" }, t('settings.legal.privacy'))
     )
 
     )
@@ -45479,7 +45515,7 @@ function UploadIcon() {
 
 
 Object.assign(window, { TweaksDataSection, paceDescargarCopia, paceDescargarRescate });
-;Object.assign(window, { paceBajarJSON, paceEnlaceLegal, paceDiaArchivo, paceDescargarCopia, paceDescargarRescate, paceConLogroDeLaCopia, TweaksDataSection, DownloadIcon, UploadIcon });
+;Object.assign(window, { paceBajarJSON, paceDiaArchivo, paceDescargarCopia, paceDescargarRescate, paceConLogroDeLaCopia, TweaksDataSection, DownloadIcon, UploadIcon });
 })();
 </script>
   <script>
@@ -46633,15 +46669,20 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
     canNotify && (() => {
       const avisoOn = !!state.notifyFocusEnd && permisoAviso() !== 'denied';
       const ponerAviso = (v) => {v ? enableNotify() : set({ notifyFocusEnd: false });};
+
+
+
+      const subAviso = avisoNativo ? 'settings.notify.sub.app' :
+      permisoAviso() === 'denied' ? 'settings.notify.sub.blocked' : 'settings.notify.sub';
       return (
-        React.createElement(AjustesFila, { id: "notify", nombre: t('settings.notify'), sub: t(avisoNativo ? 'settings.notify.sub.app' : 'settings.notify.sub'), modulo: "focus",
+        React.createElement(AjustesFila, { id: "notify", nombre: t('settings.notify'), sub: t(subAviso), modulo: "focus",
           alTocar: () => ponerAviso(!avisoOn) },
         React.createElement(AjustesInterruptor, { on: avisoOn, aria: t('settings.notify'), onChange: ponerAviso })
         ));
 
     })(),
-    canNotify && permisoAviso() === 'denied' &&
-    React.createElement("div", { className: "pace-aj-nota" }, t(avisoNativo ? 'settings.notify.blocked.' + plataforma : 'settings.notify.blocked')),
+    canNotify && avisoNativo && permisoAviso() === 'denied' &&
+    React.createElement("div", { className: "pace-aj-nota" }, t('settings.notify.blocked.' + plataforma)),
 
     falloAviso && state.notifyFocusEnd && permisoAviso() === 'granted' &&
     React.createElement("div", { className: "pace-aj-nota", "data-pace-aj-aviso-fallo": true }, t('settings.notify.fallo.' + plataforma)),
@@ -51715,7 +51756,7 @@ function RitmoChips(_ref3) {let { state, editarMedia, tuyo } = _ref3;
     React.createElement("div", { className: "pace-rt-chips" },
     RITMO_OPCIONES_UI.map((op) => {
       const m = ritmoMenu(state, op, null, null);
-      const vacia = !m || !m.focos.length;
+      const vacia = ritmoOpcionVacia(op, m);
       if (horas && op === 'media' && vacia) {
         return (
           React.createElement("div", { key: op, className: "pace-rt-chip pace-rt-chip-horas", "data-pace-ritmo-opcion": op, "data-pace-ritmo-media-horas": true },
@@ -51744,8 +51785,21 @@ function RitmoChips(_ref3) {let { state, editarMedia, tuyo } = _ref3;
 
 
 
+function ritmoNoCabe(op, m) {
+  const forma = m && window.RITMO_FORMAS && RITMO_FORMAS[op];
+  return !!(forma && forma.reloj && m.desde + forma.reloj > 24 * 60);
+}
+function ritmoOpcionVacia(op, m) {
+  return !m || !m.focos.length || ritmoNoCabe(op, m);
+}
+
+
+
+
+
 
 function ritmoSub(op, m, vacia, t, tn) {
+  if (ritmoNoCabe(op, m)) return t('ritmo.nocabe');
   if (vacia) return t('ritmo.fuera');
   if (op === 'media' || op === 'jornada') return tn('ritmo.tramo', { a: ritmoHora(m.desde), b: ritmoHora(m.hasta) });
   return tn('ritmo.hasta', { h: ritmoHora(m.hasta) });
@@ -52003,10 +52057,10 @@ function RitmoHecho(_ref1) {let { plan } = _ref1;
 }
 
 Object.assign(window, {
-  RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub,
+  RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub, ritmoNoCabe, ritmoOpcionVacia,
   RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho
 });
-;Object.assign(window, { RITMO_OPCIONES_UI, RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, ritmoSub, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho });
+;Object.assign(window, { RITMO_OPCIONES_UI, RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, ritmoNoCabe, ritmoOpcionVacia, ritmoSub, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho });
 })();
 </script>
   <script>
@@ -52651,7 +52705,7 @@ function RitmoTarjeta() {
     React.createElement("div", { className: "pace-rt-losetas" },
     RITMO_OPCIONES_UI.map((op) => {
       const m = ritmoMenu(state, op, null, null);
-      const vacia = !m || !m.focos.length;
+      const vacia = ritmoOpcionVacia(op, m);
       return (
         React.createElement("button", { key: op, type: "button", className: "pace-rt-loseta", "data-pace-ritmo-loseta": op,
           disabled: vacia, onClick: () => ritmoElegir(op) },
@@ -55463,8 +55517,17 @@ Object.assign(window, { ActivityBar, ABBreathe, ABStretch, ABMove, ABDrop, ABFoc
 
 function SidebarHandle(_ref) {let { onOpen } = _ref;
   const { t } = useT();
+
+
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    if (!window.paceCajonDevolverFoco) return;
+    window.paceCajonDevolverFoco = false;
+    try {ref.current.focus({ preventScroll: true });} catch (e) {}
+  }, []);
   return (
     React.createElement("button", {
+      ref: ref,
       "data-pace-sidebar-open": true,
       onClick: onOpen,
       title: t('sidebar.open.title'),

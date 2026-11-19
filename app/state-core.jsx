@@ -358,9 +358,9 @@ function loadState(estricto) {
     }
 
     const merged = rolloverIfNeeded({ ...defaultState, ...parsed });
-    if (parsed.sidebarCollapsed === undefined && isMobileViewport()) {
-      return { ...merged, sidebarCollapsed: true };
-    }
+    /* En el móvil, PACE abre SIEMPRE con el cajón cerrado, que tapa el reloj (caza del 19 nov., Ez
+       «sí» a la 1); también quien viene del ordenador. Allí se recuerda cómo lo dejaste. */
+    if (isMobileViewport()) return { ...merged, sidebarCollapsed: true };
     return merged;
   } catch (e) {
     if (estricto) throw e;

@@ -1,0 +1,248 @@
+<title>La caza, montada</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Papel y tinta, como la página de la caza: los once hallazgos con lo que elegiste, la foto de antes
+   y la de después (fotos/montaje/), y la prueba que cae sin el arreglo. */
+:root{
+  --paper:#F2EDE0;--card:#FBF8F1;
+  --ink:#1F1C17;--ink-2:#4A453C;--ink-3:#77705F;
+  --line:#C9C0A8;
+  --olive:#3E5A3A;--olive-soft:rgba(62,90,58,.12);
+  --terra:#A85E43;--terra-soft:rgba(168,94,67,.12);
+  --velo:rgba(31,28,23,.86);
+  --display:'EB Garamond',Georgia,'Times New Roman',serif;
+  --ui:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);
+  --velo:rgba(0,0,0,.88);color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);
+  --velo:rgba(0,0,0,.88);color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+main{max-width:960px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 72px}
+h1,h2,h3{font-family:var(--display);font-style:italic;font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(32px,6vw,44px)}
+h2{font-size:clamp(23px,4vw,28px);margin:48px 0 4px;padding-top:22px;border-top:1px solid var(--line)}
+h3{font-size:22px;display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+p,li{color:var(--ink-2);max-width:70ch}
+p{margin:0 0 10px}
+strong{color:var(--ink);font-weight:500}
+code{font-family:ui-monospace,'Cascadia Mono',Consolas,monospace;font-size:.86em;color:var(--ink);overflow-wrap:anywhere}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.lead{font-family:var(--display);font-size:21px;color:var(--ink);max-width:62ch;margin-top:14px}
+.resumen{margin-top:20px;padding:16px 18px;border:1px solid var(--ink);border-radius:12px;background:var(--card)}
+.resumen p{margin:0;color:var(--ink)}
+.resumen p + p{margin-top:6px;font-size:15px;color:var(--ink-2)}
+.num{flex:0 0 auto;display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--ink);font-family:var(--display);font-style:normal;font-size:19px;color:var(--ink);transform:translateY(-2px)}
+.estado{font-family:var(--ui);font-style:normal;font-size:11px;letter-spacing:.12em;text-transform:uppercase;border-radius:999px;padding:2px 10px;border:1px solid var(--olive);color:var(--olive);background:var(--olive-soft);white-space:nowrap}
+.estado.fuera{border-color:var(--ink-3);color:var(--ink-3);background:transparent}
+.hz{margin-top:34px;padding-top:24px;border-top:1px dashed var(--line)}
+h2 + .sub + .hz{border-top:0;padding-top:4px}
+.sub{font-size:15px;color:var(--ink-3);margin:0 0 6px}
+.eleccion{margin:10px 0 0;font-size:15px;color:var(--ink-2)}
+.eleccion b{font-weight:600;color:var(--ink)}
+.fotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-top:14px}
+.fotos.anchas{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+figure{margin:0;min-width:0}
+figure img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:10px;background:var(--card);cursor:zoom-in}
+figcaption{font-size:13px;color:var(--ink-3);margin-top:6px;line-height:1.35}
+figcaption b{font-weight:600;color:var(--ink-2)}
+figure.despues img{border-color:var(--olive)}
+.prueba{margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);font-size:14px;color:var(--ink-2)}
+.prueba p{margin:0;max-width:none}
+.prueba p + p{margin-top:4px}
+.nota{margin-top:10px;font-size:14px;color:var(--ink-3)}
+ul.lista{padding-left:22px;margin:8px 0 0}
+ul.lista li{margin-bottom:6px}
+#grande{position:fixed;inset:0;background:var(--velo);display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:20;cursor:zoom-out}
+#grande img{max-width:100%;max-height:100%;border-radius:12px}
+img:focus-visible{outline:2px solid var(--olive);outline-offset:2px}
+</style>
+
+<main>
+  <div class="eyebrow">PACE · caza de fallos · 19 nov. · montado en su rama</div>
+  <h1>La caza, montada</h1>
+  <p class="lead">Contestaste «todas sí a lo recomendado, menos 6B, y la 10 se queda como está». Está montado en la rama <code>claude/caza-19nov-c2077c</code>, sobre la 0.211.0, sin juntar con main.</p>
+
+  <div class="resumen">
+    <p><strong>Nueve montados, uno ya hecho en otra rama y uno que no se toca.</strong></p>
+    <p>Un commit por hallazgo, cada uno con su prueba, que he visto caer antes del arreglo y pasar después. Fotos de antes y después a 360 y a 1280. La suite entera la pasa la coordinadora antes de juntar.</p>
+  </div>
+
+  <h2>Fallos</h2>
+  <p class="sub">Los cinco que salían mal.</p>
+
+  <section class="hz" id="h1">
+    <h3><span class="num">1</span>El panel del móvil ya no se abre solo <span class="estado">Montado</span></h3>
+    <p class="eleccion">Elegiste <b>sí</b>. En el móvil PACE abre siempre con el panel cerrado; en el ordenador sigue recordando cómo lo dejaste.</p>
+    <div class="fotos">
+      <figure><img tabindex="0" src="fotos/montaje/antes-1-360.png" alt="Antes: PACE abre en el móvil con el panel tapando el reloj"><figcaption><b>Antes</b> · 360, guardado abierto</figcaption></figure>
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-1-360.png" alt="Después: PACE abre en el móvil con el reloj a la vista"><figcaption><b>Después</b> · 360, guardado abierto</figcaption></figure>
+    </div>
+    <div class="prueba"><p><code>tests/caza-19nov-cajon.spec.js</code> · cae sin el arreglo: 2 pruebas en el móvil (abrir con él guardado abierto, y abrirlo y recargar). La del ordenador pasa antes y después.</p>
+      <p>Las pruebas que sembraban el panel abierto en el móvil (<code>sidebar-movil</code>, <code>sidebar-redesign</code>) ahora lo abren con «Abrir panel», como lo abre la gente.</p></div>
+  </section>
+
+  <section class="hz" id="h2">
+    <h3><span class="num">2</span>El panel se cierra con Escape y el tabulador no se escapa <span class="estado">Montado</span></h3>
+    <p class="eleccion">Elegiste <b>sí</b>. En el móvil y en la tableta vertical el panel es una ventana como las demás: Escape lo cierra, el tabulador da la vuelta dentro y al cerrarlo vuelves a «Abrir panel».</p>
+    <div class="fotos">
+      <figure><img tabindex="0" src="fotos/montaje/antes-2-360.png" alt="Antes: tras pulsar Escape el panel sigue abierto"><figcaption><b>Antes</b> · 360, tras Escape</figcaption></figure>
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-2-360.png" alt="Después: tras pulsar Escape el panel se ha cerrado"><figcaption><b>Después</b> · 360, tras Escape</figcaption></figure>
+      <figure><img tabindex="0" src="fotos/montaje/antes-2-820.png" alt="Antes: en la tableta, tras Escape el panel sigue abierto"><figcaption><b>Antes</b> · tableta 820, tras Escape</figcaption></figure>
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-2-820.png" alt="Después: en la tableta, tras Escape el panel se ha cerrado"><figcaption><b>Después</b> · tableta 820, tras Escape</figcaption></figure>
+    </div>
+    <div class="prueba"><p><code>tests/caza-19nov-cajon.spec.js</code> · cae sin el arreglo: 4 pruebas (a 360 y a 820 × 1180: ventana, 30 tabulaciones dentro, Escape y el foco de vuelta; y cerrar con su flecha).</p></div>
+    <p class="nota">En el ordenador la barra no cambia: convive con la home y no es una ventana.</p>
+  </section>
+
+  <section class="hz" id="h3">
+    <h3><span class="num">3</span>El aviso del sello sale en el idioma de ahora <span class="estado">Montado</span></h3>
+    <p class="eleccion">Elegiste <b>sí</b>. Cambias de idioma sin recargar y el aviso sale entero en el nuevo; el del código, también.</p>
+    <div class="fotos">
+      <figure><img tabindex="0" src="fotos/fm-4-fin.png" alt="Antes: New stamp · Primer paso"><figcaption><b>Antes</b> · 360, «New stamp · Primer paso»</figcaption></figure>
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-3-360.png" alt="Después: New stamp · First step"><figcaption><b>Después</b> · 360, «New stamp · First step»</figcaption></figure>
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-3-1280.png" alt="Después, en el ordenador: New stamp · First step"><figcaption><b>Después</b> · 1280</figcaption></figure>
+    </div>
+    <div class="prueba"><p><code>tests/caza-19nov-textos.spec.js</code> · cae sin el arreglo: 3 pruebas (a inglés, de vuelta a español y el aviso del código).</p></div>
+    <p class="nota">La rama del recorrido junta los sellos que llegan a la vez en un aviso y toca el mismo archivo. Aquí solo cambia el envoltorio, no lo de dentro, para que casen al juntar.</p>
+  </section>
+
+  <section class="hz" id="h4">
+    <h3><span class="num">4</span>Ajustes cabe sin scroll con los avisos bloqueados <span class="estado">Montado · 4A</span></h3>
+    <p class="eleccion">Elegiste <b>A</b>. La nota de debajo se va; lo dice la línea pequeña de la fila: «Foco · bloqueados en este navegador» («Focus · blocked in this browser»).</p>
+    <div class="fotos">
+      <figure><img tabindex="0" src="fotos/montaje/antes-4-360-en.png" alt="Antes: Ajustes en inglés con la nota de bloqueadas y Tus datos cortada"><figcaption><b>Antes</b> · 360, en inglés</figcaption></figure>
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-4-360-en.png" alt="Después: Ajustes en inglés con la línea pequeña y Tus datos entera"><figcaption><b>Después</b> · 360, en inglés</figcaption></figure>
+      <figure><img tabindex="0" src="fotos/montaje/antes-4-360-es.png" alt="Antes: Ajustes en español con la nota de bloqueadas"><figcaption><b>Antes</b> · 360, en español</figcaption></figure>
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-4-360-es.png" alt="Después: Ajustes en español con Foco · bloqueados en este navegador"><figcaption><b>Después</b> · 360, en español</figcaption></figure>
+    </div>
+    <div class="fotos anchas">
+      <figure><img tabindex="0" src="fotos/montaje/antes-4-1280.png" alt="Antes: Ajustes a 1280 por 720 con la nota de bloqueadas"><figcaption><b>Antes</b> · 1280 × 720</figcaption></figure>
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-4-1280.png" alt="Después: Ajustes a 1280 por 720 sin la nota"><figcaption><b>Después</b> · 1280 × 720</figcaption></figure>
+    </div>
+    <div class="prueba"><p><code>tests/caza-19nov-ajustes.spec.js</code> · cae sin el arreglo: las 8 (360 × 640, 360 × 730, 1280 × 720 y 1280 × 800, en los dos idiomas); a 1280 × 720, por los 6 px de scroll.</p></div>
+    <p class="nota">En las apps de Android y del iPhone la nota sigue como estaba: dice dónde se activan los avisos y sus pruebas la miden. No he medido si allí pide scroll.</p>
+  </section>
+
+  <section class="hz" id="h5">
+    <h3><span class="num">5</span>En inglés, Privacidad y Seguridad abren en inglés <span class="estado">Montado · 5A</span></h3>
+    <p class="eleccion">Elegiste <b>A</b>. Arriba de cada página hay un «English ↓», y la app en inglés abre directamente la parte en inglés (<code>/privacy#en</code>, <code>/safety#en</code>).</p>
+    <div class="fotos">
+      <figure><img tabindex="0" src="fotos/montaje/antes-5-360.png" alt="Antes: Privacidad en español, abierta desde PACE en inglés"><figcaption><b>Antes</b> · 360, desde PACE en inglés</figcaption></figure>
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-5-360.png" alt="Después: Privacy en inglés, abierta desde PACE en inglés"><figcaption><b>Después</b> · 360, desde PACE en inglés</figcaption></figure>
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-5-es-360.png" alt="Después: la página en español con English ↓ arriba a la derecha"><figcaption><b>Después</b> · 360, entrando en español: «English ↓» arriba</figcaption></figure>
+    </div>
+    <div class="fotos anchas">
+      <figure><img tabindex="0" src="fotos/montaje/antes-5-1280.png" alt="Antes: Privacidad en español a 1280"><figcaption><b>Antes</b> · 1280</figcaption></figure>
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-5-1280.png" alt="Después: Privacy en inglés a 1280"><figcaption><b>Después</b> · 1280</figcaption></figure>
+    </div>
+    <div class="prueba"><p><code>tests/caza-19nov-ajustes.spec.js</code> · cae sin el arreglo: 3 pruebas (el enlace en inglés, y <code>/privacy</code> y <code>/safety</code> con su «English ↓» y su <code>#en</code>).</p></div>
+    <p class="nota">Lo enlazan en inglés Ajustes, el acuse de una sesión («Seguridad») y el pie de la compra en las apps. Las páginas de la web (inicio, /premium, /beta) siguen enlazando sin <code>#en</code>; quien llega desde ahí tiene el «English ↓».</p>
+  </section>
+
+  <h2>Detalles</h2>
+  <p class="sub">Funcionaban, pero se leían mal.</p>
+
+  <section class="hz" id="h6">
+    <h3><span class="num">6</span>De noche, la loseta que ya no cabe se apaga <span class="estado">Montado · 6B</span></h3>
+    <p class="eleccion">Elegiste <b>B</b>. La que la medianoche cortaría se apaga y dice «Ya no cabe hoy» («No longer fits today»), como ya se apaga «Jornada entera · Tu jornada ya terminó». En el móvil y en el ordenador.</p>
+    <div class="fotos">
+      <figure><img tabindex="0" src="fotos/noche-2330.png" alt="Antes: a las 23:30 Una hora y Dos horas dicen Hasta las 0:00"><figcaption><b>Antes</b> · 360, a las 23:30</figcaption></figure>
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-6-2330-360.png" alt="Después: a las 23:30 Una hora y Dos horas apagadas, Ya no cabe hoy"><figcaption><b>Después</b> · 360, a las 23:30: las dos apagadas</figcaption></figure>
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-6-2245-360.png" alt="Después: a las 22:45 Una hora sigue y Dos horas apagada"><figcaption><b>Después</b> · 360, a las 22:45: «Una hora» sigue</figcaption></figure>
+    </div>
+    <div class="fotos anchas">
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-6-2330-1280.png" alt="Después: en el ordenador a las 23:30, las losetas apagadas"><figcaption><b>Después</b> · 1280, a las 23:30</figcaption></figure>
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-6-2245-1280.png" alt="Después: en el ordenador a las 22:45, Una hora sigue y Dos horas apagada"><figcaption><b>Después</b> · 1280, a las 22:45</figcaption></figure>
+    </div>
+    <div class="prueba"><p><code>tests/caza-19nov-noche.spec.js</code> · a 360 y en inglés cae sin el arreglo (3 pruebas); por la tarde pasa antes y después.</p>
+      <p>Las de 1280 cayeron primero porque no encontraban las losetas: en el ordenador son otras, las de la tarjeta de la home, y tenían el mismo fallo. Las arreglé las dos con la misma regla y ajusté la prueba; esas tres no las he visto caer por el fallo.</p></div>
+    <p class="nota">A las 23:30 ya no queda nada que elegir en «A tu ritmo»: se puede seguir por libre. Es lo que dice la B.</p>
+  </section>
+
+  <section class="hz" id="h7">
+    <h3><span class="num">7</span>Los logros dicen «Foco» <span class="estado fuera">Hecho en otra rama</span></h3>
+    <p class="eleccion">Elegiste <b>sí</b>. Ya está hecho en la rama del recorrido (<code>claude/arreglos-tester-18nov</code>, commit <code>a47d3bd5</code>, con su prueba <code>tests/textos-verdad.spec.js</code>): «Completa tu primer Foco», «12 Focos», «8 Focos en un día», en los dos idiomas. Aquí no lo repito; llega al juntar esa rama.</p>
+    <div class="fotos">
+      <figure><img tabindex="0" src="fotos/m-es-1-Ver_logros.png" alt="Antes: Completa tu primer Pomodoro"><figcaption><b>Antes</b> · la 0.211.0</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="hz" id="h8">
+    <h3><span class="num">8</span>«Después del Foco» con cero ya no suena a error <span class="estado">Montado · 8A</span></h3>
+    <p class="eleccion">Elegiste <b>A</b>. Con cero dice «Aún no has parado justo después de un Foco.» («You haven’t taken a break right after a Focus block yet.»). Con alguna, la frase de siempre.</p>
+    <div class="fotos">
+      <figure><img tabindex="0" src="fotos/vet-16-9-m-st-Quteayuda.png" alt="Antes: Tras 0 de tus 60 Focos, una pausa"><figcaption><b>Antes</b> · 360</figcaption></figure>
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-8-360.png" alt="Después: Aún no has parado justo después de un Foco"><figcaption><b>Después</b> · 360</figcaption></figure>
+    </div>
+    <div class="fotos anchas">
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-8-1280.png" alt="Después, en el ordenador: Aún no has parado justo después de un Foco"><figcaption><b>Después</b> · 1280</figcaption></figure>
+    </div>
+    <div class="prueba"><p><code>tests/caza-19nov-textos.spec.js</code> · cae sin el arreglo: 2 pruebas (en español y en inglés). La de «con alguna pausa» pasa antes y después.</p></div>
+  </section>
+
+  <section class="hz" id="h9">
+    <h3><span class="num">9</span>«Otro» se queda en el límite por los dos lados <span class="estado">Montado · 9A</span></h3>
+    <p class="eleccion">Elegiste <b>A</b>. 999 se queda en 180, como 3 ya subía a 5.</p>
+    <div class="fotos">
+      <figure><img tabindex="0" src="fotos/montaje/antes-9-360.png" alt="Antes: tras escribir 999 el reloj vuelve a 25:00"><figcaption><b>Antes</b> · 360, tras 999: 25:00</figcaption></figure>
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-9-360.png" alt="Después: tras escribir 999 el reloj marca 180:00"><figcaption><b>Después</b> · 360, tras 999: 180:00</figcaption></figure>
+      <figure><img tabindex="0" src="fotos/montaje/antes-9-1280.png" alt="Antes, en el ordenador: 25:00"><figcaption><b>Antes</b> · 1280</figcaption></figure>
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-9-1280.png" alt="Después, en el ordenador: 180:00"><figcaption><b>Después</b> · 1280</figcaption></figure>
+    </div>
+    <div class="prueba"><p><code>tests/caza-19nov-textos.spec.js</code> · cae sin el arreglo: 2 pruebas (999 y 181). 3 → 5 y 90 → 90 pasan antes y después.</p></div>
+  </section>
+
+  <section class="hz" id="h10">
+    <h3><span class="num">10</span>«2 series · 25·12 reps» <span class="estado fuera">Se queda como está</span></h3>
+    <p class="eleccion">Dijiste que <b>se queda como está</b>. No se ha tocado.</p>
+    <div class="fotos anchas">
+      <figure><img tabindex="0" src="fotos/zoom-reps.png" alt="2 SETS · 25·12 REPS, como está"><figcaption>Como está</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="hz" id="h11">
+    <h3><span class="num">11</span>La línea del Mes: horas y minutos, y el número de vasos como las demás cifras <span class="estado">Montado · 11A</span></h3>
+    <p class="eleccion">Elegiste <b>A</b>. «Foco 20 h 36 min · Respira 27 min · Cuerpo 1 h 6 min · 78 vasos». Sale en el ordenador, en el Mes y en el Año; en el móvil van las cuatro tarjetas de arriba.</p>
+    <div class="fotos anchas">
+      <figure><img tabindex="0" src="fotos/montaje/antes-11-linea.png" alt="Antes: Foco 15,8h · Respira 21min · Cuerpo 50min · 60 vasos"><figcaption><b>Antes</b> · la línea, 1280</figcaption></figure>
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-11-linea.png" alt="Después: Foco 15 h 50 min · Respira 21 min · Cuerpo 50 min · 60 vasos"><figcaption><b>Después</b> · la línea, 1280</figcaption></figure>
+      <figure><img tabindex="0" src="fotos/montaje/antes-11-1280.png" alt="Antes: Estadísticas, Mes, a 1280"><figcaption><b>Antes</b> · el Mes, 1280</figcaption></figure>
+      <figure class="despues"><img tabindex="0" src="fotos/montaje/despues-11-1280.png" alt="Después: Estadísticas, Mes, a 1280"><figcaption><b>Después</b> · el Mes, 1280</figcaption></figure>
+    </div>
+    <div class="prueba"><p><code>tests/caza-19nov-textos.spec.js</code> · cae sin el arreglo (1 prueba: el texto y la letra del número de vasos).</p>
+      <p><code>tests/stats-auditoria.spec.js</code> decía «Foco 1,4h» y «las horas llevan coma»: con la 11A dicen «1 h 24 min» y sin decimales.</p></div>
+  </section>
+
+  <h2>Lo que no he probado</h2>
+  <ul class="lista">
+    <li>La suite entera: solo las pruebas que he tocado o escrito y las vecinas de cada cambio, más <code>npm run verify</code>.</li>
+    <li>En un móvil de verdad: las fotos son de Chromium a 360 × 640 y 1280 × 720.</li>
+  </ul>
+</main>
+<div id="grande" hidden><img alt=""></div>
+
+<script>
+(function () {
+  var grande = document.getElementById('grande');
+  function abrir(img) { grande.querySelector('img').src = img.src; grande.querySelector('img').alt = img.alt; grande.hidden = false; }
+  document.addEventListener('click', function (e) {
+    if (e.target.matches('figure img')) abrir(e.target);
+    else if (!grande.hidden && grande.contains(e.target)) grande.hidden = true;
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') grande.hidden = true;
+    if (e.key === 'Enter' && e.target.matches && e.target.matches('figure img')) abrir(e.target);
+  });
+})();
+</script>

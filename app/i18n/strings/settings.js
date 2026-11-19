@@ -73,7 +73,7 @@ Object.assign(window.PACE_STRINGS.es, {
     // Sesiones: cada fila dice de que modulo es
     'settings.notify':               'Aviso al terminar',
     'settings.notify.sub':           'Foco · si la pestaña está detrás',
-    'settings.notify.blocked':       'El navegador tiene las notificaciones bloqueadas para este sitio.',
+    'settings.notify.sub.blocked':   'Foco · bloqueados en este navegador',
     'settings.notify.sub.app':       'Foco y pausa · si la app está en segundo plano',
     'settings.notify.blocked.android': 'Los avisos de PACE están desactivados en los ajustes de Android.',
     'settings.notify.blocked.ios':   'Los avisos de PACE están desactivados en los ajustes del iPhone.',
@@ -191,7 +191,7 @@ Object.assign(window.PACE_STRINGS.en, {
     // Sessions
     'settings.notify':               'Alert at the end',
     'settings.notify.sub':           'Focus · if the tab is in the background',
-    'settings.notify.blocked':       'Notifications are blocked for this site in your browser.',
+    'settings.notify.sub.blocked':   'Focus · blocked in this browser',
     'settings.notify.sub.app':       'Focus and break · if the app is in the background',
     'settings.notify.blocked.android': 'PACE notifications are turned off in Android settings.',
     'settings.notify.blocked.ios':   'PACE notifications are turned off in iPhone settings.',

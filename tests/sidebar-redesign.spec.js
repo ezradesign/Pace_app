@@ -19,7 +19,7 @@
    `docs/traspaso/archivos/sidebar-8oct/` (montada.js las repite).
 */
 const { test, expect } = require('@playwright/test');
-const { sembrar, sembrarPisando, irAlArtefacto, capturarErrores, esperarEnPagina } = require('./helpers');
+const { sembrar, sembrarPisando, irAlArtefacto, capturarErrores, esperarEnPagina, abrirCajon } = require('./helpers');
 
 /* `lastActiveDay` y las guardas de migración NO SON OPCIONALES cuando se siembra
    `weeklyStats` o `water`: sin ellos `loadState` archiva la semana o la recalcula
@@ -221,6 +221,7 @@ test('el orden es Semana · Hoy · Pausa · Bibliotecas · Último logro, en esc
 test('móvil: el mismo orden, y el cajón se cierra al elegir', async ({ page, context }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await conUnaSesion(page, context);
+  await abrirCajon(page);
   const orden = await estructura(page);
   expect(orden.filter((x, i) => x === 'regla' && orden[i + 1] === 'regla')).toEqual([]);
   expect(orden.filter(x => x !== 'regla' && x !== 'spacer')).toEqual(['logo', 'SEMANA', 'HOY', 'ACCION', 'BIBLIOTECAS', 'LOGRO', 'pie']);
@@ -237,6 +238,7 @@ test('ni en móvil ni en escritorio hay scroll horizontal', async ({ page, conte
   for (const v of [{ width: 1280, height: 720 }, { width: 390, height: 844 }, { width: 320, height: 568 }]) {
     await page.setViewportSize(v);
     await irAlArtefacto(page);
+    await abrirCajon(page);
     const desborde = await page.evaluate(() => {
       const el = document.querySelector('[data-pace-sidebar]');
       return el ? el.scrollWidth - el.clientWidth : 0;

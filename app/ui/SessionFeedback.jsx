@@ -48,7 +48,7 @@
 const { useState: useStateSF, useRef: useRefSF, useEffect: useEffectSF } = React;
 
 function SessionFeedback({ routineId, kind = 'move', accent = 'var(--move)' }) {
-  const { t } = useT();
+  const { t, lang } = useT();
   // Gate por-día CAPTURADO en el mount (no reactivo — ver cabecera).
   const [shouldShow] = useStateSF(() => {
     try { return shouldPromptRoutineFeedback(routineId); } catch (e) { return false; }
@@ -124,7 +124,7 @@ function SessionFeedback({ routineId, kind = 'move', accent = 'var(--move)' }) {
   const dolor = (
     <React.Fragment>
       {t('session.feedback.dolor')}{' '}
-      <a href={typeof paceNativoEnlace === 'function' ? paceNativoEnlace('/safety') : '/safety'} target="_blank" rel="noopener"
+      <a href={typeof paceEnlaceLegal === 'function' ? paceEnlaceLegal('/safety', lang) : '/safety'} target="_blank" rel="noopener"
         data-pace-fb-seguridad style={sessionFeedbackStyles.deshacer}>{t('settings.legal.safety')}</a>.
     </React.Fragment>
   );

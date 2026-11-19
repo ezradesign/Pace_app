@@ -250,6 +250,15 @@ async function acabarBienvenida(page) {
    ordenador por debajo de 860 px de alto (3A del 27 oct.), y la suite corre a 1280 × 720. Sus
    filas (exportar, importar, borrar, PACE completo, el pie) se ven tras «Copias, borrar y PACE
    completo ›», como las ve la persona. Con Ajustes abierto, abre esa vista si hace falta. */
+/* EL CAJÓN DEL MÓVIL ARRANCA SIEMPRE CERRADO (caza del 19 nov. 2026): sembrar `sidebarCollapsed:false`
+   ya no lo abre en el móvil. Se abre como lo abre la gente, con «Abrir panel». En el ordenador no
+   hace nada si la barra ya está abierta. */
+async function abrirCajon(page) {
+  const asa = page.locator('[data-pace-sidebar-open]');
+  if (await asa.isVisible()) await asa.click();
+  await page.locator('[data-pace-sidebar]').waitFor({ state: 'visible' });
+}
+
 async function abrirTusDatos(page) {
   const panel = page.locator('[data-pace-tweaks-panel]');
   await panel.waitFor({ state: 'visible' });
@@ -332,6 +341,7 @@ const MEDIODIA = (() => { const d = new Date(); d.setHours(12, 0, 0, 0); return 
 
 module.exports = {
   MEDIODIA,
+  abrirCajon,
   abrirTusDatos,
   esperarEnPagina,
   fijarViewport,

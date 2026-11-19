@@ -120,17 +120,19 @@ test('E3 · en el escritorio, el Año enseña sus totales', async ({ page, conte
   await pestana(page, 'year');
   const linea = page.locator('[data-pace-year-view] .pace-heatmap-totals');
   await expect(linea, 'el año no enseña sus totales en el escritorio').toBeVisible();
-  await expect(linea).toContainText('Foco 1,4h');
+  await expect(linea).toContainText('Foco 1 h 24 min');
   await expect(linea).toContainText('6 vasos');
 });
 
 /* ------------------------------------------------------------------- E4 · decimales y miles */
-test('E4 · en castellano, las horas del Mes llevan coma', async ({ page, context }) => {
+/* Desde la 11A de Ez (caza del 19 nov. 2026) la línea dice horas y minutos, sin decimales. */
+test('E4 · las horas del Mes van en horas y minutos, sin decimales', async ({ page, context }) => {
   await abrir(page, context, { focus: 84 });
   await pestana(page, 'month');
   const linea = page.locator('.pace-heatmap-totals');
   await expect(linea).toBeVisible();
-  await expect(linea, '84 min salen con punto').toContainText('1,4');
+  await expect(linea).toContainText('1 h 24 min');
+  await expect(linea).not.toContainText('1,4');
   await expect(linea).not.toContainText('1.4');
 });
 

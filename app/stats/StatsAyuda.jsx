@@ -109,7 +109,9 @@ function StatsAyudaTras({ tras }) {
   const { t, tn } = useT();
   return (
     <StatsAyudaTarjeta idea="tras" color="var(--move)" titulo={t('stats.ayuda.tras')} fuente={t('stats.ayuda.tras.fuente')}>
-      <div className="pace-ay-frase">{tn('stats.ayuda.tras.frase', { a: tras.a, b: tras.b })}</div>
+      {/* Con cero, «Tras 0 de tus 60 Focos, una pausa.» sonaba a error (caza del 19 nov. 2026, Ez 8A):
+          otra frase, que dice lo mismo. */}
+      <div className="pace-ay-frase">{tras.a === 0 ? t('stats.ayuda.tras.cero') : tn('stats.ayuda.tras.frase', { a: tras.a, b: tras.b })}</div>
       {tras.manana ? (
         <div className="pace-ay-nota">{tn('stats.ayuda.tras.franjas', { ma: tras.manana[0], mb: tras.manana[1], ta: tras.tarde[0], tb: tras.tarde[1] })}</div>
       ) : null}
