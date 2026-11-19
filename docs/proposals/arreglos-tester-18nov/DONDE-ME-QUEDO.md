@@ -33,6 +33,17 @@ Una por commit con su prueba vista caer; al final, la suite entera con PACE_E2E_
   líneas de Ajustes; «Lo que suena al respirar», «The voice for each phase» y «What plays as you breathe», más
   cortas que la A porque partían la línea y Ajustes pedía scroll a 360 × 640). MINIMO_PRUEBAS 1702, censo 1259.
 
+## Letras montadas (19 nov., otra sesión)
+- 2A 411b65df: con semana, «Preparar jornada» sirve el día; «Hoy es distinto» bajo «Jornada entera» (sin las horas: no
+  cabían sin scroll a 360 × 640). tests/ritmo-tarjeta-un-toque.spec.js. MINIMO_PRUEBAS 1706. Foto: fotos/nuevo-un-toque-360.png.
+- 1A 404eec67: sellos juntos («3 sellos nuevos · Primer paso y dos más»), al ganarlos salvo en un Foco, sin sonido tras 15 min.
+  tests/sellos-juntos.spec.js; caza-respira contaba sellos escondidos (ahora lo visible). MINIMO 1711, censo 1263.
+- 8A 0678cd0e: «Piernas: ayer sin mover» / «Legs: idle yesterday» (la de Ez partía la ventana a 360 px), solo si el último
+  día fue ayer. tests/ritmo-ayer.spec.js. MINIMO 1713, censo 1264. Suite de main de la coordinadora: acabada (exit=0).
+- 10A, el resto: bc9dd01c «Ver todo» (6 vasos en la jornada, contexto sin borde) + e0da294c (textos-honestos); 4c7f5845
+  calendario de la web; 0ebd3631 «Hoy, lunes» la primera semana (ritmo.semanaDesde); f3766c1b «hecha» en la fila; CONTENT.md.
+  MINIMO 1723, censo 1269. Falta: 11A (página con opciones), suite entera, fotos, página, push.
+
 ## Falta (por orden)
 - 2A «Preparar jornada» en un toque: el botón de la tarjeta corta (RitmoTarjeta.jsx, data-pace-ritmo-comienza)
   llama a ritmoComenzarHabitual si hay día habitual; y hace falta «Hoy es distinto» en la tarjeta corta, que hoy

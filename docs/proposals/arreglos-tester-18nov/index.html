@@ -30,6 +30,11 @@ h1,h2,h3{font-family:var(--display);font-style:italic;font-weight:400;line-heigh
 h1{font-size:clamp(32px,6vw,44px)}
 h2{font-size:clamp(23px,4vw,28px);margin:44px 0 10px;padding-top:22px;border-top:1px solid var(--line)}
 h3{font-size:21px;margin:34px 0 6px}
+details{margin-top:30px;border-top:1px solid var(--line);padding-top:18px}
+summary{cursor:pointer;font-family:var(--display);font-style:italic;font-size:21px;color:var(--ink)}
+summary:focus-visible{outline:2px solid var(--olive);outline-offset:3px}
+.ancho{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.ancho figure img,.ancho figcaption{max-width:560px}
 p{margin:0 0 12px;color:var(--ink-2);max-width:68ch}
 strong{color:var(--ink);font-weight:500}
 code{font-size:13px}
@@ -63,13 +68,59 @@ a{color:var(--olive)}
 </style>
 
 <main>
-  <div class="eyebrow">PACE · lo que salió del recorrido de tester · 18 nov. 2026</div>
+  <div class="eyebrow">PACE · lo que salió del recorrido de tester · 19 nov. 2026</div>
   <h1>Montado y para elegir</h1>
-  <p class="lead">Dijiste «todo menos» lo de las actividades con el día servido. Los fallos ya están montados, uno por commit y con su prueba. Lo que se ve distinto o es cuestión de gusto está pintado aquí sobre la app, con dos o tres letras y una recomendada.</p>
-  <p>Todo está en la rama <code>claude/arreglos-tester-18nov</code>, desde la 0.210.0, con <code>verify</code> en verde. He pasado las pruebas vecinas de cada arreglo; la suite entera, no. Falta tu «júntalo». El recorrido de origen: <a href="https://claude.ai/artifact/T8J9vT4s5aodPFLd1k3iYM">Tres días de tester</a>.</p>
-  <p class="queda"><strong>Se queda como está</strong>, como dijiste: con el día servido, la home se centra en lo que toca ahora, y Respira, Estira, Mueve e Hidrátate siguen en el cajón y con «Hoy voy por libre».</p>
+  <p class="lead">Están montadas todas tus letras menos la 11. La 11 cambia nombres que se ven, así que va abajo con sus opciones, para que elijas.</p>
+  <p>Todo está en la rama <code>claude/arreglos-tester-18nov</code>, desde la 0.210.0, una letra por commit y cada una con su prueba vista caer antes del arreglo. <code>verify</code>, en verde. Falta tu «júntalo». El recorrido de origen: <a href="https://claude.ai/artifact/T8J9vT4s5aodPFLd1k3iYM">Tres días de tester</a>.</p>
+  <p class="resumen" id="suite">SUITE</p>
 
-  <h2>Montado con tus letras</h2>
+  <h2>Lo nuevo de hoy</h2>
+  <ol class="montado">
+    <li><b>2 · «Preparar jornada» en un toque.</b> Con tu semana guardada, el botón de la tarjeta corta sirve el día; el horario se cambia luego con «Cambiar». «Hoy es distinto» está ahora en la tarjeta, debajo de «Jornada entera». Las horas «9:00–17:00» ya no salen ahí: con el enlace al lado, la home pedía scroll a 360 × 640. Sin semana guardada, todo igual. Solo cambia en el móvil; en el ordenador ya era un toque.</li>
+    <li><b>1 · Los sellos, juntos.</b> Los que llegan a la vez salen en un aviso, «3 sellos nuevos · Primer paso y dos más», con una campanita. Salen al ganarlos, en cuanto no hay nada abierto encima: «Curiosidad» sale al cerrar los Ajustes. Con un Foco en marcha esperan a que acabe. Si llevan más de 15 min esperando, salen sin sonido.</li>
+    <li><b>8 · Lo de ayer, dicho: «Piernas: ayer sin mover».</b> Tu A decía «ayer no las moviste», pero partía en dos líneas la ventana de la pausa a 360 px en seis de las doce frases (las medí en el hueco de verdad). «Ayer sin mover» cabe en todas y dice lo mismo, como pasó con la 7. En inglés, «Legs: idle yesterday». Solo sale si lo último fue ayer; si fue el viernes y hoy es lunes, la línea de siempre.</li>
+    <li><b>10 · Textos de la casa, el resto.</b> En «Ver todo», «6 vasos en la jornada», y «Junto a la mesa · Sin material…» en una línea sin borde. El calendario de la web dice «Descarga lo que queda de hoy y ábrelo con tu calendario»; en las apps sigue «Se añade». La primera semana, «Hoy, jueves»; desde la siguiente, «Hoy, como cada jueves», también en el aviso de entrada. La pausa ya hecha dice «hecha» en su fila, sin «Otra». Y <code>CONTENT.md</code> dice la frase de las pausas como es hoy.</li>
+  </ol>
+  <div class="par">
+    <figure><img src="fotos/nuevo2-un-toque-360.webp" alt="Tarjeta corta: Hoy, como cada jueves, Jornada entera, Hoy es distinto y Preparar jornada" loading="lazy"><figcaption><b>2 · 360 px</b>«Hoy es distinto» bajo «Jornada entera». La home sigue sin scroll.</figcaption></figure>
+    <figure><img src="fotos/nuevo2-sellos-360.webp" alt="El aro con 3 sellos nuevos, Primer paso y dos más" loading="lazy"><figcaption><b>1 · 360 px</b>Tres sellos, un aviso y una campanita.</figcaption></figure>
+    <figure><img src="fotos/nuevo2-ayer-360.webp" alt="Luego, Empuje sencillo, Hombros: ayer sin mover" loading="lazy"><figcaption><b>8 · 360 px</b>Ayer no salieron los hombros: «Hombros: ayer sin mover».</figcaption></figure>
+    <figure><img src="fotos/nuevo2-vertodo-360.webp" alt="Ver todo con 6 vasos en la jornada y el contexto sin borde" loading="lazy"><figcaption><b>10 · «Ver todo»</b>«6 vasos en la jornada» y el contexto en una línea.</figcaption></figure>
+    <figure><img src="fotos/nuevo2-calendario-360.webp" alt="Tu día en el calendario: Descarga lo que queda de hoy y ábrelo con tu calendario" loading="lazy"><figcaption><b>10 · calendario de la web</b>«Descarga… y ábrelo con tu calendario».</figcaption></figure>
+    <figure><img src="fotos/nuevo2-primera-360.webp" alt="Tarjeta corta con Hoy, jueves" loading="lazy"><figcaption><b>10 · la primera semana</b>«Hoy, jueves».</figcaption></figure>
+    <figure><img src="fotos/nuevo2-hecha-360.webp" alt="Fila Ahora con Coherente 5·5 y hecha" loading="lazy"><figcaption><b>10 · la pausa ya hecha</b>«hecha» en vez de «Otra».</figcaption></figure>
+  </div>
+  <div class="par ancho">
+    <figure><img src="fotos/nuevo2-sellos-1280.webp" alt="A 1280 px, el aro con 3 sellos nuevos" loading="lazy"><figcaption><b>1 · 1280 px</b>En el ordenador, igual: dentro del aro.</figcaption></figure>
+    <figure><img src="fotos/nuevo2-ayer-1280.webp" alt="A 1280 px, la línea del día con la frase de ayer" loading="lazy"><figcaption><b>8 · 1280 px</b>La línea del día del ordenador dice lo mismo.</figcaption></figure>
+  </div>
+  <p class="nota">Lo demás de hoy no cambia en el ordenador: la tarjeta corta, la fila «Ahora» y «Ver todo» son del móvil.</p>
+
+  <h2>Para elegir: 11 · Nombres que solo entiende quien hizo PACE</h2>
+  <p>Repasé con <code>CONTENT.md</code> los nombres de Respira, Mueve, Estira y el aro. A los tres que viste se suman otros tres del mismo tipo. No he montado ninguno: todos cambian un nombre que se ve.</p>
+  <div class="textos"><table>
+    <thead><tr><th>Dónde</th><th>Hoy</th><th>A · recomendada</th><th>B</th></tr></thead>
+    <tbody>
+      <tr><td>11.1 · Respira</td><td>Coherente 432<br><span class="nota">«sobre un drone de fondo»</span></td><td class="a">Coherente con fondo<br><span class="nota">«con un sonido grave de fondo»</span></td><td>Coherente 432 Hz</td></tr>
+      <tr><td>11.2 · Mueve</td><td>Gemelos subrepticios</td><td class="a">Gemelos bajo la mesa</td><td>Talones bajo la mesa</td></tr>
+      <tr><td>11.3 · El aro, sin plan</td><td>FOCO MANUAL</td><td class="a">FOCO</td><td>FOCO LIBRE</td></tr>
+      <tr><td>11.4 · Grupo de Mueve</td><td>Sigilo</td><td class="a">Sin levantarte</td><td>Bajo la mesa</td></tr>
+      <tr><td>11.5 · Estira</td><td>Antídoto silla</td><td class="a">Antídoto a la silla</td><td>Contra la silla</td></tr>
+      <tr><td>11.6 · Mueve</td><td>Postura reset</td><td class="a">Recolocar la postura</td><td>Postura, de nuevo</td></tr>
+    </tbody>
+  </table></div>
+  <p class="nota">Por qué A. «432» son hercios, no un ritmo como «5·5», y «drone» tampoco se entiende. «Manual» se oponía a los Caminos, que no se ven hasta después de v1, y con un plan el aro ya dice «Bloque 1 de 9». «Sigilo» y «subrepticios» son la broma de quien lo escribió; lo que importa es que se hace sentado. «Antídoto a la silla» es como lo dice ya la pausa. «Reset» es la única palabra en inglés de la lista. En inglés iría lo mismo: «Coherent, with a backdrop», «Calf raises under the desk», «FOCUS», «Without standing up», «Chair antidote» y «Posture reset», que ya se entiende.</p>
+  <p class="nota">No los toco: «Box 4·4·4·4», «4·7·8», «Kumbhaka 1:4:2» o «Kapalabhati» son nombres de técnica que se buscan así. «ATG» y «Ancestral» ya no salen en la lista.</p>
+
+  <div class="pregunta">
+    <h3>¿Qué letras para la 11?</h3>
+    <p>Una letra por fila. Con las recomendadas:</p>
+    <p class="resumen">11.1A · 11.2A · 11.3A · 11.4A · 11.5A · 11.6A</p>
+    <p>Y para todo lo montado, tu «júntalo».</p>
+  </div>
+
+  <h2>Montado el 18 nov.</h2>
+  <p class="queda"><strong>Se queda como está</strong>, como dijiste: con el día servido, la home se centra en lo que toca ahora, y Respira, Estira, Mueve e Hidrátate siguen en el cajón y con «Hoy voy por libre».</p>
   <p>Contestaste «1A + 2A + 3b atenuadas y no hecha las dos + 4A + 5A + 6A + 7A + 8A + 9A + 10A + 11A». Montado en la misma rama, una por commit y con su prueba:</p>
   <ol class="montado">
     <li><b>3 · Estadísticas › Hoy:</b> las pausas que no se hicieron salen atenuadas y con «no hecha» («not done»), sin minutos.</li>
@@ -80,19 +131,6 @@ a{color:var(--olive)}
     <li><b>9 · En inglés:</b> «Workday over», «Keep going» y «I already did one».</li>
     <li><b>10 · Textos de la casa, la primera parte.</b> En la bienvenida, «cada lunes, tu semana ajustada» y «con los ejercicios de PACE». En Ajustes, «La voz que cuenta las fases» y «Lo que suena al respirar». Lo de «mientras respiras» de la A partía la línea, y Ajustes pedía 29 px de scroll a 360 × 640. En inglés, «The voice for each phase» y «What plays as you breathe», por lo mismo.</li>
   </ol>
-  <p class="nota"><strong>Sin montar aún</strong> (se acabó el uso de la semana; está apuntado en <code>DONDE-ME-QUEDO.md</code> con dónde tocar):</p>
-  <ul class="nota">
-    <li>La 2. Pide además poner «Hoy es distinto» en la tarjeta corta, que hoy no lo tiene, sin romper la home sin scroll.</li>
-    <li>La 1 (los sellos juntos) y la 8 (lo de ayer).</li>
-    <li>De la 10: «6 vasos en la jornada» y el contexto sin borde en «Ver todo», el calendario de la web, «Hoy, lunes» la primera semana y «hecha» en la fila de la pausa ya hecha.</li>
-    <li>La 11 queda para la próxima pasada de textos, como dice su A.</li>
-  </ul>
-  <p><strong>La suite entera en la rama</strong> (con <code>PACE_E2E_PORT=8915</code>, 1 h 30 min) dio 1724 pruebas en verde, 2 saltadas a propósito y 23 en rojo:</p>
-  <ul class="nota">
-    <li>14 eran del runner. Sus pruebas leían el número de paso de la cabecera, que con la 6 ya no cuenta los descansos. Ahora lo leen de un atributo con el índice real; arreglado en <code>38f0d434</code>, y las 29 de esos archivos pasan.</li>
-    <li>Las otras 9 pasan al repetirlas solas: 7 de Chromium (34 de 34 en sus archivos) y 2 del iPhone en WebKit (64 en verde).</li>
-  </ul>
-  <p><code>verify</code>, en verde.</p>
   <div class="par">
     <figure><img src="fotos/nuevo-stats.webp" alt="Estadísticas con las no hechas atenuadas y con no hecha" loading="lazy"><figcaption><b>3 · montada</b>Escritorio express, hecha; las demás, atenuadas y «no hecha».</figcaption></figure>
     <figure><img src="fotos/nuevo-jornada-cerrada.webp" alt="Jornada cerrada con un solo botón" loading="lazy"><figcaption><b>5 · montada</b>«Seguir por libre» en el aro; la tarjeta, con «Cambiar».</figcaption></figure>
@@ -100,7 +138,7 @@ a{color:var(--olive)}
     <figure><img src="fotos/nuevo-aun-sin-mover.webp" alt="Hombros: aún sin mover" loading="lazy"><figcaption><b>7 · montada</b>«Hombros: aún sin mover».</figcaption></figure>
   </div>
 
-  <h2>Montado</h2>
+  <h3>Los fallos, montados</h3>
   <ol class="montado">
     <li><b>Estadísticas › Hoy dice lo que hiciste en cada pausa.</b> La pausa cambiada con «Otra» por Escritorio express salía como «Manos y muñecas · hecha». Ahora manda lo que se guardó al hacerla, también si «Otra» cambió de Mueve a Estira.</li>
     <li><b>El sello del aro ya no se pinta encima del cajón del móvil.</b> Con el panel abierto no se ve, igual que con una ventana abierta. En el ordenador la barra va al lado y el sello sigue a la vista.</li>
@@ -113,8 +151,8 @@ a{color:var(--olive)}
   <figure style="margin-top:14px"><img src="fotos/stats-hoy.webp" alt="Estadísticas, Hoy, con Escritorio express hecha a las 10:35" loading="lazy"><figcaption><b>El 1, montado</b>«Escritorio express · 10:35 · hecha», lo que se hizo.</figcaption></figure>
   <p class="nota">«Pausa terminada» horas después no era un fallo. Tu V1 A del 7 nov. lo pide así, y una prueba lo vigila (pestaña de fondo de 8:10 a 12:10: el aro dice «Pausa terminada»). Lo deshice; es la pregunta 4.</p>
 
-  <h2>Para elegir</h2>
-  <p class="nota">Contestado el 18 nov.: todo A salvo la 3, que fue la B con «no hecha». Se queda aquí como referencia de lo que se pintó.</p>
+  <details>
+  <summary>Lo que se pintó el 18 nov. y contestaste: todo A salvo la 3, que fue la B con «no hecha»</summary>
 
   <h3>1 · Los sellos: cuándo salen y cuántos suenan</h3>
   <p>Hoy esperan a que acabe un Foco y salen uno detrás de otro con su campanita. Tras la primera pausa suenan cuatro en diez segundos, y alguno llega horas tarde (Curiosidad, ganado a las 9:43, a las 16:58).</p>
@@ -212,13 +250,5 @@ a{color:var(--olive)}
     </tbody>
   </table></div>
 
-  <h3>11 · Nombres raros</h3>
-  <p>«Coherente 432», «Gemelos subrepticios» y «FOCO MANUAL» solo los entiende quien hizo PACE. <span class="rec-linea">A · recomendada: revisarlos con CONTENT.md en la próxima pasada de textos, junto con los de ChatGPT.</span> B: dejarlos.</p>
-
-  <div class="pregunta">
-    <h3>¿Qué letras?</h3>
-    <p>Con las recomendadas, la respuesta sería:</p>
-    <p class="resumen">1A · 2A · 3A · 4A · 5A · 6A · 7A · 8A · 9A · 10A · 11A</p>
-    <p>Y para lo montado, tu «júntalo». Antes de juntar paso la suite entera en la rama.</p>
-  </div>
+  </details>
 </main>
