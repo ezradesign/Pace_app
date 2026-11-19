@@ -213,10 +213,15 @@ test('pasada la salida el día se cierra, con la página abierta y al recargar, 
   await page.reload();
   await page.locator('[data-pace-dial-number]').first().waitFor();
   await cerrada(page, 'al recargar, el día no se cierra');
-  /* Por libre: el Foco es el de siempre y su ventana también, sin la pausa de cierre. */
+  /* Por libre (Ez, A del 19 nov. 2026: «home, sin arrancar»): «Seguir por libre» retira el día como
+     «Hoy voy por libre» y deja el aro parado; antes arrancaba el Foco en el mismo toque. Al empezarlo,
+     el Foco es el de siempre y su ventana también, sin la pausa de cierre. */
   await cta(page).click();
   await expect(vis(page, '[data-pace-dial-label]')).toHaveText('Foco manual');
   await expect(vis(page, '[data-pace-ciclo]'), 'CONTROL: por libre la fila del ciclo vuelve').toHaveCount(1);
+  expect(await page.evaluate(() => getState().ritmo.libre), 'el día se retira').toBeTruthy();
+  await expect(cta(page), 'no arranca solo').not.toHaveText('Pausar foco');
+  await cta(page).click();
   await terminarBloque(page);
   const ventana = overlaySuperior(page);
   await expect(ventana).toContainText('Ciclo completado');

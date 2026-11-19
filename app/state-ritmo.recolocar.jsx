@@ -81,22 +81,40 @@ function ritmoBloqueTerminado(inicioMs, finMs, minutos) {
    sigue a su hora y con su duración (como al empezarlo, `ritmoBloqueEmpezado`). Si ya estaba en la
    historia no se toca: congelar dos veces no mueve nada. Sin nada hecho, o con el día cerrado o
    terminado, no hay nada que proteger. Lo llaman bloquesElegir, ritmoHorario, ritmoGuardarSemana y
-   calendarioGuardarOcupado ANTES de guardar su cambio. */
-function ritmoFijarLoHecho() {
+   calendarioGuardarOcupado ANTES de guardar su cambio.
+   LA COMIDA ABIERTA NO ES LO HECHO (caza del 19 nov. 2026): si la parada abierta es la comida, se
+   congela hasta el último bloque y la comida se vuelve a componer. Congelada, pasaba a la historia
+   como comida hecha a su hora de antes, aunque no hubiera empezado, y cambiar su hora o lo que dura
+   no movía nada. Si ya ha empezado y con las horas nuevas sigue siendo hora de comer, el día se
+   compone desde que empezó, y la comida dura lo que digan las horas nuevas. `nuevo` es el horario
+   que se va a guardar (ritmoHorario); sin él, el de ahora. */
+function ritmoFijarLoHecho(nuevo) {
   var s = getState(), R = ritmoDe(s);
   if (!R.dia || R.libre) return;
   var p = ritmoPlanBase(s);
-  if (!p || p.hechos < 1 || !p.actual || ritmoPasadaLaSalida(p)) return;
+  if (!p || !p.actual || ritmoPasadaLaSalida(p)) return;
   var corre = typeof ritmoFocoCorriendo === 'function' && ritmoFocoCorriendo();
-  var hasta = corre ? p.actual : (p.pausa || p.m.focos[p.hechos - 1]);
+  /* EL PRIMER BLOQUE EN MARCHA también se guarda, a su hora y con los minutos del aro, como al
+     elegir con un Foco empezado (ritmoFocoDelDiaNuevo): sin nada hecho, adelantar la comida lo
+     recortaba en la línea mientras el aro seguía, y al acabar la comida encogía. */
+  if (p.hechos < 1) {
+    var v = corre && !R.dia.pasado ? ritmoFocoDelDiaNuevo() : null;
+    if (v) ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, { pasado: [], desde: v.desde, primerBloque: v.min }) } : {}; });
+    return;
+  }
+  var comida =!corre && p.pausa && p.pausa.tipo === 'comida' ? p.pausa : null;
+  var hasta = corre ? p.actual : comida ? p.m.focos[p.hechos - 1] : (p.pausa || p.m.focos[p.hechos - 1]);
   var corte = p.m.items.indexOf(hasta) + (corre ? 0 : 1);
   var ya = (R.dia.pasado || []).length;
   if (!p.m.items.slice(ya, corte).some(function (it) { return it.tipo !== 'libre'; })) return;
   var antes = p.m.items.slice(0, corte);
   while (antes.length && antes[antes.length - 1].tipo === 'libre') antes.pop();
   var fin = antes[antes.length - 1];
-  var cambios = { pasado: ritmoCongelar(antes), pausaPendiente: false,
-    desde: corre ? p.actual.desde : Math.max(ritmoAhoraExacto(), fin.desde + fin.dur),
+  var t = ritmoAhoraExacto();
+  var desde = corre ? p.actual.desde : Math.max(t, fin.desde + fin.dur);
+  var h = nuevo || R.horario;
+  if (comida && comida.desde <= t && !h.sinComida && h.comida <= comida.desde && h.comida + (h.comidaDur || 60) > comida.desde) desde = comida.desde;
+  var cambios = { pasado: ritmoCongelar(antes), pausaPendiente: false, desde: desde,
     primerBloque: corre ? p.actual.dur : null };
   ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, cambios) } : {}; });
 }
@@ -136,9 +154,17 @@ function ritmoBloqueEmpezado(minutos) {
   if (p && p.actual && (t !== p.actual.desde || otraDuracion || p.pausaPasada)) {
     var antes = p.m.items.slice(0, p.m.items.indexOf(p.actual));
     /* Empezado antes de comer (S7), la comida aún no ha pasado: no va a la historia, y se sirve detrás. */
-    if (antes.some(function (x) { return x.tipo === 'comida' && x.desde > t; })) antes = antes.filter(function (x) { return x.desde < t; });
+    /* La pausa abierta que se salta en el mismo minuto en que se abrió sí es historia: fuera, su
+       «saltada» (va por orden) caía en la pausa siguiente, la de la tarde. */
+    if (antes.some(function (x) { return x.tipo === 'comida' && x.desde > t; })) antes = antes.filter(function (x) { return x.desde < t || x === p.pausa; });
     /* Leído tras la pausa (S11), el hueco hasta ahora no es historia: lo vuelve a pintar ritmoMenu. */
     while (p.pausaPasada && antes.length && antes[antes.length - 1].tipo === 'libre') antes.pop();
+    /* Empezado en plena comida (te la saltas, o vuelves antes), la comida dura hasta ahora: entera,
+       el bloque iba pintado encima y Estadísticas contaba la hora. Con 0 min se queda (saltada a su
+       hora): sin ella, lo que quedaba de comida volvía detrás del bloque. */
+    antes = antes.map(function (x) {
+      return x.tipo === 'comida' && x.desde <= t && x.desde + x.dur > t ? Object.assign({}, x, { dur: t - x.desde }) : x;
+    });
     cambios.pasado = ritmoCongelar(antes);
     cambios.desde = t;
     cambios.primerBloque = mins || p.actual.dur;

@@ -80,7 +80,7 @@ function aroCerrado(s, t, tn) {
 
 /* Lo que la jornada le cambia al aro según el momento. `cta`, si manda en el botón;
    `lleno`, si ese botón va relleno aunque el reloj corra; `fila`, la línea de debajo. */
-function aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa }) {
+function aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa, porLibre }) {
   if (enPausaRitmo) {
     const plato = aroPlatoPendiente(state);
     if (!plato) return {};
@@ -98,9 +98,11 @@ function aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empez
     };
   }
   if (!aro) {
-    /* La jornada cerrada con todos sus bloques: el botón sigue por libre (aroCerrado). */
+    /* La jornada cerrada con todos sus bloques: el botón sigue por libre (aroCerrado). «Seguir por
+       libre» es «Hoy voy por libre» (Ez, A del 19 nov. 2026: «home, sin arrancar»): retira el día y
+       deja el aro parado en Foco manual. Antes arrancaba un Foco y la tarjeta seguía «Jornada cerrada». */
     const c = state.focusMode === 'foco' && status !== 'running' && status !== 'paused' ? aroCerrado(state, t, tn) : null;
-    return c && c.cta ? { cta: { label: c.cta } } : {};
+    return c && c.cta ? { cta: { label: c.cta, action: porLibre } } : {};
   }
   const despues = aroDespues(state, t, tn);
   return {
