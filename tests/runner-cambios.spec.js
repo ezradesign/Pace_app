@@ -52,16 +52,18 @@ async function abrirPaso(browser, { id, i }, { lang, alto, letra, extra }) {
   await page.locator('[data-pace-v1-raiz]').first().waitFor({ timeout: 20000 });
   const ahora = await page.evaluate(() => Date.now());
   await page.clock.pauseAt(ahora + 1000);
-  /* Hasta el paso `i` trabajando, por «Paso N de M» / «Step N of M». */
+  /* Hasta el paso `i` trabajando, por «Paso N de M» / «Step N of M». Ese número cuenta los ejercicios, sin
+     los descansos (sessionPasoCabecera): el paso `i` es el ejercicio número `objetivo`. */
+  const objetivo = await page.evaluate(({ id, i }) => window.resolveBodyRoutine(id).routine.steps.slice(0, i + 1).filter((s) => s.mode !== 'rest').length - 1, { id, i });
   for (let k = 0; k < 600; k++) {
     const r = await page.evaluate(() => {
       const raiz = [...document.querySelectorAll('[data-pace-v1-raiz]')].find((e) => e.getBoundingClientRect().width > 0);
       const meta = [...document.querySelectorAll('[data-pace-session-root] *')].find((e) => e.children.length === 0 && /^(Paso|Step) \d+ (de|of) \d+$/.test(e.textContent.trim()));
       return { fase: raiz && raiz.getAttribute('data-pace-v1-fase'), n: meta ? +meta.textContent.match(/\d+/)[0] - 1 : -1 };
     });
-    if (r.n === i && r.fase === 'work') break;
+    if (r.n === objetivo && r.fase === 'work') break;
     /* De 5 en 5 s por los pasos de antes; ya en el suyo, de segundo en segundo hasta que trabaja. */
-    await page.clock.runFor(r.n < i ? 5000 : 1000);
+    await page.clock.runFor(r.n < objetivo ? 5000 : 1000);
     await page.waitForTimeout(15);
   }
   if (letra) {
@@ -134,7 +136,9 @@ test('la señal del cambio de sentido: dos vibraciones, las del cambio de lado',
 });
 
 test('la señal del cambio de pie: con la voz, «Cambia de lado» en lugar del número', async ({ browser }) => {
-  /* Piernas en pausa, repetición 9 (el cambio de pie): con la voz, «cambia» en lugar del número. */
+  /* Piernas en pausa, repetición 9 (el cambio de pie): con la voz, «cambia» en lugar del número. La voz dice
+     el número que la pantalla acaba de poner (MoveSessionV1.voz.jsx): el «ocho» suena al empezar la 8 y el
+     cambio, al empezar la 9, que es la que no se dice. */
   const b = await abrirPaso(browser, CON_PALABRA[0], { lang: 'es', extra: { soundOn: true, voiceOn: true, voice: 'sulafat' } });
   await b.page.evaluate(() => { window.__palabras = []; window.paceVozCuerpoIntenta = (p) => { window.__palabras.push(p); return true; }; });
   const s2 = await b.page.evaluate(() => window.v1RepSeconds(window.resolveBodyRoutine('move.hamstrings.standing').routine.steps[2]));
@@ -142,6 +146,6 @@ test('la señal del cambio de pie: con la voz, «Cambia de lado» en lugar del n
   await b.page.waitForTimeout(300);
   const p = await b.page.evaluate(() => window.__palabras);
   expect(p, 'la voz: ' + p.join(' ')).toContain('cambia');
-  expect(p, 'el número del cambio no se dice').not.toContain('n8');
+  expect(p, 'el número del cambio no se dice').not.toContain('n9');
   await b.context.close();
 });

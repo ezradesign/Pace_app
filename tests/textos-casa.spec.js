@@ -18,6 +18,6 @@ test('la bienvenida y Ajustes dicen lo que hacen (es y en)', async ({ page, cont
   });
   expect(S).toEqual([
     ['cada lunes, tu semana ajustada', 'con los ejercicios de PACE', 'La voz que cuenta las fases', 'Lo que suena al respirar'],
-    ['every Monday, your week adjusted', 'with the PACE exercises', 'The voice for each phase', 'What plays as you breathe'],
+    ['every Monday, your week adjusted', 'with the PACE exercises', 'The voice for each phase', 'While you breathe'],
   ]);
 });

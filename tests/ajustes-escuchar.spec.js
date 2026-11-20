@@ -20,7 +20,7 @@ const { sembrar, irAlArtefacto } = require('./helpers');
 const PANEL = '[data-pace-tweaks-panel]';
 const TX = {
   es: { abrir: 'Abrir ajustes', oir: 'Oír', musica: 'Lo que suena al respirar' },
-  en: { abrir: 'Open settings', oir: 'Audio', musica: 'What plays as you breathe' },
+  en: { abrir: 'Open settings', oir: 'Audio', musica: 'While you breathe' },
 };
 
 async function comoAndroid(page) {

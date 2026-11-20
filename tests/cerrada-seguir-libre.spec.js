@@ -14,7 +14,7 @@ const a = (hhmm) => new Date(HOY + 'T' + hhmm + ':00+02:00');
 const vis = (page, sel) => page.locator(sel).filter({ visible: true });
 const TEXTOS = {
   es: { libre: 'Seguir por libre', cerrada: 'Jornada cerrada', manual: 'Foco manual' },
-  en: { libre: 'Keep going freestyle', cerrada: 'Day complete', manual: 'Manual Focus' },
+  en: { libre: 'Keep going', cerrada: 'Workday over', manual: 'Manual Focus' },
 };
 
 for (const [w, h] of [[1280, 720], [360, 740]]) {

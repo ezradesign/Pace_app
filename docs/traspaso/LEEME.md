@@ -4,6 +4,12 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de noviembre de 2026, 10:20, v0.204.0 en `main` y los cuatro arreglos de S3 y S4 en su rama.
 
+## AL RELEVO (20 nov., 12:30, cuenta EcLj6): empieza aquí; manda sobre todo lo de abajo
+
+- **`main` = 0.212.0 con el «Júntalo todo» de Ez:** las siete ramas del 19 nov. (menores, recorrido con la 11 y la tarjeta limpia, voz 1A, visita A, caza, aviso del Foco en el PC y comida con «Seguir por libre» A). El CI pasa a seis trozos y el censo de claves, a 1325.
+- Al juntar chocaron cinco pruebas (no la app) y una letra con otra: con los avisos bloqueados, la caza 4A (la línea de la fila) y el aviso 1.2A (la nota de cómo desbloquear) no cabían juntas en inglés a 1280 × 720 (22 px). Ez eligió la **C** (página NeBtettfymr4RwBjBgHTdj): en inglés, «Background», «While you breathe» y «Copies, deletion and PACE Complete»; la nota se queda entera.
+- **Sin probar:** el aviso y la miniventana en un Chrome de verdad, y un hueco de la comida: tras «Seguir por libre», un Foco después de la salida podría seguir contando para Ocaso.
+
 ## AL RELEVO (19 nov., 15:55, cuenta EcLj6 con las 5 h al 98 %; se reponen a las 19:40; 5iWBf sin semana hasta el 23 nov.): empieza aquí
 
 - Nada juntado; `main` = 0.211.0 en verde. Todas las sesiones, paradas con push.

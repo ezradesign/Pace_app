@@ -15,9 +15,12 @@ test.describe('3 · el aviso, en el idioma de ahora', () => {
     await sembrar(context, {});
     await irAlArtefacto(page);
     await page.evaluate(() => window.setState({ lang: 'en' }));
+    await page.waitForTimeout(1000);   // el sello del idioma sale solo, y el de la prueba va detrás, no junto a él
     await page.evaluate(() => showToast({ id: 'first.step', type: 'achievement' }));
-    const sello = page.locator('[data-pace-sello-aro], [data-pace-toast]').first();
-    await expect(sello).toBeVisible();
+    /* Cambiar de idioma gana su propio sello, que sale antes (los sellos salen al ganarlos, 1A del 18 nov.):
+       se mira el aviso de «First step», que sale solo detrás. */
+    const sello = page.locator('[data-pace-sello-aro], [data-pace-toast]').filter({ hasText: 'First step' }).first();
+    await expect(sello).toBeVisible({ timeout: 15000 });
     await expect(sello).toContainText('New stamp');
     await expect(sello).toContainText('First step');
     await expect(sello).not.toContainText('Primer paso');
@@ -27,9 +30,11 @@ test.describe('3 · el aviso, en el idioma de ahora', () => {
     await sembrar(context, { lang: 'en' });
     await irAlArtefacto(page);
     await page.evaluate(() => window.setState({ lang: 'es' }));
+    await page.waitForTimeout(1000);
     await page.evaluate(() => showToast({ id: 'first.step', type: 'achievement' }));
-    const sello = page.locator('[data-pace-sello-aro], [data-pace-toast]').first();
-    await expect(sello).toContainText('Primer paso');
+    const sello = page.locator('[data-pace-sello-aro], [data-pace-toast]').filter({ hasText: 'Primer paso' }).first();
+    await expect(sello).toBeVisible({ timeout: 15000 });
+    await expect(sello).toContainText('Nuevo sello');
     await expect(sello).not.toContainText('First step');
   });
 

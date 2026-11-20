@@ -2594,6 +2594,12 @@ Object.assign(window.PACE_STRINGS.es, {
 
   'focus.startPause': 'Empezar pausa',
   'focus.pause': 'Pausar',
+  'focus.tab.done': '● Foco terminado · PACE',
+  'mini.fin': 'Foco terminado',
+  'mini.fin.sub': 'Vuelve a PACE para tu pausa',
+  'mini.volver': 'Volver',
+  'mini.abrir': 'Miniventana',
+  'mini.abrir.aria': 'Abrir la miniventana, encima de todas las ventanas',
   'focus.continue': 'Continuar',
   'focus.startAnother': 'Empezar otro ciclo',
   'focus.cycleComplete': 'Ciclo completado',
@@ -2638,6 +2644,8 @@ Object.assign(window.PACE_STRINGS.es, {
 
 
   'breathe.prepCopy': 'Siéntate cómodo. Respira natural.',
+
+  'breathe.prepCopy.dePie': 'De pie o sentado. Respira natural.',
   'breathe.doneCopy': 'Has dedicado un rato a respirar.',
 
 
@@ -2810,6 +2818,12 @@ Object.assign(window.PACE_STRINGS.en, {
   'focus.start': 'Start Focus',
   'focus.startPause': 'Start break',
   'focus.pause': 'Pause',
+  'focus.tab.done': '● Focus done · PACE',
+  'mini.fin': 'Focus done',
+  'mini.fin.sub': 'Back to PACE for your break',
+  'mini.volver': 'Back',
+  'mini.abrir': 'Mini window',
+  'mini.abrir.aria': 'Open the mini window, on top of every window',
   'focus.continue': 'Continue',
   'focus.startAnother': 'Start another cycle',
   'focus.cycleComplete': 'Cycle complete',
@@ -2854,6 +2868,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
   'breathe.prepCopy': 'Sit comfortably. Breathe naturally.',
+  'breathe.prepCopy.dePie': 'Standing or sitting. Breathe naturally.',
   'breathe.doneCopy': 'You took a moment to breathe.',
 
 
@@ -3755,7 +3770,11 @@ Object.assign(window.PACE_STRINGS.es, {
   'ach.cat.estacionales': 'Estacionales',
   'ach.seal.secret': 'Secreto',
   'ach.seal.discover': 'Por descubrir',
-  'ach.toast.new': 'Nuevo sello'
+  'ach.toast.new': 'Nuevo sello',
+  'ach.toast.varios': '{n} sellos nuevos',
+  'ach.toast.mas.uno': '{t} y uno más',
+  'ach.toast.mas': '{t} y {n} más',
+  'ach.toast.numeros': 'uno,dos,tres,cuatro,cinco,seis,siete,ocho,nueve,diez'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -3773,7 +3792,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.cat.estacionales': 'Seasonal',
   'ach.seal.secret': 'Secret',
   'ach.seal.discover': 'To discover',
-  'ach.toast.new': 'New stamp'
+  'ach.toast.new': 'New stamp',
+  'ach.toast.varios': '{n} new stamps',
+  'ach.toast.mas.uno': '{t} and one more',
+  'ach.toast.mas': '{t} and {n} more',
+  'ach.toast.numeros': 'one,two,three,four,five,six,seven,eight,nine,ten'
 });
 })();
 </script>
@@ -3859,7 +3882,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'break.ritmo.sub': '{h} · What comes next.',
   'break.ritmo.hacer': 'Take the break',
   'break.ritmo.seguir': 'Continue to block {n}',
-  'break.ritmo.cuenta': 'I did it my own way',
+  'break.ritmo.cuenta': 'I already did one',
   'break.ritmo.agua': 'and a glass of water',
   'break.ritmo.vaso': 'a glass now',
   'break.antes': 'your last one, {n} min',
@@ -3935,8 +3958,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.bg.music': 'Música',
 
   'settings.signal.escuchar': 'Escuchar',
-  'settings.bg.music.nota': 'La música, solo en Respira',
-  'settings.signal.nota': 'En Respira, Mueve y Estira',
+  'settings.bg.music.nota': 'Lo que suena al respirar',
+  'settings.signal.nota': 'La voz que cuenta las fases',
   'settings.vibrar': 'Vibrar',
   'settings.vibrar.sub': 'Mueve y Estira',
   'settings.vibrar.no': 'No',
@@ -3947,6 +3970,12 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.notify': 'Aviso al terminar',
   'settings.notify.sub': 'Foco · si la pestaña está detrás',
   'settings.notify.sub.blocked': 'Foco · bloqueados en este navegador',
+
+  'settings.notify.blocked.chrome': 'Bloqueados: icono junto a la dirección, «Notificaciones», «Permitir».',
+  'settings.notify.blocked.edge': 'Bloqueados: candado de la dirección, «Permisos para este sitio», «Notificaciones», «Permitir».',
+  'settings.notify.blocked.firefox': 'Bloqueados: icono junto a la dirección, quita el bloqueo de «Enviar notificaciones».',
+  'settings.notify.blocked.safari': 'Bloqueados: en Safari, Ajustes › Sitios web › Notificaciones, «Permitir».',
+  'settings.notify.blocked.sigue': 'La pestaña y la campana siguen avisando.',
   'settings.notify.sub.app': 'Foco y pausa · si la app está en segundo plano',
   'settings.notify.blocked.android': 'Los avisos de PACE están desactivados en los ajustes de Android.',
   'settings.notify.blocked.ios': 'Los avisos de PACE están desactivados en los ajustes del iPhone.',
@@ -4021,7 +4050,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.sec.oir': 'Audio',
   'settings.sec.sesiones': 'Sessions',
   'settings.sec.datos': 'Your data',
-  'settings.datos.abrir': 'Copies, data deletion and PACE Complete',
+  'settings.datos.abrir': 'Copies, deletion and PACE Complete',
   'settings.visita': 'Guided tour',
   'settings.datos.volver': 'Back to settings',
 
@@ -4048,13 +4077,13 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.signal.tone': 'Tone',
   'settings.signal.clear': 'Clear voice',
   'settings.signal.deep': 'Deep voice',
-  'settings.bg': 'Background audio',
+  'settings.bg': 'Background',
   'settings.bg.none': 'Nothing',
   'settings.bg.ambient': 'Ambient',
   'settings.bg.music': 'Music',
   'settings.signal.escuchar': 'Listen',
-  'settings.bg.music.nota': 'Music plays only in Breathe',
-  'settings.signal.nota': 'Breathe, Move, Stretch',
+  'settings.bg.music.nota': 'While you breathe',
+  'settings.signal.nota': 'The voice for each phase',
   'settings.vibrar': 'Vibrate',
   'settings.vibrar.sub': 'Move and Stretch',
   'settings.vibrar.no': 'Never',
@@ -4065,6 +4094,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.notify': 'Alert at the end',
   'settings.notify.sub': 'Focus · if the tab is in the background',
   'settings.notify.sub.blocked': 'Focus · blocked in this browser',
+  'settings.notify.blocked.chrome': 'Blocked: icon by the address, “Notifications”, “Allow”.',
+  'settings.notify.blocked.edge': 'Blocked: lock by the address, “Site permissions”, “Notifications”, “Allow”.',
+  'settings.notify.blocked.firefox': 'Blocked: icon by the address, clear the block on “Send Notifications”.',
+  'settings.notify.blocked.safari': 'Blocked: in Safari, Settings › Websites › Notifications, “Allow”.',
+  'settings.notify.blocked.sigue': 'The tab and the bell still tell you.',
   'settings.notify.sub.app': 'Focus and break · if the app is in the background',
   'settings.notify.blocked.android': 'PACE notifications are turned off in Android settings.',
   'settings.notify.blocked.ios': 'PACE notifications are turned off in iPhone settings.',
@@ -4153,9 +4187,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'premium.inc.routines': 'Las rutinas más profundas',
   'premium.inc.routines.d': 'Respira, Mueve, Estira',
   'premium.inc.custom': 'Tus propias rutinas',
-  'premium.inc.custom.d': 'con el catálogo',
+  'premium.inc.custom.d': 'con los ejercicios de PACE',
   'premium.inc.letter': 'Una semana a tu medida',
-  'premium.inc.letter.d': 'la carta del lunes',
+  'premium.inc.letter.d': 'cada lunes, tu semana ajustada',
   'premium.inc.stats': 'Tu mes, tu año y qué te ayuda',
   'premium.inc.stats.d': 'estadísticas',
   'premium.v1': 'Llega cuando salga a la venta.',
@@ -4268,9 +4302,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'premium.inc.routines': 'More in-depth routines',
   'premium.inc.routines.d': 'Breathe, Move, Stretch',
   'premium.inc.custom': 'Your own routines',
-  'premium.inc.custom.d': 'from the catalog',
+  'premium.inc.custom.d': 'with the PACE exercises',
   'premium.inc.letter': 'A week tailored to you',
-  'premium.inc.letter.d': 'the Monday letter',
+  'premium.inc.letter.d': 'every Monday, your week adjusted',
   'premium.inc.stats': 'Your month, your year and what helps',
   'premium.inc.stats.d': 'stats',
   'premium.v1': 'Coming when it goes on sale.',
@@ -4571,6 +4605,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.frase.movil.empieza': 'empieza en el aro, arriba',
   'ritmo.hecha': 'hecha',
   'ritmo.saltada': 'saltada',
+  'ritmo.noHecha': 'no hecha',
   'ritmo.cuenta': 'por tu cuenta',
   'ritmo.hoy': 'hoy de {desde} a {hasta}',
   'ritmo.opcion.1h': 'Una hora',
@@ -4599,6 +4634,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.resumen': '{f} de foco · {p} pausas · {v}',
   'ritmo.resumen.una': '{f} de foco · 1 pausa · {v}',
   'ritmo.vasos': '{v} de {m} vasos',
+  'ritmo.vasos.jornada': '{v} vasos en la jornada',
+  'ritmo.vasos.jornada.uno': '1 vaso en la jornada',
   'ritmo.ahora': 'Ahora',
   'ritmo.luego': 'Luego',
   'ritmo.fila.bloque': 'Foco · bloque {n} de {m}',
@@ -4650,7 +4687,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.motivo.cierre': 'Para cerrar la jornada',
   'ritmo.motivo.respira': 'Bajar revoluciones',
 
-  'ritmo.frase.zona': '{zona}: sin mover hoy',
+  'ritmo.frase.zona': '{zona}: aún sin mover',
+  'ritmo.frase.ayer': '{zona}: ayer sin mover',
   'ritmo.frase.sentado': 'Llevas {n} min sentado',
   'ritmo.frase.larga': 'Dos horas: sal de la silla',
   'ritmo.frase.cierre': 'Para cerrar, despacio',
@@ -4747,6 +4785,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.st.aviso.verbo': 'Avísame',
   'ritmo.st.aviso.resto': 'a mi hora de entrada',
   'ritmo.manana.titulo': 'Hoy, como cada {dia}',
+  'ritmo.manana.titulo.primera': 'Hoy, {dia}',
   'ritmo.manana.como': 'como cada {dia}',
   'ritmo.manana.distinto': 'Hoy es distinto',
   'ritmo.dias': 'lunes,martes,miércoles,jueves,viernes,sábado,domingo'
@@ -4773,6 +4812,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.frase.movil.empieza': 'start with the timer above',
   'ritmo.hecha': 'done',
   'ritmo.saltada': 'skipped',
+  'ritmo.noHecha': 'not done',
   'ritmo.cuenta': 'your own way',
 
 
@@ -4803,6 +4843,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.resumen': '{f} of focus · {p} breaks · {v}',
   'ritmo.resumen.una': '{f} of focus · 1 break · {v}',
   'ritmo.vasos': '{v} of {m} glasses',
+  'ritmo.vasos.jornada': '{v} glasses over the day',
+  'ritmo.vasos.jornada.uno': '1 glass over the day',
   'ritmo.ahora': 'Now',
   'ritmo.luego': 'Next',
   'ritmo.fila.bloque': 'Focus · block {n} of {m}',
@@ -4848,6 +4890,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
   'ritmo.frase.zona': '{zona}: unmoved today',
+  'ritmo.frase.ayer': '{zona}: idle yesterday',
   'ritmo.frase.sentado': '{n} min sitting so far',
   'ritmo.frase.larga': 'Two hours: time to stand',
   'ritmo.frase.cierre': 'A gentle finish',
@@ -4857,11 +4900,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.zona.caderas': 'Hips',
   'ritmo.zona.piernas': 'Legs',
   'ritmo.zona.manos': 'Hands',
-  'ritmo.hecho': 'Day complete',
+  'ritmo.hecho': 'Workday over',
   'ritmo.hecho.sub': '{f} of focus. The rest of the day is yours.',
   'ritmo.aro.hecho': '{f} of focus',
   'ritmo.aro.tuyo': 'The rest of the day is yours',
-  'ritmo.aro.libre': 'Keep going freestyle',
+  'ritmo.aro.libre': 'Keep going',
   'ritmo.aro.bloque': 'Block {n} of {m}',
   'ritmo.aro.hasta': 'Your day, until {h}',
   'ritmo.aro.empezar': 'Start the day',
@@ -4938,6 +4981,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.st.aviso.verbo': 'Remind me',
   'ritmo.st.aviso.resto': 'at my start time',
   'ritmo.manana.titulo': 'Today, like every {dia}',
+  'ritmo.manana.titulo.primera': 'Today, {dia}',
   'ritmo.manana.como': 'like every {dia}',
   'ritmo.manana.distinto': 'Today is different',
   'ritmo.dias': 'Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday'
@@ -5116,6 +5160,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'cal.resumen': 'Se añade lo que queda de hoy: {n} bloques de foco con sus pausas, de {a} a {b}.',
   'cal.resumen.uno': 'Se añade lo que queda de hoy: 1 bloque de foco con su pausa, de {a} a {b}.',
   'cal.resumen.nada': 'De hoy ya no queda nada que añadir.',
+  'cal.resumen.web': 'Descarga lo que queda de hoy y ábrelo con tu calendario: {n} bloques de foco con sus pausas, de {a} a {b}.',
+  'cal.resumen.web.uno': 'Descarga lo que queda de hoy y ábrelo con tu calendario: 1 bloque de foco con su pausa, de {a} a {b}.',
   'cal.dest.android': 'Calendario del móvil',
   'cal.dest.android.sub': 'El de tu cuenta de Google o de Microsoft en el teléfono',
   'cal.dest.android.en': 'En',
@@ -5241,6 +5287,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'cal.resumen': 'Add the rest of today’s plan: {n} Focus blocks and their breaks, from {a} to {b}.',
   'cal.resumen.uno': 'Add the rest of today’s plan: 1 Focus block and its break, from {a} to {b}.',
   'cal.resumen.nada': 'No more events to add today.',
+  'cal.resumen.web': 'Download the rest of today and open it with your calendar: {n} Focus blocks and their breaks, from {a} to {b}.',
+  'cal.resumen.web.uno': 'Download the rest of today and open it with your calendar: 1 Focus block and its break, from {a} to {b}.',
   'cal.dest.android': 'Phone calendar',
   'cal.dest.android.sub': 'The one from your Google or Microsoft account on this phone',
   'cal.dest.android.en': 'In',
@@ -5413,7 +5461,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'breathe.co2.name': 'CO₂ Tolerance',
   'breathe.co2.desc': 'Exhale and hold with empty lungs. Breathe in whenever you need to.',
   'breathe.co2.code': 'Balance',
-  'breathe.coherent.432.name': 'Coherent 432',
+  'breathe.coherent.432.name': 'Coherent 432 Hz',
   'breathe.coherent.432.desc': 'Coherence 6·6 over a background drone. Immersive.',
   'breathe.coherent.432.code': 'Coherence',
   'breathe.exhale.46.name': 'Exhale 4·6',
@@ -5445,7 +5493,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
   'mueve.cat.empezar.label': 'Start here',
   'mueve.cat.empezar.aside': 'Two or three minutes, a gentle start',
-  'mueve.cat.sigilo.label': 'Discreet',
+  'mueve.cat.sigilo.label': 'Without standing up',
   'mueve.cat.sigilo.aside': 'Small movements at your desk',
   'mueve.cat.material.label': 'With equipment',
   'mueve.cat.material.aside': 'A band or a bar; without them, skip it',
@@ -5501,7 +5549,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.wall.sit.s2.instruction.action': 'Second round. Return to the position and hold.',
   'extra.wall.sit.s2.instruction.care': 'Choose a height that lets you breathe easy.',
 
-  'extra.calves.name': 'Stealth Calf Raises',
+  'extra.calves.name': 'Calf Raises Under the Desk',
   'extra.calves.desc': 'Under your desk, heels up and down.',
   'extra.calves.code': 'Calves',
   'extra.calves.s0.name': 'Calf raises',
@@ -5958,7 +6006,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.neck.3.s2.instruction.care': 'Tilt with control, without pulling with your hand or lifting your shoulder.',
 
   'move.desk.quick.name': 'Desk Express',
-  'move.desk.quick.desc': 'Without standing up. 6 movements in the chair.',
+  'move.desk.quick.desc': 'Without standing up. 5 movements in the chair.',
   'move.desk.quick.code': 'Desk',
   'move.desk.quick.s0.name': 'Shrug + round',
   'move.desk.quick.s0.instruction.setup': 'Sit tall, feet flat, arms loose.',
@@ -6458,7 +6506,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
   'ach.item.first.step.title': 'First step',
-  'ach.item.first.step.desc': 'Complete your first Pomodoro',
+  'ach.item.first.step.desc': 'Complete your first Focus block',
   'ach.item.first.breath.title': 'First breath',
   'ach.item.first.breath.desc': 'Your first breathing session',
   'ach.item.first.stretch.title': 'First stretch',
@@ -6468,7 +6516,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.first.extra.title': 'First Move',
   'ach.item.first.extra.desc': 'Your first Move routine',
   'ach.item.first.cycle.title': 'Full cycle',
-  'ach.item.first.cycle.desc': 'One Pomodoro plus an active break',
+  'ach.item.first.cycle.desc': 'One Focus block and its active break',
   'ach.item.first.ritual.title': 'First ritual',
   'ach.item.first.ritual.desc': 'Use all four modules in one day',
   'ach.item.first.day.title': 'First day',
@@ -6554,9 +6602,9 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
   'ach.item.master.pomodoro.12.title': 'Twelve deep',
-  'ach.item.master.pomodoro.12.desc': '12 Pomodoros',
+  'ach.item.master.pomodoro.12.desc': '12 Focus blocks',
   'ach.item.master.long.focus.title': 'The long session',
-  'ach.item.master.long.focus.desc': 'Five 45-minute blocks without a break',
+  'ach.item.master.long.focus.desc': 'Five 45-minute Focus blocks',
   'ach.item.master.box.15.title': 'Box mastered',
   'ach.item.master.box.15.desc': '15 Box sessions',
   'ach.item.master.coherent.15.title': 'Heart in time',
@@ -6584,7 +6632,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.master.gardener.title': 'The gardener',
   'ach.item.master.gardener.desc': '200 glasses accumulated',
   'ach.item.master.antidote.title': 'The full antidote',
-  'ach.item.master.antidote.desc': '50 SIT sessions',
+  'ach.item.master.antidote.desc': '50 seated Stretch routines',
   'ach.item.master.collector.half.title': 'Forty-five stamps',
   'ach.item.master.collector.half.desc': '45 stamps gathered',
   'ach.item.master.collector.full.title': 'Seventy-five stamps',
@@ -6604,7 +6652,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.master.midnight.never.title': 'Before midnight',
   'ach.item.master.midnight.never.desc': '30 days with no use after 23:00',
   'ach.item.master.pomodoro.8.title': 'A day of eight',
-  'ach.item.master.pomodoro.8.desc': '8 Pomodoros in one day',
+  'ach.item.master.pomodoro.8.desc': '8 Focus blocks in one day',
   'ach.item.master.focus.day.title': 'A day of focus',
   'ach.item.master.focus.day.desc': '4h of focus in one day',
   'ach.item.master.retreat.title': 'Personal retreat',
@@ -7717,7 +7765,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.211.0';
+const PACE_VERSION = 'v0.212.0';
 
 
 
@@ -9157,21 +9205,6 @@ function checkRetreatAchievement() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function unlockAchievement(id, note) {
   const s = getState();
   if (s.achievements[id]) return false;
@@ -9182,6 +9215,7 @@ function unlockAchievement(id, note) {
     ...(id === 'first.stretch' || id === 'first.extra' ? { logrosPrimerosCruzados: true } : {})
   });
   checkCollectorAchievements();
+  programarSellos();
   return true;
 }
 
@@ -9191,28 +9225,32 @@ function unlockAchievement(id, note) {
 
 
 
+function paceFocoEnMarcha() {
+  try {
+    const f = JSON.parse(localStorage.getItem('pace.timer.v1') || 'null');
+    return !!(f && typeof f.endsAt === 'number' && f.endsAt > Date.now());
+  } catch (e) {return false;}
+}
+let _sellosTimer = null;
 
-
-
-
-
+function programarSellos() {
+  if (_sellosTimer) return;
+  _sellosTimer = setTimeout(() => {_sellosTimer = null;flushAchievementToast();}, 0);
+}
 
 
 
 function flushAchievementToast(modulo) {
   const q = getState().achievementQueue || [];
-  if (!q.length) return false;
+  if (!q.length || paceFocoEnMarcha()) return false;
 
 
 
 
-
-  let i = modulo ? q.findIndex((id) => MODULO_DE_LOGRO[id] === modulo) : -1;
-  if (i === -1) i = q.findIndex((id) => encajaEnSesion(id, modulo));
-  if (i === -1) return false;
-  const siguiente = q[i];
-  setState({ achievementQueue: q.filter((_, n) => n !== i) });
-  showToast({ id: siguiente, type: 'achievement' });
+  const suyos = modulo ? q.filter((id) => MODULO_DE_LOGRO[id] === modulo) : [];
+  const orden = suyos.concat(q.filter((id) => suyos.indexOf(id) === -1));
+  setState({ achievementQueue: [] });
+  orden.forEach((id) => showToast({ id, type: 'achievement' }));
   return true;
 }
 
@@ -9440,7 +9478,7 @@ Object.assign(window, {
   checkAllPathsCompleted,
   checkTimeOfDayAchievements
 });
-;Object.assign(window, { checkPlanAchievements, marcaDia, checkTimeOfDayAchievements, checkCollectorAchievements, checkSilentDayAchievement, checkRoutineCountAchievements, checkStatsAchievements, checkAllPathsCompleted, checkPrimerDiaDeVerdad, checkRetreatAchievement, unlockAchievement, flushAchievementToast, updateStreak, conMinutosQueCuentan, completeBreathSession, logrosDeRespira, completeMoveSession, logrosDeMueve, completeExtraSession, logrosDeEstira });
+;Object.assign(window, { checkPlanAchievements, marcaDia, checkTimeOfDayAchievements, checkCollectorAchievements, checkSilentDayAchievement, checkRoutineCountAchievements, checkStatsAchievements, checkAllPathsCompleted, checkPrimerDiaDeVerdad, checkRetreatAchievement, unlockAchievement, paceFocoEnMarcha, programarSellos, flushAchievementToast, updateStreak, conMinutosQueCuentan, completeBreathSession, logrosDeRespira, completeMoveSession, logrosDeMueve, completeExtraSession, logrosDeEstira });
 })();
 </script>
   <!-- Ocaso y Búho con lo que premian ahora (Ez, D-6 D del 11 nov.). DESPUÉS de state-achievements. -->
@@ -12075,6 +12113,7 @@ Object.assign(window, { semanaISO, SEMANA_TEMAS, SEMANA_ACENTOS, semanaDe, seman
 
 
 
+
 var RITMO_SERIES_META = {
 
 
@@ -12211,6 +12250,13 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
   var ayerMovidas = {},pesos = {};
   Object.keys(otraVez).forEach(function (id) {ritmoSeriesZonas(id).forEach(function (z) {ayerMovidas[z] = true;});});
   if (Object.keys(otraVez).length) RITMO_ZONAS.forEach(function (z) {if (!ayerMovidas[z]) pesos[z] = 7;});
+
+
+
+  var zonaDeAyer = function (x) {
+    if (mem.ultimaHace !== 1 || !x) return null;
+    return ritmoSeriesZonas(x.r.id).filter(function (z) {return pesos[z] && !movidas[z];})[0] || null;
+  };
 
 
   function pasar(it, ids, saltada) {
@@ -12379,6 +12425,7 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
       if (xe) platos.push(plato('estira', xe, clave + 'b'));
       it.motivo = 'larga';
       if (it.desde - desdeLarga >= RITMO_SERIES_LARGA) frase = { k: 'larga' };else
+      if (zonaDeAyer(xe)) frase = { k: 'ayer', zona: zonaDeAyer(xe) };else
       if (xe && xe.nueva) frase = { k: 'zona', zona: xe.nueva };
     } else {
       var claveC = 'p' + ++i;
@@ -12409,6 +12456,7 @@ function ritmoServir(m, pozos, cambios, previos, mem, opts) {
       it.motivo = platos[0] ? platos[0].modulo : 'estira';
       var pie = !!(x && ritmoSeriesDePie(x.r.id));
       if (porPrevia && pie && !primera) frase = { k: 'sentado', n: Math.round(it.desde - ultimaPie) };else
+      if (zonaDeAyer(x)) frase = { k: 'ayer', zona: zonaDeAyer(x) };else
       if (x && x.nueva) frase = { k: 'zona', zona: x.nueva };
     }
     if (platos.length) it.platos = platos;
@@ -12786,7 +12834,7 @@ Object.assign(window, {
    `docs/proposals/por-donde-seguir-s198.html`): con «A tu ritmo», el aviso dice
    QUE pausa toca y CUANDO vuelves.
 
-     Tu pausa: Gemelos subrepticios · 1 min
+     Tu pausa: Gemelos bajo la mesa · 1 min
      Bloque 1 de 9 hecho. El siguiente, a las 9:50.
 
    `ritmoAviso(s, t, tn, lang)` -> { title, body } o null (sin menu, o nada que
@@ -15519,6 +15567,8 @@ function ritmoGuardarSemana(tipo, cambios) {
   if (typeof ritmoFijarLoHecho === 'function') ritmoFijarLoHecho(nuevo);
   ritmoGuardar(function (r) {
     var c = { semanaTipo: Array.isArray(tipo) ? tipo.slice(0, 7) : null };
+
+    if (c.semanaTipo && !r.semanaDesde) c.semanaDesde = ritmoHoy();
     if (tocadas.length) {
       var R = ritmoDe(getState());
       var h = Object.assign({}, r.horario || {});
@@ -15564,6 +15614,19 @@ function ritmoAbrirPregunta() {
 }
 
 
+
+
+
+function ritmoPrimeraSemana(s, fecha) {
+  var desde = s && s.ritmo && s.ritmo.semanaDesde;
+  var hace = desde && typeof ritmoDiasEntre === 'function' ? ritmoDiasEntre(desde, fecha || ritmoHoy()) : null;
+  return hace != null && hace < 7;
+}
+function ritmoTituloHabitual(s, diaSemana, t, tn) {
+  return tn(ritmoPrimeraSemana(s) ? 'ritmo.manana.titulo.primera' : 'ritmo.manana.titulo', { dia: ritmoNombreDia(diaSemana, t) });
+}
+
+
 function ritmoNombreDia(diaSemana, t) {
   var lista = String(t('ritmo.dias')).split(',');
   return lista[(diaSemana || 1) - 1] || '';
@@ -15575,9 +15638,9 @@ function ritmoNombreDia(diaSemana, t) {
 
 Object.assign(window, {
   RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoTramoCon, ritmoOcupadoDe,
-  ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoNombreDia
+  ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoNombreDia, ritmoTituloHabitual, ritmoPrimeraSemana
 });
-;Object.assign(window, { RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, RITMO_TRAMO_PAR, ritmoTramoCon, ritmoOcupadoDe, ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoNombreDia });
+;Object.assign(window, { RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, RITMO_TRAMO_PAR, ritmoTramoCon, ritmoOcupadoDe, ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoPrimeraSemana, ritmoTituloHabitual, ritmoNombreDia });
 })();
 </script>
   <!-- La pausa entera (14 oct. 2026): sus platos seguidos y el aro que la cuenta. -->
@@ -15697,6 +15760,57 @@ function ritmoPausaHecha(routineId, runId, minutos) {
     }
     return { dia: Object.assign({}, r.dia, cambio) };
   });
+}
+
+
+
+
+
+
+
+function ritmoModuloDeRutina(id, base) {
+  if (window.getBreatheRoutine && window.getBreatheRoutine(id)) return 'respira';
+  if (/^extra\./.test(id)) return 'mueve';
+  if (/^move\./.test(id)) return 'estira';
+  return base;
+}
+
+function ritmoPlatosVistos(it, n, dia) {
+  var platos = it && it.platos || [];
+  var hechos = dia && dia.platos && Array.isArray(dia.platos[n]) ? dia.platos[n] : [];
+  if (!hechos.length) return platos;
+  var resolver = window.resolveAnyRoutine;
+  var vistos = hechos.map(function (id) {
+    var servido = platos.filter(function (pl) {return pl.id === id;})[0];
+    if (servido) return servido;
+    var rutina = typeof resolver === 'function' ? resolver(id) : null;
+    if (!rutina) return null;
+    var base = platos[0] || {};
+    return Object.assign({}, base, { id: id, rutina: rutina, modulo: ritmoModuloDeRutina(id, base.modulo) });
+  }).filter(Boolean);
+  if (!vistos.length) return platos;
+
+
+  var libres = vistos.slice();
+  var out = platos.map(function (pl) {
+    var k = -1;
+    for (var i = 0; i < libres.length; i++) if (libres[i] && libres[i].modulo === pl.modulo) {k = i;break;}
+    if (k === -1) return null;
+    var v = libres[k];libres[k] = null;return v;
+  });
+  out = out.map(function (v, i) {
+    if (v) return v;
+    for (var j = 0; j < libres.length; j++) if (libres[j]) {var w = libres[j];libres[j] = null;return w;}
+    return platos[i];
+  });
+  return out.concat(libres.filter(Boolean));
+}
+
+
+
+function ritmoPausaDeLevantarse(routineId) {
+  var a = routineId ? ritmoPausaAbierta() : null;
+  return !!(a && a.it.frase && a.it.frase.k === 'larga' && a.platos.some(function (pl) {return pl.id === routineId;}));
 }
 
 
@@ -15855,11 +15969,11 @@ function ritmoPausaCerrarConElDia() {
 }
 
 Object.assign(window, {
-  ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta,
+  ritmoSinPausa, ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, ritmoSigueCierre, ritmoPausaHecha, ritmoPausaPorTuCuenta, ritmoPlatosVistos, ritmoPausaDeLevantarse,
   ritmoSesionesHoy, ritmoMinutosHechos, ritmoMetaHecha, RITMO_MODULO_SESION,
   ritmoPausaEmpieza, ritmoPausaCuenta, ritmoCierreEnCurso, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia, ritmoParadaHasta
 });
-;Object.assign(window, { ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, RITMO_METAS_DE_FIN, ritmoSigueCierre, ritmoPausaHecha, ritmoSesionesHoy, RITMO_MODULO_SESION, ritmoMinutosHechos, ritmoMetaHecha, ritmoPausaPorTuCuenta, ritmoSinPausa, ritmoPausaEmpieza, ritmoParadaHasta, ritmoPausaCuenta, ritmoCierreEnCurso, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia });
+;Object.assign(window, { ritmoPausaAbierta, ritmoPlatoQueToca, ritmoPausaSigue, RITMO_METAS_DE_FIN, ritmoSigueCierre, ritmoPausaHecha, ritmoModuloDeRutina, ritmoPlatosVistos, ritmoPausaDeLevantarse, ritmoSesionesHoy, RITMO_MODULO_SESION, ritmoMinutosHechos, ritmoMetaHecha, ritmoPausaPorTuCuenta, ritmoSinPausa, ritmoPausaEmpieza, ritmoParadaHasta, ritmoPausaCuenta, ritmoCierreEnCurso, ritmoPausaHuerfana, ritmoPausaAcabada, ritmoPausaCerrarConElDia });
 })();
 </script>
   <!-- Las pausas con bloques cortos (22 oct. 2026): la invitación, «a mi ritmo» o tras cada bloque, y sin día. -->
@@ -16138,6 +16252,8 @@ function ritmoMemoria(s, fecha, dia, pasado) {
   var aprende = typeof ritmoPuedeAprender === 'function' && ritmoPuedeAprender() && typeof ritmoMotorVigente === 'function';
   return {
     ultima: fechas.length ? serv[fechas[fechas.length - 1]] || {} : {},
+
+    ultimaHace: fechas.length ? ritmoDiasEntre(fechas[fechas.length - 1], fecha) : null,
     dias: dias, hechas: hechas,
     pasado: pasado || [], estados: dia && dia.estados || {},
     inicio: pasado && pasado.length ? pasado[0].desde : null,
@@ -16178,6 +16294,7 @@ function ritmoFrase(it, t, tn) {
   var f = it && it.frase;
   if (!f || !f.k) return null;
   if (f.k === 'zona') return f.zona ? tn('ritmo.frase.zona', { zona: t('ritmo.zona.' + f.zona) }) : null;
+  if (f.k === 'ayer') return f.zona ? tn('ritmo.frase.ayer', { zona: t('ritmo.zona.' + f.zona) }) : null;
   if (f.k === 'sentado') return f.n > 0 ? tn('ritmo.frase.sentado', { n: f.n }) : null;
   return t('ritmo.frase.' + f.k);
 }
@@ -20974,6 +21091,12 @@ function paceEntradaTexto(s, clave, vars) {
 
 
 var PACE_ENTRADA_MADRUGADA = 4;
+function ritmoEntradaPrimera(r, dia) {
+  if (!r.semanaDesde || typeof parseLocalDateKey !== 'function') return false;
+  var d = parseLocalDateKey(r.semanaDesde);
+  if (!d) return false;
+  return Math.round((new Date(dia.getFullYear(), dia.getMonth(), dia.getDate()) - d) / 86400000) < 7;
+}
 function paceEntradaAvisos(s, ahora) {
   var out = [];
   try {
@@ -20999,7 +21122,8 @@ function paceEntradaAvisos(s, ahora) {
       out.push({
         id: PACE_ENTRADA_PRIMER_ID + i,
         at: at,
-        title: paceEntradaTexto(s, 'ritmo.manana.titulo', { dia: dias[n] || '' }),
+
+        title: paceEntradaTexto(s, ritmoEntradaPrimera(r, dia) ? 'ritmo.manana.titulo.primera' : 'ritmo.manana.titulo', { dia: dias[n] || '' }),
         body: paceEntradaTexto(s, 'notify.entrada.' + tipo, { inicio: ritmoHora(desde), salida: ritmoHora(hasta) })
       });
     }
@@ -21168,7 +21292,7 @@ function paceEntradaEncender() {
 })();
 
 Object.assign(window, { paceEntradaAvisos, paceEntradaPoner, paceEntradaEncender, paceEntradaQuitar });
-;Object.assign(window, { PACE_ENTRADA_PRIMER_ID, PACE_ENTRADA_DIAS, PACE_ENTRADA_CANAL, PACE_ENTRADA_CANAL_MUDO, PACE_ENTRADA_CANAL_VIEJO, PACE_ENTRADA_SONIDO, PACE_ENTRADA_SONIDO_IOS, paceEntradaTexto, PACE_ENTRADA_MADRUGADA, paceEntradaAvisos, PACE_ENTRADA_CLAVE, _paceEntrada, paceEntradaLeer, paceEntradaGuardar, paceEntradaPoner, paceEntradaNotificacion, paceEntradaCanales, paceEntradaExacta, paceEntradaPonerYa, PACE_ENTRADA_TOPE_MS, paceEntradaQuitar, paceEntradaEncender });
+;Object.assign(window, { PACE_ENTRADA_PRIMER_ID, PACE_ENTRADA_DIAS, PACE_ENTRADA_CANAL, PACE_ENTRADA_CANAL_MUDO, PACE_ENTRADA_CANAL_VIEJO, PACE_ENTRADA_SONIDO, PACE_ENTRADA_SONIDO_IOS, paceEntradaTexto, PACE_ENTRADA_MADRUGADA, ritmoEntradaPrimera, paceEntradaAvisos, PACE_ENTRADA_CLAVE, _paceEntrada, paceEntradaLeer, paceEntradaGuardar, paceEntradaPoner, paceEntradaNotificacion, paceEntradaCanales, paceEntradaExacta, paceEntradaPonerYa, PACE_ENTRADA_TOPE_MS, paceEntradaQuitar, paceEntradaEncender });
 })();
 </script>
   <!-- valoracion: la ventana de la tienda para valorar PACE, una vez, tras la quinta pausa
@@ -22808,12 +22932,25 @@ function sessionPrepCopy(routine, tn) {
   const donde = pos.length && pos.every((p) => PREP_SUELO.indexOf(p) !== -1) ? 'floor' :
   pos.length === 1 && (pos[0] === 'seated' || pos[0] === 'standing') ? pos[0] :
   'any';
-  const n = routine.steps.length;
+
+
+  const n = routine.steps.filter((s) => s.mode !== 'rest').length;
   return tn('move.prepCopy.' + donde + (n === 1 ? '.uno' : ''), { n });
 }
 
-Object.assign(window, { SessionPrep, sessionPrepCopy });
-;Object.assign(window, { SessionPrep, sessionPrepCopy });
+
+
+
+function sessionPasoCabecera(routine, stepIdx, t, tn) {
+  const steps = routine && routine.steps || [];
+  if (steps[stepIdx] && steps[stepIdx].mode === 'rest') return t('session.restLabel');
+  const total = steps.filter((s) => s.mode !== 'rest').length;
+  const current = steps.slice(0, stepIdx + 1).filter((s) => s.mode !== 'rest').length;
+  return tn('move.stepCount', { current, total });
+}
+
+Object.assign(window, { SessionPrep, sessionPrepCopy, sessionPasoCabecera });
+;Object.assign(window, { SessionPrep, sessionPrepCopy, sessionPasoCabecera });
 })();
 </script>
   <!-- CSS responsive de las pantallas de sesión, extraído de SessionShell.jsx
@@ -23073,10 +23210,12 @@ Object.assign(window, { SessionPrep, sessionPrepCopy });
        del círculo de antes. En Mueve y Estira CRECE CON EL ALTO QUE SOBRA (Ez, 14 oct.,
        opción B): a 72 px fijos se perdía en una pantalla grande. Su tamaño de siempre es
        el tope: 120 px a 720 de alto, 216 desde 816, y en el móvil de 72 a 140; Respira,
-       72. Por debajo de ese tope cede hasta 48 px cuando no cabe todo lo demás. */
+       72. Por debajo de ese tope cede hasta 32 px cuando no cabe todo lo demás: con 48, un nombre en
+       dos líneas («Calf Raises Under the Desk») se pasaba 15 px a 1536x701 y «Not now» pisaba
+       «Back to Home». */
     [data-pace-session-done-hero][data-pace-session-done-glifo] {
       --pace-cierre-glifo: 72px;
-      flex: 0 1 var(--pace-cierre-glifo); min-height: 48px; aspect-ratio: 1 / 1;
+      flex: 0 1 var(--pace-cierre-glifo); min-height: 32px; aspect-ratio: 1 / 1;
       width: auto !important; height: auto !important;
       background: none !important; border: 0 !important;
     }
@@ -23088,7 +23227,7 @@ Object.assign(window, { SessionPrep, sessionPrepCopy });
         --pace-cierre-glifo: clamp(72px, calc(100 * var(--pace-vh, 1vh) - 500px), 140px);
       }
     }
-    /* En una ventana de escritorio muy baja ni con el dibujo en 48 px caben la pregunta,
+    /* En una ventana de escritorio muy baja ni con el dibujo en 32 px caben la pregunta,
        las respuestas, «Ahora no» y la salida: el dibujo, que es decorativo, se quita
        (hasta el 16 oct. se quitaba desde 430 px, y de 431 a 510 «Volver al inicio»
        tapaba lo de abajo también en Respira). */
@@ -23363,10 +23502,12 @@ const sessionFeedbackStyles = {
     transition: 'color 160ms ease'
   },
 
+
+
   deshacer: {
     ...displayItalic,
     fontSize: 'inherit', color: 'var(--ink-2)',
-    background: 'none', border: 'none', padding: '0 2px', cursor: 'pointer',
+    background: 'none', border: 'none', padding: '2px 2px', cursor: 'pointer',
     textDecoration: 'underline', textUnderlineOffset: 3
   },
 
@@ -23377,7 +23518,7 @@ const sessionFeedbackStyles = {
   razon: {
     ...displayItalic,
     fontSize: 'inherit', color: 'var(--ink-3)',
-    background: 'none', border: 'none', padding: '2px 2px', cursor: 'pointer',
+    background: 'none', border: 'none', padding: '3px 2px', cursor: 'pointer',
     textDecoration: 'underline', textUnderlineOffset: 3
   },
   thanks: {
@@ -24042,6 +24183,8 @@ function madera(ctx, dest, t0, peak) {
 
 var PACE_SONIDO_PAUSA = 'pausa.end.dos';
 
+var PACE_TOQUES_FIN_FOCO = 3;
+
 
 var SOUND_RECIPES = {
 
@@ -24065,8 +24208,8 @@ var SOUND_RECIPES = {
   'pomodoro.start': function (ctx, t0) {
     glide(ctx, ctx.destination, note('C5'), note('G5'), t0, 0.20, 0.06, 'sine');
   },
-  'pomodoro.end': function (ctx, t0) {
-    SOUND_RECIPES.complete(ctx, t0);
+  'pomodoro.end': function (ctx, t0, toques) {
+    for (var i = 0; i < (toques > 1 ? toques : 1); i++) SOUND_RECIPES.complete(ctx, t0 + i * 0.9);
   },
 
 
@@ -24319,8 +24462,8 @@ const ambientDrone = (() => {
 
 
 
-Object.assign(window, { playSound, useSound, ambientDrone, paceAudioCtx: getCtx });
-;Object.assign(window, { note, getCtx, ensureRunning, envelope, tone, glide, chord, bell, breathNoise, cuenco, madera, PACE_SONIDO_PAUSA, SOUND_RECIPES, playSound, useSound });
+Object.assign(window, { playSound, useSound, ambientDrone, paceAudioCtx: getCtx, PACE_TOQUES_FIN_FOCO });
+;Object.assign(window, { note, getCtx, ensureRunning, envelope, tone, glide, chord, bell, breathNoise, cuenco, madera, PACE_SONIDO_PAUSA, PACE_TOQUES_FIN_FOCO, SOUND_RECIPES, playSound, useSound });
 })();
 </script>
   <script>
@@ -24805,7 +24948,10 @@ function paceVozCuerpoOcupa(nombre) {
   try {
     var tapa = PACE_VOZ_CUERPO_TAPA[nombre];
     var ctx = tapa && typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;
-    if (ctx) _paceVozCuerpoLibre = Math.max(_paceVozCuerpoLibre, ctx.currentTime + tapa + PACE_VOZ_CUERPO_HUECO);
+    if (ctx) {
+      _paceVozCuerpoSuena = Math.max(_paceVozCuerpoSuena, ctx.currentTime + tapa);
+      _paceVozCuerpoLibre = Math.max(_paceVozCuerpoLibre, ctx.currentTime + tapa + PACE_VOZ_CUERPO_HUECO);
+    }
   } catch (e) {}
 }
 
@@ -24822,7 +24968,22 @@ function paceVozCuerpoCabe(e, max) {
 
 
 
+
+
+
+
+var _paceVozCuerpoSerie = null;
+var _paceVozCuerpoSuena = 0;
 function paceVozCuerpoIntenta(palabra, max, op) {
+  var clave = typeof max === 'number' && op && op.serie ? op.serie.join(' ') : null;
+  var sigue = !!clave && !op.primera && !!_paceVozCuerpoSerie && _paceVozCuerpoSerie.clave === clave;
+  if (sigue && !_paceVozCuerpoSerie.voz) return false;
+  var dijo = _paceVozCuerpoSuenaPalabra(palabra, max, op, sigue);
+  if (clave && !sigue) _paceVozCuerpoSerie = { clave: clave, voz: dijo };
+  return dijo;
+}
+
+function _paceVozCuerpoSuenaPalabra(palabra, max, op, sigue) {
   try {
     if (typeof paceVozEncendida === 'function' && !paceVozEncendida()) return false;
     var j = paceVozCuerpoJuego();
@@ -24839,8 +25000,8 @@ function paceVozCuerpoIntenta(palabra, max, op) {
     if (ctx.state === 'closed') return false;
     if (ctx.state !== 'running') {try {ctx.resume();} catch (er) {}}
     var ahora = ctx.currentTime;
-    if (aSuHora && _paceVozCuerpoLibre > ahora) return false;
-    var t0 = Math.max(ahora, _paceVozCuerpoLibre);
+    if (aSuHora && (sigue ? _paceVozCuerpoSuena : _paceVozCuerpoLibre) > ahora) return false;
+    var t0 = aSuHora ? ahora : Math.max(ahora, _paceVozCuerpoLibre);
     if (t0 - ahora > PACE_VOZ_CUERPO_ESPERA) return false;
     var dur = Math.min(e.b, toma.buffer.duration) - e.a;
     if (!(dur > 0.02)) return false;
@@ -24863,6 +25024,7 @@ function paceVozCuerpoIntenta(palabra, max, op) {
       try {g.disconnect();} catch (er) {}
       _paceVozCuerpoVivas = _paceVozCuerpoVivas.filter(function (v) {return v !== viva;});
     };
+    _paceVozCuerpoSuena = t0 + dur;
     _paceVozCuerpoLibre = t0 + dur + (op && op.ultima ? PACE_VOZ_CUERPO_TRAS_SERIE : PACE_VOZ_CUERPO_HUECO);
     return true;
   } catch (err) {
@@ -24888,11 +25050,13 @@ function paceVozCuerpoCalla() {
   } catch (err) {}
   _paceVozCuerpoVivas = [];
   _paceVozCuerpoLibre = 0;
+  _paceVozCuerpoSuena = 0;
+  _paceVozCuerpoSerie = null;
 }
 
 Object.assign(window, { paceVozCuerpoPrecarga: paceVozCuerpoPrecarga, paceVozCuerpoIntenta: paceVozCuerpoIntenta,
   paceVozCuerpoOcupa: paceVozCuerpoOcupa, paceVozCuerpoCalla: paceVozCuerpoCalla });
-;Object.assign(window, { PACE_VOZ_CUERPO_HUECO, PACE_VOZ_CUERPO_TRAS_SERIE, PACE_VOZ_CUERPO_ESPERA, _paceVozCuerpoTomas, _paceVozCuerpoLibre, _paceVozCuerpoVivas, paceVozCuerpoJuego, paceVozCuerpoPrecarga, PACE_VOZ_CUERPO_TAPA, paceVozCuerpoOcupa, paceVozCuerpoCabe, paceVozCuerpoIntenta, paceVozCuerpoCalla });
+;Object.assign(window, { PACE_VOZ_CUERPO_HUECO, PACE_VOZ_CUERPO_TRAS_SERIE, PACE_VOZ_CUERPO_ESPERA, _paceVozCuerpoTomas, _paceVozCuerpoLibre, _paceVozCuerpoVivas, paceVozCuerpoJuego, paceVozCuerpoPrecarga, PACE_VOZ_CUERPO_TAPA, paceVozCuerpoOcupa, paceVozCuerpoCabe, _paceVozCuerpoSerie, _paceVozCuerpoSuena, paceVozCuerpoIntenta, _paceVozCuerpoSuenaPalabra, paceVozCuerpoCalla });
 })();
 </script>
   <script>
@@ -25480,11 +25644,18 @@ function toastHuecoDelAro() {
 
 
 const TOAST_TAPADO = 'html:has([data-pace-modal-backdrop], [data-pace-session-root], [role="dialog"])';
+
+
+
+const TOAST_CAJON = 'html:has([data-pace-sidebar])';
 if (!document.getElementById('pace-toast-css')) {
   const st = document.createElement('style');
   st.id = 'pace-toast-css';
   st.textContent = '[data-pace-sello-en-aro] [data-pace-dial-subtitle] { visibility: hidden; }' +
-  TOAST_TAPADO + ' [data-pace-sello-aro], ' + TOAST_TAPADO + ' [data-pace-toast] { visibility: hidden; }';
+  TOAST_TAPADO + ' [data-pace-sello-aro], ' + TOAST_TAPADO + ' [data-pace-toast] { visibility: hidden; }' + (
+  typeof PACE_CORTE_MOVIL === 'string' ?
+  '@media ' + PACE_CORTE_MOVIL + ' { ' + TOAST_CAJON + ' [data-pace-sello-aro], ' + TOAST_CAJON + ' [data-pace-toast] { visibility: hidden; } }' :
+  '');
   document.head.appendChild(st);
 }
 
@@ -25508,6 +25679,28 @@ function paceSelloPendiente() {
 }
 
 
+
+function selloTextos(toast, t, tn) {
+  const g = toast.grupo || [];
+  if (g.length < 2) return { cabeza: t('ach.toast.new'), titulo: toast.title, desc: toast.desc };
+  const otros = g.length - 1;
+  const palabras = String(t('ach.toast.numeros')).split(',');
+  const n = otros <= palabras.length ? palabras[otros - 1] : String(otros);
+  return { cabeza: tn('ach.toast.varios', { n: g.length }),
+    titulo: tn(otros === 1 ? 'ach.toast.mas.uno' : 'ach.toast.mas', { t: g[0].title, n }), desc: null };
+}
+
+
+const SELLO_CALLADO_MS = 15 * 60 * 1000;
+function selloViejo(grupo) {
+  try {
+    const ach = getState().achievements || {};
+    const fechas = (grupo || []).map((x) => (ach[x.id] || {}).unlockedAt).filter((f) => typeof f === 'number');
+    return fechas.length === (grupo || []).length && fechas.length > 0 && Date.now() - Math.max(...fechas) > SELLO_CALLADO_MS;
+  } catch (e) {return false;}
+}
+
+
 const toastSoloLector = { position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap' };
 
 
@@ -25516,7 +25709,7 @@ const toastSoloLector = { position: 'absolute', width: 1, height: 1, overflow: '
 
 
 
-function SelloEnAro(_ref) {let { toast, t } = _ref;
+function SelloEnAro(_ref) {let { toast, t, tn } = _ref;
   const textoRef = useRefTO(null);
   const [ajuste, setAjuste] = useStateTO({ escala: 1, corto: false });
 
@@ -25559,7 +25752,7 @@ function SelloEnAro(_ref) {let { toast, t } = _ref;
         opacity: toast.exiting ? 0 : 1, transition: 'opacity 300ms ease-out'
       } },
     React.createElement("span", { "data-pace-sello-texto": true, ref: textoRef, style: { minWidth: 0, overflow: 'hidden' } },
-    React.createElement("span", { style: ajuste.corto ? toastSoloLector : undefined }, t('ach.toast.new'), " \xB7 "), toast.title
+    React.createElement("span", { style: ajuste.corto ? toastSoloLector : undefined }, selloTextos(toast, t, tn).cabeza, " \xB7 "), selloTextos(toast, t, tn).titulo
     )
     ));
 
@@ -25567,7 +25760,7 @@ function SelloEnAro(_ref) {let { toast, t } = _ref;
 
 function ToastHost() {
   const [toasts, setToasts] = useStateTO([]);
-  const { t, lang } = useT();
+  const { t, tn, lang } = useT();
 
 
 
@@ -25593,7 +25786,7 @@ function ToastHost() {
     const full = Object.assign({}, sig, { aro: sig.licencia ? null : toastHuecoDelAro() });
     activoRef.current = true;
     setToasts((prev) => [...prev, full]);
-    if (!full.licencia) {try {playSound(full.secreto ? 'achievement.secret' : 'achievement.unlock');} catch (e) {}}
+    if (!full.licencia && !selloViejo(full.grupo)) {try {playSound(full.secreto && full.grupo.length === 1 ? 'achievement.secret' : 'achievement.unlock');} catch (e) {}}
     const durationMs = full.duracion || (typeof TOAST_DURATION_MS === 'number' ? TOAST_DURATION_MS : 3000);
     const fadeMs = 300;
 
@@ -25618,11 +25811,14 @@ function ToastHost() {
     if (toast.type === 'achievement') {
       const a = (window.ACHIEVEMENT_CATALOG || []).find((x) => x.id === toast.id);
       if (!a) return;
-      colaRef.current.push({ ...toast,
-        title: tR('ach.item.' + a.id + '.title', a.title),
-        desc: tR('ach.item.' + a.id + '.desc', a.desc),
+      const uno = { id: a.id, title: tR('ach.item.' + a.id + '.title', a.title), desc: tR('ach.item.' + a.id + '.desc', a.desc) };
+
+
+      const ultimo = colaRef.current[colaRef.current.length - 1];
+      if (ultimo && ultimo.grupo) {if (!ultimo.grupo.some((x) => x.id === a.id)) ultimo.grupo.push(uno);} else
+      colaRef.current.push({ ...toast, ...uno, grupo: [uno],
         glyph: a.glyph, glyphSvg: a.glyphSvg, secreto: !!a.secret, exiting: false });
-      siguienteRef.current();
+      setTimeout(() => siguienteRef.current(), 0);
     }
 
 
@@ -25657,7 +25853,7 @@ function ToastHost() {
       } },
 
     toasts.map((toast) => toast.aro ?
-    React.createElement(SelloEnAro, { key: toast._id, toast: toast, t: t }) :
+    React.createElement(SelloEnAro, { key: toast._id, toast: toast, t: t, tn: tn }) :
 
     React.createElement("div", { key: toast._id, "data-pace-toast": toast.licencia ? 'licencia' : 'logro', style: {
         display: 'flex', alignItems: 'center', gap: 14,
@@ -25696,9 +25892,9 @@ function ToastHost() {
 
     ),
     React.createElement("div", null,
-    React.createElement("div", { style: { fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: toast.licencia ? 'var(--premium)' : 'var(--achievement)' } }, toast.eyebrow || t('ach.toast.new')),
-    React.createElement("div", { style: { ...displayItalic, fontSize: 18, fontWeight: 500, lineHeight: 1.2 } }, toast.title),
-    React.createElement("div", { style: { fontSize: 11, color: 'var(--ink-3)' } }, toast.desc)
+    React.createElement("div", { style: { fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: toast.licencia ? 'var(--premium)' : 'var(--achievement)' } }, toast.eyebrow || selloTextos(toast, t, tn).cabeza),
+    React.createElement("div", { style: { ...displayItalic, fontSize: 18, fontWeight: 500, lineHeight: 1.2 } }, toast.licencia ? toast.title : selloTextos(toast, t, tn).titulo),
+    (toast.licencia ? toast.desc : selloTextos(toast, t, tn).desc) ? React.createElement("div", { style: { fontSize: 11, color: 'var(--ink-3)' } }, toast.licencia ? toast.desc : selloTextos(toast, t, tn).desc) : null
     )
     )
     )
@@ -25707,7 +25903,7 @@ function ToastHost() {
 }
 
 Object.assign(window, { ToastHost, toastTapado, paceSelloPendiente });
-;Object.assign(window, { toastHuecoDelAro, toastTapado, paceSelloPendiente, SelloEnAro, ToastHost });
+;Object.assign(window, { toastHuecoDelAro, toastTapado, paceSelloPendiente, selloTextos, selloViejo, SelloEnAro, ToastHost });
 })();
 </script>
   <!-- La invitación a PACE completo: se abre al tocar algo cerrado. -->
@@ -27225,13 +27421,19 @@ function useCountdown(durationSec, onComplete, modo) {
       forceTick((n) => n + 1);
     };
     const id = setInterval(check, 1000);
+
+
+
+
+    const fin = endsAtRef.current == null ? null : setTimeout(check, Math.max(0, endsAtRef.current - Date.now()) + 20);
     const onVis = () => {if (document.visibilityState === 'visible') check();};
     document.addEventListener('visibilitychange', onVis);
     return () => {
       clearInterval(id);
+      if (fin != null) clearTimeout(fin);
       document.removeEventListener('visibilitychange', onVis);
     };
-  }, [status, complete]);
+  }, [status, complete, endsAtRef.current]);
 
 
   useEffectUC(() => {
@@ -27432,7 +27634,9 @@ function maybeNotifyFocusEnd(opts) {
       icon: '/icons/icon-192.png',
       badge: '/icons/icon-192.png',
       tag,
-      silent: true
+      silent: true,
+
+      requireInteraction: true
     };
     const fallback = () => {try {new Notification(title, nOpts);} catch (e) {}};
     if (navigator.serviceWorker && navigator.serviceWorker.getRegistration) {
@@ -33708,10 +33912,14 @@ function aroPlatoPendiente(s) {
 
 
 
+
+
+const ARO_PAUSA_TERMINADA_MIN = 15;
 function aroPausaTerminada(s) {
   if (typeof ritmoPausaCuenta !== 'function' || ritmoPausaCuenta(s)) return false;
   const a = ritmoPausaAbierta(s);
-  return !!a && a.it.tipo === 'pausa';
+  if (!a || a.it.tipo !== 'pausa') return false;
+  return ritmoAhoraExacto() - (a.it.desde + a.it.dur) <= ARO_PAUSA_TERMINADA_MIN;
 }
 
 
@@ -33934,7 +34142,13 @@ Object.assign(window, { useAvisosNativos, useOfertaExacta });
 
 
 
-const { useEffect: useEffectTitulo } = React;
+
+
+
+
+
+
+const { useEffect: useEffectTitulo, useState: useStateTitulo } = React;
 
 function paceTituloCuenta(remaining, modo, t) {
   const seg = Math.max(0, Math.floor(remaining || 0));
@@ -33945,20 +34159,243 @@ function paceTituloCuenta(remaining, modo, t) {
   return dos(Math.floor(seg / 60)) + ':' + dos(seg % 60) + ' · ' + etiqueta + ' · PACE';
 }
 
-function useTituloCuenta(_ref) {let { running, remaining, modo, lang, t } = _ref;
+
+
+let _paceTabFin = false;
+function paceTabMirando() {
+  try {return document.visibilityState === 'visible' && document.hasFocus();} catch (e) {return true;}
+}
+function paceTabFinPon(on) {
+  if (_paceTabFin === !!on) return;
+  _paceTabFin = !!on;
+  try {window.dispatchEvent(new CustomEvent('pace:pestana-fin'));} catch (e) {}
+}
+
+function paceTabTerminado() {
+  if (!paceTabMirando()) paceTabFinPon(true);
+}
+(function paceTabVuelta() {
+  const mira = () => {if (_paceTabFin && paceTabMirando()) paceTabFinPon(false);};
+  ['visibilitychange', 'pointerdown', 'keydown'].forEach((e) => document.addEventListener(e, mira, true));
+  window.addEventListener('focus', mira);
+})();
+
+
+
+let _paceIconos = null,_paceIconoUltimo = null;
+function paceIconoPon(clave) {
+  try {
+    if (_paceIconoUltimo === clave) return;
+    if (!_paceIconos) {
+      _paceIconos = Array.prototype.map.call(document.querySelectorAll('link[rel~="icon"]'), (enlace) => ({ l: enlace, href: enlace.getAttribute('href') }));
+    }
+    _paceIconoUltimo = clave;
+    if (clave === null) {_paceIconos.forEach((o) => o.l.setAttribute('href', o.href));return;}
+    const c = document.createElement('canvas');
+    c.width = c.height = 64;
+    const g = c.getContext('2d');
+    if (!g) return;
+    g.fillStyle = '#F2EDE0';
+    g.beginPath();g.arc(32, 32, 31, 0, 2 * Math.PI);g.fill();
+    g.lineWidth = 7;
+    g.strokeStyle = '#C9C0A8';
+    g.beginPath();g.arc(32, 32, 21, 0, 2 * Math.PI);g.stroke();
+    if (clave === 'fin') {
+      g.strokeStyle = '#C97A5D';
+      g.beginPath();g.arc(32, 32, 21, 0, 2 * Math.PI);g.stroke();
+      g.fillStyle = '#C97A5D';
+      g.beginPath();g.arc(32, 32, 10, 0, 2 * Math.PI);g.fill();
+    } else {
+      g.strokeStyle = '#3E5A3A';
+      g.lineCap = 'round';
+      g.beginPath();g.arc(32, 32, 21, -Math.PI / 2, -Math.PI / 2 + Math.max(0.04, clave / 32) * 2 * Math.PI);g.stroke();
+    }
+    const url = c.toDataURL('image/png');
+    if (!_paceIconos.length) {
+      const nuevo = document.createElement('link');
+      nuevo.rel = 'icon';
+      document.head.appendChild(nuevo);
+      _paceIconos.push({ l: nuevo, href: null });
+    }
+    _paceIconos.forEach((o) => o.l.setAttribute('href', url));
+  } catch (e) {}
+}
+
+function useTituloCuenta(_ref) {let { running, remaining, total, modo, lang, t } = _ref;
+  const [fin, setFin] = useStateTitulo(_paceTabFin);
+  useEffectTitulo(() => {
+    const oye = () => setFin(_paceTabFin);
+    window.addEventListener('pace:pestana-fin', oye);
+    return () => window.removeEventListener('pace:pestana-fin', oye);
+  }, []);
   useEffectTitulo(() => {
     try {
-      document.title = running ? paceTituloCuenta(remaining, modo, t) : paceTituloApp(lang);
+      document.title = fin ? t('focus.tab.done') : running ? paceTituloCuenta(remaining, modo, t) : paceTituloApp(lang);
     } catch (e) {}
-  }, [running, remaining, modo, lang]);
+    const hecho = total > 0 ? 1 - Math.max(0, remaining) / total : 0;
+    paceIconoPon(fin ? 'fin' : running ? Math.min(32, Math.floor(hecho * 32)) : null);
+  }, [fin, running, remaining, total, modo, lang]);
 
   useEffectTitulo(() => () => {
     try {document.title = paceTituloApp(getState().lang);} catch (e) {}
+    paceIconoPon(null);
   }, []);
 }
 
-Object.assign(window, { useTituloCuenta, paceTituloCuenta });
-;Object.assign(window, { paceTituloCuenta, useTituloCuenta });
+Object.assign(window, { useTituloCuenta, paceTituloCuenta, paceTabTerminado });
+;Object.assign(window, { paceTituloCuenta, paceTabMirando, paceTabFinPon, paceTabTerminado, paceIconoPon, useTituloCuenta });
+})();
+</script>
+  <!-- La miniventana: el Foco en una tira encima de todas las ventanas. Antes de FocusTimer.jsx. -->
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const { useEffect: useEffectMini, useState: useStateMini } = React;
+
+const PACE_MINI_TAM = { width: 300, height: 84 };
+let _paceMini = { win: null, root: null, props: null };
+
+function paceMiniPuede() {
+  try {return 'documentPictureInPicture' in window && window.top === window;} catch (e) {return false;}
+}
+function paceMiniAbierta() {return !!_paceMini.win;}
+function paceMiniAvisar() {try {window.dispatchEvent(new CustomEvent('pace:mini'));} catch (e) {}}
+function paceMiniPintar() {
+  if (!_paceMini.root || !_paceMini.props) return;
+  try {_paceMini.root.render(React.createElement(MiniTira, _paceMini.props));} catch (e) {}
+}
+function paceMiniCerrar() {
+  const w = _paceMini.win;
+  if (w) {try {w.close();} catch (e) {}}
+}
+
+
+
+function paceMiniVestir(w) {
+  const d = w.document;
+  const base = d.createElement('base');
+  base.href = document.baseURI;
+  d.head.appendChild(base);
+  document.querySelectorAll('link[rel="stylesheet"], style').forEach((nodo) => {
+    try {d.head.appendChild(nodo.cloneNode(true));} catch (e) {}
+  });
+  Array.prototype.forEach.call(document.documentElement.attributes, (atr) => {
+    try {d.documentElement.setAttribute(atr.name, atr.value);} catch (e) {}
+  });
+  d.title = 'PACE';
+  d.documentElement.style.height = '100%';
+  d.body.style.cssText = 'margin:0;height:100%;overflow:hidden;background:var(--paper);';
+}
+
+function paceMiniAbrir() {
+  if (!paceMiniPuede()) return Promise.resolve(null);
+  if (_paceMini.win) {try {_paceMini.win.focus();} catch (e) {}return Promise.resolve(_paceMini.win);}
+  return Promise.resolve(window.documentPictureInPicture.requestWindow(PACE_MINI_TAM)).then((w) => {
+    paceMiniVestir(w);
+    const cont = w.document.createElement('div');
+    cont.style.height = '100%';
+    w.document.body.appendChild(cont);
+    _paceMini.win = w;
+    _paceMini.root = ReactDOM.createRoot(cont);
+    const tic = w.setInterval(paceMiniPintar, 1000);
+    w.addEventListener('pagehide', () => {
+      try {w.clearInterval(tic);} catch (e) {}
+      try {_paceMini.root && _paceMini.root.unmount();} catch (e) {}
+      _paceMini = { win: null, root: null, props: _paceMini.props };
+      paceMiniAvisar();
+    });
+    paceMiniPintar();
+    paceMiniAvisar();
+    return w;
+  }).catch(() => null);
+}
+
+
+function paceMiniQueda(p) {
+  if (p.status === 'running' && p.endsAt) return Math.max(0, Math.ceil((p.endsAt - Date.now()) / 1000));
+  if (p.status === 'paused' && p.restanteMs != null) return Math.ceil(p.restanteMs / 1000);
+  if (p.status === 'completed') return 0;
+  return p.total;
+}
+
+const miniTiraStyles = {
+  caja: { position: 'relative', height: '100%', boxSizing: 'border-box', display: 'flex', alignItems: 'center', gap: 12,
+    padding: '0 14px', fontFamily: 'var(--font-ui)', color: 'var(--ink)', background: 'var(--paper)', overflow: 'hidden' },
+  cajaFin: { background: 'var(--breathe-soft)' },
+  txt: { display: 'flex', flexDirection: 'column', gap: 2, flex: 1, minWidth: 0 },
+  hora: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 400, fontSize: 30, lineHeight: 1,
+    fontVariantNumeric: 'tabular-nums', color: 'var(--ink)' },
+  horaFin: { fontSize: 22, color: 'var(--breathe-deep)' },
+  sub: { fontSize: 12, color: 'var(--ink-3)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },
+  boton: { flexShrink: 0, border: '1px solid var(--line)', background: 'var(--paper-2)', color: 'var(--ink-2)',
+    borderRadius: 999, padding: '5px 12px', fontFamily: 'var(--font-ui)', fontSize: 12, cursor: 'pointer' },
+  botonFin: { background: 'var(--breathe-deep)', borderColor: 'var(--breathe-deep)', color: 'var(--paper)' },
+  linea: { position: 'absolute', left: 0, bottom: 0, height: 3, background: 'var(--focus)' }
+};
+
+function MiniTira(p) {
+  const { t } = p;
+  const fin = p.status === 'completed' && p.modo === 'foco';
+  const queda = paceMiniQueda(p);
+  const hecho = fin ? 1 : p.total > 0 ? Math.min(1, Math.max(0, 1 - queda / p.total)) : 0;
+  const dos = (n) => (n < 10 ? '0' : '') + n;
+  const color = fin ? 'var(--breathe)' : 'var(--focus)';
+  const r = 18.5,vuelta = 2 * Math.PI * r;
+  const etiqueta = p.modo === 'foco' ? t('focus.mode.focus') : p.modo === 'pausa' ? t('focus.mode.pause') : t('focus.mode.long');
+  let boton = null;
+  if (fin) boton = React.createElement("button", { type: "button", style: { ...miniTiraStyles.boton, ...miniTiraStyles.botonFin }, onClick: () => {try {window.focus();} catch (e) {}} }, t('mini.volver'));else
+  if (p.status === 'running') boton = React.createElement("button", { type: "button", style: miniTiraStyles.boton, onClick: p.onPausar }, t('focus.pause'));else
+  if (p.status === 'paused') boton = React.createElement("button", { type: "button", style: miniTiraStyles.boton, onClick: p.onSeguir }, t('focus.continue'));
+  return (
+    React.createElement("div", { "data-pace-mini": true, "data-fin": fin ? '' : undefined, style: fin ? { ...miniTiraStyles.caja, ...miniTiraStyles.cajaFin } : miniTiraStyles.caja },
+    React.createElement("svg", { width: "40", height: "40", viewBox: "0 0 40 40", "aria-hidden": "true", style: { flexShrink: 0 } },
+    React.createElement("circle", { cx: "20", cy: "20", r: r, fill: "none", stroke: "var(--line)", strokeWidth: "1.5" }),
+    React.createElement("circle", { cx: "20", cy: "20", r: r, fill: "none", stroke: color, strokeWidth: "3", strokeLinecap: "round",
+      strokeDasharray: (vuelta * hecho).toFixed(1) + ' ' + vuelta.toFixed(1), transform: "rotate(-90 20 20)" })
+    ),
+    React.createElement("div", { style: miniTiraStyles.txt },
+    React.createElement("span", { style: fin ? { ...miniTiraStyles.hora, ...miniTiraStyles.horaFin } : miniTiraStyles.hora },
+    fin ? t('mini.fin') : dos(Math.floor(queda / 60)) + ':' + dos(queda % 60)
+    ),
+    React.createElement("span", { style: miniTiraStyles.sub }, fin ? t('mini.fin.sub') : etiqueta + (p.modo === 'foco' && p.ciclo ? ' · ' + p.ciclo : ''))
+    ),
+    boton,
+    React.createElement("span", { style: { ...miniTiraStyles.linea, width: (hecho * 100).toFixed(1) + '%', background: color } })
+    ));
+
+}
+
+
+function useMiniventana(props) {
+  const [abierta, setAbierta] = useStateMini(paceMiniAbierta);
+  _paceMini.props = props;
+  useEffectMini(() => {paceMiniPintar();});
+  useEffectMini(() => {
+    const oye = () => setAbierta(paceMiniAbierta());
+    window.addEventListener('pace:mini', oye);
+    return () => {window.removeEventListener('pace:mini', oye);paceMiniCerrar();};
+  }, []);
+  return { puede: paceMiniPuede(), abierta };
+}
+
+Object.assign(window, { useMiniventana, paceMiniAbrir, paceMiniPuede, MiniTira });
+;Object.assign(window, { paceMiniPuede, paceMiniAbierta, paceMiniAvisar, paceMiniPintar, paceMiniCerrar, paceMiniVestir, paceMiniAbrir, paceMiniQueda, MiniTira, useMiniventana });
 })();
 </script>
   <script>
@@ -34029,8 +34466,9 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
     }
     paceFocoContar(bloque, () => {
 
-      const campana = () => {try {playSound('pomodoro.end');} catch (e) {}};
+      const campana = () => {try {playSound('pomodoro.end', PACE_TOQUES_FIN_FOCO);} catch (e) {}};
       if (typeof paceNativoCampana === 'function') paceNativoCampana(finBloque, campana);else campana();
+      try {paceTabTerminado();} catch (e) {}
 
 
 
@@ -34120,7 +34558,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
   useAvisosNativos({ state, running, endsAt, pausaRitmo, enPausaRitmo, t, tn, lang });
-  useTituloCuenta({ running, remaining, modo: state.focusMode, lang, t });
+  useTituloCuenta({ running, remaining, total: durationSec, modo: state.focusMode, lang, t });
   const ofertaExacta = useOfertaExacta({ state, set, status, t });
 
 
@@ -34322,6 +34760,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
   const cycleN = state.cycle % 4 + 1;
+  const mini = useMiniventana({ status, endsAt, restanteMs, total: durationSec, modo: state.focusMode, ciclo: tn('focus.cycleOf', { n: cycleN }), t, onPausar: handlePause, onSeguir: handleNormalStart });
   const cycleLabel = isFocoMode && isCompleted ?
   tn('focus.cycleNext', { n: cycleN }) :
   tn('focus.cycleOf', { n: cycleN });
@@ -34340,6 +34779,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   ctaLabel
   ),
   bloques.seguir,
+  running && state.focusMode === 'foco' && mini.puede && !mini.abierta && React.createElement("button", { type: "button", onClick: paceMiniAbrir, style: focusStyles.resetTextBtn, "aria-label": t('mini.abrir.aria') }, t('mini.abrir')),
 
 
 
@@ -35080,7 +35520,7 @@ const BREATHE_ROUTINES = {
     items: [
     { id: 'breathe.coherent.55', tag: 'BAL', code: 'Coherencia', name: 'Coherente 5·5', desc: 'Ritmo constante de cinco y cinco. Pensada para encontrar un compás estable.', min: 5, pattern: 'coherent', cycle: [5, 0, 5, 0] },
     { id: 'breathe.coherent.66', tag: 'BAL', code: 'Coherencia', name: 'Coherente 6·6', desc: 'Versión más profunda. 5 ciclos por minuto.', min: 10, pattern: 'coherent', cycle: [6, 0, 6, 0] },
-    { id: 'breathe.coherent.432', tag: 'BAL', code: 'Coherencia', name: 'Coherente 432', desc: 'Coherencia 6·6 sobre un drone de fondo. Inmersiva.', min: 10, pattern: 'coherent', cycle: [6, 0, 6, 0], drone: true, access: 'premium' }]
+    { id: 'breathe.coherent.432', tag: 'BAL', code: 'Coherencia', name: 'Coherente 432 Hz', desc: 'Coherencia 6·6 sobre un drone de fondo. Inmersiva.', min: 10, pattern: 'coherent', cycle: [6, 0, 6, 0], drone: true, access: 'premium' }]
 
   },
   relajacion: {
@@ -36005,7 +36445,7 @@ function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
         onExit: onExit,
         accent: "var(--breathe)",
         prepCount: prepCount,
-        copy: t('breathe.prepCopy'),
+        copy: t(typeof ritmoPausaDeLevantarse === 'function' && ritmoPausaDeLevantarse(routine && routine.id) ? 'breathe.prepCopy.dePie' : 'breathe.prepCopy'),
         onSkip: () => {setPaused(false);setPrepCount(0);setStage('active');playPhaseSound(sequence[0].label, sequence[0].duration);},
         atmosphere: atmo }
       ));
@@ -36416,12 +36856,12 @@ var MOVE_ROUTINES = {
 
   },
   sigilo: {
-    label: 'Sigilo',
+    label: 'Sin levantarte',
     aside: 'Movimientos pequeños, en tu mesa',
     items: [
 
 
-    { id: 'extra.calves', tag: 'STEALTH', code: 'Gemelos', name: 'Gemelos subrepticios', desc: 'Bajo la mesa, talones arriba y abajo.', min: 2,
+    { id: 'extra.calves', tag: 'STEALTH', code: 'Gemelos', name: 'Gemelos bajo la mesa', desc: 'Bajo la mesa, talones arriba y abajo.', min: 2,
       position: ['seated', 'standing'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
       { name: 'Elevación de talones', mode: 'reps', reps: 25, dur: 30,
@@ -37039,7 +37479,7 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
       routine: displayRoutine,
       onExit: onExit,
       atmosphere: atmo,
-      headerExtra: React.createElement(Meta, null, tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })),
+      headerExtra: React.createElement(Meta, null, sessionPasoCabecera(routine, stepIdx, t, tn)),
       footer: footer,
       hint: t('move.hint') },
 
@@ -37057,7 +37497,7 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
     React.createElement(StepGlyph, { stepName: step.name, accent: accent, accentSoft: accentSoft,
       size: typeof v1GlyphSizeAhora === 'function' ? v1GlyphSizeAhora() : 72 }),
     React.createElement("div", { style: { fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: letraDe(accent), marginBottom: 12, fontWeight: 500 } },
-    tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })
+    sessionPasoCabecera(routine, stepIdx, t, tn)
     ),
     React.createElement("h1", { style: {
         ...displayItalic,
@@ -37963,20 +38403,29 @@ Object.assign(window, {
 
 
 
+
+
+
+
+
 var V1_VOZ_CUENTA = ['c3', 'c2', 'c1'];
-function v1VozCuenta(n) {
-  return n >= 1 && n <= 3 ? { voz: 'c' + n, max: 1, serie: V1_VOZ_CUENTA } : null;
+function v1VozCuenta(n, desde) {
+  if (desde > 3 && desde < 6) return null;
+  return n >= 1 && n <= 3 ? { voz: 'c' + n, max: 1, serie: V1_VOZ_CUENTA, primera: n === 3 } : null;
 }
 
 
 
 
 
-function v1VozRep(n, repSec, ultima, total) {
-  if (!(n >= 1 && n <= 25 && n === Math.floor(n))) return ultima ? { soloVoz: true } : null;
+
+
+
+function v1VozRep(n, repSec, total) {
+  if (!(n >= 2 && n <= 25 && n === Math.floor(n) && n <= total)) return null;
   const serie = [];
-  for (let k = 1; k <= (total || n); k++) serie.push('n' + k);
-  return ultima ? { voz: 'n' + n, max: repSec, serie, soloVoz: true, ultima: true } : { voz: 'n' + n, max: repSec, serie };
+  for (let k = 2; k <= total; k++) serie.push('n' + k);
+  return { voz: 'n' + n, max: repSec, serie, primera: n === 2, ultima: n === total };
 }
 
 
@@ -38012,7 +38461,16 @@ function v1VozCalla() {
 }
 
 
+
+
+
 function v1VozPrecarga() {
+  try {
+    const s = typeof getState === 'function' ? getState() : null;
+    const ctx = s && s.soundOn && typeof window.paceAudioCtx === 'function' ? window.paceAudioCtx() : null;
+    const p = ctx && ctx.state !== 'running' && ctx.state !== 'closed' ? ctx.resume() : null;
+    if (p && typeof p.catch === 'function') p.catch(() => {});
+  } catch (e) {}
   try {if (typeof window.paceVozCuerpoPrecarga === 'function') window.paceVozCuerpoPrecarga();} catch (e) {}
 }
 
@@ -38376,7 +38834,9 @@ function CuerpoV1(p) {
 
 
   return (
-    React.createElement("div", _extends({ "data-pace-v1-raiz": true, "data-pace-v1-fase": step.mode === 'rest' ? 'rest' : p.phase, className: "pace-v1-raiz", style: { '--v1-acento': stepAccent } },
+
+
+    React.createElement("div", _extends({ "data-pace-v1-raiz": true, "data-pace-v1-paso": stepIdx, "data-pace-v1-fase": step.mode === 'rest' ? 'rest' : p.phase, className: "pace-v1-raiz", style: { '--v1-acento': stepAccent } },
     justo ? { 'data-pace-v1-justo': '' } : {}),
     React.createElement("div", _extends({ ref: cuerpoRef, "data-pace-v1-body": true, className: "pace-v1" }, p.paused ? { 'data-pace-v1-en-pausa': '' } : {}),
     React.createElement("div", { ref: glifoRef, "data-pace-v1-glyph": true, className: "pace-v1-glifo", style: { width: aro, height: aro } },
@@ -39004,7 +39464,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
 
   useEffectV1(() => {
-    if (stage === 'prep' && prepCount > 0 && prepCount <= 3) {try {playSound('move.warn', v1VozCuenta(prepCount));} catch (e) {}}
+    if (stage === 'prep' && prepCount > 0 && prepCount <= 3) {try {playSound('move.warn', v1VozCuenta(prepCount, V1_PREP_SECONDS));} catch (e) {}}
   }, [prepCount]);
 
 
@@ -39022,7 +39482,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   useSesionAlOcultar(stage === 'run', vuelta.pausar);
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'place') return;
-    if (placeLeft > 0 && placeLeft <= 3) {try {playSound('move.warn', v1VozCuenta(placeLeft));} catch (e) {}}
+    if (placeLeft > 0 && placeLeft <= 3) {try {playSound('move.warn', v1VozCuenta(placeLeft, totalesRef.current.place));} catch (e) {}}
   }, [placeLeft]);
 
 
@@ -39059,11 +39519,13 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
 
       const guided = v1CompletionMode(step) !== 'manual';
+
+
       if (guided && elapsed >= v1RepTarget(step) * repSec) {
-        darSerie(v1RepTarget(step));try {playSound('move.rep', v1VozRep(v1RepTarget(step), repSec, true, v1RepTarget(step)));} catch (e) {}
+        darSerie(v1RepTarget(step));
         advanceStep();
       } else if (suena && elapsed % repSec === 0) {
-        const cb = v1CambioAhora(step, elapsed);try {if (cb) playSound('move.side', v1CambioSonido(cb));else playSound('move.rep', v1VozRep(elapsed / repSec, repSec, false, v1RepTarget(step)));} catch (e) {}
+        const cb = v1CambioAhora(step, elapsed);try {if (cb) playSound('move.side', v1CambioSonido(cb));else playSound('move.rep', v1VozRep(elapsed / repSec + 1, repSec, v1RepTarget(step)));} catch (e) {}
       }
       return;
     }
@@ -39071,7 +39533,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
     const effDur = v1StepDur(step);
 
 
-    if (suena && effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) {try {playSound('move.warn', v1VozCuenta(effDur - elapsed));} catch (e) {}}
+    if (suena && effDur > 6 && elapsed >= effDur - 3 && elapsed < effDur) {try {playSound('move.warn', v1VozCuenta(effDur - elapsed, effDur));} catch (e) {}}
     if (suena && step.mode === 'timed' && v1CambioAhora(step, elapsed)) {try {playSound('move.side', v1CambioSonido(v1CambioAhora(step, elapsed)));} catch (e) {}}
     if (elapsed >= effDur) {
       if (!auto) {
@@ -39091,7 +39553,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   useRelojSesion(stage === 'run' && phase === 'change' && !paused, (n) => setChangeLeft((c) => Math.max(0, c - n)), [stepIdx]);
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'change') return;
-    if (changeLeft > 0 && changeLeft <= 3) {try {playSound('move.warn', v1VozCuenta(changeLeft));} catch (e) {}}
+    if (changeLeft > 0 && changeLeft <= 3) {try {playSound('move.warn', v1VozCuenta(changeLeft, totalesRef.current.change));} catch (e) {}}
   }, [changeLeft]);
   useEffectV1(() => {
     if (stage === 'run' && phase === 'change' && changeLeft <= 0 && auto && !paused) onSideReady();
@@ -39270,7 +39732,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   return (
     React.createElement(SessionShell, {
       routine: displayRoutine, onExit: onExit, atmosphere: atmo,
-      headerExtra: React.createElement(Meta, null, tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })),
+      headerExtra: React.createElement(Meta, null, sessionPasoCabecera(routine, stepIdx, t, tn)),
       footer: React.createElement(MandoV1, { accent: stepAccent, paused: paused && vuelta.cuenta == null, onPause: vuelta.alternar, anillo: anillo, espera: espera, acentoModulo: accent,
         prev: { onClick: () => {if (stepIdx > 0) {vuelta.reanudar();startStep(stepIdx - 1);}}, disabled: stepIdx === 0 },
         next: { label: primary.label, onClick: () => {vuelta.reanudar();primary.onClick();} },
@@ -39494,7 +39956,7 @@ const EXTRA_ROUTINES = {
     { id: 'move.desk.quick', tag: 'SIT', code: 'Escritorio', name: 'Escritorio express',
       intensity: 'gentle', level: 'accessible',
       position: ['seated'], equipment: [], requiresFloor: false,
-      desc: 'Sin levantarse. 6 movimientos en la silla.', min: 2,
+      desc: 'Sin levantarse. 5 movimientos en la silla.', min: 2,
 
 
       steps: [
@@ -39532,7 +39994,7 @@ const EXTRA_ROUTINES = {
 
 
 
-    { id: 'move.chair.antidote', tag: 'SIT', code: 'Antídoto a estar sentado', name: 'Antídoto silla',
+    { id: 'move.chair.antidote', tag: 'SIT', code: 'Antídoto a estar sentado', name: 'Antídoto a la silla',
       desc: 'Lo contrario de estar sentado: pecho, caderas y cuello. Pasarás por el suelo.', min: 6,
       position: ['seated', 'halfKneeling', 'standing'], equipment: ['cushionOptional'], requiresFloor: true, intensity: 'gentle', level: 'accessible',
       steps: [
@@ -39570,7 +40032,7 @@ const EXTRA_ROUTINES = {
     },
 
 
-    { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Postura reset', desc: 'Barbilla, omóplatos y pecho. Tres gestos contra la silla.', min: 2,
+    { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Recolocar la postura', desc: 'Barbilla, omóplatos y pecho. Tres gestos contra la silla.', min: 2,
       position: ['seated'], equipment: ['chair'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
       { name: 'Barbilla atrás', mode: 'reps', reps: 8, dur: 30,
@@ -42338,12 +42800,12 @@ const GLYPH_SVG = window.ACHIEVEMENT_GLYPHS || {};
 
 const ACHIEVEMENT_CATALOG = [
 
-{ id: 'first.step', cat: 'primeros', title: 'Primer paso', desc: 'Completa tu primer Pomodoro', glyph: '✦', glyphSvg: GLYPH_SVG['first.step'] },
+{ id: 'first.step', cat: 'primeros', title: 'Primer paso', desc: 'Completa tu primer Foco', glyph: '✦', glyphSvg: GLYPH_SVG['first.step'] },
 { id: 'first.breath', cat: 'primeros', title: 'Primer aliento', desc: 'Tu primera sesión de respiración', glyph: '𓇼', glyphSvg: GLYPH_SVG['first.breath'] },
 { id: 'first.stretch', cat: 'primeros', title: 'Primer estirón', desc: 'Tu primera rutina de Estira', glyph: '𓂃', glyphSvg: GLYPH_SVG['first.stretch'] },
 { id: 'first.sip', cat: 'primeros', title: 'Primer sorbo', desc: 'Tu primer vaso de agua', glyph: '◌', glyphSvg: GLYPH_SVG['first.sip'] },
 { id: 'first.extra', cat: 'primeros', title: 'Primera calistenia', desc: 'Tu primera rutina de Mueve', glyph: '✕', glyphSvg: GLYPH_SVG['first.extra'] },
-{ id: 'first.cycle', cat: 'primeros', title: 'Ciclo completo', desc: 'Un Pomodoro + pausa activa', glyph: '◯', glyphSvg: GLYPH_SVG['first.cycle'] },
+{ id: 'first.cycle', cat: 'primeros', title: 'Ciclo completo', desc: 'Un Foco y su pausa activa', glyph: '◯', glyphSvg: GLYPH_SVG['first.cycle'] },
 { id: 'first.ritual', cat: 'primeros', title: 'Primer ritual', desc: 'Usa los 4 módulos en un día', glyph: '✧', glyphSvg: GLYPH_SVG['first.ritual'] },
 { id: 'first.day', cat: 'primeros', title: 'Primer día', desc: 'Un día con dos actividades distintas', glyph: '☾', glyphSvg: GLYPH_SVG['first.day'] },
 { id: 'first.plan', cat: 'primeros', title: 'Con un plan', desc: 'Completa el plan del día tres veces', glyph: '✓', glyphSvg: GLYPH_SVG['first.plan'] },
@@ -42371,9 +42833,9 @@ const ACHIEVEMENT_CATALOG = [
 { id: 'breathe.sessions.50', cat: 'constancia', title: '50 respiraciones', desc: 'Sesiones acumuladas', glyph: '≋', glyphSvg: GLYPH_SVG['breathe.sessions.50'] },
 { id: 'move.sessions.25', cat: 'constancia', title: '25 rutinas de Mueve', desc: 'Sesiones acumuladas', glyph: '∷', glyphSvg: GLYPH_SVG['move.sessions.25'] },
 { id: 'hydrate.week.perfect', cat: 'constancia', title: 'Semana hidratada', desc: '8 vasos / 7 días', glyph: '◌' },
-{ id: 'stats.month.first', cat: 'constancia', title: 'Mes habitado', desc: 'Veinte días con pace en un mismo mes', glyph: '✦' },
+{ id: 'stats.month.first', cat: 'constancia', title: 'Mes habitado', desc: 'Veinte días con PACE en un mismo mes', glyph: '✦' },
 { id: 'stats.month.focus', cat: 'constancia', title: 'Mes profundo', desc: 'Veinte horas de foco en un mes', glyph: '✦' },
-{ id: 'stats.year.first', cat: 'constancia', title: 'Año entero', desc: 'Doce meses con pace, sin saltarte ninguno', glyph: '✦' },
+{ id: 'stats.year.first', cat: 'constancia', title: 'Año entero', desc: 'Doce meses con PACE, sin saltarte ninguno', glyph: '✦' },
 
 
 { id: 'explore.box', cat: 'exploracion', title: 'Box asentada', desc: 'Tres sesiones de Box 4·4·4·4', glyph: '▢', glyphSvg: GLYPH_SVG['explore.box'] },
@@ -42397,8 +42859,8 @@ const ACHIEVEMENT_CATALOG = [
 
 
 
-{ id: 'master.pomodoro.12', cat: 'maestria', title: 'Doce profundos', desc: '12 Pomodoros', glyph: 'XII' },
-{ id: 'master.long.focus', cat: 'maestria', title: 'Larga sesión', desc: 'Cinco bloques de 45 min sin pausa', glyph: '═', glyphSvg: GLYPH_SVG['master.long.focus'] },
+{ id: 'master.pomodoro.12', cat: 'maestria', title: 'Doce profundos', desc: '12 bloques de Foco', glyph: 'XII' },
+{ id: 'master.long.focus', cat: 'maestria', title: 'Larga sesión', desc: 'Cinco bloques de Foco de 45 min', glyph: '═', glyphSvg: GLYPH_SVG['master.long.focus'] },
 { id: 'master.box.15', cat: 'maestria', title: 'Caja maestra', desc: '15 sesiones Box', glyph: '▣' },
 { id: 'master.coherent.15', cat: 'maestria', title: 'Corazón sincronizado', desc: '15 sesiones coherente', glyph: '♥' },
 { id: 'master.rounds.15', cat: 'maestria', title: 'Rondas maestra', desc: '15 sesiones', glyph: '◶' },
@@ -42412,7 +42874,7 @@ const ACHIEVEMENT_CATALOG = [
 { id: 'master.marathon', cat: 'maestria', title: 'Maratoniana', desc: '2000 min totales', glyph: 'ℳ', glyphSvg: GLYPH_SVG['master.marathon'] },
 { id: 'master.centurion', cat: 'maestria', title: 'Centurión', desc: '100 sesiones respiración', glyph: 'C', glyphSvg: GLYPH_SVG['master.centurion'] },
 { id: 'master.gardener', cat: 'maestria', title: 'Jardinera', desc: '200 vasos acumulados', glyph: '❀' },
-{ id: 'master.antidote', cat: 'maestria', title: 'Antídoto completo', desc: '50 sesiones SIT', glyph: '✚' },
+{ id: 'master.antidote', cat: 'maestria', title: 'Antídoto completo', desc: '50 rutinas de Estira en la silla', glyph: '✚' },
 { id: 'master.collector.half', cat: 'maestria', title: 'Cuarenta y cinco sellos', desc: '45 sellos reunidos', glyph: 'L' },
 { id: 'master.collector.full', cat: 'maestria', title: 'Setenta y cinco sellos', desc: '75 sellos reunidos', glyph: 'C' },
 { id: 'master.path.all7', cat: 'maestria', title: 'Cartógrafa', desc: 'Recorre los siete caminos al menos una vez', glyph: '✦', glyphSvg: GLYPH_SVG['master.path.all7'] },
@@ -42425,8 +42887,8 @@ const ACHIEVEMENT_CATALOG = [
 
 
 
-{ id: 'master.dawn', cat: 'jornada', title: 'Amanecer', desc: 'Cinco días con sesión antes de las 7am', glyph: '↑', glyphSvg: GLYPH_SVG['master.dawn'] },
-{ id: 'morning.5', cat: 'jornada', title: 'Madrugadora', desc: '5 sesiones antes de las 9am', glyph: '☀' },
+{ id: 'master.dawn', cat: 'jornada', title: 'Amanecer', desc: 'Cinco días con sesión antes de las 7:00', glyph: '↑', glyphSvg: GLYPH_SVG['master.dawn'] },
+{ id: 'morning.5', cat: 'jornada', title: 'Madrugadora', desc: '5 sesiones antes de las 9:00', glyph: '☀' },
 
 
 
@@ -42435,7 +42897,7 @@ const ACHIEVEMENT_CATALOG = [
 { id: 'stats.streak.30', cat: 'jornada', title: 'Treinta amaneceres', desc: 'Treinta días con sesión antes de las 9', glyph: '✦' },
 { id: 'master.dusk', cat: 'jornada', title: 'Ocaso', desc: 'Cinco jornadas cerradas a su hora', glyph: '↓', glyphSvg: GLYPH_SVG['master.dusk'] },
 { id: 'master.midnight.never', cat: 'jornada', title: 'Nunca a medianoche', desc: '30 días sin uso tras 23h', glyph: '○' },
-{ id: 'master.pomodoro.8', cat: 'jornada', title: 'Jornada de ocho', desc: '8 Pomodoros en un día', glyph: 'VIII', glyphSvg: GLYPH_SVG['master.pomodoro.8'] },
+{ id: 'master.pomodoro.8', cat: 'jornada', title: 'Jornada de ocho', desc: '8 bloques de Foco en un día', glyph: 'VIII', glyphSvg: GLYPH_SVG['master.pomodoro.8'] },
 { id: 'master.focus.day', cat: 'jornada', title: 'Día de foco', desc: '4h de foco en un día', glyph: 'IV', glyphSvg: GLYPH_SVG['master.focus.day'] },
 { id: 'master.retreat', cat: 'jornada', title: 'Retiro personal', desc: '2h respira + mueve en día', glyph: '❖', glyphSvg: GLYPH_SVG['master.retreat'] },
 { id: 'master.silent.day', cat: 'jornada', title: 'Día silencioso', desc: '5 días en modo silencio', glyph: '𝇇' },
@@ -43228,6 +43690,9 @@ function statsHoyMeta(p, t, hechas) {
   if (estado === 'saltada') return t('ritmo.saltada');
   if (estado === 'cuenta') return t('ritmo.cuenta');
   if (estado === 'ahora') return t('ritmo.ahora.min');
+
+
+  if (estado === 'pasada') return t('ritmo.noHecha');
   return it.dur + ' min';
 }
 
@@ -43243,6 +43708,7 @@ function StatsHoy(_ref4) {let { state, onClose } = _ref4;
 
   if (plan) {
     const paradas = statsHoyParadas(plan);
+    const dia = R.dia || {};
     const hechas = ritmoMinutosHechos(state);
     const sueltas = statsHoySueltas(state);
     return (
@@ -43253,9 +43719,11 @@ function StatsHoy(_ref4) {let { state, onClose } = _ref4;
       ),
       React.createElement(StatsHoyRejilla, { n: paradas.length },
       paradas.map((p, k) => {
-        const modulos = p.comida ? ['comida'] : p.it.platos.map((x) => x.modulo);
+
+        const platos = p.comida ? [] : ritmoPlatosVistos(p.it, p.n, dia);
+        const modulos = p.comida ? ['comida'] : platos.map((x) => x.modulo);
         return React.createElement(StatsHoyTarjeta, { key: k, modulos: modulos, larga: p.it.larga,
-          nombre: p.comida ? t('ritmo.comida') : ritmoPlatos(p.it, t, lang), hora: ritmoHora(p.it.desde),
+          nombre: p.comida ? t('ritmo.comida') : ritmoPlatos({ platos }, t, lang), hora: ritmoHora(p.it.desde),
           meta: statsHoyMeta(p, t, hechas), estado: p.comida ? 'comida' : p.estado });
       })
       ),
@@ -44475,7 +44943,7 @@ Object.assign(window, { PathStats });
     .pace-sh-aro.pace-sh-larga { width: 36px; border-radius: 11px; gap: 1px; }
     .pace-sh-aro .pace-rt-g { width: 13px; height: 13px; }
     .pace-sh-hecha .pace-sh-aro, .pace-sh-cuenta .pace-sh-aro { border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 22%, var(--paper)); }
-    .pace-sh-saltada { opacity: 0.45; }
+    .pace-sh-saltada, .pace-sh-pasada { opacity: 0.45; }
     .pace-sh-saltada .pace-sh-aro { border-style: dashed; }
     .pace-sh-ahora { box-shadow: inset 0 0 0 1.5px var(--c); background: color-mix(in srgb, var(--c) 12%, var(--paper-2)); }
     .pace-sh-ahora .pace-sh-m { color: var(--cd, var(--c)); font-weight: 500; }   /* letra: el hondo (Ez, 2B) */
@@ -46412,6 +46880,16 @@ const { useEffect: useEffectTW, useState: useStateTW, useRef: useRefTW } = React
 
 
 
+
+
+function paceNavegador() {
+  const ua = navigator && navigator.userAgent || '';
+  if (/Edg\//.test(ua)) return 'edge';
+  if (/Firefox\//.test(ua)) return 'firefox';
+  if (/Safari\//.test(ua) && !/(Chrome|Chromium|CriOS)\//.test(ua)) return 'safari';
+  return 'chrome';
+}
+
 function TweaksPanel(_ref) {let { open, onClose } = _ref;
   const [state, set] = usePace();
   const { t, tn } = useT();
@@ -46713,8 +47191,9 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
         ));
 
     })(),
-    canNotify && avisoNativo && permisoAviso() === 'denied' &&
-    React.createElement("div", { className: "pace-aj-nota" }, t('settings.notify.blocked.' + plataforma)),
+    canNotify && permisoAviso() === 'denied' &&
+    React.createElement("div", { className: "pace-aj-nota", "data-pace-aj-aviso-bloqueado": true }, avisoNativo ? t('settings.notify.blocked.' + plataforma) :
+    t('settings.notify.blocked.' + paceNavegador()) + ' ' + t('settings.notify.blocked.sigue')),
 
     falloAviso && state.notifyFocusEnd && permisoAviso() === 'granted' &&
     React.createElement("div", { className: "pace-aj-nota", "data-pace-aj-aviso-fallo": true }, t('settings.notify.fallo.' + plataforma)),
@@ -46761,7 +47240,7 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
 }
 
 Object.assign(window, { TweaksPanel });
-;Object.assign(window, { TweaksPanel });
+;Object.assign(window, { paceNavegador, TweaksPanel });
 })();
 </script>
 
@@ -50661,37 +51140,25 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
 .pace-rt-porlibre:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
 .pace-rt-pie { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
 .pace-rt-der { display: flex; gap: 14px; align-items: center; }
-/* La parte derecha de la cabecera del menú (escritorio, s195): el RESUMEN del día con
-   «Cambiar» y los chips con la píldora. Antes el resumen era un absoluto a 21 px sobre la
-   línea —la misma banda donde la etiqueta «AHORA» se ancla al bloque de ahora— y se
-   pisaban en cuanto el bloque actual caía en el último cuarto del día, en los nueve
-   viewports de escritorio medidos. En la cabecera no comparte banda con nada.
+/* La parte derecha de la cabecera del menú (escritorio): «Cambiar» y «Al calendario», y la
+   píldora «Hoy voy por libre». No van sobre la línea, donde «AHORA» se ancla al bloque de
+   ahora y se pisaban al final del día (s195). Sin el resumen del día ni la etiqueta del
+   material (Ez, encargo 3 del 19 nov. 2026): con ellos, la columna medía 246 px y la frase
+   de la jornada entera llegando tarde partía «a 20:00» a 1280 y 1366.
    Dos formas según lo ancho que sea el PANEL (container query, porque el panel cambia de
-   ancho también al plegar la barra lateral): con sitio, todo en la fila del título
-   (resumen · chips · píldora) y el panel no crece ni un píxel; sin sitio, dos filas a la
-   derecha, chips arriba y resumen debajo (+19 px). Medido en es: resumen 246 + 14 + chips
-   327 = 587 a la derecha; el título de «Una hora» llegando tarde mide 451 y el de la
-   jornada entera unos 400. El corte va en 1000 px de contenido: por encima, al título le
-   quedan al menos 397 y como mucho se parte en dos líneas (lo que cuesta lo mismo que la
-   columna); por debajo (1366 → 962, 1280 → 876, 1024 → 620) la fila del título ya no da
-   para las dos cosas. 1536×704 (1132) y 1440×789 (1036) van en fila. */
+   ancho también al plegar la barra lateral): con 1000 px o más, todo en la fila del título;
+   por debajo (1366 → 962, 1280 → 876, 1024 → 620), la píldora arriba y los enlaces debajo,
+   que deja más ancho a la frase. */
 .pace-rt-panel { container-type: inline-size; }
 .pace-rt-der-col { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
 .pace-rt-der-col .pace-rt-sobre { order: 2; }
 .pace-rt-sobre { display: flex; align-items: center; justify-content: flex-end; gap: 14px; }
-.pace-rt-sobre .pace-rt-meta { font-size: 9px; letter-spacing: 0.14em; }
 /* La línea de los lunes (ritmo.lunes.jsx): bajo el resumen y sin ancho propio, o el título se encoge (DECISIONES, 11 nov.). */
 .pace-rt-sobre:has(.pace-rt-lunes) { flex-wrap: wrap; row-gap: 2px; }
 .pace-rt-lunes { flex-basis: 100%; contain: inline-size; text-align: right; background: none; border: 0; padding: 0; margin: 0 0 0 -14px; font-family: var(--font-display); font-style: italic; font-size: 15px; color: var(--ink-2); cursor: pointer; white-space: nowrap; } .pace-rt-lunes:hover { color: var(--ink); }
 @container (min-width: 1000px) {
   .pace-rt-der-col { flex-direction: row; align-items: center; gap: 14px; }
   .pace-rt-der-col .pace-rt-sobre { order: 0; }
-  /* En la fila del título, «Sin material, a veces pared o mesa» (Ez, 3B del 30 oct.) va sola y en dos
-     líneas: junto a «Junto a la mesa» y en una línea se comía 126 px y el título de la jornada se
-     partía en dos o tres líneas a 1440, 1536 y 1920, con el panel 24 px más alto (medido). Ya dice
-     «mesa»; en las dos filas de debajo de 1000 y en la hoja del móvil van las dos, en una línea. */
-  .pace-rt-esc .pace-rt-ctx .pace-rt-ctx-mesa { display: none; }
-  .pace-rt-esc .pace-rt-ctx .pace-rt-ctx-material { white-space: normal; max-width: 13em; text-align: center; line-height: 1.15; padding: 2px 9px; }
 }
 
 /* LAS OPCIONES */
@@ -50704,10 +51171,6 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
 .pace-rt-chip b { display: block; font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 16px; color: var(--ink); line-height: 1.1; }
 .pace-rt-chip > span { display: block; font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--ink-2); margin-top: 4px; }   /* s195c: la hora en itálica, como en la tarjeta por libre */
 
-/* EL CONTEXTO (fijo por ahora: el onboarding contextual es la Fase 8) */
-.pace-rt-ctx { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
-.pace-rt-ctx span { font-size: 10px; letter-spacing: 0.08em; color: var(--ink-2); border: 1px solid var(--line);
-  border-radius: var(--r-pill); padding: 3px 9px; white-space: nowrap; }
 
 /* EL HORARIO se edita dentro de la frase: un botón con aspecto de texto subrayado que abre
    su paso a paso (RitmoHoraPaso); el <select> de los bloques y del calendario lleva la misma
@@ -51076,9 +51539,9 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
 .pace-rt-paso-ahora b { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 19px; }
 .pace-rt-paso-ahora span { font-family: var(--font-display); font-style: italic; font-size: 16px; color: var(--ink-2); }
 .pace-rt-paso-mas:focus-visible, .pace-rt-paso-hora:focus-visible, .pace-rt-paso-dejar:focus-visible, .pace-rt-paso-ahora:focus-visible { outline: 2px solid var(--focus-cta); outline-offset: 2px; }
-/* EL DÍA YA CONTESTADO (RitmoManana.jsx). Escritorio: tu opción marcada y «Comienza» a la
-   derecha de las cuatro. Móvil: «· como cada martes» detrás del título, más pequeño, sin
-   partirse (si no cabe, baja entero), y el pie sin margen propio, porque la línea deja el suyo. */
+/* EL DÍA YA CONTESTADO (RitmoManana.jsx). Escritorio: tu opción marcada y «Comienza» a la derecha de las cuatro. Móvil: «· como cada martes»
+   detrás del título, sin partirse, y el pie sin margen propio. En la tarjeta corta, «Hoy es distinto» bajo tu opción, en el alto del pie (2A). */
+.pace-rt-tm-nota-h { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.2; } .pace-rt-tm-distinto { font-size: 14px; line-height: 17px; padding: 4px 0 !important; margin: -3px 0 -4px; background: none !important; border: none !important; cursor: pointer; }
 .pace-rt-habitual-fila { display: flex; align-items: flex-end; gap: 16px; }
 .pace-rt-habitual-fila .pace-rt-chips { flex: 1 1 auto; min-width: 0; }
 .pace-rt-chip.pace-rt-chip-tuyo { background: var(--focus-soft) !important; border-color: var(--focus-cta) !important; }
@@ -51147,8 +51610,12 @@ function ritmoMetaVasos(s) {
 
 
 
-function ritmoResumen(m, tn, meta) {
-  const vasos = tn('ritmo.vasos', { v: m.vasos, m: meta || m.vasos });
+
+
+
+function ritmoResumen(m, tn, meta, jornada) {
+  const vasos = jornada ? tn(m.vasos === 1 ? 'ritmo.vasos.jornada.uno' : 'ritmo.vasos.jornada', { v: m.vasos }) :
+  tn('ritmo.vasos', { v: m.vasos, m: meta || m.vasos });
   return tn(m.pausas === 1 ? 'ritmo.resumen.una' : 'ritmo.resumen', { f: ritmoDuracion(m.focoMin), p: m.pausas, v: vasos });
 }
 
@@ -51732,16 +52199,6 @@ const { useState: useStateRP, useLayoutEffect: useLayoutEffectRP } = React;
 
 var RITMO_OPCIONES_UI = ['1h', '2h', 'media', 'jornada'];
 
-function RitmoContexto() {
-  const { t } = useT();
-  return (
-    React.createElement("div", { className: "pace-rt-ctx" },
-    React.createElement("span", { className: "pace-rt-ctx-mesa" }, t('ritmo.ctx.mesa')),
-    React.createElement("span", { className: "pace-rt-ctx-material" }, t('ritmo.ctx.material'))
-    ));
-
-}
-
 
 
 
@@ -51757,12 +52214,12 @@ function RitmoLibre(_ref) {let { enlace } = _ref;
 
 
 
-function RitmoSobre(_ref2) {let { m } = _ref2;
-  const { t, tn } = useT();
-  const [st] = usePace();
+
+
+function RitmoSobre() {
+  const { t } = useT();
   return (
     React.createElement("div", { className: "pace-rt-sobre", "data-pace-ritmo-resumen": true },
-    React.createElement("span", { className: "pace-rt-meta" }, ritmoResumen(m, tn, ritmoMetaVasos(st))),
     React.createElement("button", { className: "pace-rt-enlace", onClick: ritmoPreguntar }, t('ritmo.cambiar')),
     React.createElement(RitmoAlCalendario, null),
     typeof RitmoLunes === 'function' ? React.createElement(RitmoLunes, null) : null
@@ -51779,7 +52236,7 @@ function RitmoSobre(_ref2) {let { m } = _ref2;
 
 
 
-function RitmoChips(_ref3) {let { state, editarMedia, tuyo } = _ref3;
+function RitmoChips(_ref2) {let { state, editarMedia, tuyo } = _ref2;
   const { t, tn } = useT();
   const [inicioAbierto, setInicioAbierto] = useStateRP(false);
   const horario = editarMedia ? ritmoDe(state).horario : null;
@@ -51837,7 +52294,7 @@ function ritmoSub(op, m, vacia, t, tn) {
   return tn('ritmo.hasta', { h: ritmoHora(m.hasta) });
 }
 
-function RitmoPregunta(_ref4) {let { state } = _ref4;
+function RitmoPregunta(_ref3) {let { state } = _ref3;
   const { t, tn } = useT();
   const R = ritmoDe(state);
 
@@ -51860,7 +52317,7 @@ function RitmoPregunta(_ref4) {let { state } = _ref4;
     React.createElement("div", { className: "pace-rt-panel pace-rt-esc", "data-pace-ritmo-estado": "pregunta" },
     React.createElement("div", { className: "pace-rt-cab" },
     React.createElement("div", null,
-    React.createElement("div", { className: "pace-rt-titulo" }, H ? tn('ritmo.manana.titulo', { dia }) : t('ritmo.pregunta')),
+    React.createElement("div", { className: "pace-rt-titulo" }, H ? ritmoTituloHabitual(state, H.diaSemana, t, tn) : t('ritmo.pregunta')),
     H ? null : React.createElement("div", { className: "pace-rt-sub" }, t('ritmo.sub')),
     React.createElement("div", { className: "pace-rt-sub pace-rt-frase" }, frase),
     React.createElement("div", { className: "pace-rt-sub pace-rt-frase", "data-pace-ritmo-frase-media": true }, fraseMedia)
@@ -51898,7 +52355,7 @@ function RitmoPregunta(_ref4) {let { state } = _ref4;
 
 
 
-function RitmoDiaLinea(_ref5) {let { horario } = _ref5;
+function RitmoDiaLinea(_ref4) {let { horario } = _ref4;
   const { t } = useT();
   const h = ritmoHuecos(horario);
   const come = !horario.sinComida;
@@ -51931,7 +52388,7 @@ function RitmoDiaLinea(_ref5) {let { horario } = _ref5;
 
 
 
-function RitmoFraseMenu(_ref6) {let { plan, horario, plantilla, capital } = _ref6;
+function RitmoFraseMenu(_ref5) {let { plan, horario, plantilla, capital } = _ref5;
   const { t, tn } = useT();
   const m = plan.m;
   const huecos = ritmoHuecos(horario);
@@ -51958,7 +52415,7 @@ function RitmoFraseMenu(_ref6) {let { plan, horario, plantilla, capital } = _ref
 
 }
 
-function RitmoEscritorio(_ref7) {let { state, plan } = _ref7;
+function RitmoEscritorio(_ref6) {let { state, plan } = _ref6;
   const { t } = useT();
   const R = ritmoDe(state);
   return (
@@ -51971,8 +52428,8 @@ function RitmoEscritorio(_ref7) {let { state, plan } = _ref7;
     )
     ),
     React.createElement("div", { className: "pace-rt-der-col" },
-    React.createElement(RitmoSobre, { m: plan.m }),
-    React.createElement("div", { className: "pace-rt-der" }, React.createElement(RitmoContexto, null), React.createElement(RitmoLibre, null))
+    React.createElement(RitmoSobre, null),
+    React.createElement("div", { className: "pace-rt-der" }, React.createElement(RitmoLibre, null))
     )
     ),
     React.createElement(RitmoLinea, { plan: plan })
@@ -51980,7 +52437,9 @@ function RitmoEscritorio(_ref7) {let { state, plan } = _ref7;
 
 }
 
-function RitmoFila(_ref8) {let { rotulo, modulo, nombre, meta, claves, luego } = _ref8;
+
+
+function RitmoFila(_ref7) {let { rotulo, modulo, nombre, meta, claves, luego, hecha } = _ref7;
   const { t } = useT();
   return (
     React.createElement("div", { className: "pace-rt-fila", "data-pace-ritmo-luego": luego ? '' : undefined },
@@ -51989,6 +52448,7 @@ function RitmoFila(_ref8) {let { rotulo, modulo, nombre, meta, claves, luego } =
     React.createElement("div", { className: "pace-rt-n" }, React.createElement(RitmoGlifo, { modulo: modulo }), nombre),
     React.createElement("div", { className: "pace-rt-m" }, meta)
     ),
+    hecha ? React.createElement("span", { className: "pace-rt-sub", "data-pace-ritmo-hecha": true }, t('ritmo.hecha')) :
     claves ?
     React.createElement("button", { type: "button", className: "pace-rt-otra", "data-pace-ritmo-otra": true, onClick: () => ritmoOtra(claves) }, t('ritmo.otra')) :
     React.createElement("span", null)
@@ -51998,7 +52458,7 @@ function RitmoFila(_ref8) {let { rotulo, modulo, nombre, meta, claves, luego } =
 
 
 
-function RitmoFilaParada(_ref9) {let { it, rotulo, corta } = _ref9;
+function RitmoFilaParada(_ref8) {let { it, rotulo, corta, hecha } = _ref8;
   const { t, tn, lang } = useT();
   const cab = React.createElement(React.Fragment, null, t(rotulo), React.createElement("br", null), ritmoHora(it.desde));
   const luego = rotulo === 'ritmo.luego';
@@ -52011,10 +52471,10 @@ function RitmoFilaParada(_ref9) {let { it, rotulo, corta } = _ref9;
   if (!it.platos || !it.platos.length) return null;
   return React.createElement(RitmoFila, { rotulo: cab, luego: luego, modulo: it.platos[0].modulo, nombre: ritmoPlatos(it, t, lang),
     meta: React.createElement(RitmoMetaGota, { texto: ritmoMetaPlato(it, t, tn, corta), agua: it.agua }),
-    claves: it.platos.map((p) => p.clave) });
+    claves: it.platos.map((p) => p.clave), hecha: hecha });
 }
 
-function RitmoMovil(_ref0) {let { state, plan, onVer } = _ref0;
+function RitmoMovil(_ref9) {let { state, plan, onVer } = _ref9;
   const { t, tn } = useT();
   const R = ritmoDe(state);
   const b = plan.actual;
@@ -52040,7 +52500,8 @@ function RitmoMovil(_ref0) {let { state, plan, onVer } = _ref0;
     if (typeof window.paceHomeGeometriaYa === 'function') window.paceHomeGeometriaYa();
   }, [conPausa, !!luego, plan.hechos, plan.m.opcion]);
   const filas = conPausa ?
-  React.createElement(React.Fragment, null, React.createElement(RitmoFilaParada, { it: plan.pausa, rotulo: "ritmo.ahora", corta: true }), b ? filaBloque('ritmo.luego') : null) :
+  React.createElement(React.Fragment, null, React.createElement(RitmoFilaParada, { it: plan.pausa, rotulo: "ritmo.ahora", corta: true,
+    hecha: (plan.estados || {})[ritmoOrdinal(plan.m, plan.pausa)] === 'hecha' }), b ? filaBloque('ritmo.luego') : null) :
   React.createElement(React.Fragment, null, filaBloque('ritmo.ahora'), luego ? React.createElement(RitmoFilaParada, { it: luego, rotulo: "ritmo.luego", corta: true }) : null);
   return (
     React.createElement("div", { className: "pace-rt-panel pace-rt-mov", "data-pace-ritmo-estado": "menu" },
@@ -52067,7 +52528,7 @@ function RitmoMovil(_ref0) {let { state, plan, onVer } = _ref0;
 
 }
 
-function RitmoHecho(_ref1) {let { plan } = _ref1;
+function RitmoHecho(_ref0) {let { plan } = _ref0;
   const { t, tn } = useT();
   return (
     React.createElement("div", { className: "pace-rt-panel", "data-pace-ritmo-estado": "hecho" },
@@ -52080,8 +52541,9 @@ function RitmoHecho(_ref1) {let { plan } = _ref1;
 
     ),
     React.createElement("div", { className: "pace-rt-der" },
-    React.createElement("button", { className: "pace-rt-enlace", onClick: ritmoPreguntar }, t('ritmo.cambiar')),
-    React.createElement(RitmoLibre, null)
+
+
+    React.createElement("button", { className: "pace-rt-enlace", onClick: ritmoPreguntar }, t('ritmo.cambiar'))
     )
     )
     ));
@@ -52089,10 +52551,10 @@ function RitmoHecho(_ref1) {let { plan } = _ref1;
 }
 
 Object.assign(window, {
-  RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub, ritmoNoCabe, ritmoOpcionVacia,
+  RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub, ritmoNoCabe, ritmoOpcionVacia,
   RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho
 });
-;Object.assign(window, { RITMO_OPCIONES_UI, RitmoContexto, RitmoLibre, RitmoSobre, RitmoChips, ritmoNoCabe, ritmoOpcionVacia, ritmoSub, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho });
+;Object.assign(window, { RITMO_OPCIONES_UI, RitmoLibre, RitmoSobre, RitmoChips, ritmoNoCabe, ritmoOpcionVacia, ritmoSub, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho });
 })();
 </script>
   <script>
@@ -52183,8 +52645,9 @@ function RitmoHoja(_ref2) {let { open, onClose, plan, state } = _ref2;
     React.createElement("div", { className: "pace-rt-sub pace-rt-frase" },
     React.createElement(RitmoFraseMenu, { plan: plan, horario: R.horario, plantilla: "ritmo.frase.menu", capital: true })
     ),
-    React.createElement("div", { className: "pace-rt-sub" }, ritmoResumen(plan.m, tn, ritmoMetaVasos(state))),
-    React.createElement("div", { style: { marginTop: 12 } }, React.createElement(RitmoContexto, null)),
+    React.createElement("div", { className: "pace-rt-sub" }, ritmoResumen(plan.m, tn, ritmoMetaVasos(state), true)),
+
+    React.createElement("div", { className: "pace-rt-sub", "data-pace-ritmo-ctx": true }, t('ritmo.ctx.mesa') + ' · ' + t('ritmo.ctx.material')),
     React.createElement(RitmoLista, { plan: plan }),
 
 
@@ -52367,8 +52830,12 @@ function RitmoCalendarioHoja(_ref3) {let { plan, onClose } = _ref3;
 
   const sinDia = !plan;
   const evs = sinDia ? [] : calendarioEventos(plan.m, ritmoAhoraExacto(), t, tn, lang);
+
+
+  const soloArchivo = !compartir && destinos.every((d) => d === 'archivo');
+  const claveResumen = (soloArchivo ? 'cal.resumen.web' : 'cal.resumen') + (evs.length === 1 ? '.uno' : '');
   let resumen = sinDia ? t('cal.sindia.resumen') : !evs.length ? t('cal.resumen.nada') :
-  tn(evs.length === 1 ? 'cal.resumen.uno' : 'cal.resumen', { n: evs.length, a: ritmoHora(evs[0].desde), b: ritmoHora(evs[evs.length - 1].hasta) });
+  tn(claveResumen, { n: evs.length, a: ritmoHora(evs[0].desde), b: ritmoHora(evs[evs.length - 1].hasta) });
   if (solo && !sinDia) {
     const q = solo.quedan;
     resumen = calendarioSoloPorDetras(solo) || calendarioSoloCaso(solo) === 'fallo' ?
@@ -52713,7 +53180,7 @@ function RitmoTarjeta() {
   const { t, tn } = useT();
   if (state.paths && state.paths.current) return null;
   const H = ritmoHabitual(state);
-  const titulo = H ? tn('ritmo.manana.titulo', { dia: ritmoNombreDia(H.diaSemana, t) }) : t('ritmo.pregunta');
+  const titulo = H ? ritmoTituloHabitual(state, H.diaSemana, t, tn) : t('ritmo.pregunta');
   const nota = H ? t('ritmo.opcion.' + H.opcion) + ', ' + ritmoHora(H.m.desde) + '–' + ritmoHora(H.m.hasta) : t('ritmo.tarjeta.horas');
   const abrirCaminos = () => window.dispatchEvent(new CustomEvent('pace:open-paths-library'));
   const conCaminos = window.SHOW_CAMINOS !== false;
@@ -52758,10 +53225,19 @@ function RitmoTarjeta() {
 
 
     React.createElement("div", { className: "pace-rt-esq-fila" }, React.createElement(RitmoEsquema, null), React.createElement(RitmoCalendarioTarjeta, { corto: true })),
+
+
+
+
     React.createElement("div", { className: "pace-rt-tm-pie" },
+    H ?
+    React.createElement("span", { className: "pace-rt-tm-nota pace-rt-tm-nota-h" },
+    React.createElement("span", null, t('ritmo.opcion.' + H.opcion)),
+    React.createElement("button", { type: "button", className: "pace-rt-enlace pace-rt-tm-distinto", "data-pace-ritmo-distinto": true, onClick: ritmoDistinto }, t('ritmo.manana.distinto'))
+    ) :
     React.createElement("span", { className: "pace-rt-tm-nota" }, nota),
 
-    React.createElement("button", { type: "button", className: "pace-rt-tm-comienza", "data-pace-ritmo-comienza": true, onClick: ritmoAbrirPregunta },
+    React.createElement("button", { type: "button", className: "pace-rt-tm-comienza", "data-pace-ritmo-comienza": true, onClick: H ? ritmoComenzarHabitual : ritmoAbrirPregunta },
     React.createElement("span", { className: "pace-rt-tm-pildora" },
     t('ritmo.tarjeta.comienza'),
     React.createElement("svg", { width: "16", height: "10", viewBox: "0 0 16 10", fill: "none", stroke: "currentColor", strokeWidth: "1.2", strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true" },
@@ -53310,7 +53786,7 @@ Object.assign(window, { ritmoCartaStyles, RitmoCartaLeida, RitmoCartaVentana, ri
    «Los lunes, PACE completo te escribe tu semana ›», y tocarla abre la invitación. Solo los lunes:
    todos los días sería pedir la compra cada vez que se abre la app.
 
-   DÓNDE: en el ordenador, en la fila del resumen del día (`RitmoSobre`, RitmoPanel.jsx). En el
+   DÓNDE: en el ordenador, en la fila de «Cambiar» y «Al calendario» (`RitmoSobre`, RitmoPanel.jsx). En el
    móvil la home no tiene sitio (se pasaba 2 px a 360×740), y va en DOS sitios a la vez: en el
    sobre de arriba, donde llegaría la carta (cerrado hasta que se abre ese lunes), y en una fila
    del cajón bajo «Tus rutinas» (`SidebarFooter`). El sobre y la fila no salen en el ordenador.
@@ -53403,6 +53879,7 @@ function RitmoComienzaHabitual() {
 
 function RitmoMananaMovil(_ref) {let { h } = _ref;
   const { t, tn } = useT();
+  const [state] = usePace();
   const vista = { m: h.m, hechos: 0, actual: h.m.focos[0], estados: {} };
   return (
     React.createElement("div", { className: "pace-rt-panel pace-rt-mov", "data-pace-ritmo-estado": "habitual", "data-pace-ritmo-habitual": h.opcion },
@@ -53412,7 +53889,8 @@ function RitmoMananaMovil(_ref) {let { h } = _ref;
     React.createElement("div", null,
     React.createElement("div", { className: "pace-rt-titulo" },
     t('ritmo.opcion.' + h.opcion), ' ',
-    React.createElement("span", { className: "pace-rt-habitual-como" }, '· ' + tn('ritmo.manana.como', { dia: ritmoNombreDia(h.diaSemana, t) }))
+
+    ritmoPrimeraSemana(state) ? null : React.createElement("span", { className: "pace-rt-habitual-como" }, '· ' + tn('ritmo.manana.como', { dia: ritmoNombreDia(h.diaSemana, t) }))
     ),
     React.createElement("div", { className: "pace-rt-sub pace-rt-frase" }, React.createElement(RitmoFraseMenu, { plan: vista, horario: h.horario, plantilla: "ritmo.frase.movil" }))
     )

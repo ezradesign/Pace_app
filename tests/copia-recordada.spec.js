@@ -20,7 +20,7 @@ const PANEL = '[data-pace-tweaks-panel]';
 const DIA = 86400000;
 const TX = {
   es: { abrir: 'Abrir ajustes', datos: 'Copias, borrar y PACE completo', nunca: 'Aún no has guardado ninguna copia.', safari: 'Sin instalar, Safari' },
-  en: { abrir: 'Open settings', datos: 'Copies, data deletion and PACE Complete', nunca: 'You haven’t saved a copy yet.', safari: 'If PACE isn’t installed, Safari' },
+  en: { abrir: 'Open settings', datos: 'Copies, deletion and PACE Complete', nunca: 'You haven’t saved a copy yet.', safari: 'If PACE isn’t installed, Safari' },
 };
 
 /* PACE instalada: el navegador ya no dice `display-mode: browser`. */

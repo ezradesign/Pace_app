@@ -41,7 +41,9 @@ for (const [ancho, alto] of [[360, 640], [360, 730], [1280, 720], [1280, 800]]) 
       const fila = page.locator(PANEL + ' [data-pace-aj-fila="notify"]');
       await expect(fila).toContainText(SUB[lang]);
       await expect(fila.getByRole('switch')).toHaveAttribute('aria-checked', 'false');
-      await expect(page.locator(PANEL + ' .pace-aj-nota')).toHaveCount(0);
+      /* Y debajo, la nota de cómo quitar el bloqueo en este navegador (aviso del Foco en el PC, 1.2A de Ez,
+         19 nov.): al juntar las dos ramas caben las dos, la línea de la fila y la nota, sin scroll. */
+      await expect(page.locator(PANEL + ' [data-pace-aj-aviso-bloqueado]')).toHaveCount(1);
     });
   }
 }
