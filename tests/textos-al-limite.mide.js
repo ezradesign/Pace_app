@@ -92,7 +92,7 @@ async function medir(page, opts, cfg) {
   for (const t of justos) {
     if (t.lineas !== 1 || t.reserva && !opts.efectoReservas) continue;
     const antes = await page.evaluate(efectoPantalla);
-    const puesto = await page.evaluate(ponHueco, { texto: t.texto, px: t.margen + 1.5, raices: opts.raices || ['body'] });
+    const puesto = await page.evaluate(ponHueco, { texto: t.texto, px: t.margen + 1.5, raices: opts.raices && opts.raices.length ? opts.raices : ['body'] });
     if (!puesto) { t.efecto = { error: 'no encuentro el texto para ponerle el hueco' }; continue; }
     await page.evaluate(() => { window.dispatchEvent(new Event('resize')); window.dispatchEvent(new Event('pace:home-relayout')); });
     await asentar(page, cfg.home);
@@ -226,37 +226,52 @@ for (const modulo of ['Mueve', 'Estira']) for (const lang of ['es', 'en']) for (
       for (const g of Object.values(cat || {})) for (const r of (g.items || [])) out.push(r.id);
       return out;
     }, modulo);
+    await page.close();
     const filas = [];
     const raiz = { raices: ['[data-pace-session-root]'], efectoReservas: true };
     for (const id of ids) {
-      await irAlArtefacto(page);
-      await page.evaluate((x) => {
-        const r = window.resolveBodyRoutine(x);
-        window.dispatchEvent(new CustomEvent('pace:hacerla', { detail: { routine: r.routine, kind: r.source } }));
-      }, id);
-      await page.locator('[data-pace-v1-raiz]').first().waitFor({ timeout: 20000 });
-      const ahora = await page.evaluate(() => Date.now());
-      await page.clock.pauseAt(ahora + 1000);
-      await agrandar(page, letra);
-      await asentar(page, false);
-      filas.push(Object.assign({ momento: id + ' · al colocarse' }, await medir(page, raiz, {})));
-      for (let k = 0; k < 40; k++) {
-        const fase = await page.evaluate(() => {
-          const r = [...document.querySelectorAll('[data-pace-v1-raiz]')].find((e) => e.getBoundingClientRect().width > 0);
-          return r && r.getAttribute('data-pace-v1-fase');
-        });
-        if (fase === 'work') break;
-        await page.clock.runFor(1000);
-        await page.waitForTimeout(15);
+      /* Un contexto limpio por rutina: con el de la anterior, la sesión a medias que guarda el runner
+         (MoveSessionV1.reanudar.jsx) no dejaba abrir la siguiente. Una rutina que falle se apunta y se sigue. */
+      const ctx = await contexto(browser, { w: 360, h: 640, lang });
+      const pg = await ctx.newPage();
+      try {
+        await pg.clock.install({ time: new Date('2026-11-18T10:00:00+01:00') });
+        await irAlArtefacto(pg);
+        await rutina(pg, id, filas, raiz);
+      } catch (e) {
+        filas.push({ momento: id, error: String(e.message || e).split('\n')[0] });
       }
-      await asentar(page, false);
-      const trabajo = await medir(page, raiz, {});
-      /* Trabajando, solo lo que no estaba ya al colocarse (la pila no cambia). */
-      const vistos = new Set(filas[filas.length - 1].justos ? filas[filas.length - 1].justos.map((t) => t.texto) : []);
-      if (trabajo.justos) trabajo.justos = trabajo.justos.filter((t) => !vistos.has(t.texto));
-      filas.push(Object.assign({ momento: id + ' · trabajando' }, trabajo));
+      await ctx.close();
     }
     guarda('runner-' + modulo + '-' + lang + '-' + letra, { pantalla: 'runner ' + modulo, lang, letra, filas });
     await context.close();
   });
+
+  async function rutina(page, id, filas, raiz) {
+    await page.evaluate((x) => {
+      const r = window.resolveBodyRoutine(x);
+      window.dispatchEvent(new CustomEvent('pace:hacerla', { detail: { routine: r.routine, kind: r.source } }));
+    }, id);
+    await page.locator('[data-pace-v1-raiz]').first().waitFor({ timeout: 20000 });
+    const ahora = await page.evaluate(() => Date.now());
+    await page.clock.pauseAt(ahora + 1000);
+    await agrandar(page, letra);
+    await asentar(page, false);
+    filas.push(Object.assign({ momento: id + ' · al colocarse' }, await medir(page, raiz, {})));
+    for (let k = 0; k < 40; k++) {
+      const fase = await page.evaluate(() => {
+        const r = [...document.querySelectorAll('[data-pace-v1-raiz]')].find((e) => e.getBoundingClientRect().width > 0);
+        return r && r.getAttribute('data-pace-v1-fase');
+      });
+      if (fase === 'work') break;
+      await page.clock.runFor(1000);
+      await page.waitForTimeout(15);
+    }
+    await asentar(page, false);
+    const trabajo = await medir(page, raiz, {});
+    /* Trabajando, solo lo que no estaba ya al colocarse (la pila no cambia). */
+    const vistos = new Set(filas[filas.length - 1].justos ? filas[filas.length - 1].justos.map((t) => t.texto) : []);
+    if (trabajo.justos) trabajo.justos = trabajo.justos.filter((t) => !vistos.has(t.texto));
+    filas.push(Object.assign({ momento: id + ' · trabajando' }, trabajo));
+  }
 }
