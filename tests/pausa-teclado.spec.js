@@ -25,12 +25,13 @@ async function abrirPausa(page) {
   await page.evaluate(() => localStorage.removeItem('pace.state.v2'));
   await page.reload();
   await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
-  await page.evaluate((id) => setState(prev => ({ ...prev, focoPausa: { id: id, dia: new Date().toDateString() } })), 'a8-' + (++veces));
+  /* Cero vasos en cada apertura: borrar la clave no basta, porque la app aún puede guardar su estado al
+     recargar, con el vaso de la vuelta anterior. En el CI de Linux, más lento, pasaba: con un vaso hoy, la
+     propuesta ya no es el agua sino Estira («Tronco sentado»), y Espacio sobre ese botón abría Estira. */
+  await page.evaluate((id) => setState(prev => ({ ...prev, water: { ...(prev.water || {}), today: 0 },
+    focoPausa: { id: id, dia: new Date().toDateString() } })), 'a8-' + (++veces));
   await expect(pausa(page)).toHaveCount(1);
-  /* La propuesta se decide con los eventos guardados, que llegan después de abrir: en el CI de Linux, más lento,
-     Tab llegaba al botón de la propuesta cuando aún era otra rutina («Tronco sentado») y Espacio la abría. Se
-     espera a que sea el agua, la de esta prueba, antes de tocar nada. */
-  await expect(page.locator('[data-pace-break-prop]')).toContainText('Hidrátate');
+  await expect(page.locator('[data-pace-break-prop]'), 'GUARD: la propuesta no es el agua').toContainText('Hidrátate');
 }
 /* Lo que se ve después: los vasos de hoy, si sigue la pausa, si hay sesión y qué diálogos hay. */
 const huella = (page) => page.evaluate(() => ({
