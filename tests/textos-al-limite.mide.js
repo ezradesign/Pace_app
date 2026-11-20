@@ -90,9 +90,9 @@ async function medir(page, opts, cfg) {
   if (r.error) return { error: r.error };
   const justos = r.textos.filter(alLimite);
   for (const t of justos) {
-    if (t.lineas !== 1 || t.reserva && !opts.efectoReservas) continue;
+    if (t.reserva && !opts.efectoReservas) continue;
     const antes = await page.evaluate(efectoPantalla);
-    const puesto = await page.evaluate(ponHueco, { texto: t.texto, px: t.margen + 1.5, raices: opts.raices && opts.raices.length ? opts.raices : ['body'] });
+    const puesto = await page.evaluate(ponHueco, { texto: t.texto, px: t.margen + 1.5, letra: t.lineas > 1 ? t.porLetra + 0.02 : 0, raices: opts.raices && opts.raices.length ? opts.raices : ['body'] });
     if (!puesto) { t.efecto = { error: 'no encuentro el texto para ponerle el hueco' }; continue; }
     await page.evaluate(() => { window.dispatchEvent(new Event('resize')); window.dispatchEvent(new Event('pace:home-relayout')); });
     await asentar(page, cfg.home);

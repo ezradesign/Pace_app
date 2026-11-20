@@ -13,9 +13,9 @@
      · `porLetra`, en px: cuánta separación de letra aguanta todo el bloque, que es como se parece
        más la letra de Linux (cada letra un poco más ancha, no un trozo al final).
    «El diseño cambia» es cualquiera de estas cosas: el bloque gana una línea; su texto se sale de su
-   caja o de una que recorta; el bloque salta de sitio (otra fila de un flex); o un vecino (lo que
+   caja o de una que recorta (una línea más solo cuenta si su caja crece: ver `parte`); el bloque salta de sitio (otra fila de un flex); o un vecino (lo que
    cuelga de su tercer ancestro) gana una línea o salta. Lo que pase después (scroll, «Luego» que se
-   esconde, el dibujo que encoge) lo mide `efectoTexto`, dejando puesto el hueco que lo rompe. */
+   esconde, el dibujo que encoge) lo mide `efectoPantalla` con `ponHueco`, que deja puesto lo que lo rompe. */
 'use strict';
 
 function sondaTextos(opts) {
@@ -94,8 +94,13 @@ function sondaTextos(opts) {
     const izq = Math.min(...ls.map((l) => l.left)), der = Math.max(...ls.map((l) => l.right));
     const r = b.getBoundingClientRect();
     const sale = limites(b).filter((L) => izq < L.left - 0.5 || der > L.right + 0.5).map((L) => (L.recorta ? 'se corta' : 'se sale de su caja'));
-    return { n: ls.length, top: r.top, sale };
+    const p = b.parentElement, pr = p.getBoundingClientRect(), ps = cs(p);
+    return { n: ls.length, top: r.top, bottom: r.bottom, sale, padreAlto: pr.height,
+      padreBottom: pr.bottom - parseFloat(ps.paddingBottom) - parseFloat(ps.borderBottomWidth) };
   }
+  /* Una línea más solo mueve el diseño si su caja crece o se sale por abajo. En las pilas del runner, un
+     texto escondido que pasa de 2 a 3 líneas no mueve nada si otro de la pila ya ocupa 3. */
+  const parte = (f, f0) => f.n > f0.n && (f.padreAlto > f0.padreAlto + 0.5 || f.bottom > f0.padreBottom + 0.5);
   const vecinosDe = (b) => {
     let a = b;
     for (let i = 0; i < 3 && a.parentElement; i++) a = a.parentElement;
@@ -107,13 +112,13 @@ function sondaTextos(opts) {
   /* Lo que cambió con el bloque estirado, o null si nada. */
   function rompe(b, vecinos) {
     const f = foto(b), f0 = base.get(b);
-    if (f.n > f0.n) return 'se parte en ' + f.n + ' líneas';
+    if (parte(f, f0)) return 'se parte en ' + f.n + ' líneas';
     const nueva = f.sale.find((s) => !f0.sale.includes(s));
     if (nueva) return nueva;
     if (Math.abs(f.top - f0.top) > 2) return 'salta de sitio';
     for (const o of vecinos) {
       const g = foto(o), g0 = base.get(o);
-      if (g.n > g0.n) return 'parte a su vecino «' + nombre(o).slice(0, 50) + '»';
+      if (parte(g, g0)) return 'parte a su vecino «' + nombre(o).slice(0, 50) + '»';
       if (Math.abs(g.top - g0.top) > 2) return 'mueve a su vecino «' + nombre(o).slice(0, 50) + '»';
     }
     return null;
@@ -192,7 +197,7 @@ function sondaTextos(opts) {
 
 /* Deja puesto un hueco al final del texto `texto` (el primero que case dentro de la raíz) y devuelve
    la función que lo quita. Lo que la app haga después se mide fuera, con su propia espera. */
-function ponHueco({ texto, px, raices }) {
+function ponHueco({ texto, px, letra, raices }) {
   const raizSel = (raices || ['body']).join(',');
   for (const raiz of document.querySelectorAll(raizSel)) {
     const w = document.createTreeWalker(raiz, NodeFilter.SHOW_TEXT);
@@ -208,10 +213,12 @@ function ponHueco({ texto, px, raices }) {
           let b = nodos[j].parentElement;
           while (b && ['inline', 'contents'].includes(getComputedStyle(b).display)) b = b.parentElement;
           if (!b || b.getBoundingClientRect().width <= 0) break;
-          const antes = b.style.getPropertyValue('text-indent');
-          const propia = parseFloat(getComputedStyle(b).textIndent) || 0;
-          b.style.setProperty('text-indent', (propia + px) + 'px', 'important');
-          window.__paceSondaQuita = () => { if (antes) b.style.setProperty('text-indent', antes); else b.style.removeProperty('text-indent'); };
+          /* En una línea, la sangría; en varias, la separación de letra que la rompe. */
+          const prop = letra ? 'letter-spacing' : 'text-indent';
+          const antes = b.style.getPropertyValue(prop);
+          const propia = parseFloat(getComputedStyle(b)[letra ? 'letterSpacing' : 'textIndent']) || 0;
+          b.style.setProperty(prop, (propia + (letra || px)) + 'px', 'important');
+          window.__paceSondaQuita = () => { if (antes) b.style.setProperty(prop, antes); else b.style.removeProperty(prop); };
           return true;
         }
       }
