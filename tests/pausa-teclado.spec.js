@@ -27,6 +27,10 @@ async function abrirPausa(page) {
   await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
   await page.evaluate((id) => setState(prev => ({ ...prev, focoPausa: { id: id, dia: new Date().toDateString() } })), 'a8-' + (++veces));
   await expect(pausa(page)).toHaveCount(1);
+  /* La propuesta se decide con los eventos guardados, que llegan después de abrir: en el CI de Linux, más lento,
+     Tab llegaba al botón de la propuesta cuando aún era otra rutina («Tronco sentado») y Espacio la abría. Se
+     espera a que sea el agua, la de esta prueba, antes de tocar nada. */
+  await expect(page.locator('[data-pace-break-prop]')).toContainText('Hidrátate');
 }
 /* Lo que se ve después: los vasos de hoy, si sigue la pausa, si hay sesión y qué diálogos hay. */
 const huella = (page) => page.evaluate(() => ({

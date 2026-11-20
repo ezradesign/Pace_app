@@ -47,7 +47,7 @@ de Android con sus 14 días seguidos, que aún no han empezado, y el alta para c
 
 ## Espera a Ez
 
-- **La 0.212.0, en `main` con el «Júntalo todo» de Ez (19 nov.)**: las siete ramas del día (menores, recorrido con la 11 y la tarjeta limpia, voz 1A, visita A, caza, aviso del Foco en el PC con la miniventana, y la comida con «Seguir por libre» A). En inglés, Ajustes con los avisos bloqueados cabe a 1280 × 720 con tres textos más cortos (C de Ez, 20 nov.). Falta probar en un Chrome de verdad el aviso y la miniventana, y un hueco sin probar: tras «Seguir por libre», un Foco después de la salida podría seguir contando para Ocaso.
+- **La 0.212.0, en `main` con el «Júntalo todo» de Ez (19 nov.)**: las siete ramas del día (menores, recorrido con la 11 y la tarjeta limpia, voz 1A, visita A, caza, aviso del Foco en el PC con la miniventana, y la comida con «Seguir por libre» A). En inglés, Ajustes con los avisos bloqueados cabe a 1280 × 720 con tres textos más cortos (C de Ez, 20 nov.), y tres textos que en Linux (como en Android) pasaban de línea, arreglados con 1A 2A 3A de Ez (página 57qUVTJTpogW8Ddcz9nBmj). Falta probar en un Chrome de verdad el aviso y la miniventana, y un hueco sin probar: tras «Seguir por libre», un Foco después de la salida podría seguir contando para Ocaso.
 
 La lista, por orden y sin jerga, en su hoja de pasos (`docs/traspaso/hoja-de-ruta-20oct.html`), una por cuenta:
 https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 y https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT. La lista corta de solo

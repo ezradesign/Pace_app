@@ -232,7 +232,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.tarjeta.comienza':        'Plan my day',
     'ritmo.frase.menu':              'from {inicio} to {salida} · lunch at {comida} for {dur}',
     'ritmo.frase.menu.sin':          'from {inicio} to {salida}',
-    'ritmo.frase.movil':             'From {inicio} to {salida} · lunch {comida} · {dur}',
+    'ritmo.frase.movil':             '{inicio}–{salida} · lunch {comida} · {dur}',   /* sin «From… to»: en Linux, como en Android, partía en dos líneas a 360 × 640 y la tarjeta escondía «Luego» (Ez, 3A del 20 nov.) */
     'ritmo.frase.movil.sin':         'From {inicio} to {salida}',
     'ritmo.frase.movil.empieza':     'start with the timer above',
     'ritmo.hecha':                   'done',

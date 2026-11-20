@@ -101,6 +101,9 @@ if (!_paceAjustesCss) {
     /* La línea pequeña de «Suena detrás» cabe en el alto de la fila (34 px en el móvil): con la de
        las demás filas la hoja crecía 4 px, y en Android a 360×730 ya está en el 79 %. */
     [data-pace-aj-fila="bg"] .pace-aj-sub { font-size: 11px; line-height: 1; margin-top: 1px; }
+    /* 6 px y no 10 entre «Suena detrás» y sus botones: en Linux, que pinta la letra como Android, «Lo que suena al
+       respirar» los bajaba a otra línea por 1 px y Ajustes pedía scroll a 1280 × 720 (Ez, 2A del 20 nov.). */
+    [data-pace-aj-fila="bg"] { column-gap: 6px; }
     .pace-aj-nota { font-size: 10.5px; color: var(--ink-3); letter-spacing: .1px; line-height: 1.45; margin: -2px 0 6px; }
 
     /* pildoras: pista de papel-2 sin borde, la elegida en tinta */

@@ -8,6 +8,7 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de 
 
 - **`main` = 0.212.0 con el «Júntalo todo» de Ez:** las siete ramas del 19 nov. (menores, recorrido con la 11 y la tarjeta limpia, voz 1A, visita A, caza, aviso del Foco en el PC y comida con «Seguir por libre» A). El CI pasa a seis trozos y el censo de claves, a 1325.
 - Al juntar chocaron cinco pruebas (no la app) y una letra con otra: con los avisos bloqueados, la caza 4A (la línea de la fila) y el aviso 1.2A (la nota de cómo desbloquear) no cabían juntas en inglés a 1280 × 720 (22 px). Ez eligió la **C** (página NeBtettfymr4RwBjBgHTdj): en inglés, «Background», «While you breathe» y «Copies, deletion and PACE Complete»; la nota se queda entera.
+- **El CI de GitHub (Linux, que pinta la letra como Android) sacó tres textos más al límite;** medidos en Linux con la rama de diagnóstico `claude/diag-linux-20nov` (no se junta), Ez eligió 1A 2A 3A (página 57qUVTJTpogW8Ddcz9nBmj). Regla nueva arriba de `DECISIONES_TECNICAS_VIGENTES.md`. Propuestas en tarjeta, sin arrancar: el hueco de Ocaso tras «Seguir por libre» y un barrido de textos al límite.
 - **Sin probar:** el aviso y la miniventana en un Chrome de verdad, y un hueco de la comida: tras «Seguir por libre», un Foco después de la salida podría seguir contando para Ocaso.
 
 ## AL RELEVO (19 nov., 15:55, cuenta EcLj6 con las 5 h al 98 %; se reponen a las 19:40; 5iWBf sin semana hasta el 23 nov.): empieza aquí
