@@ -64,7 +64,7 @@ const EXTRA_ROUTINES = {
             tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
             cambios: [{ en: 4, que: 'sentido', dice: 'atras' }, { en: 8, que: 'lado', dice: 'otroBrazo' }, { en: 12, que: 'sentido', dice: 'atras' }],
             instruction: {
-              action: 'De pie, brazo estirado: ocho círculos lentos, cuatro adelante y cuatro atrás.',
+              action: 'De pie, brazo estirado: círculos lentos, cuatro adelante y cuatro atrás.',
               care: 'Empieza pequeño. Haz el círculo más grande solo si el tronco sigue quieto.' } },
           { name: 'Deslizamientos en pared', mode: 'reps', reps: 6, dur: 36,
             tempo: { down: 3, hold: 0, up: 3 }, completion: { mode: 'guided' },
@@ -209,12 +209,12 @@ const EXTRA_ROUTINES = {
           { name: 'Giro sentado', mode: 'timed', dur: 20,
             cambios: [{ en: 10, que: 'lado', dice: 'otroLado' }],
             instruction: {
-              action: 'Gira el tronco hacia el respaldo, con una mano apoyada en él, sin tirar. Luego, al otro lado.',
+              action: 'Gira el tronco hacia el respaldo, con una mano apoyada en él, sin tirar.',
               care: 'Gira solo hasta donde vaya suelto. El giro nace del tronco, no del cuello.' } },
           { name: 'Círculos de tobillo', mode: 'timed', dur: 20,
             cambios: [{ en: 10, que: 'lado', dice: 'otroPie' }],
             instruction: {
-              action: 'Bajo la mesa, levanta un pie y dibuja círculos con el tobillo. Cambia a mitad.',
+              action: 'Bajo la mesa, levanta un pie y dibuja círculos con el tobillo.',
               care: 'Círculos lentos y cómodos, sin forzar ni mover toda la pierna.' } },
           { name: 'Barbilla atrás', mode: 'reps', reps: 5, dur: 20,
             tempo: { down: 1, hold: 2, up: 1 }, completion: { mode: 'guided' },

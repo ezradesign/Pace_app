@@ -27,7 +27,7 @@ for (const lang of ['es', 'en']) {
     await expect(page.locator('[data-pace-tweaks-panel]')).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(500);
-    const d = await page.locator('[data-pace-tweaks-panel]').evaluate((p, f) => ({ sobra: p.scrollHeight - p.clientHeight, alto: p.clientHeight, filas: (new Function('return ' + f))()(p) }), volcar.toString());
+    const d = await page.locator('[data-pace-tweaks-panel]').evaluate((p, f) => { const fila = p.querySelector('[data-pace-aj-fila="bg"]'); const nom = fila.querySelector('.pace-aj-nombre'); const pista = fila.querySelector('.pace-aj-pista'); const nat = (e) => { const c = e.cloneNode(true); c.style.cssText += ';position:absolute;visibility:hidden;width:max-content;white-space:nowrap'; e.parentNode.appendChild(c); const w = c.getBoundingClientRect().width; c.remove(); return +w.toFixed(2); }; return { sobra: p.scrollHeight - p.clientHeight, alto: p.clientHeight, bg: { fila: +fila.getBoundingClientRect().width.toFixed(2), nombreNatural: nat(nom), pista: +pista.getBoundingClientRect().width.toFixed(2), hijos: [...nom.children].map(nat) }, filas: (new Function('return ' + f))()(p) }; }, volcar.toString());
     console.log('DIAG ajustes ' + lang + ' ' + JSON.stringify(d));
   });
 }
@@ -47,7 +47,9 @@ for (const lang of ['es', 'en']) {
     await asentarGeometria(page);
     const d = await page.evaluate((f) => {
       const body = [...document.querySelectorAll('[data-pace-home-body]')].find((e) => e.getBoundingClientRect().width > 0);
-      return { justa: document.querySelectorAll('[data-pace-home-justa]').length, sobra: body.scrollHeight - body.clientHeight, alto: body.clientHeight,
+      const fr = [...body.querySelectorAll('*')].find((e) => e.getBoundingClientRect().width && [...e.childNodes].some((n) => n.nodeType === 3 && /From|De /.test(n.nodeValue)) && e.querySelector('button'));
+      const frase = fr ? (() => { const r = fr.getBoundingClientRect().width; const c = fr.cloneNode(true); c.style.cssText += ';position:absolute;visibility:hidden;width:max-content;white-space:nowrap'; fr.parentNode.appendChild(c); const w = c.getBoundingClientRect().width; c.firstChild && c.firstChild.nodeType === 3 && (c.firstChild.nodeValue = ''); [...c.childNodes].forEach((n) => { if (n.nodeType === 3 && / to /.test(n.nodeValue)) n.nodeValue = '–'; }); const w2 = c.getBoundingClientRect().width; c.remove(); return { caja: +r.toFixed(2), natural: +w.toFixed(2), sinFrom: +w2.toFixed(2), texto: fr.textContent }; })() : null;
+      return { frase, justa: document.querySelectorAll('[data-pace-home-justa]').length, sobra: body.scrollHeight - body.clientHeight, alto: body.clientHeight,
         filas: (new Function('return ' + f))()(body) };
     }, volcar.toString());
     console.log('DIAG home ' + lang + ' ' + JSON.stringify(d));
