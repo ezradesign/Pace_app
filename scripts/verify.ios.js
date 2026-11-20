@@ -260,6 +260,20 @@ function chequeaTienda(ctx, archivoIcono) {
   var plugins = (cfg.ios && cfg.ios.includePlugins) || [];
   if (cfg.appId !== ID_APP) malas.push('capacitor.config.json ya no dice appId = ' + ID_APP);
   plugins.forEach(function (p) { if (!instalados[p]) malas.push('ios.includePlugins pide ' + p + ', que no esta en package.json'); });
+  /* EL Package.swift DEL REPO Y EL QUE HACE GITHUB, IGUALES (auditoria de la 0.212.0, 20 nov. 2026). Con
+     `ios.includePlugins` puesto, `npm run ios:sync` (el workflow iOS, antes de compilar) rehace
+     Package.swift SOLO con esa lista: un complemento que esta en el archivo del repo y no en la lista
+     desaparece de la app sin que nada falle, y la web recibe `Capacitor.Plugins.X` vacio. Le paso a
+     Haptics (0.208.0): el iPhone no vibraba y la fila «Vibrar» no salia. Cada complemento del archivo
+     va en la lista, y cada uno de la lista, en el archivo. */
+  var spmSync = texto('ios/App/CapApp-SPM/Package.swift');
+  var enSpm = [];
+  spmSync.replace(/\.package\(name: "[^"]+", path: "\.\.\/\.\.\/\.\.\/node_modules\/([^"]+)"\)/g, function (_, p) { enSpm.push(p); return _; });
+  enSpm.forEach(function (p) { if (plugins.indexOf(p) === -1) malas.push(p + ' esta en Package.swift y no en ios.includePlugins: ios:sync lo quitaria de la app'); });
+  plugins.forEach(function (p) { if (enSpm.indexOf(p) === -1) malas.push('ios.includePlugins pide ' + p + ', que no esta en ios/App/CapApp-SPM/Package.swift'); });
+  if (/Plugins\.Haptics/.test(texto('app/ui/vibra.js')) && plugins.indexOf('@capacitor/haptics') === -1) {
+    malas.push('app/ui/vibra.js vibra con Haptics y @capacitor/haptics no va en ios.includePlugins: el iPhone no vibraria');
+  }
   /* El del calendario usa EventKit: sin sus textos para la pregunta del sistema, Apple rechaza la subida. */
   if (plugins.indexOf('@ebarooni/capacitor-calendar') !== -1 && !/NSCalendarsFullAccessUsageDescription/.test(plist)) {
     malas.push('el complemento del calendario va en iOS sin NSCalendarsFullAccessUsageDescription en Info.plist: Apple rechaza la subida');

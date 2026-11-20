@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Auditoría de la 0.212</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500&family=Inter+Tight:wght@400;500&display=swap">
+<style>
+  /* Una columna de lectura con los colores y la letra de PACE. */
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4; --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858;
+    --line: #C9C0A8; --line-2: #B8AD8E; --focus: #3E5A3A; --cta: #50624D; --terra: #A35F45;
+    --display: 'Cormorant Garamond', Georgia, serif; --ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536; --line-2: #5f5544; --focus: #7A9A6D; --cta: #8E9D88; --terra: #D49478; color-scheme: dark; } }
+  :root[data-theme="dark"] { --paper: #1d1a14; --paper-2: #26211a; --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+    --line: #4d4536; --line-2: #5f5544; --focus: #7A9A6D; --cta: #8E9D88; --terra: #D49478; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.6 var(--ui); }
+  .marco { max-width: 760px; margin: 0 auto; padding: 8px 16px 88px; }
+  h1, h2, h3 { font-family: var(--display); font-style: italic; font-weight: 500; text-wrap: balance; color: var(--ink); }
+  h1 { font-size: clamp(38px, 8vw, 54px); line-height: 1.04; margin: 28px 0 14px; }
+  h2 { font-size: clamp(28px, 6vw, 34px); line-height: 1.1; margin: 56px 0 10px; padding-top: 24px; border-top: 1px solid var(--line); }
+  h3 { font-size: 25px; line-height: 1.2; margin: 0 0 8px; }
+  p, li { color: var(--ink-2); } p { margin: 0 0 12px; }
+  a { color: var(--focus); }
+  code { font-size: 13.5px; background: var(--paper-2); border-radius: 4px; padding: 1px 5px; overflow-wrap: anywhere; }
+  .kicker { font: 500 11px/1.4 var(--ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 6px; }
+  .lede { font-size: 18px; }
+  .cifras { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 0; padding: 0; list-style: none; }
+  .cifras li { border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; color: var(--ink); }
+  .cifras b { font: italic 500 26px/1 var(--display); margin-right: 6px; }
+  .hallazgo { border: 1px solid var(--line); border-radius: 12px; padding: 18px 18px 8px; margin: 20px 0; }
+  .etiquetas { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
+  .etq { font: 500 11px/1 var(--ui); letter-spacing: .1em; text-transform: uppercase; border: 1px solid var(--line-2); color: var(--ink-2); border-radius: 999px; padding: 5px 9px; }
+  .etq.grave, .etq.medio { border-color: var(--terra); color: var(--terra); }
+  .etq.hecho { background: var(--cta); border-color: var(--cta); color: var(--paper); }
+  .dato { font-size: 14px; color: var(--ink-3); }
+  .ops { list-style: none; padding: 0; margin: 12px 0; display: grid; gap: 8px; }
+  .ops li { border-left: 2px solid var(--line); padding: 2px 0 2px 12px; }
+  .ops li.rec { border-left-color: var(--cta); }
+  .ops b { color: var(--ink); font-weight: 500; }
+  .sello { font: 500 10.5px/1 var(--ui); letter-spacing: .1em; text-transform: uppercase; color: var(--paper); background: var(--cta); border-radius: 999px; padding: 3px 7px; margin-left: 6px; white-space: nowrap; }
+  ol.pasos { padding-left: 22px; } ol.pasos li { margin: 4px 0; }
+  ul.lista { padding-left: 20px; } ul.lista li { margin: 6px 0; }
+</style>
+</head>
+<body>
+<main class="marco">
+  <p class="kicker">PACE · 20 nov. 2026 · de la 0.205.0 a la 0.212.0</p>
+  <h1>Lo que entró desde la versión de prueba, mirado desde fuera</h1>
+  <p class="lede">He leído enteros la compra en las tiendas (la web, Android y el iPhone), la miniventana y el aviso al acabar el Foco en el PC, la voz y la vibración de Mueve y Estira, la comida, «Seguir por libre» con Ocaso, el calendario del iPhone, el aviso a la hora de entrada, la nota del fin de la semana de prueba y los avisos de logros agrupados. Antes de contar un fallo lo he comprobado: con una prueba que hoy cae en <code>main</code>, o leyendo el código hasta estar seguro.</p>
+  <ul class="cifras">
+    <li><b>7</b>hallazgos</li>
+    <li><b>5</b>comprobados</li>
+    <li><b>1</b>arreglado en la rama</li>
+    <li><b>4</b>descartados al mirarlos</li>
+  </ul>
+  <p class="dato" style="margin-top:14px">Las pruebas que caen en <code>main</code> están en <code>caen-en-main.spec.js</code>, en esta misma carpeta. El hallazgo 1 lo vigila <code>verify</code>. Lo demás espera tu letra: cada hallazgo lleva dos opciones, y la recomendada va marcada.</p>
+
+  <h2>Los hallazgos, de más grave a más leve</h2>
+
+  <section class="hallazgo">
+    <div class="etiquetas"><span class="etq grave">Grave</span><span class="etq">Comprobado</span><span class="etq hecho">Arreglado en la rama</span></div>
+    <h3>1 · En el iPhone, Mueve y Estira no vibran, y «Vibrar» no sale en Ajustes</h3>
+    <p>La vibración usa el complemento Haptics. En el iPhone, GitHub rehace la lista de complementos antes de compilar, y lo hace solo con los que dice <code>capacitor.config.json</code> en <code>ios.includePlugins</code>. Haptics no estaba ahí, así que la app del iPhone sale sin él. PACE cree que en ese móvil no se puede vibrar y esconde la fila. Al calendario le pasó lo mismo en la 0.210.0 y se arregló así, pero solo para el calendario.</p>
+    <p class="dato">Dónde: <code>capacitor.config.json</code> y el paso <code>npm run ios:sync</code> de <code>.github/workflows/ios.yml</code>. Lo comprobé con el código de la herramienta de Capacitor (<code>getIncludedPluginPackages</code>, la 8.5.2): si la lista existe, solo se usa la lista. TestFlight aún no tiene ninguna versión con la vibración (la última es la 0.205.0), así que nadie lo ha notado.</p>
+    <p><b>Arreglado:</b> Haptics va en la lista. Además <code>verify</code> comprueba ahora que la lista y el <code>Package.swift</code> del repositorio lleven los mismos complementos, para que no le pase a un tercero. Sobre <code>main</code> esa comprobación falla.</p>
+  </section>
+
+  <section class="hallazgo">
+    <div class="etiquetas"><span class="etq medio">Medio</span><span class="etq">Supongo</span><span class="etq">Cuando se encienda Play</span></div>
+    <h3>2 · En Android, la primera vez que se abre la compra puede decir «No se pudieron cargar los precios»</h3>
+    <p>Al abrirse la tienda, PACE le pide a Google dos cosas a la vez: lo que ya tienes comprado y los precios. Las dos intentan conectar con Google Play al mismo tiempo. Según la biblioteca de cobro de Google, si un segundo intento llega mientras el primero aún está conectando, se rechaza al momento. Así, la pregunta de los precios fallaría siempre en el primer arranque. Saldría «No se pudieron cargar los precios» con «Reintentar», y al reintentar ya iría bien.</p>
+    <p class="dato">Dónde: <code>PaceCompras.java</code>, <code>conectar()</code> (llama a <code>startConnection</code> sin mirar si ya está conectando), y <code>paceTiendaAppCargar</code> en <code>app/state-compra.apps.js</code>, que pide las dos cosas a la vez. «Supongo» porque el código de Google no está en el repositorio: lo digo por cómo se comporta su biblioteca, y solo se sabe del todo con un tester con licencia. Hoy no pasa nada, porque la tienda está apagada.</p>
+    <ul class="ops">
+      <li class="rec"><b>A · Que PACE pregunte una cosa detrás de otra</b> (primero lo comprado, luego los precios) y que la pieza de Android espere a la conexión que ya está en marcha en vez de abrir otra. Va con una prueba con la tienda de mentira: la pieza nunca recibe dos preguntas a la vez. <span class="sello">Recomendada</span></li>
+      <li><b>B · Dejarlo para la prueba con licencia</b>, antes de encender Play. Es más barato ahora, pero se puede olvidar.</li>
+    </ul>
+  </section>
+
+  <section class="hallazgo">
+    <div class="etiquetas"><span class="etq medio">Medio</span><span class="etq">Comprobado</span></div>
+    <h3>3 · Con «A tu ritmo», la miniventana no avisa del final y su «Pausar» no pausa</h3>
+    <p>Con «A tu ritmo», al acabar un bloque el aro pasa solo a la pausa. La tira no llega a ponerse en terracota con «Foco terminado»: salta directa a «Pausa corta 04:59». Y en esa pausa ofrece «Pausar». Al pulsarlo, el aro la vuelve a poner en marcha al instante: el botón no hace nada. En el aro esa pausa no se puede pausar (dice «Hacer la pausa»).</p>
+    <p class="dato">Dónde: <code>app/focus/FocusTimer.mini.jsx</code>, <code>MiniTira</code>, que solo mira si corre o no, y el efecto de <code>FocusTimer.jsx</code> que repone la pausa del día. Prueba que cae: «hallazgo 3» de <code>caen-en-main.spec.js</code> (la tira pasa de 04:41 a 04:35 tras pulsar «Pausar»). Sin «A tu ritmo» va bien.</p>
+    <ul class="ops">
+      <li class="rec"><b>A · En la pausa del día, la tira sin botón</b> y con el texto del aro («Pausa · luego, el bloque 2 de 9»). Al acabar el bloque, unos segundos en terracota con «Foco terminado» antes de contar la pausa. <span class="sello">Recomendada</span></li>
+      <li><b>B · La tira dice lo mismo que el aro</b>: «Hacer la pausa», que te lleva a la pestaña de PACE. Es más útil, pero es un botón más en 300 × 84.</li>
+    </ul>
+  </section>
+
+  <section class="hallazgo">
+    <div class="etiquetas"><span class="etq">Leve</span><span class="etq">Comprobado</span></div>
+    <h3>4 · Con la tienda del móvil apagada, lo guardado de una compra sigue abriendo PACE completo</h3>
+    <p>Para que una compra siga valiendo sin conexión, PACE guarda lo último que dijo la tienda. Con la tienda apagada, como hoy, PACE no le pregunta nada. Pero lo guardado se sigue leyendo, y si dice «de por vida» abre PACE completo, sin firma ni tienda que lo contradiga. Hoy nadie lo tiene: solo se escribe con la tienda encendida, y una copia importada no lo trae. Pasaría si un día hubiera que apagar la tienda después de vender: quien compró lo conservaría para siempre, devoluciones incluidas.</p>
+    <p class="dato">Dónde: <code>paceTiendaAppVigentes</code> en <code>app/state-compra.apps.js</code>, que no mira <code>encendida</code>. Prueba que cae: «hallazgo 4».</p>
+    <ul class="ops">
+      <li class="rec"><b>A · Apagada es apagada:</b> con la tienda apagada, lo guardado no abre nada. Así se cumple la regla de la cabecera del guard: nada guardado en el estado abre PACE completo sin firma. <span class="sello">Recomendada</span></li>
+      <li><b>B · Dejarlo así a propósito</b>, como red por si hubiera que apagar una tienda tras vender, y escribirlo en el comentario.</li>
+    </ul>
+  </section>
+
+  <section class="hallazgo">
+    <div class="etiquetas"><span class="etq">Leve</span><span class="etq">Comprobado</span></div>
+    <h3>5 · Quien siempre contesta «Ahora no» oye «¿Te ayudó?» cada día</h3>
+    <p>Desde la 0.206.0, la pregunta sale las tres primeras veces de cada rutina y después una vez por semana. Pero lo que se cuenta son las respuestas (Sí, Un poco, No), y «Ahora no» no suma. Quien siempre la aparta nunca llega a tres: se la preguntan cada día por esa rutina, hasta dos al día. Es justo quien menos la quiere.</p>
+    <p class="dato">Dónde: <code>feedbackToca</code> en <code>app/state-feedback.jsx</code>. Prueba que cae: «hallazgo 5».</p>
+    <ul class="ops">
+      <li class="rec"><b>A · Contar también las veces que se preguntó</b>: tres preguntas, contestadas o no, y luego una vez por semana. Lo que aprende «Qué te ayuda» sigue igual. <span class="sello">Recomendada</span></li>
+      <li><b>B · Dos «Ahora no» seguidos de una rutina la pasan a una vez por semana</b>, y una respuesta de verdad vuelve a contar como hoy.</li>
+    </ul>
+  </section>
+
+  <section class="hallazgo">
+    <div class="etiquetas"><span class="etq">Leve</span><span class="etq">Comprobado</span></div>
+    <h3>6 · La web guarda las cuatro voces de Mueve y Estira aunque se use una</h3>
+    <p>Para usar PACE sin conexión, la web guarda al instalarse las dieciséis tomas de voz de Mueve y Estira: dos voces por dos idiomas, 2,7 MB. Se usa una voz y un idioma, unos 0,7 MB. Además, si una sola toma no baja, no se instala la versión nueva. En una wifi mala es más fácil quedarse en la de antes.</p>
+    <p class="dato">Dónde: <code>sw.js</code>, <code>PRECACHE</code>, con <code>cache.addAll</code>. Comprobado lo que se guarda; lo que gasta al actualizar depende de lo que conteste Cloudflare a «¿ha cambiado?» (supongo que casi nada). En las apps no cuenta: llevan los archivos dentro.</p>
+    <ul class="ops">
+      <li class="rec"><b>A · Guardar solo la voz y el idioma que usas</b> la primera vez que abres Mueve o Estira. Sin conexión, la primera vez suena la madera. <span class="sello">Recomendada</span></li>
+      <li><b>B · Dejarlo así</b>, porque así suena sin conexión desde el primer día, y aceptar los 2 MB de más.</li>
+    </ul>
+  </section>
+
+  <section class="hallazgo">
+    <div class="etiquetas"><span class="etq">Leve</span><span class="etq">Supongo</span></div>
+    <h3>7 · En un portátil con pantalla táctil, Ajustes ofrece «Vibrar» y no vibra nada</h3>
+    <p>PACE decide si se puede vibrar mirando dos cosas: que el navegador sepa vibrar y que la pantalla sea táctil. Chrome de ordenador sabe vibrar (aunque no tenga motor), y un portátil táctil de Windows cumple las dos. La fila sale y no hace nada.</p>
+    <p class="dato">Dónde: <code>paceVibraPosible</code> en <code>app/ui/vibra.js</code>. «Supongo» porque no tengo un portátil táctil a mano.</p>
+    <ul class="ops">
+      <li class="rec"><b>A · En la web, solo en móviles</b> (que el navegador diga que es un móvil, además de lo de ahora). <span class="sello">Recomendada</span></li>
+      <li><b>B · Dejarlo:</b> es un caso raro, y la fila dice «Vibrar», no promete nada más.</li>
+    </ul>
+  </section>
+
+  <h2>Descartados al mirarlos</h2>
+  <ul class="lista">
+    <li><b>Ocaso tras «Seguir por libre».</b> El hueco que apuntaba <code>STATE.md</code> ya está cerrado en <code>main</code> (commit 4957178f): un Foco empezado después de la salida mira la salida apuntada y saca el día. Tiene su prueba.</li>
+    <li><b>La compra, ¿puede encenderse sola o abrir PACE completo sin pagar?</b> No. Las dos tiendas de las apps llevan <code>encendida: false</code>, y <code>verify</code> no deja encenderlas sin su alta con fecha, sin la clave de Play o antes de v1. Android solo cree compras con la firma de Google y nunca una pendiente; el iPhone, solo lo que StoreKit da por verificado y sin devolver. La web no tiene enlaces de pago. Lo único que abre algo sin la tienda es el hallazgo 4, que hoy nadie puede tener.</li>
+    <li><b>El calendario del iPhone.</b> Comparé lo que PACE lee y escribe con el complemento instalado (la 8.8.0): los nombres de los campos casan, «cancelado» se escribe igual, «libre» es el 1 y el aviso al empezar va en minutos. La marca de este iPhone en el llavero no viaja a otro móvil.</li>
+    <li><b>La voz con el sonido de PACE apagado.</b> No suena: <code>playSound</code> sale antes de llegar a la voz. La vibración sí va antes, a propósito: de fábrica vibra justo cuando el sonido está apagado.</li>
+  </ul>
+
+  <h2>Solo se sabe en un móvil</h2>
+  <p>Con la 0.212.0 o la siguiente, en TestFlight y en la prueba interna de Play.</p>
+  <h3>En el iPhone (con el hallazgo 1 ya juntado)</h3>
+  <ol class="pasos">
+    <li>Ajustes de PACE › Oír: tiene que salir la fila «Vibrar», con «Sin sonido» elegido.</li>
+    <li>Apaga el sonido de PACE y empieza cualquier rutina de Mueve. En la cuenta de entrada tienes que notar un toque por segundo, uno medio al «Ya», uno por repetición y uno largo en el descanso.</li>
+    <li>Pon «Vibrar» en «Siempre» y el sonido encendido: tiene que vibrar y sonar a la vez. Con «No», nada.</li>
+    <li>Con el iPhone en silencio (el interruptor del lado): mira si sigue vibrando y apunta qué pasa.</li>
+  </ol>
+  <h3>En Android</h3>
+  <ol class="pasos">
+    <li>Lo mismo que en el iPhone: la fila, los toques con el sonido apagado y «Siempre».</li>
+    <li>Con «Marca la fase» encendida, haz «Círculos de brazos» con «Auto». En el cambio de brazo tiene que sonar «Cambia de lado» y notar dos toques. Pausa a mitad de una palabra: la voz se tiene que callar al momento.</li>
+    <li>Sin conexión (modo avión), con la app recién abierta: la voz de Mueve tiene que sonar igual, porque va dentro de la app.</li>
+  </ol>
+  <h3>La compra, cuando se enciendan las tiendas (hallazgo 2)</h3>
+  <ol class="pasos">
+    <li>Con una cuenta de tester con licencia en Play, cierra PACE del todo, ábrela y abre la hoja de PACE completo: tiene que salir el precio a la primera, sin «No se pudieron cargar los precios».</li>
+    <li>Compra el de por vida con la tarjeta de prueba, pon el móvil en modo avión, cierra y abre PACE: tiene que seguir abierto.</li>
+    <li>Devuelve la compra desde Play Console y vuelve a abrir PACE con conexión: tiene que cerrarse.</li>
+  </ol>
+  <h3>La miniventana, en el PC (Chrome o Edge)</h3>
+  <ol class="pasos">
+    <li>Empieza un Foco de 5 minutos sin «A tu ritmo», abre «Miniventana» y pasa a otra aplicación. Al acabar tiene que ponerse en terracota con «Foco terminado», sonar tres campanadas y quedarse el aviso de Windows hasta que lo cierres.</li>
+    <li>Cambia PACE a oscuro con la tira abierta y mira si la tira cambia también (supongo que no; si no cambia, es una línea más para la lista).</li>
+  </ol>
+</main>
+</body>
+</html>
