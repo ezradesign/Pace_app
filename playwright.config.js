@@ -86,7 +86,11 @@ module.exports = defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { browserName: 'chromium', viewport: { width: 1280, height: 720 } },
+      /* Sin la miniventana de verdad (Document Picture-in-Picture): desde el 20 nov. se abre sola al
+         pulsar «Empezar foco», y en el Chromium sin pantalla se abre de verdad, en otra ventana que se
+         queda con el foco. Las pruebas que la necesitan la fingen (tests/aviso-pc.spec.js). */
+      use: { browserName: 'chromium', viewport: { width: 1280, height: 720 },
+        launchOptions: { args: ['--disable-blink-features=DocumentPictureInPictureAPI'] } },
     },
     /* El motor de Safari (iPhone y Mac), solo para `*.safari.spec.js` (lo que
        ya se vio fallar en Safari y no en Chromium: el aviso falso de versión

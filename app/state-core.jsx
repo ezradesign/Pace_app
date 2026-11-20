@@ -86,7 +86,7 @@ const defaultState = {
   // toggle en Ajustes); si se deniega, el flag baja a false para que el toggle
   // refleje la realidad. Solo dispara con la pestaña en segundo plano.
   // Ver FocusTimer.support.jsx (maybeRequestNotifyPermission).
-  notifyFocusEnd: true, exactaOfrecida: false, // en Android, si ya salió «Avisos a su hora ›» (FocusTimer.avisos.jsx)
+  notifyFocusEnd: true, exactaOfrecida: false, miniSolaNo: false, // si ya salió «Avisos a su hora ›» en Android (FocusTimer.avisos.jsx); si la persona cerró la miniventana con el Foco en marcha y ya no se abre sola (Ez, A del 20 nov.; FocusTimer.mini.jsx)
   lang: 'en',
 
   /* Idioma AUTOMÁTICO (s139 · Fase 1.6). `lang` sigue siendo SIEMPRE un idioma

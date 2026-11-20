@@ -232,7 +232,8 @@ test('aviso-pc · 2B · la tira cuenta el Foco, «Pausar» y «Continuar» manda
 const botonMini = (page) => page.getByRole('button', { name: 'Abrir la miniventana, encima de todas las ventanas' });
 
 test('aviso-pc · 2.2A · el botón sale junto a «Pausar» solo mientras corre un Foco y abre la tira', async ({ page, context }) => {
-  await sembrar(context, { soundOn: false, notifyFocusEnd: false, focusMinutes: 5 });
+  /* Con `miniSolaNo` la tira no se abre sola al empezar (la cerró a mano otra vez): queda el botón. */
+  await sembrar(context, { soundOn: false, notifyFocusEnd: false, focusMinutes: 5, miniSolaNo: true });
   await miniventanaFalsa(context);
   await context.clock.install({ time: ARRANQUE });
   await irAlArtefacto(page);
@@ -270,4 +271,51 @@ test('aviso-pc · 2.2A · en la pausa no hay botón', async ({ page, context }) 
   await cta(page).click();
   await expect(cta(page)).toHaveText('Pausar');
   await expect(botonMini(page)).toHaveCount(0);
+});
+
+/* LA MINIVENTANA SE ABRE SOLA AL PULSAR «EMPEZAR» (Ez, «A: recuerda el cierre», 20 nov. 2026). Dentro del
+   mismo toque, porque el navegador solo la abre con un gesto. Si la persona la cierra con el Foco en
+   marcha, PACE lo recuerda (`miniSolaNo`) y deja de abrirla sola; abrirla a mano lo deshace. */
+const estadoGuardado = (page) => page.evaluate(() => JSON.parse(localStorage.getItem('pace.state.v2') || '{}'));
+
+test('mini-sola · al pulsar «Empezar foco» la tira se abre sola; cerrada a mano, ya no, y abrirla a mano lo deshace', async ({ page, context }) => {
+  await sembrar(context, { soundOn: false, notifyFocusEnd: false, focusMinutes: 5 });
+  await miniventanaFalsa(context);
+  await context.clock.install({ time: ARRANQUE });
+  await irAlArtefacto(page);
+  await empezarFoco(page);
+  await expect(tira(page), 'al pulsar «Empezar foco» la miniventana no se abrió').toContainText(/0[45]:\d\d/);
+  /* La cierra a mano, con el Foco en marcha. */
+  await page.evaluate(() => document.querySelector('[data-pip-falso]').remove());
+  await esperarEnPagina(page, () => JSON.parse(localStorage.getItem('pace.state.v2')).miniSolaNo === true);
+  await expect(botonMini(page), 'el botón sigue para abrirla a mano').toBeVisible();
+  await cta(page).click();
+  await page.getByRole('button', { name: 'Reiniciar bloque' }).click();
+  await empezarFoco(page);
+  await expect(page.locator('[data-pip-falso]'), 'la cerró a mano y se volvió a abrir sola').toHaveCount(0);
+  await botonMini(page).click();
+  await expect(tira(page)).toContainText(/0[45]:\d\d/);
+  expect((await estadoGuardado(page)).miniSolaNo, 'abrirla a mano no lo deshizo').toBe(false);
+});
+
+test('mini-sola · sin toque no se abre sola: ni el Foco que vuelve al recargar ni un toque que el navegador no da por bueno', async ({ page, context }) => {
+  await sembrar(context, { soundOn: false, notifyFocusEnd: false, focusMinutes: 5 });
+  await miniventanaFalsa(context);
+  await context.clock.install({ time: ARRANQUE });
+  await context.addInitScript(() => {
+    if (window.top !== window || sessionStorage.getItem('sembrado')) return;
+    sessionStorage.setItem('sembrado', '1');
+    const ahora = Date.now();
+    localStorage.setItem('pace.timer.v1', JSON.stringify({ endsAt: ahora + 4 * 60 * 1000, inicio: ahora - 60 * 1000, mode: 'foco', minutes: 5, id: 'vuelve' }));
+  });
+  await irAlArtefacto(page);
+  await expect(cta(page)).toHaveText('Pausar');
+  expect(await page.evaluate(() => window.__pipPedido), 'el Foco que vuelve al recargar abrió la miniventana').toBeUndefined();
+  /* `page.evaluate` cuenta como toque para el navegador: el «sin toque» se finge en `userActivation`. */
+  await page.evaluate(() => Object.defineProperty(navigator, 'userActivation', { configurable: true, get: () => ({ isActive: false, hasBeenActive: true }) }));
+  await cta(page).click();
+  await page.getByRole('button', { name: 'Reiniciar bloque' }).click();
+  await empezarFoco(page);
+  expect(await page.evaluate(() => window.__pipPedido), 'sin un toque de verdad se abrió la miniventana').toBeUndefined();
+  await expect(page.locator('[data-pip-falso]')).toHaveCount(0);
 });

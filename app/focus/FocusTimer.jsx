@@ -262,7 +262,7 @@ function FocusTimer({ onFinish }) {
       if (state.focusMode === 'foco' && typeof paceOrigenSesion === 'function') paceOrigenSesion('aro', !!aro);
     }
     try { playSound('pomodoro.start'); } catch (e) {}
-    if (state.focusMode === 'foco') maybeRequestNotifyPermission(state, set);
+    if (state.focusMode === 'foco') { if (status !== 'paused') paceMiniAlEmpezar(state); maybeRequestNotifyPermission(state, set); }   // la miniventana, dentro del toque
   };
   // Arranque/reanudación normal (idle|paused -> running). Pausar no pasa por aquí.
   const handleNormalStart = () => { startFocusVisual(); avisarCorreRef.current = true; toggle(); };

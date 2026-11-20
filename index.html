@@ -7833,7 +7833,7 @@ const defaultState = {
 
 
 
-  notifyFocusEnd: true, exactaOfrecida: false,
+  notifyFocusEnd: true, exactaOfrecida: false, miniSolaNo: false,
   lang: 'en',
 
 
@@ -34278,10 +34278,17 @@ Object.assign(window, { useTituloCuenta, paceTituloCuenta, paceTabTerminado });
 
 
 
+
+
+
+
+
+
+
 const { useEffect: useEffectMini, useState: useStateMini } = React;
 
 const PACE_MINI_TAM = { width: 300, height: 84 };
-let _paceMini = { win: null, root: null, props: null };
+let _paceMini = { win: null, root: null, props: null, cerrandoYo: false };
 
 function paceMiniPuede() {
   try {return 'documentPictureInPicture' in window && window.top === window;} catch (e) {return false;}
@@ -34294,7 +34301,21 @@ function paceMiniPintar() {
 }
 function paceMiniCerrar() {
   const w = _paceMini.win;
-  if (w) {try {w.close();} catch (e) {}}
+  if (w) {_paceMini.cerrandoYo = true;try {w.close();} catch (e) {}}
+}
+
+window.addEventListener('pagehide', () => {_paceMini.cerrandoYo = true;});
+function paceMiniApuntar(patch) {
+  try {if (typeof setState === 'function') setState(patch);} catch (e) {}
+}
+
+function paceMiniAlEmpezar(estado) {
+  try {
+    if (!estado || estado.miniSolaNo || !paceMiniPuede() || _paceMini.win) return;
+    const ua = navigator.userActivation;
+    if (ua && !ua.isActive) return;
+    paceMiniAbrir({ sola: true });
+  } catch (e) {}
 }
 
 
@@ -34315,8 +34336,11 @@ function paceMiniVestir(w) {
   d.body.style.cssText = 'margin:0;height:100%;overflow:hidden;background:var(--paper);';
 }
 
-function paceMiniAbrir() {
+function paceMiniAbrir(op) {
   if (!paceMiniPuede()) return Promise.resolve(null);
+
+  const sola = !!(op && op.sola === true);
+  if (!sola && getState().miniSolaNo) paceMiniApuntar({ miniSolaNo: false });
   if (_paceMini.win) {try {_paceMini.win.focus();} catch (e) {}return Promise.resolve(_paceMini.win);}
   return Promise.resolve(window.documentPictureInPicture.requestWindow(PACE_MINI_TAM)).then((w) => {
     paceMiniVestir(w);
@@ -34327,9 +34351,11 @@ function paceMiniAbrir() {
     _paceMini.root = ReactDOM.createRoot(cont);
     const tic = w.setInterval(paceMiniPintar, 1000);
     w.addEventListener('pagehide', () => {
+      const p = _paceMini.props;
+      if (!_paceMini.cerrandoYo && p && p.modo === 'foco' && (p.status === 'running' || p.status === 'paused')) paceMiniApuntar({ miniSolaNo: true });
       try {w.clearInterval(tic);} catch (e) {}
       try {_paceMini.root && _paceMini.root.unmount();} catch (e) {}
-      _paceMini = { win: null, root: null, props: _paceMini.props };
+      _paceMini = { win: null, root: null, props: _paceMini.props, cerrandoYo: false };
       paceMiniAvisar();
     });
     paceMiniPintar();
@@ -34406,8 +34432,8 @@ function useMiniventana(props) {
   return { puede: paceMiniPuede(), abierta };
 }
 
-Object.assign(window, { useMiniventana, paceMiniAbrir, paceMiniPuede, MiniTira });
-;Object.assign(window, { paceMiniPuede, paceMiniAbierta, paceMiniAvisar, paceMiniPintar, paceMiniCerrar, paceMiniVestir, paceMiniAbrir, paceMiniQueda, MiniTira, useMiniventana });
+Object.assign(window, { useMiniventana, paceMiniAbrir, paceMiniAlEmpezar, paceMiniPuede, MiniTira });
+;Object.assign(window, { paceMiniPuede, paceMiniAbierta, paceMiniAvisar, paceMiniPintar, paceMiniCerrar, paceMiniApuntar, paceMiniAlEmpezar, paceMiniVestir, paceMiniAbrir, paceMiniQueda, MiniTira, useMiniventana });
 })();
 </script>
   <script>
@@ -34676,7 +34702,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
       if (state.focusMode === 'foco' && typeof paceOrigenSesion === 'function') paceOrigenSesion('aro', !!aro);
     }
     try {playSound('pomodoro.start');} catch (e) {}
-    if (state.focusMode === 'foco') maybeRequestNotifyPermission(state, set);
+    if (state.focusMode === 'foco') {if (status !== 'paused') paceMiniAlEmpezar(state);maybeRequestNotifyPermission(state, set);}
   };
 
   const handleNormalStart = () => {startFocusVisual();avisarCorreRef.current = true;toggle();};

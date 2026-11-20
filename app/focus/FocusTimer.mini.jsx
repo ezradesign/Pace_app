@@ -13,12 +13,19 @@
    la pestaña (y sobre las demás pestañas, por el mismo camino). Al acabar un Foco se pone en
    terracota. El navegador solo deja abrirla con un toque: `paceMiniAbrir()` va siempre en un clic.
 
-   Se cierra sola si se cierra o recarga la pestaña. Si el aro se desmonta, se cierra con él. */
+   Se cierra sola si se cierra o recarga la pestaña. Si el aro se desmonta, se cierra con él.
+
+   SE ABRE SOLA AL PULSAR «EMPEZAR» (Ez, «A: recuerda el cierre», 20 nov. 2026): `paceMiniAlEmpezar` va
+   dentro del toque que empieza un bloque de Foco (no al reanudar), y solo si el toque es de verdad
+   (`navigator.userActivation`): el Foco que vuelve al recargar, el de otra pestaña o el que arranca
+   solo no la abren. Si la persona la cierra con el Foco en marcha, PACE lo apunta (`miniSolaNo`) y deja
+   de abrirla sola; abrirla a mano con «Miniventana» lo deshace. Que la cierre PACE (el aro se va) o
+   que se vaya con la pestaña no cuenta (`cerrandoYo`). */
 
 const { useEffect: useEffectMini, useState: useStateMini } = React;
 
 const PACE_MINI_TAM = { width: 300, height: 84 };
-let _paceMini = { win: null, root: null, props: null };
+let _paceMini = { win: null, root: null, props: null, cerrandoYo: false };
 
 function paceMiniPuede() {
   try { return 'documentPictureInPicture' in window && window.top === window; } catch (e) { return false; }
@@ -31,7 +38,21 @@ function paceMiniPintar() {
 }
 function paceMiniCerrar() {
   const w = _paceMini.win;
-  if (w) { try { w.close(); } catch (e) {} }
+  if (w) { _paceMini.cerrandoYo = true; try { w.close(); } catch (e) {} }
+}
+/* Si se va la pestaña, la miniventana se va con ella: tampoco la cerró la persona. */
+window.addEventListener('pagehide', () => { _paceMini.cerrandoYo = true; });
+function paceMiniApuntar(patch) {
+  try { if (typeof setState === 'function') setState(patch); } catch (e) {}
+}
+/* Al empezar un bloque de Foco, dentro del toque. */
+function paceMiniAlEmpezar(estado) {
+  try {
+    if (!estado || estado.miniSolaNo || !paceMiniPuede() || _paceMini.win) return;
+    const ua = navigator.userActivation;
+    if (ua && !ua.isActive) return;
+    paceMiniAbrir({ sola: true });
+  } catch (e) {}
 }
 
 /* La ventana lleva las hojas de estilo y los atributos del documento (paleta, letra, idioma): así
@@ -52,8 +73,11 @@ function paceMiniVestir(w) {
   d.body.style.cssText = 'margin:0;height:100%;overflow:hidden;background:var(--paper);';
 }
 
-function paceMiniAbrir() {
+function paceMiniAbrir(op) {
   if (!paceMiniPuede()) return Promise.resolve(null);
+  /* A mano («Miniventana», que pasa su evento): vuelve a abrirse sola en adelante. */
+  const sola = !!(op && op.sola === true);
+  if (!sola && getState().miniSolaNo) paceMiniApuntar({ miniSolaNo: false });
   if (_paceMini.win) { try { _paceMini.win.focus(); } catch (e) {} return Promise.resolve(_paceMini.win); }
   return Promise.resolve(window.documentPictureInPicture.requestWindow(PACE_MINI_TAM)).then((w) => {
     paceMiniVestir(w);
@@ -64,9 +88,11 @@ function paceMiniAbrir() {
     _paceMini.root = ReactDOM.createRoot(cont);
     const tic = w.setInterval(paceMiniPintar, 1000);
     w.addEventListener('pagehide', () => {
+      const p = _paceMini.props;
+      if (!_paceMini.cerrandoYo && p && p.modo === 'foco' && (p.status === 'running' || p.status === 'paused')) paceMiniApuntar({ miniSolaNo: true });
       try { w.clearInterval(tic); } catch (e) {}
       try { _paceMini.root && _paceMini.root.unmount(); } catch (e) {}
-      _paceMini = { win: null, root: null, props: _paceMini.props };
+      _paceMini = { win: null, root: null, props: _paceMini.props, cerrandoYo: false };
       paceMiniAvisar();
     });
     paceMiniPintar();
@@ -143,4 +169,4 @@ function useMiniventana(props) {
   return { puede: paceMiniPuede(), abierta };
 }
 
-Object.assign(window, { useMiniventana, paceMiniAbrir, paceMiniPuede, MiniTira });
+Object.assign(window, { useMiniventana, paceMiniAbrir, paceMiniAlEmpezar, paceMiniPuede, MiniTira });
