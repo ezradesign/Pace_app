@@ -34,7 +34,10 @@ var PACE_BUHO_RESPUESTAS = 25;
    las 18:00 dejaba el día fuera. Esa cuenta queda solo de reserva, desde el final.
    El día es el del inicio: un Foco empezado a las 23:50 tras la salida que acaba a las 00:15 saca
    de la cuenta el día de AYER, con la salida que se apuntó al contarlo (`ocasoSalida`); el plan de
-   hoy no sabe nada de ayer. Lo vigila tests/logros-ocaso-buho.spec.js. */
+   hoy no sabe nada de ayer. Lo vigila tests/logros-ocaso-buho.spec.js.
+   Hoy manda el plan; sin plan, la misma salida apuntada: «Seguir por libre» con la jornada cerrada
+   retira el día (`ritmoPorLibre`, dia: null) y, sin ella, el Foco de después de la salida no sacaba
+   de la cuenta un día ya contado. */
 function paceOcasoFoco(minutos, inicioMs, finMs) {
   try {
     if (typeof ritmoTrasElFin !== 'function') return;
@@ -42,13 +45,10 @@ function paceOcasoFoco(minutos, inicioMs, finMs) {
     var fin = typeof finMs === 'number' && isFinite(finMs) && finMs <= ahora ? finMs : ahora;
     var empezo = typeof inicioMs === 'number' && isFinite(inicioMs) && inicioMs <= fin ? inicioMs : fin - (Number(minutos) || 0) * 60000;
     var dia = toISODate(empezo);
-    if (dia === todayISO()) {
-      var p = typeof ritmoPlan === 'function' ? ritmoPlan(getState()) : null;
-      if (p && p.m && ritmoTrasElFin(p.m, empezo)) setState({ ocasoTarde: dia });
-      return;
-    }
-    var s = getState(), sal = s.ocasoSalida;
-    if (!sal || sal.fecha !== dia || !ritmoTrasElFin(sal, empezo)) return;
+    var s = getState();
+    var p = dia === todayISO() && typeof ritmoPlan === 'function' ? ritmoPlan(s) : null;
+    var sal = p && p.m ? p.m : (s.ocasoSalida && s.ocasoSalida.fecha === dia ? s.ocasoSalida : null);
+    if (!sal || !ritmoTrasElFin(sal, empezo)) return;
     var lista = Array.isArray(s.ocasoDias) ? s.ocasoDias.filter(function (d) { return d !== dia; }) : [];
     setState({ ocasoTarde: dia, ocasoDias: lista });
   } catch (e) {}
