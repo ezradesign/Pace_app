@@ -1,0 +1,1045 @@
+{
+ "pantalla": "home",
+ "lang": "es",
+ "vp": {
+  "w": 360,
+  "h": 640
+ },
+ "letra": 1.15,
+ "filas": [
+  {
+   "momento": "la tarjeta corta",
+   "medidos": 20,
+   "todos": [
+    [
+     "Min",
+     1,
+     null,
+     null
+    ],
+    [
+     "15",
+     1,
+     null,
+     null
+    ],
+    [
+     "25",
+     1,
+     null,
+     null
+    ],
+    [
+     "35",
+     1,
+     null,
+     null
+    ],
+    [
+     "45",
+     1,
+     null,
+     null
+    ],
+    [
+     "Otro",
+     1,
+     null,
+     null
+    ],
+    [
+     "Foco manual",
+     1,
+     null,
+     null
+    ],
+    [
+     "25:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Concentración profunda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar foco",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ciclo 1 / 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "Actividades",
+     1,
+     null,
+     null
+    ],
+    [
+     "Respira",
+     1,
+     null,
+     null
+    ],
+    [
+     "Estira",
+     1,
+     null,
+     null
+    ],
+    [
+     "Mueve",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hidrátate",
+     1,
+     null,
+     null
+    ],
+    [
+     "¿Cuánto trabajas hoy?",
+     1,
+     null,
+     null
+    ],
+    [
+     "Al calendario",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tú eliges las horas",
+     2,
+     null,
+     null
+    ],
+    [
+     "Preparar jornada",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "la pregunta",
+   "medidos": 29,
+   "todos": [
+    [
+     "Min",
+     1,
+     null,
+     null
+    ],
+    [
+     "15",
+     1,
+     null,
+     null
+    ],
+    [
+     "25",
+     1,
+     null,
+     null
+    ],
+    [
+     "35",
+     1,
+     null,
+     null
+    ],
+    [
+     "45",
+     1,
+     null,
+     null
+    ],
+    [
+     "Otro",
+     1,
+     null,
+     null
+    ],
+    [
+     "Foco manual",
+     1,
+     null,
+     null
+    ],
+    [
+     "25:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Concentración profunda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar foco",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ciclo 1 / 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "¿Cuánto trabajas hoy?",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hoy voy por libre",
+     1,
+     null,
+     null
+    ],
+    [
+     "9:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "14:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "·",
+     1,
+     null,
+     null
+    ],
+    [
+     "1 h",
+     1,
+     null,
+     null
+    ],
+    [
+     "17:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empiezas",
+     1,
+     null,
+     null
+    ],
+    [
+     "comes",
+     1,
+     null,
+     null
+    ],
+    [
+     "Terminas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Una hora",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hasta las 11:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Dos horas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hasta las 12:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Media jornada",
+     1,
+     null,
+     null
+    ],
+    [
+     "De 10:00 a 13:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Jornada entera",
+     1,
+     null,
+     null
+    ],
+    [
+     "De 10:00 a 17:00",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "el día servido llegando a las 10:00",
+   "medidos": 24,
+   "todos": [
+    [
+     "Min",
+     1,
+     null,
+     null
+    ],
+    [
+     "15",
+     1,
+     null,
+     null
+    ],
+    [
+     "25",
+     1,
+     null,
+     null
+    ],
+    [
+     "35",
+     1,
+     null,
+     null
+    ],
+    [
+     "45",
+     1,
+     null,
+     null
+    ],
+    [
+     "Otro",
+     1,
+     null,
+     null
+    ],
+    [
+     "Bloque 1 de 8",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tu jornada, hasta las 17:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "45:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Trabajo en profundidad",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar jornada",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ciclo 1 / 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "Jornada entera",
+     1,
+     null,
+     null
+    ],
+    [
+     "De a · comida · · hoy de 10:00 a 17:00",
+     3,
+     null,
+     null
+    ],
+    [
+     "9:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "17:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "14:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "1 h",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cambiar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hoy voy por libre",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ver todo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ahora10:00",
+     2,
+     null,
+     null
+    ],
+    [
+     "Foco · bloque 1 de 8",
+     1,
+     null,
+     null
+    ],
+    [
+     "45 min · empieza en el aro, arriba",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "el día servido al empezar",
+   "medidos": 24,
+   "todos": [
+    [
+     "Min",
+     1,
+     null,
+     null
+    ],
+    [
+     "15",
+     1,
+     null,
+     null
+    ],
+    [
+     "25",
+     1,
+     null,
+     null
+    ],
+    [
+     "35",
+     1,
+     null,
+     null
+    ],
+    [
+     "45",
+     1,
+     null,
+     null
+    ],
+    [
+     "Otro",
+     1,
+     null,
+     null
+    ],
+    [
+     "Bloque 1 de 9",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tu jornada, hasta las 17:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "45:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Trabajo en profundidad",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar jornada",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ciclo 1 / 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "Jornada entera",
+     1,
+     null,
+     null
+    ],
+    [
+     "De a · comida ·",
+     2,
+     null,
+     null
+    ],
+    [
+     "9:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "17:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "14:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "1 h",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cambiar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hoy voy por libre",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ver todo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ahora9:00",
+     2,
+     null,
+     null
+    ],
+    [
+     "Foco · bloque 1 de 9",
+     1,
+     null,
+     null
+    ],
+    [
+     "45 min · empieza en el aro, arriba",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "el día ya contestado",
+   "medidos": 21,
+   "todos": [
+    [
+     "Min",
+     1,
+     null,
+     null
+    ],
+    [
+     "15",
+     1,
+     null,
+     null
+    ],
+    [
+     "25",
+     1,
+     null,
+     null
+    ],
+    [
+     "35",
+     1,
+     null,
+     null
+    ],
+    [
+     "45",
+     1,
+     null,
+     null
+    ],
+    [
+     "Otro",
+     1,
+     null,
+     null
+    ],
+    [
+     "Foco manual",
+     1,
+     null,
+     null
+    ],
+    [
+     "25:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Concentración profunda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar foco",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ciclo 1 / 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "Actividades",
+     1,
+     null,
+     null
+    ],
+    [
+     "Respira",
+     1,
+     null,
+     null
+    ],
+    [
+     "Estira",
+     1,
+     null,
+     null
+    ],
+    [
+     "Mueve",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hidrátate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hoy, como cada jueves",
+     1,
+     null,
+     null
+    ],
+    [
+     "Al calendario",
+     1,
+     null,
+     null
+    ],
+    [
+     "Jornada entera",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hoy es distinto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Preparar jornada",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "la pausa abierta",
+   "medidos": 24,
+   "todos": [
+    [
+     "Min",
+     1,
+     null,
+     null
+    ],
+    [
+     "15",
+     1,
+     null,
+     null
+    ],
+    [
+     "25",
+     1,
+     null,
+     null
+    ],
+    [
+     "35",
+     1,
+     null,
+     null
+    ],
+    [
+     "45",
+     1,
+     null,
+     null
+    ],
+    [
+     "Otro",
+     1,
+     null,
+     null
+    ],
+    [
+     "Bloque 2 de 9",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tu jornada, hasta las 17:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "45:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausa terminada",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar bloque 2",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ciclo 2 / 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "Jornada entera",
+     1,
+     null,
+     null
+    ],
+    [
+     "De a · comida ·",
+     2,
+     null,
+     null
+    ],
+    [
+     "9:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "17:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "14:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "1 h",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cambiar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hoy voy por libre",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ver todo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ahora9:50",
+     2,
+     null,
+     null
+    ],
+    [
+     "Foco · bloque 2 de 9",
+     1,
+     null,
+     null
+    ],
+    [
+     "45 min · Trabajo en profundidad",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "el bloque terminado al volver",
+   "medidos": 21,
+   "todos": [
+    [
+     "Min",
+     1,
+     null,
+     null
+    ],
+    [
+     "15",
+     1,
+     null,
+     null
+    ],
+    [
+     "25",
+     1,
+     null,
+     null
+    ],
+    [
+     "35",
+     1,
+     null,
+     null
+    ],
+    [
+     "45",
+     1,
+     null,
+     null
+    ],
+    [
+     "Otro",
+     1,
+     null,
+     null
+    ],
+    [
+     "Foco manual",
+     1,
+     null,
+     null
+    ],
+    [
+     "00:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ciclo completado",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar otro ciclo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siguiente · Ciclo 2 / 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "Actividades",
+     1,
+     null,
+     null
+    ],
+    [
+     "Respira",
+     1,
+     null,
+     null
+    ],
+    [
+     "Estira",
+     1,
+     null,
+     null
+    ],
+    [
+     "Mueve",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hidrátate",
+     1,
+     null,
+     null
+    ],
+    [
+     "¿Cuánto trabajas hoy?",
+     1,
+     null,
+     null
+    ],
+    [
+     "Al calendario",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tú eliges las horas",
+     2,
+     null,
+     null
+    ],
+    [
+     "Preparar jornada",
+     1,
+     null,
+     null
+    ],
+    [
+     "Nuevo sello · Primer paso",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  }
+ ]
+}

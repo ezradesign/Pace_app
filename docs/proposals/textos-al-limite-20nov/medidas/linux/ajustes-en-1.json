@@ -1,0 +1,1475 @@
+{
+ "pantalla": "ajustes",
+ "lang": "en",
+ "letra": 1,
+ "filas": [
+  {
+   "momento": "360×640 web",
+   "medidos": 49,
+   "todos": [
+    [
+     "Settings",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Appearance",
+     1,
+     null,
+     null
+    ],
+    [
+     "Guided tour ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Language",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Español",
+     1,
+     null,
+     null
+    ],
+    [
+     "English",
+     1,
+     null,
+     null
+    ],
+    [
+     "Color theme",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cream",
+     1,
+     null,
+     null
+    ],
+    [
+     "Dark",
+     1,
+     null,
+     null
+    ],
+    [
+     "Audio",
+     1,
+     null,
+     null
+    ],
+    [
+     "Listen ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sound",
+     1,
+     null,
+     null
+    ],
+    [
+     "Phase cue",
+     1,
+     10.57,
+     null
+    ],
+    [
+     "The voice for each phase",
+     1,
+     10.57,
+     null
+    ],
+    [
+     "Tone",
+     1,
+     10.57,
+     null
+    ],
+    [
+     "Clear voice",
+     1,
+     10.57,
+     null
+    ],
+    [
+     "Deep voice",
+     1,
+     10.57,
+     null
+    ],
+    [
+     "Background",
+     1,
+     null,
+     null
+    ],
+    [
+     "While you breathe",
+     1,
+     null,
+     null
+    ],
+    [
+     "Nothing",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ambient",
+     1,
+     null,
+     null
+    ],
+    [
+     "Music",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sessions",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your week ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Alert at the end",
+     1,
+     null,
+     null
+    ],
+    [
+     "Focus · blocked in this browser",
+     1,
+     null,
+     null
+    ],
+    [
+     "Blocked: icon by the address, “Notifications”, “Allow”. The ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Circle",
+     1,
+     null,
+     null
+    ],
+    [
+     "Breathe · Lotus",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest between sets",
+     1,
+     null,
+     null
+    ],
+    [
+     "Move",
+     1,
+     null,
+     null
+    ],
+    [
+     "20 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "30 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "45 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "Vibrate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Move and Stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Never",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sound off",
+     1,
+     null,
+     null
+    ],
+    [
+     "Always",
+     1,
+     null,
+     null
+    ],
+    [
+     "Glasses a day",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hydrate",
+     1,
+     null,
+     null
+    ],
+    [
+     "−",
+     1,
+     null,
+     null
+    ],
+    [
+     "8",
+     1,
+     null,
+     null
+    ],
+    [
+     "+",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your data",
+     1,
+     null,
+     null
+    ],
+    [
+     "Copies, deletion and PACE Complete ›",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "360×640 web · Tus datos",
+   "medidos": 12,
+   "todos": [
+    [
+     "‹",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your data",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Export a copy",
+     1,
+     null,
+     null
+    ],
+    [
+     "You haven’t saved a copy yet. If PACE isn’t installed, Safar",
+     2,
+     null,
+     null
+    ],
+    [
+     "Import a copy",
+     1,
+     null,
+     null
+    ],
+    [
+     "Delete all my data",
+     1,
+     null,
+     null
+    ],
+    [
+     "›",
+     1,
+     null,
+     null
+    ],
+    [
+     "PACE Complete",
+     1,
+     null,
+     null
+    ],
+    [
+     "Enter code",
+     1,
+     null,
+     null
+    ],
+    [
+     "Everything lives in this browser and doesn't sync with other",
+     2,
+     null,
+     null
+    ],
+    [
+     "Safety·Privacy",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "360×640 android",
+   "medidos": 51,
+   "todos": [
+    [
+     "Settings",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Appearance",
+     1,
+     null,
+     null
+    ],
+    [
+     "Guided tour ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Language",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Español",
+     1,
+     null,
+     null
+    ],
+    [
+     "English",
+     1,
+     null,
+     null
+    ],
+    [
+     "Color theme",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cream",
+     1,
+     null,
+     null
+    ],
+    [
+     "Dark",
+     1,
+     null,
+     null
+    ],
+    [
+     "Audio",
+     1,
+     null,
+     null
+    ],
+    [
+     "Listen ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sound",
+     1,
+     null,
+     null
+    ],
+    [
+     "Phase cue",
+     1,
+     10.57,
+     null
+    ],
+    [
+     "The voice for each phase",
+     1,
+     10.57,
+     null
+    ],
+    [
+     "Tone",
+     1,
+     10.57,
+     null
+    ],
+    [
+     "Clear voice",
+     1,
+     10.57,
+     null
+    ],
+    [
+     "Deep voice",
+     1,
+     10.57,
+     null
+    ],
+    [
+     "Background",
+     1,
+     null,
+     null
+    ],
+    [
+     "While you breathe",
+     1,
+     null,
+     null
+    ],
+    [
+     "Nothing",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ambient",
+     1,
+     null,
+     null
+    ],
+    [
+     "Music",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sessions",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your week ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Alert at the end",
+     1,
+     null,
+     null
+    ],
+    [
+     "Focus and break · if the app is in the background",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get the alert on time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Android may delay it a few minutes",
+     1,
+     null,
+     null
+    ],
+    [
+     "›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Circle",
+     1,
+     null,
+     null
+    ],
+    [
+     "Breathe · Lotus",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest between sets",
+     1,
+     null,
+     null
+    ],
+    [
+     "Move",
+     1,
+     null,
+     null
+    ],
+    [
+     "20 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "30 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "45 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "Vibrate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Move and Stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Never",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sound off",
+     1,
+     null,
+     null
+    ],
+    [
+     "Always",
+     1,
+     null,
+     null
+    ],
+    [
+     "Glasses a day",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hydrate",
+     1,
+     null,
+     null
+    ],
+    [
+     "−",
+     1,
+     null,
+     null
+    ],
+    [
+     "8",
+     1,
+     null,
+     null
+    ],
+    [
+     "+",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your data",
+     1,
+     null,
+     null
+    ],
+    [
+     "Copies, deletion and PACE Complete ›",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "360×640 android · Tus datos",
+   "medidos": 11,
+   "todos": [
+    [
+     "‹",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your data",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Export a copy",
+     1,
+     null,
+     null
+    ],
+    [
+     "Import a copy",
+     1,
+     null,
+     null
+    ],
+    [
+     "Delete all my data",
+     1,
+     null,
+     null
+    ],
+    [
+     "›",
+     1,
+     null,
+     null
+    ],
+    [
+     "PACE Complete",
+     1,
+     null,
+     null
+    ],
+    [
+     "soon",
+     1,
+     null,
+     null
+    ],
+    [
+     "Everything lives on this phone and doesn't sync with others.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Safety·Privacy",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "1280×720 avisos sin decidir",
+   "medidos": 43,
+   "todos": [
+    [
+     "Settings",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Appearance",
+     1,
+     null,
+     null
+    ],
+    [
+     "Guided tour ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Language",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Español",
+     1,
+     null,
+     null
+    ],
+    [
+     "English",
+     1,
+     null,
+     null
+    ],
+    [
+     "Color theme",
+     1,
+     8.37,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     8.37,
+     null
+    ],
+    [
+     "Cream",
+     1,
+     8.37,
+     null
+    ],
+    [
+     "Dark",
+     1,
+     8.37,
+     null
+    ],
+    [
+     "Audio",
+     1,
+     null,
+     null
+    ],
+    [
+     "Listen ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sound",
+     1,
+     null,
+     null
+    ],
+    [
+     "Phase cue",
+     1,
+     null,
+     null
+    ],
+    [
+     "The voice for each phase",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tone",
+     1,
+     null,
+     null
+    ],
+    [
+     "Clear voice",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep voice",
+     1,
+     null,
+     null
+    ],
+    [
+     "Background",
+     1,
+     null,
+     null
+    ],
+    [
+     "While you breathe",
+     1,
+     null,
+     null
+    ],
+    [
+     "Nothing",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ambient",
+     1,
+     null,
+     null
+    ],
+    [
+     "Music",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sessions",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your week ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Alert at the end",
+     1,
+     null,
+     null
+    ],
+    [
+     "Focus · if the tab is in the background",
+     1,
+     null,
+     null
+    ],
+    [
+     "Circle",
+     1,
+     null,
+     null
+    ],
+    [
+     "Breathe · Lotus",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest between sets",
+     1,
+     null,
+     null
+    ],
+    [
+     "Move",
+     1,
+     null,
+     null
+    ],
+    [
+     "20 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "30 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "45 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "Glasses a day",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hydrate",
+     1,
+     null,
+     null
+    ],
+    [
+     "−",
+     1,
+     null,
+     null
+    ],
+    [
+     "8",
+     1,
+     null,
+     null
+    ],
+    [
+     "+",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your data",
+     1,
+     null,
+     null
+    ],
+    [
+     "Copies, deletion and PACE Complete ›",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "1280×720 avisos sin decidir · Tus datos",
+   "medidos": 12,
+   "todos": [
+    [
+     "‹",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your data",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Export a copy",
+     1,
+     null,
+     null
+    ],
+    [
+     "You haven’t saved a copy yet. If PACE isn’t installed, Safar",
+     3,
+     null,
+     null
+    ],
+    [
+     "Import a copy",
+     1,
+     null,
+     null
+    ],
+    [
+     "Delete all my data",
+     1,
+     null,
+     null
+    ],
+    [
+     "›",
+     1,
+     null,
+     null
+    ],
+    [
+     "PACE Complete",
+     1,
+     null,
+     null
+    ],
+    [
+     "Enter code",
+     1,
+     null,
+     null
+    ],
+    [
+     "Everything lives in this browser and doesn't sync with other",
+     2,
+     null,
+     null
+    ],
+    [
+     "Safety·Privacy",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "1280×720 avisos bloqueados",
+   "medidos": 44,
+   "todos": [
+    [
+     "Settings",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Appearance",
+     1,
+     null,
+     null
+    ],
+    [
+     "Guided tour ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Language",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Español",
+     1,
+     null,
+     null
+    ],
+    [
+     "English",
+     1,
+     null,
+     null
+    ],
+    [
+     "Color theme",
+     1,
+     8.37,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     8.37,
+     null
+    ],
+    [
+     "Cream",
+     1,
+     8.37,
+     null
+    ],
+    [
+     "Dark",
+     1,
+     8.37,
+     null
+    ],
+    [
+     "Audio",
+     1,
+     null,
+     null
+    ],
+    [
+     "Listen ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sound",
+     1,
+     null,
+     null
+    ],
+    [
+     "Phase cue",
+     1,
+     null,
+     null
+    ],
+    [
+     "The voice for each phase",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tone",
+     1,
+     null,
+     null
+    ],
+    [
+     "Clear voice",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep voice",
+     1,
+     null,
+     null
+    ],
+    [
+     "Background",
+     1,
+     null,
+     null
+    ],
+    [
+     "While you breathe",
+     1,
+     null,
+     null
+    ],
+    [
+     "Nothing",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ambient",
+     1,
+     null,
+     null
+    ],
+    [
+     "Music",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sessions",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your week ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Alert at the end",
+     1,
+     null,
+     null
+    ],
+    [
+     "Focus · blocked in this browser",
+     1,
+     null,
+     null
+    ],
+    [
+     "Blocked: icon by the address, “Notifications”, “Allow”. The ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Circle",
+     1,
+     null,
+     null
+    ],
+    [
+     "Breathe · Lotus",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest between sets",
+     1,
+     null,
+     null
+    ],
+    [
+     "Move",
+     1,
+     null,
+     null
+    ],
+    [
+     "20 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "30 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "45 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "Glasses a day",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hydrate",
+     1,
+     null,
+     null
+    ],
+    [
+     "−",
+     1,
+     null,
+     null
+    ],
+    [
+     "8",
+     1,
+     null,
+     null
+    ],
+    [
+     "+",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your data",
+     1,
+     null,
+     null
+    ],
+    [
+     "Copies, deletion and PACE Complete ›",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "1280×720 avisos bloqueados · Tus datos",
+   "medidos": 12,
+   "todos": [
+    [
+     "‹",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your data",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Export a copy",
+     1,
+     null,
+     null
+    ],
+    [
+     "You haven’t saved a copy yet. If PACE isn’t installed, Safar",
+     3,
+     null,
+     null
+    ],
+    [
+     "Import a copy",
+     1,
+     null,
+     null
+    ],
+    [
+     "Delete all my data",
+     1,
+     null,
+     null
+    ],
+    [
+     "›",
+     1,
+     null,
+     null
+    ],
+    [
+     "PACE Complete",
+     1,
+     null,
+     null
+    ],
+    [
+     "Enter code",
+     1,
+     null,
+     null
+    ],
+    [
+     "Everything lives in this browser and doesn't sync with other",
+     2,
+     null,
+     null
+    ],
+    [
+     "Safety·Privacy",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  }
+ ]
+}

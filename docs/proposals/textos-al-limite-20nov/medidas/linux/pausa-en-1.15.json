@@ -1,0 +1,99 @@
+{
+ "pantalla": "pausa",
+ "lang": "en",
+ "letra": 1.15,
+ "filas": [
+  {
+   "momento": "la pausa por libre",
+   "medidos": 14,
+   "todos": [
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cycle complete",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your break",
+     1,
+     null,
+     null
+    ],
+    [
+     "You’ve finished a Focus block. Choose your break.",
+     2,
+     null,
+     null
+    ],
+    [
+     "No Stretch session yet today",
+     2,
+     null,
+     null
+    ],
+    [
+     "Standing Back",
+     1,
+     null,
+     null
+    ],
+    [
+     "3–4",
+     1,
+     null,
+     null
+    ],
+    [
+     "min",
+     1,
+     null,
+     null
+    ],
+    [
+     "Stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hydrate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Breathe",
+     1,
+     null,
+     null
+    ],
+    [
+     "Move",
+     1,
+     null,
+     null
+    ],
+    [
+     "Not now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  }
+ ]
+}

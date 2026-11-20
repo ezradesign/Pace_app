@@ -1,0 +1,3343 @@
+{
+ "umbral": 3,
+ "textos": [
+  {
+   "pantalla": "ajustes",
+   "lang": "es",
+   "texto": "Tus datos",
+   "donde": "div[data-pace-tweaks-panel=true][data-pace-aj-bajo] › div[data-pace-aj-seccion=Tus datos][data-pace-aj-plegada].pace-aj-sec › div.pace-aj-sec-titulo",
+   "letras": 9,
+   "windows": {
+    "px": 2.04,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1.15,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": "parte a su vecino «Copias, borrar y PACE completo ›»",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 47
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 65
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     }
+    }
+   },
+   "linux": {
+    "px": -1,
+    "mas": false,
+    "yaPartido": true,
+    "vp": "1280×720",
+    "letra": 1.15,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 2,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "ajustes",
+   "lang": "es",
+   "texto": "Copias, borrar y PACE completo ›",
+   "donde": "div[data-pace-aj-seccion=Tus datos][data-pace-aj-plegada].pace-aj-sec › div.pace-aj-sec-titulo › button.pace-aj-sec-accion.pace-aj-solo-movil",
+   "letras": 32,
+   "windows": {
+    "px": 2.04,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1.15,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": "se parte en 2 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 47
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 65
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     }
+    }
+   },
+   "linux": {
+    "px": -1,
+    "mas": false,
+    "yaPartido": true,
+    "vp": "1280×720",
+    "letra": 1.15,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 2,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "home",
+   "lang": "es",
+   "texto": "De a · comida · · hoy de 10:00 a 17:00",
+   "donde": "div[data-pace-ritmo-estado=menu].pace-rt-panel.pace-rt-mov › div.pace-rt-cab › div.pace-rt-sub.pace-rt-frase",
+   "letras": 38,
+   "windows": {
+    "px": 0.7,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "el día servido llegando a las 10:00",
+    "lineas": 2,
+    "motivo": "se parte en 3 líneas",
+    "efecto": {
+     "error": "no encuentro el texto para ponerle el hueco"
+    }
+   },
+   "linux": {
+    "px": -1,
+    "mas": false,
+    "yaPartido": true,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "el día servido llegando a las 10:00",
+    "lineas": 3,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "Right. Ten seconds palm down and ten palm up, easing your fingers toward you with your other hand.",
+   "donde": "div[data-pace-v1-body=true].pace-v1 › div[data-pace-v1-pila=cue].pace-v1-pila.pace-v1-cues › p.pace-v1-reserva",
+   "letras": 98,
+   "windows": {
+    "px": 0,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "move.wrists · al colocarse",
+    "lineas": 2,
+    "motivo": "se parte en 3 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 163,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 141,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": -1,
+    "mas": false,
+    "yaPartido": true,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "move.wrists · al colocarse",
+    "lineas": 3,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "Take care · If keeping your arms on the wall strains your posture, let them come off a little. No wall? Do it in the air.",
+   "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+   "letras": 121,
+   "windows": {
+    "px": 0.5,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "extra.back.desk · al colocarse",
+    "lineas": 2,
+    "motivo": "se parte en 3 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 169,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 149,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": -1,
+    "mas": false,
+    "yaPartido": true,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "extra.back.desk · al colocarse",
+    "lineas": 3,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "es",
+   "texto": "Cuídate · Talón apoyado. Baja solo hasta donde controles.",
+   "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+   "letras": 57,
+   "windows": {
+    "px": 1.9,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "move.hips.standing · al colocarse",
+    "lineas": 1,
+    "motivo": "se parte en 2 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 163,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 163,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": -1,
+    "mas": false,
+    "yaPartido": true,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "move.hips.standing · al colocarse",
+    "lineas": 2,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "es",
+   "texto": "Cuídate · La rodilla de apoyo algo flexionada. Sin rebotes.",
+   "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+   "letras": 59,
+   "windows": {
+    "px": 1.03,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "move.hamstrings · al colocarse",
+    "lineas": 1,
+    "motivo": "se parte en 2 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 141,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 141,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": -1,
+    "mas": false,
+    "yaPartido": true,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "move.hamstrings · al colocarse",
+    "lineas": 2,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "Seated Glute Squeezes",
+   "donde": "div[data-pace-session-root=true] › div[data-pace-session-header=true] › h2[data-pace-session-title=true]",
+   "letras": 21,
+   "windows": {
+    "px": 0.07,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "extra.glutes.stealth · al colocarse",
+    "lineas": 1,
+    "motivo": "se parte en 2 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 29,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 127,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 29,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 142,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": -1,
+    "mas": false,
+    "yaPartido": true,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "extra.glutes.stealth · al colocarse",
+    "lineas": 2,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "Step 1 of 3",
+   "donde": "div[data-pace-session-root=true] › div[data-pace-session-header=true] › div.pace-meta",
+   "letras": 11,
+   "windows": {
+    "px": 0.07,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "extra.glutes.stealth · al colocarse",
+    "lineas": 1,
+    "motivo": "salta de sitio",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 29,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 127,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 29,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 142,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": -1,
+    "mas": false,
+    "yaPartido": true,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "extra.glutes.stealth · al colocarse",
+    "lineas": 2,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "× Exit",
+   "donde": "div[data-pace-session-root=true] › div[data-pace-session-header=true] › button[data-pace-toque=true]",
+   "letras": 6,
+   "windows": {
+    "px": 0.07,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "extra.glutes.stealth · al colocarse",
+    "lineas": 1,
+    "motivo": "salta de sitio",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 29,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 127,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 29,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 142,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": -1,
+    "mas": false,
+    "yaPartido": true,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "extra.glutes.stealth · al colocarse",
+    "lineas": 2,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "Take care · Don't squeeze hard. Keep breathing normally.",
+   "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+   "letras": 56,
+   "windows": {
+    "px": 1.01,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "extra.banda.espalda · al colocarse",
+    "lineas": 1,
+    "motivo": "se parte en 2 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 163,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 163,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": -1,
+    "mas": false,
+    "yaPartido": true,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "extra.banda.espalda · al colocarse",
+    "lineas": 2,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "Take care · Too hard? Use the wall, hands at chest height. The desk must not move: no wheels, nothing folding.",
+   "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div[data-pace-v1-cola=true] › div[data-pace-v1-care].pace-v1-cuidate",
+   "letras": 110,
+   "windows": {
+    "px": -1,
+    "mas": false,
+    "yaPartido": true,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "extra.desk.pushups · trabajando",
+    "lineas": 3,
+    "motivo": null,
+    "efecto": null
+   },
+   "linux": {
+    "px": 0,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "extra.desk.pushups · trabajando",
+    "lineas": 2,
+    "motivo": "se parte en 3 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": true,
+      "runnerJusto": true,
+      "dibujo": 132,
+      "aro": 331,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": true,
+      "runnerJusto": true,
+      "dibujo": 132,
+      "aro": 331,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "es",
+   "texto": "Cuídate · Si cuesta, en la pared, manos a la altura del pecho. Mesa fija: ni con ruedas ni plegable.",
+   "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+   "letras": 100,
+   "windows": {
+    "px": 0,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "extra.desk.pushups · al colocarse",
+    "lineas": 2,
+    "motivo": "se parte en 3 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 3,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 147,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 3,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 132,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 2.24,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "extra.desk.pushups · al colocarse",
+    "lineas": 2,
+    "motivo": "se parte en 3 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 3,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 147,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 3,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 132,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "Hang and draw your shoulders slightly away from your ears, without bending your elbows.",
+   "donde": "div[data-pace-v1-body=true].pace-v1 › div[data-pace-v1-pila=cue].pace-v1-pila.pace-v1-cues › p.pace-v1-reserva",
+   "letras": 87,
+   "windows": {
+    "px": 6.36,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "extra.hang.bar · al colocarse",
+    "lineas": 2,
+    "motivo": null,
+    "efecto": null
+   },
+   "linux": {
+    "px": 0.01,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "extra.hang.bar · al colocarse",
+    "lineas": 2,
+    "motivo": "se parte en 3 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 29,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 127,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 29,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 147,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "home",
+   "lang": "en",
+   "texto": "2 min · Legs: unmoved today",
+   "donde": "div[data-pace-ritmo-luego].pace-rt-fila › div.pace-rt-que › div.pace-rt-m",
+   "letras": 27,
+   "windows": {
+    "px": 0.07,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×718",
+    "letra": 1.15,
+    "momento": "la pausa abierta",
+    "lineas": 1,
+    "motivo": "se corta",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 327,
+      "pieDeLaPausa": null,
+      "pantalla": 718
+     },
+     "despues": {
+      "scroll": {
+       "home": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 327,
+      "pieDeLaPausa": null,
+      "pantalla": 718
+     }
+    }
+   },
+   "linux": {
+    "px": 12,
+    "mas": true,
+    "yaPartido": false,
+    "vp": "360×718",
+    "letra": 1.15,
+    "momento": "la pausa abierta",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "ajustes",
+   "lang": "en",
+   "texto": "Background",
+   "donde": "div[data-pace-aj-seccion=Audio].pace-aj-sec › div[data-pace-aj-fila=bg].pace-aj-fila › div.pace-aj-nombre",
+   "letras": 10,
+   "windows": {
+    "px": 0.23,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1.15,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": "mueve a su vecino «Nothing»",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 19
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 53
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     }
+    }
+   },
+   "linux": {
+    "px": 1.48,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1.15,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": "mueve a su vecino «Nothing»",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 19
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 53
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "ajustes",
+   "lang": "en",
+   "texto": "While you breathe",
+   "donde": "div[data-pace-aj-fila=bg].pace-aj-fila › div.pace-aj-nombre › div.pace-aj-sub",
+   "letras": 17,
+   "windows": {
+    "px": 0.23,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1.15,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": "mueve a su vecino «Nothing»",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 19
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 53
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     }
+    }
+   },
+   "linux": {
+    "px": 1.48,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1.15,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": "mueve a su vecino «Nothing»",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 19
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 53
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "ajustes",
+   "lang": "en",
+   "texto": "Nothing",
+   "donde": "div[data-pace-aj-fila=bg].pace-aj-fila › div.pace-aj-pista › button.pace-aj-pild",
+   "letras": 7,
+   "windows": {
+    "px": 0.23,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1.15,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": "salta de sitio",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 19
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 53
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     }
+    }
+   },
+   "linux": {
+    "px": 1.48,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1.15,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": "salta de sitio",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 19
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 53
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "ajustes",
+   "lang": "en",
+   "texto": "Ambient",
+   "donde": "div[data-pace-aj-fila=bg].pace-aj-fila › div.pace-aj-pista › button.pace-aj-pild",
+   "letras": 7,
+   "windows": {
+    "px": 0.23,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1.15,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": "salta de sitio",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 19
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 53
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     }
+    }
+   },
+   "linux": {
+    "px": 1.48,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1.15,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": "salta de sitio",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 19
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 53
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "ajustes",
+   "lang": "en",
+   "texto": "Music",
+   "donde": "div[data-pace-aj-fila=bg].pace-aj-fila › div.pace-aj-pista › button.pace-aj-pild",
+   "letras": 5,
+   "windows": {
+    "px": 0.23,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1.15,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": "salta de sitio",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 19
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 53
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     }
+    }
+   },
+   "linux": {
+    "px": 1.48,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1.15,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": "salta de sitio",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 19
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 53
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 365,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "Take care · A light, undamaged band, firmly underfoot; don't let go while it's taut. No band? Skip this step.",
+   "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+   "letras": 109,
+   "windows": {
+    "px": 7.03,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "extra.banda.espalda · al colocarse",
+    "lineas": 2,
+    "motivo": null,
+    "efecto": null
+   },
+   "linux": {
+    "px": 0.38,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "extra.banda.espalda · al colocarse",
+    "lineas": 2,
+    "motivo": "se parte en 3 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 163,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 149,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "Take care · Don't push them back with your other hand.",
+   "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+   "letras": 54,
+   "windows": {
+    "px": 5.51,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "extra.grip.squeeze · al colocarse",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   },
+   "linux": {
+    "px": 0.4,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "extra.grip.squeeze · al colocarse",
+    "lineas": 1,
+    "motivo": "se parte en 2 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 141,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 141,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "Take care · Lean on something if you lose your balance.",
+   "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+   "letras": 55,
+   "windows": {
+    "px": 7.99,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "move.hips.5 · al colocarse",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   },
+   "linux": {
+    "px": 0.4,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "move.hips.5 · al colocarse",
+    "lineas": 1,
+    "motivo": "se parte en 2 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 163,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 163,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "es",
+   "texto": "Siguiente: Rotación torácica",
+   "donde": "div[data-pace-v1-progress=true].pace-v1-pasos › div.pace-v1-siguiente › span[data-pace-v1-siguiente=true]",
+   "letras": 28,
+   "windows": {
+    "px": 0.49,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "move.spine.chair · al colocarse",
+    "lineas": 1,
+    "motivo": "salta de sitio",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 3,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 134,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 3,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 113,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 12,
+    "mas": true,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "move.spine.chair · al colocarse",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "es",
+   "texto": "Auto",
+   "donde": "div[data-pace-v1-progress=true].pace-v1-pasos › div.pace-v1-siguiente › button[data-pace-v1-auto=true].pace-v1-auto",
+   "letras": 4,
+   "windows": {
+    "px": 0.49,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "move.spine.chair · al colocarse",
+    "lineas": 1,
+    "motivo": "mueve a su vecino «Siguiente: Rotación torácica»",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 3,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 134,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 3,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 113,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 12,
+    "mas": true,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "move.spine.chair · al colocarse",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "es",
+   "texto": "Estiramiento del sofá",
+   "donde": "div[data-pace-session-root=true] › div[data-pace-session-header=true] › h2[data-pace-session-title=true]",
+   "letras": 21,
+   "windows": {
+    "px": 1.83,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "move.couch.stretch · al colocarse",
+    "lineas": 1,
+    "motivo": "se parte en 2 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 3,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 112,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 3,
+       "runner": 24
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 110,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 0.56,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "move.couch.stretch · al colocarse",
+    "lineas": 1,
+    "motivo": "se parte en 2 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 3,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 112,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 3,
+       "runner": 24
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 110,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "es",
+   "texto": "Paso 1 de 4",
+   "donde": "div[data-pace-session-root=true] › div[data-pace-session-header=true] › div.pace-meta",
+   "letras": 11,
+   "windows": {
+    "px": 1.83,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "move.couch.stretch · al colocarse",
+    "lineas": 1,
+    "motivo": "salta de sitio",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 3,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 112,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 3,
+       "runner": 24
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 110,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 0.56,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "move.couch.stretch · al colocarse",
+    "lineas": 1,
+    "motivo": "salta de sitio",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 3,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 112,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 3,
+       "runner": 24
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 110,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "es",
+   "texto": "× Salir",
+   "donde": "div[data-pace-session-root=true] › div[data-pace-session-header=true] › button[data-pace-toque=true]",
+   "letras": 7,
+   "windows": {
+    "px": 1.83,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "move.couch.stretch · al colocarse",
+    "lineas": 1,
+    "motivo": "salta de sitio",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 3,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 112,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 3,
+       "runner": 24
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 110,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 0.56,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "move.couch.stretch · al colocarse",
+    "lineas": 1,
+    "motivo": "salta de sitio",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 3,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 112,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 3,
+       "runner": 24
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 110,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "home",
+   "lang": "es",
+   "texto": "14:00",
+   "donde": "div.pace-rt-cab › div.pace-rt-sub.pace-rt-frase › button[data-pace-ritmo-horario=comida].pace-rt-sel",
+   "letras": 5,
+   "windows": {
+    "px": 0.96,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "el día servido llegando a las 10:00",
+    "lineas": 1,
+    "motivo": "parte a su vecino «De a · comida · · hoy de 10:00 a 17:00»",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0
+      },
+      "luegoEscondido": true,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 331,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0
+      },
+      "luegoEscondido": true,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 331,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 12,
+    "mas": true,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "el día servido llegando a las 10:00",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "home",
+   "lang": "es",
+   "texto": "1 h",
+   "donde": "div.pace-rt-cab › div.pace-rt-sub.pace-rt-frase › button[data-pace-ritmo-horario=comidaDur].pace-rt-sel",
+   "letras": 3,
+   "windows": {
+    "px": 0.96,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "el día servido llegando a las 10:00",
+    "lineas": 1,
+    "motivo": "parte a su vecino «De a · comida · · hoy de 10:00 a 17:00»",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0
+      },
+      "luegoEscondido": true,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 331,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0
+      },
+      "luegoEscondido": true,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 331,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 12,
+    "mas": true,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "el día servido llegando a las 10:00",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "home",
+   "lang": "es",
+   "texto": "Hoy voy por libre",
+   "donde": "div.pace-rt-cab › div.pace-rt-cab-der › button[data-pace-ritmo-libre=true].pace-rt-enlace.pace-rt-fuerte",
+   "letras": 17,
+   "windows": {
+    "px": 0.96,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "el día servido llegando a las 10:00",
+    "lineas": 1,
+    "motivo": "parte a su vecino «De a · comida · · hoy de 10:00 a 17:00»",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0
+      },
+      "luegoEscondido": true,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 331,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0
+      },
+      "luegoEscondido": true,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 331,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 12,
+    "mas": true,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "el día servido llegando a las 10:00",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "es",
+   "texto": "Cuídate · Elige una altura que te deje respirar tranquilo.",
+   "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+   "letras": 58,
+   "windows": {
+    "px": 9.94,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "extra.wall.sit · al colocarse",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   },
+   "linux": {
+    "px": 1.01,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "extra.wall.sit · al colocarse",
+    "lineas": 1,
+    "motivo": "se parte en 2 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 163,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 163,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "Take care · Keep a comfortable support and come out with control. If your heels lift, go less deep.",
+   "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+   "letras": 99,
+   "windows": {
+    "px": 3.23,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "move.hips.ground · al colocarse",
+    "lineas": 2,
+    "motivo": null,
+    "efecto": null
+   },
+   "linux": {
+    "px": 1.2,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "move.hips.ground · al colocarse",
+    "lineas": 2,
+    "motivo": "se parte en 3 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 29,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 154,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 29,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 132,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "es",
+   "texto": "Siguiente: Juntar omóplatos",
+   "donde": "div[data-pace-v1-progress=true].pace-v1-pasos › div.pace-v1-siguiente › span[data-pace-v1-siguiente=true]",
+   "letras": 27,
+   "windows": {
+    "px": 1.29,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "extra.posture.set · al colocarse",
+    "lineas": 1,
+    "motivo": "salta de sitio",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 3,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 132,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 3,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 112,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 12,
+    "mas": true,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "extra.posture.set · al colocarse",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "es",
+   "texto": "Derecha. Avanza la pelvis unos centímetros, sin arquear la cintura. Estirón suave en la ingle de atrás.",
+   "donde": "div[data-pace-v1-body=true].pace-v1 › div[data-pace-v1-pila=cue].pace-v1-pila.pace-v1-cues › p.pace-v1-reserva",
+   "letras": 103,
+   "windows": {
+    "px": 1.49,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "move.morning.flow · al colocarse",
+    "lineas": 2,
+    "motivo": "se parte en 3 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 163,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 141,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 1.88,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "move.morning.flow · al colocarse",
+    "lineas": 2,
+    "motivo": "se parte en 3 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 163,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 141,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "es",
+   "texto": "Izquierda. Avanza la pelvis unos centímetros, sin arquear la cintura. Estirón suave en la ingle de atrás.",
+   "donde": "div[data-pace-v1-body=true].pace-v1 › div[data-pace-v1-pila=cue].pace-v1-pila.pace-v1-cues › p.pace-v1-reserva",
+   "letras": 105,
+   "windows": {
+    "px": 1.52,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "move.morning.flow · al colocarse",
+    "lineas": 2,
+    "motivo": "se parte en 3 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 163,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 141,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 1.92,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "move.morning.flow · al colocarse",
+    "lineas": 2,
+    "motivo": "se parte en 3 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 163,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 141,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "es",
+   "texto": "Cuídate · Una mano en la mesa o la pared si pierdes el equilibrio. Baja solo hasta donde controles.",
+   "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+   "letras": 99,
+   "windows": {
+    "px": 1.87,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "extra.legs.single · al colocarse",
+    "lineas": 2,
+    "motivo": "se parte en 3 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 3,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 147,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 3,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 132,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 3.61,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "extra.legs.single · al colocarse",
+    "lineas": 2,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "Take care · Gentle: this is not a strength exercise.",
+   "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+   "letras": 52,
+   "windows": {
+    "px": 1.99,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "move.wrists · al colocarse",
+    "lineas": 1,
+    "motivo": "se parte en 2 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 29,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 147,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 29,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 147,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 4.15,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "move.wrists · al colocarse",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "es",
+   "texto": "Boca arriba, rodillas dobladas, pies apoyados al ancho de las caderas y cerca de los glúteos.",
+   "donde": "div[data-pace-v1-body=true].pace-v1 › div[data-pace-v1-pila=cue].pace-v1-pila.pace-v1-cues › p.pace-v1-reserva",
+   "letras": 93,
+   "windows": {
+    "px": 6.97,
+    "mas": true,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "extra.pausa.suelo · al colocarse",
+    "lineas": 2,
+    "motivo": null,
+    "efecto": null
+   },
+   "linux": {
+    "px": 1.99,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "extra.pausa.suelo · al colocarse",
+    "lineas": 2,
+    "motivo": "se parte en 3 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 3,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 127,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 3,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 147,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "pausa",
+   "lang": "es",
+   "texto": "Has cerrado un bloque. Elige tu pausa.",
+   "donde": "div[data-pace-modal-card=true] › div[data-pace-modal-head=true] › p[data-pace-modal-subtitle=true]",
+   "letras": 38,
+   "windows": {
+    "px": 5.09,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "la pausa por libre",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   },
+   "linux": {
+    "px": 2.02,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "la pausa por libre",
+    "lineas": 1,
+    "motivo": "se parte en 2 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": true,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 331,
+      "pieDeLaPausa": 603,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": true,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 331,
+      "pieDeLaPausa": 603,
+      "pantalla": 640
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "Left. Ten seconds palm down and ten palm up, easing your fingers toward you with your other hand.",
+   "donde": "div[data-pace-v1-body=true].pace-v1 › div[data-pace-v1-pila=cue].pace-v1-pila.pace-v1-cues › p.pace-v1-reserva",
+   "letras": 97,
+   "windows": {
+    "px": 2.17,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "move.wrists · al colocarse",
+    "lineas": 2,
+    "motivo": "se parte en 3 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 163,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 141,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 7.27,
+    "mas": true,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "move.wrists · al colocarse",
+    "lineas": 2,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "pausa",
+   "lang": "en",
+   "texto": "Move",
+   "donde": "div[data-pace-break-otras=true].pace-break-otras › button.pace-break-otra › span.pace-break-otra-nombre",
+   "letras": 4,
+   "windows": {
+    "px": 2.37,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "la pausa por libre",
+    "lineas": 1,
+    "motivo": "se corta",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": true,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 331,
+      "pieDeLaPausa": 603,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": true,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 331,
+      "pieDeLaPausa": 603,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 12,
+    "mas": true,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "la pausa por libre",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "Take care · The turn comes from the trunk, not the neck.",
+   "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+   "letras": 56,
+   "windows": {
+    "px": 2.84,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "move.chair.antidote · al colocarse",
+    "lineas": 1,
+    "motivo": "se parte en 2 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 163,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 163,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 2.41,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "move.chair.antidote · al colocarse",
+    "lineas": 1,
+    "motivo": "se parte en 2 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 163,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 163,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "Take care · A soft stretch at the front of the back hip, never a sharp pull. Hold the desk if you need to.",
+   "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+   "letras": 106,
+   "windows": {
+    "px": 2.76,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "move.hips.standing · al colocarse",
+    "lineas": 2,
+    "motivo": "se parte en 3 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 29,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 132,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 29,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 132,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 2.95,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "move.hips.standing · al colocarse",
+    "lineas": 2,
+    "motivo": "se parte en 3 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 29,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 132,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 29,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 132,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "Next: Standing thoracic rotation",
+   "donde": "div[data-pace-v1-progress=true].pace-v1-pasos › div.pace-v1-siguiente › span[data-pace-v1-siguiente=true]",
+   "letras": 32,
+   "windows": {
+    "px": 2.93,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "move.back.standing · al colocarse",
+    "lineas": 1,
+    "motivo": "salta de sitio",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 149,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 130,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 4.2,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "move.back.standing · al colocarse",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "Auto",
+   "donde": "div[data-pace-v1-progress=true].pace-v1-pasos › div.pace-v1-siguiente › button[data-pace-v1-auto=true].pace-v1-auto",
+   "letras": 4,
+   "windows": {
+    "px": 2.93,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "move.back.standing · al colocarse",
+    "lineas": 1,
+    "motivo": "mueve a su vecino «Next: Standing thoracic rotation»",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 149,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 130,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 4.2,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "move.back.standing · al colocarse",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "Back and glutes against the wall, feet hip-width apart, heels about a hand span from it.",
+   "donde": "div[data-pace-v1-body=true].pace-v1 › div[data-pace-v1-pila=cue].pace-v1-pila.pace-v1-cues › p.pace-v1-reserva",
+   "letras": 88,
+   "windows": {
+    "px": 6.6,
+    "mas": true,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "extra.legs.standing · al colocarse",
+    "lineas": 2,
+    "motivo": null,
+    "efecto": null
+   },
+   "linux": {
+    "px": 2.94,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1.15,
+    "momento": "extra.legs.standing · al colocarse",
+    "lineas": 2,
+    "motivo": "se parte en 3 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 29,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 127,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 29,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": true,
+      "dibujo": 147,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "Calf Raises Under the Desk",
+   "donde": "div[data-pace-session-root=true] › div[data-pace-session-header=true] › h2[data-pace-session-title=true]",
+   "letras": 26,
+   "windows": {
+    "px": 2.98,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "extra.calves · al colocarse",
+    "lineas": 1,
+    "motivo": "se parte en 2 líneas",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 169,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 143,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 7.08,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "extra.calves · al colocarse",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "runner",
+   "lang": "en",
+   "texto": "Step 1 of 2",
+   "donde": "div[data-pace-session-root=true] › div[data-pace-session-header=true] › div.pace-meta",
+   "letras": 11,
+   "windows": {
+    "px": 2.98,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "extra.calves · al colocarse",
+    "lineas": 1,
+    "motivo": "salta de sitio",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 169,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "runner": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": 143,
+      "aro": 307,
+      "pieDeLaPausa": null,
+      "pantalla": 640
+     }
+    }
+   },
+   "linux": {
+    "px": 7.08,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "360×640",
+    "letra": 1,
+    "momento": "extra.calves · al colocarse",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   }
+  },
+  {
+   "pantalla": "ajustes",
+   "lang": "es",
+   "texto": "Suena detrás",
+   "donde": "div[data-pace-aj-seccion=Oír].pace-aj-sec › div[data-pace-aj-fila=bg].pace-aj-fila › div.pace-aj-nombre",
+   "letras": 12,
+   "windows": {
+    "px": 6.16,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   },
+   "linux": {
+    "px": 2.98,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": "salta de sitio",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 391,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 391,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "ajustes",
+   "lang": "es",
+   "texto": "Lo que suena al respirar",
+   "donde": "div[data-pace-aj-fila=bg].pace-aj-fila › div.pace-aj-nombre › div.pace-aj-sub",
+   "letras": 24,
+   "windows": {
+    "px": 6.16,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   },
+   "linux": {
+    "px": 2.98,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": "salta de sitio",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 391,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 391,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "ajustes",
+   "lang": "es",
+   "texto": "Nada",
+   "donde": "div[data-pace-aj-fila=bg].pace-aj-fila › div.pace-aj-pista › button.pace-aj-pild",
+   "letras": 4,
+   "windows": {
+    "px": 6.16,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   },
+   "linux": {
+    "px": 2.98,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": "mueve a su vecino «Oír»",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 391,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 391,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "ajustes",
+   "lang": "es",
+   "texto": "Ambiente",
+   "donde": "div[data-pace-aj-fila=bg].pace-aj-fila › div.pace-aj-pista › button.pace-aj-pild",
+   "letras": 8,
+   "windows": {
+    "px": 6.16,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   },
+   "linux": {
+    "px": 2.98,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": "mueve a su vecino «Oír»",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 391,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 391,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     }
+    }
+   }
+  },
+  {
+   "pantalla": "ajustes",
+   "lang": "es",
+   "texto": "Música",
+   "donde": "div[data-pace-aj-fila=bg].pace-aj-fila › div.pace-aj-pista › button.pace-aj-pild",
+   "letras": 6,
+   "windows": {
+    "px": 6.16,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": null,
+    "efecto": null
+   },
+   "linux": {
+    "px": 2.98,
+    "mas": false,
+    "yaPartido": false,
+    "vp": "1280×720",
+    "letra": 1,
+    "momento": "1280×720 avisos sin decidir",
+    "lineas": 1,
+    "motivo": "mueve a su vecino «Oír»",
+    "efecto": {
+     "antes": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 391,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     },
+     "despues": {
+      "scroll": {
+       "home": 0,
+       "ajustes": 0
+      },
+      "luegoEscondido": false,
+      "actividadesEnFila": false,
+      "runnerJusto": false,
+      "dibujo": null,
+      "aro": 391,
+      "pieDeLaPausa": null,
+      "pantalla": 720
+     }
+    }
+   }
+  }
+ ]
+}

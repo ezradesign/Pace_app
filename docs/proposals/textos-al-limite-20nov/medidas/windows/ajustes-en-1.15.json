@@ -1,0 +1,1937 @@
+{
+ "pantalla": "ajustes",
+ "lang": "en",
+ "letra": 1.15,
+ "filas": [
+  {
+   "momento": "360×640 web",
+   "medidos": 49,
+   "todos": [
+    [
+     "Settings",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Appearance",
+     1,
+     null,
+     null
+    ],
+    [
+     "Guided tour ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Language",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Español",
+     1,
+     null,
+     null
+    ],
+    [
+     "English",
+     1,
+     null,
+     null
+    ],
+    [
+     "Color theme",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cream",
+     1,
+     null,
+     null
+    ],
+    [
+     "Dark",
+     1,
+     null,
+     null
+    ],
+    [
+     "Audio",
+     1,
+     null,
+     null
+    ],
+    [
+     "Listen ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sound",
+     1,
+     null,
+     null
+    ],
+    [
+     "Phase cue",
+     1,
+     null,
+     null
+    ],
+    [
+     "The voice for each phase",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tone",
+     1,
+     null,
+     null
+    ],
+    [
+     "Clear voice",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep voice",
+     1,
+     null,
+     null
+    ],
+    [
+     "Background",
+     1,
+     null,
+     null
+    ],
+    [
+     "While you breathe",
+     1,
+     null,
+     null
+    ],
+    [
+     "Nothing",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ambient",
+     1,
+     null,
+     null
+    ],
+    [
+     "Music",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sessions",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your week ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Alert at the end",
+     1,
+     null,
+     null
+    ],
+    [
+     "Focus · blocked in this browser",
+     1,
+     null,
+     null
+    ],
+    [
+     "Blocked: icon by the address, “Notifications”, “Allow”. The ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Circle",
+     1,
+     null,
+     null
+    ],
+    [
+     "Breathe · Lotus",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest between sets",
+     1,
+     null,
+     null
+    ],
+    [
+     "Move",
+     1,
+     null,
+     null
+    ],
+    [
+     "20 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "30 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "45 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "Vibrate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Move and Stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Never",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sound off",
+     1,
+     null,
+     null
+    ],
+    [
+     "Always",
+     1,
+     null,
+     null
+    ],
+    [
+     "Glasses a day",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hydrate",
+     1,
+     null,
+     null
+    ],
+    [
+     "−",
+     1,
+     null,
+     null
+    ],
+    [
+     "8",
+     1,
+     null,
+     null
+    ],
+    [
+     "+",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your data",
+     1,
+     null,
+     null
+    ],
+    [
+     "Copies, deletion and PACE Complete ›",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "360×640 web · Tus datos",
+   "medidos": 12,
+   "todos": [
+    [
+     "‹",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your data",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Export a copy",
+     1,
+     null,
+     null
+    ],
+    [
+     "You haven’t saved a copy yet. If PACE isn’t installed, Safar",
+     2,
+     null,
+     null
+    ],
+    [
+     "Import a copy",
+     1,
+     null,
+     null
+    ],
+    [
+     "Delete all my data",
+     1,
+     null,
+     null
+    ],
+    [
+     "›",
+     1,
+     null,
+     null
+    ],
+    [
+     "PACE Complete",
+     1,
+     null,
+     null
+    ],
+    [
+     "Enter code",
+     1,
+     null,
+     null
+    ],
+    [
+     "Everything lives in this browser and doesn't sync with other",
+     2,
+     null,
+     null
+    ],
+    [
+     "Safety·Privacy",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "360×640 android",
+   "medidos": 51,
+   "todos": [
+    [
+     "Settings",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Appearance",
+     1,
+     null,
+     null
+    ],
+    [
+     "Guided tour ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Language",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Español",
+     1,
+     null,
+     null
+    ],
+    [
+     "English",
+     1,
+     null,
+     null
+    ],
+    [
+     "Color theme",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cream",
+     1,
+     null,
+     null
+    ],
+    [
+     "Dark",
+     1,
+     null,
+     null
+    ],
+    [
+     "Audio",
+     1,
+     null,
+     null
+    ],
+    [
+     "Listen ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sound",
+     1,
+     null,
+     null
+    ],
+    [
+     "Phase cue",
+     1,
+     null,
+     null
+    ],
+    [
+     "The voice for each phase",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tone",
+     1,
+     null,
+     null
+    ],
+    [
+     "Clear voice",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep voice",
+     1,
+     null,
+     null
+    ],
+    [
+     "Background",
+     1,
+     null,
+     null
+    ],
+    [
+     "While you breathe",
+     1,
+     null,
+     null
+    ],
+    [
+     "Nothing",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ambient",
+     1,
+     null,
+     null
+    ],
+    [
+     "Music",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sessions",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your week ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Alert at the end",
+     1,
+     null,
+     null
+    ],
+    [
+     "Focus and break · if the app is in the background",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get the alert on time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Android may delay it a few minutes",
+     1,
+     null,
+     null
+    ],
+    [
+     "›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Circle",
+     1,
+     null,
+     null
+    ],
+    [
+     "Breathe · Lotus",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest between sets",
+     1,
+     null,
+     null
+    ],
+    [
+     "Move",
+     1,
+     null,
+     null
+    ],
+    [
+     "20 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "30 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "45 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "Vibrate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Move and Stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Never",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sound off",
+     1,
+     null,
+     null
+    ],
+    [
+     "Always",
+     1,
+     null,
+     null
+    ],
+    [
+     "Glasses a day",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hydrate",
+     1,
+     null,
+     null
+    ],
+    [
+     "−",
+     1,
+     null,
+     null
+    ],
+    [
+     "8",
+     1,
+     null,
+     null
+    ],
+    [
+     "+",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your data",
+     1,
+     null,
+     null
+    ],
+    [
+     "Copies, deletion and PACE Complete ›",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "360×640 android · Tus datos",
+   "medidos": 11,
+   "todos": [
+    [
+     "‹",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your data",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Export a copy",
+     1,
+     null,
+     null
+    ],
+    [
+     "Import a copy",
+     1,
+     null,
+     null
+    ],
+    [
+     "Delete all my data",
+     1,
+     null,
+     null
+    ],
+    [
+     "›",
+     1,
+     null,
+     null
+    ],
+    [
+     "PACE Complete",
+     1,
+     null,
+     null
+    ],
+    [
+     "soon",
+     1,
+     null,
+     null
+    ],
+    [
+     "Everything lives on this phone and doesn't sync with others.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Safety·Privacy",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "1280×720 avisos sin decidir",
+   "medidos": 43,
+   "todos": [
+    [
+     "Settings",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Appearance",
+     1,
+     null,
+     null
+    ],
+    [
+     "Guided tour ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Language",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Español",
+     1,
+     null,
+     null
+    ],
+    [
+     "English",
+     1,
+     null,
+     null
+    ],
+    [
+     "Color theme",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cream",
+     1,
+     null,
+     null
+    ],
+    [
+     "Dark",
+     1,
+     null,
+     null
+    ],
+    [
+     "Audio",
+     1,
+     null,
+     null
+    ],
+    [
+     "Listen ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sound",
+     1,
+     null,
+     null
+    ],
+    [
+     "Phase cue",
+     1,
+     null,
+     null
+    ],
+    [
+     "The voice for each phase",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tone",
+     1,
+     null,
+     null
+    ],
+    [
+     "Clear voice",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep voice",
+     1,
+     null,
+     null
+    ],
+    [
+     "Background",
+     1,
+     0.23,
+     null
+    ],
+    [
+     "While you breathe",
+     1,
+     0.23,
+     0.0146
+    ],
+    [
+     "Nothing",
+     1,
+     0.23,
+     0.0334
+    ],
+    [
+     "Ambient",
+     1,
+     0.23,
+     0.0349
+    ],
+    [
+     "Music",
+     1,
+     0.23,
+     0.0486
+    ],
+    [
+     "Sessions",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your week ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Alert at the end",
+     1,
+     null,
+     null
+    ],
+    [
+     "Focus · if the tab is in the background",
+     1,
+     null,
+     null
+    ],
+    [
+     "Circle",
+     1,
+     null,
+     null
+    ],
+    [
+     "Breathe · Lotus",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest between sets",
+     1,
+     null,
+     null
+    ],
+    [
+     "Move",
+     1,
+     null,
+     null
+    ],
+    [
+     "20 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "30 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "45 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "Glasses a day",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hydrate",
+     1,
+     null,
+     null
+    ],
+    [
+     "−",
+     1,
+     null,
+     null
+    ],
+    [
+     "8",
+     1,
+     null,
+     null
+    ],
+    [
+     "+",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your data",
+     2,
+     null,
+     null
+    ],
+    [
+     "Copies, deletion and PACE Complete ›",
+     2,
+     null,
+     null
+    ]
+   ],
+   "justos": [
+    {
+     "texto": "Background",
+     "donde": "div[data-pace-aj-seccion=Audio].pace-aj-sec › div[data-pace-aj-fila=bg].pace-aj-fila › div.pace-aj-nombre",
+     "lineas": 1,
+     "letras": 10,
+     "reserva": false,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 18.4,
+     "ancho": 84,
+     "natural": 83.75,
+     "margen": 0.23,
+     "margenMas": false,
+     "motivo": "mueve a su vecino «Nothing»",
+     "porLetra": 0.15,
+     "porLetraMas": true,
+     "motivoLetra": null,
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 19
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 53
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      }
+     }
+    },
+    {
+     "texto": "While you breathe",
+     "donde": "div[data-pace-aj-fila=bg].pace-aj-fila › div.pace-aj-nombre › div.pace-aj-sub",
+     "lineas": 1,
+     "letras": 17,
+     "reserva": false,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 12.65,
+     "ancho": 84,
+     "natural": 83.75,
+     "margen": 0.23,
+     "margenMas": false,
+     "motivo": "mueve a su vecino «Nothing»",
+     "porLetra": 0.0146,
+     "porLetraMas": false,
+     "motivoLetra": "mueve a su vecino «Nothing»",
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 19
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 53
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      }
+     }
+    },
+    {
+     "texto": "Nothing",
+     "donde": "div[data-pace-aj-fila=bg].pace-aj-fila › div.pace-aj-pista › button.pace-aj-pild",
+     "lineas": 1,
+     "letras": 7,
+     "reserva": false,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 12.65,
+     "ancho": 63.8,
+     "natural": 44.69,
+     "margen": 0.23,
+     "margenMas": false,
+     "motivo": "salta de sitio",
+     "porLetra": 0.0334,
+     "porLetraMas": false,
+     "motivoLetra": "salta de sitio",
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 19
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 53
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      }
+     }
+    },
+    {
+     "texto": "Ambient",
+     "donde": "div[data-pace-aj-fila=bg].pace-aj-fila › div.pace-aj-pista › button.pace-aj-pild",
+     "lineas": 1,
+     "letras": 7,
+     "reserva": false,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 12.65,
+     "ancho": 64.9,
+     "natural": 46.86,
+     "margen": 0.23,
+     "margenMas": false,
+     "motivo": "salta de sitio",
+     "porLetra": 0.0349,
+     "porLetraMas": false,
+     "motivoLetra": "salta de sitio",
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 19
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 53
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      }
+     }
+    },
+    {
+     "texto": "Music",
+     "donde": "div[data-pace-aj-fila=bg].pace-aj-fila › div.pace-aj-pista › button.pace-aj-pild",
+     "lineas": 1,
+     "letras": 5,
+     "reserva": false,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 12.65,
+     "ancho": 51.4,
+     "natural": 33.41,
+     "margen": 0.23,
+     "margenMas": false,
+     "motivo": "salta de sitio",
+     "porLetra": 0.0486,
+     "porLetraMas": false,
+     "motivoLetra": "salta de sitio",
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 19
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 53
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      }
+     }
+    }
+   ],
+   "cerca": []
+  },
+  {
+   "momento": "1280×720 avisos sin decidir · Tus datos",
+   "medidos": 12,
+   "todos": [
+    [
+     "‹",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your data",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Export a copy",
+     1,
+     null,
+     null
+    ],
+    [
+     "You haven’t saved a copy yet. If PACE isn’t installed, Safar",
+     3,
+     null,
+     null
+    ],
+    [
+     "Import a copy",
+     1,
+     null,
+     null
+    ],
+    [
+     "Delete all my data",
+     1,
+     null,
+     null
+    ],
+    [
+     "›",
+     1,
+     null,
+     null
+    ],
+    [
+     "PACE Complete",
+     1,
+     null,
+     null
+    ],
+    [
+     "Enter code",
+     1,
+     null,
+     null
+    ],
+    [
+     "Everything lives in this browser and doesn't sync with other",
+     2,
+     null,
+     null
+    ],
+    [
+     "Safety·Privacy",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "1280×720 avisos bloqueados",
+   "medidos": 44,
+   "todos": [
+    [
+     "Settings",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Appearance",
+     1,
+     null,
+     null
+    ],
+    [
+     "Guided tour ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Language",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Español",
+     1,
+     null,
+     null
+    ],
+    [
+     "English",
+     1,
+     null,
+     null
+    ],
+    [
+     "Color theme",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cream",
+     1,
+     null,
+     null
+    ],
+    [
+     "Dark",
+     1,
+     null,
+     null
+    ],
+    [
+     "Audio",
+     1,
+     null,
+     null
+    ],
+    [
+     "Listen ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sound",
+     1,
+     null,
+     null
+    ],
+    [
+     "Phase cue",
+     1,
+     null,
+     null
+    ],
+    [
+     "The voice for each phase",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tone",
+     1,
+     null,
+     null
+    ],
+    [
+     "Clear voice",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep voice",
+     1,
+     null,
+     null
+    ],
+    [
+     "Background",
+     1,
+     0.23,
+     null
+    ],
+    [
+     "While you breathe",
+     1,
+     0.23,
+     0.0146
+    ],
+    [
+     "Nothing",
+     1,
+     0.23,
+     0.0334
+    ],
+    [
+     "Ambient",
+     1,
+     0.23,
+     0.0349
+    ],
+    [
+     "Music",
+     1,
+     0.23,
+     0.0486
+    ],
+    [
+     "Sessions",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your week ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Alert at the end",
+     1,
+     null,
+     null
+    ],
+    [
+     "Focus · blocked in this browser",
+     1,
+     null,
+     null
+    ],
+    [
+     "Blocked: icon by the address, “Notifications”, “Allow”. The ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Circle",
+     1,
+     null,
+     null
+    ],
+    [
+     "Breathe · Lotus",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest between sets",
+     1,
+     null,
+     null
+    ],
+    [
+     "Move",
+     1,
+     null,
+     null
+    ],
+    [
+     "20 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "30 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "45 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "Glasses a day",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hydrate",
+     1,
+     null,
+     null
+    ],
+    [
+     "−",
+     1,
+     null,
+     null
+    ],
+    [
+     "8",
+     1,
+     null,
+     null
+    ],
+    [
+     "+",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your data",
+     2,
+     null,
+     null
+    ],
+    [
+     "Copies, deletion and PACE Complete ›",
+     2,
+     null,
+     null
+    ]
+   ],
+   "justos": [
+    {
+     "texto": "Background",
+     "donde": "div[data-pace-aj-seccion=Audio].pace-aj-sec › div[data-pace-aj-fila=bg].pace-aj-fila › div.pace-aj-nombre",
+     "lineas": 1,
+     "letras": 10,
+     "reserva": false,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 18.4,
+     "ancho": 84,
+     "natural": 83.75,
+     "margen": 0.23,
+     "margenMas": false,
+     "motivo": "mueve a su vecino «Nothing»",
+     "porLetra": 0.15,
+     "porLetraMas": true,
+     "motivoLetra": null,
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 58
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 92
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      }
+     }
+    },
+    {
+     "texto": "While you breathe",
+     "donde": "div[data-pace-aj-fila=bg].pace-aj-fila › div.pace-aj-nombre › div.pace-aj-sub",
+     "lineas": 1,
+     "letras": 17,
+     "reserva": false,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 12.65,
+     "ancho": 84,
+     "natural": 83.75,
+     "margen": 0.23,
+     "margenMas": false,
+     "motivo": "mueve a su vecino «Nothing»",
+     "porLetra": 0.0146,
+     "porLetraMas": false,
+     "motivoLetra": "mueve a su vecino «Nothing»",
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 58
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 92
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      }
+     }
+    },
+    {
+     "texto": "Nothing",
+     "donde": "div[data-pace-aj-fila=bg].pace-aj-fila › div.pace-aj-pista › button.pace-aj-pild",
+     "lineas": 1,
+     "letras": 7,
+     "reserva": false,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 12.65,
+     "ancho": 63.8,
+     "natural": 44.69,
+     "margen": 0.23,
+     "margenMas": false,
+     "motivo": "salta de sitio",
+     "porLetra": 0.0334,
+     "porLetraMas": false,
+     "motivoLetra": "salta de sitio",
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 58
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 92
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      }
+     }
+    },
+    {
+     "texto": "Ambient",
+     "donde": "div[data-pace-aj-fila=bg].pace-aj-fila › div.pace-aj-pista › button.pace-aj-pild",
+     "lineas": 1,
+     "letras": 7,
+     "reserva": false,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 12.65,
+     "ancho": 64.9,
+     "natural": 46.86,
+     "margen": 0.23,
+     "margenMas": false,
+     "motivo": "salta de sitio",
+     "porLetra": 0.0349,
+     "porLetraMas": false,
+     "motivoLetra": "salta de sitio",
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 58
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 92
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      }
+     }
+    },
+    {
+     "texto": "Music",
+     "donde": "div[data-pace-aj-fila=bg].pace-aj-fila › div.pace-aj-pista › button.pace-aj-pild",
+     "lineas": 1,
+     "letras": 5,
+     "reserva": false,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 12.65,
+     "ancho": 51.4,
+     "natural": 33.41,
+     "margen": 0.23,
+     "margenMas": false,
+     "motivo": "salta de sitio",
+     "porLetra": 0.0486,
+     "porLetraMas": false,
+     "motivoLetra": "salta de sitio",
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 58
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 92
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      }
+     }
+    }
+   ],
+   "cerca": []
+  },
+  {
+   "momento": "1280×720 avisos bloqueados · Tus datos",
+   "medidos": 12,
+   "todos": [
+    [
+     "‹",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your data",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Export a copy",
+     1,
+     null,
+     null
+    ],
+    [
+     "You haven’t saved a copy yet. If PACE isn’t installed, Safar",
+     3,
+     null,
+     null
+    ],
+    [
+     "Import a copy",
+     1,
+     null,
+     null
+    ],
+    [
+     "Delete all my data",
+     1,
+     null,
+     null
+    ],
+    [
+     "›",
+     1,
+     null,
+     null
+    ],
+    [
+     "PACE Complete",
+     1,
+     null,
+     null
+    ],
+    [
+     "Enter code",
+     1,
+     null,
+     null
+    ],
+    [
+     "Everything lives in this browser and doesn't sync with other",
+     2,
+     null,
+     null
+    ],
+    [
+     "Safety·Privacy",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  }
+ ]
+}

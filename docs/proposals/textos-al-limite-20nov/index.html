@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Textos al límite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de papel y tinta, como las demás páginas de propuestas: cada grupo con lo que pasa hoy
+   (terracota), sus dos opciones y la recomendada en oliva. */
+:root{
+  --paper:#F2EDE0;--card:#FBF8F1;
+  --ink:#1F1C17;--ink-2:#4A453C;--ink-3:#77705F;
+  --line:#C9C0A8;
+  --olive:#3E5A3A;--olive-soft:rgba(62,90,58,.12);
+  --terra:#A85E43;--terra-soft:rgba(168,94,67,.12);
+  --display:'EB Garamond',Georgia,'Times New Roman',serif;
+  --ui:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#E8A98F;--terra-soft:rgba(232,169,143,.14);color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+main{max-width:880px;margin:0 auto;padding:40px 16px 72px}
+h1,h2,h3{font-family:var(--display);font-style:italic;font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(32px,6vw,44px)}
+h2{font-size:clamp(23px,4vw,28px);margin:44px 0 10px;padding-top:22px;border-top:1px solid var(--line)}
+p{margin:0 0 12px;color:var(--ink-2);max-width:68ch}
+strong{color:var(--ink);font-weight:500}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.lead{font-family:var(--display);font-size:21px;color:var(--ink);max-width:62ch;margin-top:14px}
+.t{font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin:18px 0 6px}
+.t.hoy{color:var(--terra)}
+.opcion{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:10px 0}
+.opcion.rec{border-color:var(--olive);background:linear-gradient(var(--olive-soft),var(--olive-soft)),var(--card)}
+.opcion p{margin-bottom:6px}.opcion p:last-child{margin-bottom:0}
+.letra{font-family:var(--display);font-style:italic;font-size:20px;color:var(--ink)}
+.sello{display:inline-block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--olive);border:1px solid var(--olive);border-radius:999px;padding:1px 8px;margin-left:6px;vertical-align:2px}
+.nota{font-size:13px;color:var(--ink-3)}
+.lista{list-style:none;padding:0;margin:8px 0 14px}
+.lista li{border-bottom:1px solid var(--line);padding:9px 0}
+.lista .que{font-family:var(--display);font-style:italic;font-size:18px;color:var(--ink);display:block}
+.lista .cifras{font-size:13px;color:var(--ink-3);display:block;margin-top:2px}
+.lista .cifras b{font-weight:500;color:var(--terra)}
+.lista .nuevo{font-size:14px;color:var(--olive);display:block;margin-top:4px}
+.lista .nuevo::before{content:'A · ';letter-spacing:.06em}
+.resumen{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));margin:16px 0}
+.resumen div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.resumen b{font-family:var(--display);font-style:italic;font-weight:400;font-size:26px;color:var(--ink);display:block;line-height:1.1}
+.resumen span{font-size:13px;color:var(--ink-3)}
+code{font-size:13px;background:var(--card);border:1px solid var(--line);border-radius:4px;padding:0 4px;overflow-wrap:anywhere}
+.respuesta{font-family:var(--display);font-size:22px;color:var(--ink);background:var(--card);border:1px dashed var(--olive);border-radius:10px;padding:12px 16px}
+</style>
+</head>
+<body>
+<main>
+<p class="eyebrow">PACE · 20 nov. 2026 · para elegir</p>
+<h1>Los textos que caben por menos de 3 px</h1>
+<p class="lead">La 0.212.0 salió roja en Linux por tres textos que en el PC cabían por 1 o 2 px. He medido todos los demás de la home del móvil, Ajustes, la pausa y el runner de las 33 rutinas de Mueve y Estira, en los dos idiomas y con la letra normal y al 115 %, en tu PC y en el Linux de GitHub.</p>
+
+<div class="resumen">
+  <div><b>33 sitios</b><span>con menos de 3 px en algún sistema (54 textos: varios comparten fila)</span></div>
+  <div><b>9 ya partidos</b><span>en un sistema van ya en una línea más que en el otro</span></div>
+  <div><b>0 en la home</b><span>con la letra normal; solo dos al 115 %</span></div>
+</div>
+
+<p><strong>Lo que he aprendido midiendo:</strong> Linux no pinta siempre más ancho. Un mismo texto puede tener 8 px de margen en tu PC y 0,4 en Linux, y otro al revés. Por eso un arreglo de 2 o 4 px que no se vea no basta donde el margen baila tanto: ahí recomiendo acortar el texto, que da 15 o 20 px de sitio. Donde lo que falla es una fila (un título con su botón, una etiqueta con sus botones), recomiendo quitar 4 px de hueco entre piezas, que no se nota.</p>
+<p class="nota">Cada cifra es lo que le sobra al texto en su peor caso: «PC» es tu Windows y «Linux» el de GitHub, que pinta la letra como Android. «Ya partido» quiere decir que ahí ya va en una línea más. No he montado nada.</p>
+
+<!-- ───────────────────────────────────────────────────────────────── -->
+<h2>1 · «Cuídate» en el runner (15 textos)</h2>
+<p class="t hoy">Qué pasa si se parte</p>
+<p>La línea de abajo gana una línea, y como su hueco mide lo que el texto más largo de la rutina, el dibujo encoge de 14 a 22 px durante <strong>toda</strong> la rutina. En los que tienen una línea hoy hay aire y el dibujo no cambia, pero la línea de abajo baja.</p>
+<ul class="lista">
+  <li><span class="que">Take care · Too hard? Use the wall, hands at chest height. The desk must not move: no wheels, nothing folding.</span><span class="cifras">Empuje sencillo · inglés, al 115 % · PC <b>ya partido</b> · Linux <b>0,0 px</b> · el dibujo, −14 px</span><span class="nuevo">Too hard? Use the wall, hands at chest height. A steady desk: no wheels, nothing folding.</span></li>
+  <li><span class="que">Cuídate · Si cuesta, en la pared, manos a la altura del pecho. Mesa fija: ni con ruedas ni plegable.</span><span class="cifras">Empuje sencillo · al 115 % · PC <b>0,0 px</b> · Linux 2,2 px · el dibujo, −15 px</span><span class="nuevo">Si cuesta, en la pared, manos a la altura del pecho. Mesa fija, sin ruedas ni plegable.</span></li>
+  <li><span class="que">Take care · A light, undamaged band, firmly underfoot; don't let go while it's taut. No band? Skip this step.</span><span class="cifras">Espalda con banda · inglés · PC 7,0 px · Linux <b>0,4 px</b> · el dibujo, −14 px</span><span class="nuevo">A light, undamaged band, firmly underfoot; don't let go while it's taut. No band? Skip it.</span></li>
+  <li><span class="que">Take care · Don't push them back with your other hand.</span><span class="cifras">Manos y antebrazos · inglés · PC 5,5 px · Linux <b>0,4 px</b></span><span class="nuevo">Don't push them back with the other hand.</span></li>
+  <li><span class="que">Take care · Lean on something if you lose your balance.</span><span class="cifras">Caderas · inglés · PC 8,0 px · Linux <b>0,4 px</b></span><span class="nuevo">Lean on something if you lose balance.</span></li>
+  <li><span class="que">Take care · If keeping your arms on the wall strains your posture, let them come off a little. No wall? Do it in the air.</span><span class="cifras">Espalda de oficina · inglés · PC <b>0,5 px</b> · Linux <b>ya partido</b> · el dibujo, −20 px</span><span class="nuevo">If arms on the wall strain your posture, let them come off a little. No wall? Do it in the air.</span></li>
+  <li><span class="que">Take care · Don't squeeze hard. Keep breathing normally.</span><span class="cifras">Espalda con banda · inglés · PC <b>1,0 px</b> · Linux <b>ya partido</b></span><span class="nuevo">Don't squeeze hard. Keep breathing.</span></li>
+  <li><span class="que">Cuídate · Elige una altura que te deje respirar tranquilo.</span><span class="cifras">Sentadilla en pared · PC 9,9 px · Linux <b>1,0 px</b></span><span class="nuevo">Una altura que te deje respirar tranquilo.</span></li>
+  <li><span class="que">Cuídate · La rodilla de apoyo algo flexionada. Sin rebotes.</span><span class="cifras">Cadena posterior · PC <b>1,0 px</b> · Linux <b>ya partido</b></span><span class="nuevo">Rodilla de apoyo algo flexionada. Sin rebotes.</span></li>
+  <li><span class="que">Take care · Keep a comfortable support and come out with control. If your heels lift, go less deep.</span><span class="cifras">Caderas · suelo · inglés, al 115 % · PC 3,2 px · Linux <b>1,2 px</b> · el dibujo, −22 px</span><span class="nuevo">Keep a comfortable support and come out slowly. If your heels lift, go less deep.</span></li>
+  <li><span class="que">Cuídate · Una mano en la mesa o la pared si pierdes el equilibrio. Baja solo hasta donde controles.</span><span class="cifras">Piernas · a una · al 115 % · PC <b>1,9 px</b> · Linux 3,6 px · el dibujo, −15 px</span><span class="nuevo">Una mano en la mesa o la pared si pierdes el equilibrio. Baja hasta donde controles.</span></li>
+  <li><span class="que">Cuídate · Talón apoyado. Baja solo hasta donde controles.</span><span class="cifras">Caderas de pie, Caderas y Caderas · suelo · PC <b>1,9 px</b> · Linux <b>ya partido</b></span><span class="nuevo">Talón apoyado. Baja hasta donde controles.</span></li>
+  <li><span class="que">Take care · Gentle: this is not a strength exercise.</span><span class="cifras">Manos y muñecas, y Manos y antebrazos · inglés, al 115 % · PC <b>2,0 px</b> · Linux 4,2 px</span><span class="nuevo">Gentle: it's not a strength exercise.</span></li>
+  <li><span class="que">Take care · The turn comes from the trunk, not the neck.</span><span class="cifras">Antídoto a la silla y Columna · ondas · inglés · PC 2,8 px · Linux <b>2,4 px</b></span><span class="nuevo">Turn from the trunk, not the neck.</span></li>
+  <li><span class="que">Take care · A soft stretch at the front of the back hip, never a sharp pull. Hold the desk if you need to.</span><span class="cifras">Caderas de pie · inglés, al 115 % · PC 2,8 px · Linux 2,9 px</span><span class="nuevo">A soft stretch at the front of the back hip, never a sharp pull. Hold the desk if needed.</span></li>
+</ul>
+<div class="opcion rec"><p class="letra">1A · Los quince, más cortos <span class="sello">recomendada</span></p><p>Lo que va en verde debajo de cada uno: quita una palabra que sobra y no toca el aviso de seguridad. Da de 6 a 60 px de sitio, más de lo que baila la letra entre sistemas.</p></div>
+<div class="opcion"><p class="letra">1B · El rótulo «CUÍDATE» un pelo más junto</p><p>La separación de sus letras, de 0,18 a 0,12 em: unos 4 px por línea, sin cambiar ningún texto. No basta para los que bailan 7 px entre sistemas (la banda, «Lean on something»).</p></div>
+
+<!-- ───────────────────────────────────────────────────────────────── -->
+<h2>2 · Las instrucciones del runner (7 textos)</h2>
+<p class="t hoy">Qué pasa si se parte</p>
+<p>Igual que «Cuídate»: la frase pasa de dos a tres líneas, el dibujo encoge 22 px en toda la rutina o el runner se aprieta (menos aire entre piezas y el número más pequeño).</p>
+<ul class="lista">
+  <li><span class="que">Right. / Left. Ten seconds palm down and ten palm up, easing your fingers toward you with your other hand.</span><span class="cifras">Manos y muñecas, y Manos y antebrazos · inglés · PC <b>0,0 px</b> (la derecha) y 2,2 (la izquierda) · Linux <b>ya partido</b> · el dibujo, −22 px</span><span class="nuevo">Ten seconds palm down, ten palm up; ease your fingers toward you with the other hand.</span></li>
+  <li><span class="que">Hang and draw your shoulders slightly away from your ears, without bending your elbows.</span><span class="cifras">Colgarse · inglés, al 115 % · PC 6,4 px · Linux <b>0,0 px</b> · el runner se aprieta</span><span class="nuevo">Hang and draw your shoulders slightly away from your ears, elbows straight.</span></li>
+  <li><span class="que">Derecha. / Izquierda. Avanza la pelvis unos centímetros, sin arquear la cintura. Estirón suave en la ingle de atrás.</span><span class="cifras">Movilidad en suelo, Antídoto a la silla y Estiramiento del sofá · PC <b>1,5 px</b> · Linux <b>1,9 px</b> · el dibujo, −22 px</span><span class="nuevo">Avanza un poco la pelvis, sin arquear la cintura. Estirón suave en la ingle de atrás.</span></li>
+  <li><span class="que">Boca arriba, rodillas dobladas, pies apoyados al ancho de las caderas y cerca de los glúteos.</span><span class="cifras">Fuerza en suelo · al 115 % · PC 7,0 px · Linux <b>2,0 px</b> · el runner se aprieta</span><span class="nuevo">Boca arriba, rodillas dobladas, pies al ancho de las caderas y cerca de los glúteos.</span></li>
+  <li><span class="que">Back and glutes against the wall, feet hip-width apart, heels about a hand span from it.</span><span class="cifras">Piernas sin pasos · inglés, al 115 % · PC 6,6 px · Linux <b>2,9 px</b> · el runner se aprieta</span><span class="nuevo">Back and glutes on the wall, feet hip-width apart, heels a hand span from it.</span></li>
+</ul>
+<div class="opcion rec"><p class="letra">2A · Las cinco frases, más cortas <span class="sello">recomendada</span></p><p>Lo de verde. Siguen diciendo lo mismo y quedan muy por debajo del tope de 95 letras.</p></div>
+<div class="opcion"><p class="letra">2B · La letra de la instrucción, de 17 a 16,8 px en el móvil</p><p>Un 1 % más estrecha, unos 4 px por línea, y no se nota. Pero no salva la de las muñecas, que en Linux ya va en tres líneas.</p></div>
+
+<!-- ───────────────────────────────────────────────────────────────── -->
+<h2>3 · El título de la rutina, arriba del runner (3 sitios)</h2>
+<p class="t hoy">Qué pasa si se parte</p>
+<p>El nombre comparte fila con «Paso 1 de 4» y «× Salir». Si pasa a dos líneas, la cabecera crece: con «Estiramiento del sofá» al 115 % el runner pide <strong>24 px de scroll</strong>; con los otros dos, el dibujo encoge 26 px o el runner se aprieta.</p>
+<ul class="lista">
+  <li><span class="que">Estiramiento del sofá</span><span class="cifras">al 115 % · PC 1,8 px · Linux <b>0,6 px</b> · el runner pide 24 px de scroll</span></li>
+  <li><span class="que">Seated Glute Squeezes</span><span class="cifras">inglés, al 115 % · PC <b>0,1 px</b> · Linux <b>ya partido</b> · el runner se aprieta</span></li>
+  <li><span class="que">Calf Raises Under the Desk</span><span class="cifras">inglés · PC <b>3,0 px</b> · Linux 7,1 px · el dibujo, −26 px</span><span class="nuevo">Under-Desk Calf Raises</span></li>
+</ul>
+<div class="opcion rec"><p class="letra">3A · 12 px y no 16 entre el paso y «× Salir» <span class="sello">recomendada</span></p><p>Cuatro px más para el nombre en todas las rutinas, sin tocar ningún nombre. Con «Seated Glute Squeezes», que en Linux ya va en dos líneas, quizá no baste: lo vuelvo a medir antes de montarlo.</p></div>
+<div class="opcion"><p class="letra">3B · Nombres más cortos</p><p>«Under-Desk Calf Raises» es natural en inglés; pero «Estiramiento del sofá» y «Seated Glute Squeezes» son el nombre del ejercicio y no tienen un corto que suene bien.</p></div>
+
+<!-- ───────────────────────────────────────────────────────────────── -->
+<h2>4 · «Siguiente: …» con «Auto», abajo del runner (3 sitios)</h2>
+<p class="t hoy">Qué pasa si se parte</p>
+<p>«Auto» baja a otra fila y el dibujo encoge unos 20 px. Solo pasa en tu PC; en Linux sobra.</p>
+<ul class="lista">
+  <li><span class="que">Siguiente: Rotación torácica · Auto</span><span class="cifras">al 115 % · PC <b>0,5 px</b> · Linux más de 12 px · el dibujo, −21 px</span></li>
+  <li><span class="que">Siguiente: Juntar omóplatos · Auto</span><span class="cifras">al 115 % · PC <b>1,3 px</b> · Linux más de 12 px · el dibujo, −20 px</span></li>
+  <li><span class="que">Next: Standing thoracic rotation · Auto</span><span class="cifras">inglés · PC <b>2,9 px</b> · Linux 4,2 px · el dibujo, −19 px</span></li>
+</ul>
+<div class="opcion rec"><p class="letra">4A · 8 px y no 12 entre «Siguiente» y «Auto» <span class="sello">recomendada</span></p><p>Cuatro px más en todas las rutinas; el nombre del paso siguiente no se toca.</p></div>
+<div class="opcion"><p class="letra">4B · «Luego:» en lugar de «Siguiente:»</p><p>Cinco letras menos en castellano; en inglés «Next:» ya es corto. Pero cambia una palabra que sale en todas las rutinas, y solo hace falta al 115 %.</p></div>
+
+<!-- ───────────────────────────────────────────────────────────────── -->
+<h2>5 · Ajustes (3 filas)</h2>
+<p class="t hoy">Qué pasa si se parte</p>
+<p>Los botones bajan a otra línea y Ajustes pide scroll. Las tres son en el ordenador a 1280 × 720; dos solo con la letra del navegador al 115 %, que es lo menos frecuente.</p>
+<ul class="lista">
+  <li><span class="que">Suena detrás · Lo que suena al respirar · Nada · Ambiente · Música</span><span class="cifras">con la letra normal · PC 6,2 px · Linux <b>3,0 px</b> (con el arreglo de hoy, 2A) · Ajustes pide 6 px de scroll</span><span class="nuevo">«Al respirar» en la línea pequeña</span></li>
+  <li><span class="que">Background · While you breathe · Nothing · Ambient · Music</span><span class="cifras">inglés, al 115 % · PC <b>0,2 px</b> · Linux <b>1,5 px</b> · Ajustes pide 34 px de scroll</span><span class="nuevo">«When breathing» en la línea pequeña</span></li>
+  <li><span class="que">Tus datos · Copias, borrar y PACE completo ›</span><span class="cifras">al 115 % · PC <b>2,0 px</b> · Linux <b>ya partido</b> · Ajustes pide 18 px de scroll</span><span class="cifras">Se queda igual: solo pasa con la letra del navegador al 115 %.</span></li>
+</ul>
+<div class="opcion rec"><p class="letra">5A · Las dos líneas pequeñas, más cortas <span class="sello">recomendada</span></p><p>Lo de verde: «Al respirar» y «When breathing». «Suena detrás» ya tuvo su arreglo de hueco hoy y en Linux va justo otra vez; quitarle letras le da unos 30 px. «Tus datos» se queda: acortarlo quitaría «borrar» o «PACE completo», y solo falla en el ordenador con la letra grande.</p></div>
+<div class="opcion"><p class="letra">5B · 4 px menos de hueco en esas filas</p><p>Entre el nombre y los botones, de 6 a 2 px. No cambia ningún texto, pero en «Suena detrás» ya se quitaron 4 px hoy y quedaría pegado.</p></div>
+
+<!-- ───────────────────────────────────────────────────────────────── -->
+<h2>6 · La home del móvil (2 sitios, solo al 115 %)</h2>
+<p class="t hoy">Qué pasa si se parte</p>
+<p>Con la letra normal, nada va justo en la home. Al 115 %, la frase del horario en castellano pasa de dos a tres líneas y, a 360 × 718, la tarjeta esconde «Luego». Es la misma frase que hoy se arregló en inglés.</p>
+<ul class="lista">
+  <li><span class="que">De 9:00 a 17:00 · comida 14:00 · 1 h · hoy de 10:00 a 17:00</span><span class="cifras">el día servido, llegando a las 10:00, al 115 % · PC <b>0,7 px</b> · Linux <b>ya en tres líneas</b> · a 360 × 718 esconde «Luego»</span><span class="nuevo">9:00–17:00 · comida 14:00 · 1 h · hoy de 10:00 a 17:00</span></li>
+  <li><span class="que">2 min · Legs: unmoved today</span><span class="cifras">la pausa abierta, inglés, 360 × 718 al 115 % · PC <b>0,1 px</b> · Linux más de 12 · se corta con «…»</span><span class="nuevo">2 min · Legs: idle today</span></li>
+</ul>
+<div class="opcion rec"><p class="letra">6A · Las dos, más cortas <span class="sello">recomendada</span></p><p>La primera, igual que la 3A de hoy en inglés: sin «De… a», con la raya. La segunda, «idle» en lugar de «unmoved».</p></div>
+<div class="opcion"><p class="letra">6B · Dejarlas</p><p>Al 115 % la home ya se recoge a propósito (esconde «Luego» y pone las actividades en dibujo), así que no hay scroll en ningún caso.</p></div>
+
+<!-- ───────────────────────────────────────────────────────────────── -->
+<h2>7 · La pausa (2 sitios, solo al 115 %)</h2>
+<p class="t hoy">Qué pasa si se parte</p>
+<p>La frase de arriba pasa a dos líneas; hoy el modal tiene sitio y «Ahora no» no se mueve. «Move», en la fila de las otras actividades, se corta.</p>
+<ul class="lista">
+  <li><span class="que">Has cerrado un bloque. Elige tu pausa.</span><span class="cifras">al 115 % · PC 5,1 px · Linux <b>2,0 px</b> · una línea más en la cabecera</span><span class="nuevo">Bloque cerrado. Elige tu pausa.</span></li>
+  <li><span class="que">Move</span><span class="cifras">inglés, al 115 % · PC <b>2,4 px</b> · Linux más de 12 · se corta</span></li>
+</ul>
+<div class="opcion rec"><p class="letra">7A · La frase más corta y 4 px en lugar de 6 entre el dibujo y el nombre de cada actividad <span class="sello">recomendada</span></p><p>Lo de verde para la frase, y el hueco para «Move», que no se puede acortar.</p></div>
+<div class="opcion"><p class="letra">7B · Dejarlas</p><p>Ninguna de las dos mueve nada más en la pausa.</p></div>
+
+<!-- ───────────────────────────────────────────────────────────────── -->
+<h2>Y para que no vuelva</h2>
+<p>La medida se queda en la rama: <code>tests/textos-al-limite.mide.js</code>, con <code>npx playwright test -c playwright.mide.config.js</code>. No es de la suite y no falla: apunta. Se puede pasar en Linux con la rama <code>claude/diag-textos-20nov</code> (<code>gh workflow run ci.yml --ref claude/diag-textos-20nov</code>). Lo que elijas lo vuelvo a medir en los dos sistemas antes de montarlo, porque un texto que en tu PC gana 5 px puede ganar 2 en Linux.</p>
+<p>Si quieres que la suite lo vigile, el siguiente paso sería una prueba que falle cuando un texto del runner (sus pilas) quede con menos de 3 px, como hace la home con su letra 0,3 px más ancha. Eso es otra decisión; no va en esta.</p>
+
+<h2>Tu respuesta</h2>
+<p>Una letra por grupo. Lo que recomiendo:</p>
+<p class="respuesta">1A 2A 3A 4A 5A 6A 7A</p>
+</main>
+</body>
+</html>
