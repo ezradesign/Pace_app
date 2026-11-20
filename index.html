@@ -9521,6 +9521,9 @@ var PACE_BUHO_RESPUESTAS = 25;
 
 
 
+
+
+
 function paceOcasoFoco(minutos, inicioMs, finMs) {
   try {
     if (typeof ritmoTrasElFin !== 'function') return;
@@ -9528,13 +9531,10 @@ function paceOcasoFoco(minutos, inicioMs, finMs) {
     var fin = typeof finMs === 'number' && isFinite(finMs) && finMs <= ahora ? finMs : ahora;
     var empezo = typeof inicioMs === 'number' && isFinite(inicioMs) && inicioMs <= fin ? inicioMs : fin - (Number(minutos) || 0) * 60000;
     var dia = toISODate(empezo);
-    if (dia === todayISO()) {
-      var p = typeof ritmoPlan === 'function' ? ritmoPlan(getState()) : null;
-      if (p && p.m && ritmoTrasElFin(p.m, empezo)) setState({ ocasoTarde: dia });
-      return;
-    }
-    var s = getState(),sal = s.ocasoSalida;
-    if (!sal || sal.fecha !== dia || !ritmoTrasElFin(sal, empezo)) return;
+    var s = getState();
+    var p = dia === todayISO() && typeof ritmoPlan === 'function' ? ritmoPlan(s) : null;
+    var sal = p && p.m ? p.m : s.ocasoSalida && s.ocasoSalida.fecha === dia ? s.ocasoSalida : null;
+    if (!sal || !ritmoTrasElFin(sal, empezo)) return;
     var lista = Array.isArray(s.ocasoDias) ? s.ocasoDias.filter(function (d) {return d !== dia;}) : [];
     setState({ ocasoTarde: dia, ocasoDias: lista });
   } catch (e) {}
