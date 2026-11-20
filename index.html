@@ -24210,6 +24210,7 @@ var SOUND_RECIPES = {
   },
   'pomodoro.end': function (ctx, t0, toques) {
     for (var i = 0; i < (toques > 1 ? toques : 1); i++) SOUND_RECIPES.complete(ctx, t0 + i * 0.9);
+    window.paceCampanaHasta = Date.now() + ((toques > 1 ? toques : 1) - 1) * 900 + 600;
   },
 
 
@@ -25786,7 +25787,15 @@ function ToastHost() {
     const full = Object.assign({}, sig, { aro: sig.licencia ? null : toastHuecoDelAro() });
     activoRef.current = true;
     setToasts((prev) => [...prev, full]);
-    if (!full.licencia && !selloViejo(full.grupo)) {try {playSound(full.secreto && full.grupo.length === 1 ? 'achievement.secret' : 'achievement.unlock');} catch (e) {}}
+
+
+
+    const sonido = full.secreto && full.grupo.length === 1 ? 'achievement.secret' : 'achievement.unlock';
+    const tras = (typeof window.paceCampanaHasta === 'number' ? window.paceCampanaHasta : 0) - Date.now();
+    if (!full.licencia && !selloViejo(full.grupo)) {
+      if (tras > 0) setTimeout(() => {try {playSound(sonido);} catch (e) {}}, tras);else
+      {try {playSound(sonido);} catch (e) {}}
+    }
     const durationMs = full.duracion || (typeof TOAST_DURATION_MS === 'number' ? TOAST_DURATION_MS : 3000);
     const fadeMs = 300;
 

@@ -185,7 +185,15 @@ function ToastHost() {
     const full = Object.assign({}, sig, { aro: sig.licencia ? null : toastHuecoDelAro() });
     activoRef.current = true;
     setToasts(prev => [...prev, full]);
-    if (!full.licencia && !selloViejo(full.grupo)) { try { playSound(full.secreto && full.grupo.length === 1 ? 'achievement.secret' : 'achievement.unlock'); } catch(e) {} }
+    /* LA CAMPANITA DEL SELLO NO SE METE EN LA CAMPANA DEL FOCO. Al acabar un Foco suenan tres toques (Ez,
+       19 nov. 2026), y el sello que gana ese Foco salía a los 0,4 s: sonaba entre el primero y el segundo, y
+       se oían cuatro golpes mezclados. El aviso sale a su hora; su sonido, al acabar el último toque. */
+    const sonido = full.secreto && full.grupo.length === 1 ? 'achievement.secret' : 'achievement.unlock';
+    const tras = (typeof window.paceCampanaHasta === 'number' ? window.paceCampanaHasta : 0) - Date.now();
+    if (!full.licencia && !selloViejo(full.grupo)) {
+      if (tras > 0) setTimeout(() => { try { playSound(sonido); } catch (e) {} }, tras);
+      else { try { playSound(sonido); } catch (e) {} }
+    }
     const durationMs = full.duracion || ((typeof TOAST_DURATION_MS === 'number') ? TOAST_DURATION_MS : 3000);
     const fadeMs = 300;
     /* s79: tres fases. Visible (durationMs) -> exiting (opacity 1->0) -> fuera del array. */

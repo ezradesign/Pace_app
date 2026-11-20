@@ -241,6 +241,7 @@ var SOUND_RECIPES = {
   },
   'pomodoro.end': function(ctx, t0, toques) {   // `toques`: cuántas veces seguidas (el aviso grabado, una)
     for (var i = 0; i < (toques > 1 ? toques : 1); i++) SOUND_RECIPES.complete(ctx, t0 + i * 0.9);
+    window.paceCampanaHasta = Date.now() + ((toques > 1 ? toques : 1) - 1) * 900 + 600;   // el sello que llegue espera a que acabe (Toast.jsx)
   },
   /* El fin de la pausa suena distinto del fin del Foco, para saber sin mirar si toca parar o
      volver (auditoría externa 4.F3, 12 nov. 2026). Dos candidatos para que Ez elija oyéndolos;
