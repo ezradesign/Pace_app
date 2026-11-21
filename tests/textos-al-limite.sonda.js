@@ -58,6 +58,9 @@ function sondaTextos(opts) {
     if (r.width <= 0 || r.height <= 0) return false;
     if (r.right < 1 || r.left > innerWidth - 1) return false;
     if (opts.soloPantalla && (r.bottom < 1 || r.top > innerHeight - 1)) return false;
+    /* Lo que se recorta a propósito no cuenta: el texto solo para el lector de pantalla (una caja de 1 px) y
+       los nombres de las actividades plegadas en la home, que van en una caja de ancho cero. */
+    if (limites(b).some((L) => L.recorta && L.right - L.left < 4)) return false;
     return true;
   });
 
@@ -103,11 +106,12 @@ function sondaTextos(opts) {
   /* Una línea más solo mueve el diseño si su caja crece o se sale por abajo. En las pilas del runner, un
      texto escondido que pasa de 2 a 3 líneas no mueve nada si otro de la pila ya ocupa 3. */
   const parte = (f, f0) => f.n > f0.n && (f.padreAlto > f0.padreAlto + 0.5 || f.bottom > f0.padreBottom + 0.5);
-  const vecinosDe = (b) => {
-    let a = b;
-    for (let i = 0; i < 3 && a.parentElement; i++) a = a.parentElement;
-    return vivos.filter((o) => o !== b && a.contains(o));
-  };
+  const abuelo = (b) => { let a = b; for (let i = 0; i < 3 && a.parentElement; i++) a = a.parentElement; return a; };
+  const vecinosDe = (b) => { const a = abuelo(b); return vivos.filter((o) => o !== b && a.contains(o)); };
+  /* Moverse de sitio solo cuenta si la caja que lo lleva crece: un texto con `text-wrap: balance`
+     cambia qué palabra va abajo al crecer un pelo, y eso no mueve nada (la frase del día, en la home). */
+  const altoAbuelo = new Map(vivos.map((b) => [b, abuelo(b).getBoundingClientRect().height]));
+  const crece = (b) => Math.abs(abuelo(b).getBoundingClientRect().height - altoAbuelo.get(b)) > 0.5;
   const base = new Map(vivos.map((b) => [b, foto(b)]));
   const nombre = (b) => bloques.get(b).textos.map((t) => t.nodeValue).join('').replace(/\s+/g, ' ').trim().slice(0, 140);
 
@@ -117,11 +121,11 @@ function sondaTextos(opts) {
     if (parte(f, f0)) return 'se parte en ' + f.n + ' líneas';
     const nueva = f.sale.find((s) => !f0.sale.includes(s));
     if (nueva) return nueva;
-    if (Math.abs(f.top - f0.top) > 2) return 'salta de sitio';
+    if (Math.abs(f.top - f0.top) > 2 && crece(b)) return 'salta de sitio';
     for (const o of vecinos) {
       const g = foto(o), g0 = base.get(o);
       if (parte(g, g0)) return 'parte a su vecino «' + nombre(o).slice(0, 50) + '»';
-      if (Math.abs(g.top - g0.top) > 2) return 'mueve a su vecino «' + nombre(o).slice(0, 50) + '»';
+      if (Math.abs(g.top - g0.top) > 2 && crece(b)) return 'mueve a su vecino «' + nombre(o).slice(0, 50) + '»';
     }
     return null;
   }
