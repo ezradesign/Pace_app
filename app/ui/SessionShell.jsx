@@ -288,7 +288,8 @@ function SessionHeader({ routine, onExit, extra }) {
           fontSize: 22, margin: '2px 0 0', fontWeight: 500,
         }}>{routine.name}</h2>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+      {/* 12 px y no 16: el nombre de la rutina quedaba a menos de 1 px de partirse con la letra al 115 % (Ez, 7A del 20 nov.). */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         {extra}
         {/* La × es adorno: el lector dice «Salir», no «por Salir». */}
         <button data-pace-toque onClick={() => onExit('exit')} style={sessionShellStyles.exitBtn}><span aria-hidden="true">× </span>{t('session.exit')}</button>

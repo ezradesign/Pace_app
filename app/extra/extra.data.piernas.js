@@ -152,7 +152,7 @@ Object.assign(window.EXTRA_ROUTINES, {
           { name: 'Sentadilla lateral', mode: 'perSide', dur: 30, transition: { seconds: 8 },
             instruction: {
               action: 'Pies muy anchos. Dobla esta rodilla hacia donde mira el pie; la otra, estirada. Sube despacio.',
-              care: 'Talón apoyado. Baja solo hasta donde controles.' } },
+              care: 'Talón apoyado. Baja hasta donde controles.' } },
           { name: 'Zancada profunda', mode: 'perSide', dur: 30, transition: { seconds: 8 },
             instruction: {
               setup: 'Da un paso largo hacia atrás, sin apoyar la rodilla.',
@@ -173,7 +173,7 @@ Object.assign(window.EXTRA_ROUTINES, {
           { name: 'Sentadilla lateral', mode: 'perSide', dur: 30, transition: { seconds: 10 },
             instruction: {
               action: 'Pies muy anchos. Dobla esta rodilla hacia donde mira el pie; la otra, estirada. Sube despacio.',
-              care: 'Talón apoyado. Baja solo hasta donde controles.' } },
+              care: 'Talón apoyado. Baja hasta donde controles.' } },
           { name: 'Sentadilla profunda', mode: 'timed', dur: 60,
             instruction: {
               action: 'Baja en cuclillas hasta donde vaya cómodo, talones abajo. Los codos, dentro, sin empujar.',
@@ -204,7 +204,7 @@ Object.assign(window.EXTRA_ROUTINES, {
             instruction: {
               setup: 'Apoya un talón delante, en el suelo, con esa rodilla estirada o un poco doblada.',
               action: 'Cadera atrás y tronco adelante, sin redondear la espalda. Tensión detrás del muslo de delante.',
-              care: 'La rodilla de apoyo algo flexionada. Sin rebotes.' } },
+              care: 'Rodilla de apoyo algo flexionada. Sin rebotes.' } },
           { name: 'Gemelo en pared', mode: 'perSide', dur: 25, transition: { seconds: 8 },
             instruction: {
               setup: 'De cara a la pared, manos en ella. Un pie atrás, dedos hacia delante y talón en el suelo.',
@@ -226,7 +226,7 @@ Object.assign(window.EXTRA_ROUTINES, {
           { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
             instruction: {
               setup: 'Una rodilla en el suelo, cojín si molesta. El otro pie delante, su rodilla sobre el tobillo.',
-              action: 'Avanza la pelvis unos centímetros, sin arquear la cintura. Estirón suave en la ingle de atrás.',
+              action: 'Avanza un poco la pelvis, sin arquear la cintura. Estirón suave en la ingle de atrás.',
               care: 'Tronco erguido. Si la rodilla molesta aun con el cojín, salta este paso.' } },
           { name: 'Cuádriceps en pared', mode: 'perSide', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
             instruction: {
@@ -266,7 +266,7 @@ Object.assign(window.EXTRA_ROUTINES, {
           { name: 'Sentadilla lateral', mode: 'timed', dur: 60,
             instruction: {
               action: 'Pies muy anchos. Dobla una rodilla hacia donde apunta su pie, y luego la otra. Unas 5 por lado.',
-              care: 'Talón apoyado. Baja solo hasta donde controles.' } },
+              care: 'Talón apoyado. Baja hasta donde controles.' } },
           { name: 'Sentarse y levantarse del suelo', mode: 'timed', dur: 80,
             instruction: {
               action: 'Baja al suelo por una rodilla y siéntate de lado. Sube por el mismo camino. Repite despacio.',

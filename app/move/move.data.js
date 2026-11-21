@@ -80,7 +80,7 @@ var MOVE_ROUTINES = {
             instruction: {
               setup: 'Manos en mesa fija o pared, algo más abiertas que los hombros. Pies atrás y el cuerpo en línea.',
               action: 'Baja el pecho hacia la mesa o la pared, codos cerca del cuerpo. Empuja sin hundir la cintura.',
-              care: 'Si cuesta, en la pared, manos a la altura del pecho. Mesa fija: ni con ruedas ni plegable.' } },
+              care: 'Si cuesta, en la pared, manos a la altura del pecho. Mesa fija, sin ruedas ni plegable.' } },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
             instruction: { action: 'Respira.' } },
           { name: 'Flexiones inclinadas', mode: 'reps', reps: 5, dur: 20,
@@ -129,7 +129,7 @@ var MOVE_ROUTINES = {
           { name: 'Puente con los dos pies', mode: 'reps', reps: 6, dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 },
             tempo: { down: 2, hold: 1, up: 2 }, completion: { mode: 'guided' },
             instruction: {
-              setup: 'Boca arriba, rodillas dobladas, pies apoyados al ancho de las caderas y cerca de los glúteos.',
+              setup: 'Boca arriba, rodillas dobladas, pies al ancho de las caderas y cerca de los glúteos.',
               action: 'Empuja con los pies, sube la pelvis y baja despacio.',
               care: 'Sube solo hasta donde la zona lumbar no se arquee más.' } },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
@@ -385,7 +385,7 @@ var MOVE_ROUTINES = {
           { name: 'Silla en la pared', mode: 'timed', dur: 60,
             instruction: {
               action: 'Segunda tanda. Vuelve a la posición y mantén.',
-              care: 'Elige una altura que te deje respirar tranquilo.' } },
+              care: 'Una altura que te deje respirar tranquilo.' } },
         ]},
       /* Para ir a más. Abre con la bisagra de cadera (3A), que enseña a llevar la cadera atrás; la
          sentadilla de cuádriceps sale hasta tener texto y dibujo claros (2A). El runner no tiene
@@ -406,7 +406,7 @@ var MOVE_ROUTINES = {
             instruction: {
               setup: 'Silla estable contra la pared, detrás. Un empeine en ella; el otro pie, un paso largo delante.',
               action: 'Baja en vertical sobre la pierna de delante y sube. Unas 6 por pierna, a tu ritmo.',
-              care: 'Una mano en la mesa o la pared si pierdes el equilibrio. Baja solo hasta donde controles.' } },
+              care: 'Una mano en la mesa o la pared si pierdes el equilibrio. Baja hasta donde controles.' } },
           { name: 'Descanso', mode: 'rest', dur: 20,
             instruction: { action: 'Respira.' } },
           { name: 'Zancada profunda', mode: 'perSide', dur: 35, transition: { seconds: 10 },

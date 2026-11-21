@@ -76,7 +76,7 @@
 }
 .pace-break-otra {
   --c: var(--ink-2);
-  display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 2px;
+  display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 2px;
   background: none; border: 0; cursor: pointer; color: var(--ink); white-space: nowrap;
   font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 17px; line-height: 1;
 }

@@ -17,7 +17,7 @@ test('la bienvenida y Ajustes dicen lo que hacen (es y en)', async ({ page, cont
     return ['es', 'en'].map((l) => k.map((c) => window.PACE_STRINGS[l][c]));
   });
   expect(S).toEqual([
-    ['cada lunes, tu semana ajustada', 'con los ejercicios de PACE', 'La voz que cuenta las fases', 'Lo que suena al respirar'],
-    ['every Monday, your week adjusted', 'with the PACE exercises', 'The voice for each phase', 'While you breathe'],
+    ['cada lunes, tu semana ajustada', 'con los ejercicios de PACE', 'La voz que cuenta las fases', 'Al respirar'],
+    ['every Monday, your week adjusted', 'with the PACE exercises', 'The voice for each phase', 'When breathing'],
   ]);
 });

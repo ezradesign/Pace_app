@@ -66,7 +66,7 @@ test('en inglés, los textos del ejercicio en inglés', async ({ page, context }
   await expect(page.locator('[data-pace-preview-paso]').first()).toHaveAccessibleName('How it’s done: Tibialis raise');
   await page.locator('[data-pace-preview-paso]').first().click();
   await expect(page.locator('[data-pace-modal-title]')).toHaveText('Tibialis raise');
-  await expect(page.locator('[data-pace-preview-texto="setup"]')).toHaveText('Back and glutes against the wall, feet hip-width apart, heels about a hand span from it.');
+  await expect(page.locator('[data-pace-preview-texto="setup"]')).toHaveText('Back and glutes on the wall, feet hip-width apart, heels a hand span from it.');
   await expect(page.locator('[data-pace-preview-volver]')).toHaveText('The steps');
 });
 

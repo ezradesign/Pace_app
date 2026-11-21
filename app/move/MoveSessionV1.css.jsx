@@ -159,7 +159,7 @@ if (!_paceMoveV1Css) {
     /* La barra de pasos queda a la misma distancia del mando que el dibujo de la cabecera. */
     .pace-v1-pasos { flex: none; width: 100%; max-width: 640px; margin: 0 auto calc(var(--v1-u) * 1.6); }
     .pace-v1-siguiente {
-      display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 4px 12px;
+      display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 4px 8px;
       text-align: center; margin-top: 4px; font-size: 10px; line-height: 1.45;
       letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3);
     }
