@@ -352,15 +352,22 @@ function TweaksPanel({ open, onClose }) {
              Ez 4A). En las apps la nota sigue: dice dónde se activan. */
           const subAviso = avisoNativo ? 'settings.notify.sub.app'
             : (permisoAviso() === 'denied' ? 'settings.notify.sub.blocked' : 'settings.notify.sub');
+          /* EN EL MÓVIL (la web), BLOQUEADOS, EL CÓMO VA EN ESTA LÍNEA Y LA NOTA DE DEBAJO NO SALE (Ez, 1C del
+             21 nov. 2026): la nota del navegador suma dos líneas y, con la fila «Vibrar» de los móviles,
+             Ajustes pedía 27 px de scroll a 360 × 640. Cada pantalla enseña la suya con el mismo corte que pone
+             Ajustes como hoja de abajo (TweaksPanel.support.jsx, `pace-aj-tel`). */
+          const sub = !avisoNativo && permisoAviso() === 'denied'
+            ? <><span className="pace-aj-no-tel">{t(subAviso)}</span><span className="pace-aj-tel" data-pace-aj-bloqueo-movil>{t('settings.notify.sub.blocked.movil')}</span></>
+            : t(subAviso);
           return (
-            <AjustesFila id="notify" nombre={t('settings.notify')} sub={t(subAviso)} modulo="focus"
+            <AjustesFila id="notify" nombre={t('settings.notify')} sub={sub} modulo="focus"
               alTocar={() => ponerAviso(!avisoOn)}>
               <AjustesInterruptor on={avisoOn} aria={t('settings.notify')} onChange={ponerAviso} />
             </AjustesFila>
           );
         })()}
         {canNotify && permisoAviso() === 'denied' && (
-          <div className="pace-aj-nota" data-pace-aj-aviso-bloqueado>{avisoNativo ? t('settings.notify.blocked.' + plataforma)
+          <div className={'pace-aj-nota' + (avisoNativo ? '' : ' pace-aj-no-tel')} data-pace-aj-aviso-bloqueado>{avisoNativo ? t('settings.notify.blocked.' + plataforma)
             : t('settings.notify.blocked.' + paceNavegador()) + ' ' + t('settings.notify.blocked.sigue')}</div>
         )}
         {falloAviso && state.notifyFocusEnd && permisoAviso() === 'granted' && (
