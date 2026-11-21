@@ -27234,7 +27234,7 @@ function TimerDial(_ref3) {let { mins, secs, progress, mode, modeLabel, hasta, s
 
 
 
-    React.createElement("div", { style: hasta ? { ...timerDialStyles.inner, transform: 'translateY(calc(var(--pace-dial-d, 360px) * -0.030 + var(--pace-dial-baja, 15%)))' } : timerDialStyles.inner },
+    React.createElement("div", { "data-pace-dial-interior": true, style: hasta ? { ...timerDialStyles.inner, transform: 'translateY(calc(var(--pace-dial-d, 360px) * -0.030 + var(--pace-dial-baja, 15%)))' } : timerDialStyles.inner },
 
 
 
@@ -55599,6 +55599,28 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
          para ganar a los estilos inline de TimerDial. El botón conserva 44px
          (a11y); las Actividades se anclan al CICLO MEDIDO, así que estos
          tamaños son cosméticos (aspecto «escalado»), no críticos. */
+      /* CON EL NAVEGADOR AMPLIADO, LO DE DENTRO ESCALA CON EL ARO (Ez, 21 nov. 2026: con Ctrl +
+         «se descuadran todos los elementos»). Ampliar al 150 o al 175 % deja ventanas de 579 o
+         496 px de alto, y el motor baja el aro hasta su suelo de 205. Los tamaños de abajo son
+         proporcionales a D, pero sus mínimos (rótulo 9 px, descriptor 11, márgenes, el botón de
+         44 y la fila del ciclo, fijos) no: a D = 205 «Foco manual» y «Bloque 1 de 9» cruzaban el
+         trazo (0,52 D, medido) y el ciclo y «Después» se salían por abajo. Por debajo de
+         D_INTERIOR (home-geometry.js) el interior se compone como a ese D y se escala entero
+         (--pace-dial-escala): la misma composición que a 100 %, más pequeña. Por encima, la
+         escala es 1 y el D del interior es el del aro: nada cambia. «scale» y no «transform»,
+         que ya lleva la subida del bloque y la de «Hasta las»: se componen sin pisarse. El
+         botón baja de 44 px como mucho a 32 (D = 205), por encima de los 24 de WCAG 2.5.8; con
+         el zoom puesto, en la pantalla mide más que a 100 %.
+         Y la fila de la rejilla no crece con el bloque: compuesto como a D_INTERIOR, el bloque
+         mide más que el aro, la fila «auto» se estiraba hasta él (235 px en un aro de 205) y lo
+         dejaba 15 px más abajo del centro. Con minmax(0, 1fr) la fila es el aro, como siempre
+         que el bloque cabe. */
+      [data-pace-dial-fit] { grid-template: minmax(0, 1fr) / minmax(0, 1fr); }
+      [data-pace-dial-fit] [data-pace-dial-interior] {
+        --pace-timer-d: var(--pace-dial-interior-d, 360px);
+        max-width: max(70%, calc(var(--pace-dial-interior-d, 0px) * 0.7)) !important;
+        scale: var(--pace-dial-escala, 1);
+      }
       [data-pace-dial-fit] [data-pace-dial-label] {
         font-size: clamp(9px, calc(var(--pace-timer-d, 360px) * 0.028), 15px) !important;
         margin-bottom: clamp(4px, calc(var(--pace-timer-d, 360px) * 0.026), 15px) !important;
@@ -57092,6 +57114,8 @@ function paceAroPisoInterior(dial, radio) {
 
   var D_FLOOR = 205;
 
+  var D_INTERIOR = 280;
+
 
 
 
@@ -57174,6 +57198,10 @@ function paceAroPisoInterior(dial, radio) {
 
   function applyD(D, dial, horario) {
     setVar('--pace-timer-d', D + 'px');
+
+
+    setVar('--pace-dial-interior-d', Math.max(D, D_INTERIOR) + 'px');
+    setVar('--pace-dial-escala', String(Math.min(1, Math.round(D / D_INTERIOR * 1000) / 1000)));
     var dialBottom = paceCaja(dial).bottom;
     var cicloBottom = cicloBottomWithin(dial);
 

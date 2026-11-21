@@ -365,7 +365,7 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, hasta, subtitle, inn
       )}
 
       {/* Con «Hasta las» el bloque baja hasta un 15 % de su alto (Ez, 3C del 25 oct.): --pace-dial-baja, en ritmo.css. */}
-      <div style={hasta ? { ...timerDialStyles.inner, transform: 'translateY(calc(var(--pace-dial-d, 360px) * -0.030 + var(--pace-dial-baja, 15%)))' } : timerDialStyles.inner}>
+      <div data-pace-dial-interior style={hasta ? { ...timerDialStyles.inner, transform: 'translateY(calc(var(--pace-dial-d, 360px) * -0.030 + var(--pace-dial-baja, 15%)))' } : timerDialStyles.inner}>
         {/* data-pace-dial-* (s126): hooks PRESENTACIONALES para el escalado
             proporcional del interior en Desktop (app/main/_responsive.js los
             usa SOLO bajo min-width:769px). No cambian estructura ni lógica y

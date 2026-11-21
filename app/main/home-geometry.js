@@ -83,6 +83,8 @@
                                // negativo» en monitores grandes
   var D_FLOOR = 205;           // suelo con interior aún legible; por debajo, scroll
                                // de seguridad en viewports extremos
+  var D_INTERIOR = 280;        // por debajo, el interior escala con el aro (el navegador
+                               // ampliado, Ez 21 nov. 2026); a 100 % el aro no baja de 283
   /* s128: el motor corre también en móvil/tablet (≤768). Constantes propias de
      esa piel: el aro arranca por ANCHO y el mismo bucle lo encoge solo si no
      cabe; suelo un poco mayor por legibilidad en pantalla pequeña. La rama
@@ -165,6 +167,10 @@
   // independientemente de la altura del botón (a11y 44px) o del interior.
   function applyD(D, dial, horario) {
     setVar('--pace-timer-d', D + 'px');
+    /* Por debajo de D_INTERIOR, lo de dentro se compone como a D_INTERIOR y escala con el aro
+       (_responsive.pieles.esc.js, solo en escritorio). Antes de medir el CICLO: lo mueve. */
+    setVar('--pace-dial-interior-d', Math.max(D, D_INTERIOR) + 'px');
+    setVar('--pace-dial-escala', String(Math.min(1, Math.round(D / D_INTERIOR * 1000) / 1000)));
     var dialBottom = paceCaja(dial).bottom;
     var cicloBottom = cicloBottomWithin(dial);
     /* El solapamiento es el 16 % de D (contrato §0). El CICLO medido NO fija el
