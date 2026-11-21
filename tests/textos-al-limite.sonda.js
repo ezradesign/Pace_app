@@ -20,7 +20,7 @@
 
 function sondaTextos(opts) {
   const MAX_HUECO = opts.maxHueco || 12;      // px: con más margen, el texto no está al límite
-  const MAX_LETRA = opts.maxLetra || 0.15;    // px por letra
+  const MAX_LETRA = opts.maxLetra || 0.3;     // px por letra: a 0,3, unos 12 px en una línea de 40 letras
   const SALTA = 'script,style,svg,noscript,template,canvas';
   const cs = (e) => getComputedStyle(e);
   const esInline = (e) => { const d = cs(e).display; return d === 'inline' || d === 'contents'; };
@@ -93,9 +93,11 @@ function sondaTextos(opts) {
     const ls = lineas(b);
     const izq = Math.min(...ls.map((l) => l.left)), der = Math.max(...ls.map((l) => l.right));
     const r = b.getBoundingClientRect();
-    const sale = limites(b).filter((L) => izq < L.left - 0.5 || der > L.right + 0.5).map((L) => (L.recorta ? 'se corta' : 'se sale de su caja'));
+    const fuera = limites(b).filter((L) => izq < L.left - 0.5 || der > L.right + 0.5);
+    const sale = fuera.map((L) => (L.recorta ? 'se corta' : 'se sale de su caja'));
+    const exceso = Math.max(0, ...fuera.map((L) => Math.max(L.left - izq, der - L.right)));
     const p = b.parentElement, pr = p.getBoundingClientRect(), ps = cs(p);
-    return { n: ls.length, top: r.top, bottom: r.bottom, sale, padreAlto: pr.height,
+    return { n: ls.length, top: r.top, bottom: r.bottom, sale, exceso, padreAlto: pr.height,
       padreBottom: pr.bottom - parseFloat(ps.paddingBottom) - parseFloat(ps.borderBottomWidth) };
   }
   /* Una línea más solo mueve el diseño si su caja crece o se sale por abajo. En las pilas del runner, un
@@ -173,7 +175,12 @@ function sondaTextos(opts) {
   };
 
   const out = [];
-  for (const b of vivos) {
+  /* `solo`: trozos de texto; se miden solo los bloques que lleven alguno (los demás siguen contando
+     como vecinos). Es lo que usa la prueba, que solo vigila los textos que se acortaron. */
+  /* Un trozo que empieza por «=» tiene que ser el texto entero («=Move», no «Move a little»). */
+  const casa = (b, s) => (s[0] === '=' ? nombre(b) === s.slice(1) : nombre(b).includes(s));
+  const medibles = opts.solo ? vivos.filter((b) => opts.solo.some((s) => casa(b, s))) : vivos;
+  for (const b of medibles) {
     const f0 = base.get(b);
     const vec = vecinosDe(b);
     const s = cs(b);
@@ -188,7 +195,9 @@ function sondaTextos(opts) {
       yaSale: f0.sale.length ? f0.sale.join(', ') : null,
       letraPx: parseFloat(s.fontSize), ancho: +r.width.toFixed(1),
       natural: nat == null ? null : +nat.toFixed(2),
-      margen: +hueco.valor.toFixed(2), margenMas: !!hueco.mas, motivo: hueco.motivo || null,
+      /* Un texto que ya se sale no tiene margen: lo que se sale va en negativo (antes contaba como holgado). */
+      margen: f0.sale.length ? -(+f0.exceso.toFixed(2)) : +hueco.valor.toFixed(2), margenMas: !f0.sale.length && !!hueco.mas,
+      motivo: f0.sale.length ? 'ya ' + f0.sale.join(', ') : hueco.motivo || null,
       porLetra: +letra.valor.toFixed(4), porLetraMas: !!letra.mas, motivoLetra: letra.motivo || null,
     });
   }

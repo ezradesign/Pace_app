@@ -64,7 +64,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.hips.standing.s2.name':          'ATG split squat',
   'move.hips.standing.s2.instruction.setup':  'Take a long step back, without resting your knee down.',
   'move.hips.standing.s2.instruction.action': 'Sink the back hip and keep your chest tall.',
-  'move.hips.standing.s2.instruction.care':   'A soft stretch at the front of the back hip, never a sharp pull. Hold the desk if needed.',
+  'move.hips.standing.s2.instruction.care':   'A soft stretch at the front of the back hip, never sharp. Hold the desk if needed.',
   'move.hips.standing.s3.name':          'Forward fold',
   'move.hips.standing.s3.instruction.action': 'Feet hip-width apart, let your torso hang down. Soft knees.',
   'move.hips.standing.s3.instruction.care':   'Hands on your thighs or the desk if you need to: you don\'t need to touch the floor. Come up slowly.',

@@ -32,7 +32,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'ritmo.saltada':                 'saltada',
     'ritmo.noHecha':                 'no hecha',   /* pasada sin hacer, en Estadísticas › Hoy (Ez, 3B, 18 nov.) */
     'ritmo.cuenta':                  'por tu cuenta',   /* hecha sin la rutina: sin minutos (4A del 8 nov.) */
-    'ritmo.hoy':                     'hoy de {desde} a {hasta}',
+    'ritmo.hoy':                     'hoy {desde}–{hasta}',   /* con la raya, como en inglés: «hoy de… a…» dejaba la frase del día a 3 px de la tercera línea al 115 % (Ez, 7A del 20 nov.) */
     'ritmo.opcion.1h':               'Una hora',
     'ritmo.opcion.2h':               'Dos horas',
     'ritmo.opcion.media':            'Media jornada',
