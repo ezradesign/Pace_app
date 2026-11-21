@@ -34254,13 +34254,23 @@ function useTituloCuenta(_ref) {let { running, remaining, total, modo, lang, t }
   }, []);
 }
 
-Object.assign(window, { useTituloCuenta, paceTituloCuenta, paceTabTerminado });
-;Object.assign(window, { paceTituloCuenta, paceTabMirando, paceTabFinPon, paceTabTerminado, paceIconoPon, useTituloCuenta });
+
+function paceTabFinEs() {return _paceTabFin;}
+
+Object.assign(window, { useTituloCuenta, paceTituloCuenta, paceTabTerminado, paceTabFinEs });
+;Object.assign(window, { paceTituloCuenta, paceTabMirando, paceTabFinPon, paceTabTerminado, paceIconoPon, useTituloCuenta, paceTabFinEs });
 })();
 </script>
   <!-- La miniventana: el Foco en una tira encima de todas las ventanas. Antes de FocusTimer.jsx. -->
   <script>
 ;(function () {
+
+
+
+
+
+
+
 
 
 
@@ -34389,7 +34399,7 @@ const miniTiraStyles = {
 
 function MiniTira(p) {
   const { t } = p;
-  const fin = p.status === 'completed' && p.modo === 'foco';
+  const fin = p.status === 'completed' && p.modo === 'foco' || typeof paceTabFinEs === 'function' && paceTabFinEs();
   const queda = paceMiniQueda(p);
   const hecho = fin ? 1 : p.total > 0 ? Math.min(1, Math.max(0, 1 - queda / p.total)) : 0;
   const dos = (n) => (n < 10 ? '0' : '') + n;
@@ -34398,6 +34408,7 @@ function MiniTira(p) {
   const etiqueta = p.modo === 'foco' ? t('focus.mode.focus') : p.modo === 'pausa' ? t('focus.mode.pause') : t('focus.mode.long');
   let boton = null;
   if (fin) boton = React.createElement("button", { type: "button", style: { ...miniTiraStyles.boton, ...miniTiraStyles.botonFin }, onClick: () => {try {window.focus();} catch (e) {}} }, t('mini.volver'));else
+  if (p.ritmo) boton = null;else
   if (p.status === 'running') boton = React.createElement("button", { type: "button", style: miniTiraStyles.boton, onClick: p.onPausar }, t('focus.pause'));else
   if (p.status === 'paused') boton = React.createElement("button", { type: "button", style: miniTiraStyles.boton, onClick: p.onSeguir }, t('focus.continue'));
   return (
@@ -34427,7 +34438,8 @@ function useMiniventana(props) {
   useEffectMini(() => {
     const oye = () => setAbierta(paceMiniAbierta());
     window.addEventListener('pace:mini', oye);
-    return () => {window.removeEventListener('pace:mini', oye);paceMiniCerrar();};
+    window.addEventListener('pace:pestana-fin', paceMiniPintar);
+    return () => {window.removeEventListener('pace:mini', oye);window.removeEventListener('pace:pestana-fin', paceMiniPintar);paceMiniCerrar();};
   }, []);
   return { puede: paceMiniPuede(), abierta };
 }
@@ -34798,7 +34810,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
   const cycleN = state.cycle % 4 + 1;
-  const mini = useMiniventana({ status, endsAt, restanteMs, total: durationSec, modo: state.focusMode, ciclo: tn('focus.cycleOf', { n: cycleN }), t, onPausar: handlePause, onSeguir: handleNormalStart });
+  const mini = useMiniventana({ status, endsAt, restanteMs, total: durationSec, modo: state.focusMode, ciclo: aro ? aro.label : tn('focus.cycleOf', { n: cycleN }), ritmo: enPausaRitmo, t, onPausar: handlePause, onSeguir: handleNormalStart });
   const cycleLabel = isFocoMode && isCompleted ?
   tn('focus.cycleNext', { n: cycleN }) :
   tn('focus.cycleOf', { n: cycleN });

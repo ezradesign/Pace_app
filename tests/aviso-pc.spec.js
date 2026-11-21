@@ -319,3 +319,68 @@ test('mini-sola · sin toque no se abre sola: ni el Foco que vuelve al recargar 
   expect(await page.evaluate(() => window.__pipPedido), 'sin un toque de verdad se abrió la miniventana').toBeUndefined();
   await expect(page.locator('[data-pip-falso]')).toHaveCount(0);
 });
+
+/* LA TIRA EN LA JORNADA DE «A TU RITMO» (Ez, 2A del 21 nov. 2026; auditoría de la 0.212.0, hallazgo 3).
+   Habla como el aro («Foco · Bloque 1 de 8»); al acabar el bloque sin mirar PACE se pone en terracota con
+   «Foco terminado» y «Volver» hasta que vuelves, aunque el aro ya cuente la pausa; y en la pausa de la
+   jornada enseña la cuenta sin botón, porque el aro la vuelve a poner en marcha. */
+const JORNADA = { fecha: '2026-09-17', opcion: 'jornada', desde: 540, cicloBase: 0, cambios: {} };
+const HORA_JORNADA = new Date('2026-09-17T09:00:00+02:00');
+async function hastaLaPausaDeLaJornada(page, context) {
+  for (let i = 0; i < 30; i++) {
+    if (await page.evaluate(() => !!(getState().ritmo.dia || {}).pausaHasta)) break;
+    await context.clock.fastForward(5 * 60000);
+    await context.clock.runFor(1500);
+  }
+  await esperarEnPagina(page, () => !!(getState().ritmo.dia || {}).pausaHasta);
+  await context.clock.runFor(2000);
+}
+
+test('jornada · la tira habla como el aro: «Foco · Bloque 1 de N», no «Ciclo 1 / 4»', async ({ page, context }) => {
+  await sembrar(context, { soundOn: false, notifyFocusEnd: false, ritmo: { dia: JORNADA } });
+  await miniventanaFalsa(context);
+  await context.clock.install({ time: HORA_JORNADA });
+  await irAlArtefacto(page);
+  await cta(page).click();
+  await expect(tira(page)).toContainText(/Foco · Bloque 1 de \d+/);
+  await expect(tira(page)).not.toContainText('Ciclo');
+});
+
+test('jornada · al acabar el bloque sin mirar PACE, la tira dice «Foco terminado» hasta que vuelves; luego, la pausa sin botón', async ({ page, context }) => {
+  await sembrar(context, { soundOn: false, notifyFocusEnd: false, ritmo: { dia: JORNADA } });
+  await miniventanaFalsa(context);
+  await navegadorConAvisos(context);
+  await context.clock.install({ time: HORA_JORNADA });
+  await irAlArtefacto(page);
+  await cta(page).click();
+  await expect(tira(page)).toContainText('Foco');
+  await hastaLaPausaDeLaJornada(page, context);
+  await expect(tira(page), 'el bloque acabó y la tira pasó directa a contar la pausa').toHaveAttribute('data-fin', '');
+  await expect(tira(page)).toContainText('Foco terminado');
+  await expect(tira(page).getByRole('button', { name: 'Volver' })).toBeVisible();
+  await page.evaluate(() => { window.__visible = true; document.dispatchEvent(new Event('visibilitychange')); });
+  await context.clock.runFor(1500);
+  await expect(tira(page)).not.toHaveAttribute('data-fin', '');
+  await expect(tira(page)).toContainText('Pausa corta');
+  await expect(tira(page).getByRole('button'), 'en la pausa de la jornada la tira no lleva botón').toHaveCount(0);
+});
+
+/* Hallazgo 3 de la auditoría de la 0.212.0 (docs/audits/auditoria-0212-20nov/caen-en-main.spec.js), tal cual. */
+test('hallazgo 3 · con «A tu ritmo», el «Pausar» de la tira en la pausa pausa de verdad', async ({ page, context }) => {
+  await sembrar(context, { soundOn: false, notifyFocusEnd: false, ritmo: { dia: JORNADA } });
+  await miniventanaFalsa(context);
+  await context.clock.install({ time: HORA_JORNADA });
+  await irAlArtefacto(page);
+  await cta(page).click();
+  await page.evaluate(() => paceMiniAbrir());
+  await expect(tira(page)).toContainText('Foco');
+  await hastaLaPausaDeLaJornada(page, context);
+  await expect(tira(page)).toContainText('Pausa corta');
+  const boton = tira(page).getByRole('button', { name: 'Pausar' });
+  if (await boton.count()) {
+    const antes = await tira(page).locator('span').first().innerText();
+    await boton.click();
+    await context.clock.runFor(3000);
+    expect(await tira(page).locator('span').first().innerText(), 'la tira ofrece «Pausar» y la pausa sigue corriendo').toBe(antes);
+  }
+});

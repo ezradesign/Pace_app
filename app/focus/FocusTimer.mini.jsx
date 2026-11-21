@@ -20,7 +20,14 @@
    (`navigator.userActivation`): el Foco que vuelve al recargar, el de otra pestaña o el que arranca
    solo no la abren. Si la persona la cierra con el Foco en marcha, PACE lo apunta (`miniSolaNo`) y deja
    de abrirla sola; abrirla a mano con «Miniventana» lo deshace. Que la cierre PACE (el aro se va) o
-   que se vaya con la pestaña no cuenta (`cerrandoYo`). */
+   que se vaya con la pestaña no cuenta (`cerrandoYo`).
+
+   EN LA JORNADA DE «A TU RITMO» (Ez, 2A del 21 nov. 2026; auditoría de la 0.212.0, hallazgo 3): habla
+   como el aro («Foco · Bloque 1 de 8», `ciclo` es la etiqueta del aro). Al acabar el bloque sin mirar
+   PACE, el aro pasa solo a contar la pausa, pero la tira dice «Foco terminado» con «Volver» mientras la
+   pestaña diga «terminado» (`paceTabFinEs`, FocusTimer.titulo.jsx), hasta que vuelves. Y en la pausa
+   de la jornada (`ritmo`) enseña la cuenta sin botón: su «Pausar» no pausaba, porque el aro la vuelve
+   a poner en marcha desde su hora guardada. */
 
 const { useEffect: useEffectMini, useState: useStateMini } = React;
 
@@ -126,7 +133,7 @@ const miniTiraStyles = {
 
 function MiniTira(p) {
   const { t } = p;
-  const fin = p.status === 'completed' && p.modo === 'foco';
+  const fin = (p.status === 'completed' && p.modo === 'foco') || (typeof paceTabFinEs === 'function' && paceTabFinEs());
   const queda = paceMiniQueda(p);
   const hecho = fin ? 1 : p.total > 0 ? Math.min(1, Math.max(0, 1 - queda / p.total)) : 0;
   const dos = (n) => (n < 10 ? '0' : '') + n;
@@ -135,6 +142,7 @@ function MiniTira(p) {
   const etiqueta = p.modo === 'foco' ? t('focus.mode.focus') : p.modo === 'pausa' ? t('focus.mode.pause') : t('focus.mode.long');
   let boton = null;
   if (fin) boton = <button type="button" style={{ ...miniTiraStyles.boton, ...miniTiraStyles.botonFin }} onClick={() => { try { window.focus(); } catch (e) {} }}>{t('mini.volver')}</button>;
+  else if (p.ritmo) boton = null;
   else if (p.status === 'running') boton = <button type="button" style={miniTiraStyles.boton} onClick={p.onPausar}>{t('focus.pause')}</button>;
   else if (p.status === 'paused') boton = <button type="button" style={miniTiraStyles.boton} onClick={p.onSeguir}>{t('focus.continue')}</button>;
   return (
@@ -164,7 +172,8 @@ function useMiniventana(props) {
   useEffectMini(() => {
     const oye = () => setAbierta(paceMiniAbierta());
     window.addEventListener('pace:mini', oye);
-    return () => { window.removeEventListener('pace:mini', oye); paceMiniCerrar(); };
+    window.addEventListener('pace:pestana-fin', paceMiniPintar);   // «terminado» se enciende o se apaga
+    return () => { window.removeEventListener('pace:mini', oye); window.removeEventListener('pace:pestana-fin', paceMiniPintar); paceMiniCerrar(); };
   }, []);
   return { puede: paceMiniPuede(), abierta };
 }

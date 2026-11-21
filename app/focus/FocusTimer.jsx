@@ -358,7 +358,7 @@ function FocusTimer({ onFinish }) {
      completed en foco muestra «SIGUIENTE · CICLO N / 4». Los puntos marcan los
      ciclos completados del cuarteto actual (delta cero). */
   const cycleN = (state.cycle % 4) + 1;
-  const mini = useMiniventana({ status, endsAt, restanteMs, total: durationSec, modo: state.focusMode, ciclo: tn('focus.cycleOf', { n: cycleN }), t, onPausar: handlePause, onSeguir: handleNormalStart });   // la tira encima de todo
+  const mini = useMiniventana({ status, endsAt, restanteMs, total: durationSec, modo: state.focusMode, ciclo: aro ? aro.label : tn('focus.cycleOf', { n: cycleN }), ritmo: enPausaRitmo, t, onPausar: handlePause, onSeguir: handleNormalStart });   // la tira encima de todo
   const cycleLabel = (isFocoMode && isCompleted)
     ? tn('focus.cycleNext', { n: cycleN })
     : tn('focus.cycleOf', { n: cycleN });

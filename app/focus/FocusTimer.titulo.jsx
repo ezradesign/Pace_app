@@ -108,4 +108,7 @@ function useTituloCuenta({ running, remaining, total, modo, lang, t }) {
   }, []);
 }
 
-Object.assign(window, { useTituloCuenta, paceTituloCuenta, paceTabTerminado });
+/* Si la pestaña está diciendo «terminado»: la miniventana dice lo mismo hasta que vuelves. */
+function paceTabFinEs() { return _paceTabFin; }
+
+Object.assign(window, { useTituloCuenta, paceTituloCuenta, paceTabTerminado, paceTabFinEs });
