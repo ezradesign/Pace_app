@@ -173,7 +173,7 @@ const EXTRA_ROUTINES = {
           { name: 'Flexor de cadera', mode: 'perSide', dur: 15, transition: { seconds: 10 },
             instruction: {
               setup: 'Una rodilla en el suelo, cojín si molesta. El otro pie delante, su rodilla sobre el tobillo.',
-              action: 'Avanza la pelvis unos centímetros, sin arquear la cintura. Estirón suave en la ingle de atrás.',
+              action: 'Avanza un poco la pelvis, sin arquear la cintura. Estirón suave en la ingle de atrás.',
               care: 'Si la rodilla molesta aun con el cojín, salta este paso.' } },
           { name: 'Respirar a cuatro apoyos', mode: 'timed', dur: 25,
             instruction: {
@@ -244,7 +244,7 @@ const EXTRA_ROUTINES = {
           { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
             instruction: {
               setup: 'Una rodilla en el suelo, cojín si molesta. El otro pie delante, su rodilla sobre el tobillo.',
-              action: 'Avanza la pelvis unos centímetros, sin arquear la cintura. Estirón suave en la ingle de atrás.',
+              action: 'Avanza un poco la pelvis, sin arquear la cintura. Estirón suave en la ingle de atrás.',
               care: 'Recorrido corto. Si la rodilla molesta aun con el cojín, salta este paso.' } },
           { name: 'Zancada con apertura', mode: 'perSide', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
             instruction: {

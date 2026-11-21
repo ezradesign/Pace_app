@@ -401,7 +401,7 @@ test('llegando a las 10:30 el día empieza entonces y en ningún sitio pone «ta
   await pulsarComienza(page);
   await vis(page, '[data-pace-ritmo-opcion="jornada"]').click();
   const panel = vis(page, '[data-pace-ritmo-estado="menu"]');
-  await expect(panel).toContainText('hoy de 10:30 a 17:00');
+  await expect(panel).toContainText('hoy 10:30–17:00');
   expect((await panel.textContent()).toLowerCase()).not.toContain('tarde');
   await expect(page.locator('[data-pace-ritmo-hasta]')).toHaveText('Tu jornada, hasta las 17:00');
 });

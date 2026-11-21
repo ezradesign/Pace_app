@@ -106,5 +106,5 @@ test('las cinco fichas corregidas dicen lo que faltaba', () => {
   for (const p of paso('Gateo con rodillas')) expect(p).toMatch(/cuatro atrás/);
   for (const p of paso('Desliza el talón')) expect(p).toMatch(/sin mover la pelvis/);
   const en = leer('app/i18n/content/extra.js') + leer('app/i18n/content/move.js');
-  expect(en.match(/Ten seconds palm down and ten palm up/g) || []).toHaveLength(2);
+  expect(en.match(/Ten seconds palm down, ten palm up/g) || []).toHaveLength(2);   /* más corta desde la 7A de Ez (20 nov.) */
 });

@@ -1,0 +1,6391 @@
+{
+ "pantalla": "runner Mueve",
+ "lang": "es",
+ "letra": 1.15,
+ "filas": [
+  {
+   "momento": "extra.chair.squats · al colocarse",
+   "medidos": 39,
+   "todos": [
+    [
+     "Piernas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Levántate y sube",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sentadilla a silla",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Elevación de talones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sentadilla a silla",
+     1,
+     null,
+     null
+    ],
+    [
+     "De pie delante de la silla, pies al ancho de las caderas. Si",
+     2,
+     null,
+     null
+    ],
+    [
+     "Siéntate del todo, con control. Echa el tronco un poco adela",
+     3,
+     null,
+     null
+    ],
+    [
+     "Respira.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Otra serie: siéntate con control y levántate sin impulso.",
+     2,
+     null,
+     null
+    ],
+    [
+     "De pie, con una mano en la silla o en la mesa.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sube los talones hasta donde controles. Baja despacio.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Segunda serie: sube y baja despacio.",
+     1,
+     null,
+     null
+    ],
+    [
+     "De pie delante de la silla, pies al ancho de las caderas. Si",
+     2,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "para empezar",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· Más tiempo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Ayúdate con las manos si lo necesitas. La primera ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Sentadilla a silla",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Sentadilla a silla",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Si cuesta, apoya las manos en los muslos.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Luego: Elevación de talones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Elevación de talones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Sin rebotes. Si te balanceas, apóyate con las dos ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Sin rebotes. Baja hasta apoyar el talón.",
+     1,
+     6.12,
+     0.1222
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar ya",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.chair.squats · trabajando",
+   "medidos": 36,
+   "todos": [
+    [
+     "Piernas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Levántate y sube",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sentadilla a silla",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Elevación de talones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sentadilla a silla",
+     1,
+     null,
+     null
+    ],
+    [
+     "De pie delante de la silla, pies al ancho de las caderas. Si",
+     2,
+     null,
+     null
+    ],
+    [
+     "Siéntate del todo, con control. Echa el tronco un poco adela",
+     3,
+     null,
+     null
+    ],
+    [
+     "Respira.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Otra serie: siéntate con control y levántate sin impulso.",
+     2,
+     null,
+     null
+    ],
+    [
+     "De pie, con una mano en la silla o en la mesa.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sube los talones hasta donde controles. Baja despacio.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Segunda serie: sube y baja despacio.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siéntate del todo, con control. Echa el tronco un poco adela",
+     3,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "de 5 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Ayúdate con las manos si lo necesitas. La primera ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Sentadilla a silla",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Sentadilla a silla",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Si cuesta, apoya las manos en los muslos.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Luego: Elevación de talones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Elevación de talones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Sin rebotes. Si te balanceas, apóyate con las dos ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Sin rebotes. Baja hasta apoyar el talón.",
+     1,
+     6.12,
+     0.1222
+    ],
+    [
+     "Cuídate · Ayúdate con las manos si lo necesitas. La primera ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Terminar serie",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.desk.pushups · al colocarse",
+   "medidos": 30,
+   "todos": [
+    [
+     "Fuerza",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empuje sencillo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 2",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Flexiones inclinadas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Flexiones inclinadas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Manos en mesa fija o pared, algo más abiertas que los hombro",
+     3,
+     null,
+     null
+    ],
+    [
+     "Baja el pecho hacia la mesa o la pared, codos cerca del cuer",
+     3,
+     null,
+     null
+    ],
+    [
+     "Respira.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Otra serie: baja con control y empuja.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Manos en mesa fija o pared, algo más abiertas que los hombro",
+     3,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "para empezar",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· Más tiempo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Si cuesta, en la pared, manos a la altura del pech",
+     2,
+     null,
+     0
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Flexiones inclinadas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Flexiones inclinadas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Para si la técnica se rompe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar ya",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [
+    {
+     "texto": "Cuídate · Si cuesta, en la pared, manos a la altura del pecho. Mesa fija: ni con ruedas ni plegable.",
+     "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+     "lineas": 2,
+     "letras": 100,
+     "reserva": true,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 17.25,
+     "ancho": 320,
+     "natural": null,
+     "margen": 12,
+     "margenMas": true,
+     "motivo": null,
+     "porLetra": 0,
+     "porLetraMas": false,
+     "motivoLetra": "se parte en 3 líneas",
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 3,
+        "runner": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": true,
+       "dibujo": 147,
+       "aro": 307,
+       "pieDeLaPausa": null,
+       "pantalla": 640
+      },
+      "despues": {
+       "scroll": {
+        "home": 3,
+        "runner": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": true,
+       "dibujo": 132,
+       "aro": 307,
+       "pieDeLaPausa": null,
+       "pantalla": 640
+      }
+     }
+    }
+   ],
+   "cerca": []
+  },
+  {
+   "momento": "extra.desk.pushups · trabajando",
+   "medidos": 27,
+   "todos": [
+    [
+     "Fuerza",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empuje sencillo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 2",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Flexiones inclinadas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Flexiones inclinadas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Manos en mesa fija o pared, algo más abiertas que los hombro",
+     3,
+     null,
+     null
+    ],
+    [
+     "Baja el pecho hacia la mesa o la pared, codos cerca del cuer",
+     3,
+     null,
+     null
+    ],
+    [
+     "Respira.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Otra serie: baja con control y empuja.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Baja el pecho hacia la mesa o la pared, codos cerca del cuer",
+     3,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "de 5 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Si cuesta, en la pared, manos a la altura del pech",
+     2,
+     null,
+     0
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Flexiones inclinadas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Flexiones inclinadas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Para si la técnica se rompe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Si cuesta, en la pared, manos a la altura del pech",
+     2,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Terminar serie",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.legs.standing · al colocarse",
+   "medidos": 39,
+   "todos": [
+    [
+     "Piernas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Piernas sin pasos",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Elevación de puntas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Silla en la pared",
+     1,
+     null,
+     null
+    ],
+    [
+     "Elevación de puntas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Espalda y glúteos en la pared, pies al ancho de las caderas,",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sube las puntas de los pies hacia las espinillas. Bájalas de",
+     2,
+     null,
+     null
+    ],
+    [
+     "Respira.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Segunda serie, igual de despacio.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Espalda en la pared, pies un paso por delante.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Desliza un poco hacia abajo y quédate. Respira sin aguantar ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Otra vez, a la altura que elijas.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Espalda y glúteos en la pared, pies al ancho de las caderas,",
+     2,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "para empezar",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· Más tiempo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Movimiento pequeño, sin balancearte hacia atrás.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Elevación de puntas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Elevación de puntas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Notarás el trabajo delante de la espinilla.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Luego: Silla en la pared",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Silla en la pared",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Empieza alto: no hace falta llegar a 90°. Para sal",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Para salir, empuja con los pies y sube.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar ya",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.legs.standing · trabajando",
+   "medidos": 36,
+   "todos": [
+    [
+     "Piernas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Piernas sin pasos",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Elevación de puntas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Silla en la pared",
+     1,
+     null,
+     null
+    ],
+    [
+     "Elevación de puntas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Espalda y glúteos en la pared, pies al ancho de las caderas,",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sube las puntas de los pies hacia las espinillas. Bájalas de",
+     2,
+     null,
+     null
+    ],
+    [
+     "Respira.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Segunda serie, igual de despacio.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Espalda en la pared, pies un paso por delante.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Desliza un poco hacia abajo y quédate. Respira sin aguantar ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Otra vez, a la altura que elijas.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sube las puntas de los pies hacia las espinillas. Bájalas de",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "de 8 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Movimiento pequeño, sin balancearte hacia atrás.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Elevación de puntas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Elevación de puntas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Notarás el trabajo delante de la espinilla.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Luego: Silla en la pared",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Silla en la pared",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Empieza alto: no hace falta llegar a 90°. Para sal",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Para salir, empuja con los pies y sube.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Movimiento pequeño, sin balancearte hacia atrás.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Terminar serie",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.pausa.suelo · al colocarse",
+   "medidos": 40,
+   "todos": [
+    [
+     "Suelo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Fuerza en suelo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Puente con los dos pies",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Desliza el talón",
+     1,
+     null,
+     null
+    ],
+    [
+     "Gateo con rodillas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Puente con los dos pies",
+     1,
+     null,
+     null
+    ],
+    [
+     "Boca arriba, rodillas dobladas, pies apoyados al ancho de la",
+     2,
+     10.5,
+     null
+    ],
+    [
+     "Empuja con los pies, sube la pelvis y baja despacio.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Respira.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Segunda serie: sube y baja despacio.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Boca arriba, rodillas dobladas, sin aplastar la zona lumbar ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Desliza un talón por el suelo sin mover la pelvis, y vuelve.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Otra pierna. Desliza un talón por el suelo sin mover la pelv",
+     2,
+     null,
+     null
+    ],
+    [
+     "A cuatro apoyos: manos bajo los hombros, rodillas bajo las c",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuatro pasos cortos adelante y cuatro atrás, despacio, mano ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Atrás. Cuatro pasos cortos adelante y cuatro atrás, despacio",
+     2,
+     null,
+     null
+    ],
+    [
+     "Boca arriba, rodillas dobladas, pies apoyados al ancho de la",
+     2,
+     10.5,
+     null
+    ],
+    [
+     "19",
+     1,
+     null,
+     null
+    ],
+    [
+     "para empezar",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· Más tiempo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Sube solo hasta donde la zona lumbar no se arquee ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Puente con los dos pies",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Puente con los dos pies",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Si la lumbar molesta, sube menos o termina.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuídate · No hace falta estirar la pierna del todo. Si la es",
+     2,
+     6.02,
+     0.1184
+    ],
+    [
+     "Cuídate · Las rodillas siguen en el suelo. Si las muñecas mo",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar ya",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.pausa.suelo · trabajando",
+   "medidos": 37,
+   "todos": [
+    [
+     "Suelo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Fuerza en suelo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Puente con los dos pies",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Desliza el talón",
+     1,
+     null,
+     null
+    ],
+    [
+     "Gateo con rodillas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Puente con los dos pies",
+     1,
+     null,
+     null
+    ],
+    [
+     "Boca arriba, rodillas dobladas, pies apoyados al ancho de la",
+     2,
+     10.5,
+     null
+    ],
+    [
+     "Empuja con los pies, sube la pelvis y baja despacio.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Respira.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Segunda serie: sube y baja despacio.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Boca arriba, rodillas dobladas, sin aplastar la zona lumbar ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Desliza un talón por el suelo sin mover la pelvis, y vuelve.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Otra pierna. Desliza un talón por el suelo sin mover la pelv",
+     2,
+     null,
+     null
+    ],
+    [
+     "A cuatro apoyos: manos bajo los hombros, rodillas bajo las c",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuatro pasos cortos adelante y cuatro atrás, despacio, mano ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Atrás. Cuatro pasos cortos adelante y cuatro atrás, despacio",
+     2,
+     null,
+     null
+    ],
+    [
+     "Empuja con los pies, sube la pelvis y baja despacio.",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "de 6 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Sube solo hasta donde la zona lumbar no se arquee ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Puente con los dos pies",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Puente con los dos pies",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Si la lumbar molesta, sube menos o termina.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuídate · No hace falta estirar la pierna del todo. Si la es",
+     2,
+     6.02,
+     0.1184
+    ],
+    [
+     "Cuídate · Las rodillas siguen en el suelo. Si las muñecas mo",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Sube solo hasta donde la zona lumbar no se arquee ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Terminar serie",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.calves · al colocarse",
+   "medidos": 24,
+   "todos": [
+    [
+     "Gemelos",
+     1,
+     null,
+     null
+    ],
+    [
+     "Gemelos bajo la mesa",
+     2,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 2",
+     2,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Elevación de talones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Elevación de talones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sentado o de pie, pies apoyados en el suelo al ancho de las ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sube los talones hasta donde controles. Baja con control.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Más lentas ahora: baja en 3 s. Nota el gemelo en cada subida",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sentado o de pie, pies apoyados en el suelo al ancho de las ",
+     2,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "para empezar",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· Más tiempo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Movimiento pequeño y controlado. Apóyate en la mes",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Elevación de talones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar ya",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.calves · trabajando",
+   "medidos": 21,
+   "todos": [
+    [
+     "Gemelos",
+     1,
+     null,
+     null
+    ],
+    [
+     "Gemelos bajo la mesa",
+     2,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 2",
+     2,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     2,
+     null,
+     null
+    ],
+    [
+     "Elevación de talones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Elevación de talones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sentado o de pie, pies apoyados en el suelo al ancho de las ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sube los talones hasta donde controles. Baja con control.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Más lentas ahora: baja en 3 s. Nota el gemelo en cada subida",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sube los talones hasta donde controles. Baja con control.",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "de 25 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Movimiento pequeño y controlado. Apóyate en la mes",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Movimiento pequeño y controlado. Apóyate en la mes",
+     2,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Elevación de talones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Terminar serie",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.glutes.stealth · al colocarse",
+   "medidos": 32,
+   "todos": [
+    [
+     "Glúteos",
+     1,
+     null,
+     null
+    ],
+    [
+     "Glúteos en la silla",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Apretar glúteos",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Elevación de talones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Apretar glúteos",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sentado erguido, pies apoyados.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Aprieta los glúteos de forma moderada dos segundos y suelta.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Suelta.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ahora aguanta el apretón unos ocho segundos y suelta. Tres v",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cierra subiendo y bajando los talones, suave.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sentado erguido, pies apoyados.",
+     1,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "para empezar",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· Más tiempo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Sin contener el aire. Suelta del todo entre apreto",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Apretar glúteos",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Apretar glúteos",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Mantén la respiración suelta durante el aguante.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar ya",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.glutes.stealth · trabajando",
+   "medidos": 29,
+   "todos": [
+    [
+     "Glúteos",
+     1,
+     null,
+     null
+    ],
+    [
+     "Glúteos en la silla",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Apretar glúteos",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Elevación de talones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Apretar glúteos",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sentado erguido, pies apoyados.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Aprieta los glúteos de forma moderada dos segundos y suelta.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Suelta.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ahora aguanta el apretón unos ocho segundos y suelta. Tres v",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cierra subiendo y bajando los talones, suave.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Aprieta los glúteos de forma moderada dos segundos y suelta.",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "de 20 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Sin contener el aire. Suelta del todo entre apreto",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Apretar glúteos",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Apretar glúteos",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Mantén la respiración suelta durante el aguante.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Sin contener el aire. Suelta del todo entre apreto",
+     2,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Terminar serie",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.core.stealth · al colocarse",
+   "medidos": 32,
+   "todos": [
+    [
+     "Core",
+     1,
+     null,
+     null
+    ],
+    [
+     "Core silencioso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Piernas elevadas sentado",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Piernas elevadas sentado",
+     1,
+     null,
+     null
+    ],
+    [
+     "Silla sin ruedas. Atrás del todo, espalda apoyada, manos en ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Eleva las piernas y mantén, con la baja espalda apoyada.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Suelta.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Mantén la posición. Respira normal.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Última. Mantén mientras la lumbar siga apoyada.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Silla sin ruedas. Atrás del todo, espalda apoyada, manos en ",
+     2,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "para empezar",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· Más tiempo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Para que sea más suave, levanta un pie cada vez, c",
+     2,
+     6.96,
+     0.1312
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Piernas elevadas sentado",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Piernas elevadas sentado",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Si la lumbar se despega, apoya los pies en el suel",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Termina antes si pierdes el apoyo de la espalda.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar ya",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.core.stealth · trabajando",
+   "medidos": 29,
+   "todos": [
+    [
+     "Core",
+     1,
+     null,
+     null
+    ],
+    [
+     "Core silencioso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Piernas elevadas sentado",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Piernas elevadas sentado",
+     1,
+     null,
+     null
+    ],
+    [
+     "Silla sin ruedas. Atrás del todo, espalda apoyada, manos en ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Eleva las piernas y mantén, con la baja espalda apoyada.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Suelta.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Mantén la posición. Respira normal.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Última. Mantén mientras la lumbar siga apoyada.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Eleva las piernas y mantén, con la baja espalda apoyada.",
+     2,
+     null,
+     null
+    ],
+    [
+     "30",
+     1,
+     null,
+     null
+    ],
+    [
+     "segundos",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Para que sea más suave, levanta un pie cada vez, c",
+     2,
+     6.96,
+     0.1312
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Piernas elevadas sentado",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Piernas elevadas sentado",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Si la lumbar se despega, apoya los pies en el suel",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Termina antes si pierdes el apoyo de la espalda.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Para que sea más suave, levanta un pie cada vez, c",
+     2,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siguiente",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.banda.espalda · al colocarse",
+   "medidos": 47,
+   "todos": [
+    [
+     "Espalda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Espalda con banda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Apertura con banda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Remo con banda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Remo con tu mano",
+     1,
+     null,
+     null
+    ],
+    [
+     "Apertura con banda",
+     1,
+     null,
+     null
+    ],
+    [
+     "De pie, la banda delante del pecho y los brazos casi estirad",
+     2,
+     null,
+     null
+    ],
+    [
+     "Separa las manos juntando los omóplatos, sin subir la banda ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Respira.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pisa el centro de una banda larga con los dos pies. Rodillas",
+     2,
+     null,
+     null
+    ],
+    [
+     "Espalda larga y brazos estirados: lleva los codos hacia las ",
+     2,
+     null,
+     null
+    ],
+    [
+     "De pie. Con una mano, sujeta sin apretar la muñeca de la otr",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lleva ese codo atrás mientras la otra mano frena suave, y vu",
+     2,
+     null,
+     null
+    ],
+    [
+     "Izquierda. Lleva ese codo atrás mientras la otra mano frena ",
+     3,
+     null,
+     null
+    ],
+    [
+     "Derecha. Lleva ese codo atrás mientras la otra mano frena su",
+     3,
+     null,
+     null
+    ],
+    [
+     "De pie, la banda delante del pecho y los brazos casi estirad",
+     2,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "para empezar",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· Más tiempo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Sin banda, salta este paso: la rutina cuenta igual",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Remo con banda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Remo con banda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Banda suave, sin cortes y bien pisada; no la suelt",
+     2,
+     null,
+     null
+    ],
+    [
+     "Luego: Remo con tu mano",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Remo con tu mano",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Sin apretar al máximo. Respira con normalidad.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Empiezas por: Izquierda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empiezas por: Izquierda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ahora: Derecha",
+     1,
+     null,
+     null
+    ],
+    [
+     "El lado siguiente empieza solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar ya",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.banda.espalda · trabajando",
+   "medidos": 45,
+   "todos": [
+    [
+     "Espalda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Espalda con banda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Apertura con banda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Remo con banda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Remo con tu mano",
+     1,
+     null,
+     null
+    ],
+    [
+     "Apertura con banda",
+     1,
+     null,
+     null
+    ],
+    [
+     "De pie, la banda delante del pecho y los brazos casi estirad",
+     2,
+     null,
+     null
+    ],
+    [
+     "Separa las manos juntando los omóplatos, sin subir la banda ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Respira.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pisa el centro de una banda larga con los dos pies. Rodillas",
+     2,
+     null,
+     null
+    ],
+    [
+     "Espalda larga y brazos estirados: lleva los codos hacia las ",
+     2,
+     null,
+     null
+    ],
+    [
+     "De pie. Con una mano, sujeta sin apretar la muñeca de la otr",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lleva ese codo atrás mientras la otra mano frena suave, y vu",
+     2,
+     null,
+     null
+    ],
+    [
+     "Izquierda. Lleva ese codo atrás mientras la otra mano frena ",
+     3,
+     null,
+     null
+    ],
+    [
+     "Derecha. Lleva ese codo atrás mientras la otra mano frena su",
+     3,
+     null,
+     null
+    ],
+    [
+     "Separa las manos juntando los omóplatos, sin subir la banda ",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "de 8 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Saltar este paso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Sin banda, salta este paso: la rutina cuenta igual",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Remo con banda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Remo con banda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Banda suave, sin cortes y bien pisada; no la suelt",
+     2,
+     null,
+     null
+    ],
+    [
+     "Luego: Remo con tu mano",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Remo con tu mano",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Sin apretar al máximo. Respira con normalidad.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Empiezas por: Izquierda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empiezas por: Izquierda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ahora: Derecha",
+     1,
+     null,
+     null
+    ],
+    [
+     "El lado siguiente empieza solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Sin banda, salta este paso: la rutina cuenta igual",
+     2,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Terminar serie",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.hang.bar · al colocarse",
+   "medidos": 36,
+   "todos": [
+    [
+     "Tracción",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colgarse",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Suspensión pasiva",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Suspensión activa",
+     1,
+     null,
+     null
+    ],
+    [
+     "Suspensión pasiva",
+     1,
+     null,
+     null
+    ],
+    [
+     "Agárrate a una barra firme que soporte tu peso, con las mano",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuelga relajado, con los brazos estirados. Respira.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sacude los brazos.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuelga y aleja un poco los hombros de las orejas, sin doblar",
+     2,
+     null,
+     null
+    ],
+    [
+     "Hombros sueltos, sin soltar el agarre. Deja que la espalda s",
+     2,
+     null,
+     null
+    ],
+    [
+     "Agárrate a una barra firme que soporte tu peso, con las mano",
+     2,
+     null,
+     null
+    ],
+    [
+     "19",
+     1,
+     null,
+     null
+    ],
+    [
+     "para empezar",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· Más tiempo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Entra y sal apoyando los pies, sin saltar. Baja si",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Suspensión activa",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Suspensión activa",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Suave, sin forzar los hombros atrás. Los pies, cer",
+     2,
+     null,
+     null
+    ],
+    [
+     "Luego: Suspensión pasiva",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Suspensión pasiva",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Respira hondo y afloja los hombros.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar ya",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.hang.bar · trabajando",
+   "medidos": 33,
+   "todos": [
+    [
+     "Tracción",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colgarse",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Suspensión pasiva",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Suspensión activa",
+     1,
+     null,
+     null
+    ],
+    [
+     "Suspensión pasiva",
+     1,
+     null,
+     null
+    ],
+    [
+     "Agárrate a una barra firme que soporte tu peso, con las mano",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuelga relajado, con los brazos estirados. Respira.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sacude los brazos.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuelga y aleja un poco los hombros de las orejas, sin doblar",
+     2,
+     null,
+     null
+    ],
+    [
+     "Hombros sueltos, sin soltar el agarre. Deja que la espalda s",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuelga relajado, con los brazos estirados. Respira.",
+     2,
+     null,
+     null
+    ],
+    [
+     "30",
+     1,
+     null,
+     null
+    ],
+    [
+     "segundos",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Entra y sal apoyando los pies, sin saltar. Baja si",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Suspensión activa",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Suspensión activa",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Suave, sin forzar los hombros atrás. Los pies, cer",
+     2,
+     null,
+     null
+    ],
+    [
+     "Luego: Suspensión pasiva",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Suspensión pasiva",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Respira hondo y afloja los hombros.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Entra y sal apoyando los pies, sin saltar. Baja si",
+     2,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siguiente",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.push.ladder · al colocarse",
+   "medidos": 37,
+   "todos": [
+    [
+     "Empuje",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empuje · progresión",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Flexiones inclinadas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pica en escritorio",
+     1,
+     null,
+     null
+    ],
+    [
+     "Flexiones inclinadas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Manos en el borde de una mesa fija, cuerpo recto en diagonal",
+     2,
+     null,
+     null
+    ],
+    [
+     "Baja el pecho hacia el borde, codos cerca del cuerpo. Empuja",
+     2,
+     null,
+     null
+    ],
+    [
+     "Respira.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Manos en la mesa, acerca los pies y sube la cadera: el cuerp",
+     2,
+     null,
+     null
+    ],
+    [
+     "Dobla los codos y lleva la cabeza hacia la mesa, entre los b",
+     2,
+     null,
+     null
+    ],
+    [
+     "Negativas: baja en 5 segundos y sube normal.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Manos en el borde de una mesa fija, cuerpo recto en diagonal",
+     2,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "para empezar",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· Más tiempo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Baja hasta donde controles. Cuanto más alta la sup",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Pica en escritorio",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Pica en escritorio",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Recorrido corto: la cabeza nunca toca la mesa, y l",
+     3,
+     null,
+     null
+    ],
+    [
+     "Luego: Flexiones inclinadas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Flexiones inclinadas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Si cuesta, apoya las manos en una superficie más a",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar ya",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.push.ladder · trabajando",
+   "medidos": 34,
+   "todos": [
+    [
+     "Empuje",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empuje · progresión",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Flexiones inclinadas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pica en escritorio",
+     1,
+     null,
+     null
+    ],
+    [
+     "Flexiones inclinadas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Manos en el borde de una mesa fija, cuerpo recto en diagonal",
+     2,
+     null,
+     null
+    ],
+    [
+     "Baja el pecho hacia el borde, codos cerca del cuerpo. Empuja",
+     2,
+     null,
+     null
+    ],
+    [
+     "Respira.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Manos en la mesa, acerca los pies y sube la cadera: el cuerp",
+     2,
+     null,
+     null
+    ],
+    [
+     "Dobla los codos y lleva la cabeza hacia la mesa, entre los b",
+     2,
+     null,
+     null
+    ],
+    [
+     "Negativas: baja en 5 segundos y sube normal.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Baja el pecho hacia el borde, codos cerca del cuerpo. Empuja",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "de 10 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Baja hasta donde controles. Cuanto más alta la sup",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Pica en escritorio",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Pica en escritorio",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Recorrido corto: la cabeza nunca toca la mesa, y l",
+     3,
+     null,
+     null
+    ],
+    [
+     "Luego: Flexiones inclinadas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Flexiones inclinadas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Si cuesta, apoya las manos en una superficie más a",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Baja hasta donde controles. Cuanto más alta la sup",
+     2,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Terminar serie",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.chair.dips · al colocarse",
+   "medidos": 32,
+   "todos": [
+    [
+     "Tríceps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Fondos en silla",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Fondos en silla",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Fondos en silla",
+     1,
+     null,
+     null
+    ],
+    [
+     "Al borde de una silla sin ruedas, contra la pared. Manos jun",
+     3,
+     null,
+     null
+    ],
+    [
+     "Baja doblando los codos hacia atrás. Sube empujando con los ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Respira.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Baja con control, sin dejarte caer. Empuja y sube.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Últimas. Lentas y limpias, empuja desde el tríceps.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Al borde de una silla sin ruedas, contra la pared. Manos jun",
+     3,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "para empezar",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· Más tiempo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Baja hasta donde el hombro vaya cómodo, nunca más ",
+     3,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Fondos en silla",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Fondos en silla",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Mantén los hombros lejos de las orejas.",
+     1,
+     10.2,
+     null
+    ],
+    [
+     "Cuídate · Para si la técnica se rompe. Mejor 6 buenas que 8 ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar ya",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.chair.dips · trabajando",
+   "medidos": 29,
+   "todos": [
+    [
+     "Tríceps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Fondos en silla",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Fondos en silla",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Fondos en silla",
+     1,
+     null,
+     null
+    ],
+    [
+     "Al borde de una silla sin ruedas, contra la pared. Manos jun",
+     3,
+     null,
+     null
+    ],
+    [
+     "Baja doblando los codos hacia atrás. Sube empujando con los ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Respira.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Baja con control, sin dejarte caer. Empuja y sube.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Últimas. Lentas y limpias, empuja desde el tríceps.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Baja doblando los codos hacia atrás. Sube empujando con los ",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "de 12 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Baja hasta donde el hombro vaya cómodo, nunca más ",
+     3,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Fondos en silla",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Fondos en silla",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Mantén los hombros lejos de las orejas.",
+     1,
+     10.2,
+     null
+    ],
+    [
+     "Cuídate · Para si la técnica se rompe. Mejor 6 buenas que 8 ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Baja hasta donde el hombro vaya cómodo, nunca más ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Terminar serie",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.wall.sit · al colocarse",
+   "medidos": 30,
+   "todos": [
+    [
+     "Piernas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sentadilla en pared",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 2",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Silla en la pared",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Silla en la pared",
+     1,
+     null,
+     null
+    ],
+    [
+     "Espalda en la pared, pies un paso por delante. Desliza un po",
+     2,
+     null,
+     null
+    ],
+    [
+     "Quédate a la altura que elijas, sin pasar de 90°. Respira si",
+     2,
+     null,
+     null
+    ],
+    [
+     "Suave.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Segunda tanda. Vuelve a la posición y mantén.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Espalda en la pared, pies un paso por delante. Desliza un po",
+     2,
+     null,
+     null
+    ],
+    [
+     "19",
+     1,
+     null,
+     null
+    ],
+    [
+     "para empezar",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· Más tiempo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Empieza alto: cuanto menos bajes, más suave. Para ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Silla en la pared",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Silla en la pared",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Elige una altura que te deje respirar tranquilo.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar ya",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.wall.sit · trabajando",
+   "medidos": 27,
+   "todos": [
+    [
+     "Piernas",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sentadilla en pared",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 2",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Silla en la pared",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Silla en la pared",
+     1,
+     null,
+     null
+    ],
+    [
+     "Espalda en la pared, pies un paso por delante. Desliza un po",
+     2,
+     null,
+     null
+    ],
+    [
+     "Quédate a la altura que elijas, sin pasar de 90°. Respira si",
+     2,
+     null,
+     null
+    ],
+    [
+     "Suave.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Segunda tanda. Vuelve a la posición y mantén.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Quédate a la altura que elijas, sin pasar de 90°. Respira si",
+     2,
+     null,
+     null
+    ],
+    [
+     "60",
+     1,
+     null,
+     null
+    ],
+    [
+     "segundos",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Empieza alto: cuanto menos bajes, más suave. Para ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Silla en la pared",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Silla en la pared",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Elige una altura que te deje respirar tranquilo.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Empieza alto: cuanto menos bajes, más suave. Para ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siguiente",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.legs.single · al colocarse",
+   "medidos": 57,
+   "todos": [
+    [
+     "Unilateral",
+     1,
+     null,
+     null
+    ],
+    [
+     "Piernas · a una",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Bisagra de cadera",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sentadilla búlgara",
+     1,
+     null,
+     null
+    ],
+    [
+     "Zancada profunda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Elevación de talones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Bisagra de cadera",
+     1,
+     null,
+     null
+    ],
+    [
+     "De pie, pies al ancho de las caderas, manos en la cintura.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lleva la cadera atrás con la espalda larga y las rodillas al",
+     2,
+     null,
+     null
+    ],
+    [
+     "Respira.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Silla estable contra la pared, detrás. Un empeine en ella; e",
+     3,
+     null,
+     null
+    ],
+    [
+     "Baja en vertical sobre la pierna de delante y sube. Unas 6 p",
+     2,
+     null,
+     null
+    ],
+    [
+     "Izquierda. Baja en vertical sobre la pierna de delante y sub",
+     2,
+     null,
+     null
+    ],
+    [
+     "Derecha. Baja en vertical sobre la pierna de delante y sube.",
+     2,
+     null,
+     null
+    ],
+    [
+     "De pie, da un paso largo adelante. Una mano en la mesa si la",
+     2,
+     null,
+     null
+    ],
+    [
+     "Baja y sube en zancada. La rodilla puede pasar sobre el pie,",
+     3,
+     null,
+     null
+    ],
+    [
+     "Izquierda. Baja y sube en zancada. La rodilla puede pasar so",
+     3,
+     null,
+     null
+    ],
+    [
+     "Derecha. Baja y sube en zancada. La rodilla puede pasar sobr",
+     3,
+     null,
+     null
+    ],
+    [
+     "A una pierna: sube el talón hasta donde controles y baja des",
+     2,
+     null,
+     null
+    ],
+    [
+     "Izquierda. A una pierna: sube el talón hasta donde controles",
+     2,
+     null,
+     null
+    ],
+    [
+     "Derecha. A una pierna: sube el talón hasta donde controles y",
+     2,
+     null,
+     null
+    ],
+    [
+     "De pie, pies al ancho de las caderas, manos en la cintura.",
+     2,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "para empezar",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· Más tiempo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · El tronco baja porque la cadera va atrás, sin redo",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Sentadilla búlgara",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Sentadilla búlgara",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Una mano en la mesa o la pared si pierdes el equil",
+     2,
+     null,
+     0.0378
+    ],
+    [
+     "Empiezas por: Izquierda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empiezas por: Izquierda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ahora: Derecha",
+     1,
+     null,
+     null
+    ],
+    [
+     "El lado siguiente empieza solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Zancada profunda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Zancada profunda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Si la rodilla se queja, baja menos. El talón de de",
+     2,
+     null,
+     null
+    ],
+    [
+     "Luego: Elevación de talones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Elevación de talones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Una mano en la mesa para el equilibrio. Sin rebote",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar ya",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [
+    {
+     "texto": "Cuídate · Una mano en la mesa o la pared si pierdes el equilibrio. Baja solo hasta donde controles.",
+     "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+     "lineas": 2,
+     "letras": 99,
+     "reserva": true,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 17.25,
+     "ancho": 320,
+     "natural": null,
+     "margen": 12,
+     "margenMas": true,
+     "motivo": null,
+     "porLetra": 0.0378,
+     "porLetraMas": false,
+     "motivoLetra": "se parte en 3 líneas",
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 3,
+        "runner": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": true,
+       "dibujo": 147,
+       "aro": 307,
+       "pieDeLaPausa": null,
+       "pantalla": 640
+      },
+      "despues": {
+       "scroll": {
+        "home": 3,
+        "runner": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": true,
+       "dibujo": 132,
+       "aro": 307,
+       "pieDeLaPausa": null,
+       "pantalla": 640
+      }
+     }
+    }
+   ],
+   "cerca": []
+  },
+  {
+   "momento": "extra.legs.single · trabajando",
+   "medidos": 54,
+   "todos": [
+    [
+     "Unilateral",
+     1,
+     null,
+     null
+    ],
+    [
+     "Piernas · a una",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Bisagra de cadera",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sentadilla búlgara",
+     1,
+     null,
+     null
+    ],
+    [
+     "Zancada profunda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Elevación de talones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Bisagra de cadera",
+     1,
+     null,
+     null
+    ],
+    [
+     "De pie, pies al ancho de las caderas, manos en la cintura.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lleva la cadera atrás con la espalda larga y las rodillas al",
+     2,
+     null,
+     null
+    ],
+    [
+     "Respira.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Silla estable contra la pared, detrás. Un empeine en ella; e",
+     3,
+     null,
+     null
+    ],
+    [
+     "Baja en vertical sobre la pierna de delante y sube. Unas 6 p",
+     2,
+     null,
+     null
+    ],
+    [
+     "Izquierda. Baja en vertical sobre la pierna de delante y sub",
+     2,
+     null,
+     null
+    ],
+    [
+     "Derecha. Baja en vertical sobre la pierna de delante y sube.",
+     2,
+     null,
+     null
+    ],
+    [
+     "De pie, da un paso largo adelante. Una mano en la mesa si la",
+     2,
+     null,
+     null
+    ],
+    [
+     "Baja y sube en zancada. La rodilla puede pasar sobre el pie,",
+     3,
+     null,
+     null
+    ],
+    [
+     "Izquierda. Baja y sube en zancada. La rodilla puede pasar so",
+     3,
+     null,
+     null
+    ],
+    [
+     "Derecha. Baja y sube en zancada. La rodilla puede pasar sobr",
+     3,
+     null,
+     null
+    ],
+    [
+     "A una pierna: sube el talón hasta donde controles y baja des",
+     2,
+     null,
+     null
+    ],
+    [
+     "Izquierda. A una pierna: sube el talón hasta donde controles",
+     2,
+     null,
+     null
+    ],
+    [
+     "Derecha. A una pierna: sube el talón hasta donde controles y",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lleva la cadera atrás con la espalda larga y las rodillas al",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "de 6 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · El tronco baja porque la cadera va atrás, sin redo",
+     2,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Sentadilla búlgara",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Sentadilla búlgara",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Una mano en la mesa o la pared si pierdes el equil",
+     2,
+     null,
+     0.0378
+    ],
+    [
+     "Empiezas por: Izquierda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empiezas por: Izquierda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ahora: Derecha",
+     1,
+     null,
+     null
+    ],
+    [
+     "El lado siguiente empieza solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Zancada profunda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Zancada profunda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Si la rodilla se queja, baja menos. El talón de de",
+     2,
+     null,
+     null
+    ],
+    [
+     "Luego: Elevación de talones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Elevación de talones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Una mano en la mesa para el equilibrio. Sin rebote",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuídate · El tronco baja porque la cadera va atrás, sin redo",
+     2,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Terminar serie",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.core.plank · al colocarse",
+   "medidos": 51,
+   "todos": [
+    [
+     "Core",
+     1,
+     null,
+     null
+    ],
+    [
+     "Core · plancha",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 5",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Plancha",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Plancha lateral",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hueco abdominal",
+     1,
+     null,
+     null
+    ],
+    [
+     "Puente con marcha",
+     1,
+     null,
+     null
+    ],
+    [
+     "Plancha",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ponte boca abajo en el suelo y apoya los antebrazos bajo los",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuerpo en línea recta de la cabeza a los talones. Aprieta gl",
+     2,
+     null,
+     null
+    ],
+    [
+     "Respira.",
+     1,
+     null,
+     null
+    ],
+    [
+     "De lado, codo bajo el hombro y piernas estiradas, una sobre ",
+     3,
+     null,
+     null
+    ],
+    [
+     "Izquierda. De lado, codo bajo el hombro y piernas estiradas,",
+     3,
+     null,
+     null
+    ],
+    [
+     "Derecha. De lado, codo bajo el hombro y piernas estiradas, u",
+     3,
+     null,
+     null
+    ],
+    [
+     "Tumbado boca arriba: pega la lumbar al suelo y eleva piernas",
+     2,
+     null,
+     null
+    ],
+    [
+     "Boca arriba, pies apoyados cerca del glúteo.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sube la cadera y mantenla. Levanta una rodilla y luego la ot",
+     2,
+     null,
+     null
+    ],
+    [
+     "Última. Vuelve a la plancha, cuerpo en línea. Respira dentro",
+     2,
+     null,
+     null
+    ],
+    [
+     "Ponte boca abajo en el suelo y apoya los antebrazos bajo los",
+     2,
+     null,
+     null
+    ],
+    [
+     "19",
+     1,
+     null,
+     null
+    ],
+    [
+     "para empezar",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· Más tiempo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Más suave con las rodillas en el suelo: en línea d",
+     3,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Plancha lateral",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Plancha lateral",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Más suave con las dos rodillas dobladas y la de ab",
+     2,
+     null,
+     null
+    ],
+    [
+     "Empiezas por: Izquierda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empiezas por: Izquierda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ahora: Derecha",
+     1,
+     null,
+     null
+    ],
+    [
+     "El lado siguiente empieza solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Hueco abdominal",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Hueco abdominal",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Para que sea más suave, dobla las rodillas y deja ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Si la pelvis se cae o la lumbar molesta, apoya los",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Apoya las rodillas si la línea se rompe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar ya",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.core.plank · trabajando",
+   "medidos": 48,
+   "todos": [
+    [
+     "Core",
+     1,
+     null,
+     null
+    ],
+    [
+     "Core · plancha",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paso 1 de 5",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Salir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Plancha",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Plancha lateral",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hueco abdominal",
+     1,
+     null,
+     null
+    ],
+    [
+     "Puente con marcha",
+     1,
+     null,
+     null
+    ],
+    [
+     "Plancha",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ponte boca abajo en el suelo y apoya los antebrazos bajo los",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuerpo en línea recta de la cabeza a los talones. Aprieta gl",
+     2,
+     null,
+     null
+    ],
+    [
+     "Respira.",
+     1,
+     null,
+     null
+    ],
+    [
+     "De lado, codo bajo el hombro y piernas estiradas, una sobre ",
+     3,
+     null,
+     null
+    ],
+    [
+     "Izquierda. De lado, codo bajo el hombro y piernas estiradas,",
+     3,
+     null,
+     null
+    ],
+    [
+     "Derecha. De lado, codo bajo el hombro y piernas estiradas, u",
+     3,
+     null,
+     null
+    ],
+    [
+     "Tumbado boca arriba: pega la lumbar al suelo y eleva piernas",
+     2,
+     null,
+     null
+    ],
+    [
+     "Boca arriba, pies apoyados cerca del glúteo.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sube la cadera y mantenla. Levanta una rodilla y luego la ot",
+     2,
+     null,
+     null
+    ],
+    [
+     "Última. Vuelve a la plancha, cuerpo en línea. Respira dentro",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuerpo en línea recta de la cabeza a los talones. Aprieta gl",
+     2,
+     null,
+     null
+    ],
+    [
+     "45",
+     1,
+     null,
+     null
+    ],
+    [
+     "segundos",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Más suave con las rodillas en el suelo: en línea d",
+     3,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Plancha lateral",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Plancha lateral",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Más suave con las dos rodillas dobladas y la de ab",
+     2,
+     null,
+     null
+    ],
+    [
+     "Empiezas por: Izquierda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · arranca solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empiezas por: Izquierda",
+     1,
+     null,
+     null
+    ],
+    [
+     "Colócate sin prisa · pulsa «Empezar ya»",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ahora: Derecha",
+     1,
+     null,
+     null
+    ],
+    [
+     "El lado siguiente empieza solo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Hueco abdominal",
+     1,
+     null,
+     null
+    ],
+    [
+     "Luego: Hueco abdominal",
+     1,
+     null,
+     null
+    ],
+    [
+     "Prepárate para seguir",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Para que sea más suave, dobla las rodillas y deja ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Si la pelvis se cae o la lumbar molesta, apoya los",
+     2,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Apoya las rodillas si la línea se rompe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cuídate · Más suave con las rodillas en el suelo: en línea d",
+     2,
+     null,
+     null
+    ],
+    [
+     "Siguiente: Descanso",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Anterior",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pausar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siguiente",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  }
+ ]
+}

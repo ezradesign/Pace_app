@@ -27,7 +27,7 @@ for (const [ancho, alto] of [[1280, 720], [1366, 768], [1920, 1080]]) {
       await page.evaluate(() => document.fonts.ready);
       const panel = page.locator('.pace-rt-esc[data-pace-ritmo-estado="menu"]').filter({ visible: true });
       const cab = panel.locator('.pace-rt-cab');
-      await expect(cab, 'GUARD: no es el día de la captura de Ez').toContainText(lang === 'es' ? 'hoy de 13:16 a 20:00' : '13:16');
+      await expect(cab, 'GUARD: no es el día de la captura de Ez').toContainText(lang === 'es' ? 'hoy 13:16–20:00' : '13:16');
       const fuera = await page.evaluate(() => [window.PACE_STRINGS.es['ritmo.ctx.material'], window.PACE_STRINGS.en['ritmo.ctx.material']]);
       for (const f of fuera) await expect(cab).not.toContainText(f);
       await expect(cab).not.toContainText(/de foco|of focus|vasos|glasses/i);

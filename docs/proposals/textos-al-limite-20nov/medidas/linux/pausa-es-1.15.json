@@ -1,0 +1,144 @@
+{
+ "pantalla": "pausa",
+ "lang": "es",
+ "letra": 1.15,
+ "filas": [
+  {
+   "momento": "la pausa por libre",
+   "medidos": 14,
+   "todos": [
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ciclo completado",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tu pausa",
+     1,
+     null,
+     null
+    ],
+    [
+     "Has cerrado un bloque. Elige tu pausa.",
+     1,
+     2.02,
+     0.053
+    ],
+    [
+     "Hoy aún no hay sesión de Estira",
+     2,
+     null,
+     null
+    ],
+    [
+     "Espalda de pie",
+     1,
+     null,
+     null
+    ],
+    [
+     "3–4",
+     1,
+     null,
+     null
+    ],
+    [
+     "min",
+     1,
+     null,
+     null
+    ],
+    [
+     "Estira",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hidrátate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Respira",
+     1,
+     null,
+     null
+    ],
+    [
+     "Muévete",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ahora no",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [
+    {
+     "texto": "Has cerrado un bloque. Elige tu pausa.",
+     "donde": "div[data-pace-modal-card=true] › div[data-pace-modal-head=true] › p[data-pace-modal-subtitle=true]",
+     "lineas": 1,
+     "letras": 38,
+     "reserva": false,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 14.95,
+     "ancho": 250,
+     "natural": 248,
+     "margen": 2.02,
+     "margenMas": false,
+     "motivo": "se parte en 2 líneas",
+     "porLetra": 0.053,
+     "porLetraMas": false,
+     "motivoLetra": "se parte en 2 líneas",
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": true,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 331,
+       "pieDeLaPausa": 603,
+       "pantalla": 640
+      },
+      "despues": {
+       "scroll": {
+        "home": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": true,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 331,
+       "pieDeLaPausa": 603,
+       "pantalla": 640
+      }
+     }
+    }
+   ],
+   "cerca": []
+  }
+ ]
+}

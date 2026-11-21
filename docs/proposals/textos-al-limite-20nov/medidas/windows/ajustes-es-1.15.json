@@ -1,0 +1,1661 @@
+{
+ "pantalla": "ajustes",
+ "lang": "es",
+ "letra": 1.15,
+ "filas": [
+  {
+   "momento": "360×640 web",
+   "medidos": 49,
+   "todos": [
+    [
+     "Ajustes",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ver",
+     1,
+     null,
+     null
+    ],
+    [
+     "Visita guiada ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Idioma",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Español",
+     1,
+     null,
+     null
+    ],
+    [
+     "English",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paleta",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Crema",
+     1,
+     null,
+     null
+    ],
+    [
+     "Oscuro",
+     1,
+     null,
+     null
+    ],
+    [
+     "Oír",
+     1,
+     null,
+     null
+    ],
+    [
+     "Escuchar ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sonido",
+     1,
+     null,
+     null
+    ],
+    [
+     "Marca la fase",
+     1,
+     null,
+     null
+    ],
+    [
+     "La voz que cuenta las fases",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tono",
+     1,
+     null,
+     null
+    ],
+    [
+     "Voz clara",
+     1,
+     null,
+     null
+    ],
+    [
+     "Voz grave",
+     1,
+     null,
+     null
+    ],
+    [
+     "Suena detrás",
+     1,
+     null,
+     null
+    ],
+    [
+     "Lo que suena al respirar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Nada",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ambiente",
+     1,
+     null,
+     null
+    ],
+    [
+     "Música",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sesiones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tu semana ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Aviso al terminar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Foco · bloqueados en este navegador",
+     1,
+     null,
+     null
+    ],
+    [
+     "Bloqueados: icono junto a la dirección, «Notificaciones», «P",
+     2,
+     null,
+     null
+    ],
+    [
+     "Círculo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Respira · Loto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso entre series",
+     1,
+     null,
+     null
+    ],
+    [
+     "Mueve",
+     1,
+     null,
+     null
+    ],
+    [
+     "20 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "30 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "45 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "Vibrar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Mueve y Estira",
+     1,
+     null,
+     null
+    ],
+    [
+     "No",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sin sonido",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siempre",
+     1,
+     null,
+     null
+    ],
+    [
+     "Vasos al día",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hidrátate",
+     1,
+     null,
+     null
+    ],
+    [
+     "−",
+     1,
+     null,
+     null
+    ],
+    [
+     "8",
+     1,
+     null,
+     null
+    ],
+    [
+     "+",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tus datos",
+     1,
+     null,
+     null
+    ],
+    [
+     "Copias, borrar y PACE completo ›",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "360×640 web · Tus datos",
+   "medidos": 12,
+   "todos": [
+    [
+     "‹",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tus datos",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Exportar una copia",
+     1,
+     null,
+     null
+    ],
+    [
+     "Aún no has guardado ninguna copia. Sin instalar, Safari pued",
+     2,
+     null,
+     null
+    ],
+    [
+     "Importar una copia",
+     1,
+     null,
+     null
+    ],
+    [
+     "Borrar todos mis datos",
+     1,
+     null,
+     null
+    ],
+    [
+     "›",
+     1,
+     null,
+     null
+    ],
+    [
+     "PACE completo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Introducir código",
+     1,
+     null,
+     null
+    ],
+    [
+     "Todo vive en este navegador y no se sincroniza con otros.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Seguridad·Privacidad",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "360×640 android",
+   "medidos": 51,
+   "todos": [
+    [
+     "Ajustes",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ver",
+     1,
+     null,
+     null
+    ],
+    [
+     "Visita guiada ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Idioma",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Español",
+     1,
+     null,
+     null
+    ],
+    [
+     "English",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paleta",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Crema",
+     1,
+     null,
+     null
+    ],
+    [
+     "Oscuro",
+     1,
+     null,
+     null
+    ],
+    [
+     "Oír",
+     1,
+     null,
+     null
+    ],
+    [
+     "Escuchar ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sonido",
+     1,
+     null,
+     null
+    ],
+    [
+     "Marca la fase",
+     1,
+     null,
+     null
+    ],
+    [
+     "La voz que cuenta las fases",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tono",
+     1,
+     null,
+     null
+    ],
+    [
+     "Voz clara",
+     1,
+     null,
+     null
+    ],
+    [
+     "Voz grave",
+     1,
+     null,
+     null
+    ],
+    [
+     "Suena detrás",
+     1,
+     null,
+     null
+    ],
+    [
+     "Lo que suena al respirar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Nada",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ambiente",
+     1,
+     null,
+     null
+    ],
+    [
+     "Música",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sesiones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tu semana ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Aviso al terminar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Foco y pausa · si la app está en segundo plano",
+     1,
+     null,
+     null
+    ],
+    [
+     "Que el aviso llegue a su hora",
+     1,
+     null,
+     null
+    ],
+    [
+     "Android puede retrasarlo unos minutos",
+     1,
+     null,
+     null
+    ],
+    [
+     "›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Círculo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Respira · Loto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso entre series",
+     1,
+     null,
+     null
+    ],
+    [
+     "Mueve",
+     1,
+     null,
+     null
+    ],
+    [
+     "20 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "30 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "45 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "Vibrar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Mueve y Estira",
+     1,
+     null,
+     null
+    ],
+    [
+     "No",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sin sonido",
+     1,
+     null,
+     null
+    ],
+    [
+     "Siempre",
+     1,
+     null,
+     null
+    ],
+    [
+     "Vasos al día",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hidrátate",
+     1,
+     null,
+     null
+    ],
+    [
+     "−",
+     1,
+     null,
+     null
+    ],
+    [
+     "8",
+     1,
+     null,
+     null
+    ],
+    [
+     "+",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tus datos",
+     1,
+     null,
+     null
+    ],
+    [
+     "Copias, borrar y PACE completo ›",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "360×640 android · Tus datos",
+   "medidos": 11,
+   "todos": [
+    [
+     "‹",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tus datos",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Exportar una copia",
+     1,
+     null,
+     null
+    ],
+    [
+     "Importar una copia",
+     1,
+     null,
+     null
+    ],
+    [
+     "Borrar todos mis datos",
+     1,
+     null,
+     null
+    ],
+    [
+     "›",
+     1,
+     null,
+     null
+    ],
+    [
+     "PACE completo",
+     1,
+     null,
+     null
+    ],
+    [
+     "pronto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Todo vive en este móvil y no se sincroniza con otros.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Seguridad·Privacidad",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "1280×720 avisos sin decidir",
+   "medidos": 43,
+   "todos": [
+    [
+     "Ajustes",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ver",
+     1,
+     null,
+     null
+    ],
+    [
+     "Visita guiada ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Idioma",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Español",
+     1,
+     null,
+     null
+    ],
+    [
+     "English",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paleta",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Crema",
+     1,
+     null,
+     null
+    ],
+    [
+     "Oscuro",
+     1,
+     null,
+     null
+    ],
+    [
+     "Oír",
+     1,
+     null,
+     null
+    ],
+    [
+     "Escuchar ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sonido",
+     1,
+     null,
+     null
+    ],
+    [
+     "Marca la fase",
+     1,
+     null,
+     null
+    ],
+    [
+     "La voz que cuenta las fases",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tono",
+     1,
+     null,
+     null
+    ],
+    [
+     "Voz clara",
+     1,
+     null,
+     null
+    ],
+    [
+     "Voz grave",
+     1,
+     null,
+     null
+    ],
+    [
+     "Suena detrás",
+     1,
+     null,
+     null
+    ],
+    [
+     "Lo que suena al respirar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Nada",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ambiente",
+     1,
+     null,
+     null
+    ],
+    [
+     "Música",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sesiones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tu semana ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Aviso al terminar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Foco · si la pestaña está detrás",
+     1,
+     null,
+     null
+    ],
+    [
+     "Círculo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Respira · Loto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso entre series",
+     1,
+     null,
+     null
+    ],
+    [
+     "Mueve",
+     1,
+     null,
+     null
+    ],
+    [
+     "20 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "30 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "45 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "Vasos al día",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hidrátate",
+     1,
+     null,
+     null
+    ],
+    [
+     "−",
+     1,
+     null,
+     null
+    ],
+    [
+     "8",
+     1,
+     null,
+     null
+    ],
+    [
+     "+",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tus datos",
+     1,
+     2.04,
+     null
+    ],
+    [
+     "Copias, borrar y PACE completo ›",
+     1,
+     2.04,
+     0.0639
+    ]
+   ],
+   "justos": [
+    {
+     "texto": "Tus datos",
+     "donde": "div[data-pace-tweaks-panel=true][data-pace-aj-bajo] › div[data-pace-aj-seccion=Tus datos][data-pace-aj-plegada].pace-aj-sec › div.pace-aj-sec-titulo",
+     "lineas": 1,
+     "letras": 9,
+     "reserva": false,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 12.65,
+     "ancho": 278,
+     "natural": 276,
+     "margen": 2.04,
+     "margenMas": false,
+     "motivo": "parte a su vecino «Copias, borrar y PACE completo ›»",
+     "porLetra": 0.15,
+     "porLetraMas": true,
+     "motivoLetra": null,
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 47
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 65
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      }
+     }
+    },
+    {
+     "texto": "Copias, borrar y PACE completo ›",
+     "donde": "div[data-pace-aj-seccion=Tus datos][data-pace-aj-plegada].pace-aj-sec › div.pace-aj-sec-titulo › button.pace-aj-sec-accion.pace-aj-solo-movil",
+     "lineas": 1,
+     "letras": 32,
+     "reserva": false,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 16.1,
+     "ancho": 193.7,
+     "natural": 193.67,
+     "margen": 2.04,
+     "margenMas": false,
+     "motivo": "se parte en 2 líneas",
+     "porLetra": 0.0639,
+     "porLetraMas": false,
+     "motivoLetra": "se parte en 2 líneas",
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 47
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 65
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      }
+     }
+    }
+   ],
+   "cerca": []
+  },
+  {
+   "momento": "1280×720 avisos sin decidir · Tus datos",
+   "medidos": 12,
+   "todos": [
+    [
+     "‹",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tus datos",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Exportar una copia",
+     1,
+     null,
+     null
+    ],
+    [
+     "Aún no has guardado ninguna copia. Sin instalar, Safari pued",
+     3,
+     null,
+     null
+    ],
+    [
+     "Importar una copia",
+     1,
+     null,
+     null
+    ],
+    [
+     "Borrar todos mis datos",
+     1,
+     null,
+     null
+    ],
+    [
+     "›",
+     1,
+     null,
+     null
+    ],
+    [
+     "PACE completo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Introducir código",
+     1,
+     null,
+     null
+    ],
+    [
+     "Todo vive en este navegador y no se sincroniza con otros.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Seguridad·Privacidad",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "1280×720 avisos bloqueados",
+   "medidos": 44,
+   "todos": [
+    [
+     "Ajustes",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ver",
+     1,
+     null,
+     null
+    ],
+    [
+     "Visita guiada ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Idioma",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Español",
+     1,
+     null,
+     null
+    ],
+    [
+     "English",
+     1,
+     null,
+     null
+    ],
+    [
+     "Paleta",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Crema",
+     1,
+     null,
+     null
+    ],
+    [
+     "Oscuro",
+     1,
+     null,
+     null
+    ],
+    [
+     "Oír",
+     1,
+     null,
+     null
+    ],
+    [
+     "Escuchar ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sonido",
+     1,
+     null,
+     null
+    ],
+    [
+     "Marca la fase",
+     1,
+     null,
+     null
+    ],
+    [
+     "La voz que cuenta las fases",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tono",
+     1,
+     null,
+     null
+    ],
+    [
+     "Voz clara",
+     1,
+     null,
+     null
+    ],
+    [
+     "Voz grave",
+     1,
+     null,
+     null
+    ],
+    [
+     "Suena detrás",
+     1,
+     null,
+     null
+    ],
+    [
+     "Lo que suena al respirar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Nada",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ambiente",
+     1,
+     null,
+     null
+    ],
+    [
+     "Música",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sesiones",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tu semana ›",
+     1,
+     null,
+     null
+    ],
+    [
+     "Aviso al terminar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Foco · bloqueados en este navegador",
+     1,
+     null,
+     null
+    ],
+    [
+     "Bloqueados: icono junto a la dirección, «Notificaciones», «P",
+     3,
+     null,
+     null
+    ],
+    [
+     "Círculo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Respira · Loto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Descanso entre series",
+     1,
+     null,
+     null
+    ],
+    [
+     "Mueve",
+     1,
+     null,
+     null
+    ],
+    [
+     "20 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "30 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "45 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "Vasos al día",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hidrátate",
+     1,
+     null,
+     null
+    ],
+    [
+     "−",
+     1,
+     null,
+     null
+    ],
+    [
+     "8",
+     1,
+     null,
+     null
+    ],
+    [
+     "+",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tus datos",
+     1,
+     2.04,
+     null
+    ],
+    [
+     "Copias, borrar y PACE completo ›",
+     1,
+     2.04,
+     0.0639
+    ]
+   ],
+   "justos": [
+    {
+     "texto": "Tus datos",
+     "donde": "div[data-pace-tweaks-panel=true][data-pace-aj-bajo] › div[data-pace-aj-seccion=Tus datos][data-pace-aj-plegada].pace-aj-sec › div.pace-aj-sec-titulo",
+     "lineas": 1,
+     "letras": 9,
+     "reserva": false,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 12.65,
+     "ancho": 278,
+     "natural": 276,
+     "margen": 2.04,
+     "margenMas": false,
+     "motivo": "parte a su vecino «Copias, borrar y PACE completo ›»",
+     "porLetra": 0.15,
+     "porLetraMas": true,
+     "motivoLetra": null,
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 103
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 121
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      }
+     }
+    },
+    {
+     "texto": "Copias, borrar y PACE completo ›",
+     "donde": "div[data-pace-aj-seccion=Tus datos][data-pace-aj-plegada].pace-aj-sec › div.pace-aj-sec-titulo › button.pace-aj-sec-accion.pace-aj-solo-movil",
+     "lineas": 1,
+     "letras": 32,
+     "reserva": false,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 16.1,
+     "ancho": 193.7,
+     "natural": 193.67,
+     "margen": 2.04,
+     "margenMas": false,
+     "motivo": "se parte en 2 líneas",
+     "porLetra": 0.0639,
+     "porLetraMas": false,
+     "motivoLetra": "se parte en 2 líneas",
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 103
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "ajustes": 121
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": null,
+       "aro": 365,
+       "pieDeLaPausa": null,
+       "pantalla": 720
+      }
+     }
+    }
+   ],
+   "cerca": []
+  },
+  {
+   "momento": "1280×720 avisos bloqueados · Tus datos",
+   "medidos": 12,
+   "todos": [
+    [
+     "‹",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tus datos",
+     1,
+     null,
+     null
+    ],
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Exportar una copia",
+     1,
+     null,
+     null
+    ],
+    [
+     "Aún no has guardado ninguna copia. Sin instalar, Safari pued",
+     3,
+     null,
+     null
+    ],
+    [
+     "Importar una copia",
+     1,
+     null,
+     null
+    ],
+    [
+     "Borrar todos mis datos",
+     1,
+     null,
+     null
+    ],
+    [
+     "›",
+     1,
+     null,
+     null
+    ],
+    [
+     "PACE completo",
+     1,
+     null,
+     null
+    ],
+    [
+     "Introducir código",
+     1,
+     null,
+     null
+    ],
+    [
+     "Todo vive en este navegador y no se sincroniza con otros.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Seguridad·Privacidad",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  }
+ ]
+}

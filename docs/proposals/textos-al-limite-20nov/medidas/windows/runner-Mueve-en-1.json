@@ -1,0 +1,6521 @@
+{
+ "pantalla": "runner Mueve",
+ "lang": "en",
+ "letra": 1,
+ "filas": [
+  {
+   "momento": "extra.chair.squats · al colocarse",
+   "medidos": 39,
+   "todos": [
+    [
+     "Legs",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sit and Stand",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chair squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Calf raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chair squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Stand in front of the chair, feet hip-width apart. A stable ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit all the way down with control. Lean forward a little and",
+     2,
+     null,
+     null
+    ],
+    [
+     "Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "One more set: sit down with control and stand up without mom",
+     2,
+     null,
+     null
+    ],
+    [
+     "Standing, one hand on the chair or the desk.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Raise your heels, staying in control. Lower slowly.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Second set: up and down, slowly.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Stand in front of the chair, feet hip-width apart. A stable ",
+     2,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Use your hands if you need to. The first time, o",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Chair squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Chair squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If it is hard, rest your hands on your thighs.",
+     1,
+     7.55,
+     0.1304
+    ],
+    [
+     "Next: Calf raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Calf raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · No bouncing. If you feel unsteady, hold on with ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · No bouncing. Lower until your heel is down.",
+     1,
+     4.66,
+     0.0847
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": [
+    {
+     "texto": "Take care · No bouncing. Lower until your heel is down.",
+     "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+     "lineas": 1,
+     "letras": 55,
+     "reserva": true,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 15,
+     "ancho": 315.4,
+     "natural": 294.91,
+     "margen": 4.66,
+     "margenMas": false,
+     "motivo": "se parte en 2 líneas",
+     "porLetra": 0.0847,
+     "porLetraMas": false,
+     "motivoLetra": "se parte en 2 líneas"
+    }
+   ]
+  },
+  {
+   "momento": "extra.chair.squats · trabajando",
+   "medidos": 36,
+   "todos": [
+    [
+     "Legs",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sit and Stand",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chair squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Calf raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chair squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Stand in front of the chair, feet hip-width apart. A stable ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit all the way down with control. Lean forward a little and",
+     2,
+     null,
+     null
+    ],
+    [
+     "Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "One more set: sit down with control and stand up without mom",
+     2,
+     null,
+     null
+    ],
+    [
+     "Standing, one hand on the chair or the desk.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Raise your heels, staying in control. Lower slowly.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Second set: up and down, slowly.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sit all the way down with control. Lean forward a little and",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "of 5 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Use your hands if you need to. The first time, o",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Chair squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Chair squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If it is hard, rest your hands on your thighs.",
+     1,
+     7.55,
+     0.1304
+    ],
+    [
+     "Next: Calf raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Calf raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · No bouncing. If you feel unsteady, hold on with ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · No bouncing. Lower until your heel is down.",
+     1,
+     4.66,
+     0.0847
+    ],
+    [
+     "Take care · Use your hands if you need to. The first time, o",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish set",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": [
+    {
+     "texto": "Take care · No bouncing. Lower until your heel is down.",
+     "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+     "lineas": 1,
+     "letras": 55,
+     "reserva": true,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 15,
+     "ancho": 315.4,
+     "natural": 294.91,
+     "margen": 4.66,
+     "margenMas": false,
+     "motivo": "se parte en 2 líneas",
+     "porLetra": 0.0847,
+     "porLetraMas": false,
+     "motivoLetra": "se parte en 2 líneas"
+    }
+   ]
+  },
+  {
+   "momento": "extra.desk.pushups · al colocarse",
+   "medidos": 30,
+   "todos": [
+    [
+     "Strength",
+     1,
+     null,
+     null
+    ],
+    [
+     "Simple Push",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 2",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Incline push-ups",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Incline push-ups",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hands on a sturdy desk or the wall, a bit wider than shoulde",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lower your chest toward the desk or wall, elbows in. Push ba",
+     2,
+     null,
+     null
+    ],
+    [
+     "Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "One more set: lower with control and push.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hands on a sturdy desk or the wall, a bit wider than shoulde",
+     2,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Too hard? Use the wall, hands at chest height. T",
+     2,
+     null,
+     0.1008
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Incline push-ups",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Incline push-ups",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Stop if your form breaks.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.desk.pushups · trabajando",
+   "medidos": 27,
+   "todos": [
+    [
+     "Strength",
+     1,
+     null,
+     null
+    ],
+    [
+     "Simple Push",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 2",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Incline push-ups",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Incline push-ups",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hands on a sturdy desk or the wall, a bit wider than shoulde",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lower your chest toward the desk or wall, elbows in. Push ba",
+     2,
+     null,
+     null
+    ],
+    [
+     "Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "One more set: lower with control and push.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Lower your chest toward the desk or wall, elbows in. Push ba",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "of 5 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Too hard? Use the wall, hands at chest height. T",
+     2,
+     null,
+     0.1008
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Incline push-ups",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Incline push-ups",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Stop if your form breaks.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Too hard? Use the wall, hands at chest height. T",
+     2,
+     null,
+     0.1008
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish set",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.legs.standing · al colocarse",
+   "medidos": 39,
+   "todos": [
+    [
+     "Legs",
+     1,
+     null,
+     null
+    ],
+    [
+     "Legs in Place",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tibialis raise",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Wall sit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tibialis raise",
+     1,
+     null,
+     null
+    ],
+    [
+     "Back and glutes against the wall, feet hip-width apart, heel",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lift your toes toward your shins. Lower them slowly.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Second set, just as slowly.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Back against the wall, feet a step forward.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Slide down a little and stay. Keep breathing; do not hold yo",
+     2,
+     null,
+     null
+    ],
+    [
+     "Once more, at the height you choose.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Back and glutes against the wall, feet hip-width apart, heel",
+     2,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Small movement, no rocking back.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Tibialis raise",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Tibialis raise",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · You will feel it at the front of your shin.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Wall sit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Wall sit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Start high: no need to reach 90°. To come out, p",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · To come out, push through your feet and stand up",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.legs.standing · trabajando",
+   "medidos": 36,
+   "todos": [
+    [
+     "Legs",
+     1,
+     null,
+     null
+    ],
+    [
+     "Legs in Place",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tibialis raise",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Wall sit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tibialis raise",
+     1,
+     null,
+     null
+    ],
+    [
+     "Back and glutes against the wall, feet hip-width apart, heel",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lift your toes toward your shins. Lower them slowly.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Second set, just as slowly.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Back against the wall, feet a step forward.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Slide down a little and stay. Keep breathing; do not hold yo",
+     2,
+     null,
+     null
+    ],
+    [
+     "Once more, at the height you choose.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Lift your toes toward your shins. Lower them slowly.",
+     1,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "of 8 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Small movement, no rocking back.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Tibialis raise",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Tibialis raise",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · You will feel it at the front of your shin.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Wall sit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Wall sit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Start high: no need to reach 90°. To come out, p",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · To come out, push through your feet and stand up",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Small movement, no rocking back.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish set",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.pausa.suelo · al colocarse",
+   "medidos": 40,
+   "todos": [
+    [
+     "Floor",
+     1,
+     null,
+     null
+    ],
+    [
+     "Floor Strength",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Two-foot bridge",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Heel slide",
+     1,
+     null,
+     null
+    ],
+    [
+     "Knee crawl",
+     1,
+     null,
+     null
+    ],
+    [
+     "Two-foot bridge",
+     1,
+     null,
+     null
+    ],
+    [
+     "On your back, knees bent, feet flat and hip-width apart, clo",
+     2,
+     null,
+     null
+    ],
+    [
+     "Push through your feet, lift your pelvis and lower slowly.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Second set: up and down, slowly.",
+     1,
+     null,
+     null
+    ],
+    [
+     "On your back, knees bent, without pressing your lower back i",
+     2,
+     null,
+     null
+    ],
+    [
+     "Slide one heel along the floor without moving your pelvis, t",
+     2,
+     null,
+     null
+    ],
+    [
+     "Other leg. Slide one heel along the floor without moving you",
+     2,
+     null,
+     null
+    ],
+    [
+     "On all fours: hands under shoulders, knees under hips.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Crawl four short steps forward, slowly, moving opposite hand",
+     2,
+     null,
+     null
+    ],
+    [
+     "Back. Crawl four short steps forward, slowly, moving opposit",
+     2,
+     null,
+     null
+    ],
+    [
+     "On your back, knees bent, feet flat and hip-width apart, clo",
+     2,
+     null,
+     null
+    ],
+    [
+     "19",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Only lift as far as you can without arching your",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Two-foot bridge",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Two-foot bridge",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If your lower back hurts, lift less or stop.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · No need to straighten your leg fully. If your ba",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Your knees stay on the floor. If your wrists hur",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.pausa.suelo · trabajando",
+   "medidos": 37,
+   "todos": [
+    [
+     "Floor",
+     1,
+     null,
+     null
+    ],
+    [
+     "Floor Strength",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Two-foot bridge",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Heel slide",
+     1,
+     null,
+     null
+    ],
+    [
+     "Knee crawl",
+     1,
+     null,
+     null
+    ],
+    [
+     "Two-foot bridge",
+     1,
+     null,
+     null
+    ],
+    [
+     "On your back, knees bent, feet flat and hip-width apart, clo",
+     2,
+     null,
+     null
+    ],
+    [
+     "Push through your feet, lift your pelvis and lower slowly.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Second set: up and down, slowly.",
+     1,
+     null,
+     null
+    ],
+    [
+     "On your back, knees bent, without pressing your lower back i",
+     2,
+     null,
+     null
+    ],
+    [
+     "Slide one heel along the floor without moving your pelvis, t",
+     2,
+     null,
+     null
+    ],
+    [
+     "Other leg. Slide one heel along the floor without moving you",
+     2,
+     null,
+     null
+    ],
+    [
+     "On all fours: hands under shoulders, knees under hips.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Crawl four short steps forward, slowly, moving opposite hand",
+     2,
+     null,
+     null
+    ],
+    [
+     "Back. Crawl four short steps forward, slowly, moving opposit",
+     2,
+     null,
+     null
+    ],
+    [
+     "Push through your feet, lift your pelvis and lower slowly.",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "of 6 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Only lift as far as you can without arching your",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Two-foot bridge",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Two-foot bridge",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If your lower back hurts, lift less or stop.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · No need to straighten your leg fully. If your ba",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Your knees stay on the floor. If your wrists hur",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Only lift as far as you can without arching your",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish set",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.calves · al colocarse",
+   "medidos": 24,
+   "todos": [
+    [
+     "Calves",
+     1,
+     null,
+     null
+    ],
+    [
+     "Calf Raises Under the Desk",
+     1,
+     2.98,
+     0.114
+    ],
+    [
+     "Step 1 of 2",
+     1,
+     2.98,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     2.98,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Calf raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Calf raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Seated or standing, feet flat on the floor, hip-width apart.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Raise your heels only as far as you can control. Lower with ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Slower now: lower in 3 s. Feel the calf on each lift.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Seated or standing, feet flat on the floor, hip-width apart.",
+     2,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Small, controlled movement. Hold the desk for su",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Calf raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [
+    {
+     "texto": "Calf Raises Under the Desk",
+     "donde": "div[data-pace-session-root=true] › div[data-pace-session-header=true] › h2[data-pace-session-title=true]",
+     "lineas": 1,
+     "letras": 26,
+     "reserva": false,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 18,
+     "ancho": 175.2,
+     "natural": 214.16,
+     "margen": 2.98,
+     "margenMas": false,
+     "motivo": "se parte en 2 líneas",
+     "porLetra": 0.114,
+     "porLetraMas": false,
+     "motivoLetra": "se parte en 2 líneas",
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "runner": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": 169,
+       "aro": 307,
+       "pieDeLaPausa": null,
+       "pantalla": 640
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "runner": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": 143,
+       "aro": 307,
+       "pieDeLaPausa": null,
+       "pantalla": 640
+      }
+     }
+    },
+    {
+     "texto": "Step 1 of 2",
+     "donde": "div[data-pace-session-root=true] › div[data-pace-session-header=true] › div.pace-meta",
+     "lineas": 1,
+     "letras": 11,
+     "reserva": false,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 11,
+     "ancho": 74.7,
+     "natural": 74.66,
+     "margen": 2.98,
+     "margenMas": false,
+     "motivo": "salta de sitio",
+     "porLetra": 0.15,
+     "porLetraMas": true,
+     "motivoLetra": null,
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "runner": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": 169,
+       "aro": 307,
+       "pieDeLaPausa": null,
+       "pantalla": 640
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "runner": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": 143,
+       "aro": 307,
+       "pieDeLaPausa": null,
+       "pantalla": 640
+      }
+     }
+    },
+    {
+     "texto": "× Exit",
+     "donde": "div[data-pace-session-root=true] › div[data-pace-session-header=true] › button[data-pace-toque=true]",
+     "lineas": 1,
+     "letras": 6,
+     "reserva": false,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 13,
+     "ancho": 51.2,
+     "natural": 31.19,
+     "margen": 2.98,
+     "margenMas": false,
+     "motivo": "salta de sitio",
+     "porLetra": 0.15,
+     "porLetraMas": true,
+     "motivoLetra": null,
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "runner": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": 169,
+       "aro": 307,
+       "pieDeLaPausa": null,
+       "pantalla": 640
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "runner": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": 143,
+       "aro": 307,
+       "pieDeLaPausa": null,
+       "pantalla": 640
+      }
+     }
+    }
+   ],
+   "cerca": []
+  },
+  {
+   "momento": "extra.calves · trabajando",
+   "medidos": 21,
+   "todos": [
+    [
+     "Calves",
+     1,
+     null,
+     null
+    ],
+    [
+     "Calf Raises Under the Desk",
+     1,
+     2.98,
+     0.114
+    ],
+    [
+     "Step 1 of 2",
+     1,
+     2.98,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     2.98,
+     null
+    ],
+    [
+     "Calf raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Calf raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Seated or standing, feet flat on the floor, hip-width apart.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Raise your heels only as far as you can control. Lower with ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Slower now: lower in 3 s. Feel the calf on each lift.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Raise your heels only as far as you can control. Lower with ",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "of 25 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Small, controlled movement. Hold the desk for su",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Small, controlled movement. Hold the desk for su",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Calf raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish set",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.glutes.stealth · al colocarse",
+   "medidos": 32,
+   "todos": [
+    [
+     "Glutes",
+     1,
+     null,
+     null
+    ],
+    [
+     "Seated Glute Squeezes",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Glute squeeze",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Calf raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Glute squeeze",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sit up tall, feet flat.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Squeeze your glutes moderately for two seconds and release. ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Let go.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now hold the squeeze for about eight seconds and release. Th",
+     2,
+     null,
+     null
+    ],
+    [
+     "Finish by raising and lowering your heels, gently.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sit up tall, feet flat.",
+     1,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Don't hold your breath. Let go fully between squ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Glute squeeze",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Glute squeeze",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Keep your breathing easy during the hold.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.glutes.stealth · trabajando",
+   "medidos": 29,
+   "todos": [
+    [
+     "Glutes",
+     1,
+     null,
+     null
+    ],
+    [
+     "Seated Glute Squeezes",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Glute squeeze",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Calf raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Glute squeeze",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sit up tall, feet flat.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Squeeze your glutes moderately for two seconds and release. ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Let go.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now hold the squeeze for about eight seconds and release. Th",
+     2,
+     null,
+     null
+    ],
+    [
+     "Finish by raising and lowering your heels, gently.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Squeeze your glutes moderately for two seconds and release. ",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "of 20 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Don't hold your breath. Let go fully between squ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Glute squeeze",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Glute squeeze",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Keep your breathing easy during the hold.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Don't hold your breath. Let go fully between squ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish set",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.core.stealth · al colocarse",
+   "medidos": 32,
+   "todos": [
+    [
+     "Core",
+     1,
+     null,
+     null
+    ],
+    [
+     "Silent Core",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Seated leg raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Seated leg raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "A chair without wheels. Sit all the way back, back supported",
+     2,
+     null,
+     null
+    ],
+    [
+     "Raise your legs and hold, keeping your lower back supported.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Let go.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hold the position. Breathe normally.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Last one. Hold while your lower back stays supported.",
+     2,
+     null,
+     null
+    ],
+    [
+     "A chair without wheels. Sit all the way back, back supported",
+     2,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · To make it gentler, lift one foot at a time, kne",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Seated leg raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Seated leg raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If your lower back lifts off, put your feet on t",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Finish early if you lose the support of your bac",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.core.stealth · trabajando",
+   "medidos": 29,
+   "todos": [
+    [
+     "Core",
+     1,
+     null,
+     null
+    ],
+    [
+     "Silent Core",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Seated leg raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Seated leg raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "A chair without wheels. Sit all the way back, back supported",
+     2,
+     null,
+     null
+    ],
+    [
+     "Raise your legs and hold, keeping your lower back supported.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Let go.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hold the position. Breathe normally.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Last one. Hold while your lower back stays supported.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Raise your legs and hold, keeping your lower back supported.",
+     2,
+     null,
+     null
+    ],
+    [
+     "30",
+     1,
+     null,
+     null
+    ],
+    [
+     "seconds",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · To make it gentler, lift one foot at a time, kne",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Seated leg raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Seated leg raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If your lower back lifts off, put your feet on t",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Finish early if you lose the support of your bac",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · To make it gentler, lift one foot at a time, kne",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.banda.espalda · al colocarse",
+   "medidos": 47,
+   "todos": [
+    [
+     "Back",
+     1,
+     null,
+     null
+    ],
+    [
+     "Back with a Band",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Band pull-apart",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Band row",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hand-resisted row",
+     1,
+     null,
+     null
+    ],
+    [
+     "Band pull-apart",
+     1,
+     null,
+     null
+    ],
+    [
+     "Standing, band in front of your chest, arms almost straight.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Pull the band apart, squeezing your shoulder blades, without",
+     2,
+     null,
+     null
+    ],
+    [
+     "Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Stand on the middle of a long band with both feet. Knees sli",
+     2,
+     null,
+     null
+    ],
+    [
+     "Long back, straight arms: draw your elbows back toward your ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Standing. With one hand, loosely hold your other wrist in fr",
+     2,
+     null,
+     null
+    ],
+    [
+     "Draw that elbow back while your other hand gently resists, t",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Draw that elbow back while your other hand gently resi",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Draw that elbow back while your other hand gently res",
+     2,
+     null,
+     null
+    ],
+    [
+     "Standing, band in front of your chest, arms almost straight.",
+     2,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · No band? Skip this step: the routine still count",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Band row",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Band row",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · A light, undamaged band, firmly underfoot; don't",
+     2,
+     7.59,
+     0.1289
+    ],
+    [
+     "Next: Hand-resisted row",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Hand-resisted row",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Don't squeeze hard. Keep breathing normally.",
+     1,
+     1.01,
+     0.0182
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [
+    {
+     "texto": "Take care · Don't squeeze hard. Keep breathing normally.",
+     "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+     "lineas": 1,
+     "letras": 56,
+     "reserva": true,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 15,
+     "ancho": 319,
+     "natural": 298.55,
+     "margen": 1.01,
+     "margenMas": false,
+     "motivo": "se parte en 2 líneas",
+     "porLetra": 0.0182,
+     "porLetraMas": false,
+     "motivoLetra": "se parte en 2 líneas",
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "runner": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": 163,
+       "aro": 307,
+       "pieDeLaPausa": null,
+       "pantalla": 640
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "runner": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": 163,
+       "aro": 307,
+       "pieDeLaPausa": null,
+       "pantalla": 640
+      }
+     }
+    }
+   ],
+   "cerca": []
+  },
+  {
+   "momento": "extra.banda.espalda · trabajando",
+   "medidos": 45,
+   "todos": [
+    [
+     "Back",
+     1,
+     null,
+     null
+    ],
+    [
+     "Back with a Band",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Band pull-apart",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Band row",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hand-resisted row",
+     1,
+     null,
+     null
+    ],
+    [
+     "Band pull-apart",
+     1,
+     null,
+     null
+    ],
+    [
+     "Standing, band in front of your chest, arms almost straight.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Pull the band apart, squeezing your shoulder blades, without",
+     2,
+     null,
+     null
+    ],
+    [
+     "Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Stand on the middle of a long band with both feet. Knees sli",
+     2,
+     null,
+     null
+    ],
+    [
+     "Long back, straight arms: draw your elbows back toward your ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Standing. With one hand, loosely hold your other wrist in fr",
+     2,
+     null,
+     null
+    ],
+    [
+     "Draw that elbow back while your other hand gently resists, t",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Draw that elbow back while your other hand gently resi",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Draw that elbow back while your other hand gently res",
+     2,
+     null,
+     null
+    ],
+    [
+     "Pull the band apart, squeezing your shoulder blades, without",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "of 8 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Skip this step",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · No band? Skip this step: the routine still count",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Band row",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Band row",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · A light, undamaged band, firmly underfoot; don't",
+     2,
+     7.59,
+     0.1289
+    ],
+    [
+     "Next: Hand-resisted row",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Hand-resisted row",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Don't squeeze hard. Keep breathing normally.",
+     1,
+     1.01,
+     0.0182
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · No band? Skip this step: the routine still count",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish set",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.hang.bar · al colocarse",
+   "medidos": 36,
+   "todos": [
+    [
+     "Traction",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hanging",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Passive hang",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Active hang",
+     1,
+     null,
+     null
+    ],
+    [
+     "Passive hang",
+     1,
+     null,
+     null
+    ],
+    [
+     "Grip a sturdy bar that can take your weight, hands shoulder-",
+     2,
+     null,
+     null
+    ],
+    [
+     "Hang relaxed, arms straight. Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Shake out your arms.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hang and draw your shoulders slightly away from your ears, w",
+     2,
+     null,
+     null
+    ],
+    [
+     "Shoulders loose, without letting go of the bar. Let the back",
+     2,
+     null,
+     null
+    ],
+    [
+     "Grip a sturdy bar that can take your weight, hands shoulder-",
+     2,
+     null,
+     null
+    ],
+    [
+     "19",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Step in and out with your feet, no jumping. Come",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Active hang",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Active hang",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Gently, without forcing your shoulders back. Fee",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Passive hang",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Passive hang",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Breathe deep and loosen your shoulders.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.hang.bar · trabajando",
+   "medidos": 33,
+   "todos": [
+    [
+     "Traction",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hanging",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Passive hang",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Active hang",
+     1,
+     null,
+     null
+    ],
+    [
+     "Passive hang",
+     1,
+     null,
+     null
+    ],
+    [
+     "Grip a sturdy bar that can take your weight, hands shoulder-",
+     2,
+     null,
+     null
+    ],
+    [
+     "Hang relaxed, arms straight. Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Shake out your arms.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hang and draw your shoulders slightly away from your ears, w",
+     2,
+     null,
+     null
+    ],
+    [
+     "Shoulders loose, without letting go of the bar. Let the back",
+     2,
+     null,
+     null
+    ],
+    [
+     "Hang relaxed, arms straight. Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "30",
+     1,
+     null,
+     null
+    ],
+    [
+     "seconds",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Step in and out with your feet, no jumping. Come",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Active hang",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Active hang",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Gently, without forcing your shoulders back. Fee",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Passive hang",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Passive hang",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Breathe deep and loosen your shoulders.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Step in and out with your feet, no jumping. Come",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.push.ladder · al colocarse",
+   "medidos": 37,
+   "todos": [
+    [
+     "Push",
+     1,
+     null,
+     null
+    ],
+    [
+     "Push · Progression",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Incline push-ups",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Desk pike",
+     1,
+     null,
+     null
+    ],
+    [
+     "Incline push-ups",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hands on the edge of a sturdy desk, body straight on a diago",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lower your chest toward the edge, elbows close to your body.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hands on the desk, walk your feet in and lift your hips: an ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Bend your elbows and bring your head toward the desk, betwee",
+     2,
+     null,
+     null
+    ],
+    [
+     "Negatives: lower in 5 seconds and rise normally.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hands on the edge of a sturdy desk, body straight on a diago",
+     2,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Only go as low as you control. The higher the su",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Desk pike",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Desk pike",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Short range: your head never touches the desk, a",
+     3,
+     null,
+     null
+    ],
+    [
+     "Next: Incline push-ups",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Incline push-ups",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If it's hard, put your hands on a higher surface",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.push.ladder · trabajando",
+   "medidos": 34,
+   "todos": [
+    [
+     "Push",
+     1,
+     null,
+     null
+    ],
+    [
+     "Push · Progression",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Incline push-ups",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Desk pike",
+     1,
+     null,
+     null
+    ],
+    [
+     "Incline push-ups",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hands on the edge of a sturdy desk, body straight on a diago",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lower your chest toward the edge, elbows close to your body.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hands on the desk, walk your feet in and lift your hips: an ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Bend your elbows and bring your head toward the desk, betwee",
+     2,
+     null,
+     null
+    ],
+    [
+     "Negatives: lower in 5 seconds and rise normally.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Lower your chest toward the edge, elbows close to your body.",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "of 10 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Only go as low as you control. The higher the su",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Desk pike",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Desk pike",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Short range: your head never touches the desk, a",
+     3,
+     null,
+     null
+    ],
+    [
+     "Next: Incline push-ups",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Incline push-ups",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If it's hard, put your hands on a higher surface",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Only go as low as you control. The higher the su",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish set",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.chair.dips · al colocarse",
+   "medidos": 32,
+   "todos": [
+    [
+     "Triceps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chair Dips",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chair dips",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chair dips",
+     1,
+     null,
+     null
+    ],
+    [
+     "Edge of a chair with no wheels, against the wall. Hands by y",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lower by bending your elbows back. Rise by pushing through y",
+     2,
+     null,
+     null
+    ],
+    [
+     "Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Lower with control, without dropping. Push and rise.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Last ones. Slow and clean, push from the triceps.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Edge of a chair with no wheels, against the wall. Hands by y",
+     2,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Only as low as your shoulder is comfortable, nev",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Chair dips",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Chair dips",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Keep your shoulders away from your ears.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Stop if your form breaks. Better 6 good ones tha",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.chair.dips · trabajando",
+   "medidos": 29,
+   "todos": [
+    [
+     "Triceps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chair Dips",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chair dips",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chair dips",
+     1,
+     null,
+     null
+    ],
+    [
+     "Edge of a chair with no wheels, against the wall. Hands by y",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lower by bending your elbows back. Rise by pushing through y",
+     2,
+     null,
+     null
+    ],
+    [
+     "Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Lower with control, without dropping. Push and rise.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Last ones. Slow and clean, push from the triceps.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Lower by bending your elbows back. Rise by pushing through y",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "of 12 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Only as low as your shoulder is comfortable, nev",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Chair dips",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Chair dips",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Keep your shoulders away from your ears.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Stop if your form breaks. Better 6 good ones tha",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Only as low as your shoulder is comfortable, nev",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish set",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.wall.sit · al colocarse",
+   "medidos": 30,
+   "todos": [
+    [
+     "Legs",
+     1,
+     null,
+     null
+    ],
+    [
+     "Wall Sit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 2",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Wall sit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Wall sit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Back against the wall, feet a step forward. Slide down a lit",
+     2,
+     null,
+     null
+    ],
+    [
+     "Stay at the height you choose, never past 90°. Keep breathin",
+     2,
+     null,
+     null
+    ],
+    [
+     "Easy.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Second round. Return to the position and hold.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Back against the wall, feet a step forward. Slide down a lit",
+     2,
+     null,
+     null
+    ],
+    [
+     "19",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Start high: the less you sink, the gentler it is",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Wall sit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Wall sit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Choose a height that lets you breathe easy.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.wall.sit · trabajando",
+   "medidos": 27,
+   "todos": [
+    [
+     "Legs",
+     1,
+     null,
+     null
+    ],
+    [
+     "Wall Sit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 2",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Wall sit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Wall sit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Back against the wall, feet a step forward. Slide down a lit",
+     2,
+     null,
+     null
+    ],
+    [
+     "Stay at the height you choose, never past 90°. Keep breathin",
+     2,
+     null,
+     null
+    ],
+    [
+     "Easy.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Second round. Return to the position and hold.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Stay at the height you choose, never past 90°. Keep breathin",
+     2,
+     null,
+     null
+    ],
+    [
+     "60",
+     1,
+     null,
+     null
+    ],
+    [
+     "seconds",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Start high: the less you sink, the gentler it is",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Wall sit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Wall sit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Choose a height that lets you breathe easy.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Start high: the less you sink, the gentler it is",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.legs.single · al colocarse",
+   "medidos": 57,
+   "todos": [
+    [
+     "Unilateral",
+     1,
+     null,
+     null
+    ],
+    [
+     "Legs · Single-leg Strength",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hip hinge",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Bulgarian squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "ATG split squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Calf raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hip hinge",
+     1,
+     null,
+     null
+    ],
+    [
+     "Standing, feet hip-width apart, hands on your hips.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Send your hips back with a long back and soft knees, then re",
+     2,
+     null,
+     null
+    ],
+    [
+     "Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Stable chair against the wall, behind you. Back instep on it",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lower straight down over your front leg and rise. About 6 pe",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Lower straight down over your front leg and rise. Abou",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Lower straight down over your front leg and rise. Abo",
+     2,
+     null,
+     null
+    ],
+    [
+     "Stand and take a long step forward. A hand on the desk if yo",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lunge down and up. Your knee may pass your foot; no need to ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Lunge down and up. Your knee may pass your foot; no ne",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Lunge down and up. Your knee may pass your foot; no n",
+     2,
+     null,
+     null
+    ],
+    [
+     "On one leg: lift your heel as high as you control and lower ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. On one leg: lift your heel as high as you control and ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. On one leg: lift your heel as high as you control and",
+     2,
+     null,
+     null
+    ],
+    [
+     "Standing, feet hip-width apart, hands on your hips.",
+     1,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Your trunk tilts because your hips go back, with",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Bulgarian squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Bulgarian squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · A hand on the desk or wall if you lose balance. ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: ATG split squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: ATG split squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If your knee complains, go less deep. Keep your ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Calf raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Calf raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · A hand on the desk for balance. No bouncing.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.legs.single · trabajando",
+   "medidos": 54,
+   "todos": [
+    [
+     "Unilateral",
+     1,
+     null,
+     null
+    ],
+    [
+     "Legs · Single-leg Strength",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hip hinge",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Bulgarian squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "ATG split squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Calf raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hip hinge",
+     1,
+     null,
+     null
+    ],
+    [
+     "Standing, feet hip-width apart, hands on your hips.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Send your hips back with a long back and soft knees, then re",
+     2,
+     null,
+     null
+    ],
+    [
+     "Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Stable chair against the wall, behind you. Back instep on it",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lower straight down over your front leg and rise. About 6 pe",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Lower straight down over your front leg and rise. Abou",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Lower straight down over your front leg and rise. Abo",
+     2,
+     null,
+     null
+    ],
+    [
+     "Stand and take a long step forward. A hand on the desk if yo",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lunge down and up. Your knee may pass your foot; no need to ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Lunge down and up. Your knee may pass your foot; no ne",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Lunge down and up. Your knee may pass your foot; no n",
+     2,
+     null,
+     null
+    ],
+    [
+     "On one leg: lift your heel as high as you control and lower ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. On one leg: lift your heel as high as you control and ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. On one leg: lift your heel as high as you control and",
+     2,
+     null,
+     null
+    ],
+    [
+     "Send your hips back with a long back and soft knees, then re",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "of 6 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Your trunk tilts because your hips go back, with",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Bulgarian squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Bulgarian squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · A hand on the desk or wall if you lose balance. ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: ATG split squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: ATG split squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If your knee complains, go less deep. Keep your ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Calf raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Calf raises",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · A hand on the desk for balance. No bouncing.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Your trunk tilts because your hips go back, with",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish set",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.core.plank · al colocarse",
+   "medidos": 51,
+   "todos": [
+    [
+     "Core",
+     1,
+     null,
+     null
+    ],
+    [
+     "Core · Plank",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 5",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Plank",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Side plank",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hollow hold",
+     1,
+     null,
+     null
+    ],
+    [
+     "Bridge with march",
+     1,
+     null,
+     null
+    ],
+    [
+     "Plank",
+     1,
+     null,
+     null
+    ],
+    [
+     "Lie face down on the floor and rest your forearms under your",
+     2,
+     null,
+     null
+    ],
+    [
+     "Body in a straight line from head to heels. Squeeze glutes a",
+     2,
+     null,
+     null
+    ],
+    [
+     "Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "On your side, elbow under your shoulder, legs straight and s",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. On your side, elbow under your shoulder, legs straight",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. On your side, elbow under your shoulder, legs straigh",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lying on your back: press your lower back down and lift your",
+     2,
+     null,
+     null
+    ],
+    [
+     "On your back, feet down close to your glutes.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Lift your hips and keep them up. Raise one knee, then the ot",
+     2,
+     null,
+     null
+    ],
+    [
+     "Last one. Return to the plank with your body in a straight l",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lie face down on the floor and rest your forearms under your",
+     2,
+     null,
+     null
+    ],
+    [
+     "19",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Gentler with your knees down: a straight line fr",
+     3,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Side plank",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Side plank",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Gentler with both knees bent and the bottom one ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Hollow hold",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Hollow hold",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · To make it gentler, bend your knees and keep you",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · If your pelvis drops or your lower back hurts, p",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Rest your knees if the line breaks.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.core.plank · trabajando",
+   "medidos": 48,
+   "todos": [
+    [
+     "Core",
+     1,
+     null,
+     null
+    ],
+    [
+     "Core · Plank",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 5",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Plank",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Side plank",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hollow hold",
+     1,
+     null,
+     null
+    ],
+    [
+     "Bridge with march",
+     1,
+     null,
+     null
+    ],
+    [
+     "Plank",
+     1,
+     null,
+     null
+    ],
+    [
+     "Lie face down on the floor and rest your forearms under your",
+     2,
+     null,
+     null
+    ],
+    [
+     "Body in a straight line from head to heels. Squeeze glutes a",
+     2,
+     null,
+     null
+    ],
+    [
+     "Breathe.",
+     1,
+     null,
+     null
+    ],
+    [
+     "On your side, elbow under your shoulder, legs straight and s",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. On your side, elbow under your shoulder, legs straight",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. On your side, elbow under your shoulder, legs straigh",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lying on your back: press your lower back down and lift your",
+     2,
+     null,
+     null
+    ],
+    [
+     "On your back, feet down close to your glutes.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Lift your hips and keep them up. Raise one knee, then the ot",
+     2,
+     null,
+     null
+    ],
+    [
+     "Last one. Return to the plank with your body in a straight l",
+     2,
+     null,
+     null
+    ],
+    [
+     "Body in a straight line from head to heels. Squeeze glutes a",
+     2,
+     null,
+     null
+    ],
+    [
+     "45",
+     1,
+     null,
+     null
+    ],
+    [
+     "seconds",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Gentler with your knees down: a straight line fr",
+     3,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Side plank",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Side plank",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Gentler with both knees bent and the bottom one ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Hollow hold",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Hollow hold",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready to continue",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · To make it gentler, bend your knees and keep you",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · If your pelvis drops or your lower back hurts, p",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Rest your knees if the line breaks.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Gentler with your knees down: a straight line fr",
+     3,
+     null,
+     null
+    ],
+    [
+     "Next: Rest",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  }
+ ]
+}

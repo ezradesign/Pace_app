@@ -1,0 +1,1117 @@
+{
+ "pantalla": "home",
+ "lang": "en",
+ "vp": {
+  "w": 360,
+  "h": 640
+ },
+ "letra": 1,
+ "filas": [
+  {
+   "momento": "la tarjeta corta",
+   "medidos": 20,
+   "todos": [
+    [
+     "Min",
+     1,
+     null,
+     null
+    ],
+    [
+     "15",
+     1,
+     null,
+     null
+    ],
+    [
+     "25",
+     1,
+     null,
+     null
+    ],
+    [
+     "35",
+     1,
+     null,
+     null
+    ],
+    [
+     "45",
+     1,
+     null,
+     null
+    ],
+    [
+     "Other",
+     1,
+     null,
+     null
+    ],
+    [
+     "Manual Focus",
+     1,
+     null,
+     null
+    ],
+    [
+     "25:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep focus",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start Focus",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cycle 1 / 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "Activities",
+     1,
+     null,
+     null
+    ],
+    [
+     "Breathe",
+     1,
+     null,
+     null
+    ],
+    [
+     "Stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Move",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hydrate",
+     1,
+     null,
+     null
+    ],
+    [
+     "How long are you working today?",
+     1,
+     null,
+     null
+    ],
+    [
+     "Add to calendar",
+     1,
+     null,
+     null
+    ],
+    [
+     "You choose the hours",
+     1,
+     null,
+     null
+    ],
+    [
+     "Plan my day",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "la pregunta",
+   "medidos": 29,
+   "todos": [
+    [
+     "Min",
+     1,
+     null,
+     null
+    ],
+    [
+     "15",
+     1,
+     null,
+     null
+    ],
+    [
+     "25",
+     1,
+     null,
+     null
+    ],
+    [
+     "35",
+     1,
+     null,
+     null
+    ],
+    [
+     "45",
+     1,
+     null,
+     null
+    ],
+    [
+     "Other",
+     1,
+     null,
+     null
+    ],
+    [
+     "Manual Focus",
+     1,
+     null,
+     null
+    ],
+    [
+     "25:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep focus",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start Focus",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cycle 1 / 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "How long are you working today?",
+     1,
+     null,
+     null
+    ],
+    [
+     "No plan today",
+     1,
+     null,
+     null
+    ],
+    [
+     "9:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "12:30",
+     1,
+     null,
+     null
+    ],
+    [
+     "·",
+     1,
+     null,
+     null
+    ],
+    [
+     "1 h",
+     1,
+     null,
+     null
+    ],
+    [
+     "17:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start",
+     1,
+     null,
+     null
+    ],
+    [
+     "have lunch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish",
+     1,
+     null,
+     null
+    ],
+    [
+     "One hour",
+     1,
+     null,
+     null
+    ],
+    [
+     "Until 11:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Two hours",
+     1,
+     null,
+     null
+    ],
+    [
+     "Until 12:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Half day",
+     1,
+     null,
+     null
+    ],
+    [
+     "From 10:00 to 13:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Full day",
+     1,
+     null,
+     null
+    ],
+    [
+     "From 10:00 to 17:00",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "el día servido llegando a las 10:00",
+   "medidos": 28,
+   "todos": [
+    [
+     "Min",
+     1,
+     null,
+     null
+    ],
+    [
+     "15",
+     1,
+     null,
+     null
+    ],
+    [
+     "25",
+     1,
+     null,
+     null
+    ],
+    [
+     "35",
+     1,
+     null,
+     null
+    ],
+    [
+     "45",
+     1,
+     null,
+     null
+    ],
+    [
+     "Other",
+     1,
+     null,
+     null
+    ],
+    [
+     "Block 1 of 7",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your day, until 17:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "45:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep work",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start the day",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cycle 1 / 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "Full day",
+     1,
+     null,
+     null
+    ],
+    [
+     "9:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "– · lunch · · today 10:00–17:00",
+     2,
+     null,
+     null
+    ],
+    [
+     "17:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "12:30",
+     1,
+     null,
+     null
+    ],
+    [
+     "1 h",
+     1,
+     null,
+     null
+    ],
+    [
+     "Change",
+     1,
+     null,
+     null
+    ],
+    [
+     "No plan today",
+     1,
+     null,
+     null
+    ],
+    [
+     "See all",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now10:00",
+     2,
+     null,
+     null
+    ],
+    [
+     "Focus · block 1 of 7",
+     1,
+     null,
+     null
+    ],
+    [
+     "45 min · start with the timer above",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next10:45",
+     2,
+     null,
+     null
+    ],
+    [
+     "Simple Push",
+     1,
+     null,
+     null
+    ],
+    [
+     "2 min · Shoulders: unmoved today",
+     1,
+     null,
+     null
+    ],
+    [
+     "Another",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "el día servido al empezar",
+   "medidos": 28,
+   "todos": [
+    [
+     "Min",
+     1,
+     null,
+     null
+    ],
+    [
+     "15",
+     1,
+     null,
+     null
+    ],
+    [
+     "25",
+     1,
+     null,
+     null
+    ],
+    [
+     "35",
+     1,
+     null,
+     null
+    ],
+    [
+     "45",
+     1,
+     null,
+     null
+    ],
+    [
+     "Other",
+     1,
+     null,
+     null
+    ],
+    [
+     "Block 1 of 8",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your day, until 17:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "45:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep work",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start the day",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cycle 1 / 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "Full day",
+     1,
+     null,
+     null
+    ],
+    [
+     "9:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "– · lunch ·",
+     1,
+     null,
+     null
+    ],
+    [
+     "17:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "12:30",
+     1,
+     null,
+     null
+    ],
+    [
+     "1 h",
+     1,
+     null,
+     null
+    ],
+    [
+     "Change",
+     1,
+     null,
+     null
+    ],
+    [
+     "No plan today",
+     1,
+     null,
+     null
+    ],
+    [
+     "See all",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now9:00",
+     2,
+     null,
+     null
+    ],
+    [
+     "Focus · block 1 of 8",
+     1,
+     null,
+     null
+    ],
+    [
+     "45 min · start with the timer above",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next9:45",
+     2,
+     null,
+     null
+    ],
+    [
+     "Simple Push",
+     1,
+     null,
+     null
+    ],
+    [
+     "2 min · Shoulders: unmoved today",
+     1,
+     null,
+     null
+    ],
+    [
+     "Another",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "el día ya contestado",
+   "medidos": 21,
+   "todos": [
+    [
+     "Min",
+     1,
+     null,
+     null
+    ],
+    [
+     "15",
+     1,
+     null,
+     null
+    ],
+    [
+     "25",
+     1,
+     null,
+     null
+    ],
+    [
+     "35",
+     1,
+     null,
+     null
+    ],
+    [
+     "45",
+     1,
+     null,
+     null
+    ],
+    [
+     "Other",
+     1,
+     null,
+     null
+    ],
+    [
+     "Manual Focus",
+     1,
+     null,
+     null
+    ],
+    [
+     "25:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep focus",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start Focus",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cycle 1 / 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "Activities",
+     1,
+     null,
+     null
+    ],
+    [
+     "Breathe",
+     1,
+     null,
+     null
+    ],
+    [
+     "Stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Move",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hydrate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Today, like every Thursday",
+     1,
+     null,
+     null
+    ],
+    [
+     "Add to calendar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Full day",
+     1,
+     null,
+     null
+    ],
+    [
+     "Today is different",
+     1,
+     null,
+     null
+    ],
+    [
+     "Plan my day",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "la pausa abierta",
+   "medidos": 28,
+   "todos": [
+    [
+     "Min",
+     1,
+     null,
+     null
+    ],
+    [
+     "15",
+     1,
+     null,
+     null
+    ],
+    [
+     "25",
+     1,
+     null,
+     null
+    ],
+    [
+     "35",
+     1,
+     null,
+     null
+    ],
+    [
+     "45",
+     1,
+     null,
+     null
+    ],
+    [
+     "Other",
+     1,
+     null,
+     null
+    ],
+    [
+     "Block 2 of 8",
+     1,
+     null,
+     null
+    ],
+    [
+     "Your day, until 17:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "45:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Break over",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start block 2",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cycle 2 / 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "Full day",
+     1,
+     null,
+     null
+    ],
+    [
+     "9:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "– · lunch ·",
+     1,
+     null,
+     null
+    ],
+    [
+     "17:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "12:30",
+     1,
+     null,
+     null
+    ],
+    [
+     "1 h",
+     1,
+     null,
+     null
+    ],
+    [
+     "Change",
+     1,
+     null,
+     null
+    ],
+    [
+     "No plan today",
+     1,
+     null,
+     null
+    ],
+    [
+     "See all",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now9:50",
+     2,
+     null,
+     null
+    ],
+    [
+     "Focus · block 2 of 8",
+     1,
+     null,
+     null
+    ],
+    [
+     "45 min · Deep work",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next10:35",
+     2,
+     null,
+     null
+    ],
+    [
+     "Calf Raises Under the Desk",
+     2,
+     null,
+     null
+    ],
+    [
+     "2 min · Legs: unmoved today",
+     1,
+     null,
+     null
+    ],
+    [
+     "Another",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "el bloque terminado al volver",
+   "medidos": 21,
+   "todos": [
+    [
+     "Min",
+     1,
+     null,
+     null
+    ],
+    [
+     "15",
+     1,
+     null,
+     null
+    ],
+    [
+     "25",
+     1,
+     null,
+     null
+    ],
+    [
+     "35",
+     1,
+     null,
+     null
+    ],
+    [
+     "45",
+     1,
+     null,
+     null
+    ],
+    [
+     "Other",
+     1,
+     null,
+     null
+    ],
+    [
+     "Manual Focus",
+     1,
+     null,
+     null
+    ],
+    [
+     "00:00",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cycle complete",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start another cycle",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next · Cycle 2 / 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "Activities",
+     1,
+     null,
+     null
+    ],
+    [
+     "Breathe",
+     1,
+     null,
+     null
+    ],
+    [
+     "Stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Move",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hydrate",
+     1,
+     null,
+     null
+    ],
+    [
+     "How long are you working today?",
+     1,
+     null,
+     null
+    ],
+    [
+     "Add to calendar",
+     1,
+     null,
+     null
+    ],
+    [
+     "You choose the hours",
+     1,
+     null,
+     null
+    ],
+    [
+     "Plan my day",
+     1,
+     null,
+     null
+    ],
+    [
+     "New stamp · First step",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  }
+ ]
+}

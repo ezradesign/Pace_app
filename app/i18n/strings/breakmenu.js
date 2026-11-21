@@ -14,7 +14,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'break.tag':                     'Ciclo completado',
     /* Antes de hacer la pausa, no «Pausa bien hecha»: el mismo título que con jornada (auditoría de Fable, F3). */
     'break.title':                   'Tu pausa',
-    'break.subtitle':                'Has cerrado un bloque. Elige tu pausa.',
+    'break.subtitle':                'Bloque cerrado. Elige tu pausa.',
     'break.breathe.label':           'Respira',
     'break.breathe.desc':            '2 min para volver al centro',
     'break.stretch.label':           'Estira',

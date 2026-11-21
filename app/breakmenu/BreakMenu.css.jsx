@@ -72,11 +72,11 @@
    (tests/pausa-sin-repetir.spec.js). */
 .pace-break-otras {
   display: flex; flex-wrap: nowrap; justify-content: center; align-items: center;
-  gap: 4px 16px; margin: 6px 0 0;
+  gap: 4px 12px; margin: 6px 0 0;   /* 12 y no 16: a 360 px, «Muévete» se salía 7 px por la derecha (Ez, 7A del 20 nov.) */
 }
 .pace-break-otra {
   --c: var(--ink-2);
-  display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 2px;
+  display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 2px;
   background: none; border: 0; cursor: pointer; color: var(--ink); white-space: nowrap;
   font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 17px; line-height: 1;
 }

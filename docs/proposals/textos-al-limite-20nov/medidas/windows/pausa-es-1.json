@@ -1,0 +1,99 @@
+{
+ "pantalla": "pausa",
+ "lang": "es",
+ "letra": 1,
+ "filas": [
+  {
+   "momento": "la pausa por libre",
+   "medidos": 14,
+   "todos": [
+    [
+     "×",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ciclo completado",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tu pausa",
+     1,
+     null,
+     null
+    ],
+    [
+     "Has cerrado un bloque. Elige tu pausa.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hoy aún no hay sesión de Estira",
+     2,
+     null,
+     null
+    ],
+    [
+     "Espalda de pie",
+     1,
+     null,
+     null
+    ],
+    [
+     "3–4",
+     1,
+     null,
+     null
+    ],
+    [
+     "min",
+     1,
+     null,
+     null
+    ],
+    [
+     "Estira",
+     1,
+     null,
+     null
+    ],
+    [
+     "Empezar",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hidrátate",
+     1,
+     null,
+     null
+    ],
+    [
+     "Respira",
+     1,
+     null,
+     null
+    ],
+    [
+     "Muévete",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ahora no",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  }
+ ]
+}

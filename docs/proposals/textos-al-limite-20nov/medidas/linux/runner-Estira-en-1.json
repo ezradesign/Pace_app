@@ -1,0 +1,9141 @@
+{
+ "pantalla": "runner Estira",
+ "lang": "en",
+ "letra": 1,
+ "filas": [
+  {
+   "momento": "move.neck.3 · al colocarse",
+   "medidos": 39,
+   "todos": [
+    [
+     "Neck",
+     1,
+     null,
+     null
+    ],
+    [
+     "Gentle Neck",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chin tucks",
+     1,
+     null,
+     null
+    ],
+    [
+     "Slow rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Neck tilt",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chin tucks",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sit tall, shoulders loose. Look straight ahead.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Glide your chin straight back, hold three seconds and return",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit tall, with your chin level.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Turn slowly to look over one shoulder, wait two seconds and ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit tall, let your shoulders drop.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ease your ear toward your shoulder, not trying to touch it. ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Ease your ear toward your shoulder, not trying to touc",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Ease your ear toward your shoulder, not trying to tou",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit tall, shoulders loose. Look straight ahead.",
+     1,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Small range. Your head goes back, not down.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Only turn as far as feels comfortable, without f",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Tilt with control, without pulling with your han",
+     2,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Slow rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.neck.3 · trabajando",
+   "medidos": 36,
+   "todos": [
+    [
+     "Neck",
+     1,
+     null,
+     null
+    ],
+    [
+     "Gentle Neck",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chin tucks",
+     1,
+     null,
+     null
+    ],
+    [
+     "Slow rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Neck tilt",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chin tucks",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sit tall, shoulders loose. Look straight ahead.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Glide your chin straight back, hold three seconds and return",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit tall, with your chin level.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Turn slowly to look over one shoulder, wait two seconds and ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit tall, let your shoulders drop.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ease your ear toward your shoulder, not trying to touch it. ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Ease your ear toward your shoulder, not trying to touc",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Ease your ear toward your shoulder, not trying to tou",
+     2,
+     null,
+     null
+    ],
+    [
+     "Glide your chin straight back, hold three seconds and return",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "of 5 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Small range. Your head goes back, not down.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Only turn as far as feels comfortable, without f",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Tilt with control, without pulling with your han",
+     2,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Small range. Your head goes back, not down.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Slow rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish set",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.shoulder.circles · al colocarse",
+   "medidos": 29,
+   "todos": [
+    [
+     "Shoulders",
+     1,
+     null,
+     null
+    ],
+    [
+     "Free Arms",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Arm circles",
+     1,
+     null,
+     null
+    ],
+    [
+     "Scapular wall slides",
+     1,
+     null,
+     null
+    ],
+    [
+     "External rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Arm circles",
+     1,
+     null,
+     null
+    ],
+    [
+     "Standing, arm straight: slow circles, four forward and four ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Back. Standing, arm straight: slow circles, four forward and",
+     2,
+     null,
+     null
+    ],
+    [
+     "Other arm. Standing, arm straight: slow circles, four forwar",
+     2,
+     null,
+     null
+    ],
+    [
+     "Back to the wall, feet a step forward. Arms in a W: elbows b",
+     2,
+     null,
+     null
+    ],
+    [
+     "Slide your arms up the wall and lower them slowly, without a",
+     2,
+     null,
+     null
+    ],
+    [
+     "Standing, arms by your sides, elbows bent to 90°, palms up.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Move your hands out to the sides, keeping your elbows in, an",
+     2,
+     null,
+     null
+    ],
+    [
+     "Standing, arm straight: slow circles, four forward and four ",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "of 16 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Start small. Make the circle bigger only if your",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If keeping your arms on the wall strains your po",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · No resistance: this is to move the shoulder. Sma",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Start small. Make the circle bigger only if your",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Scapular wall slides",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish set",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.shoulder.circles · trabajando",
+   "medidos": 29,
+   "todos": [
+    [
+     "Shoulders",
+     1,
+     null,
+     null
+    ],
+    [
+     "Free Arms",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Arm circles",
+     1,
+     null,
+     null
+    ],
+    [
+     "Scapular wall slides",
+     1,
+     null,
+     null
+    ],
+    [
+     "External rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Arm circles",
+     1,
+     null,
+     null
+    ],
+    [
+     "Standing, arm straight: slow circles, four forward and four ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Back. Standing, arm straight: slow circles, four forward and",
+     2,
+     null,
+     null
+    ],
+    [
+     "Other arm. Standing, arm straight: slow circles, four forwar",
+     2,
+     null,
+     null
+    ],
+    [
+     "Back to the wall, feet a step forward. Arms in a W: elbows b",
+     2,
+     null,
+     null
+    ],
+    [
+     "Slide your arms up the wall and lower them slowly, without a",
+     2,
+     null,
+     null
+    ],
+    [
+     "Standing, arms by your sides, elbows bent to 90°, palms up.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Move your hands out to the sides, keeping your elbows in, an",
+     2,
+     null,
+     null
+    ],
+    [
+     "Standing, arm straight: slow circles, four forward and four ",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "of 16 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Start small. Make the circle bigger only if your",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If keeping your arms on the wall strains your po",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · No resistance: this is to move the shoulder. Sma",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Start small. Make the circle bigger only if your",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Scapular wall slides",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish set",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.wrists · al colocarse",
+   "medidos": 40,
+   "todos": [
+    [
+     "Wrists",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hands & Wrists",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Open and close your hands",
+     1,
+     null,
+     null
+    ],
+    [
+     "Wrist circles",
+     1,
+     null,
+     null
+    ],
+    [
+     "Wrist stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Open and close your hands",
+     1,
+     null,
+     null
+    ],
+    [
+     "Arms relaxed, hands open.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Close your fist without squeezing as hard as you can, and op",
+     2,
+     null,
+     null
+    ],
+    [
+     "Seated, forearms comfortable.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Small, slow circles with your hands: four in each direction.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Reverse. Small, slow circles with your hands: four in each d",
+     2,
+     null,
+     null
+    ],
+    [
+     "Arm out in front, elbow soft.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ten seconds palm down and ten palm up, easing your fingers t",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Ten seconds palm down and ten palm up, easing your fin",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Ten seconds palm down and ten palm up, easing your fi",
+     3,
+     null,
+     null
+    ],
+    [
+     "Arms relaxed, hands open.",
+     1,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Gentle: this is not a strength exercise.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Keep your hands relaxed and don't force the rang",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Use light pressure. Stop if it hurts.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Wrist circles",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.wrists · trabajando",
+   "medidos": 37,
+   "todos": [
+    [
+     "Wrists",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hands & Wrists",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Open and close your hands",
+     1,
+     null,
+     null
+    ],
+    [
+     "Wrist circles",
+     1,
+     null,
+     null
+    ],
+    [
+     "Wrist stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Open and close your hands",
+     1,
+     null,
+     null
+    ],
+    [
+     "Arms relaxed, hands open.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Close your fist without squeezing as hard as you can, and op",
+     2,
+     null,
+     null
+    ],
+    [
+     "Seated, forearms comfortable.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Small, slow circles with your hands: four in each direction.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Reverse. Small, slow circles with your hands: four in each d",
+     2,
+     null,
+     null
+    ],
+    [
+     "Arm out in front, elbow soft.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ten seconds palm down and ten palm up, easing your fingers t",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Ten seconds palm down and ten palm up, easing your fin",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Ten seconds palm down and ten palm up, easing your fi",
+     3,
+     null,
+     null
+    ],
+    [
+     "Close your fist without squeezing as hard as you can, and op",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "of 6 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Gentle: this is not a strength exercise.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Keep your hands relaxed and don't force the rang",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Use light pressure. Stop if it hurts.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Gentle: this is not a strength exercise.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Wrist circles",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish set",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.spine.chair · al colocarse",
+   "medidos": 32,
+   "todos": [
+    [
+     "Spine",
+     1,
+     null,
+     null
+    ],
+    [
+     "Seated Trunk",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Thoracic extension",
+     1,
+     null,
+     null
+    ],
+    [
+     "Thoracic rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chest opener",
+     1,
+     null,
+     null
+    ],
+    [
+     "Thoracic extension",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sit all the way back, upper back against the backrest.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Lift your chest a little over the backrest and return. Your ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit tall, feet down. Cross your hands over your chest.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Turn your trunk slowly to one side and back. Four to each si",
+     2,
+     null,
+     null
+    ],
+    [
+     "Seated, arms back: gently bring your shoulder blades togethe",
+     2,
+     null,
+     null
+    ],
+    [
+     "Once more, a little further if it feels fine.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sit all the way back, upper back against the backrest.",
+     1,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If the backrest hits your neck or lower back, li",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Keep your pelvis facing forward; your head follo",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Don't grip the backrest or arch your lower back.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Only open as far as feels fine.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Thoracic rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.spine.chair · trabajando",
+   "medidos": 29,
+   "todos": [
+    [
+     "Spine",
+     1,
+     null,
+     null
+    ],
+    [
+     "Seated Trunk",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Thoracic extension",
+     1,
+     null,
+     null
+    ],
+    [
+     "Thoracic rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chest opener",
+     1,
+     null,
+     null
+    ],
+    [
+     "Thoracic extension",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sit all the way back, upper back against the backrest.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Lift your chest a little over the backrest and return. Your ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit tall, feet down. Cross your hands over your chest.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Turn your trunk slowly to one side and back. Four to each si",
+     2,
+     null,
+     null
+    ],
+    [
+     "Seated, arms back: gently bring your shoulder blades togethe",
+     2,
+     null,
+     null
+    ],
+    [
+     "Once more, a little further if it feels fine.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Lift your chest a little over the backrest and return. Your ",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "of 5 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If the backrest hits your neck or lower back, li",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Keep your pelvis facing forward; your head follo",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Don't grip the backrest or arch your lower back.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Only open as far as feels fine.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If the backrest hits your neck or lower back, li",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Thoracic rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish set",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.hamstrings.standing · al colocarse",
+   "medidos": 42,
+   "todos": [
+    [
+     "Hamstrings",
+     1,
+     null,
+     null
+    ],
+    [
+     "Easy Legs",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Single-leg hamstring stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ankle circles",
+     1,
+     null,
+     null
+    ],
+    [
+     "Single-leg hamstring stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "One hand on the desk. One heel forward, on the floor, knee s",
+     2,
+     null,
+     null
+    ],
+    [
+     "Hips back, lean forward without rounding your back. Feel it ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Hips back, lean forward without rounding your back. Fe",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Hips back, lean forward without rounding your back. F",
+     2,
+     null,
+     null
+    ],
+    [
+     "Once more, a little further if it feels fine.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Left. Once more, a little further if it feels fine.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Right. Once more, a little further if it feels fine.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sit down and lift one foot a little.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ankle circles: four each way with one foot, then with the ot",
+     2,
+     null,
+     null
+    ],
+    [
+     "Reverse. Ankle circles: four each way with one foot, then wi",
+     2,
+     null,
+     null
+    ],
+    [
+     "Other foot. Ankle circles: four each way with one foot, then",
+     2,
+     null,
+     null
+    ],
+    [
+     "One hand on the desk. One heel forward, on the floor, knee s",
+     2,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Keep your standing knee slightly bent. No bounci",
+     2,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · No bouncing. Come out slowly.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Comfortable circles, without forcing or moving y",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Single-leg hamstring stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.hamstrings.standing · trabajando",
+   "medidos": 38,
+   "todos": [
+    [
+     "Hamstrings",
+     1,
+     null,
+     null
+    ],
+    [
+     "Easy Legs",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Single-leg hamstring stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ankle circles",
+     1,
+     null,
+     null
+    ],
+    [
+     "Single-leg hamstring stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "One hand on the desk. One heel forward, on the floor, knee s",
+     2,
+     null,
+     null
+    ],
+    [
+     "Hips back, lean forward without rounding your back. Feel it ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Hips back, lean forward without rounding your back. Fe",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Hips back, lean forward without rounding your back. F",
+     2,
+     null,
+     null
+    ],
+    [
+     "Once more, a little further if it feels fine.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Left. Once more, a little further if it feels fine.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Right. Once more, a little further if it feels fine.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sit down and lift one foot a little.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ankle circles: four each way with one foot, then with the ot",
+     2,
+     null,
+     null
+    ],
+    [
+     "Reverse. Ankle circles: four each way with one foot, then wi",
+     2,
+     null,
+     null
+    ],
+    [
+     "Other foot. Ankle circles: four each way with one foot, then",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Hips back, lean forward without rounding your back. Fe",
+     2,
+     null,
+     null
+    ],
+    [
+     "15",
+     1,
+     null,
+     null
+    ],
+    [
+     "seconds",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Keep your standing knee slightly bent. No bounci",
+     2,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · No bouncing. Come out slowly.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Comfortable circles, without forcing or moving y",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Keep your standing knee slightly bent. No bounci",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Single-leg hamstring stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next side",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.morning.flow · al colocarse",
+   "medidos": 39,
+   "todos": [
+    [
+     "Floor",
+     1,
+     null,
+     null
+    ],
+    [
+     "Floor Mobility",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cat-camel",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hip flexor",
+     1,
+     null,
+     null
+    ],
+    [
+     "Breathing on all fours",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cat-camel",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get on all fours, hands under shoulders and knees under hips",
+     2,
+     null,
+     null
+    ],
+    [
+     "Slowly round your back, then gently arch it. Don't force eit",
+     2,
+     null,
+     null
+    ],
+    [
+     "One knee on the floor, on a cushion if needed. Front foot fl",
+     2,
+     null,
+     null
+    ],
+    [
+     "Ease your pelvis forward a little, no arching. A gentle stre",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Ease your pelvis forward a little, no arching. A gentl",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Ease your pelvis forward a little, no arching. A gent",
+     2,
+     null,
+     null
+    ],
+    [
+     "On all fours, long back and loose neck.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Breathe in toward the sides of your ribs. Breathe out slowly",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get on all fours, hands under shoulders and knees under hips",
+     2,
+     null,
+     null
+    ],
+    [
+     "19",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Slow movement, following your breath.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If your knee hurts even with the cushion, skip t",
+     2,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Don't force the air. Let your ribs widen, withou",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Hip flexor",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.morning.flow · trabajando",
+   "medidos": 36,
+   "todos": [
+    [
+     "Floor",
+     1,
+     null,
+     null
+    ],
+    [
+     "Floor Mobility",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cat-camel",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hip flexor",
+     1,
+     null,
+     null
+    ],
+    [
+     "Breathing on all fours",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cat-camel",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get on all fours, hands under shoulders and knees under hips",
+     2,
+     null,
+     null
+    ],
+    [
+     "Slowly round your back, then gently arch it. Don't force eit",
+     2,
+     null,
+     null
+    ],
+    [
+     "One knee on the floor, on a cushion if needed. Front foot fl",
+     2,
+     null,
+     null
+    ],
+    [
+     "Ease your pelvis forward a little, no arching. A gentle stre",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Ease your pelvis forward a little, no arching. A gentl",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Ease your pelvis forward a little, no arching. A gent",
+     2,
+     null,
+     null
+    ],
+    [
+     "On all fours, long back and loose neck.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Breathe in toward the sides of your ribs. Breathe out slowly",
+     2,
+     null,
+     null
+    ],
+    [
+     "Slowly round your back, then gently arch it. Don't force eit",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "of 6 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Slow movement, following your breath.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If your knee hurts even with the cushion, skip t",
+     2,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Don't force the air. Let your ribs widen, withou",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Slow movement, following your breath.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Hip flexor",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish set",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.desk.quick · al colocarse",
+   "medidos": 41,
+   "todos": [
+    [
+     "Desk",
+     1,
+     null,
+     null
+    ],
+    [
+     "Desk Express",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 5",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Shrug + round",
+     1,
+     null,
+     null
+    ],
+    [
+     "Wrist circles",
+     1,
+     null,
+     null
+    ],
+    [
+     "Seated twist",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ankle circles",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chin tucks",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep breaths",
+     1,
+     null,
+     null
+    ],
+    [
+     "Shrug + round",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sit tall, feet flat, arms loose.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Lift your shoulders toward your ears and lower them slowly. ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Seated, forearms comfortable.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Small, slow circles with your hands: four in each direction.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Reverse. Small, slow circles with your hands: four in each d",
+     2,
+     null,
+     null
+    ],
+    [
+     "Turn your trunk toward the backrest, one hand resting on it,",
+     2,
+     null,
+     null
+    ],
+    [
+     "Other side. Turn your trunk toward the backrest, one hand re",
+     2,
+     null,
+     null
+    ],
+    [
+     "Under the desk, lift one foot and draw circles with your ank",
+     2,
+     null,
+     null
+    ],
+    [
+     "Other foot. Under the desk, lift one foot and draw circles w",
+     2,
+     null,
+     null
+    ],
+    [
+     "Slide your chin straight back, hold and release. 5 times.",
+     2,
+     null,
+     null
+    ],
+    [
+     "3 full breaths to finish.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sit tall, feet flat, arms loose.",
+     1,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Breathe out as they come down. Jaw loose.",
+     1,
+     11.41,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Keep your hands relaxed and don't force the rang",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Only turn as far as feels loose. The turn comes ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Slow, comfortable circles, without forcing or mo",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Small range. Your head goes back, not down.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Wrist circles",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.desk.quick · trabajando",
+   "medidos": 38,
+   "todos": [
+    [
+     "Desk",
+     1,
+     null,
+     null
+    ],
+    [
+     "Desk Express",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 5",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Shrug + round",
+     1,
+     null,
+     null
+    ],
+    [
+     "Wrist circles",
+     1,
+     null,
+     null
+    ],
+    [
+     "Seated twist",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ankle circles",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chin tucks",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep breaths",
+     1,
+     null,
+     null
+    ],
+    [
+     "Shrug + round",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sit tall, feet flat, arms loose.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Lift your shoulders toward your ears and lower them slowly. ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Seated, forearms comfortable.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Small, slow circles with your hands: four in each direction.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Reverse. Small, slow circles with your hands: four in each d",
+     2,
+     null,
+     null
+    ],
+    [
+     "Turn your trunk toward the backrest, one hand resting on it,",
+     2,
+     null,
+     null
+    ],
+    [
+     "Other side. Turn your trunk toward the backrest, one hand re",
+     2,
+     null,
+     null
+    ],
+    [
+     "Under the desk, lift one foot and draw circles with your ank",
+     2,
+     null,
+     null
+    ],
+    [
+     "Other foot. Under the desk, lift one foot and draw circles w",
+     2,
+     null,
+     null
+    ],
+    [
+     "Slide your chin straight back, hold and release. 5 times.",
+     2,
+     null,
+     null
+    ],
+    [
+     "3 full breaths to finish.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Lift your shoulders toward your ears and lower them slowly. ",
+     2,
+     null,
+     null
+    ],
+    [
+     "20",
+     1,
+     null,
+     null
+    ],
+    [
+     "seconds",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Breathe out as they come down. Jaw loose.",
+     1,
+     11.41,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Keep your hands relaxed and don't force the rang",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Only turn as far as feels loose. The turn comes ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Slow, comfortable circles, without forcing or mo",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Small range. Your head goes back, not down.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Breathe out as they come down. Jaw loose.",
+     1,
+     11.41,
+     null
+    ],
+    [
+     "Next: Wrist circles",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.chair.antidote · al colocarse",
+   "medidos": 57,
+   "todos": [
+    [
+     "Chair antidote",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chair Antidote",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 6",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chest opening",
+     1,
+     null,
+     null
+    ],
+    [
+     "Thoracic rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hip flexor",
+     1,
+     null,
+     null
+    ],
+    [
+     "World's greatest stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Neck and traps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Scalenes",
+     1,
+     null,
+     null
+    ],
+    [
+     "Breathing reset",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chest opening",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hands behind your head, without pulling on it. Open your elb",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit tall, feet planted. Cross your hands over your chest.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Rotate your trunk slowly to one side. Return to center.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Rotate your trunk slowly to one side. Return to center",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Rotate your trunk slowly to one side. Return to cente",
+     2,
+     null,
+     null
+    ],
+    [
+     "One knee on the floor, on a cushion if needed. Front foot fl",
+     2,
+     null,
+     null
+    ],
+    [
+     "Ease your pelvis forward a little, no arching. A gentle stre",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Ease your pelvis forward a little, no arching. A gentl",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Ease your pelvis forward a little, no arching. A gent",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take a long step into a lunge. Put the hand opposite your fr",
+     2,
+     null,
+     null
+    ],
+    [
+     "Open your chest and reach the arm on the side of your front ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Open your chest and reach the arm on the side of your ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Open your chest and reach the arm on the side of your",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit tall, shoulders down.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tilt your head with control, ear toward your shoulder.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Tilt your head with control, ear toward your shoulder.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Tilt your head with control, ear toward your shoulder",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit tall. If you like, tuck one hand under that thigh so the",
+     2,
+     null,
+     null
+    ],
+    [
+     "Tilt your head to the opposite side. If it feels fine, turn ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Tilt your head to the opposite side. If it feels fine,",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Tilt your head to the opposite side. If it feels fine",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take 3 deep breaths to finish.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hands behind your head, without pulling on it. Open your elb",
+     2,
+     null,
+     null
+    ],
+    [
+     "39",
+     1,
+     null,
+     null
+    ],
+    [
+     "seconds",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Neck comfortable, eyes forward. Only open as far",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · The turn comes from the trunk, not the neck.",
+     1,
+     2.41,
+     0.0246
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Short range. If your knee hurts even with the cu",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · If you can't reach the floor, rest your hand on ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · No pulling with your hand, no lifting your shoul",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Very gentle. The neck is a delicate area.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Neck comfortable, eyes forward. Only open as far",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Thoracic rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [
+    {
+     "texto": "Take care · The turn comes from the trunk, not the neck.",
+     "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+     "lineas": 1,
+     "letras": 56,
+     "reserva": true,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 15,
+     "ancho": 317.6,
+     "natural": 299,
+     "margen": 2.41,
+     "margenMas": false,
+     "motivo": "se parte en 2 líneas",
+     "porLetra": 0.0246,
+     "porLetraMas": false,
+     "motivoLetra": "se parte en 2 líneas",
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "runner": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": 163,
+       "aro": 307,
+       "pieDeLaPausa": null,
+       "pantalla": 640
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "runner": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": 163,
+       "aro": 307,
+       "pieDeLaPausa": null,
+       "pantalla": 640
+      }
+     }
+    }
+   ],
+   "cerca": []
+  },
+  {
+   "momento": "move.chair.antidote · trabajando",
+   "medidos": 57,
+   "todos": [
+    [
+     "Chair antidote",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chair Antidote",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 6",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chest opening",
+     1,
+     null,
+     null
+    ],
+    [
+     "Thoracic rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hip flexor",
+     1,
+     null,
+     null
+    ],
+    [
+     "World's greatest stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Neck and traps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Scalenes",
+     1,
+     null,
+     null
+    ],
+    [
+     "Breathing reset",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chest opening",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hands behind your head, without pulling on it. Open your elb",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit tall, feet planted. Cross your hands over your chest.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Rotate your trunk slowly to one side. Return to center.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Rotate your trunk slowly to one side. Return to center",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Rotate your trunk slowly to one side. Return to cente",
+     2,
+     null,
+     null
+    ],
+    [
+     "One knee on the floor, on a cushion if needed. Front foot fl",
+     2,
+     null,
+     null
+    ],
+    [
+     "Ease your pelvis forward a little, no arching. A gentle stre",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Ease your pelvis forward a little, no arching. A gentl",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Ease your pelvis forward a little, no arching. A gent",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take a long step into a lunge. Put the hand opposite your fr",
+     2,
+     null,
+     null
+    ],
+    [
+     "Open your chest and reach the arm on the side of your front ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Open your chest and reach the arm on the side of your ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Open your chest and reach the arm on the side of your",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit tall, shoulders down.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Tilt your head with control, ear toward your shoulder.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Tilt your head with control, ear toward your shoulder.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Tilt your head with control, ear toward your shoulder",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit tall. If you like, tuck one hand under that thigh so the",
+     2,
+     null,
+     null
+    ],
+    [
+     "Tilt your head to the opposite side. If it feels fine, turn ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Tilt your head to the opposite side. If it feels fine,",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Tilt your head to the opposite side. If it feels fine",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take 3 deep breaths to finish.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hands behind your head, without pulling on it. Open your elb",
+     2,
+     null,
+     null
+    ],
+    [
+     "39",
+     1,
+     null,
+     null
+    ],
+    [
+     "seconds",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Neck comfortable, eyes forward. Only open as far",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · The turn comes from the trunk, not the neck.",
+     1,
+     2.41,
+     0.0246
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Short range. If your knee hurts even with the cu",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · If you can't reach the floor, rest your hand on ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · No pulling with your hand, no lifting your shoul",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Very gentle. The neck is a delicate area.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Neck comfortable, eyes forward. Only open as far",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Thoracic rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.posture.set · al colocarse",
+   "medidos": 32,
+   "todos": [
+    [
+     "Posture",
+     1,
+     null,
+     null
+    ],
+    [
+     "Posture Reset",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chin tucks",
+     1,
+     null,
+     null
+    ],
+    [
+     "Scapular squeeze",
+     1,
+     null,
+     null
+    ],
+    [
+     "Thoracic extension",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chest opener",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chin tucks",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sit up tall, shoulders loose, gaze forward.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Slide your chin straight back. The back of your neck lengthe",
+     2,
+     null,
+     null
+    ],
+    [
+     "Draw your shoulder blades toward the center and hold a momen",
+     2,
+     null,
+     null
+    ],
+    [
+     "Upper back on the chair, arch gently and open your chest. Yo",
+     2,
+     null,
+     null
+    ],
+    [
+     "Seated, arms back: gently bring your shoulder blades togethe",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit up tall, shoulders loose, gaze forward.",
+     1,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Small range, no straining. You bring the head ba",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Shoulders down, away from your ears.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · The arch comes from the chest. If the backrest h",
+     3,
+     null,
+     null
+    ],
+    [
+     "Take care · Don't grip the backrest or arch your lower back.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Scapular squeeze",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.posture.set · trabajando",
+   "medidos": 29,
+   "todos": [
+    [
+     "Posture",
+     1,
+     null,
+     null
+    ],
+    [
+     "Posture Reset",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chin tucks",
+     1,
+     null,
+     null
+    ],
+    [
+     "Scapular squeeze",
+     1,
+     null,
+     null
+    ],
+    [
+     "Thoracic extension",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chest opener",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chin tucks",
+     1,
+     null,
+     null
+    ],
+    [
+     "Sit up tall, shoulders loose, gaze forward.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Slide your chin straight back. The back of your neck lengthe",
+     2,
+     null,
+     null
+    ],
+    [
+     "Draw your shoulder blades toward the center and hold a momen",
+     2,
+     null,
+     null
+    ],
+    [
+     "Upper back on the chair, arch gently and open your chest. Yo",
+     2,
+     null,
+     null
+    ],
+    [
+     "Seated, arms back: gently bring your shoulder blades togethe",
+     2,
+     null,
+     null
+    ],
+    [
+     "Slide your chin straight back. The back of your neck lengthe",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "of 8 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Small range, no straining. You bring the head ba",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Shoulders down, away from your ears.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · The arch comes from the chest. If the backrest h",
+     3,
+     null,
+     null
+    ],
+    [
+     "Take care · Don't grip the backrest or arch your lower back.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Small range, no straining. You bring the head ba",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Scapular squeeze",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish set",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.grip.squeeze · al colocarse",
+   "medidos": 45,
+   "todos": [
+    [
+     "Forearms",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hands & Forearms",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 5",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Open and close your hands",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finger extension",
+     1,
+     null,
+     null
+    ],
+    [
+     "Wrist stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Palms on the desk",
+     1,
+     null,
+     null
+    ],
+    [
+     "Reverse prayer",
+     1,
+     null,
+     null
+    ],
+    [
+     "Open and close your hands",
+     1,
+     null,
+     null
+    ],
+    [
+     "Arms relaxed, hands open.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Close your fist without squeezing as hard as you can, and op",
+     2,
+     null,
+     null
+    ],
+    [
+     "Spread your fingers wide, stretch them, and relax.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Arm out in front, elbow soft.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ten seconds palm down and ten palm up, easing your fingers t",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Ten seconds palm down and ten palm up, easing your fin",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Ten seconds palm down and ten palm up, easing your fi",
+     3,
+     null,
+     null
+    ],
+    [
+     "Stand facing the desk, palms flat, fingers pointing forward.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lean your body slightly forward, slowly, until you feel a ge",
+     2,
+     null,
+     null
+    ],
+    [
+     "Backs of your hands together at your chest, fingers pointing",
+     2,
+     null,
+     null
+    ],
+    [
+     "Arms relaxed, hands open.",
+     1,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Gentle: this is not a strength exercise.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Don't push them back with your other hand.",
+     1,
+     0.4,
+     0.007
+    ],
+    [
+     "Take care · Use light pressure. Stop if it hurts.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Hardly any weight on your hands. If it bothers y",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · You will feel a gentle stretch over the wrist. N",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Finger extension",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [
+    {
+     "texto": "Take care · Don't push them back with your other hand.",
+     "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+     "lineas": 1,
+     "letras": 54,
+     "reserva": true,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 15,
+     "ancho": 319.6,
+     "natural": 301,
+     "margen": 0.4,
+     "margenMas": false,
+     "motivo": "se parte en 2 líneas",
+     "porLetra": 0.007,
+     "porLetraMas": false,
+     "motivoLetra": "se parte en 2 líneas",
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "runner": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": 141,
+       "aro": 307,
+       "pieDeLaPausa": null,
+       "pantalla": 640
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "runner": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": 141,
+       "aro": 307,
+       "pieDeLaPausa": null,
+       "pantalla": 640
+      }
+     }
+    }
+   ],
+   "cerca": []
+  },
+  {
+   "momento": "extra.grip.squeeze · trabajando",
+   "medidos": 42,
+   "todos": [
+    [
+     "Forearms",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hands & Forearms",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 5",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Open and close your hands",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finger extension",
+     1,
+     null,
+     null
+    ],
+    [
+     "Wrist stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Palms on the desk",
+     1,
+     null,
+     null
+    ],
+    [
+     "Reverse prayer",
+     1,
+     null,
+     null
+    ],
+    [
+     "Open and close your hands",
+     1,
+     null,
+     null
+    ],
+    [
+     "Arms relaxed, hands open.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Close your fist without squeezing as hard as you can, and op",
+     2,
+     null,
+     null
+    ],
+    [
+     "Spread your fingers wide, stretch them, and relax.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Arm out in front, elbow soft.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ten seconds palm down and ten palm up, easing your fingers t",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Ten seconds palm down and ten palm up, easing your fin",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Ten seconds palm down and ten palm up, easing your fi",
+     3,
+     null,
+     null
+    ],
+    [
+     "Stand facing the desk, palms flat, fingers pointing forward.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lean your body slightly forward, slowly, until you feel a ge",
+     2,
+     null,
+     null
+    ],
+    [
+     "Backs of your hands together at your chest, fingers pointing",
+     2,
+     null,
+     null
+    ],
+    [
+     "Close your fist without squeezing as hard as you can, and op",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "of 12 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Gentle: this is not a strength exercise.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Don't push them back with your other hand.",
+     1,
+     0.4,
+     0.007
+    ],
+    [
+     "Take care · Use light pressure. Stop if it hurts.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Hardly any weight on your hands. If it bothers y",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · You will feel a gentle stretch over the wrist. N",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Gentle: this is not a strength exercise.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Finger extension",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish set",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.shoulders.5 · al colocarse",
+   "medidos": 30,
+   "todos": [
+    [
+     "Shoulders",
+     1,
+     null,
+     null
+    ],
+    [
+     "Shoulders",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Scapular wall slides",
+     1,
+     null,
+     null
+    ],
+    [
+     "External rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Thoracic extension",
+     1,
+     null,
+     null
+    ],
+    [
+     "Scapular wall slides",
+     1,
+     null,
+     null
+    ],
+    [
+     "Back to the wall, feet a step forward. Arms in a W: elbows b",
+     2,
+     null,
+     null
+    ],
+    [
+     "Slide your arms up the wall and lower them slowly, without a",
+     2,
+     null,
+     null
+    ],
+    [
+     "Arms by your sides, elbows at 90°, palms up. Move your hands",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit all the way back, upper back against the backrest.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Arch gently over the backrest, opening your chest. Your head",
+     2,
+     null,
+     null
+    ],
+    [
+     "Back to the wall, feet a step forward. Arms in a W: elbows b",
+     2,
+     null,
+     null
+    ],
+    [
+     "19",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If keeping your arms on the wall strains your po",
+     3,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · No resistance: this is to move the shoulder. Sma",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · The arch comes from the chest. If the backrest h",
+     3,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: External rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.shoulders.5 · trabajando",
+   "medidos": 27,
+   "todos": [
+    [
+     "Shoulders",
+     1,
+     null,
+     null
+    ],
+    [
+     "Shoulders",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Scapular wall slides",
+     1,
+     null,
+     null
+    ],
+    [
+     "External rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Thoracic extension",
+     1,
+     null,
+     null
+    ],
+    [
+     "Scapular wall slides",
+     1,
+     null,
+     null
+    ],
+    [
+     "Back to the wall, feet a step forward. Arms in a W: elbows b",
+     2,
+     null,
+     null
+    ],
+    [
+     "Slide your arms up the wall and lower them slowly, without a",
+     2,
+     null,
+     null
+    ],
+    [
+     "Arms by your sides, elbows at 90°, palms up. Move your hands",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit all the way back, upper back against the backrest.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Arch gently over the backrest, opening your chest. Your head",
+     2,
+     null,
+     null
+    ],
+    [
+     "Slide your arms up the wall and lower them slowly, without a",
+     2,
+     null,
+     null
+    ],
+    [
+     "50",
+     1,
+     null,
+     null
+    ],
+    [
+     "seconds",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If keeping your arms on the wall strains your po",
+     3,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · No resistance: this is to move the shoulder. Sma",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · The arch comes from the chest. If the backrest h",
+     3,
+     null,
+     null
+    ],
+    [
+     "Take care · If keeping your arms on the wall strains your po",
+     3,
+     null,
+     null
+    ],
+    [
+     "Next: External rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.back.desk · al colocarse",
+   "medidos": 30,
+   "todos": [
+    [
+     "Back",
+     1,
+     null,
+     null
+    ],
+    [
+     "Office Back",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Scapular squeeze",
+     1,
+     null,
+     null
+    ],
+    [
+     "Scapular wall slides",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chest opening",
+     1,
+     null,
+     null
+    ],
+    [
+     "Scapular squeeze",
+     1,
+     null,
+     null
+    ],
+    [
+     "Stand with feet hip-width apart, shoulders loose.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Draw your shoulder blades toward the center and hold a momen",
+     2,
+     null,
+     null
+    ],
+    [
+     "Back to the wall, feet a step forward. Arms in a W: elbows b",
+     2,
+     null,
+     null
+    ],
+    [
+     "Slide your arms up the wall and lower them slowly, without a",
+     2,
+     null,
+     null
+    ],
+    [
+     "Hands behind your head, without pulling on it. Open your elb",
+     2,
+     null,
+     null
+    ],
+    [
+     "Stand with feet hip-width apart, shoulders loose.",
+     1,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Shoulders down, away from your ears.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If keeping your arms on the wall strains your po",
+     3,
+     null,
+     null
+    ],
+    [
+     "Take care · Neck comfortable, eyes forward. Only open as far",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Scapular wall slides",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "extra.back.desk · trabajando",
+   "medidos": 27,
+   "todos": [
+    [
+     "Back",
+     1,
+     null,
+     null
+    ],
+    [
+     "Office Back",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Scapular squeeze",
+     1,
+     null,
+     null
+    ],
+    [
+     "Scapular wall slides",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chest opening",
+     1,
+     null,
+     null
+    ],
+    [
+     "Scapular squeeze",
+     1,
+     null,
+     null
+    ],
+    [
+     "Stand with feet hip-width apart, shoulders loose.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Draw your shoulder blades toward the center and hold a momen",
+     2,
+     null,
+     null
+    ],
+    [
+     "Back to the wall, feet a step forward. Arms in a W: elbows b",
+     2,
+     null,
+     null
+    ],
+    [
+     "Slide your arms up the wall and lower them slowly, without a",
+     2,
+     null,
+     null
+    ],
+    [
+     "Hands behind your head, without pulling on it. Open your elb",
+     2,
+     null,
+     null
+    ],
+    [
+     "Draw your shoulder blades toward the center and hold a momen",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "of 12 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Shoulders down, away from your ears.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · If keeping your arms on the wall strains your po",
+     3,
+     null,
+     null
+    ],
+    [
+     "Take care · Neck comfortable, eyes forward. Only open as far",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Shoulders down, away from your ears.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Scapular wall slides",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish set",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.back.standing · al colocarse",
+   "medidos": 43,
+   "todos": [
+    [
+     "Back",
+     1,
+     null,
+     null
+    ],
+    [
+     "Standing Back",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Roll down",
+     1,
+     null,
+     null
+    ],
+    [
+     "Standing thoracic rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chest opening",
+     1,
+     null,
+     null
+    ],
+    [
+     "Scapular squeeze",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep breaths",
+     1,
+     null,
+     null
+    ],
+    [
+     "Roll down",
+     1,
+     null,
+     null
+    ],
+    [
+     "Stand with your feet hip-width apart.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Round your back down little by little, as far as is comforta",
+     2,
+     null,
+     null
+    ],
+    [
+     "Stand with feet hip-width apart. Cross your hands over your ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Turn your torso slowly to one side. Come back to center.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Turn your torso slowly to one side. Come back to cente",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Turn your torso slowly to one side. Come back to cent",
+     2,
+     null,
+     null
+    ],
+    [
+     "Hands behind your head, without pulling on it. Open your elb",
+     2,
+     null,
+     null
+    ],
+    [
+     "Gently draw your shoulder blades together. Hold briefly, the",
+     2,
+     null,
+     null
+    ],
+    [
+     "3 full breaths to finish.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Stand with your feet hip-width apart.",
+     1,
+     null,
+     null
+    ],
+    [
+     "4",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Soft knees; you can stop halfway. Come up slowly",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Don't let your whole body turn at once, but don'",
+     3,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Neck comfortable, eyes forward. Only open as far",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Shoulders down, away from your ears.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Standing thoracic rotation",
+     1,
+     4.2,
+     0.131
+    ],
+    [
+     "Auto",
+     1,
+     4.2,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": [
+    {
+     "texto": "Next: Standing thoracic rotation",
+     "donde": "div[data-pace-v1-progress=true].pace-v1-pasos › div.pace-v1-siguiente › span[data-pace-v1-siguiente=true]",
+     "lineas": 1,
+     "letras": 32,
+     "reserva": false,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 10,
+     "ancho": 224.2,
+     "natural": 224.2,
+     "margen": 4.2,
+     "margenMas": false,
+     "motivo": "salta de sitio",
+     "porLetra": 0.131,
+     "porLetraMas": false,
+     "motivoLetra": "salta de sitio"
+    },
+    {
+     "texto": "Auto",
+     "donde": "div[data-pace-v1-progress=true].pace-v1-pasos › div.pace-v1-siguiente › button[data-pace-v1-auto=true].pace-v1-auto",
+     "lineas": 1,
+     "letras": 4,
+     "reserva": false,
+     "nowrap": true,
+     "yaSale": null,
+     "letraPx": 10,
+     "ancho": 79.6,
+     "natural": 63.61,
+     "margen": 4.2,
+     "margenMas": false,
+     "motivo": "mueve a su vecino «Next: Standing thoracic rotation»",
+     "porLetra": 0.15,
+     "porLetraMas": true,
+     "motivoLetra": null
+    }
+   ]
+  },
+  {
+   "momento": "move.back.standing · trabajando",
+   "medidos": 40,
+   "todos": [
+    [
+     "Back",
+     1,
+     null,
+     null
+    ],
+    [
+     "Standing Back",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Roll down",
+     1,
+     null,
+     null
+    ],
+    [
+     "Standing thoracic rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Chest opening",
+     1,
+     null,
+     null
+    ],
+    [
+     "Scapular squeeze",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep breaths",
+     1,
+     null,
+     null
+    ],
+    [
+     "Roll down",
+     1,
+     null,
+     null
+    ],
+    [
+     "Stand with your feet hip-width apart.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Round your back down little by little, as far as is comforta",
+     2,
+     null,
+     null
+    ],
+    [
+     "Stand with feet hip-width apart. Cross your hands over your ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Turn your torso slowly to one side. Come back to center.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Turn your torso slowly to one side. Come back to cente",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Turn your torso slowly to one side. Come back to cent",
+     2,
+     null,
+     null
+    ],
+    [
+     "Hands behind your head, without pulling on it. Open your elb",
+     2,
+     null,
+     null
+    ],
+    [
+     "Gently draw your shoulder blades together. Hold briefly, the",
+     2,
+     null,
+     null
+    ],
+    [
+     "3 full breaths to finish.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Round your back down little by little, as far as is comforta",
+     2,
+     null,
+     null
+    ],
+    [
+     "40",
+     1,
+     null,
+     null
+    ],
+    [
+     "seconds",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Soft knees; you can stop halfway. Come up slowly",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Don't let your whole body turn at once, but don'",
+     3,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Neck comfortable, eyes forward. Only open as far",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Shoulders down, away from your ears.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Soft knees; you can stop halfway. Come up slowly",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Standing thoracic rotation",
+     1,
+     4.2,
+     0.131
+    ],
+    [
+     "Auto",
+     1,
+     4.2,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": [
+    {
+     "texto": "Next: Standing thoracic rotation",
+     "donde": "div[data-pace-v1-progress=true].pace-v1-pasos › div.pace-v1-siguiente › span[data-pace-v1-siguiente=true]",
+     "lineas": 1,
+     "letras": 32,
+     "reserva": false,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 10,
+     "ancho": 224.2,
+     "natural": 224.2,
+     "margen": 4.2,
+     "margenMas": false,
+     "motivo": "salta de sitio",
+     "porLetra": 0.131,
+     "porLetraMas": false,
+     "motivoLetra": "salta de sitio"
+    },
+    {
+     "texto": "Auto",
+     "donde": "div[data-pace-v1-progress=true].pace-v1-pasos › div.pace-v1-siguiente › button[data-pace-v1-auto=true].pace-v1-auto",
+     "lineas": 1,
+     "letras": 4,
+     "reserva": false,
+     "nowrap": true,
+     "yaSale": null,
+     "letraPx": 10,
+     "ancho": 79.6,
+     "natural": 63.61,
+     "margen": 4.2,
+     "margenMas": false,
+     "motivo": "mueve a su vecino «Next: Standing thoracic rotation»",
+     "porLetra": 0.15,
+     "porLetraMas": true,
+     "motivoLetra": null
+    }
+   ]
+  },
+  {
+   "momento": "move.spine.waves · al colocarse",
+   "medidos": 35,
+   "todos": [
+    [
+     "Spine",
+     1,
+     null,
+     null
+    ],
+    [
+     "Spine · Waves",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cat-camel",
+     1,
+     null,
+     null
+    ],
+    [
+     "Thoracic rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Trunk side bend",
+     1,
+     null,
+     null
+    ],
+    [
+     "Roll down",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cat-camel",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get on all fours, hands under shoulders and knees under hips",
+     2,
+     null,
+     null
+    ],
+    [
+     "Slowly round your back, then gently arch it. Don't force eit",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit tall, hands crossed over your chest.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rotate your trunk slowly to one side and the other.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Standing, feet hip-width apart, arms loose.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Bend your trunk to one side, hand sliding down your thigh, a",
+     2,
+     null,
+     null
+    ],
+    [
+     "Stand up, feet hip-width apart.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Round your back down little by little, as far as is comforta",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get on all fours, hands under shoulders and knees under hips",
+     2,
+     null,
+     null
+    ],
+    [
+     "19",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Slow movement, following your breath.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · The turn comes from the trunk, not the neck.",
+     1,
+     2.41,
+     0.0246
+    ],
+    [
+     "Take care · No twisting or leaning forward. Only as far as f",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Soft knees; you can stop halfway. Rise slowly to",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Thoracic rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [
+    {
+     "texto": "Take care · The turn comes from the trunk, not the neck.",
+     "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+     "lineas": 1,
+     "letras": 56,
+     "reserva": true,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 15,
+     "ancho": 317.6,
+     "natural": 299,
+     "margen": 2.41,
+     "margenMas": false,
+     "motivo": "se parte en 2 líneas",
+     "porLetra": 0.0246,
+     "porLetraMas": false,
+     "motivoLetra": "se parte en 2 líneas",
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "runner": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": 169,
+       "aro": 307,
+       "pieDeLaPausa": null,
+       "pantalla": 640
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "runner": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": 169,
+       "aro": 307,
+       "pieDeLaPausa": null,
+       "pantalla": 640
+      }
+     }
+    }
+   ],
+   "cerca": []
+  },
+  {
+   "momento": "move.spine.waves · trabajando",
+   "medidos": 32,
+   "todos": [
+    [
+     "Spine",
+     1,
+     null,
+     null
+    ],
+    [
+     "Spine · Waves",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cat-camel",
+     1,
+     null,
+     null
+    ],
+    [
+     "Thoracic rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Trunk side bend",
+     1,
+     null,
+     null
+    ],
+    [
+     "Roll down",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cat-camel",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get on all fours, hands under shoulders and knees under hips",
+     2,
+     null,
+     null
+    ],
+    [
+     "Slowly round your back, then gently arch it. Don't force eit",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit tall, hands crossed over your chest.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Rotate your trunk slowly to one side and the other.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Standing, feet hip-width apart, arms loose.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Bend your trunk to one side, hand sliding down your thigh, a",
+     2,
+     null,
+     null
+    ],
+    [
+     "Stand up, feet hip-width apart.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Round your back down little by little, as far as is comforta",
+     2,
+     null,
+     null
+    ],
+    [
+     "Slowly round your back, then gently arch it. Don't force eit",
+     2,
+     null,
+     null
+    ],
+    [
+     "60",
+     1,
+     null,
+     null
+    ],
+    [
+     "seconds",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Slow movement, following your breath.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · The turn comes from the trunk, not the neck.",
+     1,
+     2.41,
+     0.0246
+    ],
+    [
+     "Take care · No twisting or leaning forward. Only as far as f",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Soft knees; you can stop halfway. Rise slowly to",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Slow movement, following your breath.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Thoracic rotation",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.hips.standing · al colocarse",
+   "medidos": 41,
+   "todos": [
+    [
+     "Hips",
+     1,
+     null,
+     null
+    ],
+    [
+     "Standing Hips",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cossack squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "ATG split squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Forward fold",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep breaths",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Squat down as far as is comfortable, heels down. Elbows insi",
+     2,
+     null,
+     null
+    ],
+    [
+     "Feet very wide. Bend this knee the way the foot points, the ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Feet very wide. Bend this knee the way the foot points",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Feet very wide. Bend this knee the way the foot point",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take a long step back, without resting your knee down.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sink the back hip and keep your chest tall.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Left. Sink the back hip and keep your chest tall.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Right. Sink the back hip and keep your chest tall.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Feet hip-width apart, let your torso hang down. Soft knees.",
+     2,
+     null,
+     null
+    ],
+    [
+     "3 full breaths to finish.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Squat down as far as is comfortable, heels down. Elbows insi",
+     2,
+     null,
+     null
+    ],
+    [
+     "49",
+     1,
+     null,
+     null
+    ],
+    [
+     "seconds",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Hold the desk if you lose your balance. If your ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Heel down. Only go as low as you control.",
+     1,
+     8.41,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · A soft stretch at the front of the back hip, nev",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Hands on your thighs or the desk if you need to:",
+     2,
+     null,
+     0.102
+    ],
+    [
+     "Take care · Hold the desk if you lose your balance. If your ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Cossack squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.hips.standing · trabajando",
+   "medidos": 41,
+   "todos": [
+    [
+     "Hips",
+     1,
+     null,
+     null
+    ],
+    [
+     "Standing Hips",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cossack squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "ATG split squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Forward fold",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep breaths",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Squat down as far as is comfortable, heels down. Elbows insi",
+     2,
+     null,
+     null
+    ],
+    [
+     "Feet very wide. Bend this knee the way the foot points, the ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Feet very wide. Bend this knee the way the foot points",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Feet very wide. Bend this knee the way the foot point",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take a long step back, without resting your knee down.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sink the back hip and keep your chest tall.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Left. Sink the back hip and keep your chest tall.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Right. Sink the back hip and keep your chest tall.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Feet hip-width apart, let your torso hang down. Soft knees.",
+     2,
+     null,
+     null
+    ],
+    [
+     "3 full breaths to finish.",
+     1,
+     null,
+     null
+    ],
+    [
+     "Squat down as far as is comfortable, heels down. Elbows insi",
+     2,
+     null,
+     null
+    ],
+    [
+     "49",
+     1,
+     null,
+     null
+    ],
+    [
+     "seconds",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Hold the desk if you lose your balance. If your ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Heel down. Only go as low as you control.",
+     1,
+     8.41,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · A soft stretch at the front of the back hip, nev",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Hands on your thighs or the desk if you need to:",
+     2,
+     null,
+     0.102
+    ],
+    [
+     "Take care · Hold the desk if you lose your balance. If your ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Cossack squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.hips.5 · al colocarse",
+   "medidos": 40,
+   "todos": [
+    [
+     "Hips",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hips",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cossack squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "90/90",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pigeon",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cossack squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Feet very wide. Bend this knee the way the foot points, the ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Feet very wide. Bend this knee the way the foot points",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Feet very wide. Bend this knee the way the foot point",
+     2,
+     null,
+     null
+    ],
+    [
+     "Squat down as far as is comfortable, heels down. Elbows insi",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit on the floor, one leg in front and one to the side, both",
+     2,
+     null,
+     null
+    ],
+    [
+     "Swing your knees from side to side, slowly, without forcing ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Bring one shin to the front, the other leg stretched back.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Walk your weight forward. Lower your chest little by little.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Walk your weight forward. Lower your chest little by l",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Walk your weight forward. Lower your chest little by ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Feet very wide. Bend this knee the way the foot points",
+     2,
+     null,
+     null
+    ],
+    [
+     "29",
+     1,
+     null,
+     null
+    ],
+    [
+     "seconds",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Heel down. Only go as low as you can control.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Lean on something if you lose your balance.",
+     1,
+     0.4,
+     0.007
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Lean on your hands behind you to go more comfort",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Place a cushion under the raised hip if needed. ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Heel down. Only go as low as you can control.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Deep squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next side",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [
+    {
+     "texto": "Take care · Lean on something if you lose your balance.",
+     "donde": "div[data-pace-v1-pila=cola].pace-v1-pila.pace-v1-colas › div.pace-v1-reserva › div.pace-v1-cuidate",
+     "lineas": 1,
+     "letras": 55,
+     "reserva": true,
+     "nowrap": false,
+     "yaSale": null,
+     "letraPx": 15,
+     "ancho": 319.6,
+     "natural": 301,
+     "margen": 0.4,
+     "margenMas": false,
+     "motivo": "se parte en 2 líneas",
+     "porLetra": 0.007,
+     "porLetraMas": false,
+     "motivoLetra": "se parte en 2 líneas",
+     "efecto": {
+      "antes": {
+       "scroll": {
+        "home": 0,
+        "runner": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": 163,
+       "aro": 307,
+       "pieDeLaPausa": null,
+       "pantalla": 640
+      },
+      "despues": {
+       "scroll": {
+        "home": 0,
+        "runner": 0
+       },
+       "luegoEscondido": false,
+       "actividadesEnFila": false,
+       "runnerJusto": false,
+       "dibujo": 163,
+       "aro": 307,
+       "pieDeLaPausa": null,
+       "pantalla": 640
+      }
+     }
+    }
+   ],
+   "cerca": []
+  },
+  {
+   "momento": "move.hips.5 · trabajando",
+   "medidos": 40,
+   "todos": [
+    [
+     "Hips",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hips",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cossack squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "90/90",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pigeon",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cossack squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Feet very wide. Bend this knee the way the foot points, the ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Feet very wide. Bend this knee the way the foot points",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Feet very wide. Bend this knee the way the foot point",
+     2,
+     null,
+     null
+    ],
+    [
+     "Squat down as far as is comfortable, heels down. Elbows insi",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit on the floor, one leg in front and one to the side, both",
+     2,
+     null,
+     null
+    ],
+    [
+     "Swing your knees from side to side, slowly, without forcing ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Bring one shin to the front, the other leg stretched back.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Walk your weight forward. Lower your chest little by little.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Walk your weight forward. Lower your chest little by l",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Walk your weight forward. Lower your chest little by ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Feet very wide. Bend this knee the way the foot points",
+     2,
+     null,
+     null
+    ],
+    [
+     "29",
+     1,
+     null,
+     null
+    ],
+    [
+     "seconds",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Heel down. Only go as low as you can control.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Lean on something if you lose your balance.",
+     1,
+     0.4,
+     0.007
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Lean on your hands behind you to go more comfort",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Place a cushion under the raised hip if needed. ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Heel down. Only go as low as you can control.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Deep squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next side",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.hamstrings · al colocarse",
+   "medidos": 37,
+   "todos": [
+    [
+     "Hamstrings",
+     1,
+     null,
+     null
+    ],
+    [
+     "Posterior Chain",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Forward fold",
+     1,
+     null,
+     null
+    ],
+    [
+     "Single-leg hamstring stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Wall calf stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Forward fold",
+     1,
+     null,
+     null
+    ],
+    [
+     "Feet hip-width apart, let your trunk hang down. Soft knees.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Plant one heel ahead, on the floor, that knee straight or sl",
+     2,
+     null,
+     null
+    ],
+    [
+     "Hips back, lean forward without rounding your back. Feel it ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Hips back, lean forward without rounding your back. Fe",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Hips back, lean forward without rounding your back. F",
+     2,
+     null,
+     null
+    ],
+    [
+     "Face the wall, hands on it. One foot back, toes pointing for",
+     2,
+     null,
+     null
+    ],
+    [
+     "Bend your front knee and bring your hips toward the wall, ba",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Bend your front knee and bring your hips toward the wa",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Bend your front knee and bring your hips toward the w",
+     2,
+     null,
+     null
+    ],
+    [
+     "Feet hip-width apart, let your trunk hang down. Soft knees.",
+     2,
+     null,
+     null
+    ],
+    [
+     "59",
+     1,
+     null,
+     null
+    ],
+    [
+     "seconds",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Hands on your thighs if you need to: you don't n",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Keep the supporting knee slightly bent. No bounc",
+     2,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · A gentle stretch in the back calf. Keep that hee",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Hands on your thighs if you need to: you don't n",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Single-leg hamstring stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.hamstrings · trabajando",
+   "medidos": 37,
+   "todos": [
+    [
+     "Hamstrings",
+     1,
+     null,
+     null
+    ],
+    [
+     "Posterior Chain",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 3",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Forward fold",
+     1,
+     null,
+     null
+    ],
+    [
+     "Single-leg hamstring stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Wall calf stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Forward fold",
+     1,
+     null,
+     null
+    ],
+    [
+     "Feet hip-width apart, let your trunk hang down. Soft knees.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Plant one heel ahead, on the floor, that knee straight or sl",
+     2,
+     null,
+     null
+    ],
+    [
+     "Hips back, lean forward without rounding your back. Feel it ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Hips back, lean forward without rounding your back. Fe",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Hips back, lean forward without rounding your back. F",
+     2,
+     null,
+     null
+    ],
+    [
+     "Face the wall, hands on it. One foot back, toes pointing for",
+     2,
+     null,
+     null
+    ],
+    [
+     "Bend your front knee and bring your hips toward the wall, ba",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Bend your front knee and bring your hips toward the wa",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Bend your front knee and bring your hips toward the w",
+     2,
+     null,
+     null
+    ],
+    [
+     "Feet hip-width apart, let your trunk hang down. Soft knees.",
+     2,
+     null,
+     null
+    ],
+    [
+     "59",
+     1,
+     null,
+     null
+    ],
+    [
+     "seconds",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Hands on your thighs if you need to: you don't n",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Keep the supporting knee slightly bent. No bounc",
+     2,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · A gentle stretch in the back calf. Keep that hee",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Hands on your thighs if you need to: you don't n",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Single-leg hamstring stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.couch.stretch · al colocarse",
+   "medidos": 48,
+   "todos": [
+    [
+     "Hips",
+     1,
+     null,
+     null
+    ],
+    [
+     "Couch Stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hip flexor",
+     1,
+     null,
+     null
+    ],
+    [
+     "Couch stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "90/90",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pigeon",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hip flexor",
+     1,
+     null,
+     null
+    ],
+    [
+     "One knee on the floor, on a cushion if needed. Front foot fl",
+     2,
+     null,
+     null
+    ],
+    [
+     "Ease your pelvis forward a little, no arching. A gentle stre",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Ease your pelvis forward a little, no arching. A gentl",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Ease your pelvis forward a little, no arching. A gent",
+     2,
+     null,
+     null
+    ],
+    [
+     "Back knee on the floor, right by the wall, its instep restin",
+     2,
+     null,
+     null
+    ],
+    [
+     "Rise up through your trunk slowly. Squeeze the back glute.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Rise up through your trunk slowly. Squeeze the back gl",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Rise up through your trunk slowly. Squeeze the back g",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit on the floor, one leg in front and one to the side, both",
+     2,
+     null,
+     null
+    ],
+    [
+     "Swing your knees from side to side, slowly, without forcing ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Bring one shin to the front, the other leg stretched back.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Walk your weight forward. Lower your chest little by little.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Walk your weight forward. Lower your chest little by l",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Walk your weight forward. Lower your chest little by ",
+     2,
+     null,
+     null
+    ],
+    [
+     "One knee on the floor, on a cushion if needed. Front foot fl",
+     2,
+     null,
+     null
+    ],
+    [
+     "19",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Trunk upright. If your knee hurts even with the ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Move your knee away from the wall to lower the i",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Lean on your hands behind you to go more comfort",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Place a cushion under the raised hip if needed. ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: Couch stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.couch.stretch · trabajando",
+   "medidos": 44,
+   "todos": [
+    [
+     "Hips",
+     1,
+     null,
+     null
+    ],
+    [
+     "Couch Stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 4",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hip flexor",
+     1,
+     null,
+     null
+    ],
+    [
+     "Couch stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "90/90",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pigeon",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hip flexor",
+     1,
+     null,
+     null
+    ],
+    [
+     "One knee on the floor, on a cushion if needed. Front foot fl",
+     2,
+     null,
+     null
+    ],
+    [
+     "Ease your pelvis forward a little, no arching. A gentle stre",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Ease your pelvis forward a little, no arching. A gentl",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Ease your pelvis forward a little, no arching. A gent",
+     2,
+     null,
+     null
+    ],
+    [
+     "Back knee on the floor, right by the wall, its instep restin",
+     2,
+     null,
+     null
+    ],
+    [
+     "Rise up through your trunk slowly. Squeeze the back glute.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Rise up through your trunk slowly. Squeeze the back gl",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Rise up through your trunk slowly. Squeeze the back g",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit on the floor, one leg in front and one to the side, both",
+     2,
+     null,
+     null
+    ],
+    [
+     "Swing your knees from side to side, slowly, without forcing ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Bring one shin to the front, the other leg stretched back.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Walk your weight forward. Lower your chest little by little.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Walk your weight forward. Lower your chest little by l",
+     2,
+     null,
+     null
+    ],
+    [
+     "Right. Walk your weight forward. Lower your chest little by ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Left. Ease your pelvis forward a little, no arching. A gentl",
+     2,
+     null,
+     null
+    ],
+    [
+     "25",
+     1,
+     null,
+     null
+    ],
+    [
+     "seconds",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Trunk upright. If your knee hurts even with the ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start with: Left",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Now: Right",
+     1,
+     null,
+     null
+    ],
+    [
+     "The other side starts automatically",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Move your knee away from the wall to lower the i",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Lean on your hands behind you to go more comfort",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Place a cushion under the raised hip if needed. ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Trunk upright. If your knee hurts even with the ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: Couch stretch",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next side",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.hips.ground · al colocarse",
+   "medidos": 36,
+   "todos": [
+    [
+     "Ground",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hips · Ground",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 5",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get set",
+     1,
+     null,
+     null
+    ],
+    [
+     "Frog",
+     1,
+     null,
+     null
+    ],
+    [
+     "90/90",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cossack squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ground sitting transitions",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Frog",
+     1,
+     null,
+     null
+    ],
+    [
+     "On all fours, knees a little apart, as far as is comfortable",
+     2,
+     null,
+     null
+    ],
+    [
+     "Move your hips back slowly and return, like a gentle rocking",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit on the floor, one leg in front and one to the side, both",
+     2,
+     null,
+     null
+    ],
+    [
+     "Swing your knees from side to side, slowly, without forcing ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Feet very wide. Bend one knee, toward where its foot points,",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lower to the floor through one knee and sit to the side. Com",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lower into a squat as far as is comfortable, heels down, and",
+     2,
+     null,
+     null
+    ],
+    [
+     "On all fours, knees a little apart, as far as is comfortable",
+     2,
+     null,
+     null
+    ],
+    [
+     "19",
+     1,
+     null,
+     null
+    ],
+    [
+     "to start",
+     1,
+     null,
+     null
+    ],
+    [
+     "+15 s",
+     1,
+     null,
+     null
+    ],
+    [
+     "· More time",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Cushion under your knees if they hurt. A stretch",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Lean on your hands behind you to go more comfort",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Heel down. Only go as low as you can control.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Use your hands, and a chair beside you if you ne",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Keep a comfortable support and come out with con",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Next: 90/90",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Start now",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  },
+  {
+   "momento": "move.hips.ground · trabajando",
+   "medidos": 33,
+   "todos": [
+    [
+     "Ground",
+     1,
+     null,
+     null
+    ],
+    [
+     "Hips · Ground",
+     1,
+     null,
+     null
+    ],
+    [
+     "Step 1 of 5",
+     1,
+     null,
+     null
+    ],
+    [
+     "× Exit",
+     1,
+     null,
+     null
+    ],
+    [
+     "Frog",
+     1,
+     null,
+     null
+    ],
+    [
+     "90/90",
+     1,
+     null,
+     null
+    ],
+    [
+     "Cossack squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Ground sitting transitions",
+     1,
+     null,
+     null
+    ],
+    [
+     "Deep squat",
+     1,
+     null,
+     null
+    ],
+    [
+     "Frog",
+     1,
+     null,
+     null
+    ],
+    [
+     "On all fours, knees a little apart, as far as is comfortable",
+     2,
+     null,
+     null
+    ],
+    [
+     "Move your hips back slowly and return, like a gentle rocking",
+     2,
+     null,
+     null
+    ],
+    [
+     "Sit on the floor, one leg in front and one to the side, both",
+     2,
+     null,
+     null
+    ],
+    [
+     "Swing your knees from side to side, slowly, without forcing ",
+     2,
+     null,
+     null
+    ],
+    [
+     "Feet very wide. Bend one knee, toward where its foot points,",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lower to the floor through one knee and sit to the side. Com",
+     2,
+     null,
+     null
+    ],
+    [
+     "Lower into a squat as far as is comfortable, heels down, and",
+     2,
+     null,
+     null
+    ],
+    [
+     "Move your hips back slowly and return, like a gentle rocking",
+     2,
+     null,
+     null
+    ],
+    [
+     "1",
+     1,
+     null,
+     null
+    ],
+    [
+     "of 8 reps",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Cushion under your knees if they hurt. A stretch",
+     2,
+     null,
+     null
+    ],
+    [
+     "Get set, no rush · starts on its own",
+     1,
+     null,
+     null
+    ],
+    [
+     "Get ready, no rush · press “Start now”",
+     1,
+     null,
+     null
+    ],
+    [
+     "Take care · Lean on your hands behind you to go more comfort",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Heel down. Only go as low as you can control.",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Use your hands, and a chair beside you if you ne",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Keep a comfortable support and come out with con",
+     2,
+     null,
+     null
+    ],
+    [
+     "Take care · Cushion under your knees if they hurt. A stretch",
+     2,
+     null,
+     null
+    ],
+    [
+     "Next: 90/90",
+     1,
+     null,
+     null
+    ],
+    [
+     "Auto",
+     1,
+     null,
+     null
+    ],
+    [
+     "Previous",
+     1,
+     null,
+     null
+    ],
+    [
+     "Pause",
+     1,
+     null,
+     null
+    ],
+    [
+     "Finish set",
+     1,
+     null,
+     null
+    ]
+   ],
+   "justos": [],
+   "cerca": []
+  }
+ ]
+}

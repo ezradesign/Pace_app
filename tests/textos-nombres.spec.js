@@ -40,7 +40,7 @@ test('la 11 de Ez: los nombres nuevos en es y en, con los ids de siempre', async
     };
   });
   expect(r.coherente).toEqual({ es: 'Coherente 432 Hz', en: 'Coherent 432 Hz' });
-  expect(r.gemelos).toEqual({ es: 'Gemelos bajo la mesa', en: 'Calf Raises Under the Desk' });
+  expect(r.gemelos).toEqual({ es: 'Gemelos bajo la mesa', en: 'Under-Desk Calf Raises' });
   expect(r.grupo).toEqual({ es: 'Sin levantarte', en: 'Without standing up' });
   expect(r.antidoto).toEqual({ es: 'Antídoto a la silla', en: 'Chair Antidote' });
   expect(r.postura).toEqual({ es: 'Recolocar la postura', en: 'Posture Reset' });

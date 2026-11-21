@@ -51,7 +51,7 @@ const sessionShellStyles = {
   },
   exitBtn: {
     fontSize: 13, color: 'var(--ink-2)',
-    padding: '6px 10px',
+    padding: '6px 8px',
   },
   center: {
     /* s112: minHeight 0 + overflowY auto — en pantallas de poca altura el
@@ -288,7 +288,9 @@ function SessionHeader({ routine, onExit, extra }) {
           fontSize: 22, margin: '2px 0 0', fontWeight: 500,
         }}>{routine.name}</h2>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+      {/* 10 px y no 16, y «× Salir» con 8 px a los lados y no 10: el nombre de la rutina quedaba a menos de 1 px de
+          partirse con la letra al 115 % (Ez, 7A del 20 nov.; medido en Windows y en Linux, que pinta como Android). */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         {extra}
         {/* La × es adorno: el lector dice «Salir», no «por Salir». */}
         <button data-pace-toque onClick={() => onExit('exit')} style={sessionShellStyles.exitBtn}><span aria-hidden="true">× </span>{t('session.exit')}</button>

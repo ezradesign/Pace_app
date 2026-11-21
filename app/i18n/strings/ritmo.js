@@ -25,14 +25,14 @@ Object.assign(window.PACE_STRINGS.es, {
     'ritmo.tarjeta.comienza':        'Preparar jornada',
     'ritmo.frase.menu':              'de {inicio} a {salida} · comida a las {comida} durante {dur}',
     'ritmo.frase.menu.sin':          'de {inicio} a {salida}',
-    'ritmo.frase.movil':             'De {inicio} a {salida} · comida {comida} · {dur}',
+    'ritmo.frase.movil':             '{inicio}–{salida} · comida {comida} · {dur}',   /* sin «De… a»: al 115 % partía en tres líneas y a 360 × 718 la tarjeta escondía «Luego» (Ez, 7A del 20 nov.; la 3A hizo lo mismo en inglés) */
     'ritmo.frase.movil.sin':         'De {inicio} a {salida}',
     'ritmo.frase.movil.empieza':     'empieza en el aro, arriba',
     'ritmo.hecha':                   'hecha',
     'ritmo.saltada':                 'saltada',
     'ritmo.noHecha':                 'no hecha',   /* pasada sin hacer, en Estadísticas › Hoy (Ez, 3B, 18 nov.) */
     'ritmo.cuenta':                  'por tu cuenta',   /* hecha sin la rutina: sin minutos (4A del 8 nov.) */
-    'ritmo.hoy':                     'hoy de {desde} a {hasta}',
+    'ritmo.hoy':                     'hoy {desde}–{hasta}',   /* con la raya, como en inglés: «hoy de… a…» dejaba la frase del día a 3 px de la tercera línea al 115 % (Ez, 7A del 20 nov.) */
     'ritmo.opcion.1h':               'Una hora',
     'ritmo.opcion.2h':               'Dos horas',
     'ritmo.opcion.media':            'Media jornada',
@@ -314,7 +314,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.motivo.respira':          'Slow down',
     /* A 360 px tienen que caber en una línea: «Shoulders: not moved today» y «Two hours:
        leave the chair» se partían (medido en la app, docs/traspaso/archivos/series-15oct/). */
-    'ritmo.frase.zona':              '{zona}: unmoved today',
+    'ritmo.frase.zona':              '{zona}: idle today',
     'ritmo.frase.ayer':              '{zona}: idle yesterday',
     'ritmo.frase.sentado':           '{n} min sitting so far',
     'ritmo.frase.larga':             'Two hours: time to stand',

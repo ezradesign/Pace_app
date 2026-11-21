@@ -112,7 +112,7 @@ test('Estira · ningún botón del cierre pisa a otro, de 1280×440 a 1920×1080
 test('Mueve, en inglés · ningún botón del cierre pisa a otro', async ({ page, context }) => {
   test.setTimeout(120_000);
   await page.setViewportSize({ width: 1536, height: 864 });
-  await hastaElCierre(page, context, { extra: { lang: 'en' }, modulo: /^Move/, rutina: 'Calf Raises Under the Desk' });
+  await hastaElCierre(page, context, { extra: { lang: 'en' }, modulo: /^Move/, rutina: 'Under-Desk Calf Raises' });
   await comprobarEn(page, COMUNES.concat(alturas(1536, 701, 719, 6)).concat(alturas(1280, 450, 650, 20)));
 });
 

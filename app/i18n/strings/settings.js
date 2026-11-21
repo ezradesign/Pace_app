@@ -62,7 +62,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'settings.bg.music':             'Música',
     /* Oír la señal elegida sin empezar una Respira, y dónde suena la música (Ez, 6A del 8 nov.). */
     'settings.signal.escuchar':      'Escuchar',
-    'settings.bg.music.nota':        'Lo que suena al respirar',   /* dice qué es la fila (Ez, 10A del 18 nov.; «mientras respiras» partía la línea a 360 × 640) */
+    'settings.bg.music.nota':        'Al respirar',   /* dice qué es la fila (Ez, 10A del 18 nov.); corta porque con «Lo que suena al respirar» la fila quedaba a 3 px de bajar sus botones en Linux a 1280 × 720 (Ez, 7A del 20 nov.) */
     'settings.signal.nota':          'La voz que cuenta las fases',
     'settings.vibrar':               'Vibrar',
     'settings.vibrar.sub':           'Mueve y Estira',
@@ -183,12 +183,12 @@ Object.assign(window.PACE_STRINGS.en, {
     'settings.signal.tone':          'Tone',
     'settings.signal.clear':         'Clear voice',
     'settings.signal.deep':          'Deep voice',
-    'settings.bg':                   'Background',   /* corto, como «While you breathe» y «Copies, deletion…»: con los botones en su línea, Ajustes cabe sin scroll en inglés a 1280 × 720 con los avisos bloqueados (Ez, C del 20 nov.) */
+    'settings.bg':                   'Background',   /* corto, como «When breathing» y «Copies, deletion…»: con los botones en su línea, Ajustes cabe sin scroll en inglés a 1280 × 720 con los avisos bloqueados (Ez, C del 20 nov.) */
     'settings.bg.none':              'Nothing',
     'settings.bg.ambient':           'Ambient',
     'settings.bg.music':             'Music',
     'settings.signal.escuchar':      'Listen',
-    'settings.bg.music.nota':        'While you breathe',
+    'settings.bg.music.nota':        'When breathing',   /* al 115 %, «While you breathe» bajaba los botones a otra línea a 1280 × 720 (Ez, 7A del 20 nov.) */
     'settings.signal.nota':          'The voice for each phase',
     'settings.vibrar':               'Vibrate',
     'settings.vibrar.sub':           'Move and Stretch',
