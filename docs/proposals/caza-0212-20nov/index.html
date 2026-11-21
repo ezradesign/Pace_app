@@ -72,6 +72,14 @@ code{font-family:ui-monospace,'Cascadia Mono',Consolas,monospace;font-size:.86em
     <p><strong>Tres fallos ciertos.</strong> Uno, arreglado: no cambia nada que se vea. Los otros dos cambian lo que se ve y esperan tu letra: <strong>dos preguntas</strong>, cada una con su recomendada.</p>
   </div>
 
+  <h2>Montado: la 1C (21 nov.)</h2>
+  <p>En el móvil, con los avisos bloqueados, la fila dice «Bloqueados · permisos del sitio › Notificaciones» y la nota larga solo sale en el ordenador. Ajustes cabe a 360 × 640 y 730 en los dos idiomas, con Chrome, Edge, Firefox y Safari. La 2A (la miniventana) la monta la sesión del aviso del PC.</p>
+  <div class="par">
+    <figure><img src="montado-1c-es.jpg" alt="Ajustes a 360 por 640 con la 1C: la fila dice «Bloqueados · permisos del sitio › Notificaciones» y cabe entero" loading="lazy"><figcaption>Castellano, 360 × 640.</figcaption></figure>
+    <figure><img src="montado-1c-en.jpg" alt="Lo mismo en inglés: «Blocked · site settings › Notifications»" loading="lazy"><figcaption>Inglés, 360 × 640.</figcaption></figure>
+  </div>
+  <p class="nota">Prueba: <code>tests/ajustes-bloqueados-movil.spec.js</code>, que cae sin el cambio (27 px).</p>
+
   <h2>Arreglado, sin nada que elegir</h2>
   <h3>La campanita del sello se metía en la campana del Foco</h3>
   <p>Al acabar un Foco suenan tres toques de campana (lo pediste el 19). Si ese Foco gana un sello (el primero gana «Primer paso»), su aviso salía a los 0,4 s y su campanita sonaba entre el primer toque y el segundo: se oían cuatro golpes mezclados. <strong>Ahora el aviso sale a su hora y su campanita suena justo al acabar el tercer toque</strong>, mientras el aviso aún se ve.</p>
