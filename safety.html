@@ -157,8 +157,17 @@
 
   <div class="footer">
     <span>Pace · by @ezradesign</span>
-    <span><a href="/">Volver a la app</a> · <a href="/privacy">Privacidad</a></span>
+    <span><a href="/" data-pace-volver>Volver a la app</a><span data-pace-volver> · </span><a href="/privacy" data-pace-otra-legal>Privacidad</a></span>
   </div>
 </main>
+<script>
+/* Abierta desde las apps (?app=1, app/ui/nativo.js): sin «Volver a la app», que llevaba a la landing con
+   la compra de la web, y el enlace a la otra página legal conserva la marca. */
+(function () {
+  if (!/[?&]app=1(&|$)/.test(location.search)) return;
+  document.querySelectorAll('[data-pace-volver]').forEach(function (e) { e.remove(); });
+  document.querySelectorAll('[data-pace-otra-legal]').forEach(function (a) { a.setAttribute('href', a.getAttribute('href') + '?app=1'); });
+})();
+</script>
 </body>
 </html>

@@ -111,7 +111,7 @@ test('Android: la mensual con su prueba dice lo que da Google, cómo se renueva 
   await expect(hoja.locator('[data-pace-premium-renueva]')).toHaveText('Después, 2,99 € al mes. Se renueva cada mes hasta que canceles en Google Play.');
   await expect(hoja.locator('[data-pace-premium-aviso]')).toHaveCount(0);
   await expect(hoja.locator('[data-pace-premium-condiciones]')).toHaveAttribute('href', 'https://play.google.com/about/play-terms/');
-  await expect(hoja.locator('[data-pace-premium-privacidad]')).toHaveAttribute('href', 'https://pacegrass.app/privacy');
+  await expect(hoja.locator('[data-pace-premium-privacidad]')).toHaveAttribute('href', 'https://pacegrass.app/privacy?app=1');
 
   await hoja.locator('[data-pace-premium-mes]').click();
   await expect(hoja.locator('[data-pace-premium-resultado]')).toContainText('Tu prueba gratis acaba el');

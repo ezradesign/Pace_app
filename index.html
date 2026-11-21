@@ -7768,7 +7768,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.213.0';
+const PACE_VERSION = 'v0.213.1';
 
 
 
@@ -20966,8 +20966,14 @@ function paceNativoGuardarArchivo(nombre, texto, alAbrir) {
 
 
 
+
+
+
+
 function paceNativoEnlace(ruta) {
-  return paceEsNativo() ? PACE_WEB_PUBLICA + ruta : ruta;
+  if (!paceEsNativo()) return ruta;
+  const legal = ruta.replace(/^(\/(?:privacy|safety))(?=#|$)/, '$1?app=1');
+  return PACE_WEB_PUBLICA + legal;
 }
 
 

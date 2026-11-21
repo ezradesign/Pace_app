@@ -122,8 +122,14 @@ function paceNativoGuardarArchivo(nombre, texto, alAbrir) {
 
 /* '/privacy' en la web; la pagina publicada en las dos apps, que el sistema
    abre en el navegador. */
+/* Privacidad y Seguridad, abiertas desde las apps, llevan `?app=1`: su «Volver a la app» iba a la raíz de
+   pacegrass.app, que a quien llega nuevo le enseña la landing con la compra de la web (auditoría de Fable,
+   nº 14; Apple lo mira). Con la marca, la página quita ese enlace: desde el navegador se vuelve a PACE
+   cambiando de app. */
 function paceNativoEnlace(ruta) {
-  return paceEsNativo() ? PACE_WEB_PUBLICA + ruta : ruta;
+  if (!paceEsNativo()) return ruta;
+  const legal = ruta.replace(/^(\/(?:privacy|safety))(?=#|$)/, '$1?app=1');
+  return PACE_WEB_PUBLICA + legal;
 }
 
 /* Privacidad y Seguridad (/privacy, /safety): con PACE en inglés, a su parte en inglés (#en). Las

@@ -106,8 +106,8 @@ test.describe('en el iPhone', () => {
     await abrirTusDatos(page);
     await expect(page.getByText('Todo vive en este móvil y no se sincroniza con otros.')).toBeVisible();
     /* La App Store pide que la política de privacidad se abra desde la app. */
-    await expect(page.getByRole('link', { name: 'Privacidad' })).toHaveAttribute('href', 'https://pacegrass.app/privacy');
-    await expect(page.getByRole('link', { name: 'Seguridad' })).toHaveAttribute('href', 'https://pacegrass.app/safety');
+    await expect(page.getByRole('link', { name: 'Privacidad' })).toHaveAttribute('href', 'https://pacegrass.app/privacy?app=1');
+    await expect(page.getByRole('link', { name: 'Seguridad' })).toHaveAttribute('href', 'https://pacegrass.app/safety?app=1');
     await expect(page.getByText('Tengo un código')).toHaveCount(0);
     expect(await page.evaluate(() => paceLicenciaPermitida())).toBe(false);
   });

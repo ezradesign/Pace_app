@@ -233,8 +233,8 @@ test.describe('en Android', () => {
     await irAlArtefacto(page);
     await abrirAjustes(page);
     await abrirTusDatos(page);
-    await expect(page.getByRole('link', { name: 'Privacidad' })).toHaveAttribute('href', 'https://pacegrass.app/privacy');
-    await expect(page.getByRole('link', { name: 'Seguridad' })).toHaveAttribute('href', 'https://pacegrass.app/safety');
+    await expect(page.getByRole('link', { name: 'Privacidad' })).toHaveAttribute('href', 'https://pacegrass.app/privacy?app=1');
+    await expect(page.getByRole('link', { name: 'Seguridad' })).toHaveAttribute('href', 'https://pacegrass.app/safety?app=1');
     await expect(page.getByText('Todo vive en este móvil y no se sincroniza con otros.')).toBeVisible();
   });
 
