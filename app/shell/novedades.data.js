@@ -15,6 +15,18 @@
 
 const PACE_NOVEDADES = [
   {
+    id: 'miniventana-sola',
+    desde: '2026-11-21',
+    es: [
+      'En el ordenador, la miniventana se abre sola al empezar un Foco; si la cierras, PACE deja de abrirla sola.',
+      '«¿Te ayudó esta pausa?» sale menos: tres veces por rutina y después una vez por semana.',
+    ],
+    en: [
+      'On your computer, the mini window opens by itself when you start Focus; close it and PACE stops opening it.',
+      '“Did this break help?” shows up less: three times per routine, then once a week.',
+    ],
+  },
+  {
     id: 'aviso-pc-y-cambios',
     desde: '2026-11-20',
     es: [

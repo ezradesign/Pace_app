@@ -4,7 +4,12 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de noviembre de 2026, 10:20, v0.204.0 en `main` y los cuatro arreglos de S3 y S4 en su rama.
 
-## AL RELEVO (20 nov., 22:25, cuenta EcLj6 con las 5 h al ~92 %; se reponen a la 1:50): empieza aquí; manda sobre todo lo de abajo
+## AL RELEVO (21 nov., cuenta EcLj6; Ez: «puedes llevar el uso al 100 %, seguimos aquí cuando se restablezca»): empieza aquí
+
+- **`main` = 0.213.0** con el «Sí, júntalo» de Ez: las cuatro ramas de sus letras del 20 nov. (miniventana sola + 2A, caza + 1C, auditoría + Haptics + 3A 4A 5A 6A, barrido + 7A). Página de lo montado: ShopHkxE7Yoh1GhANwr95R. La novedad del sobre, «miniventana-sola». Suite entera sobre la unión: 1994 en verde; la única roja era `aro-jornada.spec.js:206` (buscaba «Bloque» a secas y la 7A dejó «Bloque cerrado»), puesta al día.
+- **Espera a Ez:** probar la miniventana en su Chrome (se abre sola, se cierra y no vuelve; en la jornada, «Bloque N de M» y terracota al acabar), y la 3A no se sabrá del todo sin una licencia de prueba de Play.
+
+## AL RELEVO (20 nov., 22:25, manda lo de arriba; cuenta EcLj6 con las 5 h al ~92 %; se reponen a la 1:50): empieza aquí; manda sobre todo lo de abajo
 
 - **`main` = 0.212.0 + Ocaso tras «Seguir por libre» + la novedad del sobre, GitHub en verde entero** (CI 44814473490 sobre 2219f993). Nada sin subir.
 - **Ez eligió (20 nov., literal): «1C 2A 3A 4A 5A 6A 7A»** en la página de las elecciones (EcLj6 `YZXqYBR987pVabe63345wp`; copia en `docs/proposals/elecciones-20nov/index.html`, a publicar en la otra cuenta y apuntar su par). Y «guarda estas elecciones y prepara todo».

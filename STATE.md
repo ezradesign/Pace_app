@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.212.0 · 19 de noviembre de 2026 (la versión de prueba de Play y TestFlight es la 0.191.1). Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
+**Versión:** v0.213.0 · 21 de noviembre de 2026 (la versión de prueba de Play y TestFlight es la 0.191.1). Qué trajo cada versión: `CHANGELOG.md`. Las reglas que
 no se pueden romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -47,7 +47,7 @@ de Android con sus 14 días seguidos, que aún no han empezado, y el alta para c
 
 ## Espera a Ez
 
-- **La 0.212.0, en `main` con el «Júntalo todo» de Ez (19 nov.)**: las siete ramas del día (menores, recorrido con la 11 y la tarjeta limpia, voz 1A, visita A, caza, aviso del Foco en el PC con la miniventana, y la comida con «Seguir por libre» A). En inglés, Ajustes con los avisos bloqueados cabe a 1280 × 720 con tres textos más cortos (C de Ez, 20 nov.), y tres textos que en Linux (como en Android) pasaban de línea, arreglados con 1A 2A 3A de Ez (página 57qUVTJTpogW8Ddcz9nBmj). GitHub en verde entero (CI 44811782413). El hueco de Ocaso tras «Seguir por libre», arreglado y juntado con el sí de Ez (20 nov.). Falta probar en un Chrome de verdad el aviso y la miniventana. Ez eligió el 20 nov. «1C 2A 3A 4A 5A 6A 7A» de la caza, la auditoría y el barrido (página YZXqYBR987pVabe63345wp; copia en `docs/proposals/elecciones-20nov/`): se montan en sus ramas, como dice el relevo de `docs/traspaso/LEEME.md`, para una 0.213.0.
+- **La 0.212.0, en `main` con el «Júntalo todo» de Ez (19 nov.)**: las siete ramas del día (menores, recorrido con la 11 y la tarjeta limpia, voz 1A, visita A, caza, aviso del Foco en el PC con la miniventana, y la comida con «Seguir por libre» A). En inglés, Ajustes con los avisos bloqueados cabe a 1280 × 720 con tres textos más cortos (C de Ez, 20 nov.), y tres textos que en Linux (como en Android) pasaban de línea, arreglados con 1A 2A 3A de Ez (página 57qUVTJTpogW8Ddcz9nBmj). GitHub en verde entero (CI 44811782413). El hueco de Ocaso tras «Seguir por libre», arreglado y juntado con el sí de Ez (20 nov.). Falta probar en un Chrome de verdad el aviso y la miniventana. **La 0.213.0 (21 nov., «Sí, júntalo»)** trae «1C 2A 3A 4A 5A 6A 7A» de Ez (página de lo montado ShopHkxE7Yoh1GhANwr95R): suite entera sobre la unión, 1994 en verde y 1 roja que era la prueba (la 7A cambió «Has cerrado un bloque»), puesta al día. Falta que Ez pruebe la miniventana en su Chrome.
 
 La lista, por orden y sin jerga, en su hoja de pasos (`docs/traspaso/hoja-de-ruta-20oct.html`), una por cuenta:
 https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 y https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT. La lista corta de solo
