@@ -129,6 +129,28 @@ test.describe('Ocaso con bloques de verdad', () => {
     expect(await page.evaluate(() => getState().ritmo.libre), 'GUARD: el día, por libre').toBe('2026-11-16');
   });
 
+  /* «Seguir por libre» con la jornada cerrada retira el día (Ez, A del 19 nov. 2026): ya no hay plan que
+     diga dónde estaba la salida. El Foco que se empieza después se mide con la salida que se apuntó al
+     contar el día (`ocasoSalida`); sin ella, un día cerrado a su hora seguía contando con un Foco a las 17:40.
+     El CONTROL (Foco empezado a las 16:40, antes de la salida) pasaba ya antes del arreglo. */
+  for (const [hora, tarde] of [['17:40', true], ['16:40', false]]) {
+    test(`${tarde ? '' : 'CONTROL: '}jornada cerrada a su hora, «Seguir por libre» a las ${hora} y un Foco empezado ${tarde ? 'después de' : 'antes de'} la salida: el día ${tarde ? 'sale' : 'sigue'}`, async ({ page, context }) => {
+      await abrir(page, context, { soundOn: false, achievements: { 'first.step': { unlockedAt: 1 } } }, new Date('2026-11-16T' + hora + ':00'));
+      await cerrarHoy(page);
+      await mirar(page);
+      expect(await ocaso(page), 'GUARD: el día cuenta al cerrarse con todos sus bloques').toEqual({ tarde: null, dias: ['2026-11-16'] });
+      await page.locator('[data-pace-dial-number]').first().waitFor({ state: 'visible' });
+      await expect(cta(page)).toHaveText('Seguir por libre');
+      await cta(page).click();
+      expect(await page.evaluate(() => getState().ritmo.libre), 'GUARD: el día, por libre').toBe('2026-11-16');
+      await empezarFoco(page);
+      await terminarBloque(page);
+      await expect.poll(() => page.evaluate(() => window.getState().cycle), 'GUARD: el bloque contó').toBe(21);
+      expect(await ocaso(page), tarde ? 'el Foco de las 17:40 no sacaba el día: sin plan, nadie miraba la salida' : 'un Foco empezado antes de la salida no saca el día')
+        .toEqual(tarde ? { tarde: '2026-11-16', dias: [] } : { tarde: null, dias: ['2026-11-16'] });
+    });
+  }
+
   test('un Foco empezado a las 23:50, tras una jornada cerrada a su hora, saca ese día al acabar a las 00:15', async ({ page, context }) => {
     await abrir(page, context, { soundOn: false, achievements: { 'first.step': { unlockedAt: 1 } },
       ocasoDias: ['2026-11-15', '2026-11-16'], ocasoSalida: { fecha: '2026-11-16', fin: 1020, finDesde: null } },
