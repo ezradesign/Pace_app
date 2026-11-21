@@ -7,7 +7,9 @@
  * LO QUE DEFIENDE: a 360 px en castellano la última línea mide al menos el 40 % de la primera. Sin el
  * arreglo cae: la última línea, «1 h», mide un 13 % de la primera. Las de 320, 390 y 768 px, en los dos
  * idiomas, son de cobertura (pasan con y sin el arreglo): la frase no gana líneas (tres a 320, dos
- * desde 360) y, desde 360, la home no pide scroll.
+ * desde 360) y, desde 360, la home no pide scroll. Desde la 7A de Ez (20 nov.) la frase dice
+ * «9:00–17:00 · comida…», sin «De… a», y a 360 px en castellano cabe en una línea: el reparto solo se
+ * comprueba si vuelve a ir en dos, y la frase sigue sin poder ganar líneas.
  */
 'use strict';
 
@@ -49,8 +51,9 @@ test('360×640 en castellano: «1 h» ya no se queda sola en la segunda línea',
   await abrir(page, context, 'es', 360, 640);
   const m = await lineas(page);
   expect(m.texto, 'GUARD: es la frase de la jornada con su comida').toMatch(/comida.*1 h/);
-  expect(m.anchos.length, 'GUARD: a 360 px la frase va en dos líneas').toBe(2);
-  expect(m.anchos[1] / m.anchos[0]).toBeGreaterThan(0.4);
+  /* Desde la 7A de Ez (20 nov.), sin «De… a», la frase cabe en una línea a 360 px; si va en dos, repartida. */
+  expect(m.anchos.length).toBeLessThanOrEqual(2);
+  if (m.anchos.length === 2) expect(m.anchos[1] / m.anchos[0]).toBeGreaterThan(0.4);
   expect(m.scroll).toBe(0);
 });
 

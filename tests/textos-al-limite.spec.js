@@ -9,7 +9,9 @@
  * QUÉ DEFIENDE: que cada texto acortado, en su pantalla, idioma y con la letra normal y al 115 %,
  * aguante al menos 3 px más de ancho sin mover nada (tests/textos-al-limite.sonda.js: una línea más
  * que agranda su caja, un texto que se sale o una fila que salta). Corre en Windows y en el CI de
- * Linux, así que vale para los dos. Al montarlo quedaban 6 px o más en los dos.
+ * Linux, así que vale para los dos. Al montarlo quedaban 7 px o más en los dos, salvo «Legs: idle today»
+ * (4,1 px en Windows y 5,5 en Linux, a 360 × 718 al 115 %). Fuera: las filas «Siguiente: … · Auto», cuyo texto
+ * cambia en cada paso, y «Muévete» al 115 %, que aún se sale unos 10 px en Linux.
  * Mutante: con «Talón apoyado. Baja solo hasta donde controles.», la de Caderas de pie cae (1,9 px
  * en Windows); con «Lo que suena al respirar», la de Ajustes cae en Linux (3,0 px).
  */
