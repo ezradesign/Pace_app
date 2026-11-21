@@ -74,6 +74,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'settings.notify':               'Aviso al terminar',
     'settings.notify.sub':           'Foco · si la pestaña está detrás',
     'settings.notify.sub.blocked':   'Foco · bloqueados en este navegador',
+    /* En el móvil, la línea dice el cómo y no hay nota debajo: no cabía (Ez, 1C del 21 nov. 2026). */
+    'settings.notify.sub.blocked.movil': 'Bloqueados · permisos del sitio › Notificaciones',
     /* Con el permiso bloqueado, cómo quitarlo en cada navegador (Ez, 1.2A del 19 nov. 2026). */
     'settings.notify.blocked.chrome': 'Bloqueados: icono junto a la dirección, «Notificaciones», «Permitir».',
     'settings.notify.blocked.edge':  'Bloqueados: candado de la dirección, «Permisos para este sitio», «Notificaciones», «Permitir».',
@@ -198,6 +200,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'settings.notify':               'Alert at the end',
     'settings.notify.sub':           'Focus · if the tab is in the background',
     'settings.notify.sub.blocked':   'Focus · blocked in this browser',
+    'settings.notify.sub.blocked.movil': 'Blocked · site settings › Notifications',
     'settings.notify.blocked.chrome': 'Blocked: icon by the address, “Notifications”, “Allow”.',
     'settings.notify.blocked.edge':  'Blocked: lock by the address, “Site permissions”, “Notifications”, “Allow”.',
     'settings.notify.blocked.firefox': 'Blocked: icon by the address, clear the block on “Send Notifications”.',

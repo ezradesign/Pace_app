@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caza de la 0.212</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Una columna de papel y tinta, como las demás páginas de propuestas. Terracota = lo que espera a Ez;
+   oliva = lo recomendado. Las fotos son de la 0.212.0 construida (index.html), y las de las opciones,
+   la misma pantalla con el cambio puesto a mano para medirlo. */
+:root{
+  --paper:#F2EDE0;--card:#FBF8F1;--ink:#1F1C17;--ink-2:#4A453C;--ink-3:#77705F;--line:#C9C0A8;
+  --olive:#3E5A3A;--olive-soft:rgba(62,90,58,.12);--terra:#C97A5D;--terra-soft:rgba(201,122,93,.14);
+  --display:'EB Garamond',Georgia,'Times New Roman',serif;
+  --ui:'Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#D99477;--terra-soft:rgba(232,169,143,.14);color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#1d1a14;--card:#2c271f;--ink:#EDE5D3;--ink-2:#c0b49e;--ink-3:#B2A995;--line:#4d4536;
+  --olive:#98B58B;--olive-soft:rgba(122,154,109,.16);--terra:#D99477;--terra-soft:rgba(232,169,143,.14);color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+main{max-width:880px;margin:0 auto;padding:40px 16px 72px}
+h1,h2,h3{font-family:var(--display);font-style:italic;font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(32px,6vw,44px)}
+h2{font-size:clamp(23px,4vw,28px);margin:44px 0 10px;padding-top:22px;border-top:1px solid var(--line)}
+h3{font-size:21px;margin:0 0 6px}
+p,ul{margin:0 0 12px;color:var(--ink-2);max-width:68ch}
+ul{padding-left:20px}
+li{margin-bottom:6px}
+strong{color:var(--ink);font-weight:500}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.lead{font-family:var(--display);font-size:21px;color:var(--ink);max-width:62ch;margin-top:14px}
+.nota{font-size:13px;color:var(--ink-3)}
+.resumen{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:20px 0}
+.resumen p{margin:0;color:var(--ink)}
+.pregunta{border-left:3px solid var(--terra);padding:2px 0 2px 16px;margin:26px 0 12px}
+.pregunta p{margin:0;color:var(--ink)}
+.ops{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:14px;margin:14px 0 8px}
+.op{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.op.rec{border-color:var(--olive);box-shadow:0 0 0 1px var(--olive)}
+.op .letra{font-family:var(--display);font-style:italic;font-size:24px;line-height:1}
+.op .tag{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--olive);font-weight:600}
+.op .tag.mal{color:var(--terra)}
+.op p{margin:0;font-size:14.5px}
+.op img{display:block;width:100%;height:auto;border-radius:8px;border:1px solid var(--line)}
+.tiras{display:flex;flex-direction:column;gap:8px}
+.tiras figure{margin:0}
+.tiras figcaption{font-size:12.5px;color:var(--ink-3);margin-top:3px}
+.par{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px;margin:12px 0}
+.par figure{margin:0}
+.par img{display:block;width:100%;max-width:360px;height:auto;border-radius:8px;border:1px solid var(--line)}
+.par figcaption{font-size:13px;color:var(--ink-3);margin-top:4px}
+code{font-family:ui-monospace,'Cascadia Mono',Consolas,monospace;font-size:.86em;background:var(--card);border:1px solid var(--line);border-radius:4px;padding:0 4px;word-break:break-word}
+.medida{font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink)}
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">PACE · caza de la 0.212.0 · 20 nov. 2026</div>
+  <h1>Lo que falla con las siete ramas juntas</h1>
+  <p class="lead">Recorrí los sitios donde dos ramas del 19 nov. tocan lo mismo, en el <code>index.html</code> que se sube, a 360 × 640 y a 1280 × 720, en castellano y en inglés.</p>
+
+  <div class="resumen">
+    <p><strong>Tres fallos ciertos.</strong> Uno, arreglado: no cambia nada que se vea. Los otros dos cambian lo que se ve y esperan tu letra: <strong>dos preguntas</strong>, cada una con su recomendada.</p>
+  </div>
+
+  <h2>Montado: la 1C (21 nov.)</h2>
+  <p>En el móvil, con los avisos bloqueados, la fila dice «Bloqueados · permisos del sitio › Notificaciones» y la nota larga solo sale en el ordenador. Ajustes cabe a 360 × 640 y 730 en los dos idiomas, con Chrome, Edge, Firefox y Safari. La 2A (la miniventana) la monta la sesión del aviso del PC.</p>
+  <div class="par">
+    <figure><img src="montado-1c-es.jpg" alt="Ajustes a 360 por 640 con la 1C: la fila dice «Bloqueados · permisos del sitio › Notificaciones» y cabe entero" loading="lazy"><figcaption>Castellano, 360 × 640.</figcaption></figure>
+    <figure><img src="montado-1c-en.jpg" alt="Lo mismo en inglés: «Blocked · site settings › Notifications»" loading="lazy"><figcaption>Inglés, 360 × 640.</figcaption></figure>
+  </div>
+  <p class="nota">Prueba: <code>tests/ajustes-bloqueados-movil.spec.js</code>, que cae sin el cambio (27 px).</p>
+
+  <h2>Arreglado, sin nada que elegir</h2>
+  <h3>La campanita del sello se metía en la campana del Foco</h3>
+  <p>Al acabar un Foco suenan tres toques de campana (lo pediste el 19). Si ese Foco gana un sello (el primero gana «Primer paso»), su aviso salía a los 0,4 s y su campanita sonaba entre el primer toque y el segundo: se oían cuatro golpes mezclados. <strong>Ahora el aviso sale a su hora y su campanita suena justo al acabar el tercer toque</strong>, mientras el aviso aún se ve.</p>
+  <p class="nota">Prueba: <code>tests/campana-sello.spec.js</code>, que cae contra la 0.212.0 (la campanita sonaba a los 407 ms).</p>
+
+  <h2>Pregunta 1 · Ajustes en el móvil con los avisos bloqueados</h2>
+  <p>En un Android con Chrome (la web, no la app), si las notificaciones están bloqueadas, <strong>Ajustes pide <span class="medida">27 px</span> de scroll a 360 × 640</strong> (<span class="medida">42 px</span> en Edge en castellano) y corta «Tus datos». Se juntan dos ramas: la caza quitó la nota para que cupiera, y el aviso del PC trajo otra, de dos líneas, que dice cómo quitar el bloqueo. La prueba de la unión medía sin pantalla táctil, sin la fila «Vibrar», y cabía.</p>
+  <div class="par">
+    <figure><img src="ajustes-hoy-es.jpg" alt="Ajustes a 360 por 640 con la nota de dos líneas: «Tus datos» queda cortado abajo" loading="lazy"><figcaption>Hoy: la nota suma dos líneas y «Tus datos» se corta.</figcaption></figure>
+    <figure><img src="ajustes-hoy-en.jpg" alt="Lo mismo en inglés" loading="lazy"><figcaption>En inglés, igual: 27 px.</figcaption></figure>
+  </div>
+  <p class="nota">Probé también la nota en una sola línea («Bloqueados: permisos del sitio › Notificaciones › Permitir.»): sigue pidiendo 12 px. No la pongo como opción.</p>
+
+  <div class="pregunta"><p><strong>¿Qué dice Ajustes en el móvil cuando los avisos están bloqueados?</strong></p></div>
+  <div class="ops">
+    <div class="op rec">
+      <div class="tag">Recomendada</div>
+      <div class="letra">C</div>
+      <p><strong>El cómo, en la línea pequeña de la fila:</strong> «Bloqueados · permisos del sitio › Notificaciones». La nota larga, solo en el ordenador. <span class="medida">0 px</span> de scroll en los dos idiomas, y sigue diciendo dónde se quita.</p>
+      <img src="ajustes-c-es.jpg" alt="Opción C: la fila dice «Bloqueados · permisos del sitio › Notificaciones» y Ajustes cabe entero" loading="lazy">
+    </div>
+    <div class="op">
+      <div class="letra">B</div>
+      <p><strong>Sin nota en el móvil</strong>, como dejó la caza: la fila dice «Foco · bloqueados en este navegador» y nada más. <span class="medida">0 px</span>, pero no dice dónde se quita.</p>
+      <img src="ajustes-b-es.jpg" alt="Opción B: solo la línea «Foco · bloqueados en este navegador»" loading="lazy">
+    </div>
+  </div>
+  <p class="nota">En inglés, C diría «Blocked · site settings › Notifications» (foto <code>ajustes-c-en.jpg</code>). En el móvil, «la pestaña sigue avisando» tampoco sirve: la pestaña no se ve.</p>
+
+  <h2>Pregunta 2 · La miniventana durante la jornada</h2>
+  <p>La miniventana (2B) se probó con el Foco suelto. <strong>Con «A tu ritmo» y un bloque de la jornada en marcha</strong>, falla en tres cosas:</p>
+  <ul>
+    <li>dice «Foco · Ciclo 1 / 4» mientras el aro dice «Bloque 1 de 8»;</li>
+    <li>al acabar el bloque no se pone en terracota con «Foco terminado»: pasa directa a contar la pausa, y quien está en otra ventana no ve que acabó;</li>
+    <li>en la pausa de la jornada enseña «Pausar», y <strong>ese botón no hace nada</strong>: la cuenta sigue. El aro no la deja pausar.</li>
+  </ul>
+  <div class="tiras">
+    <figure><img src="mini-hoy-corre.jpg" alt="Tira de hoy: 44:58, Foco · Ciclo 1 / 4, botón Pausar" width="300" height="84"><figcaption>Hoy, con el bloque en marcha: «Ciclo 1 / 4».</figcaption></figure>
+    <figure><img src="mini-hoy-acaba.jpg" alt="Tira de hoy al acabar el bloque: 04:58, Pausa corta, botón Pausar" width="300" height="84"><figcaption>Hoy, al acabar el bloque: ya cuenta la pausa, con un «Pausar» que no pausa.</figcaption></figure>
+  </div>
+
+  <div class="pregunta"><p><strong>¿Cómo habla la miniventana durante la jornada?</strong></p></div>
+  <div class="ops">
+    <div class="op rec">
+      <div class="tag">Recomendada</div>
+      <div class="letra">A</div>
+      <p><strong>Como el aro, y avisa al acabar.</strong> «Foco · Bloque 1 de 8»; al acabar el bloque, «Foco terminado» en terracota con «Volver», como fuera de la jornada, hasta que vuelves a PACE; y en la pausa, la cuenta sin botón.</p>
+      <div class="tiras">
+        <figure><img src="mini-a-corre.jpg" alt="Opción A con el bloque en marcha: Foco · Bloque 1 de 8" width="300" height="84"></figure>
+        <figure><img src="mini-a-acaba.jpg" alt="Opción A al acabar: Foco terminado, Vuelve a PACE para tu pausa, botón Volver" width="300" height="84"></figure>
+        <figure><img src="mini-a-pausa.jpg" alt="Opción A en la pausa: 04:00, Pausa corta, sin botón" width="300" height="84"></figure>
+      </div>
+    </div>
+    <div class="op">
+      <div class="letra">B</div>
+      <p><strong>Lo mínimo.</strong> «Bloque 1 de 8» y sin «Pausar» en la pausa de la jornada. Al acabar el bloque sigue pasando directa a la pausa, como hoy.</p>
+      <div class="tiras">
+        <figure><img src="mini-a-corre.jpg" alt="Opción B con el bloque en marcha: Foco · Bloque 1 de 8" width="300" height="84"></figure>
+        <figure><img src="mini-a-pausa.jpg" alt="Opción B en la pausa: la cuenta sin botón" width="300" height="84"></figure>
+      </div>
+    </div>
+  </div>
+
+  <h2>Lo que miré y está bien</h2>
+  <ul>
+    <li><strong>El runner:</strong> la voz que dice el número que pone la pantalla, los cambios dentro de un paso y «Paso N de M» sin descansos. «Cambia de lado» deja sitio al número siguiente en los ocho pasos con cambio, en las dos voces y los dos idiomas.</li>
+    <li><strong>La home:</strong> el bloque en marcha y pausado, la ventana de antes de comer, en plena comida, el cierre contando, «Cerrar la jornada», «Jornada cerrada» y «Seguir por libre». Sin scroll y sin textos cortados en los cuatro tamaños.</li>
+    <li><strong>Los avisos:</strong> «2 sellos nuevos · Primer paso y uno más» cabe en el aro a 360 px; las notificaciones del PC no se duplican con la pausa de la jornada; la visita guiada no deja salir sellos encima.</li>
+    <li><strong>Ajustes en el ordenador:</strong> cabe a 1280 × 720 con la nota de Chrome, Edge, Firefox y Safari, en los dos idiomas.</li>
+  </ul>
+  <p class="nota">Fuera de la unión (ya pasaba antes): si repites la visita guiada desde Ajustes con un bloque de la jornada en marcha y el bloque acaba, la ventana de la pausa sale encima de la visita.</p>
+</main>
+</body>
+</html>

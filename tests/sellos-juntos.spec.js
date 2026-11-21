@@ -77,7 +77,10 @@ test('lo ganado en un Foco espera a que acabe, y sale junto con lo del Foco', as
   await page.getByRole('button', { name: 'Ahora no', exact: true }).click();
   await expect(aviso(page)).toContainText('2 sellos nuevos');
   await expect(aviso(page)).toContainText('y uno más');
-  expect(await campanas(page)).toBe(1);
+  /* La campanita espera a que acaben los tres toques del fin del Foco (campana-sello.spec.js). */
+  await expect.poll(() => campanas(page), { timeout: 5000 }).toBe(1);
+  await page.waitForTimeout(500);
+  expect(await campanas(page), 'una sola campanita para los dos').toBe(1);
 });
 
 test('si llevan más de 15 min esperando, salen sin sonido; si no, con él', async ({ page, context }) => {
