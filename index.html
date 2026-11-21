@@ -7833,7 +7833,7 @@ const defaultState = {
 
 
 
-  notifyFocusEnd: true, exactaOfrecida: false,
+  notifyFocusEnd: true, exactaOfrecida: false, miniSolaNo: false,
   lang: 'en',
 
 
@@ -34254,8 +34254,11 @@ function useTituloCuenta(_ref) {let { running, remaining, total, modo, lang, t }
   }, []);
 }
 
-Object.assign(window, { useTituloCuenta, paceTituloCuenta, paceTabTerminado });
-;Object.assign(window, { paceTituloCuenta, paceTabMirando, paceTabFinPon, paceTabTerminado, paceIconoPon, useTituloCuenta });
+
+function paceTabFinEs() {return _paceTabFin;}
+
+Object.assign(window, { useTituloCuenta, paceTituloCuenta, paceTabTerminado, paceTabFinEs });
+;Object.assign(window, { paceTituloCuenta, paceTabMirando, paceTabFinPon, paceTabTerminado, paceIconoPon, useTituloCuenta, paceTabFinEs });
 })();
 </script>
   <!-- La miniventana: el Foco en una tira encima de todas las ventanas. Antes de FocusTimer.jsx. -->
@@ -34278,10 +34281,24 @@ Object.assign(window, { useTituloCuenta, paceTituloCuenta, paceTabTerminado });
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const { useEffect: useEffectMini, useState: useStateMini } = React;
 
 const PACE_MINI_TAM = { width: 300, height: 84 };
-let _paceMini = { win: null, root: null, props: null };
+let _paceMini = { win: null, root: null, props: null, cerrandoYo: false };
 
 function paceMiniPuede() {
   try {return 'documentPictureInPicture' in window && window.top === window;} catch (e) {return false;}
@@ -34294,7 +34311,21 @@ function paceMiniPintar() {
 }
 function paceMiniCerrar() {
   const w = _paceMini.win;
-  if (w) {try {w.close();} catch (e) {}}
+  if (w) {_paceMini.cerrandoYo = true;try {w.close();} catch (e) {}}
+}
+
+window.addEventListener('pagehide', () => {_paceMini.cerrandoYo = true;});
+function paceMiniApuntar(patch) {
+  try {if (typeof setState === 'function') setState(patch);} catch (e) {}
+}
+
+function paceMiniAlEmpezar(estado) {
+  try {
+    if (!estado || estado.miniSolaNo || !paceMiniPuede() || _paceMini.win) return;
+    const ua = navigator.userActivation;
+    if (ua && !ua.isActive) return;
+    paceMiniAbrir({ sola: true });
+  } catch (e) {}
 }
 
 
@@ -34315,8 +34346,11 @@ function paceMiniVestir(w) {
   d.body.style.cssText = 'margin:0;height:100%;overflow:hidden;background:var(--paper);';
 }
 
-function paceMiniAbrir() {
+function paceMiniAbrir(op) {
   if (!paceMiniPuede()) return Promise.resolve(null);
+
+  const sola = !!(op && op.sola === true);
+  if (!sola && getState().miniSolaNo) paceMiniApuntar({ miniSolaNo: false });
   if (_paceMini.win) {try {_paceMini.win.focus();} catch (e) {}return Promise.resolve(_paceMini.win);}
   return Promise.resolve(window.documentPictureInPicture.requestWindow(PACE_MINI_TAM)).then((w) => {
     paceMiniVestir(w);
@@ -34327,9 +34361,11 @@ function paceMiniAbrir() {
     _paceMini.root = ReactDOM.createRoot(cont);
     const tic = w.setInterval(paceMiniPintar, 1000);
     w.addEventListener('pagehide', () => {
+      const p = _paceMini.props;
+      if (!_paceMini.cerrandoYo && p && p.modo === 'foco' && (p.status === 'running' || p.status === 'paused')) paceMiniApuntar({ miniSolaNo: true });
       try {w.clearInterval(tic);} catch (e) {}
       try {_paceMini.root && _paceMini.root.unmount();} catch (e) {}
-      _paceMini = { win: null, root: null, props: _paceMini.props };
+      _paceMini = { win: null, root: null, props: _paceMini.props, cerrandoYo: false };
       paceMiniAvisar();
     });
     paceMiniPintar();
@@ -34363,7 +34399,7 @@ const miniTiraStyles = {
 
 function MiniTira(p) {
   const { t } = p;
-  const fin = p.status === 'completed' && p.modo === 'foco';
+  const fin = p.status === 'completed' && p.modo === 'foco' || typeof paceTabFinEs === 'function' && paceTabFinEs();
   const queda = paceMiniQueda(p);
   const hecho = fin ? 1 : p.total > 0 ? Math.min(1, Math.max(0, 1 - queda / p.total)) : 0;
   const dos = (n) => (n < 10 ? '0' : '') + n;
@@ -34372,6 +34408,7 @@ function MiniTira(p) {
   const etiqueta = p.modo === 'foco' ? t('focus.mode.focus') : p.modo === 'pausa' ? t('focus.mode.pause') : t('focus.mode.long');
   let boton = null;
   if (fin) boton = React.createElement("button", { type: "button", style: { ...miniTiraStyles.boton, ...miniTiraStyles.botonFin }, onClick: () => {try {window.focus();} catch (e) {}} }, t('mini.volver'));else
+  if (p.ritmo) boton = null;else
   if (p.status === 'running') boton = React.createElement("button", { type: "button", style: miniTiraStyles.boton, onClick: p.onPausar }, t('focus.pause'));else
   if (p.status === 'paused') boton = React.createElement("button", { type: "button", style: miniTiraStyles.boton, onClick: p.onSeguir }, t('focus.continue'));
   return (
@@ -34401,13 +34438,14 @@ function useMiniventana(props) {
   useEffectMini(() => {
     const oye = () => setAbierta(paceMiniAbierta());
     window.addEventListener('pace:mini', oye);
-    return () => {window.removeEventListener('pace:mini', oye);paceMiniCerrar();};
+    window.addEventListener('pace:pestana-fin', paceMiniPintar);
+    return () => {window.removeEventListener('pace:mini', oye);window.removeEventListener('pace:pestana-fin', paceMiniPintar);paceMiniCerrar();};
   }, []);
   return { puede: paceMiniPuede(), abierta };
 }
 
-Object.assign(window, { useMiniventana, paceMiniAbrir, paceMiniPuede, MiniTira });
-;Object.assign(window, { paceMiniPuede, paceMiniAbierta, paceMiniAvisar, paceMiniPintar, paceMiniCerrar, paceMiniVestir, paceMiniAbrir, paceMiniQueda, MiniTira, useMiniventana });
+Object.assign(window, { useMiniventana, paceMiniAbrir, paceMiniAlEmpezar, paceMiniPuede, MiniTira });
+;Object.assign(window, { paceMiniPuede, paceMiniAbierta, paceMiniAvisar, paceMiniPintar, paceMiniCerrar, paceMiniApuntar, paceMiniAlEmpezar, paceMiniVestir, paceMiniAbrir, paceMiniQueda, MiniTira, useMiniventana });
 })();
 </script>
   <script>
@@ -34676,7 +34714,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
       if (state.focusMode === 'foco' && typeof paceOrigenSesion === 'function') paceOrigenSesion('aro', !!aro);
     }
     try {playSound('pomodoro.start');} catch (e) {}
-    if (state.focusMode === 'foco') maybeRequestNotifyPermission(state, set);
+    if (state.focusMode === 'foco') {if (status !== 'paused') paceMiniAlEmpezar(state);maybeRequestNotifyPermission(state, set);}
   };
 
   const handleNormalStart = () => {startFocusVisual();avisarCorreRef.current = true;toggle();};
@@ -34772,7 +34810,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
   const cycleN = state.cycle % 4 + 1;
-  const mini = useMiniventana({ status, endsAt, restanteMs, total: durationSec, modo: state.focusMode, ciclo: tn('focus.cycleOf', { n: cycleN }), t, onPausar: handlePause, onSeguir: handleNormalStart });
+  const mini = useMiniventana({ status, endsAt, restanteMs, total: durationSec, modo: state.focusMode, ciclo: aro ? aro.label : tn('focus.cycleOf', { n: cycleN }), ritmo: enPausaRitmo, t, onPausar: handlePause, onSeguir: handleNormalStart });
   const cycleLabel = isFocoMode && isCompleted ?
   tn('focus.cycleNext', { n: cycleN }) :
   tn('focus.cycleOf', { n: cycleN });
