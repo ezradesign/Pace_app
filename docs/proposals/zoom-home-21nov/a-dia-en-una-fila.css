@@ -1,0 +1,7 @@
+/* Maqueta A · «El día en una fila»: con la ventana baja, la línea del día enseña solo la hora
+   de cada parada, todas a la misma altura; el nombre y los minutos siguen al tocarla. */
+.pace-rt-etiq .pace-rt-n, .pace-rt-etiq .pace-rt-m { display: none !important; }
+.pace-rt-etiq { top: 30px !important; }
+.pace-rt-seg .pace-rt-etiq { top: 18px !important; }
+.pace-rt-etiq.pace-rt-alta::before { display: none !important; }
+.pace-rt-zona { height: 22px !important; }
