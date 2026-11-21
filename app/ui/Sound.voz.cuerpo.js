@@ -39,15 +39,19 @@ function paceVozCuerpoJuego() {
   return { clave: idioma + '.' + voz, palabras: (tabla[idioma] || {})[voz] || {} };
 }
 
-/* Descodifica las tomas de la voz e idioma activos (cuatro archivos). Se llama al abrir una rutina. */
-function paceVozCuerpoPrecarga() {
+/* Descodifica las tomas de la voz e idioma activos (cuatro archivos). Se llama al abrir una rutina, con
+   `reintentar`: solo entonces se vuelve a pedir una toma que no bajó (cada palabra también la llama, y sin
+   red pediría la toma en cada repetición). */
+function paceVozCuerpoPrecarga(reintentar) {
   try {
     if (typeof paceVozEncendida === 'function' && !paceVozEncendida()) return;
     var j = paceVozCuerpoJuego();
     var tomas = _paceVozCuerpoTomas[j.clave] || (_paceVozCuerpoTomas[j.clave] = {});
     Object.keys(j.palabras).forEach(function (k) {
       var archivo = j.palabras[k].archivo;
-      if (!archivo || tomas[archivo]) return;
+      /* Solo las de tu voz y tu idioma, al abrir la rutina, y no van al precache (Ez, 6A del 21 nov. 2026):
+         la que no bajó (sin conexión, la primera vez) se vuelve a pedir al abrir otra; mientras, suena la madera. */
+      if (!archivo || (tomas[archivo] && !(reintentar && tomas[archivo].fallo))) return;
       tomas[archivo] = { buffer: null };
       if (typeof paceVozDescodifica === 'function') paceVozDescodifica(tomas[archivo], 'app/move/voz/' + archivo);
     });

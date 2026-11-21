@@ -87,6 +87,7 @@ function tandaCompras(ctx) {
     if (!/SHA1withRSA/.test(java)) malas.push('PaceCompras.java ya no comprueba la firma de Google (SHA1withRSA)');
     if (!/acknowledgePurchase/.test(java)) malas.push('PaceCompras.java ya no confirma las compras: Google las devolvería a los 3 días');
     if (!/PurchaseState\.PENDING/.test(java)) malas.push('PaceCompras.java ya no aparta las compras pendientes');
+    if (!/esperando\.add\(listo\)/.test(java) || !/if \(conectando\) return;/.test(java)) malas.push('PaceCompras.java abre otra conexión con Google Play mientras una conecta: la biblioteca la rechaza (auditoría 0.212.0, nº 2)');
     var v = gradle.match(/com\.android\.billingclient:billing:(\d+)\./);
     if (!v) malas.push('android/app/build.gradle no lleva la biblioteca de cobro de Google');
     else if (Number(v[1]) < 8) malas.push('la biblioteca de cobro de Google es la ' + v[1] + ': Play pide la 8 o más desde el 1 nov. 2026');

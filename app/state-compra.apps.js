@@ -108,7 +108,13 @@ function paceTiendaAppVale(c, guardada) {
   return Date.now() < fin + PACE_TIENDA_APPS.margenMes;
 }
 
+/* APAGADA ES APAGADA (Ez, 4A del 21 nov. 2026; auditoría de la 0.212.0, nº 4). Lo guardado de
+   `tiendaUltima` vale sin conexión con la tienda encendida, que lo pisa en cuanto contesta; con la
+   tienda apagada no hay quien lo contradiga, y un estado guardado abría PACE completo sin firma
+   (la regla de la cabecera del guard). Mientras `encendida` no sea true, ninguna compra vale. */
 function paceTiendaAppVigentes(canal) {
+  var conf = PACE_TIENDA_APPS[canal];
+  if (!conf || conf.encendida !== true) return [];
   var d = paceTiendaAppDatos(canal);
   var guardada = d.compras === null;
   var lista = guardada ? paceTiendaAppGuardada(canal) : d.compras;
@@ -133,7 +139,12 @@ function paceTiendaAppCargar(canal) {
   var compras = Promise.resolve().then(function () { return pieza.compras(pedido); }).then(function (r) {
     paceTiendaAppGuardar(canal, paceTiendaAppLimpia(r && r.compras));
   }, function () {});
-  var productos = Promise.resolve().then(function () { return pieza.productos(pedido); }).then(function (r) {
+  /* UNA PREGUNTA DETRÁS DE OTRA (Ez, 3A del 21 nov. 2026; auditoría de la 0.212.0, nº 2): los precios,
+     cuando ha contestado lo comprado. Las dos a la vez abrían dos conexiones con Google Play en el
+     primer arranque, y la biblioteca de cobro rechaza al momento la que llega mientras la otra aún
+     conecta: «No se pudieron cargar los precios» a la primera. PaceCompras.java, además, hace
+     esperar a la conexión en marcha (lo vigila tests/compra-apps.spec.js). */
+  var productos = compras.then(function () { return pieza.productos(pedido); }).then(function (r) {
     var planes = ((r && r.productos) || []).filter(function (p) { return p && (p.plan === 'vida' || p.plan === 'mes') && typeof p.texto === 'string'; })
       .map(function (p) {
         var plan = { plan: p.plan, texto: p.texto, importe: Number(p.importe) || 0, moneda: p.moneda || '' };
@@ -143,7 +154,7 @@ function paceTiendaAppCargar(canal) {
     d.planes = planes;
     d.estado = planes.length ? 'lista' : 'error';
   }, function () { d.planes = []; d.estado = 'error'; });
-  return Promise.all([compras, productos]).then(function () { paceTiendaAppAviso(); return d.estado; });
+  return productos.then(function () { paceTiendaAppAviso(); return d.estado; });
 }
 
 function paceTiendaAppAsegurar(canal) {

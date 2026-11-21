@@ -67,6 +67,9 @@ function nextRoutineFeedback(prev, routineId, response) {
     some: feedbackCount(cur.some),
     no:   feedbackCount(cur.no),
     lastPromptDay: todayISO(),
+    /* Las veces que se preguntó y se contestó algo, «Ahora no» incluido (Ez, 5A del 21 nov. 2026):
+       lo que cuenta feedbackToca. Lo guardado de antes no la trae y empieza en sus respuestas. */
+    veces: Math.max(feedbackCount(cur.veces), feedbackCount(cur.yes) + feedbackCount(cur.some) + feedbackCount(cur.no)) + 1,
   };
   /* El día del último «No»: el veto de la pausa dura una semana desde él (breakVetadas,
      Ez, 5 nov. 2026). Las otras respuestas lo conservan. */
@@ -123,8 +126,10 @@ function restaurarRoutineFeedback(routineId, antes) {
 /* CADA CUÁNTO PREGUNTA (Ez, 3A del 15 nov. 2026; auditoría externa 3.V3). Una vez por rutina y
    día la preguntaba hasta nueve veces en una jornada entera de «A tu ritmo» (siete pausas, nueve
    rutinas), y la gente acaba pulsando «Ahora no». Ahora:
-     · las tres primeras veces que acabas cada rutina (las tres respuestas que pide «Qué te
-       ayuda» para hablar de una rutina, stats-ayuda.js);
+     · las tres primeras veces que acabas cada rutina, contestes o no (Ez, 5A del 21 nov. 2026;
+       auditoría de la 0.212.0, nº 5): antes contaban solo Sí, Un poco y No, y quien siempre
+       pulsaba «Ahora no» la oía cada día. Cuenta `veces`; lo que aprende «Qué te ayuda»
+       (stats-ayuda.js) sigue leyendo solo las respuestas;
      · después, como mucho una vez a la semana por rutina;
      · y nunca más de dos preguntas en un día, sumando todas las rutinas. «Ahora no» escribe
        `lastPromptDay`, así que cuenta como una de las dos; salir sin contestar, no.
@@ -143,7 +148,7 @@ function feedbackToca(fb, id, hoy) {
   if (hoyYa >= FEEDBACK_TOPE_DIA) return false;
   if (!entry) return true;
   const respuestas = feedbackCount(entry.yes) + feedbackCount(entry.some) + feedbackCount(entry.no);
-  if (respuestas < FEEDBACK_PRIMERAS) return true;
+  if (Math.max(respuestas, feedbackCount(entry.veces)) < FEEDBACK_PRIMERAS) return true;
   const dia = typeof libraryDiaOrdinal === 'function' ? libraryDiaOrdinal(hoy) : 0;
   const desde = typeof libraryDiaOrdinal === 'function' ? libraryDiaOrdinal(entry.lastPromptDay) : 0;
   if (!dia || !desde) return true;

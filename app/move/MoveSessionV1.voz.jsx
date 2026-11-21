@@ -78,7 +78,8 @@ function v1VozPrecarga() {
     const p = ctx && ctx.state !== 'running' && ctx.state !== 'closed' ? ctx.resume() : null;
     if (p && typeof p.catch === 'function') p.catch(() => {});
   } catch (e) { /* sin audio, nada que despertar */ }
-  try { if (typeof window.paceVozCuerpoPrecarga === 'function') window.paceVozCuerpoPrecarga(); } catch (e) { /* sin voz, cuencos */ }
+  /* Abrir una rutina reintenta la toma que no bajó (sin conexión, la primera vez). */
+  try { if (typeof window.paceVozCuerpoPrecarga === 'function') window.paceVozCuerpoPrecarga(true); } catch (e) { /* sin voz, cuencos */ }
 }
 
 Object.assign(window, { v1VozCuenta, v1VozRep, v1VozEntrada, v1VozGo, v1VozLado, v1VozCalla, v1VozPrecarga });

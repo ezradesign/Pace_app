@@ -135,10 +135,11 @@ test('voz-5 · las tomas grabadas: las 36 palabras con su archivo y su tope, y e
     }
   }
   expect(voces.length).toBeGreaterThan(0);
-  /* Y cada toma, en el precache de sw.js: sin eso, sin conexión la voz no habla. */
+  /* Y NINGUNA en el precache de sw.js (Ez, 6A del 21 nov. 2026): eran 2,7 MB para usar 0,7, y una toma que
+     no bajaba dejaba sin instalar la versión nueva. Se bajan las tuyas al abrir una rutina (voz-6). */
   const sw = fs.readFileSync(path.join(raiz, 'sw.js'), 'utf8');
   for (const pal of Object.values(caja.D).flatMap((j) => Object.values(j))) {
-    for (const e of Object.values(pal)) expect(sw, e.archivo + ' sin precache').toContain("'/app/move/voz/" + e.archivo + "'");
+    for (const e of Object.values(pal)) expect(sw, e.archivo + ' sigue en el precache').not.toContain('/app/move/voz/' + e.archivo);
   }
   await sembrar(context, { soundOn: true, voiceOn: true, voice: 'sulafat', lang: 'es' });
   await irAlArtefacto(page);
@@ -147,4 +148,33 @@ test('voz-5 · las tomas grabadas: las 36 palabras con su archivo y su tope, y e
     await page.evaluate((v) => window.setState({ lang: v[0], voice: v[1] }), [idioma, voz]);
     await expect.poll(() => page.evaluate(() => window.paceVozCuerpoIntenta('c3', 1)), { timeout: 15000, message: idioma + '/' + voz }).toBe(true);
   }
+});
+
+/* 6A (Ez, 21 nov. 2026; auditoría de la 0.212.0, nº 6). Al abrir una rutina se bajan solo las cuatro tomas de
+   tu voz y tu idioma. Sin conexión esa primera vez suena la madera, y la toma no se pide en cada palabra: se
+   vuelve a pedir al abrir la rutina siguiente, y entonces habla. */
+test('voz-6 · solo se bajan las tomas de tu voz y tu idioma; sin red, madera, y al abrir otra rutina se reintenta', async ({ browser }) => {
+  const ctx = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await ctx.newPage();
+  await sembrar(ctx, { soundOn: true, voiceOn: true, voice: 'bradford', lang: 'en' });
+  const pedidas = [];
+  let sinRed = true;
+  await page.route('**/app/move/voz/*.mp3', (r) => {
+    pedidas.push(new URL(r.request().url()).pathname.split('/').pop());
+    return sinRed ? r.abort() : r.continue();
+  });
+  await irAlArtefacto(page);
+  await page.mouse.click(2, 700);
+  expect(pedidas, 'se bajaron tomas sin abrir ninguna rutina').toEqual([]);
+  await page.evaluate(() => window.v1VozPrecarga());
+  await expect.poll(() => pedidas.length).toBe(4);
+  expect(pedidas.every((f) => /^bradford-en-/.test(f)), pedidas.join(', ')).toBe(true);
+  await page.waitForTimeout(300);
+  expect(await page.evaluate(() => window.paceVozCuerpoIntenta('c3', 1)), 'sin red tiene que sonar la madera').toBe(false);
+  expect(pedidas.length, 'sin red, la toma se pidió otra vez en la palabra').toBe(4);
+  sinRed = false;
+  await page.evaluate(() => window.v1VozPrecarga());
+  await expect.poll(() => page.evaluate(() => window.paceVozCuerpoIntenta('c3', 1)), { timeout: 15000 }).toBe(true);
+  expect(pedidas.length).toBe(8);
+  await ctx.close();
 });

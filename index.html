@@ -10263,7 +10263,13 @@ function paceTiendaAppVale(c, guardada) {
   return Date.now() < fin + PACE_TIENDA_APPS.margenMes;
 }
 
+
+
+
+
 function paceTiendaAppVigentes(canal) {
+  var conf = PACE_TIENDA_APPS[canal];
+  if (!conf || conf.encendida !== true) return [];
   var d = paceTiendaAppDatos(canal);
   var guardada = d.compras === null;
   var lista = guardada ? paceTiendaAppGuardada(canal) : d.compras;
@@ -10288,7 +10294,12 @@ function paceTiendaAppCargar(canal) {
   var compras = Promise.resolve().then(function () {return pieza.compras(pedido);}).then(function (r) {
     paceTiendaAppGuardar(canal, paceTiendaAppLimpia(r && r.compras));
   }, function () {});
-  var productos = Promise.resolve().then(function () {return pieza.productos(pedido);}).then(function (r) {
+
+
+
+
+
+  var productos = compras.then(function () {return pieza.productos(pedido);}).then(function (r) {
     var planes = (r && r.productos || []).filter(function (p) {return p && (p.plan === 'vida' || p.plan === 'mes') && typeof p.texto === 'string';}).
     map(function (p) {
       var plan = { plan: p.plan, texto: p.texto, importe: Number(p.importe) || 0, moneda: p.moneda || '' };
@@ -10298,7 +10309,7 @@ function paceTiendaAppCargar(canal) {
     d.planes = planes;
     d.estado = planes.length ? 'lista' : 'error';
   }, function () {d.planes = [];d.estado = 'error';});
-  return Promise.all([compras, productos]).then(function () {paceTiendaAppAviso();return d.estado;});
+  return productos.then(function () {paceTiendaAppAviso();return d.estado;});
 }
 
 function paceTiendaAppAsegurar(canal) {
@@ -11405,7 +11416,10 @@ function nextRoutineFeedback(prev, routineId, response) {
     yes: feedbackCount(cur.yes),
     some: feedbackCount(cur.some),
     no: feedbackCount(cur.no),
-    lastPromptDay: todayISO()
+    lastPromptDay: todayISO(),
+
+
+    veces: Math.max(feedbackCount(cur.veces), feedbackCount(cur.yes) + feedbackCount(cur.some) + feedbackCount(cur.no)) + 1
   };
 
 
@@ -11468,6 +11482,8 @@ function restaurarRoutineFeedback(routineId, antes) {
 
 
 
+
+
 var FEEDBACK_PRIMERAS = 3;
 var FEEDBACK_CADA_DIAS = 7;
 var FEEDBACK_TOPE_DIA = 2;
@@ -11482,7 +11498,7 @@ function feedbackToca(fb, id, hoy) {
   if (hoyYa >= FEEDBACK_TOPE_DIA) return false;
   if (!entry) return true;
   const respuestas = feedbackCount(entry.yes) + feedbackCount(entry.some) + feedbackCount(entry.no);
-  if (respuestas < FEEDBACK_PRIMERAS) return true;
+  if (Math.max(respuestas, feedbackCount(entry.veces)) < FEEDBACK_PRIMERAS) return true;
   const dia = typeof libraryDiaOrdinal === 'function' ? libraryDiaOrdinal(hoy) : 0;
   const desde = typeof libraryDiaOrdinal === 'function' ? libraryDiaOrdinal(entry.lastPromptDay) : 0;
   if (!dia || !desde) return true;
@@ -24676,7 +24692,8 @@ function paceVozDescodifica(slot, url) {
       return new Promise(function (ok, ko) {var p = dc.decodeAudioData(ab, ok, ko);if (p && p.then) p.then(ok, ko);});
     }).
     then(function (buf) {slot.buffer = buf;}).
-    catch(function () {});
+
+    catch(function () {slot.fallo = true;});
   } catch (e) {}
 }
 
@@ -24929,14 +24946,18 @@ function paceVozCuerpoJuego() {
 }
 
 
-function paceVozCuerpoPrecarga() {
+
+
+function paceVozCuerpoPrecarga(reintentar) {
   try {
     if (typeof paceVozEncendida === 'function' && !paceVozEncendida()) return;
     var j = paceVozCuerpoJuego();
     var tomas = _paceVozCuerpoTomas[j.clave] || (_paceVozCuerpoTomas[j.clave] = {});
     Object.keys(j.palabras).forEach(function (k) {
       var archivo = j.palabras[k].archivo;
-      if (!archivo || tomas[archivo]) return;
+
+
+      if (!archivo || tomas[archivo] && !(reintentar && tomas[archivo].fallo)) return;
       tomas[archivo] = { buffer: null };
       if (typeof paceVozDescodifica === 'function') paceVozDescodifica(tomas[archivo], 'app/move/voz/' + archivo);
     });
@@ -38533,7 +38554,8 @@ function v1VozPrecarga() {
     const p = ctx && ctx.state !== 'running' && ctx.state !== 'closed' ? ctx.resume() : null;
     if (p && typeof p.catch === 'function') p.catch(() => {});
   } catch (e) {}
-  try {if (typeof window.paceVozCuerpoPrecarga === 'function') window.paceVozCuerpoPrecarga();} catch (e) {}
+
+  try {if (typeof window.paceVozCuerpoPrecarga === 'function') window.paceVozCuerpoPrecarga(true);} catch (e) {}
 }
 
 Object.assign(window, { v1VozCuenta, v1VozRep, v1VozEntrada, v1VozGo, v1VozLado, v1VozCalla, v1VozPrecarga });

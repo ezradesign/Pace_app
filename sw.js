@@ -192,26 +192,12 @@ const PRECACHE = [
   '/app/breathe/voz/bradford-mas.mp3',
   '/app/breathe/voz/sulafat-more.mp3',
   '/app/breathe/voz/bradford-more.mp3',
-  /* La voz de Mueve y Estira (15 nov. 2026): al precache, como la de Respira, para que hable sin conexión
-     desde el primer uso. De 0,6 a 0,8 MB por voz e idioma, ya sin los silencios largos de Genspark. */
-  /* La voz de Mueve y Estira: ESTAS FILAS LAS ESCRIBE scripts/voz-cuerpo-tomas.js, no se tocan a mano. */
-  '/app/move/voz/bradford-en-avisos.mp3',
-  '/app/move/voz/bradford-en-cuenta.mp3',
-  '/app/move/voz/bradford-en-lados.mp3',
-  '/app/move/voz/bradford-en-numeros.mp3',
-  '/app/move/voz/bradford-es-avisos.mp3',
-  '/app/move/voz/bradford-es-cuenta.mp3',
-  '/app/move/voz/bradford-es-lados.mp3',
-  '/app/move/voz/bradford-es-numeros.mp3',
-  '/app/move/voz/sulafat-en-avisos.mp3',
-  '/app/move/voz/sulafat-en-cuenta.mp3',
-  '/app/move/voz/sulafat-en-lados.mp3',
-  '/app/move/voz/sulafat-en-numeros.mp3',
-  '/app/move/voz/sulafat-es-avisos.mp3',
-  '/app/move/voz/sulafat-es-cuenta.mp3',
-  '/app/move/voz/sulafat-es-lados.mp3',
-  '/app/move/voz/sulafat-es-numeros.mp3',
-  /* Fin de la voz de Mueve y Estira. */
+  /* LA VOZ DE MUEVE Y ESTIRA NO VA AQUÍ (Ez, 6A del 21 nov. 2026; auditoría de la 0.212.0, nº 6). Eran
+     dieciséis tomas, dos voces por dos idiomas (2,7 MB), para usar una (0,7 MB), y con `addAll`, que es
+     todo o nada, una toma que no bajaba dejaba sin instalar la versión nueva. Ahora se bajan las de tu
+     voz y tu idioma la primera vez que abres Mueve o Estira (paceVozCuerpoPrecarga), y el fetch de
+     abajo las guarda en la caché de la versión: después hablan sin conexión. Sin conexión esa primera
+     vez, suena la madera y se vuelve a intentar al abrir la siguiente rutina. */
   /* s146: glifos de logro del usuario, MASCARAS CSS.
      Mismo trato que el loto: archivo en web + precache, data URI solo en el
      standalone.
