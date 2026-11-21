@@ -27,7 +27,15 @@ async function comoAppConTienda(context, plataforma, escena) {
   await context.addInitScript(([p, e, precios]) => {
     const t = window.__tienda = Object.assign({ llamadas: [], productos: precios, compras: [], comprar: 'comprado', fallaProductos: 0, oyentes: [] }, e);
     if (localStorage.getItem('__tiendaSinRed')) t.sinRed = true;
-    const apunta = (m, f) => (o) => { t.llamadas.push({ m, o: o === undefined ? null : JSON.parse(JSON.stringify(o)) }); return f(o || {}); };
+    /* `vivas`/`maxVivas`: cuántas preguntas a Google hay abiertas a la vez (3A). `retraso`: lo comprado tarda. */
+    t.vivas = 0; t.maxVivas = 0;
+    const apunta = (m, f) => (o) => {
+      t.llamadas.push({ m, o: o === undefined ? null : JSON.parse(JSON.stringify(o)) });
+      t.vivas++; t.maxVivas = Math.max(t.maxVivas, t.vivas);
+      const fin = (x) => { t.vivas--; return x; };
+      const r = (m === 'compras' && t.retraso) ? new Promise((ok) => setTimeout(ok, t.retraso)).then(() => f(o || {})) : Promise.resolve(f(o || {}));
+      return r.then(fin, (e) => { fin(); throw e; });
+    };
     window.Capacitor = {
       getPlatform: () => p, isNativePlatform: () => true,
       Plugins: {
@@ -256,4 +264,29 @@ test('iPhone: la tienda de Apple, sus condiciones estándar (4A) y «App Store»
   const panel = await filaPremium(page);
   await expect(panel.getByRole('button', { name: /Gestionar la suscripción/ })).toContainText('App Store');
   expect(errores).toEqual([]);
+});
+
+/* 3A (Ez, 21 nov. 2026; auditoría de la 0.212.0, nº 2). En el primer arranque PACE pedía a Google lo
+   comprado y los precios a la vez: dos conexiones con Google Play, y la biblioteca de cobro rechaza la
+   que llega mientras la otra conecta. Ahora, una detrás de otra, aunque lo comprado tarde. */
+test('3A · al abrir la tienda, lo comprado y los precios se preguntan uno detrás de otro, y los precios salen a la primera', async ({ page, context }) => {
+  await comoAppConTienda(context, 'android', { retraso: 300 });
+  await sembrar(context);
+  await irAlArtefacto(page);
+  await encender(page);
+  expect(await page.evaluate(() => window.__tienda.maxVivas), 'dos preguntas a Google a la vez').toBe(1);
+  expect((await page.evaluate(() => window.__tienda.llamadas.map((l) => l.m))).slice(0, 2)).toEqual(['compras', 'productos']);
+  expect(await page.evaluate(() => window.paceTiendaEstado())).toBe('lista');
+});
+
+/* 4A (Ez, 21 nov. 2026; auditoría de la 0.212.0, nº 4): con la tienda apagada, lo guardado no abre nada. */
+test('4A · con la tienda apagada, lo último que dijo la tienda no abre PACE completo; encendida, sí', async ({ page, context }) => {
+  await comoAppConTienda(context, 'android', { sinRed: true });
+  await sembrar(context, { tiendaUltima: { canal: 'play', at: Date.now(), compras: [{ plan: 'vida' }] } });
+  await irAlArtefacto(page);
+  expect(await page.evaluate(() => [window.PACE_TIENDA_APPS.play.encendida, window.hasPremiumEntitlement()])).toEqual([false, false]);
+  expect(await page.evaluate(() => window.paceCompraEstado())).toBe(null);
+  expect(await llamadas(page, 'compras'), 'apagada, la pieza ni se llama').toHaveLength(0);
+  await encender(page);
+  expect(await page.evaluate(() => window.hasPremiumEntitlement()), 'encendida y sin red, lo guardado vale').toBe(true);
 });

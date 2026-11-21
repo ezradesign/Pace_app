@@ -7,6 +7,9 @@
  *   PACE_E2E_PORT=8931 npx playwright test tests/caen-en-main.spec.js --project=chromium --workers=1
  * Al montar el cierre de un hallazgo, su prueba pasa a tests/ con el nombre del módulo.
  * (El hallazgo 1, Haptics fuera del iPhone, no está aquí: lo vigila verify.ios.js, y en main cae.)
+ * Con las letras de Ez del 21 nov. (3A 4A 5A 6A), los hallazgos 2, 4, 5 y 6 ya están montados con su prueba
+ * en tests/: compra-apps.spec.js (3A y 4A), feedback-frecuencia.spec.js (5A) y voz-cuerpo.spec.js (voz-5 y
+ * voz-6, 6A). Aquí queda el 3, la miniventana en la jornada (2A de Ez), que monta la sesión del aviso del PC.
  */
 'use strict';
 
@@ -58,33 +61,4 @@ test('hallazgo 3 · con «A tu ritmo», el «Pausar» de la tira en la pausa pau
     await context.clock.runFor(3000);
     expect(await tira(page).locator('span').first().innerText(), 'la tira ofrece «Pausar» y la pausa sigue corriendo').toBe(antes);
   }
-});
-
-/* Hallazgo 4. Con la tienda de Play apagada (`encendida: false`), lo último que «dijo» la tienda guardado
-   en el estado abre PACE completo. */
-test('hallazgo 4 · con la tienda de Play apagada, lo guardado en el estado no abre PACE completo', async ({ page, context }) => {
-  await sembrar(context, { tiendaUltima: { canal: 'play', at: Date.parse('2026-09-17T08:00:00+02:00'), compras: [{ plan: 'vida' }] } });
-  await context.addInitScript(() => {
-    window.Capacitor = { getPlatform: () => 'android', isNativePlatform: () => true,
-      Plugins: { App: { addListener: () => ({ remove() {} }), minimizeApp: () => Promise.resolve() } } };
-  });
-  await context.clock.install({ time: new Date('2026-09-17T10:00:00+02:00') });
-  await irAlArtefacto(page);
-  expect(await page.evaluate(() => PACE_TIENDA_APPS.play.encendida)).toBe(false);
-  expect(await page.evaluate(() => hasPremiumEntitlement()), 'la tienda está apagada y abre PACE completo').toBe(false);
-});
-
-/* Hallazgo 5. Quien siempre contesta «Ahora no» no suma respuestas, así que nunca pasa a «una vez a la semana». */
-test('hallazgo 5 · tras tres «Ahora no» de una rutina en tres días, al cuarto no vuelve a preguntar', async ({ page, context }) => {
-  await sembrar(context, {});
-  await context.clock.install({ time: new Date('2026-09-14T10:00:00+02:00') });
-  await irAlArtefacto(page);
-  await page.evaluate(() => { window.__fb = nextRoutineFeedback({}, 'move.x', 'later'); });
-  for (const dia of ['2026-09-15', '2026-09-16']) {
-    await context.clock.setSystemTime(new Date(dia + 'T10:00:00+02:00'));
-    await page.evaluate(() => { window.__fb = nextRoutineFeedback(window.__fb, 'move.x', 'later'); });
-  }
-  await context.clock.setSystemTime(new Date('2026-09-17T10:00:00+02:00'));
-  const toca = await page.evaluate(() => feedbackToca(window.__fb, 'move.x', todayISO()));
-  expect(toca, '«Ahora no» no cuenta como una de las tres: pregunta cada día por esa rutina').toBe(false);
 });

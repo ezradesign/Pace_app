@@ -202,7 +202,8 @@ function paceVozDescodifica(slot, url) {
         return new Promise(function (ok, ko) { var p = dc.decodeAudioData(ab, ok, ko); if (p && p.then) p.then(ok, ko); });
       })
       .then(function (buf) { slot.buffer = buf; })
-      .catch(function () { /* sin buffer suena el <audio>, como antes */ });
+      /* `fallo`: sin red (o la toma no baja), Mueve y Estira lo vuelven a intentar al abrir la siguiente rutina. */
+      .catch(function () { slot.fallo = true; /* sin buffer suena el <audio>, como antes */ });
   } catch (e) { /* idem */ }
 }
 

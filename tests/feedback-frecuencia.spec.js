@@ -45,6 +45,26 @@ test.describe('la regla, en puro', () => {
   });
 });
 
+/* 5A (Ez, 21 nov. 2026; auditoría de la 0.212.0, nº 5): «Ahora no» no sumaba, y quien siempre la
+   apartaba la oía cada día. Tres preguntas, contestadas o no, y luego una a la semana. */
+test('5A · tres «Ahora no» en tres días cuentan como tres: al cuarto no pregunta, a la semana sí', async ({ page, context }) => {
+  await sembrar(context);
+  await page.clock.install({ time: new Date('2026-11-16T12:00:00+01:00') });
+  await irAlArtefacto(page);
+  await page.evaluate(() => { window.__fb = nextRoutineFeedback({}, 'r', 'later'); });
+  for (const d of ['2026-11-17', '2026-11-18']) {
+    await page.clock.setSystemTime(new Date(d + 'T12:00:00+01:00'));
+    await page.evaluate(() => { window.__fb = nextRoutineFeedback(window.__fb, 'r', 'later'); });
+  }
+  const fb = await page.evaluate(() => window.__fb);
+  expect(fb.r.veces).toBe(3);
+  expect([fb.r.yes, fb.r.some, fb.r.no], '«Ahora no» no es una respuesta para «Qué te ayuda»').toEqual([0, 0, 0]);
+  expect(await toca(page, fb, 'r'), 'pregunta cada día a quien la aparta').toBe(false);
+  expect(await page.evaluate(([f]) => feedbackToca(f, 'r', '2026-11-25'), [fb]), 'a los siete días, otra vez').toBe(true);
+  expect(await toca(page, { r: { yes: 0, some: 0, no: 0, veces: 2, lastPromptDay: '2026-11-18' } }, 'r'), 'CONTROL: con dos, sí').toBe(true);
+  expect(await page.evaluate(() => nextRoutineFeedback({ v: { yes: 2, some: 1, no: 0 } }, 'v', 'yes').v.veces), 'lo guardado de antes empieza en sus respuestas').toBe(4);
+});
+
 /* En el cierre de verdad: con dos rutinas ya preguntadas hoy, «Escritorio express» no pregunta. */
 async function cierreDeEscritorio(page, context, routineFeedback) {
   const hoy = (() => { const d = new Date(MEDIODIA); const dd = (n) => (n < 10 ? '0' : '') + n; return d.getFullYear() + '-' + dd(d.getMonth() + 1) + '-' + dd(d.getDate()); })();

@@ -61,6 +61,15 @@ public class PaceCompras extends Plugin implements PurchasesUpdatedListener {
 
     private interface Listo { void hecho(boolean ok); }
 
+    /* UNA SOLA CONEXIÓN A LA VEZ (Ez, 3A del 21 nov. 2026; auditoría de la 0.212.0, nº 2). La biblioteca
+       de cobro rechaza al momento un `startConnection` que llega mientras otro aún conecta: si dos
+       preguntas llegaban juntas en el primer arranque (lo comprado y los precios), la segunda fallaba
+       y la hoja decía «No se pudieron cargar los precios». Las que llegan mientras conecta esperan a
+       esa misma conexión. Si se cae antes de acabar, las que esperan oyen que no y la siguiente
+       pregunta conecta de nuevo. La web, además, pregunta una cosa detrás de otra. */
+    private final List<Listo> esperando = new ArrayList<>();
+    private boolean conectando = false;
+
     private void conectar(Listo listo) {
         if (cliente == null) {
             cliente = BillingClient.newBuilder(getContext())
@@ -69,12 +78,27 @@ public class PaceCompras extends Plugin implements PurchasesUpdatedListener {
                 .build();
         }
         if (cliente.isReady()) { listo.hecho(true); return; }
+        synchronized (esperando) {
+            esperando.add(listo);
+            if (conectando) return;
+            conectando = true;
+        }
         cliente.startConnection(new BillingClientStateListener() {
             @Override public void onBillingSetupFinished(BillingResult r) {
-                listo.hecho(r.getResponseCode() == BillingClient.BillingResponseCode.OK);
+                avisarEsperando(r.getResponseCode() == BillingClient.BillingResponseCode.OK);
             }
-            @Override public void onBillingServiceDisconnected() { }
+            @Override public void onBillingServiceDisconnected() { avisarEsperando(false); }
         });
+    }
+
+    private void avisarEsperando(boolean ok) {
+        List<Listo> lista;
+        synchronized (esperando) {
+            conectando = false;
+            lista = new ArrayList<>(esperando);
+            esperando.clear();
+        }
+        for (Listo l : lista) l.hecho(ok);
     }
 
     private static String id(PluginCall call, String plan) {

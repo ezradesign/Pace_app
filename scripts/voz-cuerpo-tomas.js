@@ -14,8 +14,9 @@
 
    EL SILENCIO DE MÁS SE QUITA: una toma MP3 (y una repetida) se escribe con unos 0,4 s entre palabra y
    palabra, quitando cuadros enteros sin recodificar (scripts/voz-cuerpo-mp3.js), y se mide ya recortada.
-   Si al recortarla cambiara una palabra, se escribe sin recortar y se dice. Las tomas que quedan en la
-   tabla se apuntan en el precache de sw.js, entre sus marcas: Mueve y Estira hablan sin conexión.
+   Si al recortarla cambiara una palabra, se escribe sin recortar y se dice. Las tomas NO van al precache
+   de sw.js (Ez, 6A del 21 nov. 2026): la app baja las de la voz y el idioma de cada cual al abrir Mueve
+   o Estira, y el service worker las guarda para sin conexión.
 
    Uso:
      node scripts/voz-cuerpo-tomas.js "<carpeta con las tomas>" [--solo NOMBRE] [--salida DIR] [--datos ARCHIVO]
@@ -184,23 +185,6 @@ async function prepararToma(dec, bruto, ext, lineas, corte) {
   return { bytes: r.bytes, x: d2.x, rate: d2.rate, nota: ' · ' + kb(bruto.length) + ' → ' + kb(r.bytes.length) };
 }
 
-/* El precache de sw.js: entre sus dos marcas, una fila por toma que la tabla usa. */
-const SW_INICIO = '/* La voz de Mueve y Estira: ESTAS FILAS LAS ESCRIBE scripts/voz-cuerpo-tomas.js, no se tocan a mano. */';
-const SW_FIN = '/* Fin de la voz de Mueve y Estira. */';
-function escribirPrecache(archivo, datos) {
-  const sw = fs.readFileSync(archivo, 'utf8');
-  const a = sw.indexOf(SW_INICIO), z = sw.indexOf(SW_FIN);
-  if (a < 0 || z < a) return 'NO · sw.js no tiene las marcas de la voz de Mueve y Estira: las tomas no se guardan para sin conexión';
-  const nl = sw.includes('\r\n') ? '\r\n' : '\n';
-  const sangria = sw.slice(sw.lastIndexOf('\n', a) + 1, a);
-  const tomas = new Set();
-  for (const voces of Object.values(datos)) for (const pal of Object.values(voces)) for (const e of Object.values(pal)) tomas.add(e.archivo);
-  const filas = [...tomas].sort().map((t) => sangria + "'/app/move/voz/" + t + "'," + nl).join('');
-  const nuevo = sw.slice(0, a + SW_INICIO.length) + nl + filas + sangria + sw.slice(z);
-  if (nuevo !== sw) fs.writeFileSync(archivo, nuevo);
-  return 'ok · sw.js guarda ' + tomas.size + ' tomas para sin conexión';
-}
-
 /* El volumen de Respira, por voz: la media de sus palabras en castellano con su `vol`. */
 async function objetivoRespira(leer) {
   const vm = require('vm');
@@ -286,13 +270,10 @@ async function procesar(carpeta, op) {
     }
   } finally { await dec.cerrar(); }
   escribirDatos(datosArchivo, datos);
-  // El precache solo se toca cuando se escribe en la app de verdad (no en las pruebas, que van a otra carpeta).
-  const sw = op.sw !== undefined ? op.sw : (path.resolve(salida) === path.join(ROOT, 'app/move/voz') ? path.join(ROOT, 'sw.js') : null);
-  if (sw) informe.push(escribirPrecache(sw, datos));
   return { informe, datos };
 }
 
-module.exports = { segmentar, nivelDb, cortarToma, procesar, abrirDescodificador, TOMAS, TOPE, CORTE, SW_INICIO, SW_FIN };
+module.exports = { segmentar, nivelDb, cortarToma, procesar, abrirDescodificador, TOMAS, TOPE, CORTE };
 
 if (require.main === module) {
   const args = process.argv.slice(2);
