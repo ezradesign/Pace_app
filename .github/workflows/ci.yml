@@ -1,320 +1,59 @@
-# PACE · integracion continua
-#
-# La red de seguridad LOCAL vive en `npm run verify` (s150 la creo, s152 la
-# completo; s169 le sumo la del encargo de arte). Este workflow no la duplica ni la
-# reinterpreta: la INVOCA. Si algo hay que vigilar, se anade al verify y aqui
-# no se toca nada — de ese modo lo que falla en CI se reproduce en local con
-# un solo comando, que es la unica forma de que un CI no se vuelva un oraculo.
-#
-# Lo unico que este archivo anade por su cuenta es lo que el verify NO PUEDE
-# comprobar por diseno: que el `index.html` committeado sea el build de las
-# fuentes. El verify corre justo ANTES de regenerarlo en el cierre de sesion,
-# o sea en el momento en que el artefacto TIENE que estar desactualizado, asi
-# que su aviso de deriva es `[INFO]` a proposito y jamas se pondra rojo.
-# Esperar que lo haga no funciona: hay que comprobarlo aparte, y aqui es donde.
-#
-# DOS JOBS (s154), Y UN TERCERO DESDE v0.154.0:
-#   verify -> `npm run verify` + frescura del artefacto.
-#   e2e    -> `npm run test:e2e`, el checklist de cierre EJECUTADO en un
-#             navegador de verdad. Cubre el primer hueco que el verify declara
-#             («no abre navegador, no monta la app, no pulsa nada»). Desde el
-#             11 nov. 2026 va en seis trozos a la vez (desde el 19 nov. 2026, con 1870 pruebas), `e2e (1/6)` a `e2e (6/6)`.
-#   e2e-safari (9 oct. 2026) -> el proyecto webkit de esa misma suite, aparte
-#             porque sus librerias salen de `apt` (ver el job).
-# Los dos siguen la misma regla: INVOCAN un comando que corre igual en local.
-
+# RAMA DE DIAGNÓSTICO (no se junta): mide en Linux cuánto le sobra a cada texto
+# (tests/textos-al-limite.mide.js), para compararlo con lo medido en Windows.
 name: CI
-
 on:
-  push:
-    branches: [main]
-  pull_request:
   workflow_dispatch:
-  # A HORAS FIJAS (la octava, nº 3, 11 nov. 2026; la 4.ª pasada, 12 nov.): la suite solo corria a
-  # la hora a la que se sube codigo, y los fallos que salen de noche (el relevo del dia) o en lunes
-  # tardaban semanas en verse. GitHub cuenta en UTC y no sabe de horario de verano, asi que hay tres
-  # pasadas de noche para que TODO el año haya una antes y otra despues de la medianoche de Madrid:
-  #   21:30 UTC = 22:30 en invierno, 23:30 en verano
-  #   22:30 UTC = 23:30 en invierno, 00:30 en verano
-  #   23:30 UTC = 00:30 en invierno, 01:30 en verano
-  # y el lunes a las 07:00 UTC (08:00 en invierno, 09:00 en verano). La de despues de medianoche
-  # cubre tambien el dia 1 de cada mes. scripts/verify.ci.js lo comprueba con los dos husos.
-  # Solo corren sobre `main`. No disparan el AAB de Android: android.yml solo mira CI de un push.
-  schedule:
-    - cron: '30 21 * * *'
-    - cron: '30 22 * * *'
-    - cron: '30 23 * * *'
-    - cron: '0 7 * * 1'
-
-# Solo lectura: este workflow no publica nada ni escribe en el repo.
 permissions:
   contents: read
-
-# Un push encima de otro cancela el anterior: interesa el ultimo estado.
-# Por evento: una corrida a hora fija no cancela la de un push, ni al reves.
-concurrency:
-  group: ci-${{ github.event_name }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  verify:
-    name: verify
+  textos:
+    name: textos (${{ matrix.trozo }}/4)
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
-    steps:
-      - uses: actions/checkout@v4
-        # El historial entero: verify comprueba que todos los commits los firma Ez
-        # (scripts/verify.autoria.js), y con la copia superficial solo vería el último.
-        with:
-          fetch-depth: 0
-
-      # Node 24 = el del desarrollo local (v24.15.0). `package.json` no declara
-      # `engines`, asi que la version vive aqui: si algun dia se anade ese campo,
-      # este numero se alinea con el.
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-          cache: npm
-
-      # `npm ci` y no `npm install`: instala EXACTAMENTE el lockfile y falla si
-      # se ha desincronizado de package.json, en vez de arreglarlo por su cuenta.
-      # (`sharp` es nativa y no la usan ni el build ni el verify —solo la ingesta
-      # de arte y los scripts de audit—, pero el lock v3 trae su binario de
-      # linux-x64, asi que se instala sin incidencias.)
-      - name: Instalar dependencias
-        run: npm ci
-
-      # LA red de seguridad. Devuelve codigo de salida: si falla, no se sigue.
-      # 4 tandas — node --check de todos los .js (tambien sw.js y scripts/, que
-      # el build no mira jamas) · build con salida 0 · analisis de AMBITO del
-      # artefacto compilado (el crash de s144) · integridad de i18n, precache,
-      # glifos y catalogos. Restaura los dos artefactos en su `finally`.
-      - name: npm run verify
-        run: npm run verify
-
-      # Frescura del artefacto. Va DESPUES del verify a proposito: el verify
-      # corre el build de verdad y reescribe los dos artefactos antes de
-      # restaurarlos, asi que comparar mientras corre no mide nada.
-      #
-      # DOS COSAS QUE NO SE PUEDEN "SIMPLIFICAR" AQUI:
-      #
-      #  1. El diff va ACOTADO a index.html. Un `git diff --exit-code` a secas
-      #     se pondria rojo SIEMPRE por `PACE_standalone.html`, que esta
-      #     congelado en v0.71.0 a proposito (s134: export bajo demanda, ya no
-      #     se regenera en cada cierre) y que el build acaba de reescribir a la
-      #     version actual. En el runner da igual —es efimero y no se committea
-      #     nada—, pero el diff tiene que ignorarlo.
-      #
-      #  2. Esta comprobacion solo tiene sentido si el artefacto es REPRODUCIBLE
-      #     entre plataformas, y al principio NO lo era: el primer run de este
-      #     workflow se puso rojo aqui. La causa no era el YAML sino el build —
-      #     `.gitattributes` guarda el texto en LF, pero en un worktree de
-      #     Windows varios fuentes acaban en CRLF y `readFileClean` los inlineaba
-      #     tal cual, y con CRLF **Babel emite otra indentacion** en los
-      #     comentarios que conserva: **una linea de diferencia, un espacio**,
-      #     invisible en local y roja en el runner. Arreglado en el build (s153),
-      #     que ahora normaliza a LF al leer — comprobado: las mismas fuentes en
-      #     CRLF y en LF producen el MISMO `index.html`, byte a byte.
-      #
-      #     Aun asi se compara con `git diff` y no con un hash: es la
-      #     comparacion correcta contra lo COMMITTEADO, y no depende de como
-      #     tenga el worktree los finales de linea quien la ejecute.
-      #
-      #     Lo demas que sostiene la reproducibilidad, tambien medido: dos
-      #     pasadas seguidas dan el mismo artefacto, y el unico recorrido de
-      #     directorio que podria depender del orden del sistema de archivos
-      #     (`validateAppFiles`, cuyo orden difiere entre NTFS y ext4) va con
-      #     `.sort()` y ademas no emite nada al artefacto.
-      - name: El index.html committeado es el build de las fuentes
-        run: |
-          node build-standalone.js
-          if ! git diff --quiet -- index.html; then
-            echo "::error file=index.html::index.html no esta al dia con las fuentes. Regeneralo con 'node build-standalone.js' y committealo (paso 3 del cierre de sesion en CLAUDE.md)."
-            git diff --stat -- index.html
-            exit 1
-          fi
-          echo "index.html coincide byte a byte con el build de las fuentes."
-
-  # ==========================================================================
-  # COMPORTAMIENTO (s154). Cubre el PRIMER hueco que el verify declara e
-  # imprime en cada pasada: «no abre navegador, no monta la app, no pulsa
-  # nada». Es el checklist de cierre de CLAUDE.md, ejecutado.
-  #
-  # POR QUE UN JOB APARTE Y NO PASOS DEL DE ARRIBA. La tesis de s153 sigue
-  # intacta —este YAML INVOCA un comando que corre igual en local,
-  # `npm run test:e2e`, y no reinterpreta nada—, pero las dos redes tienen
-  # naturaleza y coste distintos: el `verify` son ~5 s sin dependencias y es el
-  # paso 2 del cierre, mientras que esto descarga un Chromium de ~115 MB. Meter
-  # los navegadores dentro de `npm run verify` convertiria en minutos el unico
-  # comando del que depende «si falla, no se sigue». Separados, ademas, el rojo
-  # dice cual de las dos fallo sin abrir el log.
-  #
-  # `needs: verify` NO es por orden estetico: la suite carga el `index.html`
-  # COMMITTEADO, y es el job de arriba el que acaba de probar que ese artefacto
-  # es el build de las fuentes. Sin esa garantia, un rojo aqui podria significar
-  # «el comportamiento cambio» o «el artefacto esta viejo», que son dos cosas
-  # muy distintas de arreglar.
-  #
-  # EN CINCO TROZOS (11 nov. 2026; eran dos desde el 18 oct.). Con dos, el
-  # segundo tardaba 24 min 30 s de un tope de 25 y el primero 18 min 40 s: la
-  # suite crece y las pruebas mas lentas (runner-*, ritmo-*, pausa-*) caen al
-  # final del orden alfabetico, o sea en el ultimo trozo. `--shard` reparte las
-  # mismas pruebas, prueba a prueba (`fullyParallel`), sin cambiar cuales corren.
-  # Simulado con la duracion de cada prueba en el CI de da56e0a (1511 pruebas):
-  # cinco trozos dan 6,6 / 7,9 / 8,2 / 9,3 / 11,0 min; cuatro dejaban el ultimo
-  # en 13,3. El repo es publico: mas trozos no cuestan minutos.
-  # QUIEN LO VIGILA: `scripts/verify.ci.js` cuenta las pruebas de cada trozo
-  # con `--list` y falla si alguno pasa del tope; entonces se sube `trozo` y el
-  # `/6`, nunca el `timeout-minutes`. En local se reproduce un trozo con
-  # `npm run test:e2e -- --project=chromium --shard=1/6`.
-  # `fail-fast: false`: si un trozo cae, los otros terminan y dicen lo suyo.
-  # ==========================================================================
-  e2e:
-    name: e2e (${{ matrix.trozo }}/6)
-    runs-on: ubuntu-latest
-    needs: verify
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
-        trozo: [1, 2, 3, 4, 5, 6]
-    # 25 desde v0.151.0: con las pruebas de la caza, la suite tardaba 13,7 min
-    # y el job llegó a los 15 justo al guardar la cache, con todos los pasos en
-    # verde; GitHub lo dio por cancelado. El proyecto webkit va en e2e-safari.
-    # El tope es de cada trozo.
-    timeout-minutes: 25
-
+        trozo: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: npm
-
-      - name: Instalar dependencias
-        run: npm ci
-
-      # CACHE DEL NAVEGADOR (s168) — Y SIN `apt` (s169), QUE ERA LA COLA DE VERDAD.
-      #
-      # ESTE COMENTARIO AFIRMABA ALGO FALSO Y SE CORRIGE CON EL LOG DELANTE. Decia
-      # que la cache «compra quitar esa COLA» de 217 y 672 s. No la compra: la
-      # cola no la producia la descarga de Chromium sino `apt`, y `apt` corria en
-      # LOS DOS CAMINOS —con acierto de cache y sin el—, asi que cachear el
-      # navegador no podia tocarla. De hecho la cola volvio a salir en el run con
-      # FALLO de cache.
-      #
-      # MEDIDO leyendo los logs paso a paso de los 11 ultimos runs con job e2e
-      # (`gh` esta instalado desde s161; s153 lo dio por ausente y la nota se
-      # arrastro hasta s169):
-      #
-      #                            descarga Chromium   `apt` bajando fuentes   paso
-      #   7 runs rapidos ........       ~10 s                0-6 s           21-28 s
-      #   el run de 672 s .......       ~11 s           10 min 49 s          672 s
-      #   el de 217 s (FALLO) ...        ~9 s            3 min 15 s          217 s
-      #   acierto ...............      omitida           1 min 21 s           97 s
-      #   acierto ...............      omitida              42 s             55 s
-      #   acierto (v0.99.0) .....      omitida              ~14 s            14 s
-      #
-      # Dos hechos que cierran el diagnostico. (1) Los MISMOS 9 paquetes de
-      # fuentes —CJK, cirilico, `xfonts-*`; 21,1 MB de descarga, 79,5 MB en
-      # disco— se instalan en TODOS los runs, con cache y sin ella. (2) Todas las
-      # librerias del NAVEGADOR dicen `already the newest version`: esas si estan
-      # en la imagen de `ubuntu-latest`, y por eso `install-deps` no instala nada
-      # util. Lo unico que hace es bajar fuentes.
-      #
-      # Y el paso no es CARO, es VARIABLE: 14 s en el run de v0.99.0 y 10 min 49 s
-      # en el peor. Lo que se quita aqui no es un coste medio, es la VARIANZA — el
-      # caso de 11 minutos que puede repetirse cualquier dia sin avisar.
-      #
-      # RIESGO ASUMIDO: el Chromium del CI se queda sin fuentes CJK ni cirilicas.
-      # No lo nota nadie, porque la app sirve sus PROPIOS woff2 con `unicode-range`
-      # latino y la suite no compara ni un pixel — no hay capturas de referencia.
-      # Si aun asi Chromium no arrancara, el rojo es inmediato e inequivoco y se
-      # revierte esta linea.
-      #
-      # La clave lleva `package-lock.json` porque de ahi sale la version de
-      # Playwright: al subirla, el navegador cacheado ya no sirve y la clave
-      # cambia sola.
-      #
-      # La clave lleva `-webkit` desde que la suite tiene el proyecto del motor
-      # de Safari (9 oct. 2026): una cache guardada solo con Chromium no lo trae.
+      - run: npm ci
       - name: Cache de Chromium y WebKit
         id: cache-chromium
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
           key: playwright-webkit-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-
-      # Los dos proyectos de playwright.config.js: chromium para todo y webkit
-      # solo para `*.safari.spec.js`. Chromium, SIN `--with-deps` a proposito
-      # (ver arriba): sus librerias ya estan en la imagen y lo unico que anadia
-      # era la descarga de fuentes.
-      - name: Instalar Chromium y WebKit
-        if: steps.cache-chromium.outputs.cache-hit != 'true'
+      - if: steps.cache-chromium.outputs.cache-hit != 'true'
         run: npx playwright install chromium webkit
-
-      # Aqui solo el proyecto chromium: el webkit va en su propio job (abajo),
-      # porque sus librerias salen de `apt`, que es la cola variable de s169.
-      # El servidor lo levanta y lo tumba la propia configuracion (`webServer`
-      # -> `.claude/static-server.js`), asi que aqui no hay que orquestar nada.
-      - name: npm run test:e2e (chromium, trozo ${{ matrix.trozo }} de 5)
-        run: npm run test:e2e -- --project=chromium --shard=${{ matrix.trozo }}/6
-
-      # Diagnostico, no comprobacion: si algo se pone rojo, la traza dice donde
-      # sin tener que reproducirlo a ciegas. Un nombre por trozo: dos artefactos
-      # con el mismo nombre en una matriz chocan.
-      - name: Guardar el informe si fallo
-        if: failure()
+      - name: Medir
+        run: npx playwright test -c playwright.mide.config.js --shard=${{ matrix.trozo }}/4
+      - if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ matrix.trozo }}
-          path: playwright-report/
+          name: textos-linux-${{ matrix.trozo }}
+          path: test-results/textos-al-limite/
           retention-days: 7
-
-  # ==========================================================================
-  # e2e-safari (9 oct. 2026): EL PROYECTO WEBKIT DE LA SUITE, EN SU PROPIO JOB.
-  #
-  # Las librerias de WebKit NO estan en la imagen de `ubuntu-latest` y salen de
-  # `apt`, que no se cachea: es la misma cola variable de s169. Medido: 37 s en
-  # v0.151.0 y 14 min 20 s en v0.154.0, que dejaron la suite entera sin tiempo
-  # dentro del tope de 25 min con todas las pruebas en verde. Aparte, la lentitud
-  # de `apt` solo retrasa este job, que corre en paralelo y prueba poco (los
-  # `*.safari.spec.js` y la home sin scroll), y no tumba el de chromium.
-  # ==========================================================================
-  e2e-safari:
-    name: e2e-safari
-    # DENTRO DE LA IMAGEN DE PLAYWRIGHT (11 nov. 2026). Antes instalaba las librerias
-    # de WebKit con `apt` en cada pasada: 45 s un dia y 16 min otro (CI de da56e0a),
-    # segun el espejo, y dos veces colgado hasta el tope. La imagen oficial ya trae
-    # WebKit y sus librerias, asi que no queda nada que bajar de `apt`. Es Ubuntu
-    # 24.04 (noble): en 26.04 el MiniBrowser no arranca (exit 127).
-    # La etiqueta tiene que ser la version de Playwright del lockfile, o el navegador
-    # de la imagen no es el que espera la suite: lo comprueba `scripts/verify.ci.js`.
-    runs-on: ubuntu-24.04
-    needs: verify
-    timeout-minutes: 25
-    container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble
-
+  prueba:
+    name: prueba de los textos acortados
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: npm
-
-      - name: Instalar dependencias
-        run: npm ci
-
-      - name: npm run test:e2e (webkit)
-        run: npm run test:e2e -- --project=webkit
-
-      - name: Guardar el informe si fallo
-        if: failure()
-        uses: actions/upload-artifact@v4
+      - run: npm ci
+      - name: Cache de Chromium y WebKit
+        id: cache-chromium
+        uses: actions/cache@v4
         with:
-          name: playwright-report-safari
-          path: playwright-report/
-          retention-days: 7
+          path: ~/.cache/ms-playwright
+          key: playwright-webkit-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - if: steps.cache-chromium.outputs.cache-hit != 'true'
+        run: npx playwright install chromium webkit
+      - run: npx playwright test tests/textos-al-limite.spec.js --project=chromium
