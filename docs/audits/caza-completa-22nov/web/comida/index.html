@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La comida, a las 14:20</title>
+<style>
+  :root { --paper:#f2ece0; --paper-2:#e9e2d3; --ink:#2b2a26; --ink-2:#5b574e; --line:#d8cfbd; --oliva:#55634a; --terra:#b5694a; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper:#1d1b17; --paper-2:#27241f; --ink:#ece5d6; --ink-2:#b4ac9c; --line:#3b372f; --oliva:#9db08a; --terra:#d9906f; } }
+  :root[data-theme="dark"] { --paper:#1d1b17; --paper-2:#27241f; --ink:#ece5d6; --ink-2:#b4ac9c; --line:#3b372f; --oliva:#9db08a; --terra:#d9906f; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.5 system-ui, sans-serif; }
+  main { max-width: 1500px; margin: 0 auto; padding: 28px 16px 56px; }
+  h1, h2 { font-family: Georgia, serif; font-style: italic; font-weight: 400; margin: 0 0 6px; }
+  h1 { font-size: 32px; } h2 { font-size: 24px; }
+  .sub { color: var(--ink-2); margin: 0 0 24px; max-width: 70ch; }
+  .tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 1100px) { .tres { grid-template-columns: 1fr; } }
+  .col { background: var(--paper-2); border-radius: 12px; padding: 14px; }
+  .col.hoy h2 { color: var(--terra); } .col.a h2, .col.b h2 { color: var(--oliva); }
+  img { width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--line); display: block; margin: 10px 0; }
+  ol { margin: 0; padding-left: 20px; } li { margin: 4px 0; }
+  .rec { font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--oliva); }
+</style>
+</head>
+<body>
+<main>
+  <h1>La comida, a las 14:20</h1>
+  <p class="sub">Jornada de 9:00 a 17:00, con la comida de 14:00 a 15:00. Eliges la jornada (o vuelves a PACE) a las 14:20, en plena comida. Solo el aro y la línea del día, en la app de verdad. Lo marcado es lo que importa.</p>
+  <div class="tres">
+    <section class="col hoy">
+      <h2>Hoy</h2>
+      <img src="hoy-es.webp" alt="Hoy: el aro ofrece Empezar jornada de 45 minutos y AHORA está en el bloque de las 15:00">
+      <ol>
+        <li>El botón verde, «Empezar jornada», empieza un bloque de 45 min ya: <b>se come la comida</b> y la quita del día.</li>
+        <li>«AHORA» está en el bloque de las 15:00, no en la comida, que es lo que toca.</li>
+      </ol>
+    </section>
+    <section class="col a">
+      <div class="rec">Recomendada</div>
+      <h2>A · La comida, en el aro</h2>
+      <img src="a-es.webp" alt="A: el aro dice Comida, hasta las 15:00, con lo que queda de comida, y el botón pasa a enlace">
+      <ol>
+        <li>El aro dice «Comida · Hasta las 15:00» y cuenta lo que queda de comida.</li>
+        <li>No hay botón verde: «Empezar ya el bloque 1» queda como enlace, por si ya has comido.</li>
+        <li>«AHORA» va en la comida.</li>
+      </ol>
+    </section>
+    <section class="col b">
+      <h2>B · Solo «AHORA»</h2>
+      <img src="b-es.webp" alt="B: el aro igual que hoy y AHORA en la comida">
+      <ol>
+        <li>«AHORA» va en la comida.</li>
+        <li>El aro se queda como hoy: el botón verde sigue invitando a empezar el bloque y a comerse la comida.</li>
+      </ol>
+    </section>
+  </div>
+</main>
+</body>
+</html>
