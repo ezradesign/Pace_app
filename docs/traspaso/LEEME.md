@@ -4,6 +4,15 @@ Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y 
 PACE sin preguntarle a Ez lo que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir.
 Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de noviembre de 2026, 10:20, v0.204.0 en `main` y los cuatro arreglos de S3 y S4 en su rama.
 
+## AL RELEVO (22 nov., cuenta EcLj6; semana al 80 %, se repone el martes 24 a las 14:00): empieza aquí
+
+- **`main` = 0.214.0** (la home con el navegador ampliado, A de Ez), GitHub en verde. Nada sin subir.
+- **La caza completa del 22 nov.** (tres sesiones en Opus 5.5, esfuerzo alto), cada una en su rama y sin juntar. Páginas: ordenador GKPDhv3qS2AWdkM5WMf4HN, móvil MsoqxhnRYchgMqLTyT89Zo, datos TuDuWPWYAd9N1Vuh8mgwwR; las preguntas juntas, 8FWH7kpL1kDdRY3tsDjX3y.
+  - `claude/caza-datos-22nov-0e230b`: la racha con el reloj hacia atrás y la voz sin conexión tras actualizar, arreglados. Lista para juntar.
+  - `claude/caza-web-22nov-829743`: el encabezado para el lector de pantalla, arreglado. Ez (22 nov., literal): «La 1 no la entiendo no veo bien el cambio en capturas de toda la ventana + 2A + 3A + 4A + 5A pero solo Sin rachas que castigan». Se montan 2A (minutos de la rutina en Estadísticas), 3A («Pausa terminada · Volver» en la miniventana), 4A («Cuatro gestos») y la 5A corta («Sin rachas que castigan» / «No streaks that punish you»). La 1 (la comida a las 14:20) se vuelve a maquetar con recortes del aro y la línea, en `docs/audits/caza-completa-22nov/web/comida/`.
+  - `claude/caza-movil-22nov-a63749`: el zoom al tocar un campo en el iPhone, Atrás en «Tus datos» y dos toques pequeños, arreglados. Ez: «Movil: 1A + 2A +3A + LA 4 LA POSTPONEMOS + 6A». Se montan 1A (apps solo en vertical), 3A («Bloque terminado») y 6A (sin la línea repetida en «PACE completo»). La 4 (el texto del aviso en la web del móvil) espera a que Ez pruebe en su Android si llega con la pantalla bloqueada.
+- **Después:** la página de la 1 para Ez, juntar las tres ramas con la suite entera y la 0.215.0 con su novedad en el sobre.
+
 ## AL RELEVO (21 nov., cuenta EcLj6; Ez: «puedes llevar el uso al 100 %, seguimos aquí cuando se restablezca»): empieza aquí
 
 - **`main` = 0.213.0** con el «Sí, júntalo» de Ez: las cuatro ramas de sus letras del 20 nov. (miniventana sola + 2A, caza + 1C, auditoría + Haptics + 3A 4A 5A 6A, barrido + 7A). Página de lo montado: ShopHkxE7Yoh1GhANwr95R. La novedad del sobre, «miniventana-sola». Suite entera sobre la unión: 1994 en verde; la única roja era `aro-jornada.spec.js:206` (buscaba «Bloque» a secas y la 7A dejó «Bloque cerrado»), puesta al día.
