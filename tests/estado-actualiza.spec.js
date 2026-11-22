@@ -4,7 +4,8 @@
  * ahora son actualizaciones, y una actualización solo es buena si abre con SU estado: historia,
  * logros, semana, rutinas, el código y el registro de eventos. El saneador ya tiene sus pruebas
  * (estado-saneado.spec.js) con campos rotos a mano; esto va con un estado ENTERO y de verdad de
- * cada versión: tests/fixtures/estado-viejo/v0.191.1.json y v0.174.0.json los sacó
+ * cada versión: tests/fixtures/estado-viejo/v0.205.0.json (la que tienen los testers de sus 14 días),
+ * v0.191.1.json y v0.174.0.json los sacó
  * captura.gen.js usando el `index.html` de esa versión dos días (dos Focos, vasos, un «Sí», una
  * rutina propia y tres días de jornada en el registro).
  *
@@ -74,7 +75,7 @@ function loQueQueda(page) {
   });
 }
 
-for (const version of ['v0.191.1', 'v0.174.0']) {
+for (const version of ['v0.205.0', 'v0.191.1', 'v0.174.0']) {
   test('desde la ' + version + ': arranca sin bienvenida y con su historia, logros, semana, rutinas, código y registro', async ({ page, context }) => {
     const codigo = firmar({ tester: 3 });
     const { antes, errores, idsViejos } = await abrirConLoDeAntes(page, context, version, codigo);

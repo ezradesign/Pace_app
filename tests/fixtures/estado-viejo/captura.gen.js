@@ -19,6 +19,7 @@ const { execSync } = require('child_process');
 const { test, expect } = require('@playwright/test');
 
 const VERSIONES = [
+  { version: 'v0.205.0', commit: '45a85c7c' },
   { version: 'v0.191.1', commit: 'be9fd861' },
   { version: 'v0.174.0', commit: '570ab80a' },
 ];
