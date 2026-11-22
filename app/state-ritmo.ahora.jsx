@@ -98,4 +98,18 @@ function ritmoComidaSinEmpezar(m, t) {
   return null;
 }
 
-Object.assign(window, { ritmoDesdeSinEmpezar, ritmoMirarSinEmpezar, ritmoDurSiEmpiezas, ritmoLeerTrasLaPausa, ritmoComidaSinEmpezar });
+/* LA COMIDA EN CURSO a la hora `t` (por defecto, ahora), o null (Ez, 1A del 22 nov. 2026). En plena comida
+   lo que toca es comer: la línea pone «AHORA» en ella (RitmoLinea.jsx) y el aro la cuenta
+   (FocusTimer.jornada.jsx). Con un bloque que ya corre la comida va detrás de él, y si el bloque se la
+   comió queda con 0 min: en los dos casos no está en curso. Con el día cerrado, tampoco. */
+function ritmoComidaEnCurso(p, t) {
+  if (!p || !p.m || p.cerrado) return null;
+  if (t == null) t = ritmoAhoraExacto();
+  for (var i = 0; i < p.m.items.length; i++) {
+    var it = p.m.items[i];
+    if (it.tipo === 'comida' && it.dur > 0 && it.desde <= t && t < it.desde + it.dur) return it;
+  }
+  return null;
+}
+
+Object.assign(window, { ritmoDesdeSinEmpezar, ritmoMirarSinEmpezar, ritmoDurSiEmpiezas, ritmoLeerTrasLaPausa, ritmoComidaSinEmpezar, ritmoComidaEnCurso });

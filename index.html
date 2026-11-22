@@ -15481,8 +15481,22 @@ function ritmoComidaSinEmpezar(m, t) {
   return null;
 }
 
-Object.assign(window, { ritmoDesdeSinEmpezar, ritmoMirarSinEmpezar, ritmoDurSiEmpiezas, ritmoLeerTrasLaPausa, ritmoComidaSinEmpezar });
-;Object.assign(window, { ritmoDesdeSinEmpezar, ritmoLeerTrasLaPausa, _ritmoSinEmpezarVisto, ritmoMirarSinEmpezar, ritmoDurSiEmpiezas, ritmoComidaSinEmpezar });
+
+
+
+
+function ritmoComidaEnCurso(p, t) {
+  if (!p || !p.m || p.cerrado) return null;
+  if (t == null) t = ritmoAhoraExacto();
+  for (var i = 0; i < p.m.items.length; i++) {
+    var it = p.m.items[i];
+    if (it.tipo === 'comida' && it.dur > 0 && it.desde <= t && t < it.desde + it.dur) return it;
+  }
+  return null;
+}
+
+Object.assign(window, { ritmoDesdeSinEmpezar, ritmoMirarSinEmpezar, ritmoDurSiEmpiezas, ritmoLeerTrasLaPausa, ritmoComidaSinEmpezar, ritmoComidaEnCurso });
+;Object.assign(window, { ritmoDesdeSinEmpezar, ritmoLeerTrasLaPausa, _ritmoSinEmpezarVisto, ritmoMirarSinEmpezar, ritmoDurSiEmpiezas, ritmoComidaSinEmpezar, ritmoComidaEnCurso });
 })();
 </script>
   <script>
@@ -34038,7 +34052,46 @@ function aroCerrado(s, t, tn) {
 
 
 
-function aroJornada(_ref) {let { state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa, porLibre } = _ref;
+
+
+
+
+
+const { useState: useStateAroC, useEffect: useEffectAroC } = React;
+function aroComida(state, aro, status) {
+  if (!aro || status === 'running' || status === 'paused' || typeof ritmoComidaEnCurso !== 'function') return null;
+  const c = ritmoComidaEnCurso(ritmoPlan(state));
+  if (!c) return null;
+  const fin = new Date();fin.setHours(Math.floor((c.desde + c.dur) / 60), (c.desde + c.dur) % 60, 0, 0);
+  return { hasta: c.desde + c.dur, queda: Math.max(0, Math.round((fin.getTime() - Date.now()) / 1000)) };
+}
+function useAroComida(state, aro, status) {
+  const c = aroComida(state, aro, status);
+  const [, repinta] = useStateAroC(0);
+  useEffectAroC(() => {
+    if (!c) return undefined;
+    const id = setInterval(() => repinta((x) => x + 1), 1000);
+    return () => clearInterval(id);
+  }, [!!c]);
+  return c;
+}
+
+const aroEnlaceEstilo = { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minHeight: 44, padding: '8px 6px',
+  whiteSpace: 'nowrap', background: 'none', border: 0, boxShadow: 'none', cursor: 'pointer', color: 'var(--ink-2)',
+  fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, fontWeight: 400, textDecoration: 'underline', textUnderlineOffset: 3 };
+
+
+
+function aroJornada(_ref) {let { state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa, porLibre, comida } = _ref;
+  if (comida && aro) {
+    const p = ritmoPlan(state);
+    const q = tn('ritmo.aro.despues.bloque', { n: aro.n }) + (p && p.actual ? ' · ' + ritmoDuracion(p.actual.dur) : '');
+    return {
+      enlace: true,
+      cta: { label: tn('ritmo.pausa.ya', { n: aro.n }) },
+      fila: React.createElement("span", { className: "pace-aro-despues", "data-pace-aro-despues": true }, tn('ritmo.aro.despues', { q }))
+    };
+  }
   if (enPausaRitmo) {
     const plato = aroPlatoPendiente(state);
     if (!plato) return {};
@@ -34106,8 +34159,8 @@ function AroFila(_ref2) {let { cycle, cycleLabel, oculta, fila } = _ref2;
   document.head.appendChild(s);
 })();
 
-Object.assign(window, { aroJornada, aroPausaTerminada, aroPlatoPendiente, aroDespues, aroCerrado, AroFila });
-;Object.assign(window, { aroPlatoPendiente, aroPausaTerminada, aroDespues, aroCerrado, aroJornada, AroFila });
+Object.assign(window, { aroJornada, aroComida, useAroComida, aroEnlaceEstilo, aroPausaTerminada, aroPlatoPendiente, aroDespues, aroCerrado, AroFila });
+;Object.assign(window, { aroPlatoPendiente, aroPausaTerminada, aroDespues, aroCerrado, aroComida, useAroComida, aroJornada, AroFila });
 })();
 </script>
   <!-- Los avisos del móvil: el fin del bloque y el fin de la pausa. Antes de FocusTimer.jsx. -->
@@ -34725,19 +34778,19 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
   const aro = state.focusMode === 'foco' && typeof ritmoAro === 'function' ? ritmoAro(state, t, tn) : null;
-  const cerrada = !aro && state.focusMode === 'foco' && status !== 'running' && status !== 'paused' && typeof aroCerrado === 'function' ? aroCerrado(state, t, tn) : null;
+  const comidaAro = useAroComida(state, aro, status);const cerrada = !comidaAro && !aro && state.focusMode === 'foco' && status !== 'running' && status !== 'paused' && typeof aroCerrado === 'function' ? aroCerrado(state, t, tn) : null;
   const siguienteDelPlan = status === 'completed' && !!aro;
-  const mostrado = siguienteDelPlan ? durationSec : remaining;
+  const mostrado = comidaAro ? comidaAro.queda : siguienteDelPlan ? durationSec : remaining;
   const mins = Math.floor(mostrado / 60);
   const secs = mostrado % 60;
-  const totalSec = durationSec;
+  const totalSec = comidaAro ? Math.max(1, mostrado) : durationSec;
   const progress = 1 - mostrado / totalSec;
 
 
 
 
 
-  const modeLabel = aro ? aro.label : cerrada ? cerrada.label : state.focusMode === 'foco' ? t('focus.manual.label') :
+  const modeLabel = comidaAro ? t('ritmo.comida') : aro ? aro.label : cerrada ? cerrada.label : state.focusMode === 'foco' ? t('focus.manual.label') :
   enPausaRitmo && pausaRitmo.cierre ? t('ritmo.aro.cierre') : state.focusMode === 'pausa' ? t('focus.mode.pause') :
   t('focus.mode.long');
 
@@ -34759,7 +34812,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
 
-  const subtitle = bloques.subtitulo ? bloques.subtitulo :
+  const subtitle = comidaAro ? t('ritmo.comida.lejos') : bloques.subtitulo ? bloques.subtitulo :
   enPausaRitmo ? pausaRitmo.cierre ? t('ritmo.cierre.luego') : tn('ritmo.pausa.luego', { n: pausaRitmo.n, m: pausaRitmo.de }) :
   aro && aroPausaTerminada(state) ? t('ritmo.aro.pausaTerminada') : cerrada && cerrada.sub ? cerrada.sub :
   isFocoMode ?
@@ -34870,7 +34923,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   }
 
   const porLibre = () => {reset();ritmoPorLibre();};
-  const jornada = aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa, porLibre });
+  const jornada = aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa, porLibre, comida: comidaAro });
   if (jornada.cta) {ctaLabel = jornada.cta.label;ctaAction = jornada.cta.action || ctaAction;}
 
 
@@ -34894,7 +34947,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   React.createElement("button", {
     "data-pace-cta": true,
     onClick: ctaAction,
-    style: running && !jornada.lleno ? focusStyles.startBtnSecondary : focusStyles.startBtnPrimary },
+    style: jornada.enlace ? aroEnlaceEstilo : running && !jornada.lleno ? focusStyles.startBtnSecondary : focusStyles.startBtnPrimary },
 
   ctaLabel
   ),
@@ -34971,7 +35024,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
       progress: progress,
       mode: state.focusMode,
       modeLabel: modeLabel,
-      hasta: aro ? aro.hasta : cerrada ? cerrada.hecho : null,
+      hasta: comidaAro ? tn('ritmo.hasta', { h: ritmoHora(comidaAro.hasta) }) : aro ? aro.hasta : cerrada ? cerrada.hecho : null,
       subtitle: subtitle,
       inner: isAro ? innerForAro : null,
       running: running,
@@ -52123,6 +52176,10 @@ function ritmoIndiceAhora(plan) {
   const m = plan.m;
 
   if (plan.pausa && !plan.pausaPasada) return m.items.indexOf(plan.pausa);
+
+
+  const comida = typeof ritmoComidaEnCurso === 'function' ? ritmoComidaEnCurso(plan) : null;
+  if (comida) return m.items.indexOf(comida);
   return plan.actual ? m.items.indexOf(plan.actual) : m.items.length;
 }
 

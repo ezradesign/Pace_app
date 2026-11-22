@@ -109,6 +109,10 @@ function ritmoIndiceAhora(plan) {
   const m = plan.m;
   /* Con su rato ya acabado, la pausa abierta queda atrás y «Ahora» es el bloque (Ez, S11 A del 8 nov.). */
   if (plan.pausa && !plan.pausaPasada) return m.items.indexOf(plan.pausa);
+  /* En plena comida, «Ahora» es la comida (Ez, 1A del 22 nov. 2026): elegida la jornada a las 14:20 caía
+     en el bloque de las 15:00. */
+  const comida = typeof ritmoComidaEnCurso === 'function' ? ritmoComidaEnCurso(plan) : null;
+  if (comida) return m.items.indexOf(comida);
   return plan.actual ? m.items.indexOf(plan.actual) : m.items.length;
 }
 
