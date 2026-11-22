@@ -115,3 +115,68 @@ test('a 100 % no cambia nada: 1536×734, el aro de 400 y su interior sin escalar
   expect(r.escala === 'none' || r.escala === '1', 'el interior escala a 100 %: ' + r.escala).toBe(true);
   await context.close();
 });
+
+/* EL DÍA EN UNA FILA (Ez, A del 22 nov. 2026). Con el día servido, la tarjeta de la jornada es lo más
+ * alto de la home: al 175 % en 1911×868 (1092×496) pedía 35 px de scroll en castellano y 79 en inglés,
+ * y al 150 % en 1536×864 (1024×489), 87 y 42. Ahora, si con el aro en su suelo no cabe, la línea del
+ * día enseña solo la hora de cada parada (home-geometry.medidas.js); el nombre sigue en el
+ * `aria-label` y el `title` de su botón. CONTROL: a 100 % (1536×734) la línea va entera.
+ * Por debajo de ~470 px de alto ni así cabe: la línea se queda entera y se admite el scroll, con su
+ * tope en px, como `pendiente115` en home-sin-scroll.spec.js: se apunta, y si crece, rojo.
+ * Mutante: con `paceHomeDiaLinea` devolviendo null, las cuatro primeras vuelven a pedir scroll. */
+const DIA = [
+  { w: 1092, h: 496, nombre: 'el 175 % en 1911×868', fila: true },
+  { w: 1024, h: 489, nombre: 'el 150 % en 1536×864', fila: true },
+  { w: 1536, h: 734, nombre: 'CONTROL, 1536×864 al 100 %', fila: false },
+  /* Ancha y muy baja: con menos de ~1000 px de ancho la tarjeta del día ya va en su versión estrecha
+     («Ahora» y «Luego»), sin línea; el 150 % en 1366×768 (910×425) es así. */
+  { w: 1280, h: 440, nombre: 'una ventana ancha y muy baja', fila: false, tope: 105 },   // 92 px aquí
+];
+
+for (const lang of ['es', 'en']) {
+  for (const v of DIA) {
+    test(lang + ' · ' + v.w + '×' + v.h + ' (' + v.nombre + '), con el día servido: ' + (v.tope ? 'scroll admitido, con tope' : v.fila ? 'la línea solo con horas, sin scroll' : 'la línea entera'), async ({ browser }) => {
+      const baseURL = test.info().project.use.baseURL;
+      const context = await browser.newContext({ baseURL, viewport: { width: v.w, height: v.h },
+        locale: lang === 'es' ? 'es-ES' : 'en-GB', timezoneId: 'Europe/Madrid' });
+      await sembrar(context, { lang, ritmo: { dia: JORNADA } });
+      const page = await context.newPage();
+      await page.clock.install({ time: hora('09:00') });
+      await irAlArtefacto(page);
+      await expect(page.locator('[data-pace-ritmo-linea]')).toBeVisible();
+      await page.mouse.move(1, 1);
+      expect(await asentarGeometria(page), 'el aro no se asentó').toBe(true);
+      const r = await page.evaluate(() => {
+        const body = document.querySelector('[data-pace-home-body]');
+        const nombres = Array.from(document.querySelectorAll('[data-pace-ritmo-linea] .pace-rt-n'));
+        const botones = Array.from(document.querySelectorAll('[data-pace-ritmo-parada]'));
+        return {
+          fila: body.hasAttribute('data-pace-home-dia-fila'),
+          sobra: body.scrollHeight - body.clientHeight,
+          nombresVisibles: nombres.filter((n) => getComputedStyle(n).display !== 'none').length,
+          nombres: nombres.length,
+          horas: Array.from(document.querySelectorAll('[data-pace-ritmo-linea] .pace-rt-h')).filter((n) => n.getBoundingClientRect().height > 0).length,
+          /* Cada parada sigue diciendo qué es: hora y rutina en su nombre accesible, rutina en el title. */
+          sinNombre: botones.filter((b) => !(b.getAttribute('aria-label') || '').includes(' · ') || !b.title).length,
+        };
+      });
+      expect(r.nombres, 'GUARD: la línea del día no tiene etiquetas').toBeGreaterThan(3);
+      expect(r.sinNombre, 'paradas sin nombre accesible o sin title').toBe(0);
+      if (v.tope) {
+        if (r.sobra > 1) test.info().annotations.push({ type: 'scroll admitido (Ez, A del 22 nov.)', description: v.w + '×' + v.h + ': ' + r.sobra + ' px' });
+        expect(r.sobra, 'más scroll que su tope').toBeLessThanOrEqual(v.tope);
+        expect(r.fila, 'sin caber ni recogida, la línea se queda entera').toBe(false);
+      } else if (v.fila) {
+        expect(r.sobra, 'la home pide scroll con el día servido').toBeLessThanOrEqual(1);
+        expect(r.fila, 'la línea del día no se recogió').toBe(true);
+        expect(r.nombresVisibles, 'recogida, la línea aún enseña nombres').toBe(0);
+        expect(r.horas, 'recogida, cada parada sigue con su hora').toBe(r.nombres);
+      } else {
+        expect(r.sobra).toBeLessThanOrEqual(1);
+        expect(r.fila, 'con sitio, la línea del día se recogió').toBe(false);
+        expect(r.nombresVisibles, 'con sitio, faltan nombres en la línea').toBe(r.nombres);
+      }
+      await context.close();
+    });
+  }
+}

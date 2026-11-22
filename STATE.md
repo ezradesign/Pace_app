@@ -47,9 +47,9 @@ de Android con sus 14 días seguidos, que aún no han empezado, y el alta para c
 
 ## Espera a Ez
 
-- **La home con el navegador ampliado (21 nov.)**, en `claude/youthful-turing-53d829`, sin juntar: lo de dentro del aro
-  ya escala con el aro (montado, con `tests/home-zoom.spec.js`). Lo que aún no cabe en ventanas bajas, A / B / C en
-  `docs/proposals/zoom-home-21nov/index.html` (recomendada A, «el día en una fila», y scroll por debajo de ~430 px de alto).
+- **La home con el navegador ampliado (21-22 nov.)**, en `claude/youthful-turing-53d829`, sin juntar: lo de dentro del aro
+  escala con el aro y, con la A de Ez («el día en una fila», 22 nov.), la línea del día enseña solo horas si no cabe
+  (`tests/home-zoom.spec.js`). Por debajo de ~470 px de alto, scroll admitido. Página: `docs/proposals/zoom-home-21nov/`.
 
 - **La 0.212.0, en `main` con el «Júntalo todo» de Ez (19 nov.)**: las siete ramas del día (menores, recorrido con la 11 y la tarjeta limpia, voz 1A, visita A, caza, aviso del Foco en el PC con la miniventana, y la comida con «Seguir por libre» A). En inglés, Ajustes con los avisos bloqueados cabe a 1280 × 720 con tres textos más cortos (C de Ez, 20 nov.), y tres textos que en Linux (como en Android) pasaban de línea, arreglados con 1A 2A 3A de Ez (página 57qUVTJTpogW8Ddcz9nBmj). GitHub en verde entero (CI 44811782413). El hueco de Ocaso tras «Seguir por libre», arreglado y juntado con el sí de Ez (20 nov.). Falta probar en un Chrome de verdad el aviso y la miniventana. **La 0.213.0 (21 nov., «Sí, júntalo»)** trae «1C 2A 3A 4A 5A 6A 7A» de Ez (página de lo montado ShopHkxE7Yoh1GhANwr95R): suite entera sobre la unión, 1994 en verde y 1 roja que era la prueba (la 7A cambió «Has cerrado un bloque»), puesta al día. Falta que Ez pruebe la miniventana en su Chrome.
 

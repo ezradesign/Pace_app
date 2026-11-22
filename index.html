@@ -51390,6 +51390,10 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
 .pace-rt-etiq .pace-rt-m { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-top: 1px; white-space: nowrap; }
 .pace-rt-etiq .pace-rt-gota { width: 10px; height: 10px; margin-left: 3px; }
 .pace-rt-zona { height: 52px; }
+/* Con el navegador ampliado, si el día no cabe, solo la hora de cada parada (Ez, A del 22 nov. 2026): lo
+   marca el motor de la home midiendo (home-geometry.medidas.js). El nombre sigue en el title, en el
+   aria-label del botón y en su ficha. */
+[data-pace-home-dia-fila] .pace-rt-etiq .pace-rt-n, [data-pace-home-dia-fila] .pace-rt-etiq .pace-rt-m { display: none; }
 /* La ficha de una parada que aún no toca (Ez, 5 nov. 2026: 1A): el papel del panel, encima
    de las etiquetas; la coloca el JS (abajo, o encima si abajo no cabe). */
 .pace-rt-ficha { position: absolute; top: 34px; z-index: 6; width: 300px; max-width: calc(100% + 16px); text-align: left;
@@ -56971,6 +56975,30 @@ function paceHomeFila(body, si) {paceHomeMarca(body, PACE_HOME_FILA, si);}
 
 
 
+
+
+
+
+
+var PACE_HOME_DIA_FILA = 'data-pace-home-dia-fila';
+
+
+function paceHomeDiaLinea(body) {
+  var lin = body ? body.querySelector('[data-pace-ritmo-linea]') : null;
+  return lin && lin.offsetParent ? lin : null;
+}
+
+
+
+function paceHomeDiaFila(body, si) {
+  if (!body || body.hasAttribute(PACE_HOME_DIA_FILA) === !!si) return;
+  paceHomeMarca(body, PACE_HOME_DIA_FILA, si);
+  var lin = paceHomeDiaLinea(body);
+  if (lin && typeof ritmoColocarEtiquetas === 'function') ritmoColocarEtiquetas(lin, lin.nextElementSibling);
+}
+
+
+
 function paceHomeFilaNombres(body) {
   if (!body) return;
   var fila = body.hasAttribute(PACE_HOME_FILA);
@@ -57024,7 +57052,7 @@ function paceAroPisoInterior(dial, radio) {
   }
   return Math.ceil(peor / radio);
 }
-;Object.assign(window, { PACE_HOME_JUSTA, PACE_HOME_FILA, paceHomeLuego, paceHomeChips, paceHomeMarca, paceHomeRecoger, paceHomeFila, paceHomeFilaNombres, paceAroCicloAbajo, paceAroPisoInterior });
+;Object.assign(window, { PACE_HOME_JUSTA, PACE_HOME_FILA, paceHomeLuego, paceHomeChips, paceHomeMarca, paceHomeRecoger, paceHomeFila, PACE_HOME_DIA_FILA, paceHomeDiaLinea, paceHomeDiaFila, paceHomeFilaNombres, paceAroCicloAbajo, paceAroPisoInterior });
 })();
 </script>
   <script>
@@ -57115,7 +57143,6 @@ function paceAroPisoInterior(dial, radio) {
   var D_FLOOR = 205;
 
   var D_INTERIOR = 280;
-
 
 
 
@@ -57285,8 +57312,10 @@ function paceAroPisoInterior(dial, radio) {
     if (!body || !dial) return 0;
     var luego = !isDesktop && paceHomeLuego(body);
     var fila = !isDesktop && !luego && paceHomeChips(body).length > 0;
+    var dia = isDesktop && !!paceHomeDiaLinea(body);
     paceHomeRecoger(body, !!luego && modo === 1);
     paceHomeFila(body, fila && modo === 1);
+    paceHomeDiaFila(body, dia && modo === 1);
 
     var widthCap = isDesktop ? WIDTH_CAP : WIDTH_CAP_MOBILE;
     var dFloor = isDesktop ? D_FLOOR : D_FLOOR_MOBILE;
@@ -57408,6 +57437,11 @@ function paceAroPisoInterior(dial, radio) {
 
       if (sobra > 1 && (luego || fila) && modo === 0) return ajustar(1) > 1 ? ajustar(2) : 0;
       if (modo === 1 && sobra > 1) return sobra;
+    }
+
+    if (isDesktop && dia && D <= piso && modo < 2) {
+      var sobraDia = medirOver();
+      if (sobraDia > 1) return modo === 0 ? ajustar(1) > 1 ? ajustar(2) : 0 : sobraDia;
     }
 
     if (isDesktop && paceAroCartaVisible()) paceAroCartaRecordar(clave, D);

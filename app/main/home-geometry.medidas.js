@@ -46,6 +46,30 @@ function paceHomeMarca(body, marca, si) {
 function paceHomeRecoger(body, si) { paceHomeMarca(body, PACE_HOME_JUSTA, si); }
 function paceHomeFila(body, si) { paceHomeMarca(body, PACE_HOME_FILA, si); }
 
+/* EN EL ORDENADOR, EL DÍA EN UNA FILA (Ez, A, 22 nov. 2026). Con el navegador ampliado (al 175 % en
+   1911×868 la ventana mide 1092×496) la tarjeta del día servido no cabía ni con el aro en su suelo: 35 px
+   de scroll en castellano y 79 en inglés. Lo que se recoge es lo de debajo de cada parada: queda la hora,
+   y el nombre y los minutos se van (`display: none`, ritmo.css.jsx). Siguen en el `title` y el
+   `aria-label` de su botón y en la ficha que abre al tocarla (RitmoLinea.jsx). Se decide igual que
+   «Luego» y la fila de Actividades en el móvil: midiendo, en la misma pasada y solo si así cabe; por
+   debajo de unos 430 px de alto ni así cabe, la línea se queda entera y se admite el scroll. */
+var PACE_HOME_DIA_FILA = 'data-pace-home-dia-fila';   // en [data-pace-home-body]: la línea del día, solo horas
+
+/* La línea del día de la tarjeta de escritorio, si se ve. */
+function paceHomeDiaLinea(body) {
+  var lin = body ? body.querySelector('[data-pace-ritmo-linea]') : null;
+  return lin && lin.offsetParent ? lin : null;
+}
+
+/* Recoge o despliega, y recoloca las etiquetas en el acto: su alto lo escribe ritmoColocarEtiquetas
+   en la zona de debajo, y el motor mide justo después. */
+function paceHomeDiaFila(body, si) {
+  if (!body || body.hasAttribute(PACE_HOME_DIA_FILA) === !!si) return;
+  paceHomeMarca(body, PACE_HOME_DIA_FILA, si);
+  var lin = paceHomeDiaLinea(body);
+  if (lin && typeof ritmoColocarEtiquetas === 'function') ritmoColocarEtiquetas(lin, lin.nextElementSibling);
+}
+
 /* Al acabar la pasada, no en cada intento: el nombre de cada actividad en `aria-label` y `title`
    mientras va en fila, y nada cuando no. Se lee del rótulo, así que sigue el idioma. */
 function paceHomeFilaNombres(body) {
