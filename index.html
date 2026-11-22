@@ -52695,12 +52695,17 @@ function RitmoMovil(_ref9) {let { state, plan, onVer } = _ref9;
   const conPausa = !!(plan.pausa && !plan.pausaPasada);
 
 
+  const enComida = !conPausa && typeof ritmoComidaEnCurso === 'function' ? ritmoComidaEnCurso(plan) : null;
+
+
   useLayoutEffectRP(() => {
     if (typeof window.paceHomeGeometriaYa === 'function') window.paceHomeGeometriaYa();
-  }, [conPausa, !!luego, plan.hechos, plan.m.opcion]);
+  }, [conPausa, !!enComida, !!luego, plan.hechos, plan.m.opcion]);
   const filas = conPausa ?
   React.createElement(React.Fragment, null, React.createElement(RitmoFilaParada, { it: plan.pausa, rotulo: "ritmo.ahora", corta: true,
     hecha: (plan.estados || {})[ritmoOrdinal(plan.m, plan.pausa)] === 'hecha' }), b ? filaBloque('ritmo.luego') : null) :
+  enComida ?
+  React.createElement(React.Fragment, null, React.createElement(RitmoFilaParada, { it: enComida, rotulo: "ritmo.ahora", corta: true }), b ? filaBloque('ritmo.luego') : null) :
   React.createElement(React.Fragment, null, filaBloque('ritmo.ahora'), luego ? React.createElement(RitmoFilaParada, { it: luego, rotulo: "ritmo.luego", corta: true }) : null);
   return (
     React.createElement("div", { className: "pace-rt-panel pace-rt-mov", "data-pace-ritmo-estado": "menu" },

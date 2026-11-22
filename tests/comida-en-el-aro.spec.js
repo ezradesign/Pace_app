@@ -105,7 +105,7 @@ test('CONTROL · a las 15:00 la comida se acaba y el aro vuelve al bloque', asyn
 
 for (const [w, h] of [[1280, 720], [360, 640]]) {
   for (const lang of ['es', 'en']) {
-    test(lang + ' · ' + w + '×' + h + ': en plena comida la home no pide scroll', async ({ page, context }) => {
+    test(lang + ' · ' + w + '×' + h + ': en plena comida la home no pide scroll' + (w < 768 ? ', y en la tarjeta del móvil «Ahora» es la comida' : ''), async ({ page, context }) => {
       await page.setViewportSize({ width: w, height: h });
       await sembrar(context, Object.assign({ lang }, diaDesde(860)));
       await page.clock.install({ time: a('14:20') });
@@ -114,6 +114,12 @@ for (const [w, h] of [[1280, 720], [360, 640]]) {
       expect(await vis(page, '[data-pace-dial-label]').first().textContent(), 'GUARD: el aro de la comida').toBe(TXT[lang].comida);
       const sobra = await page.evaluate(() => { const b = [...document.querySelectorAll('[data-pace-home-body]')].find((e) => e.getBoundingClientRect().width > 0); return b.scrollHeight - b.clientHeight; });
       expect(sobra, 'la home pide scroll').toBeLessThanOrEqual(1);
+      if (w < 768) {
+        /* La tarjeta del móvil: «Ahora · 14:20 · Comida» y «Luego · 15:00 · el bloque 1». */
+        const filas = await page.locator('.pace-rt-mov .pace-rt-fila').allInnerTexts();
+        expect(filas[0] || '', '«Ahora» en la tarjeta del móvil').toContain(TXT[lang].comida);
+        if (filas[1]) expect(filas[1], '«Luego» en la tarjeta del móvil').toContain('15:00');
+      }
     });
   }
 }
