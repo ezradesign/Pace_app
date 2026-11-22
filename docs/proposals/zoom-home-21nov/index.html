@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La home ampliada</title>
+<style>
+  :root { --papel: #f3ece0; --papel-2: #ebe2d2; --tinta: #2b2620; --tinta-2: #5c5448; --tinta-3: #77705f; --oliva: #56644a; --terracota: #b3684a; --linea: #d8cdb9; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --papel: #1f1c18; --papel-2: #2a2620; --tinta: #eee6d8; --tinta-2: #c4baa8; --tinta-3: #9c937f; --oliva: #9fb08a; --terracota: #d58a6a; --linea: #3d372e; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--papel); color: var(--tinta); font: 16px/1.55 Georgia, 'Times New Roman', serif; }
+  main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1, h2, h3 { font-style: italic; font-weight: 400; line-height: 1.2; }
+  h1 { font-size: 34px; margin: 0 0 6px; }
+  h2 { font-size: 26px; margin: 44px 0 8px; border-top: 1px solid var(--linea); padding-top: 24px; }
+  h3 { font-size: 20px; margin: 0 0 6px; }
+  p, li { color: var(--tinta-2); max-width: 760px; }
+  .rotulo { font: 11px/1.4 system-ui, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--tinta-3); }
+  figure { margin: 0; }
+  figure img { width: 100%; height: auto; display: block; border: 1px solid var(--linea); border-radius: 8px; }
+  figcaption { font-size: 14px; color: var(--tinta-3); margin-top: 6px; }
+  .par { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin: 16px 0; }
+  .opcion { background: var(--papel-2); border: 1px solid var(--linea); border-radius: 12px; padding: 18px; margin: 18px 0; }
+  .opcion.rec { border-color: var(--oliva); }
+  .letra { display: inline-block; min-width: 30px; text-align: center; border-radius: 15px; background: var(--tinta); color: var(--papel); font: 600 14px/30px system-ui, sans-serif; margin-right: 8px; }
+  .rec .letra { background: var(--oliva); }
+  table { border-collapse: collapse; font: 14px/1.4 system-ui, sans-serif; margin: 12px 0; width: 100%; }
+  th, td { border-bottom: 1px solid var(--linea); padding: 6px 8px; text-align: left; }
+  th { color: var(--tinta-3); font-weight: 500; }
+  .bien { color: var(--oliva); } .mal { color: var(--terracota); }
+  .tabla { overflow-x: auto; }
+</style>
+</head>
+<body>
+<main>
+  <div class="rotulo">PACE · 21 nov. 2026 · rama claude/youthful-turing-53d829</div>
+  <h1>La home con el navegador ampliado</h1>
+  <p>Ampliar con Ctrl + no cambia la pantalla: deja menos sitio a la app. En tu pantalla, el 150 % deja una ventana
+  de 1274 × 579 y el 175 %, de 1092 × 496. Lo medí del 110 al 200 % en tres pantallas (1366 × 768, 1536 × 864 y
+  1920 × 1080), en castellano e inglés, en los siete momentos de la home y con el Foco en marcha.</p>
+
+  <h2>Ya montado: lo de dentro del aro escala con el aro</h2>
+  <p>El aro se encogía y lo de dentro no: «Foco manual», «Bloque 1 de 9» y el botón cruzaban el trazo, y el ciclo
+  o «Después: …» se salían por abajo. Ahora, cuando el aro es pequeño, todo lo de dentro se encoge con él y queda
+  como a 100 %. A 100 % no cambia nada (lo he comparado medida a medida). Va con su prueba.</p>
+  <div class="par">
+    <figure><img src="fotos/antes-175-corta.jpg" alt="Antes, al 175 %: Foco manual pisa el aro y el ciclo se sale"><figcaption>Antes · 175 %: «Foco manual» pisa el trazo y «Ciclo 1 / 4» se sale.</figcaption></figure>
+    <figure><img src="fotos/ahora-175-corta.jpg" alt="Ahora, al 175 %: todo dentro del aro"><figcaption>Ahora · 175 %: todo dentro, y sin scroll.</figcaption></figure>
+    <figure><img src="fotos/antes-150-dia.jpg" alt="Antes, al 150 % con el día: el rótulo toca el aro"><figcaption>Antes · 150 % con el día: «Bloque 1 de 9» toca el trazo y el botón llega al borde.</figcaption></figure>
+    <figure><img src="fotos/ahora-150-dia.jpg" alt="Ahora, al 150 % con el día"><figcaption>Ahora · 150 % con el día.</figcaption></figure>
+  </div>
+
+  <h2>Hasta dónde aguanta ahora</h2>
+  <div class="tabla">
+  <table>
+    <tr><th>Pantalla</th><th>110 %</th><th>125 %</th><th>150 %</th><th>175 %</th><th>200 %</th></tr>
+    <tr><td>1920 × 1080</td><td class="bien">bien</td><td class="bien">bien</td><td class="bien">bien</td><td class="mal">el día pide 33 px</td><td class="mal">10-48 px</td></tr>
+    <tr><td>Tu pantalla (1911 × 868)</td><td class="bien">bien</td><td class="bien">bien</td><td class="bien">bien</td><td class="mal">el día pide 35-79 px</td><td>—</td></tr>
+    <tr><td>1536 × 864</td><td class="bien">bien</td><td class="bien">bien</td><td class="mal">el día pide 43-87 px</td><td class="mal">100-178 px</td><td class="mal">piel de móvil, 250 px</td></tr>
+    <tr><td>1366 × 768</td><td class="bien">bien</td><td class="mal">el día pide 22-65 px</td><td class="mal">94-151 px</td><td class="mal">155-254 px</td><td class="mal">piel de móvil, 300 px</td></tr>
+  </table>
+  </div>
+  <p>«El día» es la tarjeta de la jornada con su línea de paradas: es lo más alto de la home, y es lo primero que no
+  cabe. Con la tarjeta corta o por libre la home aguanta hasta unos 490 px de alto (el 175 % en tu pantalla). Por
+  debajo de unos 430 px de alto (150 % en 1366, 175 % en 1366 y 1536) no cabe nada aunque se pliegue el día. Al
+  200 % en 1366 y 1536 la ventana mide menos de 769 de ancho y la app pasa a la piel de móvil.</p>
+
+  <h2>Montada la A (elegida por Ez el 22 nov.)</h2>
+  <p><b>La A está montada</b> en la rama <code>claude/youthful-turing-53d829</code>: con el día servido, si la home no
+  cabe, la línea del día enseña solo la hora de cada parada; el nombre y los minutos siguen en su ficha al tocarla y
+  al pasar el ratón. Con sitio no cambia nada. Ya caben sin scroll tu pantalla al 175 %, 1536 al 150 %, 1920 al
+  175 % y 1366 al 125 %. Por debajo de unos 470 px de alto la línea se queda entera y se admite el scroll.</p>
+  <div class="par">
+    <figure><img src="fotos/montada-175-dia-es.jpg" alt="Montada: tu pantalla al 175 %, en castellano"><figcaption>Tu pantalla al 175 %, castellano.</figcaption></figure>
+    <figure><img src="fotos/montada-175-dia-en.jpg" alt="Montada: tu pantalla al 175 %, en inglés"><figcaption>Tu pantalla al 175 %, inglés.</figcaption></figure>
+    <figure><img src="fotos/montada-1536-150-dia-es.jpg" alt="Montada: 1536 al 150 %, en castellano"><figcaption>1536 × 864 al 150 %, castellano.</figcaption></figure>
+    <figure><img src="fotos/montada-1536-150-dia-en.jpg" alt="Montada: 1536 al 150 %, en inglés"><figcaption>1536 × 864 al 150 %, inglés.</figcaption></figure>
+  </div>
+
+  <h2>Lo que quedaba, y cambiaba lo que se ve: las tres opciones</h2>
+  <p>Las tres, en tu pantalla al 175 % con el día servido. En las tres, lo de dentro del aro ya va arreglado.</p>
+
+  <div class="opcion rec">
+    <h3><span class="letra">A</span>El día en una fila (recomendada)</h3>
+    <p>Si con el día servido la home no cabe, la línea del día enseña solo la hora de cada parada; el nombre y los
+    minutos siguen al tocarla. Lo decide el motor midiendo, como en el móvil la B y la 1 A2 de la octava: con
+    sitio, no cambia nada. Cabe al 175 % en tu pantalla y en 1920, y al 150 % en 1536.</p>
+    <div class="par">
+      <figure><img src="fotos/a-175-dia.jpg" alt="Opción A en tu pantalla al 175 %"><figcaption>Tu pantalla al 175 %: sin scroll.</figcaption></figure>
+      <figure><img src="fotos/a-1536-150-dia-en.jpg" alt="Opción A en 1536 al 150 %, en inglés"><figcaption>1536 × 864 al 150 %, en inglés: sin scroll.</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="opcion">
+    <h3><span class="letra">B</span>El aro a un lado</h3>
+    <p>Con la ventana baja y ancha, el aro va a la izquierda, entero, y a la derecha la tarjeta del día (en su versión
+    estrecha, «Ahora» y «Luego») o Actividades y la tarjeta corta. Cabe en más sitios con el día (también al 150 % en
+    1366), pero es otra home: el aro deja de salir como un sol por encima de las tarjetas. En la maqueta el selector de
+    minutos aún se mete bajo la tarjeta en 1366; montada, se encogería.</p>
+    <div class="par">
+      <figure><img src="fotos/b-175-dia.jpg" alt="Opción B en tu pantalla al 175 % con el día"><figcaption>Tu pantalla al 175 %, con el día.</figcaption></figure>
+      <figure><img src="fotos/b-175-corta.jpg" alt="Opción B en tu pantalla al 175 %, tarjeta corta"><figcaption>Tu pantalla al 175 %, tarjeta corta: las losetas se parten en dos líneas.</figcaption></figure>
+      <figure><img src="fotos/b-1366-150-dia.jpg" alt="Opción B en 1366 al 150 %"><figcaption>1366 × 768 al 150 % con el día: cabe. Con la tarjeta corta, aún 49 px.</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="opcion">
+    <h3><span class="letra">C</span>Como queda hoy</h3>
+    <p>Solo lo montado. Con el día servido, en ventanas de 490 a 540 px de alto la home pide de 33 a 87 px de scroll;
+    con la tarjeta corta, nada hasta los 490.</p>
+    <div class="par">
+      <figure><img src="fotos/c-175-dia.jpg" alt="Opción C: tu pantalla al 175 % con el día, cortada abajo"><figcaption>Tu pantalla al 175 %: la tarjeta del día se corta y pide 35 px (79 en inglés).</figcaption></figure>
+    </div>
+  </div>
+
+  <h2>Y por debajo de unos 430 px de alto</h2>
+  <p>Ni la A ni la B bastan: hace falta sitio para el aro, Actividades y la tarjeta. Recomiendo admitir ahí el scroll,
+  como ya lo admites en el móvil a 320 × 568, y no encoger más el aro (con 205 de diámetro el número ya está en su
+  mínimo legible). Lo que sí se podría probar después: plegar la barra lateral sola en esas ventanas, que libra 280 px
+  de ancho pero ni un píxel de alto.</p>
+  <figure><img src="fotos/c-1366-150-corta.jpg" alt="1366 al 150 %: Actividades y la tarjeta quedan abajo"><figcaption>1366 × 768 al 150 % (910 × 425): el aro ya cabe; Actividades y la tarjeta piden 151 px de scroll.</figcaption></figure>
+
+  <h2>Mi recomendación</h2>
+  <p><b>A</b>, y scroll admitido por debajo de unos 430 px de alto. Es el cambio más pequeño, no toca la home de nadie
+  con sitio y arregla tu 175 %. La B es más bonita en ventanas muy bajas, pero cambia la composición que elegiste.</p>
+  <p class="rotulo">Las maquetas son CSS encima de la app (a-dia-en-una-fila.css y b-aro-al-lado.css), medidas con
+  scripts/audit/banco-zoom-home.js --css. Todas las medidas, en medidas-windows.md y medidas-linux.md (Linux, como
+  Android: las mismas conclusiones, con unos píxeles de diferencia por la letra; la A cabe en los mismos sitios).</p>
+</main>
+</body>
+</html>

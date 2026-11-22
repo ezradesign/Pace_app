@@ -204,6 +204,10 @@
 .pace-rt-etiq .pace-rt-m { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-top: 1px; white-space: nowrap; }
 .pace-rt-etiq .pace-rt-gota { width: 10px; height: 10px; margin-left: 3px; }
 .pace-rt-zona { height: 52px; }
+/* Con el navegador ampliado, si el día no cabe, solo la hora de cada parada (Ez, A del 22 nov. 2026): lo
+   marca el motor de la home midiendo (home-geometry.medidas.js). El nombre sigue en el title, en el
+   aria-label del botón y en su ficha. */
+[data-pace-home-dia-fila] .pace-rt-etiq .pace-rt-n, [data-pace-home-dia-fila] .pace-rt-etiq .pace-rt-m { display: none; }
 /* La ficha de una parada que aún no toca (Ez, 5 nov. 2026: 1A): el papel del panel, encima
    de las etiquetas; la coloca el JS (abajo, o encima si abajo no cabe). */
 .pace-rt-ficha { position: absolute; top: 34px; z-index: 6; width: 300px; max-width: calc(100% + 16px); text-align: left;

@@ -1,0 +1,14 @@
+/* Maqueta B · «El aro a un lado»: con la ventana baja y ancha, el aro va a la izquierda, entero,
+   y la tarjeta del día (o Actividades y la tarjeta corta) a la derecha, centradas en alto. */
+[data-pace-home-stack] {
+  display: grid !important; grid-template-columns: minmax(0, 0.44fr) minmax(0, 0.56fr);
+  grid-auto-flow: column; grid-template-rows: auto auto; align-content: center; column-gap: 8px;
+  min-height: 100%;
+}
+[data-pace-home-stack] > [data-pace-main-content] { grid-column: 1; grid-row: 1 / span 2; align-self: center; }
+[data-pace-home-stack] > [data-pace-activitybar] { grid-column: 2; grid-row: 1; margin-top: 0 !important; align-self: end; }
+[data-pace-home-stack] > [data-pace-spc] { grid-column: 2; grid-row: 2; align-self: start; }
+[data-pace-home-stack] > [data-pace-activitybar][data-pace-ritmo] { grid-row: 1 / span 2; align-self: center; }
+[data-pace-home-stack] > * > * { margin-left: 0 !important; margin-right: 12px !important; max-width: none !important; }
+[data-pace-activitybar-grid] { display: grid !important; grid-template-columns: 1fr 1fr; }
+:root { --pace-dial-corte: 6px !important; }

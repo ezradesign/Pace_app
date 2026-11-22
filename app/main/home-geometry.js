@@ -83,6 +83,7 @@
                                // negativo» en monitores grandes
   var D_FLOOR = 205;           // suelo con interior aún legible; por debajo, scroll
                                // de seguridad en viewports extremos
+  var D_INTERIOR = 280;        // por debajo, el interior escala con el aro (zoom; a 100 %, D >= 283)
   /* s128: el motor corre también en móvil/tablet (≤768). Constantes propias de
      esa piel: el aro arranca por ANCHO y el mismo bucle lo encoge solo si no
      cabe; suelo un poco mayor por legibilidad en pantalla pequeña. La rama
@@ -165,6 +166,10 @@
   // independientemente de la altura del botón (a11y 44px) o del interior.
   function applyD(D, dial, horario) {
     setVar('--pace-timer-d', D + 'px');
+    /* Por debajo de D_INTERIOR, lo de dentro se compone como a D_INTERIOR y escala con el aro
+       (_responsive.pieles.esc.js, solo en escritorio). Antes de medir el CICLO: lo mueve. */
+    setVar('--pace-dial-interior-d', Math.max(D, D_INTERIOR) + 'px');
+    setVar('--pace-dial-escala', String(Math.min(1, Math.round(D / D_INTERIOR * 1000) / 1000)));
     var dialBottom = paceCaja(dial).bottom;
     var cicloBottom = cicloBottomWithin(dial);
     /* El solapamiento es el 16 % de D (contrato §0). El CICLO medido NO fija el
@@ -230,9 +235,9 @@
     paceHomeFilaNombres(document.querySelector('[data-pace-home-body]'));
   }
 
-  /* `modo` 0: todo a la vista; 1: recogido, sin «Luego» o, donde no lo hay, con Actividades en
-     una fila (home-geometry.medidas.js, Ez 1 A2 y B); 2: a la vista, porque recogido tampoco
-     cabía. Devuelve lo que aún desborda en el móvil. */
+  /* `modo` 0: todo a la vista; 1: recogido (home-geometry.medidas.js): sin «Luego» o Actividades en una
+     fila en el móvil (Ez 1 A2 y B), la línea del día solo con horas en el ordenador (A); 2: a la vista,
+     porque recogido tampoco cabía. Devuelve lo que aún desborda (móvil, o el día en el ordenador). */
   function ajustar(modo) {
     /* s128: el motor corre AHORA también en móvil/tablet. isDesktop solo elige las
        CONSTANTES (la rama Desktop queda byte-idéntica); el resto del cálculo es
@@ -248,8 +253,10 @@
     if (!body || !dial) return 0;
     var luego = !isDesktop && paceHomeLuego(body);
     var fila = !isDesktop && !luego && paceHomeChips(body).length > 0;
+    var dia = isDesktop && !!paceHomeDiaLinea(body);   // la línea del día (Ez, A del 22 nov.)
     paceHomeRecoger(body, !!luego && modo === 1);
     paceHomeFila(body, fila && modo === 1);
+    paceHomeDiaFila(body, dia && modo === 1);
 
     var widthCap = isDesktop ? WIDTH_CAP : WIDTH_CAP_MOBILE;
     var dFloor = isDesktop ? D_FLOOR : D_FLOOR_MOBILE;
@@ -371,6 +378,11 @@
       /* Ni en el suelo cabe: recogido, si así cabe; si no, como estaba. */
       if (sobra > 1 && (luego || fila) && modo === 0) return ajustar(1) > 1 ? ajustar(2) : 0;
       if (modo === 1 && sobra > 1) return sobra;
+    }
+    /* En el ordenador, con el día servido: en el suelo y sin caber, la línea solo con horas, si así cabe. */
+    if (isDesktop && dia && D <= piso && modo < 2) {
+      var sobraDia = medirOver();
+      if (sobraDia > 1) return modo === 0 ? (ajustar(1) > 1 ? ajustar(2) : 0) : sobraDia;
     }
 
     if (isDesktop && paceAroCartaVisible()) paceAroCartaRecordar(clave, D);   // el tamaño que pedirá el horario
