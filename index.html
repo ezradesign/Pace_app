@@ -47172,11 +47172,15 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
     const onKey = (e) => {
       if (e.key !== 'Escape' || e.__paceDialogoAtendido) return;
       if (typeof paceHayDialogo === 'function' && paceHayDialogo()) return;
+
+
+
+      if (e.paceAtras && vistaDatos) {setVistaDatos(false);return;}
       onClose && onClose();
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [open, onClose]);
+  }, [open, onClose, vistaDatos]);
 
 
 

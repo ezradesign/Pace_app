@@ -110,3 +110,24 @@ test('ordenador alto: Tus datos va entera y sin enlace', async ({ page, context 
   await expect(page.locator(PANEL).getByRole('button', { name: TX.es.datos })).toBeHidden();
   await expect(page.locator(PANEL + ' [data-pace-aj-fila="lang"]')).toBeVisible();
 });
+
+/* Caza del móvil (22 nov. 2026): el Atrás de Android en «Tus datos» cerraba Ajustes entero. Ahora
+   sube un paso, como la «‹»; el segundo Atrás cierra el panel, y el Escape del teclado lo sigue
+   cerrando desde cualquier hoja. Contra la 0.214.0 cae: tras el primer Atrás no queda panel. */
+test('Android: Atrás en «Tus datos» vuelve a Ajustes, y el siguiente lo cierra', async ({ page, context }) => {
+  await page.setViewportSize({ width: 360, height: 730 });
+  await sembrar(context);
+  await irAlArtefacto(page);
+  await abrir(page, 'es');
+  await page.locator(PANEL).getByRole('button', { name: TX.es.datos }).click();
+  await expect(page.locator(PANEL + ' #pace-aj-titulo')).toHaveText('Tus datos');
+  expect(await page.evaluate(() => window.paceAndroidAtras())).toBe('escape');
+  await expect(page.locator(PANEL + ' #pace-aj-titulo')).toHaveText('Ajustes');
+  await page.evaluate(() => window.paceAndroidAtras());
+  await expect(page.locator(PANEL)).toHaveCount(0);
+  /* CONTROL: con el teclado, Escape en «Tus datos» cierra el panel, como siempre */
+  await abrir(page, 'es');
+  await page.locator(PANEL).getByRole('button', { name: TX.es.datos }).click();
+  await page.keyboard.press('Escape');
+  await expect(page.locator(PANEL)).toHaveCount(0);
+});
