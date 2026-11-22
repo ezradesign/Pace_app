@@ -21533,8 +21533,28 @@ try {
   });
 } catch (e) {}
 
+
+
+
+
+
+
+
+function paceEsAppleTactil() {
+  var ua = navigator && navigator.userAgent || '';
+
+  return /iPhone|iPad|iPod/.test(ua) || /Macintosh/.test(ua) && (navigator.maxTouchPoints || 0) > 1;
+}
+try {
+  var _paceVp = document.querySelector('meta[name="viewport"]');
+  var _paceVpTexto = _paceVp && _paceVp.getAttribute('content') || '';
+  if (_paceVp && paceEsAppleTactil() && !/maximum-scale/.test(_paceVpTexto)) {
+    _paceVp.setAttribute('content', _paceVpTexto + ', maximum-scale=1');
+  }
+} catch (e) {}
+
 Object.assign(window, { paceMantenerPantalla, paceLuzEstado });
-;Object.assign(window, { _paceLuz, paceLuzPedir, paceMantenerPantalla, paceLuzEstado });
+;Object.assign(window, { _paceLuz, paceLuzPedir, paceMantenerPantalla, paceLuzEstado, paceEsAppleTactil });
 })();
 </script>
   <script>
