@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caza de datos y tiempo</title>
+<style>
+  :root { --crema: #f4efe4; --papel: #fbf8f1; --tinta: #2b2a26; --tinta-2: #5c5a52; --oliva: #5f6b3c; --terracota: #b2573a; --linea: #ddd5c4; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --crema: #1f1e1b; --papel: #282723; --tinta: #ece6d8; --tinta-2: #b4ad9c; --oliva: #a3b36f; --terracota: #e08a6a; --linea: #3d3b35; } }
+  :root[data-theme="dark"] { --crema: #1f1e1b; --papel: #282723; --tinta: #ece6d8; --tinta-2: #b4ad9c; --oliva: #a3b36f; --terracota: #e08a6a; --linea: #3d3b35; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--crema); color: var(--tinta); font: 16px/1.6 Georgia, "Times New Roman", serif; }
+  main { max-width: 720px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-style: italic; font-weight: 400; font-size: 32px; margin: 0 0 4px; }
+  h2 { font-style: italic; font-weight: 400; font-size: 22px; margin: 36px 0 12px; }
+  .sub { color: var(--tinta-2); margin: 0 0 24px; }
+  .resumen { background: var(--papel); border: 1px solid var(--linea); border-radius: 10px; padding: 16px 18px; }
+  .hallazgo { background: var(--papel); border: 1px solid var(--linea); border-left: 4px solid var(--terracota); border-radius: 10px; padding: 16px 18px; margin: 0 0 16px; }
+  .hallazgo h3 { margin: 0 0 6px; font-size: 18px; font-weight: 600; }
+  .estado { display: inline-block; font: 12px/1 system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase; color: var(--oliva); border: 1px solid var(--oliva); border-radius: 99px; padding: 4px 8px; margin-bottom: 8px; }
+  .hallazgo p { margin: 6px 0; }
+  .tec { color: var(--tinta-2); font-size: 14px; }
+  code { font-size: 13px; word-break: break-word; }
+  ul { padding-left: 20px; } li { margin: 4px 0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Los datos y el paso del tiempo</h1>
+  <p class="sub">Caza del 22 de noviembre de 2026, antes de los 14 días de los testers. Lo que solo falla con días de uso.</p>
+
+  <div class="resumen">
+    <p><strong>2 fallos encontrados, los 2 arreglados</strong>, sin cambiar nada de lo que se ve. Y una comprobación nueva: la
+    actualización desde la 0.205.0, la versión que tienen los testers, abre con todo lo suyo.</p>
+    <p class="tec">Rama <code>claude/caza-datos-22nov-0e230b</code>, sin juntar. Cada arreglo lleva una prueba que falla con lo que hay ahora en main.</p>
+  </div>
+
+  <h2>De más grave a más leve</h2>
+
+  <div class="hallazgo">
+    <span class="estado">Arreglado</span>
+    <h3>1 · La racha volvía a 1 si el reloj iba un día hacia atrás</h3>
+    <p>Alguien con cinco días seguidos usa PACE en Madrid pasada la medianoche, ya sábado, y vuela a Nueva York, donde
+    todavía es viernes. Al hacer allí una pausa, la racha pasaba de 5 a 1. Pasa también si el ordenador iba con la hora
+    adelantada y se corrige.</p>
+    <p>Ahora, si «hoy» es anterior al último día que contó, la racha se queda como estaba y sigue sumando al día siguiente.</p>
+    <p class="tec">Es raro en 14 días de prueba, pero se pierde algo que la persona ve y que da logros. Prueba: <code>tests/reloj-atras.spec.js</code>.</p>
+  </div>
+
+  <div class="hallazgo">
+    <span class="estado">Arreglado</span>
+    <h3>2 · Tras una actualización, la voz de Mueve y Estira dejaba de sonar sin conexión</h3>
+    <p>Desde la 6A, la voz se guarda la primera vez que suena y a partir de ahí habla sin conexión. Pero al llegar una
+    versión nueva, PACE borraba lo guardado de la anterior, voz incluida. Quien actualizaba en casa y abría una rutina en
+    el tren, sin conexión, la oía con la madera en vez de la voz.</p>
+    <p>Ahora, al llegar la versión nueva, PACE vuelve a bajar la voz que ya tenías (solo la tuya, como pediste en la 6A) y la
+    música de Respira. No reutiliza el archivo viejo, porque si regrabas una toma con el mismo nombre, sonarían palabras cortadas.</p>
+    <p class="tec">No se pierde ningún dato, pero le pasaría a todos con cada actualización de los 14 días. Prueba: <code>tests/sw-voz-actualiza.spec.js</code>.</p>
+  </div>
+
+  <h2>Comprobado y bien</h2>
+  <ul>
+    <li><strong>Actualizar desde la 0.205.0</strong>, la de los testers, con su estado de verdad tras dos días de uso: historia, logros,
+      semana, rutinas propias, código y registro siguen ahí, y la carta del lunes sale. Queda en la suite junto a la 0.191.1 y la 0.174.0.</li>
+    <li><strong>63 estados con campos raros</strong> (fechas que son números, listas con huecos, «A tu ritmo» a medias, contadores en
+      texto, metas de agua a cero o negativas…): PACE arranca, abre Estadísticas y Logros, cuenta un vaso y cambia de día
+      sin perder los minutos ni la historia.</li>
+    <li><strong>El navegador que no deja guardar nada</strong>: PACE abre y lo avisa con su barra. <strong>Y si falla el registro de sesiones</strong>
+      (IndexedDB), PACE abre igual y las Estadísticas funcionan.</li>
+    <li><strong>Fin de año</strong>: un Foco empezado el 31 a las 23:50 cuenta el 1 de enero, y el 31 queda en el año que acaba.</li>
+    <li><strong>Volver tras diez días sin abrir</strong>: la racha a cero (la mejor se guarda), la semana y el agua a cero, y el último
+      día de jornada queda resumido para la carta del lunes.</li>
+  </ul>
+
+  <h2>Descartado</h2>
+  <ul>
+    <li>Volar hacia el oeste justo al cambiar de semana podía hacer perder los minutos del lunes: medido, no se pierden.</li>
+    <li>Un idioma que PACE no tiene, metido a mano en los datos, pone los botones en inglés: no puede pasar usando la app.</li>
+  </ul>
+
+  <p class="tec">Lo demás de esta lista (medianoche con un Foco o la jornada en marcha, el cambio de hora, varias pestañas, copias
+  rotas, viejas o de otra versión, «Borrar todo», el almacenamiento lleno) ya tenía sus pruebas: con los dos arreglos
+  montados, esas 90 pruebas siguen en verde, más las del cambio de día, el cambio de hora, los husos y el service worker.</p>
+</main>
+</body>
+</html>
