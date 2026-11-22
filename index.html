@@ -2134,7 +2134,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'welcome.greeting': 'Bienvenida',
   'welcome.tagline': 'Antídoto a la silla.',
   'welcome.tagline.sub': 'A tu ritmo.',
-  'welcome.lede': 'Micro-pausas de foco, respiración, movilidad e hidratación. Sin gamificación ni notificaciones abrumadoras.',
+  'welcome.lede': 'Micro-pausas de foco, respiración, movilidad e hidratación. Sin rachas que castigan.',
   'welcome.value.local.label': 'Todo local',
   'welcome.value.local.sub': 'en tu navegador',
   'welcome.value.local.sub.app': 'en tu móvil',
@@ -2331,7 +2331,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'welcome.greeting': 'Welcome',
   'welcome.tagline': 'The antidote to sitting.',
   'welcome.tagline.sub': 'At your pace.',
-  'welcome.lede': 'Micro-breaks for focus, breathing, mobility and hydration. No gamification, no overwhelming notifications.',
+  'welcome.lede': 'Micro-breaks for focus, breathing, mobility and hydration. No streaks that punish you.',
   'welcome.value.local.label': 'Stored locally',
   'welcome.value.local.sub': 'in your browser',
   'welcome.value.local.sub.app': 'on your phone',
@@ -2598,6 +2598,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'mini.fin': 'Foco terminado',
   'mini.fin.sub': 'Vuelve a PACE para tu pausa',
   'mini.volver': 'Volver',
+  'mini.espera.sub': 'Vuelve a PACE para el bloque {n}',
   'mini.abrir': 'Miniventana',
   'mini.abrir.aria': 'Abrir la miniventana, encima de todas las ventanas',
   'focus.continue': 'Continuar',
@@ -2822,6 +2823,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'mini.fin': 'Focus done',
   'mini.fin.sub': 'Back to PACE for your break',
   'mini.volver': 'Back',
+  'mini.espera.sub': 'Back to PACE for block {n}',
   'mini.abrir': 'Mini window',
   'mini.abrir.aria': 'Open the mini window, on top of every window',
   'focus.continue': 'Continue',
@@ -5606,7 +5608,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.grip.squeeze.s4.instruction.care': 'You will feel a gentle stretch over the wrist. No pressing one hand into the other.',
 
   'extra.posture.set.name': 'Posture Reset',
-  'extra.posture.set.desc': 'Chin tucks, scapular squeeze, thoracic ext.',
+  'extra.posture.set.desc': 'Chin, shoulder blades and chest. Four moves against the chair.',
   'extra.posture.set.code': 'Posture',
   'extra.posture.set.s0.name': 'Chin tucks',
   'extra.posture.set.s0.instruction.setup': 'Sit up tall, shoulders loose, gaze forward.',
@@ -14889,7 +14891,7 @@ function ritmoAro(s, t, tn) {
   return {
     label: tn('ritmo.aro.bloque', { n: k, m: p.total }),
     hasta: tn('ritmo.aro.hasta', { h: ritmoHora(p.m.hasta) }),
-    empezar: k === 1 ? t('ritmo.aro.empezar') : tn('ritmo.aro.siguiente', { n: k })
+    empezar: k === 1 ? t('ritmo.aro.empezar') : tn('ritmo.aro.siguiente', { n: k }), n: k
   };
 }
 
@@ -34469,8 +34471,13 @@ function MiniTira(p) {
   const color = fin ? 'var(--breathe)' : 'var(--focus)';
   const r = 18.5,vuelta = 2 * Math.PI * r;
   const etiqueta = p.modo === 'foco' ? t('focus.mode.focus') : p.modo === 'pausa' ? t('focus.mode.pause') : t('focus.mode.long');
+
+
+
+
+  const espera = !fin && p.espera ? p.espera : null;
   let boton = null;
-  if (fin) boton = React.createElement("button", { type: "button", style: { ...miniTiraStyles.boton, ...miniTiraStyles.botonFin }, onClick: () => {try {window.focus();} catch (e) {}} }, t('mini.volver'));else
+  if (fin || espera) boton = React.createElement("button", { type: "button", style: { ...miniTiraStyles.boton, ...miniTiraStyles.botonFin }, onClick: () => {try {window.focus();} catch (e) {}} }, t('mini.volver'));else
   if (p.ritmo) boton = null;else
   if (p.status === 'running') boton = React.createElement("button", { type: "button", style: miniTiraStyles.boton, onClick: p.onPausar }, t('focus.pause'));else
   if (p.status === 'paused') boton = React.createElement("button", { type: "button", style: miniTiraStyles.boton, onClick: p.onSeguir }, t('focus.continue'));
@@ -34482,10 +34489,10 @@ function MiniTira(p) {
       strokeDasharray: (vuelta * hecho).toFixed(1) + ' ' + vuelta.toFixed(1), transform: "rotate(-90 20 20)" })
     ),
     React.createElement("div", { style: miniTiraStyles.txt },
-    React.createElement("span", { style: fin ? { ...miniTiraStyles.hora, ...miniTiraStyles.horaFin } : miniTiraStyles.hora },
-    fin ? t('mini.fin') : dos(Math.floor(queda / 60)) + ':' + dos(queda % 60)
+    React.createElement("span", { style: fin || espera ? { ...miniTiraStyles.hora, ...miniTiraStyles.horaFin } : miniTiraStyles.hora },
+    fin ? t('mini.fin') : espera ? espera.titulo : dos(Math.floor(queda / 60)) + ':' + dos(queda % 60)
     ),
-    React.createElement("span", { style: miniTiraStyles.sub }, fin ? t('mini.fin.sub') : etiqueta + (p.modo === 'foco' && p.ciclo ? ' · ' + p.ciclo : ''))
+    React.createElement("span", { style: miniTiraStyles.sub }, fin ? t('mini.fin.sub') : espera ? t('mini.espera.sub').replace('{n}', espera.n) : etiqueta + (p.modo === 'foco' && p.ciclo ? ' · ' + p.ciclo : ''))
     ),
     boton,
     React.createElement("span", { style: { ...miniTiraStyles.linea, width: (hecho * 100).toFixed(1) + '%', background: color } })
@@ -34873,7 +34880,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
   const cycleN = state.cycle % 4 + 1;
-  const mini = useMiniventana({ status, endsAt, restanteMs, total: durationSec, modo: state.focusMode, ciclo: aro ? aro.label : tn('focus.cycleOf', { n: cycleN }), ritmo: enPausaRitmo, t, onPausar: handlePause, onSeguir: handleNormalStart });
+  const mini = useMiniventana({ status, endsAt, restanteMs, total: durationSec, modo: state.focusMode, ciclo: aro ? aro.label : tn('focus.cycleOf', { n: cycleN }), ritmo: enPausaRitmo, espera: aro && aro.n > 1 && status !== 'running' && status !== 'paused' ? { titulo: aroPausaTerminada(state) ? t('ritmo.aro.pausaTerminada') : aro.label, n: aro.n } : null, t, onPausar: handlePause, onSeguir: handleNormalStart });
   const cycleLabel = isFocoMode && isCompleted ?
   tn('focus.cycleNext', { n: cycleN }) :
   tn('focus.cycleOf', { n: cycleN });
@@ -40147,7 +40154,7 @@ const EXTRA_ROUTINES = {
     },
 
 
-    { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Recolocar la postura', desc: 'Barbilla, omóplatos y pecho. Tres gestos contra la silla.', min: 2,
+    { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Recolocar la postura', desc: 'Barbilla, omóplatos y pecho. Cuatro gestos contra la silla.', min: 2,
       position: ['seated'], equipment: ['chair'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
       { name: 'Barbilla atrás', mode: 'reps', reps: 8, dur: 30,
@@ -43808,7 +43815,10 @@ function statsHoyMeta(p, t, hechas) {
 
 
   if (estado === 'pasada') return t('ritmo.noHecha');
-  return it.dur + ' min';
+
+
+  const plato = !it.larga && it.platos && it.platos[0];
+  return (plato && plato.min ? plato.min : it.dur) + ' min';
 }
 
 function StatsHoyRejilla(_ref3) {let { n, children } = _ref3;

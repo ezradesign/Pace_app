@@ -120,7 +120,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.grip.squeeze.s4.instruction.care':  'You will feel a gentle stretch over the wrist. No pressing one hand into the other.',
 
   'extra.posture.set.name':                   'Posture Reset',
-  'extra.posture.set.desc':                   'Chin tucks, scapular squeeze, thoracic ext.',
+  'extra.posture.set.desc':                   'Chin, shoulder blades and chest. Four moves against the chair.',
   'extra.posture.set.code':                   'Posture',
   'extra.posture.set.s0.name':                'Chin tucks',
   'extra.posture.set.s0.instruction.setup':   'Sit up tall, shoulders loose, gaze forward.',
