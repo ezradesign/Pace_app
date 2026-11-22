@@ -15,6 +15,16 @@
 
 const PACE_NOVEDADES = [
   {
+    id: 'home-ampliada',
+    desde: '2026-11-22',
+    es: [
+      'Si amplías el navegador, la home ya no se descuadra: el aro y lo de dentro se encogen juntos, y con el día servido la línea enseña solo las horas.',
+    ],
+    en: [
+      'If you zoom in your browser, the home no longer falls apart: the ring and what is inside shrink together, and with your day served the line shows just the times.',
+    ],
+  },
+  {
     id: 'miniventana-sola',
     desde: '2026-11-21',
     es: [
