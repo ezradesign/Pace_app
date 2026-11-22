@@ -123,7 +123,10 @@ function statsHoyMeta(p, t, hechas) {
   /* Pasada sin hacer: «no hecha», sin los minutos del hueco, que se leían como hechos (Ez, 3 «B atenuadas y no
      hecha las dos», 18 nov. 2026; la atenúa StatsPanel.css.jsx). */
   if (estado === 'pasada') return t('ritmo.noHecha');
-  return it.dur + ' min';
+  /* Por llegar: los minutos de la rutina, como la línea del día y la columna (Ez, 2A del 22 nov. 2026);
+     antes decía los del hueco («5 min» donde la línea dice «2 min»). La larga, con los suyos. */
+  const plato = !it.larga && it.platos && it.platos[0];
+  return (plato && plato.min ? plato.min : it.dur) + ' min';
 }
 
 function StatsHoyRejilla({ n, children }) {
