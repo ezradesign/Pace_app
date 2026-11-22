@@ -22004,13 +22004,13 @@ Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, di
     @media (max-width: 640px), (pointer: coarse) {
       [data-pace-toque], .pace-aj-pild, .pace-aj-cerrar, .pace-aj-paso > button, .pace-aj-sw,
       .pace-lib-link, [data-pace-hoy-celda], [data-pace-semana-saltar], [data-pace-stats-tabs] > button,
-      .pace-aj-pie a, .pace-aj-sec-accion, .pace-aj-volver {
+      .pace-aj-pie a, .pace-aj-sec-accion, .pace-aj-volver, [data-pace-hoy-volver], [data-pace-tabs] > button {
         position: relative;
       }
       [data-pace-toque]::before, .pace-aj-pild::before, .pace-aj-cerrar::before, .pace-aj-paso > button::before,
       .pace-aj-sw::before, .pace-lib-link::before, [data-pace-hoy-celda]::before,
       [data-pace-semana-saltar]::before, [data-pace-stats-tabs] > button::before, .pace-aj-pie a::before,
-      .pace-aj-sec-accion::before, .pace-aj-volver::before {
+      .pace-aj-sec-accion::before, .pace-aj-volver::before, [data-pace-hoy-volver]::before, [data-pace-tabs] > button::before {
         content: ''; position: absolute; inset: -9px 0;
       }
       /* Píldoras de Ajustes: 14 px entre filas, 7 cada una. */
@@ -22037,6 +22037,12 @@ Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, di
          las píldoras del idioma suben sus 7 de siempre y se quedan el borde de su caja: entre la
          × y esas píldoras hay 40 px, y lo que se le diera de más a una se le quitaría a la otra. */
       .pace-aj-cab + .pace-aj-sec .pace-aj-sec-accion::before { top: -6px; }
+      /* «Ponle ritmo al día», en Estadísticas › Hoy: 14 px de caja, 31 libres encima y 16 debajo
+         (a 360 x 640), así que crece 14 hacia arriba y 8 hacia abajo (caza del móvil, 22 nov.). */
+      [data-pace-hoy-volver]::before { inset: -14px -6px -8px; }
+      /* Foco, Pausa y Larga, arriba en los móviles altos (390 x 844 y más): 26 px de caja y 12 libres
+         hasta la tarjeta de debajo en la más justa; crecen 7 arriba y 6 abajo. */
+      [data-pace-tabs] > button::before { inset: -7px 0 -6px; }
     }
   `;
   document.head.appendChild(s);
