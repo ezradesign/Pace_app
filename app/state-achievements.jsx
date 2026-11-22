@@ -263,7 +263,11 @@ function updateStreak(conLogros) {
   const s = getState();
   const today = new Date().toDateString();
   const last = s.streak.lastActiveDate;
-  if (last !== today) {
+  /* EL RELOJ QUE VUELVE UN DÍA ATRÁS NO ROMPE LA RACHA (caza de datos del 22 nov. 2026): pasada la
+     medianoche en Madrid y ya en Nueva York, o con la hora del equipo corregida, «hoy» es el día de
+     antes del último activo, y la cuenta volvía a 1. Ese día ya está contado: se deja como está. */
+  const ultimo = last ? new Date(last) : null, hoy0 = new Date(); hoy0.setHours(0, 0, 0, 0);
+  if (last !== today && !(ultimo && ultimo.getTime() > hoy0.getTime())) {
     /* s198 · «ayer» por CALENDARIO, no restando 24 h: el lunes siguiente al cambio
        de hora de primavera, entre las 00:00 y la 01:00, `Date.now() - 86400000`
        cae en el SÁBADO (el domingo dura 23 h) y la racha se reiniciaba. */

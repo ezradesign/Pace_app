@@ -9264,7 +9264,11 @@ function updateStreak(conLogros) {
   const s = getState();
   const today = new Date().toDateString();
   const last = s.streak.lastActiveDate;
-  if (last !== today) {
+
+
+
+  const ultimo = last ? new Date(last) : null,hoy0 = new Date();hoy0.setHours(0, 0, 0, 0);
+  if (last !== today && !(ultimo && ultimo.getTime() > hoy0.getTime())) {
 
 
 
