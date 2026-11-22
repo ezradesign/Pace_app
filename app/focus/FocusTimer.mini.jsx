@@ -140,8 +140,13 @@ function MiniTira(p) {
   const color = fin ? 'var(--breathe)' : 'var(--focus)';
   const r = 18.5, vuelta = 2 * Math.PI * r;
   const etiqueta = p.modo === 'foco' ? t('focus.mode.focus') : p.modo === 'pausa' ? t('focus.mode.pause') : t('focus.mode.long');
+  /* ENTRE DOS BLOQUES DE LA JORNADA (Ez, 3A del 22 nov. 2026): acabada la pausa, la tira se quedaba en «45:00 ·
+     Foco · Bloque 2 de 9», quieta y sin botón, como un Foco en pausa. Ahora dice «Pausa terminada · Vuelve a PACE
+     para el bloque 2» con «Volver», como «Foco terminado» por libre. Pasado el rato de «Pausa terminada»
+     (`aroPausaTerminada`), el rótulo es el del aro: «Bloque 2 de 9». */
+  const espera = !fin && p.espera ? p.espera : null;
   let boton = null;
-  if (fin) boton = <button type="button" style={{ ...miniTiraStyles.boton, ...miniTiraStyles.botonFin }} onClick={() => { try { window.focus(); } catch (e) {} }}>{t('mini.volver')}</button>;
+  if (fin || espera) boton =<button type="button" style={{ ...miniTiraStyles.boton, ...miniTiraStyles.botonFin }} onClick={() => { try { window.focus(); } catch (e) {} }}>{t('mini.volver')}</button>;
   else if (p.ritmo) boton = null;
   else if (p.status === 'running') boton = <button type="button" style={miniTiraStyles.boton} onClick={p.onPausar}>{t('focus.pause')}</button>;
   else if (p.status === 'paused') boton = <button type="button" style={miniTiraStyles.boton} onClick={p.onSeguir}>{t('focus.continue')}</button>;
@@ -153,10 +158,10 @@ function MiniTira(p) {
           strokeDasharray={(vuelta * hecho).toFixed(1) + ' ' + vuelta.toFixed(1)} transform="rotate(-90 20 20)" />
       </svg>
       <div style={miniTiraStyles.txt}>
-        <span style={fin ? { ...miniTiraStyles.hora, ...miniTiraStyles.horaFin } : miniTiraStyles.hora}>
-          {fin ? t('mini.fin') : dos(Math.floor(queda / 60)) + ':' + dos(queda % 60)}
+        <span style={fin || espera ? { ...miniTiraStyles.hora, ...miniTiraStyles.horaFin } : miniTiraStyles.hora}>
+          {fin ? t('mini.fin') : espera ? espera.titulo : dos(Math.floor(queda / 60)) + ':' + dos(queda % 60)}
         </span>
-        <span style={miniTiraStyles.sub}>{fin ? t('mini.fin.sub') : etiqueta + (p.modo === 'foco' && p.ciclo ? ' · ' + p.ciclo : '')}</span>
+        <span style={miniTiraStyles.sub}>{fin ? t('mini.fin.sub') : espera ? t('mini.espera.sub').replace('{n}', espera.n) : etiqueta + (p.modo === 'foco' && p.ciclo ? ' · ' + p.ciclo : '')}</span>
       </div>
       {boton}
       <span style={{ ...miniTiraStyles.linea, width: (hecho * 100).toFixed(1) + '%', background: color }} />

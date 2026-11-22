@@ -336,7 +336,7 @@ function ritmoAro(s, t, tn) {
   return {
     label: tn('ritmo.aro.bloque', { n: k, m: p.total }),
     hasta: tn('ritmo.aro.hasta', { h: ritmoHora(p.m.hasta) }),   // bajo el rótulo, en cursiva (Ez, 3C del 25 oct.): «Tu jornada, hasta las 17:00» (5A del 8 nov.)
-    empezar: k === 1 ? t('ritmo.aro.empezar') : tn('ritmo.aro.siguiente', { n: k }),
+    empezar: k === 1 ? t('ritmo.aro.empezar') : tn('ritmo.aro.siguiente', { n: k }), n: k,   // `n`: la miniventana lo dice entre dos bloques
   };
 }
 
