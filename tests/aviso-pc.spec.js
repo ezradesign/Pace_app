@@ -384,3 +384,25 @@ test('hallazgo 3 · con «A tu ritmo», el «Pausar» de la tira en la pausa pau
     expect(await tira(page).locator('span').first().innerText(), 'la tira ofrece «Pausar» y la pausa sigue corriendo').toBe(antes);
   }
 });
+
+/* 3A DE EZ (caza web del 22 nov. 2026): acabada la pausa de la jornada, la tira se quedaba en «45:00 · Foco ·
+   Bloque 2 de N», quieta y sin botón, como un Foco en pausa. Ahora dice «Pausa terminada · Vuelve a PACE para
+   el bloque 2» con «Volver». Contra main cae: «45:00» y ningún botón. */
+test('jornada · 3A · acabada la pausa, la tira dice «Pausa terminada» y lleva a PACE para el bloque 2', async ({ page, context }) => {
+  await sembrar(context, { soundOn: false, notifyFocusEnd: false, ritmo: { dia: JORNADA } });
+  await miniventanaFalsa(context);
+  await context.clock.install({ time: HORA_JORNADA });
+  await irAlArtefacto(page);
+  await cta(page).click();
+  await expect(tira(page)).toContainText('Foco');
+  await hastaLaPausaDeLaJornada(page, context);
+  await expect(tira(page), 'GUARD: la pausa de la jornada').toContainText('Pausa corta');
+  for (let i = 0; i < 12 && await page.evaluate(() => !!(getState().ritmo.dia || {}).pausaHasta); i++) {
+    await context.clock.fastForward(60000);
+    await context.clock.runFor(1500);
+  }
+  await expect(cta(page), 'GUARD: el aro espera el bloque 2').toHaveText('Empezar bloque 2');
+  await expect(tira(page)).toContainText('Pausa terminada');
+  await expect(tira(page)).toContainText('Vuelve a PACE para el bloque 2');
+  await expect(tira(page).getByRole('button', { name: 'Volver' })).toBeVisible();
+});

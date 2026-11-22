@@ -78,9 +78,48 @@ function aroCerrado(s, t, tn) {
   return { label: t('ritmo.hecho'), hecho, sub: t('ritmo.aro.tuyo'), cta: t('ritmo.aro.libre') };
 }
 
+/* EN PLENA COMIDA DE LA JORNADA (Ez, 1A del 22 nov. 2026, sobre docs/audits/caza-completa-22nov/web/comida/):
+   elegida la jornada a las 14:20 (o de vuelta a PACE con la comida empezada), la comida va hasta las 15:00
+   (su B del 22 oct.), pero el aro decía «Bloque 1 de 3 · 45:00 · Empezar jornada» y, al pulsar, el bloque se
+   comía la comida. Ahora, con el aro parado, el aro es la comida: «Comida · Hasta las 15:00», la cuenta de lo
+   que queda y «Lejos de la pantalla»; sin botón verde, «Empezar ya el bloque 1» como enlace por si ya has
+   comido, y debajo «Después: bloque 1 · 45 min». «No comes», en la frase, la quita del día como siempre.
+   Devuelve `{ hasta, queda }` (minutos del día, segundos), o null. Se repinta cada segundo mientras dura. */
+const { useState: useStateAroC, useEffect: useEffectAroC } = React;
+function aroComida(state, aro, status) {
+  if (!aro || status === 'running' || status === 'paused' || typeof ritmoComidaEnCurso !== 'function') return null;
+  const c = ritmoComidaEnCurso(ritmoPlan(state));
+  if (!c) return null;
+  const fin = new Date(); fin.setHours(Math.floor((c.desde + c.dur) / 60), (c.desde + c.dur) % 60, 0, 0);
+  return { hasta: c.desde + c.dur, queda: Math.max(0, Math.round((fin.getTime() - Date.now()) / 1000)) };
+}
+function useAroComida(state, aro, status) {
+  const c = aroComida(state, aro, status);
+  const [, repinta] = useStateAroC(0);
+  useEffectAroC(() => {
+    if (!c) return undefined;
+    const id = setInterval(() => repinta((x) => x + 1), 1000);
+    return () => clearInterval(id);
+  }, [!!c]);
+  return c;
+}
+/* El botón del aro en la comida, como el enlace «Empezar ya el bloque N» de la pausa, con el alto del botón. */
+const aroEnlaceEstilo = { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minHeight: 44, padding: '8px 6px',
+  whiteSpace: 'nowrap', background: 'none', border: 0, boxShadow: 'none', cursor: 'pointer', color: 'var(--ink-2)',
+  fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, fontWeight: 400, textDecoration: 'underline', textUnderlineOffset: 3 };
+
 /* Lo que la jornada le cambia al aro según el momento. `cta`, si manda en el botón;
    `lleno`, si ese botón va relleno aunque el reloj corra; `fila`, la línea de debajo. */
-function aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa, porLibre }) {
+function aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa, porLibre, comida }) {
+  if (comida && aro) {
+    const p = ritmoPlan(state);
+    const q = tn('ritmo.aro.despues.bloque', { n: aro.n }) + (p && p.actual ? ' · ' + ritmoDuracion(p.actual.dur) : '');
+    return {
+      enlace: true,
+      cta: { label: tn('ritmo.pausa.ya', { n: aro.n }) },
+      fila: <span className="pace-aro-despues" data-pace-aro-despues>{tn('ritmo.aro.despues', { q })}</span>,
+    };
+  }
   if (enPausaRitmo) {
     const plato = aroPlatoPendiente(state);
     if (!plato) return {};
@@ -148,4 +187,4 @@ function AroFila({ cycle, cycleLabel, oculta, fila }) {
   document.head.appendChild(s);
 })();
 
-Object.assign(window, { aroJornada, aroPausaTerminada, aroPlatoPendiente, aroDespues, aroCerrado, AroFila });
+Object.assign(window, { aroJornada, aroComida, useAroComida, aroEnlaceEstilo, aroPausaTerminada, aroPlatoPendiente, aroDespues, aroCerrado, AroFila });
