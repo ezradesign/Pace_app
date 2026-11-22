@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caza web 22 nov.</title>
+<style>
+  :root { --paper:#f2ece0; --paper-2:#e9e2d3; --ink:#2b2a26; --ink-2:#5b574e; --line:#d8cfbd; --oliva:#55634a; --terra:#b5694a; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper:#1d1b17; --paper-2:#27241f; --ink:#ece5d6; --ink-2:#b4ac9c; --line:#3b372f; --oliva:#9db08a; --terra:#d9906f; } }
+  :root[data-theme="dark"] { --paper:#1d1b17; --paper-2:#27241f; --ink:#ece5d6; --ink-2:#b4ac9c; --line:#3b372f; --oliva:#9db08a; --terra:#d9906f; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.55 system-ui, sans-serif; }
+  main { max-width: 880px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1, h2 { font-family: Georgia, serif; font-style: italic; font-weight: 400; }
+  h1 { font-size: 34px; margin: 0 0 6px; }
+  h2 { font-size: 24px; margin: 0 0 8px; }
+  .sub { color: var(--ink-2); margin: 0 0 28px; }
+  .h { border-top: 1px solid var(--line); padding: 24px 0; }
+  .tags { display:flex; gap:8px; flex-wrap:wrap; margin: 0 0 10px; font-size: 12px; letter-spacing:.06em; text-transform: uppercase; }
+  .tag { border:1px solid var(--line); border-radius: 999px; padding: 2px 10px; color: var(--ink-2); }
+  .tag.ok { border-color: var(--oliva); color: var(--oliva); }
+  .tag.g { border-color: var(--terra); color: var(--terra); }
+  .ops { display:grid; gap:10px; margin: 12px 0; }
+  .op { background: var(--paper-2); border-radius: 10px; padding: 12px 14px; }
+  .op b { font-family: Georgia, serif; font-style: italic; font-size: 18px; }
+  .rec { color: var(--oliva); font-weight: 600; }
+  img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; margin: 8px 0; }
+  .dos { display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 640px) { .dos { grid-template-columns: 1fr; } }
+  figcaption { font-size: 13px; color: var(--ink-2); }
+  code { font-size: 14px; background: var(--paper-2); padding: 1px 5px; border-radius: 4px; }
+  ul { padding-left: 20px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Caza en la web del ordenador</h1>
+  <p class="sub">22 nov. 2026, sobre la 0.214.0. Rama <code>claude/caza-web-22nov-829743</code>. Siete hallazgos: uno arreglado, cinco esperan tu letra y uno es solo una nota. De más grave a más leve.</p>
+
+  <section class="h">
+    <div class="tags"><span class="tag g">Medio</span><span class="tag">Comprobado</span><span class="tag">Espera tu letra</span></div>
+    <h2>1 · En plena comida, el aro invita a empezar y se come la comida</h2>
+    <p>Si eliges «Jornada entera» a las 14:20 (o vuelves a esa hora con el día ya servido), la comida va de 14:20 a 15:00, como dijiste el 22 oct. (la B: «la comida hasta las 15:00 y el foco desde entonces»). Pero el aro dice «Bloque 1 de 3 · 45:00 · Empezar jornada», y la línea pone «AHORA» en el bloque de las 15:00, no en la comida. Si pulsas, empieza un bloque de 45 min hasta las 15:05 y la comida desaparece del día. Si llegas a la comida acabando un bloque y pulsas «Ahora no», «AHORA» sí va en la comida, pero el aro sigue ofreciendo «Empezar bloque 2».</p>
+    <div class="dos">
+      <figure><img src="comida-1420-elegida.webp" alt="La home a las 14:20 con la jornada elegida en plena comida"><figcaption>Elegida a las 14:20: «AHORA» detrás de la comida.</figcaption></figure>
+      <figure><img src="comida-1420-tras-ahora-no.webp" alt="La home a las 14:20 tras «Ahora no» en la ventana de la comida"><figcaption>Tras «Ahora no»: «AHORA» en la comida, el aro igual.</figcaption></figure>
+    </div>
+    <div class="ops">
+      <div class="op"><b>A · El aro, en la comida</b> <span class="rec">(recomendada)</span><br>Mientras dura, el aro dice «Comida · hasta las 15:00» y el botón verde es «Empezar ya el bloque 1», bajado a enlace como en la pausa. «AHORA» va siempre en la comida. Quien ya comió sigue teniendo «no comes» en la frase.</div>
+      <div class="op"><b>B · Solo la línea</b><br>«AHORA» va en la comida en los dos casos, y el aro se queda como está. Más pequeño, pero el botón sigue invitando a saltarse la comida.</div>
+    </div>
+    <p>Prueba: <code>caen-en-main.spec.js</code>, H1 (cae en main: «AHORA» en la posición 34 de la línea, la comida en la 6; tras pulsar, <code>c14:20+0</code>).</p>
+  </section>
+
+  <section class="h">
+    <div class="tags"><span class="tag">Leve</span><span class="tag">Comprobado</span><span class="tag">Espera tu letra</span></div>
+    <h2>2 · Estadísticas › Hoy dice otros minutos que la línea del día</h2>
+    <p>Para la misma pausa, la línea del día dice «Empuje sencillo · 2 min · Mueve» y la columna «Dos minutos de Mueve», pero Estadísticas › Hoy dice «12:05 · 5 min»: son los minutos del hueco, no los de la rutina. Pasa en todas las pausas que aún no han llegado.</p>
+    <figure><img src="stats-hoy-minutos.webp" alt="Estadísticas, Hoy, en inglés y oscuro: cada pausa con 5 min"></figure>
+    <div class="ops">
+      <div class="op"><b>A · Los minutos de la rutina</b> <span class="rec">(recomendada)</span><br>«12:05 · 2 min», como la línea y la columna. La pausa larga sigue con sus 15.</div>
+      <div class="op"><b>B · Como está</b><br>El hueco entero, que es el tiempo que la jornada reserva.</div>
+    </div>
+    <p>Prueba: <code>caen-en-main.spec.js</code>, H2 (cae en main: «Empuje sencillo 12:05 · 5 min»).</p>
+  </section>
+
+  <section class="h">
+    <div class="tags"><span class="tag">Leve</span><span class="tag">Comprobado</span><span class="tag">Espera tu letra</span></div>
+    <h2>3 · La miniventana, al acabar la pausa de la jornada, se queda en «45:00» sin nada que hacer</h2>
+    <p>Con la jornada, la tira dice bien el bloque y la pausa. Cuando la pausa acaba, enseña «45:00 · Foco · Bloque 2 de 9» quieta y sin botón: parece un Foco en pausa. Por libre, al acabar dice «Foco terminado · Vuelve a PACE para tu pausa · Volver». Comprobado con la miniventana de verdad de Chromium (sin pantalla), en castellano y en inglés.</p>
+    <div class="ops">
+      <div class="op"><b>A · «Bloque 2 · Volver»</b> <span class="rec">(recomendada)</span><br>Como por libre: «Pausa terminada · Vuelve a PACE para el bloque 2» con «Volver», que trae la pestaña delante.</div>
+      <div class="op"><b>B · «Empezar bloque 2» en la tira</b><br>Un botón que hace lo mismo que el del aro, sin volver a PACE. Más cómodo, pero empieza el bloque sin ver la home.</div>
+    </div>
+  </section>
+
+  <section class="h">
+    <div class="tags"><span class="tag">Leve</span><span class="tag">Comprobado</span><span class="tag">Espera tu letra</span></div>
+    <h2>4 · «Recolocar la postura»: el inglés abreviado y «tres gestos» con cuatro pasos</h2>
+    <p>En inglés, la ficha dice «Chin tucks, scapular squeeze, thoracic ext.», con la abreviatura a medias. En castellano dice «Barbilla, omóplatos y pecho. Tres gestos contra la silla.», y la rutina tiene cuatro pasos (el runner dice «Paso 1 de 4»).</p>
+    <figure><img src="estira-ficha-en.webp" alt="La ficha de Posture Reset en inglés"></figure>
+    <div class="ops">
+      <div class="op"><b>A · Los dos textos</b> <span class="rec">(recomendada)</span><br>«Barbilla, omóplatos y pecho. Cuatro gestos contra la silla.» y «Chin, shoulder blades and chest. Four moves against the chair.»</div>
+      <div class="op"><b>B · Solo el inglés</b><br>«Chin, shoulder blades and chest. Three moves against the chair.», como el castellano de hoy.</div>
+    </div>
+  </section>
+
+  <section class="h">
+    <div class="tags"><span class="tag">Leve</span><span class="tag">Supongo</span><span class="tag">Espera tu letra</span></div>
+    <h2>5 · La bienvenida dice «Sin gamificación» y PACE tiene sellos</h2>
+    <p>La primera pantalla dice «Sin gamificación ni notificaciones abrumadoras». PACE tiene una colección de sellos y «1 día en ritmo». La landing lo dice mejor: «Sellos de libreta de campo, sin rachas que castigan». Supongo que alguien que lo note lo leerá como una promesa que no se cumple.</p>
+    <div class="ops">
+      <div class="op"><b>A · «Sin rachas que castigan ni notificaciones abrumadoras»</b> <span class="rec">(recomendada)</span><br>Dice lo mismo que la landing, y es verdad. En inglés: «No streaks that punish you, no overwhelming notifications».</div>
+      <div class="op"><b>B · Como está</b><br>Se entiende como «nada de gamificación agresiva».</div>
+    </div>
+  </section>
+
+  <section class="h">
+    <div class="tags"><span class="tag ok">Arreglado</span><span class="tag">Comprobado</span></div>
+    <h2>6 · Con un lector de pantalla, la app no tenía ningún encabezado</h2>
+    <p>Con NVDA o VoiceOver se salta de encabezado en encabezado. En la app no había ninguno (los de la landing están, pero ocultos). Ahora hay uno, «PACE · Foco · Cuerpo», que no se ve. No cambia nada a la vista. Prueba nueva: <code>tests/home-encabezado.spec.js</code>; cae en main y pasa en la rama. Commit <code>3b71f1d1</code>.</p>
+  </section>
+
+  <section class="h">
+    <div class="tags"><span class="tag">Nota</span><span class="tag">Comprobado</span></div>
+    <h2>7 · /premium y /beta en inglés bajan antes las capturas en castellano</h2>
+    <p>La página cambia las imágenes al inglés cuando ya ha empezado a bajar las de castellano (dos en /premium y dos en /beta). No se ve nada raro: solo se gastan unos cientos de KB. Se arregla eligiendo la imagen antes de que el navegador la pida. No lo he montado: es poco y toca las pruebas de esas páginas.</p>
+  </section>
+
+  <section class="h">
+    <h2>Revisado y bien</h2>
+    <ul>
+      <li>La home en nueve momentos (primera vez, sin plan, la pregunta, el día servido a las 9:00 y a las 11:20, la comida, el cierre, por libre y la pausa abierta) a 1280×720, 1366×768, 1536×864 y 1920×1080, y al 125 % en 1366 y 1920; en castellano y en inglés, en crema y en oscuro: 216 pantallas, ninguna con scroll, desborde ni error de consola.</li>
+      <li>El Foco: empezar, pausar, recargar en pausa, seguir, cambiar los minutos a mitad (pregunta antes), recargar corriendo y llegar al final con la pausa que propone.</li>
+      <li>Mueve, Estira y Respira de principio a fin con «Auto» encendido, a 1280×720 y al 125 % en inglés y oscuro; Hidrátate.</li>
+      <li>Cada ventana de la home (estadísticas, logros, Ajustes, el sobre, «Da de pastar a la vaca», «Tus rutinas», las horas del día, «Al calendario»): el foco entra, el Tab no se escapa, Escape cierra y el foco vuelve a su botón.</li>
+      <li>El Tab por la home: cada parada con su anillo de foco.</li>
+      <li>La bienvenida, «¿Cómo es tu semana?» y la entrada a la visita guiada, en castellano a 1920 y en inglés al 125 %.</li>
+      <li>La miniventana por libre: cuenta, pausa y «Foco terminado».</li>
+      <li>La landing, /premium, /beta, /gracias, /recuperar, /desistir, /privacy y /safety, a 1280 y 1920, en las dos lenguas y los dos temas: sin errores, sin imágenes rotas, sin enlaces internos rotos. (Las llamadas a <code>/api/*</code> dan 404 en local porque son funciones de Cloudflare.)</li>
+    </ul>
+    <h2>Sin mirar a fondo</h2>
+    <p>Por el uso de la cuenta: la carta del lunes y el sobre con novedades viejas (las pruebas ya los miden), cada interruptor de Ajustes, conectar el calendario, «Auto» apagado de principio a fin y la medida en Linux. Nada de lo propuesto mueve textos largos, así que no pide medir en Linux salvo la letra A del 1 si se monta.</p>
+  </section>
+</main>
+</body>
+</html>
