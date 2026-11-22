@@ -244,6 +244,12 @@ function chequeaTienda(ctx, archivoIcono) {
   }
   if (!/PrivacyInfo\.xcprivacy in Resources/.test(proyecto)) malas.push('el manifiesto de privacidad (PrivacyInfo.xcprivacy) no va dentro de la app');
   var plist = texto(APP + 'Info.plist');
+  /* SOLO EN VERTICAL, como la web instalada y Android: girado, el runner escondia la cuenta detras de los
+     botones (Ez, 1A de la caza del movil, 22 nov. 2026). */
+  var giros = (/<key>UISupportedInterfaceOrientations<\/key>\s*<array>([\s\S]*?)<\/array>/.exec(plist) || [])[1] || '';
+  if (!/UIInterfaceOrientationPortrait</.test(giros) || /Landscape|UpsideDown/.test(giros)) {
+    malas.push('el iPhone ya no va solo en vertical (UISupportedInterfaceOrientations): girado, el runner esconde la cuenta');
+  }
   if (!/<key>ITSAppUsesNonExemptEncryption<\/key>\s*<false\/>/.test(plist)) {
     malas.push('falta ITSAppUsesNonExemptEncryption = NO: cada subida preguntaria por el cifrado');
   }

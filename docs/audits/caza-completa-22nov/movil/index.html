@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caza en el móvil</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=Inter+Tight:wght@400;500&display=swap">
+<style>
+/* Una hoja de cuaderno de PACE: de lo más grave a lo más leve, con lo arreglado marcado. */
+:root { --papel: #F2EDE0; --papel-2: #E8E1CF; --tinta: #1F1C17; --tinta-2: #5E574A; --oliva: #3E5A3A; --terra: #A6553A; --linea: #D6CDB8;
+  --display: 'Cormorant Garamond', Georgia, serif; --ui: 'Inter Tight', system-ui, sans-serif; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --papel: #1d1a14; --papel-2: #29251c; --tinta: #EDE6D4; --tinta-2: #B3AA96; --oliva: #9DBB8F; --terra: #D98B6E; --linea: #3d372b; color-scheme: dark; } }
+:root[data-theme="dark"] { --papel: #1d1a14; --papel-2: #29251c; --tinta: #EDE6D4; --tinta-2: #B3AA96; --oliva: #9DBB8F; --terra: #D98B6E; --linea: #3d372b; color-scheme: dark; }
+body { margin: 0; background: var(--papel); color: var(--tinta); font: 16px/1.55 var(--ui); }
+main { max-width: 780px; margin: 0 auto; padding: 32px 16px 64px; display: grid; gap: 36px; }
+h1, h2, h3 { font-family: var(--display); font-style: italic; font-weight: 500; margin: 0; text-wrap: balance; }
+h1 { font-size: 38px; line-height: 1.1; } h2 { font-size: 28px; } h3 { font-size: 21px; }
+p { margin: 0; max-width: 68ch; }
+.meta { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--tinta-2); }
+section { display: grid; gap: 16px; }
+.ficha { border-top: 1px solid var(--linea); padding-top: 16px; display: grid; gap: 10px; }
+.estado { display: inline-block; font: 500 11px var(--ui); letter-spacing: .06em; text-transform: uppercase; border-radius: 999px; padding: 1px 8px; margin-right: 6px; vertical-align: 3px; font-style: normal; }
+.hecho { border: 1px solid var(--oliva); color: var(--oliva); }
+.decide { border: 1px solid var(--terra); color: var(--terra); }
+.par { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+figure { margin: 0; display: grid; gap: 6px; min-width: 0; }
+figure img { width: 100%; height: auto; border: 1px solid var(--linea); border-radius: 6px; display: block; }
+figure.estrecha { max-width: 300px; }
+figcaption { font-size: 13px; color: var(--tinta-2); }
+.op { display: grid; gap: 4px; padding: 10px 12px; background: var(--papel-2); border-radius: 8px; }
+.op b { font-weight: 500; color: var(--oliva); }
+.recom { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--oliva); border: 1px solid var(--oliva); border-radius: 999px; padding: 0 7px; margin-left: 6px; }
+code { font-size: 14px; background: var(--papel-2); padding: 0 4px; border-radius: 3px; overflow-wrap: anywhere; }
+ul, ol { margin: 0; padding-left: 22px; display: grid; gap: 6px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+td, th { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--linea); vertical-align: top; }
+th { font-weight: 500; color: var(--tinta-2); }
+</style>
+</head>
+<body>
+<main>
+  <header style="display:grid;gap:8px">
+    <p class="meta">Para Ez · 22 de noviembre · la 0.214.0, en el móvil · con tus letras: 1A, 2A, 3A, la 4 pospuesta y 6A</p>
+    <h1>Caza en el móvil</h1>
+    <p>He recorrido PACE como en un teléfono (con toque y pantalla de móvil) en seis tamaños, de 320 × 568 a 412 × 915,
+      en castellano y en inglés, en crema y en oscuro, y con la letra al 115 % como la pone Android. Unas 250 pantallas medidas:
+      lo que se sale, se corta, se pisa, pide scroll o se toca mal.</p>
+    <p><b>9 hallazgos: 6 montados</b> en la rama <code>claude/caza-movil-22nov-a63749</code>, sin juntar: los 3 que no cambiaban
+      nada a la vista y, con tus letras, la 1A, la 3A y la 6A. <b>La 4 queda pospuesta</b> hasta que la mires en tu Android.
+      Los otros 2 son leves y van al final.</p>
+  </header>
+
+  <section>
+    <h2>De lo más grave a lo más leve</h2>
+
+    <div class="ficha">
+      <h3><span class="estado hecho">Montada la A</span>1 · Con el móvil girado, la rutina esconde su cuenta</h3>
+      <p>Las apps de Android y del iPhone dejan girar la pantalla (la web instalada no: su manifiesto dice «vertical»).
+        Si giras el móvil en una rutina de Mueve o Estira, el número de repeticiones y los segundos quedan detrás de los
+        botones de abajo, y «Siguiente: …» se monta encima. Medido en 640 × 360, 740 × 360 y 844 × 390: el número no se ve;
+        en 915 × 412 se ve el número pero no lo que dice debajo. En vertical, todo bien.</p>
+      <div class="par">
+        <figure><img src="img/runner-girado-844x390.png" alt="El runner en horizontal: el número de repeticiones asoma detrás del botón de pausa"><figcaption>844 × 390, «Barbilla atrás»: el «2» asoma detrás de «Pausar».</figcaption></figure>
+      </div>
+      <div class="op"><span><b>A</b> Las apps, solo en vertical, como la web instalada<span class="recom">Recomendada</span></span>
+        <span>Una línea en Android y otra en el iPhone. Nada que maquetar ni que medir en horizontal, y así se ve igual en la web y en las apps. En una tableta Android 16 puede girar igual; PACE es para el teléfono.</span></div>
+      <div class="op"><span><b>B</b> El runner se recompone en horizontal</span>
+        <span>El dibujo a un lado y la cuenta y los botones al otro. Más trabajo, y la home, Ajustes y la pausa tampoco están pensadas para horizontal (la home pide 260 px de scroll a 667 × 375).</span></div>
+    </div>
+
+    <div class="ficha">
+      <h3><span class="estado hecho">Arreglado</span>2 · En el iPhone, tocar un campo ampliaba la pantalla</h3>
+      <p>Safari, y el WebView del iPhone, amplían la página al tocar un campo con la letra de menos de 16 px y no la
+        devuelven al salir. «Otro» en los minutos va a 13 px y el código de PACE completo a 14: al tocarlos, la home se
+        quedaba ampliada y cortada hasta pellizcar. (Las páginas sueltas de la web, como /recuperar, ya iban a 16 px.)
+        Ahora, solo en el iPhone y el iPad, la página no amplía al tocar un campo; se sigue pudiendo ampliar con dos dedos.
+        En Android no cambia nada. No se ve distinto: solo deja de ampliarse sola.</p>
+      <p class="meta">Prueba: tests/ios-campo-sin-zoom.spec.js · cae en la 0.214.0 (13 y 14 px)</p>
+    </div>
+
+    <div class="ficha">
+      <h3><span class="estado hecho">Montada la A</span>3 · La pausa dice «Ciclo completado» tras un solo bloque</h3>
+      <p>Al terminar el primer bloque de Foco, la ventana de la pausa lleva arriba «Ciclo completado» («Cycle complete»),
+        mientras el aro dice «Ciclo 1 / 4» y el texto de la ventana, «Has terminado un bloque de Foco». A quien empieza le
+        dice dos cosas que no casan.</p>
+      <figure class="estrecha"><img src="img/pausa-ciclo-completado.png" alt="La ventana de la pausa con «Ciclo completado» arriba"><figcaption>320 × 568: «Ciclo completado» tras el bloque 1.</figcaption></figure>
+      <div class="op"><span><b>A</b> «Bloque terminado» / «Block done»<span class="recom">Recomendada</span></span>
+        <span>Dice lo que ha pasado y casa con el texto de debajo. Es un cambio de dos claves.</span></div>
+      <div class="op"><span><b>B</b> Como está</span><span>Si «ciclo» se lee como «el rato de Foco», sin más.</span></div>
+    </div>
+
+    <div class="ficha">
+      <h3><span class="estado decide">Pospuesta</span>4 · El aviso del Foco en la web del móvil promete más de lo que puede</h3>
+      <p>En Ajustes, «Aviso al terminar» dice «Foco · si la pestaña está detrás». En un ordenador es verdad. En el navegador
+        de un móvil, con la pantalla bloqueada, Chrome y Safari congelan la página y no hay quien dé el aviso a su hora: llega
+        al volver. En las apps sí avisa el sistema. Esto no se puede ver fuera de un móvil; está en la lista de abajo para que lo
+        mires tú antes de cambiar el texto. <b>Pospuesta (Ez, 22 nov.):</b> el texto no se toca hasta que lo pruebes en tu Android (paso 2 de abajo).</p>
+      <div class="op"><span><b>A</b> En la web del móvil, «Foco · con PACE abierto»<span class="recom">Recomendada, si tu móvil lo confirma</span></span>
+        <span>Dice lo que pasa sin entrar en por qués; en el ordenador y en las apps sigue como está.</span></div>
+      <div class="op"><span><b>B</b> Como está</span><span>Si en tu Android el aviso llega a su hora con la pantalla bloqueada.</span></div>
+    </div>
+
+    <div class="ficha">
+      <h3><span class="estado hecho">Arreglado</span>5 · Android: Atrás en «Tus datos» cerraba Ajustes entero</h3>
+      <p>En Ajustes › «Copias, borrar y PACE completo», el botón o el gesto Atrás de Android cerraba el panel en vez de volver
+        a Ajustes, que es lo que se espera de Atrás. Ahora sube un paso, como la «‹», y el siguiente Atrás cierra. El Escape del
+        teclado sigue igual. Lo demás (cajón, estadísticas, logros, bibliotecas, las rutinas a medias, la hoja del día,
+        Hidrátate) ya se cerraba bien con Atrás: lo he probado capa a capa.</p>
+      <p class="meta">Prueba: tests/ajustes-movil.spec.js · cae en la 0.214.0</p>
+    </div>
+
+    <div class="ficha">
+      <h3><span class="estado hecho">Montada la A</span>6 · «PACE completo. Es parte de PACE completo.»</h3>
+      <p>Desde Ajustes, «PACE completo › Introducir código» abre la hoja con el título «PACE completo» y, debajo, «Es parte de
+        PACE completo.». Esa línea está pensada para cuando se toca algo cerrado (una rutina, «Tus rutinas»); con el título
+        genérico se repite.</p>
+      <figure class="estrecha"><img src="img/pace-completo-codigo.png" alt="La hoja del código con el título y la línea repetida"><figcaption>360 × 640, desde Ajustes.</figcaption></figure>
+      <div class="op"><span><b>A</b> Sin esa línea cuando el título ya es «PACE completo»<span class="recom">Recomendada</span></span>
+        <span>Desde algo cerrado (una rutina, «Tus rutinas») sigue saliendo, con su nombre de título.</span></div>
+      <div class="op"><span><b>B</b> Otra línea: «Lo que se abre con tu código.»</span><span>Mantiene el ritmo de la hoja, con una frase que diga algo.</span></div>
+    </div>
+
+    <div class="ficha">
+      <h3><span class="estado hecho">Arreglado</span>7 · Dos toques demasiado pequeños para el dedo</h3>
+      <p>«Ponle ritmo al día», en Estadísticas › Hoy, se tocaba en 15 px de alto; y Foco, Pausa y Larga, que salen arriba en
+        los móviles altos (390 × 844 y más), en 26. Ahora responden en 36 y 39 px, con la zona invisible de siempre: se ven igual.</p>
+      <figure class="estrecha"><img src="img/estadisticas-ponle-ritmo.png" alt="Estadísticas, Hoy, con el enlace «Ponle ritmo al día»"><figcaption>«Ponle ritmo al día», a la derecha de «Por libre».</figcaption></figure>
+      <p>Quedan justos, sin tocar porque no tienen hueco al lado o ya se midieron: los vasos de Hidrátate a 320 px (24 × 31),
+        «Cambiar» y «Hoy voy por libre» en la tarjeta del día (25 px de alto), las píldoras de Ajustes (33-38) y «Ahora no» del
+        cierre de una rutina (26). Si quieres, se miran juntos con una maqueta.</p>
+      <p class="meta">Prueba: tests/toques-movil.spec.js · cae en la 0.214.0 (15 px)</p>
+    </div>
+
+    <div class="ficha">
+      <h3>8 · Leve: con la letra al 115 %, «A tu ritmo» se parte en dos en la bienvenida a 320 px</h3>
+      <p>En la pantalla de la semana, el título pequeño queda junto a «← Atrás» y se parte: «A TU / RITMO». Solo a 320 px de
+        ancho con la letra grande; se lee bien.</p>
+      <figure class="estrecha"><img src="img/bienvenida-320-115.png" alt="La bienvenida con «A tu ritmo» partido en dos líneas"><figcaption>320 × 568, letra al 115 %.</figcaption></figure>
+    </div>
+
+    <div class="ficha">
+      <h3>9 · Leve: Ajustes pide 72 px de scroll a 360 × 640 con la letra al 115 %</h3>
+      <p>A 100 % cabe sin scroll (lo vigila tests/ajustes-movil.spec.js). Con la letra grande baja como una lista normal.
+        No lo tocaría antes de v1.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Revisado y bien</h2>
+    <ul>
+      <li>La home en sus momentos (tarjeta corta, «¿Cuánto trabajas hoy?», el día servido, la noche) en los seis tamaños, en los dos idiomas, en crema y en oscuro y con la letra al 115 %: nada se sale de la pantalla ni hay scroll de lado. A 320 × 568 pide scroll, como ya aceptaste.</li>
+      <li>El cajón, Estadísticas, Logros, Ajustes, Hidrátate, la biblioteca de Respira y la ventana de la pausa, a 320, 360 y 412 de ancho, en los dos idiomas y con la letra grande.</li>
+      <li>Una rutina de Estira entera: los dos lados con «Cambia de lado», Auto, el «+15 s», el cierre con «¿Te ayudó?».</li>
+      <li>La bienvenida y la visita guiada a 320 × 568 con la letra al 115 %, sin errores en la consola.</li>
+      <li>Atrás de Android en diez capas: todas se cierran con un Atrás y ninguna manda PACE al fondo por error.</li>
+    </ul>
+    <p>No he podido recorrer a fondo, por tiempo, la voz del runner, el calendario de Android y la compra apagada, el sobre y el
+      Foco con la pantalla bloqueada en una pestaña simulada. Los cuatro tienen sus pruebas en la suite
+      (<code>voz-runner-sincro</code>, <code>android-calendario</code>, <code>compra-apps</code>, <code>sobre-hoja</code>,
+      <code>foco-hora-de-acabar</code>), que siguen en verde.</p>
+  </section>
+
+  <section>
+    <h2>Solo se sabe en un móvil de verdad</h2>
+    <p>Cosas que Playwright no puede imitar. Con cinco minutos por móvil basta.</p>
+    <h3>En tu Android</h3>
+    <ol>
+      <li><b>Que no gire.</b> Con la 1A juntada, gira el móvil en una rutina: la app se queda en vertical.</li>
+      <li><b>El aviso en la web con la pantalla bloqueada.</b> En Chrome, en pacegrass.app (no en la app), con «Aviso al terminar» encendido, pon un Foco de 15 minutos y bloquea la pantalla. ¿Suena o vibra a los 15 minutos, o solo al desbloquear? (Decide la 4.)</li>
+      <li><b>El teclado sobre el código.</b> Ajustes › «Copias, borrar y PACE completo» › «PACE completo»: con el teclado abierto, ¿se ve «Canjear»?</li>
+      <li><b>El gesto Atrás a mitad de rutina.</b> Desliza desde el borde en mitad de un ejercicio: sale de la rutina (queda para seguir con «Continúa»). Mira si te pasa sin querer mientras haces el ejercicio.</li>
+      <li><b>La letra grande del sistema.</b> Ajustes de Android › Pantalla › Tamaño de fuente al máximo: la home y Ajustes.</li>
+    </ol>
+    <h3>En tu iPhone</h3>
+    <ol>
+      <li><b>«Otro» en los minutos, en Safari.</b> En pacegrass.app, toca «Otro»: con la 0.214.0 la pantalla se amplía; con esta rama juntada, no.</li>
+      <li><b>Lo mismo en la app de TestFlight.</b> Con la 0.214.0, ¿se amplía al tocar «Otro»? (La app ya no deja ampliar con los dedos, y no sé si eso frena también este zoom.)</li>
+      <li><b>Que no gire</b>, como en Android: con la 1A juntada, la app del iPhone se queda en vertical.</li>
+      <li><b>Dos toques rápidos en «+ Un vaso más».</b> ¿Suma dos vasos, o amplía la pantalla?</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Lo que hay en la rama</h2>
+    <table>
+      <tr><th>Commit</th><th>Qué</th></tr>
+      <tr><td><code>20a9d447</code></td><td>En el iPhone, tocar un campo ya no amplía la pantalla (<code>app/ui/pantalla.js</code>, fila nueva en DECISIONES_TECNICAS_VIGENTES).</td></tr>
+      <tr><td><code>4b40e14b</code></td><td>«Ponle ritmo al día» y Foco/Pausa/Larga se tocan con el dedo (<code>app/ui/toques.css.jsx</code>).</td></tr>
+      <tr><td><code>c0a118d4</code></td><td>Android: Atrás en «Tus datos» vuelve a Ajustes (<code>app/tweaks/TweaksPanel.jsx</code>).</td></tr>
+      <tr><td><code>8bef77f8</code></td><td>1A: las apps de Android y del iPhone, solo en vertical; <code>verify</code> lo vigila en los dos.</td></tr>
+      <tr><td><code>09297d48</code></td><td>3A: la ventana de la pausa dice «Bloque terminado» / «Block done» (<code>tests/pausa-rotulo.spec.js</code>).</td></tr>
+      <tr><td><code>e634f355</code></td><td>6A: la hoja de PACE completo, sin la línea repetida cuando nada cerrado la abrió (<code>tests/premium-codigo.spec.js</code>).</td></tr>
+    </table>
+    <p>Sin bump ni novedad en el sobre: lo hace la coordinadora al juntar (la 1, la 2, la 3 y la 5 merecen una línea en el sobre). Los
+      scripts del recorrido, en <code>banco/</code> (<code>land.js</code> mide el runner girado).</p>
+  </section>
+</main>
+</body>
+</html>

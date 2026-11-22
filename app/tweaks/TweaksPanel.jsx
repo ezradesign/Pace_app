@@ -193,11 +193,15 @@ function TweaksPanel({ open, onClose }) {
     const onKey = (e) => {
       if (e.key !== 'Escape' || e.__paceDialogoAtendido) return;
       if (typeof paceHayDialogo === 'function' && paceHayDialogo()) return;
+      /* Atrás de Android (ui/android.js lo manda como un Escape marcado `paceAtras`) desde «Tus
+         datos» vuelve a Ajustes, como la «‹»: Android espera que Atrás suba un paso, y cerraba el
+         panel entero. El Escape del teclado sigue cerrándolo (caza del móvil, 22 nov.). */
+      if (e.paceAtras && vistaDatos) { setVistaDatos(false); return; }
       onClose && onClose();
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [open, onClose]);
+  }, [open, onClose, vistaDatos]);
 
   /* EL TECLADO NO SALE DEL PANEL (auditoría del 7 nov.). Para el ratón sigue siendo un panel
      no modal, pero con el teclado el foco se quedaba en la rueda al abrirlo y el Tab caía en

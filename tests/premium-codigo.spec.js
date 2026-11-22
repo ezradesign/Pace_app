@@ -186,3 +186,19 @@ test('en Android no hay «Tengo un código» y no vale ni el enlace ni un códig
   await expect(page.locator(HOJA)).toContainText('Pronto podrás tenerlo aquí.');
   await expect(page.locator('[data-pace-premium-tengo]')).toHaveCount(0);
 });
+
+/* Ez, 6A de la caza del móvil (22 nov. 2026): desde Ajustes la hoja se titula «PACE completo» y debajo
+   decía «Es parte de PACE completo.». Sin esa línea cuando nada cerrado la abrió; desde una rutina cerrada
+   sigue (la primera prueba de este archivo). Contra la 0.214.0 cae. */
+test('desde Ajustes, la hoja del código no repite «Es parte de PACE completo.»', async ({ page }) => {
+  await irAlArtefacto(page);
+  await page.evaluate(() => window.paceAbrirPremium({ modo: 'codigo' }));
+  const hoja = page.locator(HOJA);
+  await expect(hoja.locator('h2')).toHaveText('PACE completo');
+  await expect(hoja.locator('[data-pace-premium-codigo]')).toBeVisible();
+  await expect(hoja).not.toContainText('Es parte de PACE completo.');
+  /* CONTROL: con un nombre, la línea sigue */
+  await page.keyboard.press('Escape');
+  await page.evaluate(() => window.paceAbrirPremium({ nombre: 'Colgarse' }));
+  await expect(page.locator(HOJA)).toContainText('Es parte de PACE completo.');
+});
