@@ -26363,7 +26363,9 @@ function PremiumInvitacion() {
     ) :
 
     React.createElement(React.Fragment, null,
-    React.createElement("p", { style: premiumInvitacionStyles.sub }, t('premium.part')),
+
+
+    abierta.nombre && React.createElement("p", { "data-pace-premium-parte": true, style: premiumInvitacionStyles.sub }, t('premium.part')),
     React.createElement("ul", { style: premiumInvitacionStyles.lista },
     PREMIUM_INCLUYE.map((k) =>
     React.createElement("li", { key: k, style: premiumInvitacionStyles.item },

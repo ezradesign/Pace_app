@@ -239,7 +239,9 @@ function PremiumInvitacion() {
           </React.Fragment>
         ) : (
           <React.Fragment>
-            <p style={premiumInvitacionStyles.sub}>{t('premium.part')}</p>
+            {/* «Es parte de PACE completo.» solo bajo lo que se tocó (una rutina, «Tus rutinas»): con el
+                título «PACE completo» se repetía (Ez, 6A de la caza del móvil, 22 nov.). */}
+            {abierta.nombre && <p data-pace-premium-parte style={premiumInvitacionStyles.sub}>{t('premium.part')}</p>}
             <ul style={premiumInvitacionStyles.lista}>
               {PREMIUM_INCLUYE.map((k) => (
                 <li key={k} style={premiumInvitacionStyles.item}>
