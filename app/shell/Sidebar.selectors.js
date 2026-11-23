@@ -205,8 +205,12 @@ function selectSidebarPrimaryAction(state, ctx) {
      «Comienza»; un «Para ahora, Postura reset» al lado eran dos voces para la misma
      decisión. Lo que está a medias (arriba) sí se sigue ofreciendo: es tuyo. */
   if (c.conRitmo) return null;
+  /* LA ÚLTIMA SOLO SE OFRECE SI SE PUEDE ABRIR (`c.puede`, el guard central que le pasa la barra):
+     desde v1, una de pago hecha en la semana de prueba se ofrecía como «Repetir» y se abría sin
+     PACE completo. Si no se puede, la tarjeta cae a la sugerencia, que ya va filtrada. */
   const last = selectSidebarLastSession(c.events);
-  if (last && last.routineId) {
+  const abre = (id) => typeof c.puede !== 'function' || c.puede(id);
+  if (last && last.routineId && abre(last.routineId)) {
     return {
       kind: 'repeat',
       targetId: last.routineId,

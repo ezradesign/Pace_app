@@ -152,7 +152,8 @@ function Sidebar() {
   const R = (typeof ritmoDe === 'function') ? ritmoDe(state) : null;
   const conRitmo = !!(R && !R.libre && (R.dia || R.propuesta));
   const accion = selectSidebarPrimaryAction(state,
-    { events: eventos, sugerencia: sugerencia, reanudable: reanudable, ritmo: ritmo, conRitmo: conRitmo });
+    { events: eventos, sugerencia: sugerencia, reanudable: reanudable, ritmo: ritmo, conRitmo: conRitmo,
+      puede: function (id) { return !window.canAccessRoutine || window.canAccessRoutine(id); } });
   const vistaAccion = sidebarActionView(accion, t, tn, lang);
 
   /* CERRAR EL CAJON AL ELEGIR (solo movil). En escritorio la sidebar convive

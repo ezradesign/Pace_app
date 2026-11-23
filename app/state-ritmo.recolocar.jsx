@@ -141,6 +141,7 @@ function ritmoBloqueEmpezado(minutos) {
     }
   }
   if (R.dia.pausaPendiente) cambios.pausaPendiente = false;
+  if (R.dia.minutosElegidos) cambios.minutosElegidos = null;   /* ya empezó: el siguiente vuelve a lo del plan */
   var t = ritmoAhoraExacto();
   /* Antes de que acabe el último bloque hecho solo se está si el reloj ha vuelto atrás
      (la hora repetida): el bloque empieza a su hora del plan, no delante de lo hecho. */
@@ -285,6 +286,27 @@ function ritmoMinutosDelPlan(s, dur) {
   if (r.minutosPlan == null && ritmoMinutosSonTuyos(s, r)) cambio.focoLibre = s.focusMinutes;
   setState(function (prev) { return Object.assign({}, prev, { focusMinutes: dur, ritmo: Object.assign({}, prev.ritmo || {}, cambio) }); });
 }
+/* LOS MINUTOS QUE ELIGES CON EL DÍA SERVIDO SE QUEDAN HASTA QUE EMPIEZAS (Ez, 2A de la caza de huecos,
+   23 nov. 2026). Tocar 15 encima del aro ponía 15:00, pero `ritmoSincronizar` volvía a los del plan al
+   minuto sin avisar: si empezabas a tiempo, el bloque duraba 15 y el día se recolocaba; si tardabas, 45.
+   Ahora la elección se apunta en el día (`dia.minutosElegidos`, con el bloque al que va), el plan no la
+   pisa, «Después» y «Luego» la dicen, y aguanta una recarga. Al empezar el bloque se borra
+   (`ritmoBloqueEmpezado`) y el siguiente vuelve a medir lo del plan. Elegir lo mismo que el plan la quita. */
+function ritmoElegirMinutos(min) {
+  var s = getState();
+  if (s.focusMode !== 'foco' || ritmoFocoCorriendo()) return;
+  var p = ritmoPlan(s);
+  if (!p || !p.actual || !ritmoDe(s).dia) return;
+  var v = min === ritmoDurSiEmpiezas(p, ritmoAhoraExacto()) ? null : { min: min, bloque: p.hechos };
+  ritmoGuardar(function (r) { return r.dia ? { dia: Object.assign({}, r.dia, { minutosElegidos: v }) } : {}; });
+}
+/* Los minutos elegidos para el bloque que toca, o null (otro bloque, o ninguno). */
+function ritmoMinutosElegidos(s, p) {
+  var d = ritmoDe(s).dia, e = d && d.minutosElegidos;
+  if (!e || !(Number(e.min) > 0)) return null;
+  p = p || ritmoPlan(s);
+  return p && p.actual && e.bloque === p.hechos ? Number(e.min) : null;
+}
 function ritmoMinutosDevolver(s) {
   var r = (s && s.ritmo) || {};
   if (r.minutosPlan == null) return;
@@ -314,5 +336,5 @@ function ritmoFocoHecho(p) {
   return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) { return a + ritmoFocoMin(f); }, 0) : 0;
 }
 
-Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoDesdeHoy, ritmoFocoEmpezo, ritmoFocoDelDiaNuevo, ritmoFocoHecho, ritmoFocoMin, ritmoFijarLoHecho,
+Object.assign(window, { ritmoElegirMinutos, ritmoMinutosElegidos, ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoDesdeHoy, ritmoFocoEmpezo, ritmoFocoDelDiaNuevo, ritmoFocoHecho, ritmoFocoMin, ritmoFijarLoHecho,
   ritmoMinutosDelPlan, ritmoMinutosDevolver });

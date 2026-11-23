@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caza de huecos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --papel: #f3ece0; --papel-2: #ebe2d2; --tinta: #2a2620; --tinta-2: #5d564b; --tinta-3: #8a8274;
+    --oliva: #56634a; --terracota: #a6543a; --linea: #d8cdb9; --ok: #56634a; --aviso: #a6543a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --papel: #1e1c19; --papel-2: #282521; --tinta: #efe8db; --tinta-2: #c7bfb1; --tinta-3: #968e80;
+      --oliva: #9fb08c; --terracota: #d98b6e; --linea: #3b3731; --ok: #9fb08c; --aviso: #d98b6e;
+    }
+  }
+  :root[data-theme="dark"] {
+    --papel: #1e1c19; --papel-2: #282521; --tinta: #efe8db; --tinta-2: #c7bfb1; --tinta-3: #968e80;
+    --oliva: #9fb08c; --terracota: #d98b6e; --linea: #3b3731; --ok: #9fb08c; --aviso: #d98b6e;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--papel); color: var(--tinta); font: 15px/1.55 Inter, system-ui, sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1, h2 { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-weight: 500; }
+  h1 { font-size: 40px; margin: 0 0 4px; }
+  h2 { font-size: 27px; margin: 0 0 6px; }
+  .sub { color: var(--tinta-2); margin: 0 0 24px; }
+  .resumen { background: var(--papel-2); border: 1px solid var(--linea); border-radius: 14px; padding: 14px 18px; margin-bottom: 32px; }
+  .resumen p { margin: 4px 0; }
+  article { border-top: 1px solid var(--linea); padding: 28px 0 8px; }
+  .etq { display: inline-block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; border: 1px solid currentColor; margin-right: 6px; }
+  .grave { color: var(--aviso); } .media { color: var(--terracota); } .leve { color: var(--tinta-3); }
+  .hecho { color: var(--ok); } .ez { color: var(--aviso); }
+  .meta { margin: 0 0 12px; }
+  figure { margin: 14px 0; }
+  figure img { max-width: 100%; border: 1px solid var(--linea); border-radius: 10px; display: block; }
+  figcaption { font-size: 13px; color: var(--tinta-3); margin-top: 6px; }
+  .fila { display: flex; gap: 14px; flex-wrap: wrap; }
+  .fila figure { flex: 1 1 240px; }
+  .fila figure.estrecha { flex: 0 1 260px; }
+  .opciones { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin: 14px 0; }
+  .op { border: 1px solid var(--linea); border-radius: 12px; padding: 12px 14px; background: var(--papel-2); }
+  .op.rec { border-color: var(--oliva); box-shadow: inset 0 0 0 1px var(--oliva); }
+  .op b { display: block; margin-bottom: 4px; }
+  .op .rec-t { font-size: 12px; color: var(--oliva); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+  code { font-size: 13px; background: var(--papel-2); padding: 1px 5px; border-radius: 4px; }
+  ul { padding-left: 20px; } li { margin: 4px 0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Caza de huecos</h1>
+  <p class="sub">23 nov. 2026 · lo que las cazas del 22 nov. no miraron a fondo · rama <code>claude/caza-huecos-23nov-ed3e34</code>, sin juntar</p>
+
+  <div class="resumen">
+    <p><b>Cuatro hallazgos.</b> Dos arreglados en la rama, cada uno con su prueba que cae en main. Dos esperan tu letra.</p>
+    <p>Hoy no se nota ninguno de los arreglados: el de la compra solo se vería desde v1, y el otro es la voz.</p>
+  </div>
+
+  <article>
+    <h2>1 · Desde v1, «Repetir» abría rutinas de pago sin PACE completo</h2>
+    <p class="meta"><span class="etq grave">Grave</span><span class="etq hecho">Arreglado</span></p>
+    <p>Con PACE cerrado (v1) y la semana de prueba acabada, la tarjeta de la barra lateral ofrecía repetir la última rutina aunque fuera de pago, por ejemplo una hecha durante la semana de prueba. Al tocarla, Mueve y Estira llegaban a la sesión y Respira, a su aviso de seguridad. La sugerencia ya miraba si se puede abrir; «Repetir» no lo miraba. Pasaba también con «Continúa» en una Respira de pago a medias.</p>
+    <p>Ahora la tarjeta no ofrece lo que no se puede abrir: en su sitio sale la sugerencia, como antes. Las que se quedan de antes de v1 se siguen ofreciendo. Prueba: <code>tests/v1-repetir-de-pago.spec.js</code>. Commit <code>912a9069</code>.</p>
+    <div class="fila">
+      <figure><img src="img/repetir-de-pago-mueve.png" alt="La ficha de Core silencioso, de pago, abierta desde Repetir con PACE cerrado"><figcaption>Antes: Core silencioso (de pago), abierta desde «Repetir» con PACE cerrado.</figcaption></figure>
+      <figure><img src="img/repetir-de-pago-respira.png" alt="El aviso de Tolerancia CO2, de pago, abierto desde Repetir"><figcaption>Antes: Tolerancia CO₂ (de pago), en su aviso, lista para empezar.</figcaption></figure>
+    </div>
+  </article>
+
+  <article>
+    <h2>2 · Con el día servido, los minutos que eliges se deshacen al minuto</h2>
+    <p class="meta"><span class="etq media">Media</span><span class="etq ez">Espera tu letra</span></p>
+    <p>Con la jornada puesta y el bloque sin empezar, tocas 15 encima del aro: el aro pasa a 15:00. Al minuto, sin avisar, vuelve a 45:00. Si empiezas dentro de ese minuto, el bloque dura 15 y el día se recoloca bien. Si tardas un poco más, el bloque dura 45. En plena comida pasa lo mismo: marca 15 y «Luego» sigue diciendo 45 min. Por libre no pasa: tu elección se queda.</p>
+    <div class="fila">
+      <figure><img src="img/chip-1-elijo-15.png" alt="El aro con 15 elegido"><figcaption>9:00, tocas 15.</figcaption></figure>
+      <figure><img src="img/chip-2-al-minuto-45.png" alt="Un minuto después el aro vuelve a 45"><figcaption>9:01, sin tocar nada: vuelve a 45.</figcaption></figure>
+      <figure class="estrecha"><img src="img/chip-comida-360.png" alt="En la comida, 15 elegido y Luego dice 45 min"><figcaption>En la comida, a 360 px: 15 marcado y «Luego» dice 45 min.</figcaption></figure>
+    </div>
+    <div class="opciones">
+      <div class="op rec"><span class="rec-t">Recomendada</span><b>A · Lo que eliges se queda hasta que empiezas</b>El aro deja de volver al minuto. El bloque dura lo que elegiste y el día se recoloca al empezar, como ya pasa si empiezas a tiempo. Al acabar ese bloque, el siguiente vuelve a medir lo del plan.</div>
+      <div class="op"><b>B · Con el día servido, los minutos no se tocan</b>Los chips se ven apagados mientras hay un día servido; para cambiar la duración, «Ajustar el horario». Es más claro, pero quita una elección que hoy medio funciona.</div>
+    </div>
+  </article>
+
+  <article>
+    <h2>3 · Sin «Auto», el lado derecho empezaba mudo</h2>
+    <p class="meta"><span class="etq leve">Leve</span><span class="etq hecho">Arreglado</span></p>
+    <p>Con «Auto», al cambiar de lado la voz dice «Cambia» y luego «Derecha». Sin «Auto», el lado izquierdo empezaba con «Izquierda» al tocar «›», pero al tocar «›» para el derecho no sonaba nada, con «Derecha» en la pantalla. Ahora suena «Derecha», una vez. Prueba: <code>tests/voz-lado-sin-auto.spec.js</code>. Commit <code>7be19057</code>.</p>
+  </article>
+
+  <article>
+    <h2>4 · La pausa por libre dice dos veces que el bloque acabó</h2>
+    <p class="meta"><span class="etq leve">Leve</span><span class="etq ez">Espera tu letra</span></p>
+    <p>Desde la 3A, arriba pone «BLOQUE TERMINADO» y, dos líneas más abajo, «Bloque cerrado. Elige tu pausa.» Con la jornada no pasa: allí pone «Bloque 1 de 9 · terminado» y debajo la hora y «Lo que viene».</p>
+    <div class="fila">
+      <figure class="estrecha"><img src="img/pausa-libre-repite.png" alt="La ventana de la pausa por libre"><figcaption>Por libre, a 360 px.</figcaption></figure>
+      <figure class="estrecha"><img src="img/pausa-jornada-en-115.png" alt="La ventana de la pausa con la jornada, en inglés y con la letra al 115 %"><figcaption>Con la jornada, en inglés y con la letra al 115 %: sin repetir.</figcaption></figure>
+    </div>
+    <div class="opciones">
+      <div class="op rec"><span class="rec-t">Recomendada</span><b>A · Debajo, solo «Elige tu pausa.»</b>«Choose your break.» en inglés. El rótulo de arriba ya dice que el bloque acabó.</div>
+      <div class="op"><b>B · Dejarlo como está</b>La repetición es pequeña y la ventana se entiende igual.</div>
+    </div>
+  </article>
+
+  <article>
+    <h2>Mirado y sin fallos</h2>
+    <ul>
+      <li><b>La voz del runner</b>, de principio a fin, en tres rutinas con «Auto» (en castellano y en inglés) y una sin él: números, «Colócate», «Izquierda», «Cambia», «Derecha», «Descansa», «Último paso» y el final. Pausar, volver con 3-2-1, saltar dos veces seguidas, volver atrás y salir a mitad, a 390 px: la voz se calla y no se apila.</li>
+      <li><b>La compra apagada en las apps</b>: en Android y en el iPhone no entra ningún código (ni escrito ni por enlace) y la tienda está apagada; con PACE cerrado, la biblioteca, la pausa, el día servido y la sugerencia miran si se puede abrir (leído en el código; probado en la app, el 1). El único hueco que encontré era el 1.</li>
+      <li><b>Ajustes, uno a uno</b> (21 controles en castellano y en inglés): cada uno cambia lo que dice y se guarda al recargar. Con el sonido apagado, la voz y lo que suena detrás quedan sin tocar, como deben.</li>
+      <li><b>Lo nuevo de la 0.215.0</b> (la comida en el aro, «Bloque terminado», la ventana de la comida), a 360 × 640, en los dos idiomas y con la letra al 115 %: nada se corta y nada pide scroll.</li>
+      <li><b>El Foco de la jornada con la página congelada</b> (como un móvil que duerme la pestaña), a 360 px: al volver a las 9:50 sale la pausa con lo que le queda; a las 11:00 y a las 15:10, el aro está en el bloque que toca. El bloque cuenta una sola vez (45 min).</li>
+      <li><b>La carta del lunes</b> entera (la semana del registro, la carta, «Vale» y la home después), a 1280 × 720 y a 360 × 640, también al 115 %: cabe sin scroll.</li>
+    </ul>
+    <div class="fila">
+      <figure class="estrecha"><img src="img/comida-aro-en-115.png" alt="La comida en el aro, en inglés al 115 %"><figcaption>La comida en el aro, en inglés al 115 %.</figcaption></figure>
+      <figure class="estrecha"><img src="img/carta-en-360-115.png" alt="La carta del lunes a 360 px al 115 %"><figcaption>La carta del lunes, a 360 px al 115 %.</figcaption></figure>
+    </div>
+  </article>
+
+  <article>
+    <h2>Sin mirar</h2>
+    <ul>
+      <li><b>El Foco con la pestaña oculta en un móvil de verdad.</b> Simulé la página congelada y va bien, pero lo que hace de verdad un navegador con una pestaña dormida solo se ve en el teléfono.</li>
+      <li><b>El calendario en Android y conectar el calendario en la web.</b> Uno necesita el teléfono y el otro, las altas de Google y Microsoft, que siguen sin hacer.</li>
+      <li><b>La miniventana al acabar la pausa de la jornada (3A)</b>, en un Chrome de verdad: la del ordenador sigue pendiente de que la pruebes tú.</li>
+      <li><b>Linux</b>: no medí los textos en Linux. Nada de esta rama cambia textos.</li>
+    </ul>
+  </article>
+</main>
+</body>
+</html>

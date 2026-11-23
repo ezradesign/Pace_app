@@ -136,6 +136,9 @@ function leerRespiraGuardada(ahora) {
     if (respiraDiaLocal(g.savedAt) !== respiraDiaLocal(t)) return null;
     const rutina = window.getBreatheRoutine && window.getBreatheRoutine(g.routineId);
     if (!rutina) return null;
+    /* Como en Mueve y Estira: una de pago que ya no se puede abrir (v1, la semana de prueba acabada)
+       no se ofrece para seguir; «Continúa» la abría sin PACE completo. */
+    if (window.canAccessRoutine && !window.canAccessRoutine(g.routineId)) return null;
     if (respiraVivaFuera(t)) return null;   // sigue viva en otra pestaña: no está a medias
     /* Blindaje, como el `endsAt-now <= duracion` de s102: un activo mayor que
        tres veces el plan de la rutina es un registro corrupto, no una sesión. */
