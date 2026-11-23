@@ -7,7 +7,7 @@ Se actualiza en cada hito (regla en `CLAUDE.md`). Última actualización: 14 de 
 ## AL RELEVO (23 nov., cuenta EcLj6; semana al 98-100 %, se repone el martes 24 a las 14:00): empieza aquí
 
 - **`main` = 0.216.0**: la caza de los huecos (Ez «2A + 4A») y la página de la caza de las apps (Ez: tabletas de Android 16, «A, dejarlo así»). Al mandar v1 a la App Store, en las notas para el revisor: avisos del Foco y de la pausa, calendario del iPhone, vibración en Mueve y Estira y la compra con Apple (la norma 4.2, «una web dentro de una app»).
-- **Sin juntar:** `claude/sidebar-mejoras-23nov-bceb9a`, las mejoras de la barra lateral. Ez (23 nov., literal): «1C + 2A + 3B + 4B + 5A». 1C = como está; 2A «Un vaso más. Deshacer»; 3B el último logro en una línea; 4B «2 días seguidos · tu mejor, 9» (ya montada); 5A Ctrl + \ pliega la barra. Su sesión las monta y sube tras cada letra; al acabar, fotos en `docs/proposals/sidebar-23nov/montado/`, enseñárselas a Ez y juntarlas como 0.217.0 con su novedad.
+- **Hecho: la 0.217.0** con la barra lateral (antes, sin juntar: `claude/sidebar-mejoras-23nov-bceb9a`). Ez (23 nov., literal): «1C + 2A + 3B + 4B + 5A». 1C = como está; 2A «Un vaso más. Deshacer»; 3B el último logro en una línea; 4B «2 días seguidos · tu mejor, 9» (ya montada); 5A Ctrl + \ pliega la barra. Su sesión las monta y sube tras cada letra; al acabar, fotos en `docs/proposals/sidebar-23nov/montado/`, enseñárselas a Ez y juntarlas como 0.217.0 con su novedad.
 - **Espera a Ez:** la 4 del móvil (el aviso en la web del móvil con la pantalla bloqueada), la miniventana en su Chrome y los pasos de cinco minutos de la página de las apps.
 
 ## AL RELEVO (22 nov., cuenta EcLj6; semana al 80 %, se repone el martes 24 a las 14:00): empieza aquí

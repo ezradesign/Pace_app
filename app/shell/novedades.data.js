@@ -15,15 +15,8 @@
 
 const PACE_NOVEDADES = [
   {
-    id: 'minutos-se-quedan',
-    desde: '2026-11-23',
-    es: [
-      'Con el día servido, los minutos que eliges encima del aro se quedan hasta que empiezas el bloque.',
-    ],
-    en: [
-      'With your day served, the minutes you pick above the ring stay until you start the block.',
     id: 'barra-deshacer-vaso',
-    desde: '2026-11-24',
+    desde: '2026-11-23',
     es: [
       'Si sumas un vaso sin querer desde el panel, «Deshacer» lo quita durante unos segundos.',
       'El panel dice «2 días seguidos», el último logro ocupa una línea, y en el ordenador Ctrl + \\ lo pliega y lo despliega.',
@@ -31,6 +24,16 @@ const PACE_NOVEDADES = [
     en: [
       'If you add a glass by mistake from the panel, “Undo” takes it back for a few seconds.',
       'The panel says “2 days in a row”, the latest achievement takes one line, and on a computer Ctrl + \\ folds and unfolds it.',
+    ],
+  },
+  {
+    id: 'minutos-se-quedan',
+    desde: '2026-11-23',
+    es: [
+      'Con el día servido, los minutos que eliges encima del aro se quedan hasta que empiezas el bloque.',
+    ],
+    en: [
+      'With your day served, the minutes you pick above the ring stay until you start the block.',
     ],
   },
   {
