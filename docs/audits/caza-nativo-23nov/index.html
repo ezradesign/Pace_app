@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caza en las apps</title>
+<style>
+:root{--paper:#F4EFE4;--ink:#2B2A26;--soft:#6B675D;--line:#D9D1BF;--olive:#3E5A3A;--terra:#B4643E;--card:#FBF8F1}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#1E1D1A;--ink:#ECE6D8;--soft:#A59F90;--line:#3A3832;--olive:#9DB58F;--terra:#E09A72;--card:#26251F}}
+:root[data-theme="dark"]{--paper:#1E1D1A;--ink:#ECE6D8;--soft:#A59F90;--line:#3A3832;--olive:#9DB58F;--terra:#E09A72;--card:#26251F}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 Georgia,"Iowan Old Style",serif}
+main{max-width:760px;margin:0 auto;padding:32px 16px 64px}
+h1,h2{font-style:italic;font-weight:400;line-height:1.2}
+h1{font-size:2rem;margin:0 0 8px}
+h2{font-size:1.35rem;margin:40px 0 12px;color:var(--olive)}
+p.sub{color:var(--soft);margin:0 0 24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:12px 0}
+.tag{display:inline-block;font:600 .75rem/1 system-ui,sans-serif;letter-spacing:.04em;text-transform:uppercase;padding:4px 8px;border-radius:6px;border:1px solid var(--line);color:var(--soft);margin-right:6px}
+.tag.c{color:var(--olive);border-color:var(--olive)}
+.tag.s{color:var(--terra);border-color:var(--terra)}
+.card h3{margin:8px 0 6px;font-size:1.08rem}
+.op{margin:8px 0 0;padding-left:18px}
+ul.ok{padding-left:18px}
+ul.ok li{margin:4px 0}
+ol li{margin:6px 0}
+a{color:var(--olive)}
+code{font-size:.88em}
+</style>
+</head>
+<body>
+<main>
+<h1>Lo que solo pasa en las apps</h1>
+<p class="sub">Caza del 23 nov. 2026 en la app de Android y la del iPhone: lo que miran Google y Apple, los avisos, las piezas nativas, el paso entre la web y el móvil, y el calendario.</p>
+
+<div class="card">
+<strong>En corto:</strong> no he encontrado nada que haga rechazar la app en Google Play ni en la App Store, ni nada que rompa algo a los testers. Lo que sí hay es una cosa pequeña que tienes que decidir tú: las tabletas de Android 16. Todo lo demás que he mirado ya estaba bien hecho, y lo dejo abajo para que conste. Las 134 pruebas de las apps (<code>android-*</code> e <code>ios-*</code>), en verde.
+</div>
+
+<h2>Hallazgos, de más grave a más leve</h2>
+
+<div class="card">
+<span class="tag c">Comprobado</span><span class="tag">Leve · decide Ez</span>
+<h3>1. En tabletas y móviles plegables con Android 16, PACE gira aunque le digamos «solo en vertical»</h3>
+<p>Desde la 1A del 22 nov., la app de Android va siempre en vertical. Pero Google ha cambiado la norma: si la app está hecha para Android 16, que es nuestro caso, Android no hace caso de «solo en vertical» en pantallas grandes (tabletas y plegables abiertos). En esas pantallas PACE girará igual. En los móviles normales no cambia nada.</p>
+<p>Norma: <a href="https://developer.android.com/about/versions/16/behavior-changes-16#ignore-orientation">Android 16, cambios de comportamiento</a>. Google no rechaza la app por esto; solo lo avisa en Play Console.</p>
+<p><strong>Opciones:</strong></p>
+<ul class="op">
+<li><strong>A (recomendada): dejarlo así.</strong> En una tableta tumbada la pantalla es ancha, como la del ordenador, y la web ya se ve bien a ese tamaño. Lo de la 1A (la cuenta escondida al girar) pasaba en un móvil tumbado, que es bajito, no en una tableta.</li>
+<li><strong>B: pedirle a Android que respete «solo en vertical».</strong> Hay una excepción, pero Google la quita con Android 17, así que solo dura un año y luego hay que hacer la A igualmente.</li>
+</ul>
+</div>
+
+<div class="card">
+<span class="tag s">Supongo</span><span class="tag">Medio · antes de v1</span>
+<h3>2. Apple puede decir que PACE es «una web dentro de una app»</h3>
+<p>Es lo que más rechaza Apple en apps hechas así (norma 4.2, <a href="https://developer.apple.com/app-store/review/guidelines/#minimum-functionality">funcionalidad mínima</a>). PACE se defiende bien porque tiene cosas que solo hace la app: los avisos del Foco y de la pausa, el calendario del iPhone, la vibración en Mueve y Estira y la compra con Apple. Y no carga nada de internet: todo viaja dentro de la app.</p>
+<p><strong>Qué hacer:</strong> cuando se mande la versión de v1 a revisión, poner en las notas para el revisor una línea con esas cuatro cosas. TestFlight no lo revisa así, por eso hasta ahora no ha salido.</p>
+</div>
+
+<div class="card">
+<span class="tag s">Supongo</span><span class="tag">Leve · ya avisado en la app</span>
+<h3>3. En Android 14 o más, el aviso del fin del Foco puede llegar unos minutos tarde con el móvil bloqueado</h3>
+<p>Android 14 viene con «Alarmas y recordatorios» apagado para las apps nuevas. Sin ese permiso, Android puede retrasar el aviso. PACE ya lo tiene resuelto: «Avisos a su hora ›» bajo «Pausar» y en Ajustes, que abren el permiso con un toque. Solo hace falta comprobarlo en un móvil (abajo, paso 2).</p>
+</div>
+
+<h2>Mirado y bien</h2>
+<ul class="ok">
+<li><strong>Google Play:</strong> la app está hecha para Android 16 (lo que Google pide desde agosto de 2026). Pide solo internet, el calendario, avisos, arranque del móvil y «Alarmas y recordatorios», y este último sin el permiso que Google reserva para los despertadores. La declaración de datos («no se recogen datos») encaja con el código: en la app no hay licencias web, ni «Avísame», ni apoyo con Buy Me a Coffee.</li>
+<li><strong>La compra:</strong> apagada en las dos apps hasta tus altas, y <code>verify</code> no deja encenderla sola. Cuando se encienda, «Restaurar compras», las condiciones de Apple y la privacidad están en el pie de la hoja.</li>
+<li><strong>iPhone:</strong> solo iPhone y solo en vertical (sin el problema de las tabletas). La pregunta del calendario sale en castellano y en inglés. No pide trabajar en segundo plano. El manifiesto de privacidad está y declara lo que usa Capacitor. Se compila con el Xcode más nuevo, como pide Apple desde abril.</li>
+<li><strong>Avisos de Android:</strong> los canales con su sonido (y mudos con el sonido apagado), el aviso fijo con la cuenta atrás con el móvil bloqueado, y que vuelvan tras reiniciar el móvil o actualizar PACE. He comprobado que, si Android cerró PACE a la fuerza, un aviso de un Foco ya pasado no sale de golpe días después.</li>
+<li><strong>Avisos del iPhone:</strong> una sola campana al acabar el bloque, el permiso denegado y el aviso que se quita al volver.</li>
+<li><strong>Piezas nativas</strong> (las de Java y las de Swift, leídas enteras): si algo falla, contestan con un error en vez de cerrar la app. El aviso fijo no sale sin permiso y la valoración se pide una sola vez.</li>
+<li><strong>Entre la web y el móvil:</strong> el botón Atrás de Android, el zoom al tocar un campo en el iPhone, Privacidad con «Volver a la app», guardar la copia con el menú de compartir, y los textos de los avisos y del calendario, que dicen «iPhone» o «Android» según dónde estés.</li>
+<li><strong>Calendario:</strong> se pide el permiso al pulsar, nunca al arrancar. De una reunión solo se leen las horas. Solo se borra lo que puso PACE. En un móvil restaurado desde la copia de otro, PACE olvida su lista para no tocar eventos que no son suyos.</li>
+</ul>
+
+<h2>Solo se sabe en el móvil</h2>
+<p>Unos cinco minutos con cada móvil. Si algo no sale como aquí, una captura basta.</p>
+<div class="card">
+<strong>Android</strong>
+<ol>
+<li>Pon un Foco de 1 minuto, bloquea el móvil y espera. Tiene que verse la cuenta atrás en la pantalla bloqueada y sonar la campana de PACE al acabar.</li>
+<li>Ajustes de Android › Apps › PACE › «Alarmas y recordatorios»: mira si está encendido. Apágalo, repite el paso 1 y apunta cuánto tarda el aviso. Después enciéndelo desde «Avisos a su hora ›» en PACE.</li>
+<li>Con un Foco en marcha, activa «No molestar»: el aviso debe llegar sin sonar. Desactívalo.</li>
+<li>Pon un Foco de 3 minutos, reinicia el móvil y no abras PACE: el aviso tiene que llegar igual.</li>
+<li>Abre Ajustes y, dentro, «Tus datos», y toca Atrás: tiene que volver a Ajustes. Otra vez Atrás cierra Ajustes, y en la home PACE se va al fondo sin perder nada.</li>
+</ol>
+</div>
+<div class="card">
+<strong>iPhone</strong>
+<ol>
+<li>Pon un Foco de 1 minuto y bloquea el iPhone: tiene que llegar un solo aviso, con la campana, y al abrir PACE no debe volver a sonar.</li>
+<li>Con el interruptor de silencio puesto, empieza Respira: no tiene que sonar, y tu música de otra app debe seguir.</li>
+<li>Ajustes del iPhone › PACE › Notificaciones: apágalas y vuelve a PACE. En Ajustes de PACE tiene que salir que los avisos están desactivados en el iPhone.</li>
+<li>En «A tu ritmo», «Al calendario»: la pregunta del iPhone sale en castellano y el día aparece en Calendario. Bórralo desde PACE y comprueba que desaparece.</li>
+<li>Toca un campo de texto (por ejemplo, «Otro» en los minutos del Foco, en la home): la página no debe ampliarse.</li>
+</ol>
+</div>
+</main>
+</body>
+</html>
