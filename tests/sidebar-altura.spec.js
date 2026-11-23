@@ -37,12 +37,15 @@
 const { test, expect } = require('@playwright/test');
 const { sembrar, irAlArtefacto } = require('./helpers');
 
+/* Con un logro ganado: sin ninguno el bloque no sale (3B de Ez, 23 nov.) y la columna, más baja,
+   ya cabe a 620. Se mide la barra entera, que es la que aprieta. */
 const ABIERTA = {
   sidebarCollapsed: false,
   lastActiveDay: new Date().toDateString(),
   _historyMigrated: true,
   _weeklyStatsReindexed_v0_28_8: true,
   _historyRecalculated_v0_28_8: true,
+  achievements: { 'first.sip': { unlockedAt: 1736120000000 } },
 };
 
 /* De holgado a apretado. 1000 está por encima del tamaño natural (ahí la escala

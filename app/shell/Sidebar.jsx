@@ -214,8 +214,9 @@ function Sidebar() {
     </div>
   );
 
-  /* El último logro con su rótulo: sin él, un título suelto «se entiende raro». */
-  const seccionLogro = (
+  /* El último logro con su rótulo: sin él, un título suelto «se entiende raro». Sin ninguno ganado
+     el bloque no sale (Ez, 3B del 23 nov. 2026): el primer día era una fila vacía. */
+  const seccionLogro = ultimo ? (
     <div style={sidebarStyles.section} key="logro">
       <div style={sidebarStyles.sectionHeaderCentro}>
         <Meta>{t('sidebar.latest')}</Meta>
@@ -225,7 +226,7 @@ function Sidebar() {
         onOpen={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))}
       />
     </div>
-  );
+  ) : null;
 
   /* La semana va sin rótulo: siete cápsulas con la inicial de cada día ya se leen
      como una semana. El nombre vive en el `aria-label` del botón. */

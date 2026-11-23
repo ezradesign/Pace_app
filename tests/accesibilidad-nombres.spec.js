@@ -65,12 +65,13 @@ test.describe('nombres y estados en la home', () => {
     await expect(modo('Larga')).toHaveAttribute('aria-pressed', 'false');
   });
 
-  test('el último logro de la barra lateral no empieza por un punto', async ({ page, context }) => {
-    await sembrar(context);
+  /* Sin logro la fila ya no sale (3B de Ez, 23 nov.); con uno, el nombre empieza por el suyo y no por el sello. */
+  test('el último logro de la barra lateral se nombra por su título, no por el sello', async ({ page, context }) => {
+    await sembrar(context, { achievements: { 'first.sip': { unlockedAt: 1736120000000 } } });
     await irAlArtefacto(page);
     const boton = page.locator('[data-pace-sidebar-ultimo]').filter({ visible: true });
     await expect(boton).toHaveCount(1);
-    await expect(boton).toHaveAccessibleName(/^Aún no hay ninguno/);
+    await expect(boton).toHaveAccessibleName('Primer sorbo. Ver la colección');
   });
 
   test('el aro del Foco no son imágenes sin nombre: el tiempo lo dice el número', async ({ page, context }) => {

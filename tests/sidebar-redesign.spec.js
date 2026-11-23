@@ -73,8 +73,9 @@ async function sembrarSesion(page, routineId, modulo) {
     null, { timeout: 5000 });
 }
 
+/* Con un logro ganado: sin ninguno, el bloque del último logro no sale (3B de Ez, 23 nov.). */
 async function conUnaSesion(page, context) {
-  await sembrar(context, ABIERTA);
+  await sembrar(context, Object.assign({}, ABIERTA, { achievements: { 'first.breath': { unlockedAt: 1736500000000 } } }));
   await irAlArtefacto(page);
   await sembrarSesion(page, 'breathe.box.4', 'breathe');
   await page.reload();
@@ -251,14 +252,17 @@ test('ni en móvil ni en escritorio hay scroll horizontal', async ({ page, conte
    EL ÚLTIMO LOGRO Y EL PIE
    ========================================================================== */
 
-test('el último logro tiene su rótulo, nombra el más reciente y dice qué lo ganó', async ({ page, context }) => {
+/* EN UNA LÍNEA (Ez, 3B del 23 nov. 2026): el sello pequeño, el nombre y ›; sin ninguno, el bloque no sale. */
+test('el último logro va en una línea con su rótulo, nombra el más reciente y sin ninguno no sale', async ({ page, context }) => {
   /* Sin el rótulo, un título suelto «se entiende raro» (lo dijo el usuario en s180). */
   await sembrar(context, ABIERTA);
   await irAlArtefacto(page);
-  await expect(sb(page).getByText('Último logro', { exact: true })).toHaveCount(1);
-  const vacio = sb(page).locator('[data-pace-sidebar-ultimo]');
-  await expect(vacio).toHaveAttribute('data-pace-sidebar-ultimo', '');
-  await expect(vacio).toContainText('Aún no hay ninguno');
+  await expect(sb(page).locator('[data-pace-semana]')).toBeVisible();
+  await expect(sb(page).locator('[data-pace-sidebar-ultimo]'), 'sin logro, sin fila').toHaveCount(0);
+  await expect(sb(page).getByText('Último logro', { exact: true }), 'ni su rótulo').toHaveCount(0);
+  await expect(sb(page)).not.toContainText('Aún no hay ninguno');
+  const orden = await estructura(page);
+  expect(orden.filter((x, i) => x === 'regla' && orden[i + 1] === 'regla'), 'ni una regla huérfana').toEqual([]);
 
   await sembrarPisando(context, Object.assign({}, ABIERTA, {
     achievements: {
@@ -268,10 +272,16 @@ test('el último logro tiene su rótulo, nombra el más reciente y dice qué lo 
     },
   }));
   await irAlArtefacto(page);
+  await expect(sb(page).getByText('Último logro', { exact: true })).toHaveCount(1);
   const fila = sb(page).locator('[data-pace-sidebar-ultimo]');
   await expect(fila, 'el MÁS RECIENTE, no el primero del objeto').toHaveAttribute('data-pace-sidebar-ultimo', 'first.return');
-  const desc = await page.evaluate(() => (window.ACHIEVEMENT_CATALOG.find(a => a.id === 'first.return') || {}).desc);
-  await expect(fila).toContainText(desc);
+  const cat = await page.evaluate(() => window.ACHIEVEMENT_CATALOG.find(a => a.id === 'first.return'));
+  await expect(fila).toHaveText(new RegExp(cat.title));
+  await expect(fila, 'sin la descripción').not.toContainText(cat.desc);
+  await expect(fila, 'sin el enlace escrito').not.toContainText('Ver la colección');
+  await expect(fila).toHaveAccessibleName(cat.title + '. Ver la colección');
+  const alto = await fila.evaluate((e) => e.getBoundingClientRect().height);
+  expect(alto, 'una línea: el sello de 30').toBeLessThanOrEqual(32);
   await fila.click();
   await expect(page.locator('[data-pace-modal-backdrop]')).toHaveCount(1);
 });

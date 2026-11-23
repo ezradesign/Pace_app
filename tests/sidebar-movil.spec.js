@@ -197,7 +197,9 @@ test.describe('375x844 · donde ya cabía, no se toca', () => {
     const s = await sonda(page);
     expect(s.escala).toBe(1);
     expect(s.escalado).toBe('0');
-    expect(s.cajaVista).toBeCloseTo(s.cajaLayout, 0);
+    /* El alto de layout (offsetHeight) viene redondeado al entero y el visto no: hasta medio píxel es
+       ese redondeo, no una escala (con el logro en una línea el cajón mide 671,5). */
+    expect(Math.abs(s.cajaVista - s.cajaLayout)).toBeLessThanOrEqual(0.5);
     expect(s.desborde).toBe(0);
   });
 });

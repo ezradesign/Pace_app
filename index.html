@@ -29937,15 +29937,13 @@ const sidebarStyles = {
 
 
 
+
   logroFila: { display: 'flex', alignItems: 'center', gap: 12, width: '100%', textAlign: 'left', background: 'none',
     border: 0, padding: 0, cursor: 'pointer', color: 'inherit' },
-  logroSello: { width: 46, height: 46, flex: 'none', border: '1px solid var(--line)', borderRadius: '50%', display: 'grid',
-    placeItems: 'center', color: 'var(--ink-2)', background: 'var(--paper)', fontSize: 16 },
-  logroTexto: { display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 },
-  logroTitulo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, lineHeight: 1.2, color: 'var(--ink)' },
-  logroDesc: { fontFamily: 'var(--font-ui)', fontSize: 11.5, lineHeight: 1.35, color: 'var(--ink-3)' },
-  logroEnlace: { fontFamily: 'var(--font-ui)', fontSize: 11, color: 'var(--ink-3)', textDecoration: 'underline',
-    textUnderlineOffset: 3, marginTop: 2 },
+  logroSello: { width: 30, height: 30, flex: 'none', border: '1px solid var(--line)', borderRadius: '50%', display: 'grid',
+    placeItems: 'center', color: 'var(--ink-2)', background: 'var(--paper)', fontSize: 13 },
+  logroTitulo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, lineHeight: 1.2, color: 'var(--ink)',
+    minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
 
 
   footer: { display: 'flex', flexDirection: 'column', gap: 2, borderTop: '1px solid var(--line)', paddingTop: 8, marginTop: 12 },
@@ -30554,32 +30552,22 @@ function SidebarLibraries(_ref5) {let { onOpen } = _ref5;
 
 
 
+
+
+
 function SidebarLatestAchievement(_ref7) {let { ultimo, onOpen } = _ref7;
   const { t, lang } = useT();
 
 
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
-  const enlace = React.createElement("span", { style: sidebarStyles.logroEnlace }, t('sidebar.collection'));
-  if (!ultimo) {
-    return (
-      React.createElement("button", { style: sidebarStyles.logroFila, onClick: onOpen, "data-pace-sidebar-ultimo": "" },
-      React.createElement("span", { style: { ...sidebarStyles.logroSello, opacity: 0.6 }, "aria-hidden": "true" }, "\xB7"),
-      React.createElement("span", { style: sidebarStyles.logroTexto },
-      React.createElement("span", { style: { ...sidebarStyles.logroTitulo, color: 'var(--ink-3)' } }, t('sidebar.latest.none')),
-      enlace
-      )
-      ));
-
-  }
+  if (!ultimo) return null;
   const mini = achMini(ultimo.id, tR);
   return (
-    React.createElement("button", { style: sidebarStyles.logroFila, onClick: onOpen, title: mini.title, "data-pace-sidebar-ultimo": ultimo.id },
+    React.createElement("button", { style: sidebarStyles.logroFila, onClick: onOpen, title: mini.title,
+      "aria-label": mini.title + '. ' + t('sidebar.collection'), "data-pace-sidebar-ultimo": ultimo.id },
     React.createElement("span", { style: sidebarStyles.logroSello, "aria-hidden": "true" }, mini.nodo),
-    React.createElement("span", { style: sidebarStyles.logroTexto },
     React.createElement("span", { style: sidebarStyles.logroTitulo, "data-pace-sidebar-ultimo-titulo": true }, mini.title),
-    mini.desc ? React.createElement("span", { style: sidebarStyles.logroDesc }, mini.desc) : null,
-    enlace
-    )
+    React.createElement("span", { "aria-hidden": "true", style: sidebarStyles.pieChev }, "\u203A")
     ));
 
 }
@@ -30858,7 +30846,8 @@ function Sidebar() {
 
 
 
-  const seccionLogro =
+
+  const seccionLogro = ultimo ?
   React.createElement("div", { style: sidebarStyles.section, key: "logro" },
   React.createElement("div", { style: sidebarStyles.sectionHeaderCentro },
   React.createElement(Meta, null, t('sidebar.latest'))
@@ -30867,8 +30856,8 @@ function Sidebar() {
     ultimo: ultimo,
     onOpen: () => window.dispatchEvent(new CustomEvent('pace:open-achievements')) }
   )
-  );
-
+  ) :
+  null;
 
 
 

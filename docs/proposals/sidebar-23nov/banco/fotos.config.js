@@ -4,7 +4,7 @@ const path = require('path');
 const base = require('../../../../playwright.config.js');
 module.exports = Object.assign({}, base, {
   testDir: __dirname,
-  testMatch: /fotos\.spec\.js$/,
+  testMatch: /(fotos|medir)\.spec\.js$/,
   globalSetup: undefined,
   projects: [base.projects[0]],
   webServer: Object.assign({}, base.webServer, { cwd: path.resolve(__dirname, '../../../..') }),

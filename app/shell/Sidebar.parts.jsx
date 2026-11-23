@@ -267,36 +267,26 @@ function SidebarLibraries({ onOpen }) {
 }
 
 /* ============================================================
-   ÚLTIMO LOGRO — uno, con su rótulo, su sello, su nombre y lo que lo ganó. La fila
-   entera abre la colección; «Ver la colección» lo dice. El gancho del título es del
-   TÍTULO y no de la fila, que arrastra el glifo cuando es un carácter.
+   ÚLTIMO LOGRO — en una línea (Ez, 3B del 23 nov. 2026): el sello pequeño, el nombre y
+   ›. Enseñaba lo mismo durante días y era el bloque más alto después de Hoy; la
+   descripción y «Ver la colección» se van, y la fila entera sigue abriendo la
+   colección (su nombre accesible lo dice). Sin ningún logro el bloque no sale: lo
+   decide el orquestador (Sidebar.jsx). El gancho del título es del TÍTULO y no de
+   la fila, que arrastra el glifo cuando es un carácter.
    ============================================================ */
 function SidebarLatestAchievement({ ultimo, onOpen }) {
   const { t, lang } = useT();
   /* El mismo `tR` que `Achievements.jsx`: en castellano manda el catálogo y en
      inglés el patch, cayendo al catálogo si la clave aún no está traducida. */
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
-  const enlace = <span style={sidebarStyles.logroEnlace}>{t('sidebar.collection')}</span>;
-  if (!ultimo) {
-    return (
-      <button style={sidebarStyles.logroFila} onClick={onOpen} data-pace-sidebar-ultimo="">
-        <span style={{ ...sidebarStyles.logroSello, opacity: 0.6 }} aria-hidden="true">·</span>
-        <span style={sidebarStyles.logroTexto}>
-          <span style={{ ...sidebarStyles.logroTitulo, color: 'var(--ink-3)' }}>{t('sidebar.latest.none')}</span>
-          {enlace}
-        </span>
-      </button>
-    );
-  }
+  if (!ultimo) return null;
   const mini = achMini(ultimo.id, tR);
   return (
-    <button style={sidebarStyles.logroFila} onClick={onOpen} title={mini.title} data-pace-sidebar-ultimo={ultimo.id}>
+    <button style={sidebarStyles.logroFila} onClick={onOpen} title={mini.title}
+      aria-label={mini.title + '. ' + t('sidebar.collection')} data-pace-sidebar-ultimo={ultimo.id}>
       <span style={sidebarStyles.logroSello} aria-hidden="true">{mini.nodo}</span>
-      <span style={sidebarStyles.logroTexto}>
-        <span style={sidebarStyles.logroTitulo} data-pace-sidebar-ultimo-titulo>{mini.title}</span>
-        {mini.desc ? <span style={sidebarStyles.logroDesc}>{mini.desc}</span> : null}
-        {enlace}
-      </span>
+      <span style={sidebarStyles.logroTitulo} data-pace-sidebar-ultimo-titulo>{mini.title}</span>
+      <span aria-hidden="true" style={sidebarStyles.pieChev}>›</span>
     </button>
   );
 }
