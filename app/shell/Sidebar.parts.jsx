@@ -214,7 +214,7 @@ function SidebarWeek({ semana, onOpen }) {
     : mejor > n ? tn(n === 1 ? 'sidebar.week.rhythm.one' : 'sidebar.week.rhythm', { n, m: mejor })
     : tn(n === 1 ? 'sidebar.week.rhythm.one.sin' : 'sidebar.week.rhythm.sin', { n });
   /* EL NOMBRE ACCESIBLE LLEVA LA RACHA QUE SE VE. Solo con «Ver la semana en Estadísticas», el
-     lector de pantalla y el control por voz no oían «2 días en ritmo · mejor 9», que es lo único
+     lector de pantalla y el control por voz no oían «2 días seguidos · tu mejor, 9», que es lo único
      escrito del bloque (WCAG 2.5.3, la etiqueta contiene lo visible). */
   const nombre = racha ? racha + '. ' + t('sidebar.week.open') : t('sidebar.week.open');
   return (

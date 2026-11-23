@@ -3,7 +3,7 @@
    Lo que la barra dice a quien no la ve, o a quien pasa el ratón:
 
    · El bloque de la semana es UN botón, y su nombre accesible era solo «Ver la semana en
-     Estadísticas»: el lector de pantalla y el control por voz no oían la racha, que es lo
+     Estadísticas»: el lector de pantalla y el control por voz no oían la racha («3 días seguidos · tu mejor, 9»), que es lo
      único escrito del bloque. El nombre lleva ahora lo que se ve (WCAG 2.5.3).
    · El botón de plegar decía «Colapsar (⌘\)» y ese atajo no existe: nadie escucha esa tecla,
      y en Windows ni siquiera hay ⌘. El título ya no promete nada.
@@ -23,8 +23,8 @@ const ABIERTA = {
 };
 
 for (const [lang, racha, abre] of [
-  ['es', '3 días en ritmo · mejor 9', 'Ver la semana en Estadísticas'],
-  ['en', '3 days in rhythm · best 9', 'See the week in Stats'],
+  ['es', '3 días seguidos · tu mejor, 9', 'Ver la semana en Estadísticas'],
+  ['en', '3 days in a row · your best, 9', 'See the week in Stats'],
 ]) {
   test('la semana se nombra con la racha que se ve (' + lang + ')', async ({ page, context }) => {
     await sembrar(context, Object.assign({}, ABIERTA, { lang }));
