@@ -2181,7 +2181,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'sidebar.streak.days': 'días seguidos',
   'sidebar.streak.best': 'Mejor: {n} días',
   'sidebar.status.ontrack': 'En camino',
-  'sidebar.collapse.title': 'Colapsar (⌘\\)',
+  'sidebar.collapse.title': 'Colapsar',
   'sidebar.collapse.aria': 'Colapsar panel',
   'sidebar.logo.title': '¿Le haces cosquillas?',
   'sidebar.counter.pomodoros': 'Pomodoros completados hoy',
@@ -2378,7 +2378,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.streak.days': 'days in a row',
   'sidebar.streak.best': 'Best: {n} days',
   'sidebar.status.ontrack': 'On track',
-  'sidebar.collapse.title': 'Collapse (⌘\\)',
+  'sidebar.collapse.title': 'Collapse',
   'sidebar.collapse.aria': 'Collapse panel',
   'sidebar.logo.title': 'Give the cow a tickle?',
   'sidebar.counter.pomodoros': 'Pomodoros completed today',
@@ -30496,8 +30496,12 @@ function SidebarWeek(_ref4) {let { semana, onOpen } = _ref4;
   const racha = !n ? null :
   mejor > n ? tn(n === 1 ? 'sidebar.week.rhythm.one' : 'sidebar.week.rhythm', { n, m: mejor }) :
   tn(n === 1 ? 'sidebar.week.rhythm.one.sin' : 'sidebar.week.rhythm.sin', { n });
+
+
+
+  const nombre = racha ? racha + '. ' + t('sidebar.week.open') : t('sidebar.week.open');
   return (
-    React.createElement("button", { "data-pace-semana": true, onClick: onOpen, "aria-label": t('sidebar.week.open'), title: t('sidebar.week.open'), style: sidebarStyles.semana },
+    React.createElement("button", { "data-pace-semana": true, onClick: onOpen, "aria-label": nombre, title: t('sidebar.week.open'), style: sidebarStyles.semana },
     React.createElement("span", { style: sidebarStyles.semDias },
     semana.days.map((d, i) => {
       const alto = d.active ? Math.max(8, Math.round(d.minutes / semana.escala * 40)) : 0;
