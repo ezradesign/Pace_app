@@ -370,7 +370,9 @@ const onboardingStyles = {
     display: 'flex', flexDirection: 'column',
     isolation: 'isolate',
     overflow: 'hidden',
-    animation: 'pace-fade-in 320ms ease',
+    /* SIN FUNDIDO EN LA RAÍZ (Ez, 1A del 23 nov. 2026): con él, el papel entraba de 0 a 1 en 320 ms
+       y quien abría PACE por primera vez veía debajo las actividades y «¿Cuánto trabajas hoy?». El
+       papel tapa la home desde el primer cuadro; lo que entra con calma es el texto (data-pace-reveal). */
   },
   header: {
     display: 'flex', alignItems: 'center', justifyContent: 'space-between',

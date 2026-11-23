@@ -408,6 +408,12 @@
    compacta del panel estrecho de escritorio. */
 .pace-rt-preg .pace-rt-titulo { font-size: 20px; line-height: 23px; }
 .pace-rt-preg .pace-rt-mov-cab .pace-rt-enlace { padding: 16px 0 12px; margin: -16px 0 -12px auto; position: relative; z-index: 2; }
+/* «Ahora no» y «Hoy voy por libre» van juntos en la fila del título (Ez, 2A del 23 nov. 2026). Con los
+   huecos de antes (12 + 14 px) a 360 px no cabían por 1 px y bajaban de línea; con 8 + 10 sobran 7, y la
+   letra es la de la app en todas partes. En inglés el título ya ocupa su fila y bajan los dos juntos. */
+.pace-rt-preg .pace-rt-mov-cab { column-gap: 8px; }
+.pace-rt-cab-acc { display: flex; align-items: baseline; column-gap: 10px; margin-left: auto; }
+.pace-rt-preg .pace-rt-mov-cab .pace-rt-cab-acc .pace-rt-enlace { margin-left: 0; }
 .pace-rt-dia { display: grid; grid-template-columns: 1fr auto 1fr; grid-template-rows: 20px 14px 12px; row-gap: 3px; margin-top: 9px; }
 .pace-rt-dia > :nth-child(3n+2) { justify-content: center; }
 .pace-rt-dia > :nth-child(3n) { justify-content: flex-end; }

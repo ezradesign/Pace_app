@@ -145,6 +145,15 @@ function ritmoAbrirPregunta() {
   ritmoGuardar(function () { return { pregunta: ritmoHoy() }; });
 }
 
+/* «AHORA NO» CIERRA LA PREGUNTA (Ez, 2A del 23 nov. 2026): abierta, la pregunta ocupa el sitio de
+   Respira, Estira, Mueve e Hidrátate, y su única salida era «Hoy voy por libre», que además deja de
+   proponerte tu día y quita del calendario las pausas de hoy. «Ahora no» deshace solo lo que la abrió
+   (`pregunta`, o `distinto` de «Hoy es distinto» y de «Ponle ritmo al día») y la home vuelve a la
+   tarjeta corta, o a la de por libre si hoy es libre en tu semana. No toca el día ni el calendario. */
+function ritmoAhoraNo() {
+  ritmoGuardar(function () { return { pregunta: null, distinto: null }; });
+}
+
 /* «HOY, LUNES» LA PRIMERA SEMANA (Ez, 10A del 18 nov. 2026): «Hoy, como cada lunes» el mismo lunes
    en que guardaste la semana no era verdad. Hasta siete días después de guardarla, «Hoy, lunes»;
    después, «como cada». Sin `semanaDesde` (guardada antes de esto), como siempre. `fecha` es la
@@ -170,5 +179,5 @@ function ritmoNombreDia(diaSemana, t) {
 
 Object.assign(window, {
   RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoTramoCon, ritmoOcupadoDe,
-  ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoNombreDia, ritmoTituloHabitual, ritmoPrimeraSemana,
+  ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoAhoraNo, ritmoNombreDia, ritmoTituloHabitual, ritmoPrimeraSemana,
 });

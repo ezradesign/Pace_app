@@ -66,7 +66,8 @@ function HydrateTracker({ open, onClose }) {
 
       {/* Un botón nunca parte su texto: si los dos no caben en una fila, el segundo baja entero. */}
       <div data-pace-hidr-acciones style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' }}>
-        <Button variant="secondary" onClick={() => addWaterGlass(-1)} icon="−" size="md" style={{ whiteSpace: 'nowrap' }}>{t('hydrate.less')}</Button>
+        {/* Con 0 vasos no hay nada que quitar: apagado, no activo y mudo (Ez, 7A del 23 nov. 2026). */}
+        <Button variant="secondary" onClick={() => addWaterGlass(-1)} disabled={today <= 0} icon="−" size="md" style={{ whiteSpace: 'nowrap' }}>{t('hydrate.less')}</Button>
         {/* Relleno de color con la letra del papel: el hondo de Hidrátate (Ez, 3B · 7 nov. 2026). */}
         <Button onClick={() => { addWaterGlass(1); try { playSound(today < goal && today + 1 >= goal ? 'hydrate.goal' : 'hydrate.sip'); } catch (e) {} }} icon="+" size="md"
           style={{ background: 'var(--hydrate-deep)', borderColor: 'var(--hydrate-deep)', whiteSpace: 'nowrap' }}>{t('hydrate.more')}</Button>

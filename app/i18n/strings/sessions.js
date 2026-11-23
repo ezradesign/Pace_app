@@ -138,7 +138,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
     // Breathe Library
     'lib.breathe.title':               'Respiración',
-    'lib.breathe.subtitle':            'Breathwork guiado: pranayamas, coherencia, rondas.',
+    'lib.breathe.subtitle':            'Respiración guiada: pranayamas, coherencia, rondas.',
 
     // CUERPO (Mueve/Estira) -> strings/sessions.body.js  (s148)
     // lib.move.* · lib.extra.* · move.* de sesión · contrato v1 · runner
@@ -177,7 +177,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'hydrate.more':                    'Un vaso más',
     'hydrate.vaso.lleno':              'Vaso {n} de {total}, lleno',
     'hydrate.vaso.vacio':              'Vaso {n} de {total}, vacío',
-    'hydrate.tip.label':               'Tip:',
+    'hydrate.tip.label':               'Consejo:',
     'hydrate.tip':                     'Llena una botella de 500 ml por la mañana y otra después de comer. Dos botellas = 4 vasos. Hecho.',
 
     // BreatheLibrary safety modal

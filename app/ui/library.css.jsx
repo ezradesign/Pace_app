@@ -189,12 +189,8 @@
 }
 .pace-lib-ctx .pace-lib-pre { color: var(--premium-deep); }
 .pace-lib-ctx .pace-lib-soon { color: var(--premium-deep); font-weight: 500; }
-/* La tira: la capitular a 62 px y el resto a 20. El 55 % de opacidad NO valía
-   -- el usuario no los registraba y reportó «sólo muestra un glifo». Si no se
-   leen, no están. */
-.pace-lib-tira { display: flex; gap: 5px; align-items: center; margin: 7px 0 0; opacity: .75; }
+/* La capitular, a 62 px. Sin la tira de los demás glifos a 20 px (Ez, 5A del 23 nov. 2026). */
 .pace-lib-cap { flex-shrink: 0; margin-top: 2px; color: var(--tone); }
-.pace-lib-tira, .pace-lib-tira * { color: var(--tone); }
 .pace-lib-pie {
   margin-top: 7px; font-size: 10.5px; letter-spacing: .1em;
   text-transform: uppercase; color: var(--ink-3);
@@ -311,11 +307,10 @@
      Ahora el margen lo llevan los BLOQUES; los rotulos conservan sus 11 px. */
   .pace-lib-lateral > :not(.pace-lib-lateral-tit) { margin-bottom: 26px; }
   .pace-lib-lateral > :last-child { margin-bottom: 0; }
-  /* en el lateral la tarjeta se compacta: sin descripción, sin series y sin
-     tira -- el lateral orienta, no es catálogo */
+  /* en el lateral la tarjeta se compacta: sin descripción y sin series -- el
+     lateral orienta, no es catálogo */
   .pace-lib-lateral .pace-lib-card p,
-  .pace-lib-lateral .pace-lib-card .pace-lib-pie,
-  .pace-lib-lateral .pace-lib-tira { display: none; }
+  .pace-lib-lateral .pace-lib-card .pace-lib-pie { display: none; }
   .pace-lib-lateral .pace-lib-card h4 { font-size: 17px; }
 }
 /* Las piezas que existen en las DOS pieles pero sólo se pintan en una. Se

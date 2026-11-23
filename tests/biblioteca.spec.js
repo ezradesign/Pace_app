@@ -431,21 +431,19 @@ test('«Tus rutinas» cabe en el lateral y no se sale por la derecha', async ({ 
     .toBeLessThanOrEqual(1);
 });
 
-/* LA TIRA NO REPITE EN PEQUEÑO EL GESTO DE LA CAPITULAR. «Colgarse» alterna la
-   suspension pasiva y la activa: dos dibujos que a 20 px se leen igual, y la
-   tira enseñaba en pequeño lo mismo que la capitular en grande. Ez lo vio en su
-   movil, y despues lo mismo en «Gluteos invisibles», cuyos dos dibujos son
-   figuras de pie que en pequeño se confunden. Control positivo: «Empuje ·
-   progresion» tiene dos ejercicios distintos y su tira tiene que seguir ahi. */
-test('la tira no repite en pequeño el gesto de la capitular', async ({ page }) => {
+/* SIN TIRA DE GLIFOS PEQUEÑOS (Ez, 5A del 23 nov. 2026). A 20 px un cuerpo entero se leía
+   como un trazo suelto («Levántate y sube» enseñaba una raya), y a 32 tampoco se leía: la
+   tarjeta se queda con la capitular, y la línea de series ya dice cuántos ejercicios son.
+   Antes, la tira ya se callaba cuando repetía el gesto de la capitular («Colgarse»,
+   «Glúteos invisibles»); ahora no sale en ninguna, tampoco en Estira. */
+test('las tarjetas de Mueve y Estira llevan la capitular y ninguna tira', async ({ page }) => {
   await irAlArtefacto(page);
   await abrir(page, /^Mueve/);
-  const colgarse = page.locator('[data-pace-lib-card="extra.hang.bar"]').locator('visible=true').first();
-  await expect(colgarse.locator('.pace-lib-cap')).toHaveCount(1);
-  await expect(colgarse.locator('.pace-lib-tira')).toHaveCount(0);
-  const gluteos = page.locator('[data-pace-lib-card="extra.glutes.stealth"]').locator('visible=true').first();
-  await expect(gluteos.locator('.pace-lib-cap')).toHaveCount(1);
-  await expect(gluteos.locator('.pace-lib-tira')).toHaveCount(0);
   const empuje = page.locator('[data-pace-lib-card="extra.push.ladder"]').locator('visible=true').first();
-  await expect(empuje.locator('.pace-lib-tira')).toHaveCount(1);
+  await expect(empuje.locator('.pace-lib-cap')).toHaveCount(1);
+  await expect(page.locator('.pace-lib-tira')).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  await abrir(page, /^Estira/);
+  await expect(page.locator('[data-pace-lib-card] .pace-lib-cap').locator('visible=true').first()).toBeVisible();
+  await expect(page.locator('.pace-lib-tira')).toHaveCount(0);
 });
