@@ -224,7 +224,7 @@ test('pasada la salida el día se cierra, con la página abierta y al recargar, 
   await cta(page).click();
   await terminarBloque(page);
   const ventana = overlaySuperior(page);
-  await expect(ventana).toContainText('Ciclo completado');
+  await expect(ventana).toContainText('Bloque terminado');
   /* Por libre no sale nada de la jornada: ni «Bloque N de M» ni su pausa. La palabra sola no vale: el menú de
      siempre dice «Bloque cerrado. Elige tu pausa.» desde la 7A de Ez (21 nov.). */
   await expect(ventana).not.toContainText(/Bloque \d+ de \d+/);

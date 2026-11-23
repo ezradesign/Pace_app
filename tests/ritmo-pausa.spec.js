@@ -221,7 +221,7 @@ test('en el último bloque la ventana no ofrece seguir con el siguiente', async 
    La pausa de cierre se salta al empezar otra cosa; antes, al acabar ese Foco, `ritmoBloqueTerminado`
    la volvía a abrir y la ventana repetía «Bloque 1 de 1 · hecho» con «Para cerrar, despacio». El
    Foco libre es de 3 min para acabar antes de la salida (13:00): lo de después lo cierra la 1A. */
-test('tras el último bloque, un Foco por libre acaba con «Ciclo completado» y el cierre queda saltado', async ({ page, context }) => {
+test('tras el último bloque, un Foco por libre acaba con «Bloque terminado» y el cierre queda saltado', async ({ page, context }) => {
   const MEDIA = { fecha: '2026-09-18', opcion: 'media', desde: 720, cicloBase: 0, cambios: {} };
   await abrir(page, context, { ritmo: { dia: MEDIA } }, new Date('2026-09-18T12:00:00+02:00'));
   await page.getByRole('button', { name: 'Empezar jornada', exact: true }).click();
@@ -252,7 +252,7 @@ test('tras el último bloque, un Foco por libre acaba con «Ciclo completado» y
   await terminarBloque(page);
   expect(await page.evaluate(() => new Date().getHours() * 60 + new Date().getMinutes()), 'GUARD: el Foco libre acabó pasada la salida').toBeLessThan(13 * 60);
   const ventana = page.locator('[data-pace-modal-backdrop]');
-  await expect(ventana).toContainText('Ciclo completado');
+  await expect(ventana).toContainText('Bloque terminado');
   await expect(ventana, 'la ventana repite la pausa de cierre').not.toContainText('Bloque 1 de 1');
   expect(await page.evaluate(() => Object.values(getState().ritmo.dia.estados || {}))).toEqual(['saltada']);
   expect(await diaDe(), 'el Foco libre recoloca el día terminado').toBe(antes);

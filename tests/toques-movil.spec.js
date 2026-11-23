@@ -100,3 +100,16 @@ test('ajustes, estadísticas y apoyo', async ({ page, context }) => {
   await page.keyboard.press('s');
   await exigir(page, '[data-pace-stats-tabs] > button', 40, 'las pestañas de Estadísticas');
 });
+
+/* Caza del móvil (22 nov. 2026): «Ponle ritmo al día», en Estadísticas › Hoy, se tocaba en 15 px; y
+   Foco, Pausa y Larga, que salen arriba en los móviles altos, en 26. Contra la 0.214.0 cae. */
+test('«Ponle ritmo al día» en Estadísticas, y Foco, Pausa y Larga en un móvil alto', async ({ page, context }) => {
+  await sembrar(context);
+  await irAlArtefacto(page);
+  await page.keyboard.press('s');
+  await exigir(page, '[data-pace-hoy-volver]', 34, '«Ponle ritmo al día»');
+  await page.keyboard.press('Escape');
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(400);
+  for (let i = 0; i < 3; i++) await exigir(page, '[data-pace-tabs] > button', 38, 'Foco, Pausa y Larga (' + (i + 1) + ')', i);
+});

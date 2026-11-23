@@ -135,6 +135,11 @@ function chequeaManifiesto(ctx) {
     malas.push('el complemento de avisos ya no trae la clase LocalNotificationRestoreReceiver');
   }
   malas = malas.concat(faltanEnPace((leer('android/app/src/main/AndroidManifest.xml') || '').toString()));
+  /* SOLO EN VERTICAL, como la web instalada (manifest.webmanifest): girado, el runner escondia la cuenta
+     detras de los botones (Ez, 1A de la caza del movil, 22 nov. 2026). */
+  if (!/android:name="\.MainActivity"[^>]*android:screenOrientation="portrait"/.test((leer('android/app/src/main/AndroidManifest.xml') || '').toString())) {
+    malas.push('la actividad de PACE ya no va solo en vertical (android:screenOrientation="portrait"): girado, el runner esconde la cuenta');
+  }
   if (malas.length) malas.forEach(function (m) { ctx.falla('android: ' + m); });
   else ctx.ok('android: el complemento declara la alarma exacta, los avisos y el arranque, y PACE le suma MY_PACKAGE_REPLACED al receptor que los repone');
 }

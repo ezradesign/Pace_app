@@ -97,4 +97,24 @@ try {
   });
 } catch (e) {}
 
+/* EN EL IPHONE, TOCAR UN CAMPO NO AMPLÍA LA PANTALLA.
+   Safari y el WebView del iPhone amplían la página al enfocar un campo con la letra por debajo de
+   16 px, y no la devuelven al salir: la home se queda ampliada y cortada hasta que se pellizca. Los
+   campos de PACE van a 13-15 px («Otro» en los minutos, el código de PACE completo, la bienvenida,
+   el nombre de una rutina). Con `maximum-scale=1` no amplía al enfocar y, desde iOS 10, se sigue
+   pudiendo ampliar con dos dedos. Solo en el iPhone y el iPad: en Android ese valor sí quitaría el
+   zoom con dos dedos, y allí no amplía al enfocar. Lo mide tests/ios-campo-sin-zoom.spec.js. */
+function paceEsAppleTactil() {
+  var ua = (navigator && navigator.userAgent) || '';
+  /* El iPad con Safari de escritorio dice «Macintosh»: se le reconoce por la pantalla táctil. */
+  return /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && (navigator.maxTouchPoints || 0) > 1);
+}
+try {
+  var _paceVp = document.querySelector('meta[name="viewport"]');
+  var _paceVpTexto = (_paceVp && _paceVp.getAttribute('content')) || '';
+  if (_paceVp && paceEsAppleTactil() && !/maximum-scale/.test(_paceVpTexto)) {
+    _paceVp.setAttribute('content', _paceVpTexto + ', maximum-scale=1');
+  }
+} catch (e) {}
+
 Object.assign(window, { paceMantenerPantalla, paceLuzEstado });
