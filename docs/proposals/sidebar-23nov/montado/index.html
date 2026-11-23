@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La barra, montada</title>
+<style>
+  :root { --papel: #f3ece0; --papel-2: #ebe2d2; --tinta: #2b2620; --tinta-2: #5c5448; --tinta-3: #77705f; --linea: #d8cdb9; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --papel: #1f1c18; --papel-2: #2a2620; --tinta: #eee6d8; --tinta-2: #c4baa8; --tinta-3: #9c937f; --linea: #3d372e; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--papel); color: var(--tinta); font: 16px/1.55 Georgia, 'Times New Roman', serif; }
+  main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-size: 32px; font-style: italic; font-weight: 400; margin: 0 0 6px; }
+  p, li { color: var(--tinta-2); max-width: 760px; }
+  .rotulo { font: 11px/1.4 system-ui, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--tinta-3); }
+  .fila { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 18px 0; align-items: start; }
+  figure { margin: 0; }
+  figure img { width: 100%; height: auto; display: block; border: 1px solid var(--linea); border-radius: 8px; }
+  figcaption { font-size: 14px; color: var(--tinta-3); margin-top: 6px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="rotulo">PACE · 23 nov. 2026 · rama claude/sidebar-mejoras-23nov-bceb9a · sin juntar</div>
+  <h1>La barra lateral, con 1C 2A 3B 4B 5A</h1>
+  <ul>
+    <li><b>1C</b>: como estaba; el encogido no se toca.</li>
+    <li><b>2A</b>: tras sumar un vaso, «Un vaso más. Deshacer» durante cinco segundos; «Deshacer» lo quita.</li>
+    <li><b>3B</b>: el último logro en una línea; sin ninguno, el bloque no sale.</li>
+    <li><b>4B</b>: «2 días seguidos · tu mejor, 9».</li>
+    <li><b>5A</b>: Ctrl + \ (⌘ + \ en el Mac) pliega y despliega la barra; los títulos lo dicen. No se ve en las fotos.</li>
+  </ul>
+  <div class="fila">
+    <figure><img src="barra-es-deshacer.jpg" alt="Barra con Deshacer"><figcaption>Justo después de sumar un vaso</figcaption></figure>
+    <figure><img src="barra-es-libre.jpg" alt="Barra por libre"><figcaption>Por libre, cinco segundos después</figcaption></figure>
+    <figure><img src="barra-es-primer-dia.jpg" alt="El primer día"><figcaption>El primer día: sin logro, sin bloque</figcaption></figure>
+    <figure><img src="barra-es-jornada-1366.jpg" alt="Día de jornada a 1366"><figcaption>Día de jornada, 1366 × 768</figcaption></figure>
+    <figure><img src="barra-en-oscuro-undo.jpg" alt="Inglés y oscuro"><figcaption>Inglés, oscuro: «One more. Undo»</figcaption></figure>
+  </div>
+  <div class="fila">
+    <figure><img src="cajon-es-deshacer.jpg" alt="Cajón con Deshacer"><figcaption>Cajón, 360 × 640</figcaption></figure>
+    <figure><img src="cajon-es-primer-dia.jpg" alt="Cajón el primer día"><figcaption>Cajón, el primer día</figcaption></figure>
+    <figure><img src="cajon-en-oscuro-jornada.jpg" alt="Cajón en inglés y oscuro"><figcaption>Cajón, inglés, oscuro, día de jornada</figcaption></figure>
+  </div>
+  <figure><img src="ventana-1280-es.jpg" alt="La ventana entera a 1280"><figcaption>La ventana entera a 1280 × 720</figcaption></figure>
+  <p>Medido: el título de logro más largo ocupa el 70 % de su línea, y a «Un vaso más. Deshacer» le sobran 23 px hasta
+  «+ vaso» en el caso más justo. Nada queda al borde (entre sistemas la letra baila hasta 7 px).</p>
+</main>
+</body>
+</html>

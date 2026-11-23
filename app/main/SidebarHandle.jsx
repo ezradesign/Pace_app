@@ -22,7 +22,7 @@ function SidebarHandle({ onOpen }) {
       ref={ref}
       data-pace-sidebar-open
       onClick={onOpen}
-      title={t('sidebar.open.title')}
+      title={t('sidebar.open.title').replace('{k}', typeof paceAtajoBarra === 'function' ? paceAtajoBarra() : 'Ctrl + \\')}
       aria-label={t('sidebar.open.aria')}
       style={{
         position: 'fixed', top: 16, left: 14, zIndex: 50,

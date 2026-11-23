@@ -2181,7 +2181,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'sidebar.streak.days': 'días seguidos',
   'sidebar.streak.best': 'Mejor: {n} días',
   'sidebar.status.ontrack': 'En camino',
-  'sidebar.collapse.title': 'Colapsar (⌘\\)',
+  'sidebar.collapse.title': 'Colapsar ({k})',
   'sidebar.collapse.aria': 'Colapsar panel',
   'sidebar.logo.title': '¿Le haces cosquillas?',
   'sidebar.counter.pomodoros': 'Pomodoros completados hoy',
@@ -2191,7 +2191,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'sidebar.trail.hitos': 'hitos',
   'sidebar.trail.now': 'ahora',
   'sidebar.days': 'L,M,X,J,V,S,D',
-  'sidebar.open.title': 'Abrir panel',
+  'sidebar.open.title': 'Abrir panel ({k})',
   'sidebar.open.aria': 'Abrir panel',
   'sidebar.dialog.aria': 'Panel',
 
@@ -2206,14 +2206,17 @@ Object.assign(window.PACE_STRINGS.es, {
   'sidebar.agua.meta': '{x} del día',
   'sidebar.agua.meta.x': 'Los {m} vasos',
   'sidebar.agua.mas': '+ vaso',
+  'sidebar.agua.otro': 'Un vaso más.',
+  'sidebar.agua.deshacer': 'Deshacer',
+  'sidebar.agua.deshacer.title': 'Quitar el vaso que acabas de sumar',
   'sidebar.open.module': 'Abrir {m}',
   'sidebar.water.add': 'Añadir un vaso',
   'sidebar.week': 'Esta semana',
-  'sidebar.week.rhythm': '{n} días en ritmo · mejor {m}',
-  'sidebar.week.rhythm.one': '1 día en ritmo · mejor {m}',
-  'sidebar.week.none': 'Sin días todavía · mejor {m}',
-  'sidebar.week.rhythm.sin': '{n} días en ritmo',
-  'sidebar.week.rhythm.one.sin': '1 día en ritmo',
+  'sidebar.week.rhythm': '{n} días seguidos · tu mejor, {m}',
+  'sidebar.week.rhythm.one': '1 día seguido · tu mejor, {m}',
+  'sidebar.week.none': 'Sin días todavía · tu mejor, {m}',
+  'sidebar.week.rhythm.sin': '{n} días seguidos',
+  'sidebar.week.rhythm.one.sin': '1 día seguido',
   'sidebar.week.open': 'Ver la semana en Estadísticas',
   'sidebar.action.continue': 'Continúa',
   'sidebar.action.repeat': 'Repetir',
@@ -2233,7 +2236,6 @@ Object.assign(window.PACE_STRINGS.es, {
   'sidebar.libraries': 'Bibliotecas',
   'sidebar.mine': 'Tus rutinas',
   'sidebar.latest': 'Último logro',
-  'sidebar.latest.none': 'Aún no hay ninguno',
   'sidebar.collection': 'Ver la colección',
   'sidebar.support': 'Apoyar PACE',
   'sidebar.empty': 'Tu día empieza en blanco. Lo que hagas se queda aquí.',
@@ -2378,7 +2380,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.streak.days': 'days in a row',
   'sidebar.streak.best': 'Best: {n} days',
   'sidebar.status.ontrack': 'On track',
-  'sidebar.collapse.title': 'Collapse (⌘\\)',
+  'sidebar.collapse.title': 'Collapse ({k})',
   'sidebar.collapse.aria': 'Collapse panel',
   'sidebar.logo.title': 'Give the cow a tickle?',
   'sidebar.counter.pomodoros': 'Pomodoros completed today',
@@ -2388,7 +2390,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.trail.hitos': 'milestones',
   'sidebar.trail.now': 'now',
   'sidebar.days': 'Mo,Tu,We,Th,Fr,Sa,Su',
-  'sidebar.open.title': 'Open panel',
+  'sidebar.open.title': 'Open panel ({k})',
   'sidebar.open.aria': 'Open panel',
   'sidebar.dialog.aria': 'Panel',
 
@@ -2401,14 +2403,17 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.agua.meta': '{x} today',
   'sidebar.agua.meta.x': 'All {m} glasses',
   'sidebar.agua.mas': '+ glass',
+  'sidebar.agua.otro': 'One more.',
+  'sidebar.agua.deshacer': 'Undo',
+  'sidebar.agua.deshacer.title': 'Remove the glass you just added',
   'sidebar.open.module': 'Open {m}',
   'sidebar.water.add': 'Add a glass',
   'sidebar.week': 'This week',
-  'sidebar.week.rhythm': '{n} days in rhythm · best {m}',
-  'sidebar.week.rhythm.one': '1 day in rhythm · best {m}',
-  'sidebar.week.none': 'No days yet · best {m}',
-  'sidebar.week.rhythm.sin': '{n} days in rhythm',
-  'sidebar.week.rhythm.one.sin': '1 day in rhythm',
+  'sidebar.week.rhythm': '{n} days in a row · your best, {m}',
+  'sidebar.week.rhythm.one': '1 day in a row · your best, {m}',
+  'sidebar.week.none': 'No days yet · your best, {m}',
+  'sidebar.week.rhythm.sin': '{n} days in a row',
+  'sidebar.week.rhythm.one.sin': '1 day in a row',
   'sidebar.week.open': 'See the week in Stats',
   'sidebar.action.continue': 'Continue',
   'sidebar.action.repeat': 'Repeat',
@@ -2428,7 +2433,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.libraries': 'Libraries',
   'sidebar.mine': 'Your routines',
   'sidebar.latest': 'Latest achievement',
-  'sidebar.latest.none': 'None yet',
   'sidebar.collection': 'See the collection',
   'sidebar.support': 'Support PACE',
   'sidebar.empty': 'Your day starts blank. Whatever you do stays here.',
@@ -29924,6 +29928,13 @@ const sidebarStyles = {
 
   lineaAgua: { width: '100%', textAlign: 'left', background: 'none', border: 0, padding: 0, cursor: 'pointer' },
 
+
+  aguaFila: { position: 'relative' },
+  deshacerHueco: { visibility: 'hidden', whiteSpace: 'nowrap' },
+  deshacer: { position: 'absolute', zIndex: 1, margin: 0, padding: 0, border: 0, background: 'none', cursor: 'pointer',
+    fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, lineHeight: 1.25, color: 'var(--ink-2)',
+    whiteSpace: 'nowrap', textDecoration: 'underline', textUnderlineOffset: 3, textDecorationThickness: 1 },
+
   vaso: { marginLeft: 'auto', flex: 'none', fontFamily: 'var(--font-ui)', fontStyle: 'normal', fontSize: 11, lineHeight: 1.2,
     color: 'var(--hydrate-deep)', border: '1px solid var(--hydrate-deep)', borderRadius: 'var(--r-pill)', padding: '3px 9px',
     whiteSpace: 'nowrap', background: 'var(--hydrate-soft)' },
@@ -29960,15 +29971,13 @@ const sidebarStyles = {
 
 
 
+
   logroFila: { display: 'flex', alignItems: 'center', gap: 12, width: '100%', textAlign: 'left', background: 'none',
     border: 0, padding: 0, cursor: 'pointer', color: 'inherit' },
-  logroSello: { width: 46, height: 46, flex: 'none', border: '1px solid var(--line)', borderRadius: '50%', display: 'grid',
-    placeItems: 'center', color: 'var(--ink-2)', background: 'var(--paper)', fontSize: 16 },
-  logroTexto: { display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 },
-  logroTitulo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, lineHeight: 1.2, color: 'var(--ink)' },
-  logroDesc: { fontFamily: 'var(--font-ui)', fontSize: 11.5, lineHeight: 1.35, color: 'var(--ink-3)' },
-  logroEnlace: { fontFamily: 'var(--font-ui)', fontSize: 11, color: 'var(--ink-3)', textDecoration: 'underline',
-    textUnderlineOffset: 3, marginTop: 2 },
+  logroSello: { width: 30, height: 30, flex: 'none', border: '1px solid var(--line)', borderRadius: '50%', display: 'grid',
+    placeItems: 'center', color: 'var(--ink-2)', background: 'var(--paper)', fontSize: 13 },
+  logroTitulo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, lineHeight: 1.2, color: 'var(--ink)',
+    minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
 
 
   footer: { display: 'flex', flexDirection: 'column', gap: 2, borderTop: '1px solid var(--line)', paddingTop: 8, marginTop: 12 },
@@ -30382,8 +30391,44 @@ function SidebarFrase(_ref) {let { plantilla, x } = _ref;
 
 
 
-function SidebarToday(_ref2) {let { hoy, enBlanco, onWater } = _ref2;
+
+
+
+
+
+
+
+
+const SIDEBAR_DESHACER_MS = 5000;
+
+function SidebarToday(_ref2) {let { hoy, enBlanco, onWater, onUndo } = _ref2;
   const { t, tn, lang } = useT();
+  const [deshacer, setDeshacer] = React.useState(false);
+  const plazo = React.useRef(null);
+  const hueco = React.useRef(null);
+  const [sitio, setSitio] = React.useState(null);
+  React.useEffect(() => () => clearTimeout(plazo.current), []);
+
+  const puedeDeshacer = deshacer && hoy.waterGlasses > 0;
+  React.useLayoutEffect(() => {
+    const h = hueco.current;
+    const s = h ? { left: h.offsetLeft, top: h.offsetTop, height: h.offsetHeight } : null;
+    setSitio((v) => {
+      if (!s) return null;
+      return v && v.left === s.left && v.top === s.top && v.height === s.height ? v : s;
+    });
+  });
+  const sumar = () => {
+    onWater();
+    setDeshacer(true);
+    clearTimeout(plazo.current);
+    plazo.current = setTimeout(() => setDeshacer(false), SIDEBAR_DESHACER_MS);
+  };
+  const quitar = () => {
+    clearTimeout(plazo.current);
+    setDeshacer(false);
+    if (onUndo) onUndo();
+  };
   const linea = (modulo, glifo, color, minutos, clave) => minutos ?
   React.createElement("p", { key: modulo, "data-pace-hoy-celda": true, "data-modulo": modulo, "data-cero": "0", style: sidebarStyles.linea },
   React.createElement("span", { "data-pace-hoy-ic": true, style: { ...sidebarStyles.lineaIc, color } }, glifo),
@@ -30399,16 +30444,29 @@ function SidebarToday(_ref2) {let { hoy, enBlanco, onWater } = _ref2;
     linea('focus', React.createElement(ABFocus, null), 'var(--focus)', hoy.focusMinutes, 'sidebar.hoy.focus'),
     linea('breathe', React.createElement(ABBreathe, null), 'var(--breathe)', hoy.breatheMinutes, 'sidebar.hoy.breathe'),
     linea('body', React.createElement(ABMove, null), 'var(--move)', hoy.bodyMinutes, 'sidebar.hoy.body'),
+    React.createElement("div", { "data-pace-agua": true, style: sidebarStyles.aguaFila },
     React.createElement("button", {
       "data-pace-hoy-celda": true, "data-modulo": "water", "data-cero": hoy.waterGlasses ? '0' : '1',
-      onClick: onWater,
-      "aria-label": fraseAgua + '. ' + t('sidebar.water.add'),
+      onClick: sumar,
+      "aria-label": (puedeDeshacer ? t('sidebar.agua.otro') + ' ' : '') + fraseAgua + '. ' + t('sidebar.water.add'),
       title: t('sidebar.water.add'),
       style: { ...sidebarStyles.linea, ...sidebarStyles.lineaAgua } },
 
     React.createElement("span", { "data-pace-hoy-ic": true, style: { ...sidebarStyles.lineaIc, color: 'var(--hydrate)' } }, React.createElement(ABDrop, null)),
+    puedeDeshacer ?
+    React.createElement("span", { "data-pace-agua-otro": true },
+    React.createElement("b", { style: sidebarStyles.tinta }, t('sidebar.agua.otro')), ' ',
+    React.createElement("span", { ref: hueco, "aria-hidden": "true", style: sidebarStyles.deshacerHueco }, t('sidebar.agua.deshacer'))
+    ) :
     React.createElement(SidebarFrase, { plantilla: tn(agua.clave, { m: agua.m }), x: xAgua }),
     React.createElement("span", { "data-pace-hoy-vaso": true, "aria-hidden": "true", style: sidebarStyles.vaso }, t('sidebar.agua.mas'))
+    ),
+    puedeDeshacer && sitio ?
+    React.createElement("button", { "data-pace-agua-deshacer": true, onClick: quitar, title: t('sidebar.agua.deshacer.title'),
+      style: { ...sidebarStyles.deshacer, left: sitio.left, top: sitio.top, height: sitio.height } },
+    t('sidebar.agua.deshacer')
+    ) :
+    null
     )
     ));
 
@@ -30523,8 +30581,12 @@ function SidebarWeek(_ref4) {let { semana, onOpen } = _ref4;
   const racha = !n ? null :
   mejor > n ? tn(n === 1 ? 'sidebar.week.rhythm.one' : 'sidebar.week.rhythm', { n, m: mejor }) :
   tn(n === 1 ? 'sidebar.week.rhythm.one.sin' : 'sidebar.week.rhythm.sin', { n });
+
+
+
+  const nombre = racha ? racha + '. ' + t('sidebar.week.open') : t('sidebar.week.open');
   return (
-    React.createElement("button", { "data-pace-semana": true, onClick: onOpen, "aria-label": t('sidebar.week.open'), title: t('sidebar.week.open'), style: sidebarStyles.semana },
+    React.createElement("button", { "data-pace-semana": true, onClick: onOpen, "aria-label": nombre, title: t('sidebar.week.open'), style: sidebarStyles.semana },
     React.createElement("span", { style: sidebarStyles.semDias },
     semana.days.map((d, i) => {
       const alto = d.active ? Math.max(8, Math.round(d.minutes / semana.escala * 40)) : 0;
@@ -30577,32 +30639,22 @@ function SidebarLibraries(_ref5) {let { onOpen } = _ref5;
 
 
 
+
+
+
 function SidebarLatestAchievement(_ref7) {let { ultimo, onOpen } = _ref7;
   const { t, lang } = useT();
 
 
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
-  const enlace = React.createElement("span", { style: sidebarStyles.logroEnlace }, t('sidebar.collection'));
-  if (!ultimo) {
-    return (
-      React.createElement("button", { style: sidebarStyles.logroFila, onClick: onOpen, "data-pace-sidebar-ultimo": "" },
-      React.createElement("span", { style: { ...sidebarStyles.logroSello, opacity: 0.6 }, "aria-hidden": "true" }, "\xB7"),
-      React.createElement("span", { style: sidebarStyles.logroTexto },
-      React.createElement("span", { style: { ...sidebarStyles.logroTitulo, color: 'var(--ink-3)' } }, t('sidebar.latest.none')),
-      enlace
-      )
-      ));
-
-  }
+  if (!ultimo) return null;
   const mini = achMini(ultimo.id, tR);
   return (
-    React.createElement("button", { style: sidebarStyles.logroFila, onClick: onOpen, title: mini.title, "data-pace-sidebar-ultimo": ultimo.id },
+    React.createElement("button", { style: sidebarStyles.logroFila, onClick: onOpen, title: mini.title,
+      "aria-label": mini.title + '. ' + t('sidebar.collection'), "data-pace-sidebar-ultimo": ultimo.id },
     React.createElement("span", { style: sidebarStyles.logroSello, "aria-hidden": "true" }, mini.nodo),
-    React.createElement("span", { style: sidebarStyles.logroTexto },
     React.createElement("span", { style: sidebarStyles.logroTitulo, "data-pace-sidebar-ultimo-titulo": true }, mini.title),
-    mini.desc ? React.createElement("span", { style: sidebarStyles.logroDesc }, mini.desc) : null,
-    enlace
-    )
+    React.createElement("span", { "aria-hidden": "true", style: sidebarStyles.pieChev }, "\u203A")
     ));
 
 }
@@ -30712,6 +30764,28 @@ function Sidebar() {
   usePaceDialogo(asideRef, enCajon, { onEscape: plegar });
 
   const toggle = () => collapsed ? set({ sidebarCollapsed: false }) : plegar();
+
+
+
+
+
+
+
+
+  React.useEffect(function () {
+    const alTeclear = function (e) {
+      if (!(e.ctrlKey || e.metaKey) || e.isComposing || e.defaultPrevented) return;
+      if (e.key !== '\\' && e.code !== 'Backslash') return;
+      if (esCajon()) return;
+      const tg = e.target || {};
+      if (tg.isContentEditable || tg.tagName === 'INPUT' || tg.tagName === 'TEXTAREA' || tg.tagName === 'SELECT') return;
+      if (document.querySelector('[data-pace-session-root], [aria-modal="true"]:not([data-pace-modal-card])')) return;
+      e.preventDefault();
+      setState({ sidebarCollapsed: !getState().sidebarCollapsed });
+    };
+    window.addEventListener('keydown', alTeclear);
+    return function () {window.removeEventListener('keydown', alTeclear);};
+  }, []);
 
 
 
@@ -30856,7 +30930,8 @@ function Sidebar() {
   React.createElement(SidebarToday, {
     hoy: hoy,
     enBlanco: enBlanco,
-    onWater: () => {try {addWaterGlass(1);} catch (e) {}} }
+    onWater: () => {try {addWaterGlass(1);} catch (e) {}},
+    onUndo: () => {try {addWaterGlass(-1);} catch (e) {}} }
   )
   );
 
@@ -30882,7 +30957,8 @@ function Sidebar() {
 
 
 
-  const seccionLogro =
+
+  const seccionLogro = ultimo ?
   React.createElement("div", { style: sidebarStyles.section, key: "logro" },
   React.createElement("div", { style: sidebarStyles.sectionHeaderCentro },
   React.createElement(Meta, null, t('sidebar.latest'))
@@ -30891,8 +30967,8 @@ function Sidebar() {
     ultimo: ultimo,
     onOpen: () => window.dispatchEvent(new CustomEvent('pace:open-achievements')) }
   )
-  );
-
+  ) :
+  null;
 
 
 
@@ -30912,7 +30988,7 @@ function Sidebar() {
   return (
     React.createElement("aside", _extends({ ref: asideRef, style: enCajon ? { ...sidebarStyles.root, outline: 'none' } : sidebarStyles.root, "data-pace-sidebar": true, "data-escalado": "0" },
     enCajon ? { role: 'dialog', 'aria-modal': 'true', 'aria-label': t('sidebar.dialog.aria'), tabIndex: -1 } : {}),
-    React.createElement("button", { onClick: toggle, style: sidebarStyles.toggleFloating, "data-pace-sidebar-toggle": true, title: t('sidebar.collapse.title'), "aria-label": t('sidebar.collapse.aria') },
+    React.createElement("button", { onClick: toggle, style: sidebarStyles.toggleFloating, "data-pace-sidebar-toggle": true, title: t('sidebar.collapse.title').replace('{k}', paceAtajoBarra()), "aria-label": t('sidebar.collapse.aria') },
     React.createElement(ChevronLeftIcon, null)
     ),
 
@@ -30979,6 +31055,14 @@ function esCajon() {
   return typeof paceEsMovil === 'function' ? paceEsMovil() : false;
 }
 
+
+
+function paceAtajoBarra() {
+  let p = '';
+  try {p = navigator.userAgentData && navigator.userAgentData.platform || navigator.platform || '';} catch (e) {p = '';}
+  return (/mac|iphone|ipad/i.test(p) ? '⌘' : 'Ctrl') + ' + \\';
+}
+
 function fechaCortaSidebar(lang) {
   try {
 
@@ -30991,8 +31075,8 @@ function fechaCortaSidebar(lang) {
   }
 }
 
-Object.assign(window, { Sidebar, fechaCortaSidebar, esCajon });
-;Object.assign(window, { _extends, Sidebar, esCajon, fechaCortaSidebar });
+Object.assign(window, { Sidebar, fechaCortaSidebar, esCajon, paceAtajoBarra });
+;Object.assign(window, { _extends, Sidebar, esCajon, paceAtajoBarra, fechaCortaSidebar });
 })();
 </script>
   <script>
@@ -31176,6 +31260,15 @@ const PACE_NOVEDADES = [
 
   en: [
   'With your day served, the minutes you pick above the ring stay until you start the block.']
+  id: 'barra-deshacer-vaso',
+  desde: '2026-11-24',
+  es: [
+  'Si sumas un vaso sin querer desde el panel, «Deshacer» lo quita durante unos segundos.',
+  'El panel dice «2 días seguidos», el último logro ocupa una línea, y en el ordenador Ctrl + \\ lo pliega y lo despliega.'],
+
+  en: [
+  'If you add a glass by mistake from the panel, “Undo” takes it back for a few seconds.',
+  'The panel says “2 days in a row”, the latest achievement takes one line, and on a computer Ctrl + \\ folds and unfolds it.']
 
 },
 {
@@ -56363,7 +56456,7 @@ function SidebarHandle(_ref) {let { onOpen } = _ref;
       ref: ref,
       "data-pace-sidebar-open": true,
       onClick: onOpen,
-      title: t('sidebar.open.title'),
+      title: t('sidebar.open.title').replace('{k}', typeof paceAtajoBarra === 'function' ? paceAtajoBarra() : 'Ctrl + \\'),
       "aria-label": t('sidebar.open.aria'),
       style: {
         position: 'fixed', top: 16, left: 14, zIndex: 50,

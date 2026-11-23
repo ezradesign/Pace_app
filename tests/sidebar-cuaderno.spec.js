@@ -158,15 +158,28 @@ test('cada cápsula se llena con los minutos de su día, contra el mejor de la s
   expect(r.dias.map((d) => d.futuro)).toEqual(['0', '0', '0', '0', '1', '1', '1']);
 });
 
-test('la racha con palabras, y «mejor» solo si hay un mejor', async ({ page, context }) => {
+/* La racha dice «seguidos» y «tu mejor» (Ez, 4B del 23 nov. 2026): «en ritmo» se leía como días con
+   el plan de «A tu ritmo» cumplido, y cuenta los días seguidos con algo hecho. */
+test('la racha con palabras, y «tu mejor» solo si hay un mejor', async ({ page, context }) => {
   await abrirDiaServido(page, context);
   const semana = sb(page).locator('[data-pace-semana]');
-  await expect(semana).toContainText('4 días en ritmo · mejor 9');
-  await page.evaluate(() => setState({ streak: Object.assign({}, getState().streak, { current: 3, longest: 3 }) }));
-  await expect(semana).toContainText('3 días en ritmo');
+  const racha = (current, longest) => page.evaluate(([c, l]) => setState({ streak: Object.assign({}, getState().streak, { current: c, longest: l }) }), [current, longest]);
+  await expect(semana).toContainText('4 días seguidos · tu mejor, 9');
+  await racha(3, 3);
+  await expect(semana).toContainText('3 días seguidos');
   await expect(semana).not.toContainText('mejor');
-  await page.evaluate(() => setState({ streak: Object.assign({}, getState().streak, { current: 1, longest: 5 }) }));
-  await expect(semana).toContainText('1 día en ritmo · mejor 5');
+  await racha(1, 5);
+  await expect(semana).toContainText('1 día seguido · tu mejor, 5');
+  await racha(1, 1);
+  await expect(semana).toContainText('1 día seguido');
+  await expect(semana).not.toContainText('mejor');
+  await page.evaluate(() => setState({ lang: 'en' }));
+  await expect(semana).toContainText('1 day in a row');
+  await racha(2, 9);
+  await expect(semana).toContainText('2 days in a row · your best, 9');
+  await racha(1, 4);
+  await expect(semana).toContainText('1 day in a row · your best, 4');
+  await expect(semana).not.toContainText('rhythm');
 });
 
 /* ==========================================================================

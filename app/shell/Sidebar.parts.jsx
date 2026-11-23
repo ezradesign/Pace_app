@@ -71,9 +71,45 @@ function SidebarFrase({ plantilla, x }) {
    del día y se hace sin abrir nada. Es la única fila que ACTÚA, y su «+ vaso» lo
    dice; no es un segundo botón, así que el objetivo es la fila entera.
    Sin nada hecho, la frase del día en blanco.
+
+   UN VASO DE MÁS SE DESHACE AQUÍ (Ez, 2A del 23 nov. 2026). La fila entera suma, así
+   que un toque sin querer es fácil, y quitarlo pedía encontrar Hidrátate. Durante
+   `SIDEBAR_DESHACER_MS` tras sumar, la frase dice «Un vaso más. Deshacer» en su mismo
+   sitio: junto a «+ vaso» no cabe nada sin partir la frase (medido). «Deshacer» es su
+   propio botón, HERMANO del de sumar y no dentro (un botón no puede llevar otro): va
+   encima del hueco que la frase le guarda, con la misma letra, y se coloca midiendo ese
+   hueco. El resto de la fila sigue sumando, y cada vaso nuevo vuelve a contar el plazo.
    ============================================================ */
-function SidebarToday({ hoy, enBlanco, onWater }) {
+const SIDEBAR_DESHACER_MS = 5000;
+
+function SidebarToday({ hoy, enBlanco, onWater, onUndo }) {
   const { t, tn, lang } = useT();
+  const [deshacer, setDeshacer] = React.useState(false);
+  const plazo = React.useRef(null);
+  const hueco = React.useRef(null);
+  const [sitio, setSitio] = React.useState(null);
+  React.useEffect(() => () => clearTimeout(plazo.current), []);
+  /* Sin vasos no hay nada que deshacer (otra pestaña, el cambio de día). */
+  const puedeDeshacer = deshacer && hoy.waterGlasses > 0;
+  React.useLayoutEffect(() => {
+    const h = hueco.current;
+    const s = h ? { left: h.offsetLeft, top: h.offsetTop, height: h.offsetHeight } : null;
+    setSitio((v) => {
+      if (!s) return null;
+      return v && v.left === s.left && v.top === s.top && v.height === s.height ? v : s;
+    });
+  });
+  const sumar = () => {
+    onWater();
+    setDeshacer(true);
+    clearTimeout(plazo.current);
+    plazo.current = setTimeout(() => setDeshacer(false), SIDEBAR_DESHACER_MS);
+  };
+  const quitar = () => {
+    clearTimeout(plazo.current);
+    setDeshacer(false);
+    if (onUndo) onUndo();
+  };
   const linea = (modulo, glifo, color, minutos, clave) => (minutos ? (
     <p key={modulo} data-pace-hoy-celda data-modulo={modulo} data-cero="0" style={sidebarStyles.linea}>
       <span data-pace-hoy-ic style={{ ...sidebarStyles.lineaIc, color }}>{glifo}</span>
@@ -89,17 +125,30 @@ function SidebarToday({ hoy, enBlanco, onWater }) {
       {linea('focus', <ABFocus />, 'var(--focus)', hoy.focusMinutes, 'sidebar.hoy.focus')}
       {linea('breathe', <ABBreathe />, 'var(--breathe)', hoy.breatheMinutes, 'sidebar.hoy.breathe')}
       {linea('body', <ABMove />, 'var(--move)', hoy.bodyMinutes, 'sidebar.hoy.body')}
-      <button
-        data-pace-hoy-celda data-modulo="water" data-cero={hoy.waterGlasses ? '0' : '1'}
-        onClick={onWater}
-        aria-label={fraseAgua + '. ' + t('sidebar.water.add')}
-        title={t('sidebar.water.add')}
-        style={{ ...sidebarStyles.linea, ...sidebarStyles.lineaAgua }}
-      >
-        <span data-pace-hoy-ic style={{ ...sidebarStyles.lineaIc, color: 'var(--hydrate)' }}><ABDrop /></span>
-        <SidebarFrase plantilla={tn(agua.clave, { m: agua.m })} x={xAgua} />
-        <span data-pace-hoy-vaso aria-hidden="true" style={sidebarStyles.vaso}>{t('sidebar.agua.mas')}</span>
-      </button>
+      <div data-pace-agua style={sidebarStyles.aguaFila}>
+        <button
+          data-pace-hoy-celda data-modulo="water" data-cero={hoy.waterGlasses ? '0' : '1'}
+          onClick={sumar}
+          aria-label={(puedeDeshacer ? t('sidebar.agua.otro') + ' ' : '') + fraseAgua + '. ' + t('sidebar.water.add')}
+          title={t('sidebar.water.add')}
+          style={{ ...sidebarStyles.linea, ...sidebarStyles.lineaAgua }}
+        >
+          <span data-pace-hoy-ic style={{ ...sidebarStyles.lineaIc, color: 'var(--hydrate)' }}><ABDrop /></span>
+          {puedeDeshacer ? (
+            <span data-pace-agua-otro>
+              <b style={sidebarStyles.tinta}>{t('sidebar.agua.otro')}</b>{' '}
+              <span ref={hueco} aria-hidden="true" style={sidebarStyles.deshacerHueco}>{t('sidebar.agua.deshacer')}</span>
+            </span>
+          ) : <SidebarFrase plantilla={tn(agua.clave, { m: agua.m })} x={xAgua} />}
+          <span data-pace-hoy-vaso aria-hidden="true" style={sidebarStyles.vaso}>{t('sidebar.agua.mas')}</span>
+        </button>
+        {puedeDeshacer && sitio ? (
+          <button data-pace-agua-deshacer onClick={quitar} title={t('sidebar.agua.deshacer.title')}
+            style={{ ...sidebarStyles.deshacer, left: sitio.left, top: sitio.top, height: sitio.height }}>
+            {t('sidebar.agua.deshacer')}
+          </button>
+        ) : null}
+      </div>
     </div>
   );
 }
@@ -213,8 +262,12 @@ function SidebarWeek({ semana, onOpen }) {
   const racha = !n ? null
     : mejor > n ? tn(n === 1 ? 'sidebar.week.rhythm.one' : 'sidebar.week.rhythm', { n, m: mejor })
     : tn(n === 1 ? 'sidebar.week.rhythm.one.sin' : 'sidebar.week.rhythm.sin', { n });
+  /* EL NOMBRE ACCESIBLE LLEVA LA RACHA QUE SE VE. Solo con «Ver la semana en Estadísticas», el
+     lector de pantalla y el control por voz no oían «2 días seguidos · tu mejor, 9», que es lo único
+     escrito del bloque (WCAG 2.5.3, la etiqueta contiene lo visible). */
+  const nombre = racha ? racha + '. ' + t('sidebar.week.open') : t('sidebar.week.open');
   return (
-    <button data-pace-semana onClick={onOpen} aria-label={t('sidebar.week.open')} title={t('sidebar.week.open')} style={sidebarStyles.semana}>
+    <button data-pace-semana onClick={onOpen} aria-label={nombre} title={t('sidebar.week.open')} style={sidebarStyles.semana}>
       <span style={sidebarStyles.semDias}>
         {semana.days.map((d, i) => {
           const alto = d.active ? Math.max(8, Math.round(d.minutes / semana.escala * 40)) : 0;
@@ -263,36 +316,26 @@ function SidebarLibraries({ onOpen }) {
 }
 
 /* ============================================================
-   ÚLTIMO LOGRO — uno, con su rótulo, su sello, su nombre y lo que lo ganó. La fila
-   entera abre la colección; «Ver la colección» lo dice. El gancho del título es del
-   TÍTULO y no de la fila, que arrastra el glifo cuando es un carácter.
+   ÚLTIMO LOGRO — en una línea (Ez, 3B del 23 nov. 2026): el sello pequeño, el nombre y
+   ›. Enseñaba lo mismo durante días y era el bloque más alto después de Hoy; la
+   descripción y «Ver la colección» se van, y la fila entera sigue abriendo la
+   colección (su nombre accesible lo dice). Sin ningún logro el bloque no sale: lo
+   decide el orquestador (Sidebar.jsx). El gancho del título es del TÍTULO y no de
+   la fila, que arrastra el glifo cuando es un carácter.
    ============================================================ */
 function SidebarLatestAchievement({ ultimo, onOpen }) {
   const { t, lang } = useT();
   /* El mismo `tR` que `Achievements.jsx`: en castellano manda el catálogo y en
      inglés el patch, cayendo al catálogo si la clave aún no está traducida. */
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
-  const enlace = <span style={sidebarStyles.logroEnlace}>{t('sidebar.collection')}</span>;
-  if (!ultimo) {
-    return (
-      <button style={sidebarStyles.logroFila} onClick={onOpen} data-pace-sidebar-ultimo="">
-        <span style={{ ...sidebarStyles.logroSello, opacity: 0.6 }} aria-hidden="true">·</span>
-        <span style={sidebarStyles.logroTexto}>
-          <span style={{ ...sidebarStyles.logroTitulo, color: 'var(--ink-3)' }}>{t('sidebar.latest.none')}</span>
-          {enlace}
-        </span>
-      </button>
-    );
-  }
+  if (!ultimo) return null;
   const mini = achMini(ultimo.id, tR);
   return (
-    <button style={sidebarStyles.logroFila} onClick={onOpen} title={mini.title} data-pace-sidebar-ultimo={ultimo.id}>
+    <button style={sidebarStyles.logroFila} onClick={onOpen} title={mini.title}
+      aria-label={mini.title + '. ' + t('sidebar.collection')} data-pace-sidebar-ultimo={ultimo.id}>
       <span style={sidebarStyles.logroSello} aria-hidden="true">{mini.nodo}</span>
-      <span style={sidebarStyles.logroTexto}>
-        <span style={sidebarStyles.logroTitulo} data-pace-sidebar-ultimo-titulo>{mini.title}</span>
-        {mini.desc ? <span style={sidebarStyles.logroDesc}>{mini.desc}</span> : null}
-        {enlace}
-      </span>
+      <span style={sidebarStyles.logroTitulo} data-pace-sidebar-ultimo-titulo>{mini.title}</span>
+      <span aria-hidden="true" style={sidebarStyles.pieChev}>›</span>
     </button>
   );
 }

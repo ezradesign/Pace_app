@@ -188,6 +188,13 @@ const sidebarStyles = {
   lineaIc:   { width: 16, height: 16, flex: 'none', display: 'inline-grid', placeItems: 'center' },
   /* La línea del agua es un botón: hereda la línea y se quita lo de botón. */
   lineaAgua: { width: '100%', textAlign: 'left', background: 'none', border: 0, padding: 0, cursor: 'pointer' },
+  /* «Un vaso más. Deshacer» (Ez, 2A del 23 nov. 2026): «Deshacer» es un botón aparte, colocado sobre el hueco
+     que la frase le guarda (deshacerHueco, invisible y con la misma letra), así que mide lo mismo. */
+  aguaFila:      { position: 'relative' },
+  deshacerHueco: { visibility: 'hidden', whiteSpace: 'nowrap' },
+  deshacer:      { position: 'absolute', zIndex: 1, margin: 0, padding: 0, border: 0, background: 'none', cursor: 'pointer',
+                   fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, lineHeight: 1.25, color: 'var(--ink-2)',
+                   whiteSpace: 'nowrap', textDecoration: 'underline', textUnderlineOffset: 3, textDecorationThickness: 1 },
   /* «+ vaso» es letra: en el hondo de Hidrátate, con su filo (Ez, 2B · 7 nov. 2026); la gota sigue en --hydrate. */
   vaso:      { marginLeft: 'auto', flex: 'none', fontFamily: 'var(--font-ui)', fontStyle: 'normal', fontSize: 11, lineHeight: 1.2,
                color: 'var(--hydrate-deep)', border: '1px solid var(--hydrate-deep)', borderRadius: 'var(--r-pill)', padding: '3px 9px',
@@ -223,17 +230,15 @@ const sidebarStyles = {
               color: 'var(--ink)', background: 'none', border: 0, cursor: 'pointer' },
   puertaIc: { width: 18, height: 18, flex: 'none', display: 'inline-grid', placeItems: 'center' },
 
-  /* EL ÚLTIMO LOGRO: sello de 46 con el trazo legible (la hoja lo pinta a 1,2 px:
-     a 26 px «Ciclo completo» era un círculo vacío), nombre, descripción y enlace. */
+  /* EL ÚLTIMO LOGRO, EN UNA LÍNEA (Ez, 3B del 23 nov. 2026): sello de 30 con el trazo legible (la hoja lo
+     pinta a 1,2 px: a 26 px «Ciclo completo» era un círculo vacío), nombre y ›. El título no parte línea:
+     el más largo del catálogo en inglés cabe con el sello (medido en la rama). */
   logroFila:   { display: 'flex', alignItems: 'center', gap: 12, width: '100%', textAlign: 'left', background: 'none',
                  border: 0, padding: 0, cursor: 'pointer', color: 'inherit' },
-  logroSello:  { width: 46, height: 46, flex: 'none', border: '1px solid var(--line)', borderRadius: '50%', display: 'grid',
-                 placeItems: 'center', color: 'var(--ink-2)', background: 'var(--paper)', fontSize: 16 },
-  logroTexto:  { display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 },
-  logroTitulo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, lineHeight: 1.2, color: 'var(--ink)' },
-  logroDesc:   { fontFamily: 'var(--font-ui)', fontSize: 11.5, lineHeight: 1.35, color: 'var(--ink-3)' },
-  logroEnlace: { fontFamily: 'var(--font-ui)', fontSize: 11, color: 'var(--ink-3)', textDecoration: 'underline',
-                 textUnderlineOffset: 3, marginTop: 2 },
+  logroSello:  { width: 30, height: 30, flex: 'none', border: '1px solid var(--line)', borderRadius: '50%', display: 'grid',
+                 placeItems: 'center', color: 'var(--ink-2)', background: 'var(--paper)', fontSize: 13 },
+  logroTitulo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, lineHeight: 1.2, color: 'var(--ink)',
+                 minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
 
   /* EL PIE: dos filas de texto y la versión. */
   footer:     { display: 'flex', flexDirection: 'column', gap: 2, borderTop: '1px solid var(--line)', paddingTop: 8, marginTop: 12 },

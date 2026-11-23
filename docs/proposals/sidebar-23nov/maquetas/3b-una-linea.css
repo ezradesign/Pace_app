@@ -1,0 +1,4 @@
+/* 3B · El último logro en una línea: sello pequeño, nombre y ›. Sin ninguno, el bloque no sale. */
+[data-pace-sidebar-ultimo] [data-pace-sidebar-ultimo-titulo] ~ span { display: none !important; }
+[data-pace-sidebar-ultimo] > span:first-child { width: 30px !important; height: 30px !important; }
+[data-pace-sidebar-ultimo]:not([data-pace-sidebar-ultimo=""])::after { content: '›'; margin-left: auto; color: var(--ink-3); font-size: 14px; }

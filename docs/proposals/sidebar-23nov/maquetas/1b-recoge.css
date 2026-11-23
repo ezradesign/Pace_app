@@ -1,0 +1,8 @@
+/* 1B · En ventanas bajas, con el suelo de 1A, antes se recoge lo que es adorno: el logo, a la mitad,
+   y el último logro, en una línea. Así hace falta menos desplazarse. */
+@media (max-height: 640px) and (min-width: 641px) {
+  [data-pace-sidebar] [data-pace-sidebar-logo] { width: 58% !important; margin: 0 auto !important; }
+  [data-pace-sidebar] [data-pace-sidebar-logobar] { margin-bottom: -6px !important; }
+  [data-pace-sidebar-ultimo] [data-pace-sidebar-ultimo-titulo] ~ span { display: none !important; }
+  [data-pace-sidebar-ultimo] > span:first-child { width: 30px !important; height: 30px !important; }
+}
