@@ -261,7 +261,9 @@ test('ingles-12 · la pausa de «A tu ritmo» habla inglés natural', async ({ p
 test('ingles-14 · ni «seal» ni «badge»: la barra dice «Latest achievement», como «Último logro»', async ({ page, context }) => {
   await sembrar(context, EN);
   await irAlArtefacto(page);
-  await expect(page.getByText('Latest achievement', { exact: true }).first()).toBeVisible();
+  /* Sin logros, el bloque ya no sale (3B de Ez, 23 nov.): se mira el texto del rótulo, no que se vea. */
+  expect(await page.evaluate(() => Object.values(window.PACE_STRINGS.en).includes('Latest achievement')),
+    'el rótulo del último logro en inglés no es «Latest achievement»').toBe(true);
   const raros = await page.evaluate(() => Object.entries(window.PACE_STRINGS.en)
     .filter(([, v]) => /\b(seals?|badges?)\b/i.test(String(v))).map(([k, v]) => k + ' = ' + v));
   expect(raros, 'quedan textos en inglés con «seal» o «badge»').toEqual([]);
