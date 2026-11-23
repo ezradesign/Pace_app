@@ -30175,8 +30175,12 @@ function selectSidebarPrimaryAction(state, ctx) {
 
 
   if (c.conRitmo) return null;
+
+
+
   const last = selectSidebarLastSession(c.events);
-  if (last && last.routineId) {
+  const abre = (id) => typeof c.puede !== 'function' || c.puede(id);
+  if (last && last.routineId && abre(last.routineId)) {
     return {
       kind: 'repeat',
       targetId: last.routineId,
@@ -30791,7 +30795,8 @@ function Sidebar() {
   const R = typeof ritmoDe === 'function' ? ritmoDe(state) : null;
   const conRitmo = !!(R && !R.libre && (R.dia || R.propuesta));
   const accion = selectSidebarPrimaryAction(state,
-  { events: eventos, sugerencia: sugerencia, reanudable: reanudable, ritmo: ritmo, conRitmo: conRitmo });
+  { events: eventos, sugerencia: sugerencia, reanudable: reanudable, ritmo: ritmo, conRitmo: conRitmo,
+    puede: function (id) {return !window.canAccessRoutine || window.canAccessRoutine(id);} });
   const vistaAccion = sidebarActionView(accion, t, tn, lang);
 
 
@@ -36099,6 +36104,9 @@ function leerRespiraGuardada(ahora) {
     if (respiraDiaLocal(g.savedAt) !== respiraDiaLocal(t)) return null;
     const rutina = window.getBreatheRoutine && window.getBreatheRoutine(g.routineId);
     if (!rutina) return null;
+
+
+    if (window.canAccessRoutine && !window.canAccessRoutine(g.routineId)) return null;
     if (respiraVivaFuera(t)) return null;
 
 
@@ -56451,6 +56459,8 @@ function usePaceEventos(acciones) {
         return;
       }
       if ((d.kind === 'repeat' || d.kind === 'suggest') && d.targetId) {
+
+        if (window.canAccessRoutine && !window.canAccessRoutine(d.targetId)) return;
 
         const b = window.getBreatheRoutine && window.getBreatheRoutine(d.targetId);
         if (b) {a.empezarRespira(b);return;}

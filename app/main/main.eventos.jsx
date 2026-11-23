@@ -101,6 +101,8 @@ function usePaceEventos(acciones) {
         return;
       }
       if ((d.kind === 'repeat' || d.kind === 'suggest') && d.targetId) {
+        /* La puerta mira también el guard: la tarjeta ya no ofrece lo cerrado, y esto lo asegura. */
+        if (window.canAccessRoutine && !window.canAccessRoutine(d.targetId)) return;
         /* El módulo se le pregunta al CATÁLOGO, nunca al prefijo del id (s172). */
         const b = window.getBreatheRoutine && window.getBreatheRoutine(d.targetId);
         if (b) { a.empezarRespira(b); return; }
