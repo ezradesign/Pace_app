@@ -317,14 +317,19 @@ function RitmoMovil({ state, plan, onVer }) {
   /* Tras el último bloque, con el cierre contando, no hay bloque: solo la fila «Ahora» del cierre. */
   const luego = b ? ritmoDetras(plan.m, b) : null;
   const conPausa = !!(plan.pausa && !plan.pausaPasada);
+  /* EN PLENA COMIDA (Ez, 1A del 22 nov. 2026), como el aro y la línea: «Ahora» es la comida y «Luego» el
+     bloque. Decía «Ahora · 15:00 · Foco · bloque 1 de 3» a las 14:20. */
+  const enComida = !conPausa && typeof ritmoComidaEnCurso === 'function' ? ritmoComidaEnCurso(plan) : null;
   /* Las filas cambian: el motor de la home decide YA, antes de pintar, si «Luego» cabe (Ez, 1 A2;
      home-geometry.medidas.js). Así no se ve un fotograma con «Luego» que luego se esconde. */
   useLayoutEffectRP(() => {
     if (typeof window.paceHomeGeometriaYa === 'function') window.paceHomeGeometriaYa();
-  }, [conPausa, !!luego, plan.hechos, plan.m.opcion]);
+  }, [conPausa, !!enComida, !!luego, plan.hechos, plan.m.opcion]);
   const filas = conPausa
     ? <React.Fragment><RitmoFilaParada it={plan.pausa} rotulo="ritmo.ahora" corta
         hecha={(plan.estados || {})[ritmoOrdinal(plan.m, plan.pausa)] === 'hecha'} />{b ? filaBloque('ritmo.luego') : null}</React.Fragment>
+    : enComida
+    ? <React.Fragment><RitmoFilaParada it={enComida} rotulo="ritmo.ahora" corta />{b ? filaBloque('ritmo.luego') : null}</React.Fragment>
     : <React.Fragment>{filaBloque('ritmo.ahora')}{luego ? <RitmoFilaParada it={luego} rotulo="ritmo.luego" corta /> : null}</React.Fragment>;
   return (
     <div className="pace-rt-panel pace-rt-mov" data-pace-ritmo-estado="menu">

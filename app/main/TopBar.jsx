@@ -66,6 +66,9 @@ function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
       flexShrink: 0,
       minHeight: 56,
     }}>
+      {/* Un encabezado solo para el lector de pantalla: la app no tenía ninguno (los de la landing
+          van ocultos), y quien navega por encabezados no encontraba por dónde entrar. No se ve. */}
+      <h1 data-pace-app-titulo style={topBarStyles.soloLector}>{paceTituloApp(state.lang)}</h1>
       {/* Tabs centrados (según referencia) */}
       <div data-pace-tabs style={{
         position: 'absolute', left: '50%', top: '50%',
@@ -163,6 +166,7 @@ function topBarPregunta(p, t, tn) {
 }
 
 const topBarStyles = {
+  soloLector: { position: 'absolute', width: 1, height: 1, margin: -1, padding: 0, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap', border: 0 },
   iconBtn: {
     width: 36, height: 36,
     display: 'grid', placeItems: 'center',

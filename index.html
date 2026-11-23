@@ -2134,7 +2134,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'welcome.greeting': 'Bienvenida',
   'welcome.tagline': 'Antídoto a la silla.',
   'welcome.tagline.sub': 'A tu ritmo.',
-  'welcome.lede': 'Micro-pausas de foco, respiración, movilidad e hidratación. Sin gamificación ni notificaciones abrumadoras.',
+  'welcome.lede': 'Micro-pausas de foco, respiración, movilidad e hidratación. Sin rachas que castigan.',
   'welcome.value.local.label': 'Todo local',
   'welcome.value.local.sub': 'en tu navegador',
   'welcome.value.local.sub.app': 'en tu móvil',
@@ -2331,7 +2331,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'welcome.greeting': 'Welcome',
   'welcome.tagline': 'The antidote to sitting.',
   'welcome.tagline.sub': 'At your pace.',
-  'welcome.lede': 'Micro-breaks for focus, breathing, mobility and hydration. No gamification, no overwhelming notifications.',
+  'welcome.lede': 'Micro-breaks for focus, breathing, mobility and hydration. No streaks that punish you.',
   'welcome.value.local.label': 'Stored locally',
   'welcome.value.local.sub': 'in your browser',
   'welcome.value.local.sub.app': 'on your phone',
@@ -2598,6 +2598,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'mini.fin': 'Foco terminado',
   'mini.fin.sub': 'Vuelve a PACE para tu pausa',
   'mini.volver': 'Volver',
+  'mini.espera.sub': 'Vuelve a PACE para el bloque {n}',
   'mini.abrir': 'Miniventana',
   'mini.abrir.aria': 'Abrir la miniventana, encima de todas las ventanas',
   'focus.continue': 'Continuar',
@@ -2822,6 +2823,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'mini.fin': 'Focus done',
   'mini.fin.sub': 'Back to PACE for your break',
   'mini.volver': 'Back',
+  'mini.espera.sub': 'Back to PACE for block {n}',
   'mini.abrir': 'Mini window',
   'mini.abrir.aria': 'Open the mini window, on top of every window',
   'focus.continue': 'Continue',
@@ -5606,7 +5608,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.grip.squeeze.s4.instruction.care': 'You will feel a gentle stretch over the wrist. No pressing one hand into the other.',
 
   'extra.posture.set.name': 'Posture Reset',
-  'extra.posture.set.desc': 'Chin tucks, scapular squeeze, thoracic ext.',
+  'extra.posture.set.desc': 'Chin, shoulder blades and chest. Four moves against the chair.',
   'extra.posture.set.code': 'Posture',
   'extra.posture.set.s0.name': 'Chin tucks',
   'extra.posture.set.s0.instruction.setup': 'Sit up tall, shoulders loose, gaze forward.',
@@ -14889,7 +14891,7 @@ function ritmoAro(s, t, tn) {
   return {
     label: tn('ritmo.aro.bloque', { n: k, m: p.total }),
     hasta: tn('ritmo.aro.hasta', { h: ritmoHora(p.m.hasta) }),
-    empezar: k === 1 ? t('ritmo.aro.empezar') : tn('ritmo.aro.siguiente', { n: k })
+    empezar: k === 1 ? t('ritmo.aro.empezar') : tn('ritmo.aro.siguiente', { n: k }), n: k
   };
 }
 
@@ -15479,8 +15481,22 @@ function ritmoComidaSinEmpezar(m, t) {
   return null;
 }
 
-Object.assign(window, { ritmoDesdeSinEmpezar, ritmoMirarSinEmpezar, ritmoDurSiEmpiezas, ritmoLeerTrasLaPausa, ritmoComidaSinEmpezar });
-;Object.assign(window, { ritmoDesdeSinEmpezar, ritmoLeerTrasLaPausa, _ritmoSinEmpezarVisto, ritmoMirarSinEmpezar, ritmoDurSiEmpiezas, ritmoComidaSinEmpezar });
+
+
+
+
+function ritmoComidaEnCurso(p, t) {
+  if (!p || !p.m || p.cerrado) return null;
+  if (t == null) t = ritmoAhoraExacto();
+  for (var i = 0; i < p.m.items.length; i++) {
+    var it = p.m.items[i];
+    if (it.tipo === 'comida' && it.dur > 0 && it.desde <= t && t < it.desde + it.dur) return it;
+  }
+  return null;
+}
+
+Object.assign(window, { ritmoDesdeSinEmpezar, ritmoMirarSinEmpezar, ritmoDurSiEmpiezas, ritmoLeerTrasLaPausa, ritmoComidaSinEmpezar, ritmoComidaEnCurso });
+;Object.assign(window, { ritmoDesdeSinEmpezar, ritmoLeerTrasLaPausa, _ritmoSinEmpezarVisto, ritmoMirarSinEmpezar, ritmoDurSiEmpiezas, ritmoComidaSinEmpezar, ritmoComidaEnCurso });
 })();
 </script>
   <script>
@@ -34064,7 +34080,46 @@ function aroCerrado(s, t, tn) {
 
 
 
-function aroJornada(_ref) {let { state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa, porLibre } = _ref;
+
+
+
+
+
+const { useState: useStateAroC, useEffect: useEffectAroC } = React;
+function aroComida(state, aro, status) {
+  if (!aro || status === 'running' || status === 'paused' || typeof ritmoComidaEnCurso !== 'function') return null;
+  const c = ritmoComidaEnCurso(ritmoPlan(state));
+  if (!c) return null;
+  const fin = new Date();fin.setHours(Math.floor((c.desde + c.dur) / 60), (c.desde + c.dur) % 60, 0, 0);
+  return { hasta: c.desde + c.dur, queda: Math.max(0, Math.round((fin.getTime() - Date.now()) / 1000)) };
+}
+function useAroComida(state, aro, status) {
+  const c = aroComida(state, aro, status);
+  const [, repinta] = useStateAroC(0);
+  useEffectAroC(() => {
+    if (!c) return undefined;
+    const id = setInterval(() => repinta((x) => x + 1), 1000);
+    return () => clearInterval(id);
+  }, [!!c]);
+  return c;
+}
+
+const aroEnlaceEstilo = { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minHeight: 44, padding: '8px 6px',
+  whiteSpace: 'nowrap', background: 'none', border: 0, boxShadow: 'none', cursor: 'pointer', color: 'var(--ink-2)',
+  fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, fontWeight: 400, textDecoration: 'underline', textUnderlineOffset: 3 };
+
+
+
+function aroJornada(_ref) {let { state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa, porLibre, comida } = _ref;
+  if (comida && aro) {
+    const p = ritmoPlan(state);
+    const q = tn('ritmo.aro.despues.bloque', { n: aro.n }) + (p && p.actual ? ' · ' + ritmoDuracion(p.actual.dur) : '');
+    return {
+      enlace: true,
+      cta: { label: tn('ritmo.pausa.ya', { n: aro.n }) },
+      fila: React.createElement("span", { className: "pace-aro-despues", "data-pace-aro-despues": true }, tn('ritmo.aro.despues', { q }))
+    };
+  }
   if (enPausaRitmo) {
     const plato = aroPlatoPendiente(state);
     if (!plato) return {};
@@ -34132,8 +34187,8 @@ function AroFila(_ref2) {let { cycle, cycleLabel, oculta, fila } = _ref2;
   document.head.appendChild(s);
 })();
 
-Object.assign(window, { aroJornada, aroPausaTerminada, aroPlatoPendiente, aroDespues, aroCerrado, AroFila });
-;Object.assign(window, { aroPlatoPendiente, aroPausaTerminada, aroDespues, aroCerrado, aroJornada, AroFila });
+Object.assign(window, { aroJornada, aroComida, useAroComida, aroEnlaceEstilo, aroPausaTerminada, aroPlatoPendiente, aroDespues, aroCerrado, AroFila });
+;Object.assign(window, { aroPlatoPendiente, aroPausaTerminada, aroDespues, aroCerrado, aroComida, useAroComida, aroJornada, AroFila });
 })();
 </script>
   <!-- Los avisos del móvil: el fin del bloque y el fin de la pausa. Antes de FocusTimer.jsx. -->
@@ -34497,8 +34552,13 @@ function MiniTira(p) {
   const color = fin ? 'var(--breathe)' : 'var(--focus)';
   const r = 18.5,vuelta = 2 * Math.PI * r;
   const etiqueta = p.modo === 'foco' ? t('focus.mode.focus') : p.modo === 'pausa' ? t('focus.mode.pause') : t('focus.mode.long');
+
+
+
+
+  const espera = !fin && p.espera ? p.espera : null;
   let boton = null;
-  if (fin) boton = React.createElement("button", { type: "button", style: { ...miniTiraStyles.boton, ...miniTiraStyles.botonFin }, onClick: () => {try {window.focus();} catch (e) {}} }, t('mini.volver'));else
+  if (fin || espera) boton = React.createElement("button", { type: "button", style: { ...miniTiraStyles.boton, ...miniTiraStyles.botonFin }, onClick: () => {try {window.focus();} catch (e) {}} }, t('mini.volver'));else
   if (p.ritmo) boton = null;else
   if (p.status === 'running') boton = React.createElement("button", { type: "button", style: miniTiraStyles.boton, onClick: p.onPausar }, t('focus.pause'));else
   if (p.status === 'paused') boton = React.createElement("button", { type: "button", style: miniTiraStyles.boton, onClick: p.onSeguir }, t('focus.continue'));
@@ -34510,10 +34570,10 @@ function MiniTira(p) {
       strokeDasharray: (vuelta * hecho).toFixed(1) + ' ' + vuelta.toFixed(1), transform: "rotate(-90 20 20)" })
     ),
     React.createElement("div", { style: miniTiraStyles.txt },
-    React.createElement("span", { style: fin ? { ...miniTiraStyles.hora, ...miniTiraStyles.horaFin } : miniTiraStyles.hora },
-    fin ? t('mini.fin') : dos(Math.floor(queda / 60)) + ':' + dos(queda % 60)
+    React.createElement("span", { style: fin || espera ? { ...miniTiraStyles.hora, ...miniTiraStyles.horaFin } : miniTiraStyles.hora },
+    fin ? t('mini.fin') : espera ? espera.titulo : dos(Math.floor(queda / 60)) + ':' + dos(queda % 60)
     ),
-    React.createElement("span", { style: miniTiraStyles.sub }, fin ? t('mini.fin.sub') : etiqueta + (p.modo === 'foco' && p.ciclo ? ' · ' + p.ciclo : ''))
+    React.createElement("span", { style: miniTiraStyles.sub }, fin ? t('mini.fin.sub') : espera ? t('mini.espera.sub').replace('{n}', espera.n) : etiqueta + (p.modo === 'foco' && p.ciclo ? ' · ' + p.ciclo : ''))
     ),
     boton,
     React.createElement("span", { style: { ...miniTiraStyles.linea, width: (hecho * 100).toFixed(1) + '%', background: color } })
@@ -34746,19 +34806,19 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
   const aro = state.focusMode === 'foco' && typeof ritmoAro === 'function' ? ritmoAro(state, t, tn) : null;
-  const cerrada = !aro && state.focusMode === 'foco' && status !== 'running' && status !== 'paused' && typeof aroCerrado === 'function' ? aroCerrado(state, t, tn) : null;
+  const comidaAro = useAroComida(state, aro, status);const cerrada = !comidaAro && !aro && state.focusMode === 'foco' && status !== 'running' && status !== 'paused' && typeof aroCerrado === 'function' ? aroCerrado(state, t, tn) : null;
   const siguienteDelPlan = status === 'completed' && !!aro;
-  const mostrado = siguienteDelPlan ? durationSec : remaining;
+  const mostrado = comidaAro ? comidaAro.queda : siguienteDelPlan ? durationSec : remaining;
   const mins = Math.floor(mostrado / 60);
   const secs = mostrado % 60;
-  const totalSec = durationSec;
+  const totalSec = comidaAro ? Math.max(1, mostrado) : durationSec;
   const progress = 1 - mostrado / totalSec;
 
 
 
 
 
-  const modeLabel = aro ? aro.label : cerrada ? cerrada.label : state.focusMode === 'foco' ? t('focus.manual.label') :
+  const modeLabel = comidaAro ? t('ritmo.comida') : aro ? aro.label : cerrada ? cerrada.label : state.focusMode === 'foco' ? t('focus.manual.label') :
   enPausaRitmo && pausaRitmo.cierre ? t('ritmo.aro.cierre') : state.focusMode === 'pausa' ? t('focus.mode.pause') :
   t('focus.mode.long');
 
@@ -34780,7 +34840,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
 
-  const subtitle = bloques.subtitulo ? bloques.subtitulo :
+  const subtitle = comidaAro ? t('ritmo.comida.lejos') : bloques.subtitulo ? bloques.subtitulo :
   enPausaRitmo ? pausaRitmo.cierre ? t('ritmo.cierre.luego') : tn('ritmo.pausa.luego', { n: pausaRitmo.n, m: pausaRitmo.de }) :
   aro && aroPausaTerminada(state) ? t('ritmo.aro.pausaTerminada') : cerrada && cerrada.sub ? cerrada.sub :
   isFocoMode ?
@@ -34891,7 +34951,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   }
 
   const porLibre = () => {reset();ritmoPorLibre();};
-  const jornada = aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa, porLibre });
+  const jornada = aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa, porLibre, comida: comidaAro });
   if (jornada.cta) {ctaLabel = jornada.cta.label;ctaAction = jornada.cta.action || ctaAction;}
 
 
@@ -34901,7 +34961,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
   const cycleN = state.cycle % 4 + 1;
-  const mini = useMiniventana({ status, endsAt, restanteMs, total: durationSec, modo: state.focusMode, ciclo: aro ? aro.label : tn('focus.cycleOf', { n: cycleN }), ritmo: enPausaRitmo, t, onPausar: handlePause, onSeguir: handleNormalStart });
+  const mini = useMiniventana({ status, endsAt, restanteMs, total: durationSec, modo: state.focusMode, ciclo: aro ? aro.label : tn('focus.cycleOf', { n: cycleN }), ritmo: enPausaRitmo, espera: aro && aro.n > 1 && status !== 'running' && status !== 'paused' ? { titulo: aroPausaTerminada(state) ? t('ritmo.aro.pausaTerminada') : aro.label, n: aro.n } : null, t, onPausar: handlePause, onSeguir: handleNormalStart });
   const cycleLabel = isFocoMode && isCompleted ?
   tn('focus.cycleNext', { n: cycleN }) :
   tn('focus.cycleOf', { n: cycleN });
@@ -34915,7 +34975,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   React.createElement("button", {
     "data-pace-cta": true,
     onClick: ctaAction,
-    style: running && !jornada.lleno ? focusStyles.startBtnSecondary : focusStyles.startBtnPrimary },
+    style: jornada.enlace ? aroEnlaceEstilo : running && !jornada.lleno ? focusStyles.startBtnSecondary : focusStyles.startBtnPrimary },
 
   ctaLabel
   ),
@@ -34992,7 +35052,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
       progress: progress,
       mode: state.focusMode,
       modeLabel: modeLabel,
-      hasta: aro ? aro.hasta : cerrada ? cerrada.hecho : null,
+      hasta: comidaAro ? tn('ritmo.hasta', { h: ritmoHora(comidaAro.hasta) }) : aro ? aro.hasta : cerrada ? cerrada.hecho : null,
       subtitle: subtitle,
       inner: isAro ? innerForAro : null,
       running: running,
@@ -40175,7 +40235,7 @@ const EXTRA_ROUTINES = {
     },
 
 
-    { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Recolocar la postura', desc: 'Barbilla, omóplatos y pecho. Tres gestos contra la silla.', min: 2,
+    { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Recolocar la postura', desc: 'Barbilla, omóplatos y pecho. Cuatro gestos contra la silla.', min: 2,
       position: ['seated'], equipment: ['chair'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
       { name: 'Barbilla atrás', mode: 'reps', reps: 8, dur: 30,
@@ -43836,7 +43896,10 @@ function statsHoyMeta(p, t, hechas) {
 
 
   if (estado === 'pasada') return t('ritmo.noHecha');
-  return it.dur + ' min';
+
+
+  const plato = !it.larga && it.platos && it.platos[0];
+  return (plato && plato.min ? plato.min : it.dur) + ' min';
 }
 
 function StatsHoyRejilla(_ref3) {let { n, children } = _ref3;
@@ -52145,6 +52208,10 @@ function ritmoIndiceAhora(plan) {
   const m = plan.m;
 
   if (plan.pausa && !plan.pausaPasada) return m.items.indexOf(plan.pausa);
+
+
+  const comida = typeof ritmoComidaEnCurso === 'function' ? ritmoComidaEnCurso(plan) : null;
+  if (comida) return m.items.indexOf(comida);
   return plan.actual ? m.items.indexOf(plan.actual) : m.items.length;
 }
 
@@ -52660,12 +52727,17 @@ function RitmoMovil(_ref9) {let { state, plan, onVer } = _ref9;
   const conPausa = !!(plan.pausa && !plan.pausaPasada);
 
 
+  const enComida = !conPausa && typeof ritmoComidaEnCurso === 'function' ? ritmoComidaEnCurso(plan) : null;
+
+
   useLayoutEffectRP(() => {
     if (typeof window.paceHomeGeometriaYa === 'function') window.paceHomeGeometriaYa();
-  }, [conPausa, !!luego, plan.hechos, plan.m.opcion]);
+  }, [conPausa, !!enComida, !!luego, plan.hechos, plan.m.opcion]);
   const filas = conPausa ?
   React.createElement(React.Fragment, null, React.createElement(RitmoFilaParada, { it: plan.pausa, rotulo: "ritmo.ahora", corta: true,
     hecha: (plan.estados || {})[ritmoOrdinal(plan.m, plan.pausa)] === 'hecha' }), b ? filaBloque('ritmo.luego') : null) :
+  enComida ?
+  React.createElement(React.Fragment, null, React.createElement(RitmoFilaParada, { it: enComida, rotulo: "ritmo.ahora", corta: true }), b ? filaBloque('ritmo.luego') : null) :
   React.createElement(React.Fragment, null, filaBloque('ritmo.ahora'), luego ? React.createElement(RitmoFilaParada, { it: luego, rotulo: "ritmo.luego", corta: true }) : null);
   return (
     React.createElement("div", { className: "pace-rt-panel pace-rt-mov", "data-pace-ritmo-estado": "menu" },
@@ -55865,6 +55937,9 @@ function TopBar(_ref) {let { onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTw
         minHeight: 56
       } },
 
+
+    React.createElement("h1", { "data-pace-app-titulo": true, style: topBarStyles.soloLector }, paceTituloApp(state.lang)),
+
     React.createElement("div", { "data-pace-tabs": true, style: {
         position: 'absolute', left: '50%', top: '50%',
         transform: 'translate(-50%, -50%)',
@@ -55961,6 +56036,7 @@ function topBarPregunta(p, t, tn) {
 }
 
 const topBarStyles = {
+  soloLector: { position: 'absolute', width: 1, height: 1, margin: -1, padding: 0, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap', border: 0 },
   iconBtn: {
     width: 36, height: 36,
     display: 'grid', placeItems: 'center',

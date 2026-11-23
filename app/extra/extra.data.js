@@ -266,7 +266,7 @@ const EXTRA_ROUTINES = {
         ]},
       /* s118 (B2.3 OLA 1): migrado — control postural (chin tucks + scapular con
          retención → reps con hold) y dos movilizaciones suaves `timed` (§B). */
-      { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Recolocar la postura', desc: 'Barbilla, omóplatos y pecho. Tres gestos contra la silla.', min: 2,
+      { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Recolocar la postura', desc: 'Barbilla, omóplatos y pecho. Cuatro gestos contra la silla.', min: 2,
         position: ['seated'], equipment: ['chair'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
           { name: 'Barbilla atrás', mode: 'reps', reps: 8, dur: 30,
