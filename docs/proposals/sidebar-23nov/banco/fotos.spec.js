@@ -89,7 +89,13 @@ for (const momento of Object.keys(MOMENTOS)) {
         await page.evaluate(() => document.fonts.ready);
         /* La maqueta que no se puede pintar solo con CSS (un texto nuevo, un botón más):
            se aplica al DOM ya montado y se repite tras un instante por si React repinta. */
-        if (JS) { await page.evaluate(JS); await page.waitForTimeout(300); await page.evaluate(JS); }
+        /* Entre las dos pasadas, un `resize`: la escala vuelve a medir con la maqueta puesta. */
+        if (JS) {
+          await page.evaluate(JS);
+          await page.evaluate(() => window.dispatchEvent(new Event('resize')));
+          await page.waitForTimeout(300);
+          await page.evaluate(JS);
+        }
         await page.waitForTimeout(900);
         const m = await page.evaluate(() => {
           const sb = document.querySelector('[data-pace-sidebar]');

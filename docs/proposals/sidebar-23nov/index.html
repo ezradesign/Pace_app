@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La barra lateral</title>
+<style>
+  :root { --papel: #f3ece0; --papel-2: #ebe2d2; --tinta: #2b2620; --tinta-2: #5c5448; --tinta-3: #77705f; --oliva: #56644a; --terracota: #b3684a; --linea: #d8cdb9; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --papel: #1f1c18; --papel-2: #2a2620; --tinta: #eee6d8; --tinta-2: #c4baa8; --tinta-3: #9c937f; --oliva: #9fb08a; --terracota: #d58a6a; --linea: #3d372e; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--papel); color: var(--tinta); font: 16px/1.55 Georgia, 'Times New Roman', serif; }
+  main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1, h2, h3 { font-style: italic; font-weight: 400; line-height: 1.2; }
+  h1 { font-size: 34px; margin: 0 0 6px; }
+  h2 { font-size: 26px; margin: 44px 0 8px; border-top: 1px solid var(--linea); padding-top: 24px; }
+  h3 { font-size: 20px; margin: 0 0 6px; }
+  p, li { color: var(--tinta-2); max-width: 760px; }
+  .rotulo { font: 11px/1.4 system-ui, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--tinta-3); }
+  figure { margin: 0; }
+  figure img { width: 100%; height: auto; display: block; border: 1px solid var(--linea); border-radius: 8px; }
+  figcaption { font-size: 14px; color: var(--tinta-3); margin-top: 6px; }
+  .fila { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 14px 0; align-items: start; }
+  .fila.ancha { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .fila.estrecha figure { max-width: 300px; }
+  .opcion { background: var(--papel-2); border: 1px solid var(--linea); border-radius: 12px; padding: 18px; margin: 18px 0; }
+  .opcion.rec { border-color: var(--oliva); }
+  .letra { display: inline-block; min-width: 30px; text-align: center; border-radius: 15px; background: var(--tinta); color: var(--papel); font: 600 14px/30px system-ui, sans-serif; margin-right: 8px; }
+  .rec .letra { background: var(--oliva); }
+  .reco { border-left: 3px solid var(--oliva); padding: 4px 0 4px 14px; margin: 16px 0; }
+  .reco p { margin: 4px 0; }
+  table { border-collapse: collapse; font: 14px/1.4 system-ui, sans-serif; margin: 12px 0; width: 100%; }
+  th, td { border-bottom: 1px solid var(--linea); padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { color: var(--tinta-3); font-weight: 500; }
+  .tabla { overflow-x: auto; }
+  .respuesta { font: 600 20px/1.4 system-ui, sans-serif; letter-spacing: .04em; background: var(--papel-2); border: 1px solid var(--oliva); border-radius: 10px; padding: 14px 18px; display: inline-block; }
+  code { font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="rotulo">PACE · 23 nov. 2026 · rama claude/sidebar-mejoras-23nov-bceb9a · sobre la 0.215.0</div>
+  <h1>La barra lateral: cinco mejoras para elegir</h1>
+  <p>He mirado la barra del ordenador y el cajón del móvil como los usaría alguien: en cuatro momentos (el primer día,
+  la semana a medias por libre, el día de jornada servido y PACE cerrado como en v1), en castellano y en inglés, en
+  crema y en oscuro, a 1280 × 720, 1366 × 768, 1536 × 864 y 1920 × 1080, con el navegador ampliado (150 % y 175 %) y en
+  el cajón a 360 × 640. Son 112 fotos. No he montado nada que se vea: las opciones van pintadas encima de la app de verdad.</p>
+  <p>Para contestar, una letra por pregunta. Mi recomendación, en verde:</p>
+  <p class="respuesta">1A 2A 3B 4B 5A</p>
+
+  <h2>1 · Con la ventana baja o el navegador ampliado, la letra se vuelve diminuta</h2>
+  <p>En el ordenador la barra encoge entera para caber, sin límite. A 1280 × 720 baja al 93 % y no se nota. Con el
+  navegador al 150 % (1274 × 579) baja al 74 %, y al 175 % (1092 × 496), al 62 %: la letra pequeña queda en 6,8 px y
+  las iniciales de los días, en 5,6. En el cajón del móvil ya elegiste un suelo del 80 % y, por debajo, «un pequeño
+  scroll sin barra».</p>
+  <div class="opcion rec">
+    <h3><span class="letra">A</span>El mismo suelo que el cajón: nunca menos del 80 %, y lo que no cabe se desplaza</h3>
+    <p>La barra se ve igual que siempre, solo que a partir del 80 % deja de encoger. Lo de abajo (el último logro y el pie)
+    se alcanza con la rueda, sin barra de desplazamiento. Lo que más se usa (la semana, Hoy, la pausa y las bibliotecas)
+    queda a la vista.</p>
+    <div class="fila">
+      <figure><img src="fotos/1-1a-1092-barra.jpg" alt="1A al 175 %"><figcaption>1A · 175 % (1092 × 496), al 80 %</figcaption></figure>
+      <figure><img src="fotos/1-1a-1274-barra.jpg" alt="1A al 150 %"><figcaption>1A · 150 % (1274 × 579), al 80 %</figcaption></figure>
+    </div>
+  </div>
+  <div class="opcion">
+    <h3><span class="letra">B</span>Como la A, pero en ventanas bajas antes se recoge el adorno</h3>
+    <p>Por debajo de 640 px de alto, el logo baja a la mitad y el último logro queda en una línea. Hace falta desplazarse
+    menos, pero la barra deja de verse igual en todas las pantallas, y eso era lo que querías conservar.</p>
+    <div class="fila">
+      <figure><img src="fotos/1-1b-1092-barra.jpg" alt="1B al 175 %"><figcaption>1B · 175 %</figcaption></figure>
+      <figure><img src="fotos/1-1b-1274-barra.jpg" alt="1B al 150 %"><figcaption>1B · 150 %</figcaption></figure>
+    </div>
+  </div>
+  <div class="opcion">
+    <h3><span class="letra">C</span>Como está: todo encoge lo que haga falta</h3>
+    <div class="fila">
+      <figure><img src="fotos/1-hoy-1092-barra.jpg" alt="Hoy al 175 %"><figcaption>Hoy · 175 %, al 62 %</figcaption></figure>
+      <figure><img src="fotos/1-hoy-1274-barra.jpg" alt="Hoy al 150 %"><figcaption>Hoy · 150 %, al 74 %</figcaption></figure>
+    </div>
+  </div>
+  <div class="reco"><p><b>Recomiendo la A.</b> Es la regla que ya elegiste para el móvil, cambia solo en las ventanas que hoy se
+  leen mal (de 1280 × 720 para arriba no se mueve nada) y no cambia la composición. Con la B se gana poco: al 175 % se ve
+  un bloque más.</p></div>
+  <div class="fila ancha">
+    <figure><img src="fotos/1-hoy-1092.jpg" alt="La ventana entera al 175 %, hoy"><figcaption>La ventana entera al 175 %, como está</figcaption></figure>
+    <figure><img src="fotos/1-1a-1092.jpg" alt="La ventana entera al 175 %, con la A"><figcaption>La misma, con la A</figcaption></figure>
+  </div>
+
+  <h2>2 · Un vaso de más no se puede quitar desde la barra</h2>
+  <p>«+ vaso» es lo que más se toca de la barra, y la fila entera es el botón, así que un toque sin querer es fácil. Para
+  quitarlo hay que encontrar Hidrátate; con el día de jornada servido, la home no lo enseña. Junto a «+ vaso» no cabe
+  nada más: con «Deshacer» al lado, «Cuatro vasos de ocho» se partía en dos líneas (lo medí).</p>
+  <div class="opcion rec">
+    <h3><span class="letra">A</span>Unos segundos después de sumar, la frase dice «Un vaso más. Deshacer»</h3>
+    <p>En el mismo sitio de la frase, sin empujar nada. Pasados unos cinco segundos vuelve a «Cinco vasos de ocho».
+    «Deshacer» es su propio botón; el resto de la fila sigue sumando.</p>
+    <div class="fila">
+      <figure><img src="fotos/2-2a-es.jpg" alt="2A en castellano"><figcaption>2A · crema</figcaption></figure>
+      <figure><img src="fotos/2-2a-en-oscuro.jpg" alt="2A en inglés y oscuro"><figcaption>2A · inglés, oscuro</figcaption></figure>
+      <figure><img src="fotos/2-2a-movil.jpg" alt="2A en el cajón"><figcaption>2A · cajón, 360 × 640</figcaption></figure>
+    </div>
+  </div>
+  <div class="opcion">
+    <h3><span class="letra">B</span>Un «−» siempre a la vista, con algún vaso</h3>
+    <p>Cabe con «Cuatro vasos de ocho», pero con la frase más larga («Los ocho vasos del día») se parte en dos líneas.</p>
+    <div class="fila">
+      <figure><img src="fotos/2-2b-es.jpg" alt="2B en castellano"><figcaption>2B · crema</figcaption></figure>
+      <figure><img src="fotos/2-2b-en-oscuro.jpg" alt="2B en inglés y oscuro"><figcaption>2B · inglés, oscuro</figcaption></figure>
+      <figure><img src="fotos/2-2b-movil.jpg" alt="2B en el cajón"><figcaption>2B · cajón</figcaption></figure>
+    </div>
+  </div>
+  <div class="opcion">
+    <h3><span class="letra">C</span>Como está: se quita en Hidrátate</h3>
+    <div class="fila">
+      <figure><img src="fotos/2-hoy-es.jpg" alt="Como está"><figcaption>Hoy</figcaption></figure>
+      <figure><img src="fotos/2-hoy-en-oscuro.jpg" alt="Como está en inglés"><figcaption>Hoy · inglés, oscuro</figcaption></figure>
+      <figure><img src="fotos/2-hoy-movil.jpg" alt="Como está en el cajón"><figcaption>Hoy · cajón</figcaption></figure>
+    </div>
+  </div>
+  <div class="reco"><p><b>Recomiendo la A.</b> Lo que hace falta es arreglar el toque sin querer, que se nota justo después.
+  La A además confirma el vaso sin sonido y sin aviso encima, y no añade un botón que se queda para siempre. La B está siempre ahí
+  y se parte con la frase más larga.</p></div>
+
+  <h2>3 · El último logro ocupa mucho para lo poco que cambia</h2>
+  <p>Es el bloque más alto después de Hoy y enseña lo mismo durante días. El primer día dice «Aún no hay ninguno» junto a
+  un sello vacío. La colección ya tiene su sello arriba a la derecha de la home (y la tecla L).</p>
+  <div class="opcion">
+    <h3><span class="letra">A</span>Como está</h3>
+    <div class="fila">
+      <figure><img src="fotos/3-hoy-libre.jpg" alt="Como está"><figcaption>Semana a medias</figcaption></figure>
+      <figure><img src="fotos/3-hoy-primer.jpg" alt="Como está, primer día"><figcaption>El primer día</figcaption></figure>
+      <figure><img src="fotos/3-hoy-movil.jpg" alt="Como está, cajón"><figcaption>Cajón</figcaption></figure>
+    </div>
+  </div>
+  <div class="opcion rec">
+    <h3><span class="letra">B</span>En una línea: el sello pequeño, el nombre y ›; sin ninguno, el bloque no sale</h3>
+    <p>Toda la fila sigue abriendo la colección. El rótulo «Último logro» se queda.</p>
+    <div class="fila">
+      <figure><img src="fotos/3-3b-libre.jpg" alt="3B"><figcaption>3B · semana a medias</figcaption></figure>
+      <figure><img src="fotos/3-3b-primer.jpg" alt="3B primer día"><figcaption>3B · el primer día</figcaption></figure>
+      <figure><img src="fotos/3-3b-movil.jpg" alt="3B cajón"><figcaption>3B · cajón</figcaption></figure>
+    </div>
+  </div>
+  <div class="opcion">
+    <h3><span class="letra">C</span>Fuera de la barra</h3>
+    <div class="fila">
+      <figure><img src="fotos/3-3c-libre.jpg" alt="3C"><figcaption>3C · semana a medias</figcaption></figure>
+      <figure><img src="fotos/3-3c-movil.jpg" alt="3C cajón"><figcaption>3C · cajón</figcaption></figure>
+    </div>
+  </div>
+  <div class="reco"><p><b>Recomiendo la B.</b> El logro sigue a la vista sin pedir tanto sitio, el primer día no hay una
+  fila vacía y el sitio que queda libre ayuda en las ventanas bajas (pregunta 1). La C quita algo que alegra cuando llega
+  uno nuevo.</p></div>
+
+  <h2>4 · «2 días en ritmo» no se entiende solo</h2>
+  <p>Es la racha, pero «en ritmo» suena a «A tu ritmo», como si fueran días con el plan cumplido. Cuenta los días seguidos
+  con algo hecho. Los tres textos caben de sobra (ocupan menos de la mitad del ancho), así que no hace falta medirlos en Linux.</p>
+  <div class="opcion">
+    <h3><span class="letra">A</span>Como está: «2 días en ritmo · mejor 9»</h3>
+    <div class="fila"><figure><img src="fotos/4-hoy-es.jpg" alt="4A"><figcaption>Castellano</figcaption></figure><figure><img src="fotos/4-hoy-en.jpg" alt="4A inglés"><figcaption>«2 days in rhythm · best 9»</figcaption></figure></div>
+  </div>
+  <div class="opcion rec">
+    <h3><span class="letra">B</span>«2 días seguidos · tu mejor, 9»</h3>
+    <div class="fila"><figure><img src="fotos/4-4b-es.jpg" alt="4B"><figcaption>Castellano</figcaption></figure><figure><img src="fotos/4-4b-en.jpg" alt="4B inglés"><figcaption>«2 days in a row · your best, 9»</figcaption></figure></div>
+  </div>
+  <div class="opcion">
+    <h3><span class="letra">C</span>«Racha de 2 días · mejor, 9»</h3>
+    <div class="fila"><figure><img src="fotos/4-4c-es.jpg" alt="4C"><figcaption>Castellano</figcaption></figure><figure><img src="fotos/4-4c-en.jpg" alt="4C inglés"><figcaption>«2-day streak · best, 9»</figcaption></figure></div>
+  </div>
+  <div class="reco"><p><b>Recomiendo la B.</b> Dice lo que cuenta con las palabras de todos los días. «Racha» empuja más hacia
+  el juego, y la app no busca eso.</p></div>
+
+  <h2>5 · Plegar la barra con el teclado</h2>
+  <p>El botón de plegar decía «Colapsar (⌘\)», pero ese atajo nunca existió (y en Windows no hay ⌘). Ya he quitado la
+  promesa del título. Esta pregunta no cambia nada de lo que se ve.</p>
+  <div class="opcion rec">
+    <h3><span class="letra">A</span>Ctrl + \ (⌘ + \ en el Mac) pliega y despliega la barra, y el título lo dice con la tecla de cada sistema</h3>
+    <p>Como en los editores que la usan para lo mismo. En el móvil no hace nada. Como las teclas T, S y L, no salta mientras escribes ni con
+    una sesión delante.</p>
+  </div>
+  <div class="opcion">
+    <h3><span class="letra">B</span>Sin atajo, como queda ahora</h3>
+  </div>
+  <div class="reco"><p><b>Recomiendo la A.</b> Cuesta poco, la usan quienes trabajan con teclado y sirve para quien no usa ratón.</p></div>
+
+  <h2>Ya arreglado en la rama (no cambia lo que se ve)</h2>
+  <ul>
+    <li><b>El lector de pantalla no oía la racha.</b> El bloque de la semana es un botón que se llamaba solo «Ver la semana en
+    Estadísticas»; ahora se llama «2 días en ritmo · mejor 9. Ver la semana en Estadísticas».</li>
+    <li><b>El título de plegar prometía «⌘\»</b>, una tecla que no hacía nada. Ahora dice «Colapsar».</li>
+  </ul>
+  <p>Los dos van con su prueba (<code>tests/sidebar-nombres.spec.js</code>), que falla en main y pasa en la rama, junto con las 46 pruebas de la barra y el cajón.</p>
+
+  <h2>Lo que miré y dejaría como está</h2>
+  <div class="tabla"><table>
+    <tr><th>Qué</th><th>Lo que vi</th></tr>
+    <tr><td>El orden</td><td>La semana arriba y lo que se toca (el agua, la pausa, las bibliotecas) a media altura. En el cajón queda a mano del pulgar,
+    y en el ordenador todo cabe sin desplazarse, así que reordenar no acerca nada.</td></tr>
+    <tr><td>«Siguiente pausa»</td><td>Con el día servido repite la parada de la línea, pero la línea se ve solo en la home, y la barra la acompaña en
+    Estadísticas o en una biblioteca. Sin día, «Para ahora» solo propone lo que puedes abrir, también con PACE cerrado.</td></tr>
+    <tr><td>Las bibliotecas</td><td>Por libre repiten tres botones de la home; con el día servido son la única puerta a Respira, Estira y Mueve.</td></tr>
+    <tr><td>Hoy</td><td>Se entiende sin explicación en los dos idiomas; lo que vale cero no sale.</td></tr>
+    <tr><td>Oscuro e inglés</td><td>Nada se corta ni se sale en las 112 fotos; en oscuro, todo con su contraste.</td></tr>
+    <tr><td>El cajón</td><td>A 360 × 640 cabe entero (al 85-97 %), se cierra con Escape y con su flecha.</td></tr>
+    <tr><td>Ventanas grandes</td><td>A 1536 y 1920 sobra aire (95-193 px) antes del pie, como elegiste: el pie abajo y el aire, encima.</td></tr>
+  </table></div>
+
+  <p class="rotulo">Cómo se rehace: <code>docs/proposals/sidebar-23nov/banco/</code> (fotos.spec.js, maquetas.sh y recortes.js). Las maquetas, en <code>maquetas/</code>.</p>
+</main>
+</body>
+</html>
