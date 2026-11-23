@@ -345,14 +345,40 @@ self.addEventListener('message', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(
-        keys
-          .filter((k) => k.indexOf('pace-') === 0 && k !== CACHE_NAME)
-          .map((k) => caches.delete(k))
-      ))
+      .then((keys) => {
+        const viejas = keys.filter((k) => k.indexOf('pace-') === 0 && k !== CACHE_NAME);
+        return pedirOtraVezLoGuardadoAlUsar(viejas)
+          .then(() => Promise.all(viejas.map((k) => caches.delete(k))));
+      })
       .then(() => self.clients.claim())
   );
 });
+
+/* LO QUE SE GUARDA AL USARLO SOBREVIVE A LA VERSIÓN NUEVA (caza de datos del 22 nov. 2026). La voz de
+   Mueve y Estira (la de tu voz y tu idioma, 6A de Ez) y la música de Respira no van al precache: se
+   guardan en la caché de la versión la primera vez que suenan. Al activar una versión, el borrado de
+   las cachés viejas se las llevaba, y sin conexión la rutina volvía a la madera hasta abrirla otra vez
+   con red. Se vuelven a pedir a la red y van a la caché nueva; no se copian las viejas, porque una toma
+   regrabada con el mismo nombre no casaría con sus tiempos nuevos (Sound.voz.cuerpo.datos.js). Sin red
+   no se guarda nada, como antes. La activación no espera a la descarga: solo a saber qué pedir. */
+const PACE_GUARDADO_AL_USAR = ['/app/move/voz/', '/app/breathe/musica/'];
+function pedirOtraVezLoGuardadoAlUsar(viejas) {
+  return Promise.all(viejas.map((k) => caches.open(k).then((c) => c.keys())))
+    .then((listas) => {
+      const urls = [];
+      listas.forEach((lista) => lista.forEach((req) => {
+        const u = new URL(req.url);
+        if (u.origin === self.location.origin && PACE_GUARDADO_AL_USAR.some((p) => u.pathname.indexOf(p) === 0) && urls.indexOf(req.url) === -1) urls.push(req.url);
+      }));
+      urls.forEach((url) => {
+        fetch(url).then((r) => {
+          if (r && r.status === 200 && r.type !== 'opaque') return caches.open(CACHE_NAME).then((c) => c.put(url, r));
+          return undefined;
+        }).catch(() => {});
+      });
+    })
+    .catch(() => {});
+}
 
 /* s102: click en la notificación de fin de Pomodoro -> enfocar la app (o
    abrirla si no hay ventana). La notificación se muestra desde la página
