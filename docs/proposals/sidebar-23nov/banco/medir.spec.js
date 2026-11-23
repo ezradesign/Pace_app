@@ -32,3 +32,26 @@ for (const [nombre, w, h] of [['barra', 1280, 720], ['cajon', 360, 640]]) {
     });
   }
 }
+
+/* La fila del agua con «Un vaso más. Deshacer» (2A): cuánto sobra hasta «+ vaso», con cada meta. */
+for (const [nombre, w, h] of [['barra', 1280, 720], ['cajon', 360, 640]]) {
+  for (const lang of ['es', 'en']) {
+    test('agua · ' + nombre + ' · ' + lang, async ({ page, context }) => {
+      await page.setViewportSize({ width: w, height: h });
+      await sembrar(context, { sidebarCollapsed: false, lang, lastActiveDay: new Date().toDateString(), water: { goal: 8, today: 3, lastReset: null } });
+      await irAlArtefacto(page);
+      if (w <= 640) await abrirCajon(page);
+      await page.locator('[data-pace-sidebar] [data-pace-hoy-celda][data-modulo="water"]').click();
+      await page.locator('[data-pace-agua-deshacer]').waitFor();
+      const r = await page.evaluate(() => {
+        const sb = document.querySelector('[data-pace-sidebar]');
+        const esc = parseFloat(getComputedStyle(sb.querySelector('[data-pace-sidebar-escala]')).getPropertyValue('--sb-escala')) || 1;
+        const d = sb.querySelector('[data-pace-agua-deshacer]').getBoundingClientRect();
+        const v = sb.querySelector('[data-pace-hoy-vaso]').getBoundingClientRect();
+        const f = sb.querySelector('[data-pace-hoy-celda][data-modulo="water"]').getBoundingClientRect();
+        return { sobra_px: Math.round((v.left - d.right) / esc), alto_fila: Math.round(f.height / esc) };
+      });
+      console.log(nombre, lang, 'agua:', JSON.stringify(r));
+    });
+  }
+}

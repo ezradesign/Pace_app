@@ -15,6 +15,18 @@
 
 const PACE_NOVEDADES = [
   {
+    id: 'barra-deshacer-vaso',
+    desde: '2026-11-24',
+    es: [
+      'Si sumas un vaso sin querer desde el panel, «Deshacer» lo quita durante unos segundos.',
+      'El panel dice «2 días seguidos», el último logro ocupa una línea, y en el ordenador Ctrl + \\ lo pliega y lo despliega.',
+    ],
+    en: [
+      'If you add a glass by mistake from the panel, “Undo” takes it back for a few seconds.',
+      'The panel says “2 days in a row”, the latest achievement takes one line, and on a computer Ctrl + \\ folds and unfolds it.',
+    ],
+  },
+  {
     id: 'comida-en-el-aro',
     desde: '2026-11-23',
     es: [
