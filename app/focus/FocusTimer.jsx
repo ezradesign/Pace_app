@@ -226,6 +226,7 @@ function FocusTimer({ onFinish }) {
   const elegirMinutos = (v) => {
     if (isFocoMode && (status === 'running' || status === 'paused') && v !== state.focusMinutes) { setMinPendiente(v); return; }
     set({ focusMinutes: v });
+    if (isFocoMode && typeof ritmoElegirMinutos === 'function') ritmoElegirMinutos(v);   // con el día servido, se queda (2A)
   };
   const isCompleted = status === 'completed';
   /* Las pausas con bloques cortos (FocusTimer.bloques.jsx): la invitación, su hoja y la elección del aro. */

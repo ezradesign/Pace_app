@@ -113,7 +113,7 @@ const aroEnlaceEstilo = { display: 'inline-flex', alignItems: 'center', justifyC
 function aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa, porLibre, comida }) {
   if (comida && aro) {
     const p = ritmoPlan(state);
-    const q = tn('ritmo.aro.despues.bloque', { n: aro.n }) + (p && p.actual ? ' · ' + ritmoDuracion(p.actual.dur) : '');
+    const q = tn('ritmo.aro.despues.bloque', { n: aro.n }) + (p && p.actual ? ' · ' + ritmoDuracion(ritmoMinutosElegidos(state, p) || p.actual.dur) : '');
     return {
       enlace: true,
       cta: { label: tn('ritmo.pausa.ya', { n: aro.n }) },

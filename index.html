@@ -3820,7 +3820,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'break.tag': 'Bloque terminado',
 
   'break.title': 'Tu pausa',
-  'break.subtitle': 'Bloque cerrado. Elige tu pausa.',
+  'break.subtitle': 'Elige tu pausa.',
   'break.breathe.label': 'Respira',
   'break.breathe.desc': '2 min para volver al centro',
   'break.stretch.label': 'Estira',
@@ -3859,7 +3859,7 @@ Object.assign(window.PACE_STRINGS.es, {
 Object.assign(window.PACE_STRINGS.en, {
   'break.tag': 'Block done',
   'break.title': 'Your break',
-  'break.subtitle': 'You’ve finished a Focus block. Choose your break.',
+  'break.subtitle': 'Choose your break.',
   'break.breathe.label': 'Breathe',
   'break.breathe.desc': '2 min to pause and breathe',
   'break.stretch.label': 'Stretch',
@@ -14958,7 +14958,8 @@ function ritmoSincronizar() {
   if (s.focusMode !== 'foco' || ritmoFocoCorriendo()) return;
   var p = ritmoPlan(s);
   var dur = p && p.actual ? ritmoDurSiEmpiezas(p, ritmoAhoraExacto()) : null;
-  if (dur) ritmoMinutosDelPlan(s, dur);else ritmoMinutosDevolver(s);
+  var elegidos = dur ? ritmoMinutosElegidos(s, p) : null;
+  if (elegidos) {if (s.focusMinutes !== elegidos) setState({ focusMinutes: elegidos });} else if (dur) ritmoMinutosDelPlan(s, dur);else ritmoMinutosDevolver(s);
 }
 function ritmoSincronizarALaVista() {
   if (document.visibilityState !== 'hidden') {try {ritmoSincronizar();} catch (e) {}}
@@ -15204,6 +15205,7 @@ function ritmoBloqueEmpezado(minutos) {
     }
   }
   if (R.dia.pausaPendiente) cambios.pausaPendiente = false;
+  if (R.dia.minutosElegidos) cambios.minutosElegidos = null;
   var t = ritmoAhoraExacto();
 
 
@@ -15348,6 +15350,27 @@ function ritmoMinutosDelPlan(s, dur) {
   if (r.minutosPlan == null && ritmoMinutosSonTuyos(s, r)) cambio.focoLibre = s.focusMinutes;
   setState(function (prev) {return Object.assign({}, prev, { focusMinutes: dur, ritmo: Object.assign({}, prev.ritmo || {}, cambio) });});
 }
+
+
+
+
+
+
+function ritmoElegirMinutos(min) {
+  var s = getState();
+  if (s.focusMode !== 'foco' || ritmoFocoCorriendo()) return;
+  var p = ritmoPlan(s);
+  if (!p || !p.actual || !ritmoDe(s).dia) return;
+  var v = min === ritmoDurSiEmpiezas(p, ritmoAhoraExacto()) ? null : { min: min, bloque: p.hechos };
+  ritmoGuardar(function (r) {return r.dia ? { dia: Object.assign({}, r.dia, { minutosElegidos: v }) } : {};});
+}
+
+function ritmoMinutosElegidos(s, p) {
+  var d = ritmoDe(s).dia,e = d && d.minutosElegidos;
+  if (!e || !(Number(e.min) > 0)) return null;
+  p = p || ritmoPlan(s);
+  return p && p.actual && e.bloque === p.hechos ? Number(e.min) : null;
+}
 function ritmoMinutosDevolver(s) {
   var r = s && s.ritmo || {};
   if (r.minutosPlan == null) return;
@@ -15377,9 +15400,9 @@ function ritmoFocoHecho(p) {
   return p && p.m ? p.m.focos.slice(0, p.hechos).reduce(function (a, f) {return a + ritmoFocoMin(f);}, 0) : 0;
 }
 
-Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoDesdeHoy, ritmoFocoEmpezo, ritmoFocoDelDiaNuevo, ritmoFocoHecho, ritmoFocoMin, ritmoFijarLoHecho,
+Object.assign(window, { ritmoElegirMinutos, ritmoMinutosElegidos, ritmoDesfase, ritmoBloqueTerminado, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, ritmoMirarSalida, ritmoDesdeHoy, ritmoFocoEmpezo, ritmoFocoDelDiaNuevo, ritmoFocoHecho, ritmoFocoMin, ritmoFijarLoHecho,
   ritmoMinutosDelPlan, ritmoMinutosDevolver });
-;Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoFijarLoHecho, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, _ritmoCierrePintado, ritmoMirarSalida, ritmoDesdeHoy, ritmoFocoEmpezo, ritmoFocoDelDiaNuevo, ritmoMinutosDelPlan, ritmoMinutosDevolver, ritmoMinutosSonTuyos, ritmoFocoMin, ritmoFocoHecho });
+;Object.assign(window, { ritmoDesfase, ritmoBloqueTerminado, ritmoFijarLoHecho, ritmoBloqueEmpezado, ritmoPasadaLaSalida, ritmoTrasElFin, _ritmoCierrePintado, ritmoMirarSalida, ritmoDesdeHoy, ritmoFocoEmpezo, ritmoFocoDelDiaNuevo, ritmoMinutosDelPlan, ritmoElegirMinutos, ritmoMinutosElegidos, ritmoMinutosDevolver, ritmoMinutosSonTuyos, ritmoFocoMin, ritmoFocoHecho });
 })();
 </script>
   <!-- El día elegido y sin empezar se lee desde ahora (Ez, E1 A del 7 nov. 2026). -->
@@ -34134,7 +34157,7 @@ const aroEnlaceEstilo = { display: 'inline-flex', alignItems: 'center', justifyC
 function aroJornada(_ref) {let { state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empezarYa, porLibre, comida } = _ref;
   if (comida && aro) {
     const p = ritmoPlan(state);
-    const q = tn('ritmo.aro.despues.bloque', { n: aro.n }) + (p && p.actual ? ' · ' + ritmoDuracion(p.actual.dur) : '');
+    const q = tn('ritmo.aro.despues.bloque', { n: aro.n }) + (p && p.actual ? ' · ' + ritmoDuracion(ritmoMinutosElegidos(state, p) || p.actual.dur) : '');
     return {
       enlace: true,
       cta: { label: tn('ritmo.pausa.ya', { n: aro.n }) },
@@ -34850,6 +34873,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   const elegirMinutos = (v) => {
     if (isFocoMode && (status === 'running' || status === 'paused') && v !== state.focusMinutes) {setMinPendiente(v);return;}
     set({ focusMinutes: v });
+    if (isFocoMode && typeof ritmoElegirMinutos === 'function') ritmoElegirMinutos(v);
   };
   const isCompleted = status === 'completed';
 
@@ -52747,7 +52771,7 @@ function RitmoMovil(_ref9) {let { state, plan, onVer } = _ref9;
   const filaBloque = (rotulo) =>
   React.createElement(RitmoFila, { rotulo: React.createElement(React.Fragment, null, t(rotulo), React.createElement("br", null), ritmoHora(b.desde)), luego: rotulo === 'ritmo.luego',
     modulo: "foco", nombre: tn('ritmo.fila.bloque', { n: plan.hechos + 1, m: plan.total }),
-    meta: b.dur + ' min · ' + descriptor });
+    meta: (ritmoMinutosElegidos(state, plan) || b.dur) + ' min · ' + descriptor });
 
 
   const luego = b ? ritmoDetras(plan.m, b) : null;

@@ -399,7 +399,8 @@ function ritmoSincronizar() {
   if (s.focusMode !== 'foco' || ritmoFocoCorriendo()) return;
   var p = ritmoPlan(s);
   var dur = p && p.actual ? ritmoDurSiEmpiezas(p, ritmoAhoraExacto()) : null;
-  if (dur) ritmoMinutosDelPlan(s, dur); else ritmoMinutosDevolver(s);   /* sin bloque que medir, tus minutos (S3) */
+  var elegidos = dur ? ritmoMinutosElegidos(s, p) : null;   /* los que elegiste mandan hasta empezar (2A) */
+  if (elegidos) { if (s.focusMinutes !== elegidos) setState({ focusMinutes: elegidos }); } else if (dur) ritmoMinutosDelPlan(s, dur); else ritmoMinutosDevolver(s);   /* sin bloque que medir, tus minutos (S3) */
 }
 function ritmoSincronizarALaVista() {
   if (document.visibilityState !== 'hidden') { try { ritmoSincronizar(); } catch (e) {} }

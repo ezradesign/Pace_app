@@ -312,7 +312,7 @@ function RitmoMovil({ state, plan, onVer }) {
   const filaBloque = (rotulo) => (
     <RitmoFila rotulo={<React.Fragment>{t(rotulo)}<br />{ritmoHora(b.desde)}</React.Fragment>} luego={rotulo === 'ritmo.luego'}
       modulo="foco" nombre={tn('ritmo.fila.bloque', { n: plan.hechos + 1, m: plan.total })}
-      meta={b.dur + ' min · ' + descriptor} />
+      meta={(ritmoMinutosElegidos(state, plan) || b.dur) + ' min · ' + descriptor} />
   );
   /* Tras el último bloque, con el cierre contando, no hay bloque: solo la fila «Ahora» del cierre. */
   const luego = b ? ritmoDetras(plan.m, b) : null;

@@ -115,7 +115,7 @@ for (const lang of ['es', 'en']) for (const letra of LETRAS) {
     const baseURL = test.info().project.use.baseURL;
     /* «Muévete» con la letra al 115 % se sale aún unos 10 px en Linux (antes de la 7A, más): no cabe sin cambiar
        la fila, así que aquí solo con la letra normal, donde la 7A lo metió dentro. */
-    const solo = lang === 'es' ? ['=Bloque cerrado. Elige tu pausa.'].concat(letra === 1 ? ['=Muévete'] : []) : ['=Move'];
+    const solo = lang === 'es' ? ['=Elige tu pausa.'].concat(letra === 1 ? ['=Muévete'] : []) : ['=Move'];
     expect(await vigila(await H.abrePausa(browser, baseURL, { lang, letra }), solo, 'la pausa')).toEqual([]);
   });
 }
