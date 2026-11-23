@@ -47,6 +47,28 @@ function Sidebar() {
 
   const toggle = () => (collapsed ? set({ sidebarCollapsed: false }) : plegar());
 
+  /* CTRL + \ (⌘ + \ EN EL MAC) PLIEGA Y DESPLIEGA LA BARRA (Ez, 5A del 23 nov. 2026). El título lo
+     prometía sin que nadie escuchara la tecla. Se oye aquí y no en `main.jsx` porque la barra está
+     montada también plegada (devuelve null, pero sus ganchos corren). Con la misma guarda que las teclas T,
+     S y L (main.jsx), no salta mientras escribes ni con una sesión o una pantalla completa delante (la
+     bienvenida, los Caminos); con Estadísticas o Ajustes abiertos, sí. En el cajón del móvil, nunca.
+     En un teclado español «\» sale con AltGr, que Windows manda como Ctrl + Alt: por eso no se
+     descarta Alt, y la tecla se reconoce por lo que escribe (`key`) o por su sitio (`code`). */
+  React.useEffect(function () {
+    const alTeclear = function (e) {
+      if (!(e.ctrlKey || e.metaKey) || e.isComposing || e.defaultPrevented) return;
+      if (e.key !== '\\' && e.code !== 'Backslash') return;
+      if (esCajon()) return;
+      const tg = e.target || {};
+      if (tg.isContentEditable || tg.tagName === 'INPUT' || tg.tagName === 'TEXTAREA' || tg.tagName === 'SELECT') return;
+      if (document.querySelector('[data-pace-session-root], [aria-modal="true"]:not([data-pace-modal-card])')) return;
+      e.preventDefault();
+      setState({ sidebarCollapsed: !getState().sidebarCollapsed });
+    };
+    window.addEventListener('keydown', alTeclear);
+    return function () { window.removeEventListener('keydown', alTeclear); };
+  }, []);
+
   /* LA ESCALA · la columna entera encoge para caber, en las DOS pieles.
      El motor vive en `Sidebar.escala.jsx` (s182): son ~200 lineas de
      geometria medida, y este archivo es el ORQUESTADOR. Devuelve la ref que
@@ -247,7 +269,7 @@ function Sidebar() {
   return (
     <aside ref={asideRef} style={enCajon ? { ...sidebarStyles.root, outline: 'none' } : sidebarStyles.root} data-pace-sidebar data-escalado="0"
       {...(enCajon ? { role: 'dialog', 'aria-modal': 'true', 'aria-label': t('sidebar.dialog.aria'), tabIndex: -1 } : {})}>
-      <button onClick={toggle} style={sidebarStyles.toggleFloating} data-pace-sidebar-toggle title={t('sidebar.collapse.title')} aria-label={t('sidebar.collapse.aria')}>
+      <button onClick={toggle} style={sidebarStyles.toggleFloating} data-pace-sidebar-toggle title={t('sidebar.collapse.title').replace('{k}', paceAtajoBarra())} aria-label={t('sidebar.collapse.aria')}>
         <ChevronLeftIcon />
       </button>
 
@@ -314,6 +336,14 @@ function esCajon() {
   return typeof paceEsMovil === 'function' ? paceEsMovil() : false;
 }
 
+/* La tecla del atajo de la barra con la de cada sistema: «⌘ + \» en el Mac (y en el iPad con teclado) y
+   «Ctrl + \» en los demás. La leen los títulos de plegar y de abrir (SidebarHandle.jsx). */
+function paceAtajoBarra() {
+  let p = '';
+  try { p = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || ''; } catch (e) { p = ''; }
+  return (/mac|iphone|ipad/i.test(p) ? '⌘' : 'Ctrl') + ' + \\';
+}
+
 function fechaCortaSidebar(lang) {
   try {
     /* paceFechaCorta (useT.jsx) deja «Sep» en inglés, como Estadísticas. */
@@ -326,4 +356,4 @@ function fechaCortaSidebar(lang) {
   }
 }
 
-Object.assign(window, { Sidebar, fechaCortaSidebar, esCajon });
+Object.assign(window, { Sidebar, fechaCortaSidebar, esCajon, paceAtajoBarra });

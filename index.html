@@ -2181,7 +2181,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'sidebar.streak.days': 'días seguidos',
   'sidebar.streak.best': 'Mejor: {n} días',
   'sidebar.status.ontrack': 'En camino',
-  'sidebar.collapse.title': 'Colapsar',
+  'sidebar.collapse.title': 'Colapsar ({k})',
   'sidebar.collapse.aria': 'Colapsar panel',
   'sidebar.logo.title': '¿Le haces cosquillas?',
   'sidebar.counter.pomodoros': 'Pomodoros completados hoy',
@@ -2191,7 +2191,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'sidebar.trail.hitos': 'hitos',
   'sidebar.trail.now': 'ahora',
   'sidebar.days': 'L,M,X,J,V,S,D',
-  'sidebar.open.title': 'Abrir panel',
+  'sidebar.open.title': 'Abrir panel ({k})',
   'sidebar.open.aria': 'Abrir panel',
   'sidebar.dialog.aria': 'Panel',
 
@@ -2380,7 +2380,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.streak.days': 'days in a row',
   'sidebar.streak.best': 'Best: {n} days',
   'sidebar.status.ontrack': 'On track',
-  'sidebar.collapse.title': 'Collapse',
+  'sidebar.collapse.title': 'Collapse ({k})',
   'sidebar.collapse.aria': 'Collapse panel',
   'sidebar.logo.title': 'Give the cow a tickle?',
   'sidebar.counter.pomodoros': 'Pomodoros completed today',
@@ -2390,7 +2390,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.trail.hitos': 'milestones',
   'sidebar.trail.now': 'now',
   'sidebar.days': 'Mo,Tu,We,Th,Fr,Sa,Su',
-  'sidebar.open.title': 'Open panel',
+  'sidebar.open.title': 'Open panel ({k})',
   'sidebar.open.aria': 'Open panel',
   'sidebar.dialog.aria': 'Panel',
 
@@ -30742,6 +30742,28 @@ function Sidebar() {
 
 
 
+
+
+
+  React.useEffect(function () {
+    const alTeclear = function (e) {
+      if (!(e.ctrlKey || e.metaKey) || e.isComposing || e.defaultPrevented) return;
+      if (e.key !== '\\' && e.code !== 'Backslash') return;
+      if (esCajon()) return;
+      const tg = e.target || {};
+      if (tg.isContentEditable || tg.tagName === 'INPUT' || tg.tagName === 'TEXTAREA' || tg.tagName === 'SELECT') return;
+      if (document.querySelector('[data-pace-session-root], [aria-modal="true"]:not([data-pace-modal-card])')) return;
+      e.preventDefault();
+      setState({ sidebarCollapsed: !getState().sidebarCollapsed });
+    };
+    window.addEventListener('keydown', alTeclear);
+    return function () {window.removeEventListener('keydown', alTeclear);};
+  }, []);
+
+
+
+
+
   const escalaRef = useSidebarEscala();
 
 
@@ -30938,7 +30960,7 @@ function Sidebar() {
   return (
     React.createElement("aside", _extends({ ref: asideRef, style: enCajon ? { ...sidebarStyles.root, outline: 'none' } : sidebarStyles.root, "data-pace-sidebar": true, "data-escalado": "0" },
     enCajon ? { role: 'dialog', 'aria-modal': 'true', 'aria-label': t('sidebar.dialog.aria'), tabIndex: -1 } : {}),
-    React.createElement("button", { onClick: toggle, style: sidebarStyles.toggleFloating, "data-pace-sidebar-toggle": true, title: t('sidebar.collapse.title'), "aria-label": t('sidebar.collapse.aria') },
+    React.createElement("button", { onClick: toggle, style: sidebarStyles.toggleFloating, "data-pace-sidebar-toggle": true, title: t('sidebar.collapse.title').replace('{k}', paceAtajoBarra()), "aria-label": t('sidebar.collapse.aria') },
     React.createElement(ChevronLeftIcon, null)
     ),
 
@@ -31005,6 +31027,14 @@ function esCajon() {
   return typeof paceEsMovil === 'function' ? paceEsMovil() : false;
 }
 
+
+
+function paceAtajoBarra() {
+  let p = '';
+  try {p = navigator.userAgentData && navigator.userAgentData.platform || navigator.platform || '';} catch (e) {p = '';}
+  return (/mac|iphone|ipad/i.test(p) ? '⌘' : 'Ctrl') + ' + \\';
+}
+
 function fechaCortaSidebar(lang) {
   try {
 
@@ -31017,8 +31047,8 @@ function fechaCortaSidebar(lang) {
   }
 }
 
-Object.assign(window, { Sidebar, fechaCortaSidebar, esCajon });
-;Object.assign(window, { _extends, Sidebar, esCajon, fechaCortaSidebar });
+Object.assign(window, { Sidebar, fechaCortaSidebar, esCajon, paceAtajoBarra });
+;Object.assign(window, { _extends, Sidebar, esCajon, paceAtajoBarra, fechaCortaSidebar });
 })();
 </script>
   <script>
@@ -56372,7 +56402,7 @@ function SidebarHandle(_ref) {let { onOpen } = _ref;
       ref: ref,
       "data-pace-sidebar-open": true,
       onClick: onOpen,
-      title: t('sidebar.open.title'),
+      title: t('sidebar.open.title').replace('{k}', typeof paceAtajoBarra === 'function' ? paceAtajoBarra() : 'Ctrl + \\'),
       "aria-label": t('sidebar.open.aria'),
       style: {
         position: 'fixed', top: 16, left: 14, zIndex: 50,
