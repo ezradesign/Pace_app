@@ -15,6 +15,18 @@
 
 const PACE_NOVEDADES = [
   {
+    id: 'comida-en-el-aro',
+    desde: '2026-11-23',
+    es: [
+      'Si abres PACE en plena comida, el aro te dice cuánto te queda de comida en vez de invitarte a empezar un bloque.',
+      'Al acabar un bloque, la pausa dice «Bloque terminado», y Estadísticas cuenta los minutos de cada rutina.',
+    ],
+    en: [
+      'If you open PACE in the middle of lunch, the ring tells you how much lunch is left instead of inviting you to start a block.',
+      'When a block ends, the break says “Block done”, and Stats counts each routine’s own minutes.',
+    ],
+  },
+  {
     id: 'home-ampliada',
     desde: '2026-11-22',
     es: [
