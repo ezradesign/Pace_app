@@ -188,6 +188,13 @@ const sidebarStyles = {
   lineaIc:   { width: 16, height: 16, flex: 'none', display: 'inline-grid', placeItems: 'center' },
   /* La línea del agua es un botón: hereda la línea y se quita lo de botón. */
   lineaAgua: { width: '100%', textAlign: 'left', background: 'none', border: 0, padding: 0, cursor: 'pointer' },
+  /* «Un vaso más. Deshacer» (Ez, 2A del 23 nov. 2026): «Deshacer» es un botón aparte, colocado sobre el hueco
+     que la frase le guarda (deshacerHueco, invisible y con la misma letra), así que mide lo mismo. */
+  aguaFila:      { position: 'relative' },
+  deshacerHueco: { visibility: 'hidden', whiteSpace: 'nowrap' },
+  deshacer:      { position: 'absolute', zIndex: 1, margin: 0, padding: 0, border: 0, background: 'none', cursor: 'pointer',
+                   fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, lineHeight: 1.25, color: 'var(--ink-2)',
+                   whiteSpace: 'nowrap', textDecoration: 'underline', textUnderlineOffset: 3, textDecorationThickness: 1 },
   /* «+ vaso» es letra: en el hondo de Hidrátate, con su filo (Ez, 2B · 7 nov. 2026); la gota sigue en --hydrate. */
   vaso:      { marginLeft: 'auto', flex: 'none', fontFamily: 'var(--font-ui)', fontStyle: 'normal', fontSize: 11, lineHeight: 1.2,
                color: 'var(--hydrate-deep)', border: '1px solid var(--hydrate-deep)', borderRadius: 'var(--r-pill)', padding: '3px 9px',

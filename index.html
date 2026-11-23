@@ -2206,6 +2206,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'sidebar.agua.meta': '{x} del día',
   'sidebar.agua.meta.x': 'Los {m} vasos',
   'sidebar.agua.mas': '+ vaso',
+  'sidebar.agua.otro': 'Un vaso más.',
+  'sidebar.agua.deshacer': 'Deshacer',
+  'sidebar.agua.deshacer.title': 'Quitar el vaso que acabas de sumar',
   'sidebar.open.module': 'Abrir {m}',
   'sidebar.water.add': 'Añadir un vaso',
   'sidebar.week': 'Esta semana',
@@ -2233,7 +2236,6 @@ Object.assign(window.PACE_STRINGS.es, {
   'sidebar.libraries': 'Bibliotecas',
   'sidebar.mine': 'Tus rutinas',
   'sidebar.latest': 'Último logro',
-  'sidebar.latest.none': 'Aún no hay ninguno',
   'sidebar.collection': 'Ver la colección',
   'sidebar.support': 'Apoyar PACE',
   'sidebar.empty': 'Tu día empieza en blanco. Lo que hagas se queda aquí.',
@@ -2401,6 +2403,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.agua.meta': '{x} today',
   'sidebar.agua.meta.x': 'All {m} glasses',
   'sidebar.agua.mas': '+ glass',
+  'sidebar.agua.otro': 'One more.',
+  'sidebar.agua.deshacer': 'Undo',
+  'sidebar.agua.deshacer.title': 'Remove the glass you just added',
   'sidebar.open.module': 'Open {m}',
   'sidebar.water.add': 'Add a glass',
   'sidebar.week': 'This week',
@@ -2428,7 +2433,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.libraries': 'Libraries',
   'sidebar.mine': 'Your routines',
   'sidebar.latest': 'Latest achievement',
-  'sidebar.latest.none': 'None yet',
   'sidebar.collection': 'See the collection',
   'sidebar.support': 'Support PACE',
   'sidebar.empty': 'Your day starts blank. Whatever you do stays here.',
@@ -29901,6 +29905,13 @@ const sidebarStyles = {
 
   lineaAgua: { width: '100%', textAlign: 'left', background: 'none', border: 0, padding: 0, cursor: 'pointer' },
 
+
+  aguaFila: { position: 'relative' },
+  deshacerHueco: { visibility: 'hidden', whiteSpace: 'nowrap' },
+  deshacer: { position: 'absolute', zIndex: 1, margin: 0, padding: 0, border: 0, background: 'none', cursor: 'pointer',
+    fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, lineHeight: 1.25, color: 'var(--ink-2)',
+    whiteSpace: 'nowrap', textDecoration: 'underline', textUnderlineOffset: 3, textDecorationThickness: 1 },
+
   vaso: { marginLeft: 'auto', flex: 'none', fontFamily: 'var(--font-ui)', fontStyle: 'normal', fontSize: 11, lineHeight: 1.2,
     color: 'var(--hydrate-deep)', border: '1px solid var(--hydrate-deep)', borderRadius: 'var(--r-pill)', padding: '3px 9px',
     whiteSpace: 'nowrap', background: 'var(--hydrate-soft)' },
@@ -30353,8 +30364,44 @@ function SidebarFrase(_ref) {let { plantilla, x } = _ref;
 
 
 
-function SidebarToday(_ref2) {let { hoy, enBlanco, onWater } = _ref2;
+
+
+
+
+
+
+
+
+const SIDEBAR_DESHACER_MS = 5000;
+
+function SidebarToday(_ref2) {let { hoy, enBlanco, onWater, onUndo } = _ref2;
   const { t, tn, lang } = useT();
+  const [deshacer, setDeshacer] = React.useState(false);
+  const plazo = React.useRef(null);
+  const hueco = React.useRef(null);
+  const [sitio, setSitio] = React.useState(null);
+  React.useEffect(() => () => clearTimeout(plazo.current), []);
+
+  const puedeDeshacer = deshacer && hoy.waterGlasses > 0;
+  React.useLayoutEffect(() => {
+    const h = hueco.current;
+    const s = h ? { left: h.offsetLeft, top: h.offsetTop, height: h.offsetHeight } : null;
+    setSitio((v) => {
+      if (!s) return null;
+      return v && v.left === s.left && v.top === s.top && v.height === s.height ? v : s;
+    });
+  });
+  const sumar = () => {
+    onWater();
+    setDeshacer(true);
+    clearTimeout(plazo.current);
+    plazo.current = setTimeout(() => setDeshacer(false), SIDEBAR_DESHACER_MS);
+  };
+  const quitar = () => {
+    clearTimeout(plazo.current);
+    setDeshacer(false);
+    if (onUndo) onUndo();
+  };
   const linea = (modulo, glifo, color, minutos, clave) => minutos ?
   React.createElement("p", { key: modulo, "data-pace-hoy-celda": true, "data-modulo": modulo, "data-cero": "0", style: sidebarStyles.linea },
   React.createElement("span", { "data-pace-hoy-ic": true, style: { ...sidebarStyles.lineaIc, color } }, glifo),
@@ -30370,16 +30417,29 @@ function SidebarToday(_ref2) {let { hoy, enBlanco, onWater } = _ref2;
     linea('focus', React.createElement(ABFocus, null), 'var(--focus)', hoy.focusMinutes, 'sidebar.hoy.focus'),
     linea('breathe', React.createElement(ABBreathe, null), 'var(--breathe)', hoy.breatheMinutes, 'sidebar.hoy.breathe'),
     linea('body', React.createElement(ABMove, null), 'var(--move)', hoy.bodyMinutes, 'sidebar.hoy.body'),
+    React.createElement("div", { "data-pace-agua": true, style: sidebarStyles.aguaFila },
     React.createElement("button", {
       "data-pace-hoy-celda": true, "data-modulo": "water", "data-cero": hoy.waterGlasses ? '0' : '1',
-      onClick: onWater,
-      "aria-label": fraseAgua + '. ' + t('sidebar.water.add'),
+      onClick: sumar,
+      "aria-label": (puedeDeshacer ? t('sidebar.agua.otro') + ' ' : '') + fraseAgua + '. ' + t('sidebar.water.add'),
       title: t('sidebar.water.add'),
       style: { ...sidebarStyles.linea, ...sidebarStyles.lineaAgua } },
 
     React.createElement("span", { "data-pace-hoy-ic": true, style: { ...sidebarStyles.lineaIc, color: 'var(--hydrate)' } }, React.createElement(ABDrop, null)),
+    puedeDeshacer ?
+    React.createElement("span", { "data-pace-agua-otro": true },
+    React.createElement("b", { style: sidebarStyles.tinta }, t('sidebar.agua.otro')), ' ',
+    React.createElement("span", { ref: hueco, "aria-hidden": "true", style: sidebarStyles.deshacerHueco }, t('sidebar.agua.deshacer'))
+    ) :
     React.createElement(SidebarFrase, { plantilla: tn(agua.clave, { m: agua.m }), x: xAgua }),
     React.createElement("span", { "data-pace-hoy-vaso": true, "aria-hidden": "true", style: sidebarStyles.vaso }, t('sidebar.agua.mas'))
+    ),
+    puedeDeshacer && sitio ?
+    React.createElement("button", { "data-pace-agua-deshacer": true, onClick: quitar, title: t('sidebar.agua.deshacer.title'),
+      style: { ...sidebarStyles.deshacer, left: sitio.left, top: sitio.top, height: sitio.height } },
+    t('sidebar.agua.deshacer')
+    ) :
+    null
     )
     ));
 
@@ -30820,7 +30880,8 @@ function Sidebar() {
   React.createElement(SidebarToday, {
     hoy: hoy,
     enBlanco: enBlanco,
-    onWater: () => {try {addWaterGlass(1);} catch (e) {}} }
+    onWater: () => {try {addWaterGlass(1);} catch (e) {}},
+    onUndo: () => {try {addWaterGlass(-1);} catch (e) {}} }
   )
   );
 

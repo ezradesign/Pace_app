@@ -190,6 +190,7 @@ function Sidebar() {
         hoy={hoy}
         enBlanco={enBlanco}
         onWater={() => { try { addWaterGlass(1); } catch (e) { /* el store manda */ } }}
+        onUndo={() => { try { addWaterGlass(-1); } catch (e) { /* el store manda */ } }}
       />
     </div>
   );
