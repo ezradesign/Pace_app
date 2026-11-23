@@ -15,6 +15,16 @@
 
 const PACE_NOVEDADES = [
   {
+    id: 'minutos-se-quedan',
+    desde: '2026-11-23',
+    es: [
+      'Con el día servido, los minutos que eliges encima del aro se quedan hasta que empiezas el bloque.',
+    ],
+    en: [
+      'With your day served, the minutes you pick above the ring stay until you start the block.',
+    ],
+  },
+  {
     id: 'comida-en-el-aro',
     desde: '2026-11-23',
     es: [
