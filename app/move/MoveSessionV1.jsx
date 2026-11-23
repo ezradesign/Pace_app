@@ -310,13 +310,16 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     if (stage !== 'run' || !step) return;
     try { playSound(step.mode === 'rest' ? 'move.rest' : 'move.start', v1VozEntrada(routine, stepIdx, phase)); } catch (e) {}
   }, [stage, stepIdx]);
-  const faseAntes = useRefV1({ phase, stepIdx });
+  // Sin Auto, «›» pasa al otro lado sin la cuenta de cambio: la fase sigue en trabajo y solo cambia el
+  // lado. Ahí también suena «Derecha», como suena «Izquierda» al empezar; si no, el lado 2 empezaba mudo.
+  const faseAntes = useRefV1({ phase, stepIdx, side });
   useEffectV1(() => {
     const antes = faseAntes.current;
-    faseAntes.current = { phase, stepIdx };
+    faseAntes.current = { phase, stepIdx, side };
     if (stage !== 'run' || phase !== 'work' || antes.stepIdx !== stepIdx) return;
-    if (antes.phase === 'place' || antes.phase === 'change') { try { playSound('move.go', v1VozGo(step, side)); } catch (e) {} }
-  }, [phase, stepIdx]);
+    const otroLado = antes.phase === 'work' && antes.side !== side;
+    if (antes.phase === 'place' || antes.phase === 'change' || otroLado) { try { playSound('move.go', v1VozGo(step, side)); } catch (e) {} }
+  }, [phase, stepIdx, side]);
 
   // s115 · dev-check: duración declarada vs calculada (sólo dev; una vez por
   // sesión, con el preset de descanso actual) — para comparar con la ejecución
