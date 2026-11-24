@@ -132,3 +132,28 @@ test('F7A · la landing, /premium y /beta llevan la vista previa al compartir, c
   }));
   expect(tam).toEqual([1200, 630]);
 });
+
+/* F4 · «{zona}: yet to move»: con las seis zonas y la letra al 115 %, la fila de la pausa abierta de la home (el hueco
+   más justo: «2 min · Shoulders: …») deja al menos 3 px (la ventana de la pausa, en ritmo-series). Con «not moved yet» dejaba
+   1,2 px en Windows y se salía 3 en Linux; la prueba de textos-al-limite solo ve la zona que sale ese día. */
+test('F4 · «yet to move» cabe con las seis zonas en la fila de la home, con la letra al 115 %', async ({ browser }) => {
+  const HL = require('./textos-al-limite.helpers');
+  const PAUSA = HL.MOMENTOS.find((m) => m.nombre === 'la pausa abierta');
+  const { context, page } = await HL.abreHome(browser, test.info().project.use.baseURL, { lang: 'en', w: 360, h: 718, letra: 1.15, m: PAUSA });
+  const r = await page.evaluate(() => {
+    const S = window.PACE_STRINGS.en;
+    const pat = S['ritmo.frase.zona'];
+    const zonas = ['cuello', 'hombros', 'espalda', 'caderas', 'piernas', 'manos'].map((z) => S['ritmo.zona.' + z]);
+    const frase = (z) => pat.replace('{zona}', z);
+    const casa = (t) => zonas.some((z) => t.includes(frase(z)));
+    const els = [...document.querySelectorAll('body *')].filter((e) => casa(e.textContent) && ![...e.children].some((c) => casa(c.textContent)) && e.getClientRects().length);
+    return els.map((el) => {
+      const ancho = (t) => { const c = el.cloneNode(false); c.style.cssText = 'position:absolute;visibility:hidden;width:max-content;white-space:nowrap'; c.textContent = t; el.parentElement.appendChild(c); const w = c.getBoundingClientRect().width; c.remove(); return w; };
+      const ahora = zonas.find((z) => el.textContent.includes(frase(z)));
+      return { texto: el.textContent, sobra: el.clientWidth - Math.max(...zonas.map((z) => ancho(el.textContent.replace(frase(ahora), frase(z))))) };
+    });
+  });
+  await context.close();
+  expect(r.length, 'GUARD: la frase de la zona sale en la home').toBeGreaterThan(0);
+  for (const x of r) expect(x.sobra, '«' + x.texto + '» con la zona más larga').toBeGreaterThanOrEqual(3);
+});
