@@ -258,18 +258,18 @@ jobs:
       # porque sus librerias salen de `apt`, que es la cola variable de s169.
       # El servidor lo levanta y lo tumba la propia configuracion (`webServer`
       # -> `.claude/static-server.js`), asi que aqui no hay que orquestar nada.
-      - name: npm run test:e2e (chromium, trozo ${{ matrix.trozo }} de 5)
+      - name: npm run test:e2e (chromium, trozo ${{ matrix.trozo }} de 6)
         run: npm run test:e2e -- --project=chromium --shard=${{ matrix.trozo }}/6
 
       # Diagnostico, no comprobacion: si algo se pone rojo, la traza dice donde
       # sin tener que reproducirlo a ciegas. Un nombre por trozo: dos artefactos
       # con el mismo nombre en una matriz chocan.
-      - name: Guardar el informe si fallo
+      - name: Guardar las trazas si fallo (test-results, con su trace.zip)
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report-${{ matrix.trozo }}
-          path: playwright-report/
+          path: test-results/
           retention-days: 7
 
   # ==========================================================================
@@ -311,10 +311,10 @@ jobs:
       - name: npm run test:e2e (webkit)
         run: npm run test:e2e -- --project=webkit
 
-      - name: Guardar el informe si fallo
+      - name: Guardar las trazas si fallo (test-results, con su trace.zip)
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report-safari
-          path: playwright-report/
+          path: test-results/
           retention-days: 7
