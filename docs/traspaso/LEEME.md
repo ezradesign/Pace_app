@@ -25,6 +25,17 @@ antes del 20 nov., en `docs/archive/LEEME_TRASPASO_HASTA_19NOV.md` (D4 A de Ez, 
 - **Frase de arranque para la otra cuenta:** «Eres la coordinadora de PACE. Lee CLAUDE.md, STATE.md y el arranque de
   docs/traspaso/LEEME.md, y sigue desde el primer bloque de relevo. Nunca juntes nada en main sin mi sí.»
 
+## AL RELEVO (24 nov., noche): la auditoría profunda, montada con el «Sí a todo» de Ez
+
+- Página: https://claude.ai/artifact/XPWzwT2rUrPFbKtBsrKAGs (13 hallazgos, H1-H13). Ez: «Sí a todo» = H1A H2A H3A H6A H7A
+  H8A H10A H11A H12A. Juntado el PR #8 (la prueba `fila-4`, que solo esperaba la toma de la cuenta, y las trazas del CI).
+  En el PR siguiente, desde `claude/project-thread-6ate4b`: TestFlight espera al CI en verde, acciones de GitHub en Node 24,
+  `npm audit fix`, `engines` (Node 24), seis archivos troceados sin cambiar nada (comprobado al píxel) y las reglas nuevas
+  de CLAUDE.md (juntar solo por PR con el CI en verde; lo pesado, a Releases). Cerrado el #5 de Dependabot.
+- **Espera a Ez:** activar la regla de la rama `main` en GitHub (los clics, en el hilo de la auditoría) y borrar las cinco
+  ramas que sobran (`fondo-24nov`, `state-hoja-24nov`, `diag-ahora-no-24nov`, `diag-f4-24nov`, `diag-fondo-24nov`): desde
+  la nube no se pueden borrar. Sus commits están en `/mnt/project-files/auditorias/ramas-borradas-24nov.txt`.
+
 ## AL RELEVO (24 nov., 17:45, la cuenta que no es EcLj6): empieza aquí; manda sobre lo de abajo
 
 La cuenta EcLj6 acabó hacia las 17:07 sin apuntar lo que hizo después de la 0.219.1. Lo encontró la revisión de las

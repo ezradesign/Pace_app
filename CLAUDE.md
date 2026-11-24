@@ -29,12 +29,19 @@ ir a tu ritmo). React 18.3.1 sin bundler: Babel standalone en desarrollo (`PACE.
    `docs/traspaso/LEEME.md`: es lo que permite seguir desde otra cuenta sin perder nada.
 7. Si nace una regla técnica que evita una regresión, una fila arriba del todo en
    `DECISIONES_TECNICAS_VIGENTES.md`.
-8. Commit sin línea `Co-Authored-By`, con el porqué en el mensaje, y push a `main`.
-9. Espera al CI (`gh run watch`). No está cerrado hasta que `verify` y los seis trozos de `e2e` salen en verde.
+8. Commit sin línea `Co-Authored-By`, con el porqué en el mensaje y con Ez de autor. Se sube a una rama y se
+   abre un PR a `main`: no se junta con el CI en rojo ni sin el «júntalo» de Ez (H2A, 24 nov. 2026). Tres versiones
+   se juntaron probadas solo en Windows y dejaron `main` en rojo en Linux, que pinta la letra como Android.
+9. Espera al CI del PR y, después de juntar, al de `main`. No está cerrado hasta que `verify` y los seis trozos de
+   `e2e` salen en verde.
 
 Ya no se escriben diarios de sesión, handoffs ni prompts: la historia es `git log`. Lo anterior está en
 `docs/sessions/` y `docs/archive/`, y no se toca. Lo que haya que vigilar se añade al `verify` o a la
 suite, nunca solo al YAML del CI.
+
+Lo pesado no entra en el repositorio (H11A, 24 nov. 2026): las fotos, los vídeos y las maquetas con imágenes
+dentro van a una Release de GitHub o a un artefacto, y en `docs/` queda el enlace con una línea de qué es. El
+repositorio pesa 231 MB y casi todo son maquetas de `docs/proposals` y `docs/traspaso`, que cada CI baja enteras.
 
 ## Reglas de código
 
