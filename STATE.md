@@ -32,7 +32,8 @@ fecha de v1 la ponen los 12 testers con sus 14 días seguidos, que aún no han e
 
 - **Subir la 0.219.1** a la prueba interna de Play (y de ahí a la cerrada) y a TestFlight, con las notas de `SUBIDAS.md`.
   «Escríbenos» ya escribe a `hola.ezradesign@gmail.com` (Ez, 24 nov.).
-- **Las letras de la auditoría de la experiencia** (U1-U6): página https://claude.ai/artifact/A5uYmcbADK4kmKnboHC1E8.
+- **La experiencia** (U1A U2A U4A U6A, «todo lo recomendado»), montada en `claude/experiencia-24nov`: su «júntalo» con
+  la CI en verde (será la 0.220.0). **Las V**, a medias en `claude/v-24nov` (el relevo de LEEME dice qué falta).
 - **Probar en sus aparatos**: la miniventana en su Chrome, el aviso de la web del móvil con la pantalla bloqueada (la 4 del
   móvil, 22 nov.), los pasos de cinco minutos de la página de las apps, lo privado del calendario en Android, la voz de Respira.
 - **Play Console**, al subir la siguiente beta: volver a pegar el párrafo «A tu ritmo» de `docs/launch/google-play/ficha.md`

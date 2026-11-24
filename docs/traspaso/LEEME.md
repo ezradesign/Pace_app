@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar PACE sin preguntarle a Ez lo
 que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir. Se actualiza en cada hito (regla en `CLAUDE.md`).
-Última actualización: 24 nov. 2026, con la 0.219.1 en `main`. Los relevos de
+Última actualización: 24 nov. 2026, 17:45, con la 0.219.1 en `main`. Los relevos de
 antes del 20 nov., en `docs/archive/LEEME_TRASPASO_HASTA_19NOV.md` (D4 A de Ez, 23 nov.).
 
 ## El arranque, en una pantalla
@@ -25,7 +25,25 @@ antes del 20 nov., en `docs/archive/LEEME_TRASPASO_HASTA_19NOV.md` (D4 A de Ez, 
 - **Frase de arranque para la otra cuenta:** «Eres la coordinadora de PACE. Lee CLAUDE.md, STATE.md y el arranque de
   docs/traspaso/LEEME.md, y sigue desde el primer bloque de relevo. Nunca juntes nada en main sin mi sí.»
 
-## AL RELEVO (24 nov., cuenta EcLj6; 5 h y semana al ~10 %): empieza aquí
+## AL RELEVO (24 nov., 17:45, la cuenta que no es EcLj6): empieza aquí; manda sobre lo de abajo
+
+La cuenta EcLj6 acabó hacia las 17:07 sin apuntar lo que hizo después de la 0.219.1. Lo encontró la revisión de las
+17:20 (Ez: «revisa todo bien»), y Ez eligió cerrar primero la experiencia:
+
+- **La experiencia (U1A U2A U4A U6A; U3B y U5B como están; Ez: «todo lo recomendado»)**, en `claude/experiencia-24nov`,
+  sin juntar. El Foco a mano cuenta en bloques («Bloque 1 de 4», «Otro bloque», «Luego · Bloque 2 de 4»), la frase de la
+  bienvenida y la de la landing, «una vez» sin partir y fuera 38 textos que no pedía ninguna pantalla (lo vigila
+  `scripts/verify.sinpantalla.js`). Novedad del sobre «foco-en-bloques». Su CI cayó en `v1-repetir-de-pago.spec.js:46`,
+  que era de la prueba y no de la rama: sembraba `finVisto: true` y la app solo acepta una fecha, así que la hoja del fin
+  de la semana se abría a veces en mitad de la prueba (2 de 40 también en `main`). Arreglado en 4c6df4e (100 de 100).
+  Con la CI en verde, se junta como 0.220.0 con el «júntalo» de Ez.
+- **Las V**, en `claude/v-24nov`, encima de la anterior (wip 6c1fc72, sin probar): montadas V9A, V10A, V7B y V6A; la V5A,
+  a medias. Faltan V8A, V11A, V3A, V2A y la V1, las pruebas, el singular de `move.cuenta.series` (`verify` falla) y
+  rehacer `index.html`. Antes de seguir, juntar en ella `claude/experiencia-24nov`, que trae 4c6df4e.
+- **Las páginas de la U y de las V son de la cuenta EcLj6** y desde la otra no se abren; qué es cada V no está en el repo.
+  Para seguir con las V desde esta cuenta, Ez tiene que pegar la página.
+
+## AL RELEVO (24 nov., cuenta EcLj6; 5 h y semana al ~10 %)
 
 - **`main` = 0.218.0** (Ez, 24 nov.: «Júntalo»; suite entera sobre la rama, 2033 en verde): el pulido de antes de publicar con las letras
   de Ez del 23 nov. («1A + 2A + … + 10A + D1A + D2A + D3B + D4A + D5A + D6B + D7A + LA + TA»; página «Pulido antes de
