@@ -341,31 +341,11 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     );
   }
 
-  // COMPLETADO
+  // COMPLETADO (MoveSessionV1.cierre.jsx)
   if (stage === 'done') {
-    const totalSec = tiempoSecRef.current;
-    const mins = Math.floor(totalSec / 60);
-    const secs = totalSec % 60;
-    // s114 · pantalla final por MÓDULO (resuelve el P3 antidoteDone universal):
-    // Mueve → «Movimiento completado» · Estira → «Estiramiento completado».
-    // Stats HONESTAS (s114) — el reparto por tipo de rutina vive en el support
-    // desde s170 (regla §1); el criterio no cambió.
-    const stats = v1DoneStats(routine, repsGuidedRef.current,
-                              `${mins}:${String(secs).padStart(2, '0')}`, t, hechosRef.current, seriesRef.current);
-    const doneMeta = kind === 'extra' ? t('session.stretchDone') : t('session.moveDone');
-    return (
-      <SessionDone
-        routine={displayRoutine} onExit={onExit} accent={accent} accentSoft={accentSoft}
-        doneMeta={doneMeta} doneCopy={t('move.doneCopy')}
-        stats={stats}
-        rootData={{ 'data-pace-active-sec': activeSecRef.current }}
-        buttonStyle={{ background: accent, borderColor: accent }}
-        doneButtonLabel={inPath ? t('session.next') : undefined}
-        atmosphere={atmo}
-        feedback={inPath || routine.hacerla ? undefined : <SessionFeedback routineId={routine.id} kind={kind} accent={accent} />}
-        sinContar={sinContarRef.current}
-      />
-    );
+    return v1PintaCierre({ routine, displayRoutine, kind, onExit, accent, accentSoft, inPath, atmo, t,
+      tiempoSec: tiempoSecRef.current, reps: repsGuidedRef.current, hechos: hechosRef.current,
+      series: seriesRef.current, activeSec: activeSecRef.current, sinContar: sinContarRef.current });
   }
 
   // ---- RUN: contenido central por fase/modo ----
