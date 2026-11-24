@@ -136,7 +136,10 @@ function breakElige(catalogo, iso, opts) {
   const salto = Number(o.salto) || 0;
   const pozo = breakPozo(catalogo);
   if (!pozo.length || typeof libraryParaAhora !== 'function') return null;
-  const abierta = function (r) { return !r.safety; };
+  /* JUNTO A LA MESA, como «A tu ritmo» (Ez, F1A del 24 nov. 2026; library-rules.js): sin seguridad,
+     sin suelo, sin aguantar el aire y sin más material que mesa, pared o silla. Solo miraba la
+     seguridad, y la pausa por libre proponía «Movilidad en suelo» a quien acababa un Foco sentado. */
+  const abierta = function (r) { return libraryJuntoALaMesa(r); };
   /* EL VETO VA EN EL PREDICADO, donde ya vive el filtro de seguridad: un solo
      sitio que decide qué puede salir. Y la AMNISTÍA es la segunda llamada: si
      el veto no deja nada, se pregunta otra vez sin él. */

@@ -74,7 +74,7 @@ test('el Pomodoro cuenta, se pausa, se reanuda y al terminar abre el BreakMenu',
   await expect(menu.getByText('Tu pausa', { exact: true })).toBeVisible();
   const prop = menu.locator('[data-pace-break-prop]');
   const textoProp = (await prop.count()) ? ((await prop.textContent()) || '') : '';
-  for (const nombre of ['Hidrátate', 'Respira', 'Estira', 'Muévete']) {
+  for (const nombre of ['Hidrátate', 'Respira', 'Estira', 'Mueve']) {
     const puertas = await menu.getByRole('button', { name: new RegExp(nombre) }).count();
     const propuesta = textoProp.indexOf(nombre) !== -1 ? 1 : 0;
     expect(puertas + propuesta, '«' + nombre + '» no está, o está dos veces (puertas ' + puertas + ', propuesta ' + propuesta + ')').toBe(1);

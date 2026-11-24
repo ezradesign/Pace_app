@@ -293,6 +293,19 @@ function libraryMotivoVacio(ocultas) {
   return suelo === ocultas.length ? 'floor' : 'any';
 }
 
+/* JUNTO A LA MESA: lo que PACE propone en una pausa sin que te muevas de tu sitio. Sin aviso de
+   seguridad, sin suelo, sin aguantar el aire y sin más material que la mesa, la pared o la silla de
+   trabajar, en nivel accesible; lo opcional no cuenta. La silla con respaldo (`chair`) es la de
+   trabajar, como la mesa y la pared; la que se carga sin ruedas (`stableChair`) sí es material. Lo
+   usa «A tu ritmo» para sus pozos (state-ritmo.jsx) y, desde la F1A de Ez (24 nov. 2026), la pausa
+   por libre (breakElige): proponía «Movilidad en suelo» a quien acababa un Foco en su silla. */
+function libraryJuntoALaMesa(r) {
+  if (!r || r.safety || r.requiresFloor) return false;
+  var mesa = function (e) { return (e === 'stableDesk' || e === 'wall' || e === 'chair') && (r.level || 'accessible') === 'accessible'; };
+  if ((r.equipment || []).some(function (e) { return !mesa(e) && !/Optional$/.test(e); })) return false;
+  return !libraryConRetencion(r);
+}
+
 /* LO QUE SE PUEDE PROPONER SIN QUE SE PIDA (Ez, 23 oct. 2026: 2A): todo menos los grupos que
    van `aparte` («Con material», «Para ir a más»), que solo salen si se eligen. Lo usan «Para
    ahora», la tarjeta de la barra lateral y el menú de pausa. */
@@ -323,4 +336,5 @@ Object.assign(window, {
   libraryParaAhora: libraryParaAhora,
   libraryMotivoVacio: libraryMotivoVacio,
   libraryProponibles: libraryProponibles,
+  libraryJuntoALaMesa: libraryJuntoALaMesa,
 });

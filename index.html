@@ -295,6 +295,20 @@ html[data-pace-landing-idioma="en"] #pace-landing [lang="es"] { display: none !i
   <!-- Lo que leen los buscadores de la raíz: la frase de la landing. El « — vX.Y.Z» del
        título solo vive aquí, en desarrollo: el build lo quita de index.html (paso 8b). -->
   <meta name="description" content="Pausas activas para quien trabaja sentado. Foco, respiración, movilidad y agua, a tu ritmo. Sin cuenta, sin anuncios, sin rastreo: lo tuyo se queda en tu equipo.">
+  <!-- LA VISTA PREVIA AL COMPARTIR (Ez, F7A del 24 nov. 2026): WhatsApp, Telegram, X o LinkedIn dibujan la tarjeta del
+       enlace con esto, sin ejecutar nada. La imagen, 1200 x 630, en la raíz (scripts/web-dist.js la publica). -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PACE">
+  <meta property="og:title" content="PACE · Pausas activas para quien trabaja sentado">
+  <meta property="og:description" content="Foco, respiración, movilidad y agua, a tu ritmo. Sin cuenta, sin anuncios, sin rastreo: lo tuyo se queda en tu equipo.">
+  <meta property="og:url" content="https://pacegrass.app/">
+  <meta property="og:image" content="https://pacegrass.app/og-pace.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="PACE: pausas activas para quien trabaja sentado, con la app abierta en un móvil.">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -340,7 +354,7 @@ html[data-pace-landing-idioma="en"] #pace-landing [lang="es"] { display: none !i
   --ink-2: #4A453C;
   /* Rótulos y metadatos de 9 a 12 px. #8A8372 daba 3,2:1 sobre --paper y 3,0:1 en la
      barra lateral; Ez eligió el 16 oct., viendo fotos, un punto intermedio: 4,2 y 3,9. */
-  --ink-3: #77705F;
+  --ink-3: #6C6656;   /* 4,9:1 en el crema y 4,5 en las tarjetas (Ez, F5A del 24 nov. 2026; antes #77705F) */
   --line: #C9C0A8;
   --line-2: #B8AD8E;
 
@@ -1331,7 +1345,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
   --paper-3: #DFD8C4;
   --ink: #1F1C17;
   --ink-2: #4A453C;
-  --ink-3: #77705F;
+  --ink-3: #6C6656;
   --line: #C9C0A8;
   --line-2: #B8AD8E;
   /* s104c: también los acentos de actividad — el relleno de las bolas y
@@ -3833,7 +3847,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'break.breathe.desc': '2 min para volver al centro',
   'break.stretch.label': 'Estira',
   'break.stretch.desc': 'Afloja la tensión',
-  'break.move.label': 'Muévete',
+  'break.move.label': 'Mueve',
   'break.move.desc': 'Antídoto rápido a la silla',
   'break.water.label': 'Hidrátate',
   'break.water.desc': 'Un vaso ahora',
@@ -14719,13 +14733,9 @@ function ritmoPozos(s, iso) {
     });
     return out;
   };
+
   var cabe = function (r) {
-    if (!r || r.safety || r.requiresFloor) return false;
-
-
-    var mesa = function (e) {return (e === 'stableDesk' || e === 'wall' || e === 'chair') && (r.level || 'accessible') === 'accessible';};
-    if ((r.equipment || []).some(function (e) {return !mesa(e) && !/Optional$/.test(e);})) return false;
-    if (typeof libraryConRetencion === 'function' && libraryConRetencion(r)) return false;
+    if (!libraryJuntoALaMesa(r)) return false;
     return !window.canAccessRoutine || window.canAccessRoutine(r.id);
   };
   var varia = typeof puedeVariar === 'function' && puedeVariar();
@@ -22107,6 +22117,22 @@ Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, di
       /* Foco, Pausa y Larga, arriba en los móviles altos (390 x 844 y más): 26 px de caja y 12 libres
          hasta la tarjeta de debajo en la más justa; crecen 7 arriba y 6 abajo. */
       [data-pace-tabs] > button::before { inset: -7px 0 -6px; }
+    }
+    /* EN EL ORDENADOR, CON RATÓN (Ez, F6A del 24 nov. 2026): la auditoría a fondo midió enlaces de 14 a
+       17 px de alto («Ajustar el horario», «Cambiar», «Al calendario», «Ahora no», «Ponle ritmo al día»,
+       el pie de Ajustes), la fila del agua de la barra (21) y el interruptor «Comer hoy» (22 x 12). Crecen
+       hasta 24 px, el mínimo para apuntar, con la misma zona invisible del móvil y sin cambiar cómo se
+       ven. Los enlaces de la cabecera estrecha llevan la píldora «Hoy voy por libre» 4 px encima: crecen
+       5, y la píldora, que va después en el DOM, se queda entera su caja. */
+    @media (min-width: 641px) and (pointer: fine) {
+      .pace-rt-enlace, .pace-aj-pie a, [data-pace-hoy-celda] { position: relative; }
+      .pace-rt-enlace::before, .pace-aj-pie a::before, [data-pace-hoy-celda]::before,
+      .pace-rt-mini-int[data-pace-ritmo-comes]::before { content: ''; position: absolute; }
+      .pace-rt-enlace::before, .pace-aj-pie a::before { inset: -5px -2px; }
+      [data-pace-hoy-celda]::before { inset: -2px 0; }
+      /* «Comer hoy» va en la primera línea de la frase del horario: 5 px debajo está el selector de la hora
+         de la siguiente, que se queda su caja; encima solo hay texto, así que crece hacia arriba. */
+      .pace-rt-mini-int[data-pace-ritmo-comes]::before { inset: -9px -1px -6px; }
     }
   `;
   document.head.appendChild(s);
@@ -31270,6 +31296,18 @@ Object.assign(window, { paceSobreApuntar, paceSobreLista, paceSobreHoy, PaceSobr
 
 const PACE_NOVEDADES = [
 {
+  id: 'junto-a-la-mesa',
+  desde: '2026-11-24',
+  es: [
+  'Sin plan, la pausa te propone solo lo que cabe junto a la mesa: nada de suelo.',
+  'En «Antes de empezar», el botón «Empezar» se ve siempre, también en las rutinas largas.'],
+
+  en: [
+  'Without a plan, the break only suggests what fits at your desk: nothing on the floor.',
+  'In «Before you start», the «Start» button is always in view, even in long routines.']
+
+},
+{
   id: 'ahora-no',
   desde: '2026-11-24',
   es: [
@@ -32768,7 +32806,13 @@ function RoutinePreview(_ref) {let { routine, kind = 'move', onStart, onClose } 
     ),
 
 
+
+
+
+
     React.createElement("button", { onClick: onStart, "data-pace-cta": true, style: {
+        position: 'sticky', bottom: 0, zIndex: 2,
+        boxShadow: '0 -14px 14px -2px var(--paper), 0 12px 0 12px var(--paper)',
         width: '100%', marginTop: 6, padding: '13px 20px',
         background: letraDe(accent), color: 'var(--paper)', border: 'none',
         borderRadius: 'var(--r-pill)', cursor: 'pointer', minHeight: 44,
@@ -33091,6 +33135,19 @@ function libraryMotivoVacio(ocultas) {
 
 
 
+
+
+
+function libraryJuntoALaMesa(r) {
+  if (!r || r.safety || r.requiresFloor) return false;
+  var mesa = function (e) {return (e === 'stableDesk' || e === 'wall' || e === 'chair') && (r.level || 'accessible') === 'accessible';};
+  if ((r.equipment || []).some(function (e) {return !mesa(e) && !/Optional$/.test(e);})) return false;
+  return !libraryConRetencion(r);
+}
+
+
+
+
 function libraryProponibles(cat) {
   var out = [];
   Object.keys(cat || {}).forEach(function (g) {
@@ -33117,9 +33174,10 @@ Object.assign(window, {
   libraryDiaOrdinal: libraryDiaOrdinal,
   libraryParaAhora: libraryParaAhora,
   libraryMotivoVacio: libraryMotivoVacio,
-  libraryProponibles: libraryProponibles
+  libraryProponibles: libraryProponibles,
+  libraryJuntoALaMesa: libraryJuntoALaMesa
 });
-;Object.assign(window, { LIB_FILTROS, LIB_FILTROS_RESPIRA, LIB_PATRONES_CON_SOSTEN, libraryConRetencion, libraryAire, libraryUmbralCorto, libraryPredicado, libraryFiltrar, libraryOrdenar, LIBRARY_MISMO_GESTO, libraryGlifos, librarySeries, libraryDonde, libraryPorLado, libraryDiaOrdinal, libraryParaAhora, libraryMotivoVacio, libraryProponibles });
+;Object.assign(window, { LIB_FILTROS, LIB_FILTROS_RESPIRA, LIB_PATRONES_CON_SOSTEN, libraryConRetencion, libraryAire, libraryUmbralCorto, libraryPredicado, libraryFiltrar, libraryOrdenar, LIBRARY_MISMO_GESTO, libraryGlifos, librarySeries, libraryDonde, libraryPorLado, libraryDiaOrdinal, libraryParaAhora, libraryMotivoVacio, libraryJuntoALaMesa, libraryProponibles });
 })();
 </script>
   <script>
@@ -42372,7 +42430,10 @@ function breakElige(catalogo, iso, opts) {
   const salto = Number(o.salto) || 0;
   const pozo = breakPozo(catalogo);
   if (!pozo.length || typeof libraryParaAhora !== 'function') return null;
-  const abierta = function (r) {return !r.safety;};
+
+
+
+  const abierta = function (r) {return libraryJuntoALaMesa(r);};
 
 
 
