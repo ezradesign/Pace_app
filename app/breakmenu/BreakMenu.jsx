@@ -57,7 +57,9 @@ function BreakMenu({ open, onClose, onChoose, onSeguir }) {
     const p = propRef.current;
     const desdeMenu = !!(rutina && p && p.rutina && p.rutina.id === rutina.id
       && typeof p.porque === 'string' && p.porque.indexOf('ritmo.') === 0);
-    onChoose(key, rutina || null, desdeMenu);
+    /* Sin rutina, la palabra entra en su «Para ahora» y su ficha ofrece «Ver otras» (V2A). */
+    const ahora = !rutina && key !== 'water' && typeof breakAhoraDe === 'function' ? breakAhoraDe(key, getState()) : null;
+    onChoose(key, rutina || ahora || null, desdeMenu, ahora ? { otras: true } : undefined);
   };
   /* La propuesta del agua dice «Un vaso más», así que lo suma antes de abrir Hidrátate, donde se
      ve contado y se deshace con «Un vaso menos». Las demás entran en su rutina.

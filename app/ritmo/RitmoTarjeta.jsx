@@ -34,10 +34,33 @@
    par es una pausa larga y se pinta ancha con el color de su primer plato. */
 var RITMO_ESQUEMA = ['estira', 'mueve', ['respira', 'estira'], 'comida', 'estira', 'mueve', ['respira', 'estira'], 'estira', 'respira'];
 
-function RitmoEsquema() {
+/* Con tu semana, el esquema es TU día de hoy (sus pausas y la comida, sin horas) y el título lo dice
+   al lado: «8 pausas · 9:00–17:00» (Ez, V8A del 24 nov. 2026). La fila de puntos no decía qué era, y
+   para el lector de pantalla estaba oculta. Sin tu semana, el dibujo de siempre y «un día tipo». */
+function ritmoEsquemaDe(m) {
+  if (!m || !Array.isArray(m.items)) return null;
+  const pasos = [];
+  m.items.forEach((it) => {
+    if (it.tipo === 'comida') pasos.push('comida');
+    else if (it.tipo === 'pausa' && it.platos && it.platos.length) {
+      const mods = it.platos.map((p) => p.modulo);
+      pasos.push(it.larga || mods.length > 1 ? mods : mods[0]);
+    }
+  });
+  return pasos.some((p) => p !== 'comida') ? pasos : null;
+}
+function ritmoEsquemaDice(H, t, tn) {
+  const pasos = H && ritmoEsquemaDe(H.m);
+  if (!pasos) return t('ritmo.tarjeta.esquema.tipo');
+  const n = pasos.filter((p) => p !== 'comida').length;
+  return tn(n === 1 ? 'ritmo.tarjeta.esquema.uno' : 'ritmo.tarjeta.esquema', { n, desde: ritmoHora(H.m.desde), hasta: ritmoHora(H.m.hasta) });
+}
+
+function RitmoEsquema({ m }) {
+  const pasos = ritmoEsquemaDe(m) || RITMO_ESQUEMA;
   return (
     <div className="pace-rt-esquema" aria-hidden="true" data-pace-ritmo-esquema>
-      {RITMO_ESQUEMA.map((paso, k) => {
+      {pasos.map((paso, k) => {
         if (paso === 'comida') return <span key={k} className="pace-rt-esq-comida" />;
         const larga = Array.isArray(paso);
         return (
@@ -98,10 +121,14 @@ function RitmoTarjeta() {
               <button className="pace-rt-enlace" data-pace-ritmo-caminos onClick={abrirCaminos}>{t('paths.library.viewAll')}</button>
             </div>
           )}
-          <div className="pace-rt-tm-t" data-pace-ritmo-tarjeta-titulo>{titulo}</div>
+          <div className="pace-rt-tm-tfila">
+            {/* «Hoy, jueves»: con lo que dice el esquema al lado, «como cada jueves» partía el título en dos. */}
+            <div className="pace-rt-tm-t" data-pace-ritmo-tarjeta-titulo>{H ? tn('ritmo.manana.titulo.primera', { dia: ritmoNombreDia(H.diaSemana, t) }) : titulo}</div>
+            <span className="pace-rt-tm-dice" data-pace-ritmo-esquema-dice>{ritmoEsquemaDice(H, t, tn)}</span>
+          </div>
           {/* El calendario al final del esquema, como «Ver todo» al final de la línea del día
               (Ez, 1A del 16 nov.): sin alto propio (RitmoCalendario.tarjeta.jsx). */}
-          <div className="pace-rt-esq-fila"><RitmoEsquema /><RitmoCalendarioTarjeta corto /></div>
+          <div className="pace-rt-esq-fila"><RitmoEsquema m={H && H.m} /><RitmoCalendarioTarjeta corto /></div>
           {/* CON TU SEMANA, UN TOQUE (Ez, 2A del 18 nov. 2026): «Preparar jornada» sirve tu día de
               siempre, sin pasar por una pregunta con otro «Preparar jornada» igual; el horario se cambia
               después con «Cambiar». «Hoy es distinto» va debajo de «Jornada entera», en el mismo alto
@@ -131,4 +158,4 @@ function RitmoTarjeta() {
   );
 }
 
-Object.assign(window, { RitmoTarjeta, RitmoEsquema, RITMO_ESQUEMA });
+Object.assign(window, { RitmoTarjeta, RitmoEsquema, RITMO_ESQUEMA, ritmoEsquemaDe });

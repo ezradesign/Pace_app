@@ -154,14 +154,7 @@ function PaceApp() {
     const p = previewRoutine;
     setPreviewRoutine(null);
     if (!p) return;
-    /* s178: aquí se capturaba la capitular para el VUELO de s174, que aterrizaba
-       en el círculo de arte de la preparación. s175 quitó ese arte por decisión
-       del usuario y con él el único destino posible, así que desde entonces el
-       vuelo clonaba un nodo y gastaba 24 frames buscando dónde posarse antes de
-       rendirse. La auditoría de s178 lo midió y se ha ido entero: el módulo, su
-       <script> y esta llamada. Si algún día vuelve un destino, vuelve con él.
-       `tests/transicion-biblioteca.spec.js` sigue vigilando que no aparezca un
-       clon suelto. */
+    /* Sin vuelo de la capitular: su destino se fue con el arte de la preparación (transicion-biblioteca.spec.js). */
     setOpenLibrary(null);
     setView({ type: 'move-session', routine: p.routine, kind: p.kind });
   };
@@ -255,7 +248,7 @@ function PaceApp() {
     <PaceRed modo="parte" nombre={nombre} abierto={abierto} onCerrar={cerrar}>{hijo}</PaceRed>
   );
 
-  const handleBreakChoice = (choice, rutina, desdeMenu) => {
+  const handleBreakChoice = (choice, rutina, desdeMenu, opciones) => {
     setOpenBreakMenu(false);
     /* s194 · la pausa es una puerta; `desdeMenu` dice si lo elegido era el plato que
        «A tu ritmo» sirvió (BreakMenu lo sabe por el motivo de la propuesta). */
@@ -267,7 +260,9 @@ function PaceApp() {
     if (rutina && rutina.id) {
       if (choice === 'breathe') { handleStartBreathe(rutina); return; }
       if (choice === 'extra' || choice === 'move') {
-        setPreviewRoutine({ routine: rutina, kind: choice === 'extra' ? 'extra' : 'move' });
+        /* `otras`: la pausa abrió la de «Para ahora» en vez de la biblioteca (Ez, V2A del 24 nov.), y la ficha
+           lleva «Ver otras de …» para elegir con calma. */
+        setPreviewRoutine({ routine: rutina, kind: choice === 'extra' ? 'extra' : 'move', otras: !!(opciones && opciones.otras) });
         return;
       }
     }
@@ -454,6 +449,7 @@ function PaceApp() {
           routine={previewRoutine.routine}
           kind={previewRoutine.kind}
           onStart={lanzarDesdePreview}
+          onOtras={previewRoutine.otras ? () => { const k = previewRoutine.kind; setPreviewRoutine(null); setOpenLibrary(k); } : null}
           onClose={() => setPreviewRoutine(null)}
         />)}
 

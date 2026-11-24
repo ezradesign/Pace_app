@@ -260,4 +260,4 @@ function getBreatheRoutine(id) {
 }
 window.getBreatheRoutine = getBreatheRoutine;
 
-Object.assign(window, { BreatheLibrary, BreatheSafety });
+Object.assign(window, { BreatheLibrary, BreatheSafety, BREATHE_PRIMERA_VEZ, BREATHE_BIBLIOTECA });

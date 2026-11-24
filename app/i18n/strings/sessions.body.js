@@ -127,6 +127,8 @@ Object.assign(window.PACE_STRINGS.es, {
     /* El aviso de todas las rutinas de cuerpo, encima de «Empezar»: lo que vale para cualquier
        ejercicio (BASE_MUEVE_ESTIRA §8). Lo que pide cada uno va en su «Cuídate». */
     'preview.aviso':                   'Respira con normalidad y, si notas dolor o mareo, para.',
+    'preview.otras.move':              'Ver otras de Mueve',   /* desde la pausa, que entra en la de «Para ahora» (Ez, V2A) */
+    'preview.otras.extra':             'Ver otras de Estira',
     /* s189 · lo unico del preview que sale de `pace.events.v1`. Una linea sola,
        sin fecha: el numero es cierto (son N veces registradas) y envejece bien
        -- en un año ese mismo texto sera el total real. Con 0 no se pinta. */
@@ -302,6 +304,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'preview.steps':                   'The steps',
     'preview.start':                   'Start',
     'preview.aviso':                   'Breathe normally, and stop if you feel pain or dizziness.',
+    'preview.otras.move':              'More from Move',
+    'preview.otras.extra':             'More from Stretch',
     'preview.doneCount.one':           'You have done this once',
     'preview.doneCount.many':          'You have done this {n} times',
     'preview.eq.stableDesk':           'A stable desk',

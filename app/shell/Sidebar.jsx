@@ -267,7 +267,12 @@ function Sidebar() {
      y no `order` de CSS: el visual y el de foco tienen que ser el mismo (s160). */
   const secciones = [seccionSemana, seccionHoy, seccionAccion, seccionBibliotecas, seccionLogro].filter(Boolean);
 
+  /* EN LA TABLETA, UN CAJÓN DE 360 PX CON LA HOME DETRÁS (Ez, V11A del 24 nov. 2026): a pantalla entera
+     el logo pasaba de 200 a casi 500 px y la mitad de abajo quedaba vacía. El velo (Sidebar.hoja.jsx) solo
+     se ve desde 480 px de ancho; tocarlo cierra el cajón, como fuera de cualquier ventana. */
   return (
+    <React.Fragment>
+    {enCajon && <div data-pace-cajon-velo aria-hidden="true" onClick={plegar} />}
     <aside ref={asideRef} style={enCajon ? { ...sidebarStyles.root, outline: 'none' } : sidebarStyles.root} data-pace-sidebar data-escalado="0"
       {...(enCajon ? { role: 'dialog', 'aria-modal': 'true', 'aria-label': t('sidebar.dialog.aria'), tabIndex: -1 } : {})}>
       <button onClick={toggle} style={sidebarStyles.toggleFloating} data-pace-sidebar-toggle title={t('sidebar.collapse.title').replace('{k}', paceAtajoBarra())} aria-label={t('sidebar.collapse.aria')}>
@@ -325,6 +330,7 @@ function Sidebar() {
       </div>
       </div>
     </aside>
+    </React.Fragment>
   );
 }
 

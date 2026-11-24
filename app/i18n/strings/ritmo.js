@@ -214,6 +214,9 @@ Object.assign(window.PACE_STRINGS.es, {
     'ritmo.manana.titulo.primera':   'Hoy, {dia}',
     'ritmo.manana.como':             'como cada {dia}',
     'ritmo.manana.distinto':         'Hoy es distinto',
+    'ritmo.tarjeta.esquema':         '{n} pausas · {desde}–{hasta}',   /* al lado del título, lo que es la fila de puntos (Ez, V8A) */
+    'ritmo.tarjeta.esquema.uno':     '1 pausa · {desde}–{hasta}',
+    'ritmo.tarjeta.esquema.tipo':    'Un día tipo',
     'ritmo.dias':                    'lunes,martes,miércoles,jueves,viernes,sábado,domingo',
 });
 
@@ -411,5 +414,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.manana.titulo.primera':   'Today, {dia}',
     'ritmo.manana.como':             'like every {dia}',
     'ritmo.manana.distinto':         'Today is different',
+    'ritmo.tarjeta.esquema':         '{n} breaks · {desde}–{hasta}',
+    'ritmo.tarjeta.esquema.uno':     '1 break · {desde}–{hasta}',
+    'ritmo.tarjeta.esquema.tipo':    'A typical day',
     'ritmo.dias':                    'Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
 });

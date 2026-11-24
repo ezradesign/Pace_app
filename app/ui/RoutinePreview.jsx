@@ -41,7 +41,7 @@ const flechaVolverPrev = (
   </svg>
 );
 
-function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
+function RoutinePreview({ routine, kind = 'move', onStart, onClose, onOtras }) {
   const { t, tn, lang } = useT();
   const [pace] = usePace();
   /* El paso que se mira, por su índice en la rutina preparada; null = la lista. */
@@ -250,6 +250,15 @@ function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
               })}
             </div>
           </Seccion>
+        )}
+
+        {/* Desde la pausa la ficha es la de «Para ahora» (Ez, V2A): otra de la biblioteca, a un toque. */}
+        {onOtras && (
+          <button type="button" data-pace-preview-otras onClick={onOtras} style={{
+            display: 'block', margin: '0 0 12px', padding: '6px 0', minHeight: 32, background: 'none', border: 'none',
+            cursor: 'pointer', color: 'var(--ink-2)', fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 15,
+            textDecoration: 'underline', textUnderlineOffset: 3, textDecorationColor: 'var(--line)',
+          }}>{kind === 'extra' ? t('preview.otras.extra') : t('preview.otras.move')}</button>
         )}
 
         {/* El aviso común, pegado al botón: es lo último que se lee antes de empezar. En tinta

@@ -2534,6 +2534,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
 
   'move.stepCount': 'Paso {current} de {total}',
+  'move.serieCount': 'Serie {current} de {total}',
   'move.nextStep': 'Siguiente',
   'move.lastStep': 'Último paso',
   'move.prev': '← Anterior',
@@ -2761,6 +2762,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
   'move.stepCount': 'Step {current} of {total}',
+  'move.serieCount': 'Set {current} of {total}',
   'move.nextStep': 'Next',
   'move.lastStep': 'Last step',
   'move.prev': '← Previous',
@@ -3082,6 +3084,8 @@ Object.assign(window.PACE_STRINGS.es, {
 
 
   'preview.aviso': 'Respira con normalidad y, si notas dolor o mareo, para.',
+  'preview.otras.move': 'Ver otras de Mueve',
+  'preview.otras.extra': 'Ver otras de Estira',
 
 
 
@@ -3110,15 +3114,17 @@ Object.assign(window.PACE_STRINGS.es, {
   'preview.pos.supine': 'Boca arriba',
 
 
-  'move.steps': 'Pasos',
-  'move.prepCopy.standing': 'De pie. Sin prisa. {n} pasos.',
-  'move.prepCopy.seated': 'En la silla. Sin prisa. {n} pasos.',
-  'move.prepCopy.floor': 'En el suelo. Sin prisa. {n} pasos.',
-  'move.prepCopy.any': 'Sin prisa. {n} pasos.',
-  'move.prepCopy.standing.uno': 'De pie. Sin prisa. 1 paso.',
-  'move.prepCopy.seated.uno': 'En la silla. Sin prisa. 1 paso.',
-  'move.prepCopy.floor.uno': 'En el suelo. Sin prisa. 1 paso.',
-  'move.prepCopy.any.uno': 'Sin prisa. 1 paso.',
+
+
+  'move.steps': 'Ejercicios',
+  'move.steps.uno': 'Ejercicio',
+  'move.prepCopy.standing': 'De pie. Sin prisa. {cuenta}.',
+  'move.prepCopy.seated': 'En la silla. Sin prisa. {cuenta}.',
+  'move.prepCopy.floor': 'En el suelo. Sin prisa. {cuenta}.',
+  'move.prepCopy.any': 'Sin prisa. {cuenta}.',
+  'move.cuenta.ejercicios': '{n} ejercicios',
+  'move.cuenta.ejercicios.uno': '1 ejercicio',
+  'move.cuenta.series': '{n} series',
   'move.next.prefix': 'Siguiente:',
   'move.finish': 'Terminar',
   'move.hint': '← → navegar · Espacio pausar · Esc salir',
@@ -3175,7 +3181,9 @@ Object.assign(window.PACE_STRINGS.es, {
 
   'move.careLabel': 'Cuídate',
   'move.series': 'Series',
-  'move.repsCount': 'Reps',
+  'move.series.uno': 'Serie',
+  'move.repsCount': 'Repeticiones',
+  'move.repsCount.uno': 'Repetición',
 
   'move.restNext': 'Luego: {name}',
   'move.restReady': 'Prepárate para seguir'
@@ -3253,6 +3261,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'preview.steps': 'The steps',
   'preview.start': 'Start',
   'preview.aviso': 'Breathe normally, and stop if you feel pain or dizziness.',
+  'preview.otras.move': 'More from Move',
+  'preview.otras.extra': 'More from Stretch',
   'preview.doneCount.one': 'You have done this once',
   'preview.doneCount.many': 'You have done this {n} times',
   'preview.eq.stableDesk': 'A stable desk',
@@ -3278,15 +3288,15 @@ Object.assign(window.PACE_STRINGS.en, {
   'preview.pos.supine': 'Lying face up',
 
 
-  'move.steps': 'Steps',
-  'move.prepCopy.standing': 'Stand up. No rush. {n} steps.',
-  'move.prepCopy.seated': 'In your chair. No rush. {n} steps.',
-  'move.prepCopy.floor': 'On the floor. No rush. {n} steps.',
-  'move.prepCopy.any': 'No rush. {n} steps.',
-  'move.prepCopy.standing.uno': 'Stand up. No rush. 1 step.',
-  'move.prepCopy.seated.uno': 'In your chair. No rush. 1 step.',
-  'move.prepCopy.floor.uno': 'On the floor. No rush. 1 step.',
-  'move.prepCopy.any.uno': 'No rush. 1 step.',
+  'move.steps': 'Exercises',
+  'move.steps.uno': 'Exercise',
+  'move.prepCopy.standing': 'Stand up. No rush. {cuenta}.',
+  'move.prepCopy.seated': 'In your chair. No rush. {cuenta}.',
+  'move.prepCopy.floor': 'On the floor. No rush. {cuenta}.',
+  'move.prepCopy.any': 'No rush. {cuenta}.',
+  'move.cuenta.ejercicios': '{n} exercises',
+  'move.cuenta.ejercicios.uno': '1 exercise',
+  'move.cuenta.series': '{n} sets',
   'move.next.prefix': 'Next:',
   'move.finish': 'Finish',
   'move.hint': '← → to navigate · Space to pause · Esc to exit',
@@ -3340,7 +3350,9 @@ Object.assign(window.PACE_STRINGS.en, {
 
   'move.careLabel': 'Take care',
   'move.series': 'Sets',
+  'move.series.uno': 'Set',
   'move.repsCount': 'Reps',
+  'move.repsCount.uno': 'Rep',
 
   'move.restNext': 'Next: {name}',
   'move.restReady': 'Get ready to continue'
@@ -3499,9 +3511,9 @@ Object.assign(window.PACE_STRINGS.en, {
 
 Object.assign(window.PACE_STRINGS.es, {
 
-  'stats.tag': 'Estadísticas',
-  'stats.title': 'Ritmo',
-  'stats.subtitle': 'Métricas suaves. Sin ansiedad, sin comparación.',
+  'stats.tag': 'Tu actividad',
+  'stats.title': 'Estadísticas',
+  'stats.subtitle': 'Lo que has hecho, sin compararte con nadie.',
   'stats.unit.min': 'min',
   'stats.unit.glasses': 'vasos',
   'stats.note.label': 'Nota:',
@@ -3603,9 +3615,9 @@ Object.assign(window.PACE_STRINGS.es, {
 
 Object.assign(window.PACE_STRINGS.en, {
 
-  'stats.tag': 'Stats',
-  'stats.title': 'Rhythm',
-  'stats.subtitle': 'A gentle look at your activity. No comparisons.',
+  'stats.tag': 'Your activity',
+  'stats.title': 'Stats',
+  'stats.subtitle': 'What you’ve done, no comparisons.',
   'stats.unit.min': 'min',
   'stats.unit.glasses': 'glasses',
   'stats.note.label': 'Note:',
@@ -4383,6 +4395,8 @@ Object.assign(window.PACE_STRINGS.es, {
 
 
   'onboarding.welcome.cta': 'Comenzar',
+  'onboarding.semana.rotulo': 'Tu semana',
+  'onboarding.completo.cta': 'Entrar en PACE',
   'onboarding.welcome.hint': 'Tres preguntas breves. Medio minuto.',
 
   'onboarding.copia': '¿Tienes una copia?',
@@ -4436,18 +4450,18 @@ Object.assign(window.PACE_STRINGS.es, {
   'visita.fin': 'Entendido',
   'visita.aro.titulo': 'El aro',
   'visita.aro.texto': 'Elige los minutos arriba y toca «{boton}»: el aro se llena mientras trabajas.',
-  'visita.aro.pausa': 'Al acabar te propone una pausa corta y, la primera vez, te pide permiso para avisarte aunque estés en otra app.',
+  'visita.aro.pausa': 'Al acabar te propone una pausa y, la primera vez, te pide permiso para avisarte.',
   'visita.act.titulo': 'Actividades',
-  'visita.act.texto': 'Respira, Estira y Mueve, con rutinas cortas, e Hidrátate, para tus vasos de agua. Cuando quieras.',
+  'visita.act.texto': 'Respira, Estira y Mueve, con rutinas cortas, e Hidrátate, para el agua. Cuando quieras.',
   'visita.dia.titulo': 'Empieza por tu día',
-  'visita.dia.texto': 'Elige cuánto trabajas hoy y PACE reparte tus pausas por la jornada, cada una a su hora y con qué hacer. Cada mañana te lo propone según tu semana, y «Al calendario» lo lleva a tu calendario.',
+  'visita.dia.texto': 'Elige cuánto trabajas hoy y PACE reparte tus pausas por la jornada.',
   'visita.arriba.titulo': 'Estadísticas y logros',
-  'visita.arriba.texto': 'Lo que has hecho hoy, esta semana y este mes, sin compararte con nadie. Y los sellos, que llegan solos al usar PACE.',
+  'visita.arriba.texto': 'Lo que has hecho, sin compararte con nadie, y los sellos que llegan solos.',
   'visita.cajon.titulo': 'El menú',
   'visita.columna.titulo': 'A la izquierda',
-  'visita.menu.texto': 'Tu semana de un vistazo, el agua de hoy, las bibliotecas de Respira, Estira y Mueve, y tus rutinas.',
+  'visita.menu.texto': 'Tu semana, el agua de hoy, las bibliotecas y tus rutinas.',
   'visita.ajustes.titulo': 'Ajustes',
-  'visita.ajustes.texto': 'El idioma, el sonido, los avisos y tu semana. PACE lo guarda todo en este aparato: en «Tus datos» haces una copia. Aquí repites la visita.'
+  'visita.ajustes.texto': 'Idioma, sonido, avisos y tu semana. En «Tus datos», tu copia; aquí repites la visita.'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -4459,6 +4473,8 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
   'onboarding.welcome.cta': 'Start',
+  'onboarding.semana.rotulo': 'Your week',
+  'onboarding.completo.cta': 'Open PACE',
   'onboarding.welcome.hint': 'Three short questions. Half a minute.',
   'onboarding.copia': 'Have a copy?',
   'onboarding.copia.traer': 'Bring it in',
@@ -4511,18 +4527,18 @@ Object.assign(window.PACE_STRINGS.en, {
   'visita.fin': 'Got it',
   'visita.aro.titulo': 'The ring',
   'visita.aro.texto': 'Choose the minutes above and tap “{boton}”: the ring fills as you work.',
-  'visita.aro.pausa': 'When it ends, it suggests a short break and, the first time, asks permission to let you know even if you’re in another app.',
+  'visita.aro.pausa': 'When it ends it suggests a break and, the first time, asks to notify you.',
   'visita.act.titulo': 'Activities',
-  'visita.act.texto': 'Try short routines in Breathe, Stretch and Move. Log your water in Hydrate. Whenever you like.',
+  'visita.act.texto': 'Breathe, Stretch and Move, with short routines, and Hydrate for your water. Whenever you like.',
   'visita.dia.titulo': 'Start with your day',
-  'visita.dia.texto': 'Choose how long you work today and PACE spreads your breaks across it, each at its time and with what to do. Each morning it suggests a plan from your week, and “Add to calendar” puts it in your calendar.',
+  'visita.dia.texto': 'Choose how long you work today and PACE spreads your breaks across it.',
   'visita.arriba.titulo': 'Stats and achievements',
-  'visita.arriba.texto': 'What you’ve done today, this week and this month, without comparing you to anyone. And the stamps, which come on their own as you use PACE.',
+  'visita.arriba.texto': 'What you’ve done, without comparing you to anyone, and the stamps that come on their own.',
   'visita.cajon.titulo': 'The menu',
   'visita.columna.titulo': 'On the left',
-  'visita.menu.texto': 'Your week at a glance, today’s water, the Breathe, Stretch and Move libraries, and your routines.',
+  'visita.menu.texto': 'Your week, today’s water, the libraries and your routines.',
   'visita.ajustes.titulo': 'Settings',
-  'visita.ajustes.texto': 'Language, sound, reminders and your week. PACE keeps everything on this device: make a copy in “Your data”. Take the tour again here.'
+  'visita.ajustes.texto': 'Language, sound, reminders and your week. Your copy is in “Your data”; take the tour again here.'
 });
 })();
 </script>
@@ -4744,6 +4760,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.manana.titulo.primera': 'Hoy, {dia}',
   'ritmo.manana.como': 'como cada {dia}',
   'ritmo.manana.distinto': 'Hoy es distinto',
+  'ritmo.tarjeta.esquema': '{n} pausas · {desde}–{hasta}',
+  'ritmo.tarjeta.esquema.uno': '1 pausa · {desde}–{hasta}',
+  'ritmo.tarjeta.esquema.tipo': 'Un día tipo',
   'ritmo.dias': 'lunes,martes,miércoles,jueves,viernes,sábado,domingo'
 });
 
@@ -4941,6 +4960,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.manana.titulo.primera': 'Today, {dia}',
   'ritmo.manana.como': 'like every {dia}',
   'ritmo.manana.distinto': 'Today is different',
+  'ritmo.tarjeta.esquema': '{n} breaks · {desde}–{hasta}',
+  'ritmo.tarjeta.esquema.uno': '1 break · {desde}–{hasta}',
+  'ritmo.tarjeta.esquema.tipo': 'A typical day',
   'ritmo.dias': 'Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday'
 });
 })();
@@ -22996,15 +23018,38 @@ function SessionPrep(_ref) {let { routine, onExit, accent, prepCount, copy, onSk
 
 
 const PREP_SUELO = ['floor', 'supine', 'halfKneeling'];
+
+
+
+
+function paceGruposRutina(steps) {
+  const grupos = [];
+  (steps || []).forEach((s, i) => {
+    if (!s || s.mode === 'rest') return;
+    const ult = grupos[grupos.length - 1];
+    if (ult && ult.name === s.name && ult.idxs[ult.idxs.length - 1] === paceUltimoNoDescanso(steps, i)) ult.idxs.push(i);else
+    grupos.push({ name: s.name, idxs: [i] });
+  });
+  return grupos;
+}
+
+function paceUltimoNoDescanso(steps, i) {
+  for (let j = i - 1; j >= 0; j--) if (steps[j] && steps[j].mode !== 'rest') return j;
+  return -1;
+}
+
+function paceCuentaRutina(steps, tn) {
+  const g = paceGruposRutina(steps);
+  const series = g.reduce((a, x) => a + x.idxs.length, 0);
+  const ej = g.length === 1 ? tn('move.cuenta.ejercicios.uno', {}) : tn('move.cuenta.ejercicios', { n: g.length });
+  return g.some((x) => x.idxs.length > 1) ? ej + ', ' + tn('move.cuenta.series', { n: series }) : ej;
+}
 function sessionPrepCopy(routine, tn) {
   const pos = Array.isArray(routine.position) ? routine.position : [];
   const donde = pos.length && pos.every((p) => PREP_SUELO.indexOf(p) !== -1) ? 'floor' :
   pos.length === 1 && (pos[0] === 'seated' || pos[0] === 'standing') ? pos[0] :
   'any';
-
-
-  const n = routine.steps.filter((s) => s.mode !== 'rest').length;
-  return tn('move.prepCopy.' + donde + (n === 1 ? '.uno' : ''), { n });
+  return tn('move.prepCopy.' + donde, { cuenta: paceCuentaRutina(routine.steps, tn) });
 }
 
 
@@ -23013,13 +23058,17 @@ function sessionPrepCopy(routine, tn) {
 function sessionPasoCabecera(routine, stepIdx, t, tn) {
   const steps = routine && routine.steps || [];
   if (steps[stepIdx] && steps[stepIdx].mode === 'rest') return t('session.restLabel');
-  const total = steps.filter((s) => s.mode !== 'rest').length;
-  const current = steps.slice(0, stepIdx + 1).filter((s) => s.mode !== 'rest').length;
-  return tn('move.stepCount', { current, total });
+
+  const grupos = paceGruposRutina(steps);
+  const g = grupos.findIndex((x) => x.idxs.indexOf(stepIdx) !== -1);
+  if (g === -1) return tn('move.stepCount', { current: 1, total: Math.max(1, grupos.length) });
+  const idxs = grupos[g].idxs;
+  if (idxs.length > 1) return tn('move.serieCount', { current: idxs.indexOf(stepIdx) + 1, total: idxs.length });
+  return tn('move.stepCount', { current: g + 1, total: grupos.length });
 }
 
-Object.assign(window, { SessionPrep, sessionPrepCopy, sessionPasoCabecera });
-;Object.assign(window, { SessionPrep, sessionPrepCopy, sessionPasoCabecera });
+Object.assign(window, { SessionPrep, sessionPrepCopy, sessionPasoCabecera, paceGruposRutina, paceCuentaRutina });
+;Object.assign(window, { SessionPrep, paceGruposRutina, paceUltimoNoDescanso, paceCuentaRutina, sessionPrepCopy, sessionPasoCabecera });
 })();
 </script>
   <!-- CSS responsive de las pantallas de sesión, extraído de SessionShell.jsx
@@ -23315,6 +23364,14 @@ Object.assign(window, { SessionPrep, sessionPrepCopy, sessionPasoCabecera });
     [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button:not([data-pace-cierre-otra]):hover {
       border-color: var(--ink-3) !important;
     }
+    /* Salvo cuando dice lo que sigue («Empezar el bloque 2», «Tu pausa en…»): relleno, como «Empezar foco»
+       (Ez, V6A del 24 nov.). Con la misma píldora que «Sí · Un poco · No», no destacaba. */
+    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button[data-pace-cierre-sigue-cta] {
+      background: var(--focus-cta) !important; color: var(--paper) !important; border-color: var(--focus-cta) !important;
+    }
+    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button[data-pace-cierre-sigue-cta]:hover {
+      filter: brightness(1.08);
+    }
     /* En el cierre, «Salir» va también en la serif itálica, como el resto de la pantalla
        (la A de Ez, 10 oct.). Solo en el cierre: durante la sesión no se ha tocado. */
     [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-header] button {
@@ -23556,7 +23613,7 @@ const sessionFeedbackStyles = {
 
   chip: {
     ...displayItalic,
-    padding: '0 22px', minHeight: 42, fontSize: 17, fontWeight: 500,
+    padding: '0 18px', minHeight: 38, fontSize: 16, fontWeight: 500,
     border: '1px solid var(--line-2)',
     borderRadius: 'var(--r-pill)',
     background: 'var(--paper-2)', color: 'var(--ink)',
@@ -23623,7 +23680,7 @@ if (!_paceSessionFeedbackCss) {
       [data-pace-session-feedback] { margin-top: 2px !important; }
       [data-pace-fb-rule] { margin-bottom: 14px !important; }
       [data-pace-fb-question] { margin-bottom: 12px !important; }
-      [data-pace-fb-chip] { padding: 0 20px !important; }
+      [data-pace-fb-chip] { padding: 0 16px !important; }
     }
     @media (min-width: 641px) and (max-height: 560px) {
       [data-pace-fb-rule] { margin-bottom: 12px !important; }
@@ -23716,7 +23773,9 @@ function SessionDoneSigue(_ref) {let { sigue, onExit, estilo } = _ref;
   const otra = libre ? t('session.backToHome') : tn('ritmo.pausa.ya', { n: sigue.n });
   return (
     React.createElement("div", { "data-pace-cierre-sigue": sigue.tipo, style: sessionDoneSigueStyles.caja },
-    React.createElement(Button, { variant: "secondary", onClick: libre ? arrancar : volver, style: estilo }, cta),
+
+
+    React.createElement(Button, { variant: "secondary", "data-pace-cierre-sigue-cta": "", onClick: libre ? arrancar : volver, style: estilo }, cta),
     React.createElement("button", { type: "button", "data-pace-cierre-otra": true, onClick: libre ? volver : arrancar, style: sessionDoneSigueStyles.otra }, otra)
     ));
 
@@ -29203,6 +29262,10 @@ Object.assign(window, {
 
 
 
+
+function paceCorteTableta() {
+  return String(PACE_CORTE_MOVIL).split(',').map((q) => '(min-width: 480px) and ' + q.trim()).join(', ');
+}
 if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-responsive-css')) {
   const s = document.createElement('style');
   s.id = 'pace-sidebar-responsive-css';
@@ -29256,6 +29319,22 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
       [data-pace-sidebar] [data-pace-sidebar-logobar] {
         min-height: 84px !important;
       }
+    }
+    /* LA TABLETA (Ez, V11A del 24 nov. 2026): desde 480 px de ancho, dentro de la piel de móvil, el
+       cajón mide 360 px, como en un móvil grande, y la home queda detrás con un velo que lo cierra. El
+       logo y las filas, a la medida del móvil. Por debajo de 480, pantalla entera como siempre. */
+    [data-pace-cajon-velo] { display: none; }
+    @media ${paceCorteTableta()} {
+      [data-pace-sidebar] {
+        inset: 0 auto 0 0 !important;
+        width: 360px !important;
+        border-right: 1px solid var(--line) !important;
+        box-shadow: 0 0 32px rgba(31, 28, 23, .14) !important;
+      }
+      [data-pace-cajon-velo] { display: block; position: fixed; inset: 0; z-index: 59; background: rgba(31, 28, 23, .18); }
+      [data-pace-sidebar] [data-pace-sidebar-logobar] { overflow: visible !important; margin-left: 0 !important; margin-right: 0 !important; padding: 6px 4px !important; }
+      [data-pace-sidebar] [data-pace-sidebar-logo] { max-width: 200px !important; width: 100% !important; margin: 0 auto !important; }
+      [data-pace-sidebar] [data-pace-sidebar-spacer] { display: none !important; }
     }
     /* s63 (v0.28.4): Compactación sidebar en móviles ≤640px.
        s64 (v0.28.5): márgenes negativos neutralizados para evitar clip lateral.
@@ -29473,6 +29552,7 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
   `;
   document.head.appendChild(s);
 }
+;Object.assign(window, { paceCorteTableta });
 })();
 </script>
   <script>
@@ -30954,7 +31034,12 @@ function Sidebar() {
 
   const secciones = [seccionSemana, seccionHoy, seccionAccion, seccionBibliotecas, seccionLogro].filter(Boolean);
 
+
+
+
   return (
+    React.createElement(React.Fragment, null,
+    enCajon && React.createElement("div", { "data-pace-cajon-velo": true, "aria-hidden": "true", onClick: plegar }),
     React.createElement("aside", _extends({ ref: asideRef, style: enCajon ? { ...sidebarStyles.root, outline: 'none' } : sidebarStyles.root, "data-pace-sidebar": true, "data-escalado": "0" },
     enCajon ? { role: 'dialog', 'aria-modal': 'true', 'aria-label': t('sidebar.dialog.aria'), tabIndex: -1 } : {}),
     React.createElement("button", { onClick: toggle, style: sidebarStyles.toggleFloating, "data-pace-sidebar-toggle": true, title: t('sidebar.collapse.title').replace('{k}', paceAtajoBarra()), "aria-label": t('sidebar.collapse.aria') },
@@ -31008,6 +31093,7 @@ function Sidebar() {
       onMisRutinas: () => emitir('custom'),
       onLunes: () => {if (esCajon()) set({ sidebarCollapsed: true });paceLunesAbrir(t);},
       onSupport: () => window.dispatchEvent(new CustomEvent('pace:open-support')) }
+    )
     )
     )
     )
@@ -31225,10 +31311,12 @@ const PACE_NOVEDADES = [
   id: 'foco-en-bloques',
   desde: '2026-11-24',
   es: [
-  'El Foco a mano también cuenta en bloques, como la jornada: «Bloque 1 de 4».'],
+  'El Foco a mano también cuenta en bloques, como la jornada: «Bloque 1 de 4».',
+  'En la pausa, Respira, Estira y Mueve entran directos en una rutina; «Ver otras» abre la biblioteca.'],
 
   en: [
-  'Manual Focus counts in blocks too, like your workday: “Block 1 of 4”.']
+  'Manual Focus counts in blocks too, like your workday: “Block 1 of 4”.',
+  'In a break, Breathe, Stretch and Move go straight into a routine; “More from” opens the library.']
 
 },
 {
@@ -32524,7 +32612,7 @@ React.createElement("path", { d: "M6.5 1.5L2 6l4.5 4.5" })
 );
 
 
-function RoutinePreview(_ref) {let { routine, kind = 'move', onStart, onClose } = _ref;
+function RoutinePreview(_ref) {let { routine, kind = 'move', onStart, onClose, onOtras } = _ref;
   const { t, tn, lang } = useT();
   const [pace] = usePace();
 
@@ -32733,6 +32821,15 @@ function RoutinePreview(_ref) {let { routine, kind = 'move', onStart, onClose } 
     })
     )
     ),
+
+
+
+    onOtras &&
+    React.createElement("button", { type: "button", "data-pace-preview-otras": true, onClick: onOtras, style: {
+        display: 'block', margin: '0 0 12px', padding: '6px 0', minHeight: 32, background: 'none', border: 'none',
+        cursor: 'pointer', color: 'var(--ink-2)', fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 15,
+        textDecoration: 'underline', textUnderlineOffset: 3, textDecorationColor: 'var(--line)'
+      } }, kind === 'extra' ? t('preview.otras.extra') : t('preview.otras.move')),
 
 
 
@@ -36102,7 +36199,7 @@ function getBreatheRoutine(id) {
 }
 window.getBreatheRoutine = getBreatheRoutine;
 
-Object.assign(window, { BreatheLibrary, BreatheSafety });
+Object.assign(window, { BreatheLibrary, BreatheSafety, BREATHE_PRIMERA_VEZ, BREATHE_BIBLIOTECA });
 ;Object.assign(window, { BreatheLibrary, breatheSafetyRiesgo, BreatheSafety, getBreatheRoutine });
 })();
 </script>
@@ -37813,7 +37910,7 @@ function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath 
         doneCopy: t('move.doneCopy'),
         stats: [
         { label: t('common.time'), value: `${mins}:${String(secs).padStart(2, '0')}` },
-        { label: t('move.steps'), value: String(routine.steps.length) }],
+        { label: t(paceGruposRutina(routine.steps).length === 1 ? 'move.steps.uno' : 'move.steps'), value: String(paceGruposRutina(routine.steps).length) }],
 
         rootData: { 'data-pace-active-sec': activeSecRef.current },
         buttonStyle: { background: accent, borderColor: accent },
@@ -38531,18 +38628,22 @@ function v1DevCheckDuration(routine, restBetweenSets) {
 
 function v1DoneStats(routine, guided, tiempo, t, hechos, hechas) {
   const hecho = (i) => !hechos || !!hechos[i];
-  const ejercicios = routine.steps.filter((s, i) => s.mode !== 'rest' && hecho(i)).length;
+
+
+  const ejercicios = (typeof paceGruposRutina === 'function' ? paceGruposRutina(routine.steps) : routine.steps.filter((s) => s.mode !== 'rest').map((s, i) => ({ idxs: [i] }))).
+  filter((g) => g.idxs.some(hecho)).length;
+  const rotulo = (k, n) => t(n === 1 ? k + '.uno' : k);
   const series = Number.isFinite(hechas) ? hechas : routine.steps.filter((s, i) => s.mode === 'reps' && hecho(i)).length;
   const planReps = routine.steps.filter((s) => s.mode === 'reps').length;
   const stats = [{ label: t('common.time'), value: tiempo }];
   if (planReps > 0 && planReps === routine.steps.filter((s) => s.mode !== 'rest').length) {
-    stats.push({ label: t('move.series'), value: String(series) });
-    stats.push({ label: t('move.repsCount'), value: String(guided) });
+    stats.push({ label: rotulo('move.series', series), value: String(series) });
+    stats.push({ label: rotulo('move.repsCount', guided), value: String(guided) });
   } else if (planReps > 0) {
-    stats.push({ label: t('move.steps'), value: String(ejercicios) });
-    stats.push({ label: t('move.repsCount'), value: String(guided) });
+    stats.push({ label: rotulo('move.steps', ejercicios), value: String(ejercicios) });
+    stats.push({ label: rotulo('move.repsCount', guided), value: String(guided) });
   } else {
-    stats.push({ label: t('move.steps'), value: String(ejercicios) });
+    stats.push({ label: rotulo('move.steps', ejercicios), value: String(ejercicios) });
   }
   return stats;
 }
@@ -39686,7 +39787,10 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
 
   const [rein] = useStateV1(() => (v1VozPrecarga(), cuerpoReanudacion(routine, reanudar)));
-  const [stage, setStage] = useStateV1('prep');
+
+  const [setupInicial] = useStateV1(() => v1StepSetup(routine, rein.step));
+  const sinPrep = setupInicial.mode === 'auto';
+  const [stage, setStage] = useStateV1(sinPrep ? 'run' : 'prep');
   const [prepCount, setPrepCount] = useStateV1(V1_PREP_SECONDS);
   const [stepIdx, setStepIdx] = useStateV1(rein.step);
   const [phase, setPhase] = useStateV1('place');
@@ -39696,7 +39800,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
   const vuelta = useV1Vuelta(paused, setPaused);
   const autoAbajo = useV1AutoAbajo();
-  const [placeLeft, setPlaceLeft] = useStateV1(0);
+  const [placeLeft, setPlaceLeft] = useStateV1(sinPrep ? setupInicial.estimatedSeconds : 0);
   const [changeLeft, setChangeLeft] = useStateV1(0);
   const sessionStart = useRefV1(rein.startedAt);
 
@@ -39721,7 +39825,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
 
   const [pace, setPace] = usePace();
   const auto = pace.cuerpoAuto !== false;
-  const totalesRef = useRefV1({ place: 1, change: 1 });
+  const totalesRef = useRefV1({ place: sinPrep ? setupInicial.estimatedSeconds : 1, change: 1 });
   const esperaRef = useRefV1('');
   const sonadoRef = useRefV1('');
 
@@ -39834,9 +39938,6 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath, rean
   useEffectV1(() => {
     if (stage === 'prep' && prepCount > 0 && prepCount <= 3) {try {playSound('move.warn', v1VozCuenta(prepCount, V1_PREP_SECONDS));} catch (e) {}}
   }, [prepCount]);
-
-
-
 
 
 
@@ -42509,8 +42610,32 @@ function breakLaDeAntesAhora(state, excluir) {
   return breakLaDeAntes(state, eventos, excluir);
 }
 
-Object.assign(window, { breakPozo, breakVetadas, breakProponible, breakElige, breakPropuesta, breakLaDeAntes, breakLaDeAntesAhora });
-;Object.assign(window, { breakPozo, BREAK_VETO_DIAS, breakVetadas, breakProponible, breakElige, breakPropuesta, breakLaDeAntes, breakLaDeAntesAhora });
+
+
+
+
+
+function breakAhoraDe(key, state) {
+  try {
+    const puede = (r) => !window.canAccessRoutine || window.canAccessRoutine(r.id);
+    let grupos, pozo;
+    if (key === 'breathe') {
+      const primera = ((state || {}).breatheSessionsTotal || 0) > 0 ? null :
+      window.getBreatheRoutine && window.getBreatheRoutine(window.BREATHE_PRIMERA_VEZ || 'breathe.coherent.55');
+      if (primera && puede(primera)) return primera;
+      grupos = window.BREATHE_BIBLIOTECA || window.BREATHE_ROUTINES;
+      pozo = (r) => !r.safety;
+    } else if (key === 'move') grupos = window.MOVE_ROUTINES;else
+    if (key === 'extra') grupos = window.EXTRA_ROUTINES;else
+    return null;
+    if (!grupos || typeof libraryParaAhora !== 'function') return null;
+    const abiertas = libraryProponibles(grupos).filter(puede);
+    return libraryParaAhora(abiertas, typeof todayISO === 'function' ? todayISO() : '', 1, pozo)[0] || null;
+  } catch (e) {return null;}
+}
+
+Object.assign(window, { breakAhoraDe, breakPozo, breakVetadas, breakProponible, breakElige, breakPropuesta, breakLaDeAntes, breakLaDeAntesAhora });
+;Object.assign(window, { breakPozo, BREAK_VETO_DIAS, breakVetadas, breakProponible, breakElige, breakPropuesta, breakLaDeAntes, breakLaDeAntesAhora, breakAhoraDe });
 })();
 </script>
   <script>
@@ -42732,7 +42857,9 @@ function BreakMenu(_ref) {let { open, onClose, onChoose, onSeguir } = _ref;
     const p = propRef.current;
     const desdeMenu = !!(rutina && p && p.rutina && p.rutina.id === rutina.id &&
     typeof p.porque === 'string' && p.porque.indexOf('ritmo.') === 0);
-    onChoose(key, rutina || null, desdeMenu);
+
+    const ahora = !rutina && key !== 'water' && typeof breakAhoraDe === 'function' ? breakAhoraDe(key, getState()) : null;
+    onChoose(key, rutina || ahora || null, desdeMenu, ahora ? { otras: true } : undefined);
   };
 
 
@@ -50671,7 +50798,7 @@ function OnbCompletoPaso(_ref) {let { modo, onFin } = _ref;
     abierto ?
     React.createElement(React.Fragment, null,
     React.createElement("button", { "data-pace-cta": true, "data-pace-onb-comenzar": true, onClick: () => onFin(null), style: onboardingStyles.cta },
-    t('onboarding.welcome.cta')
+    t('onboarding.completo.cta')
     ),
     paceTextoV1('premium.onb.abierto.aviso') &&
     React.createElement("p", { "data-pace-onb-v1": true, style: { ...onbCompletoStyles.aviso, maxWidth: 340 } }, t(paceTextoV1('premium.onb.abierto.aviso')))
@@ -50933,7 +51060,7 @@ function Onboarding() {
 
     ),
     isQuestion ? React.createElement(OnbDots, { total: questions.length, active: qIndex }) :
-    isSemana ? React.createElement("span", { className: "pace-meta" }, t('ritmo.nombre')) :
+    isSemana ? React.createElement("span", { className: "pace-meta" }, t('onboarding.semana.rotulo')) :
     isCompleto ? React.createElement("span", { className: "pace-meta" }, t('premium.name')) : React.createElement("span", null),
     React.createElement("div", { style: { width: 86, display: 'flex', justifyContent: 'flex-end' } },
     step === 0 &&
@@ -51804,6 +51931,10 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
 .pace-rt-tm-t { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 24px; line-height: 26px; color: var(--ink); margin-top: 5px; }
 /* Sin la fila de Caminos encima, el título es lo primero y no se separa de nada. */
 .pace-rt-tm-t:first-child { margin-top: 0; }
+/* El título y lo que dice el esquema en una fila, sin ganar alto (Ez, V8A): se corta antes lo de la derecha. */
+.pace-rt-tm-tfila { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-top: 5px; } .pace-rt-tm-tfila:first-child { margin-top: 0; }
+.pace-rt-tm-tfila .pace-rt-tm-t { margin-top: 0; flex: 0 0 auto; white-space: nowrap; }
+.pace-rt-tm-dice { flex: 0 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: var(--font-display); font-style: italic; font-size: 15px; line-height: 1.2; color: var(--ink-2); }
 .pace-rt-esquema { display: flex; align-items: center; height: 14px; margin-top: 14px; }
 .pace-rt-esq-seg { flex: 4 1 0; height: 3px; border-radius: 2px; background: var(--paper-3); }
 .pace-rt-esq-comida { flex: 8 1 0; height: 0; border-top: 2px dashed var(--line); }
@@ -51833,7 +51964,8 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
    tarjeta de móvil, nunca la cáscara. */
 @media (max-height: 700px) {
   .pace-rt-tj-mov { padding: 0; }
-  .pace-rt-tm-t { margin-top: 3px; }
+  .pace-rt-tm-t, .pace-rt-tm-tfila { margin-top: 3px; }
+  .pace-rt-tm-tfila .pace-rt-tm-t { margin-top: 0; }
   .pace-rt-esquema { margin-top: 4px; }
   .pace-rt-tm-pie { margin-top: 8px; }
 }
@@ -53624,10 +53756,33 @@ Object.assign(window, { RitmoCalendarioTarjeta, RitmoCalendarioIcono });
 
 var RITMO_ESQUEMA = ['estira', 'mueve', ['respira', 'estira'], 'comida', 'estira', 'mueve', ['respira', 'estira'], 'estira', 'respira'];
 
-function RitmoEsquema() {
+
+
+
+function ritmoEsquemaDe(m) {
+  if (!m || !Array.isArray(m.items)) return null;
+  const pasos = [];
+  m.items.forEach((it) => {
+    if (it.tipo === 'comida') pasos.push('comida');else
+    if (it.tipo === 'pausa' && it.platos && it.platos.length) {
+      const mods = it.platos.map((p) => p.modulo);
+      pasos.push(it.larga || mods.length > 1 ? mods : mods[0]);
+    }
+  });
+  return pasos.some((p) => p !== 'comida') ? pasos : null;
+}
+function ritmoEsquemaDice(H, t, tn) {
+  const pasos = H && ritmoEsquemaDe(H.m);
+  if (!pasos) return t('ritmo.tarjeta.esquema.tipo');
+  const n = pasos.filter((p) => p !== 'comida').length;
+  return tn(n === 1 ? 'ritmo.tarjeta.esquema.uno' : 'ritmo.tarjeta.esquema', { n, desde: ritmoHora(H.m.desde), hasta: ritmoHora(H.m.hasta) });
+}
+
+function RitmoEsquema(_ref) {let { m } = _ref;
+  const pasos = ritmoEsquemaDe(m) || RITMO_ESQUEMA;
   return (
     React.createElement("div", { className: "pace-rt-esquema", "aria-hidden": "true", "data-pace-ritmo-esquema": true },
-    RITMO_ESQUEMA.map((paso, k) => {
+    pasos.map((paso, k) => {
       if (paso === 'comida') return React.createElement("span", { key: k, className: "pace-rt-esq-comida" });
       const larga = Array.isArray(paso);
       return (
@@ -53688,10 +53843,14 @@ function RitmoTarjeta() {
     React.createElement("button", { className: "pace-rt-enlace", "data-pace-ritmo-caminos": true, onClick: abrirCaminos }, t('paths.library.viewAll'))
     ),
 
-    React.createElement("div", { className: "pace-rt-tm-t", "data-pace-ritmo-tarjeta-titulo": true }, titulo),
+    React.createElement("div", { className: "pace-rt-tm-tfila" },
+
+    React.createElement("div", { className: "pace-rt-tm-t", "data-pace-ritmo-tarjeta-titulo": true }, H ? tn('ritmo.manana.titulo.primera', { dia: ritmoNombreDia(H.diaSemana, t) }) : titulo),
+    React.createElement("span", { className: "pace-rt-tm-dice", "data-pace-ritmo-esquema-dice": true }, ritmoEsquemaDice(H, t, tn))
+    ),
 
 
-    React.createElement("div", { className: "pace-rt-esq-fila" }, React.createElement(RitmoEsquema, null), React.createElement(RitmoCalendarioTarjeta, { corto: true })),
+    React.createElement("div", { className: "pace-rt-esq-fila" }, React.createElement(RitmoEsquema, { m: H && H.m }), React.createElement(RitmoCalendarioTarjeta, { corto: true })),
 
 
 
@@ -53721,8 +53880,8 @@ function RitmoTarjeta() {
 
 }
 
-Object.assign(window, { RitmoTarjeta, RitmoEsquema, RITMO_ESQUEMA });
-;Object.assign(window, { RITMO_ESQUEMA, RitmoEsquema, RitmoTarjeta });
+Object.assign(window, { RitmoTarjeta, RitmoEsquema, RITMO_ESQUEMA, ritmoEsquemaDe });
+;Object.assign(window, { RITMO_ESQUEMA, ritmoEsquemaDe, ritmoEsquemaDice, RitmoEsquema, RitmoTarjeta });
 })();
 </script>
   <script>
@@ -56850,13 +57009,6 @@ function PaceApp() {
     setPreviewRoutine(null);
     if (!p) return;
 
-
-
-
-
-
-
-
     setOpenLibrary(null);
     setView({ type: 'move-session', routine: p.routine, kind: p.kind });
   };
@@ -56950,7 +57102,7 @@ function PaceApp() {
   React.createElement(PaceRed, { modo: "parte", nombre: nombre, abierto: abierto, onCerrar: cerrar }, hijo);
 
 
-  const handleBreakChoice = (choice, rutina, desdeMenu) => {
+  const handleBreakChoice = (choice, rutina, desdeMenu, opciones) => {
     setOpenBreakMenu(false);
 
 
@@ -56962,7 +57114,9 @@ function PaceApp() {
     if (rutina && rutina.id) {
       if (choice === 'breathe') {handleStartBreathe(rutina);return;}
       if (choice === 'extra' || choice === 'move') {
-        setPreviewRoutine({ routine: rutina, kind: choice === 'extra' ? 'extra' : 'move' });
+
+
+        setPreviewRoutine({ routine: rutina, kind: choice === 'extra' ? 'extra' : 'move', otras: !!(opciones && opciones.otras) });
         return;
       }
     }
@@ -57149,6 +57303,7 @@ function PaceApp() {
       routine: previewRoutine.routine,
       kind: previewRoutine.kind,
       onStart: lanzarDesdePreview,
+      onOtras: previewRoutine.otras ? () => {const k = previewRoutine.kind;setPreviewRoutine(null);setOpenLibrary(k);} : null,
       onClose: () => setPreviewRoutine(null) }
     )),
 
@@ -57576,7 +57731,7 @@ function paceAroPisoInterior(dial, radio) {
 
 
 
-  function applyD(D, dial, horario) {
+  function applyD(D, dial, horario, aroEntero) {
     setVar('--pace-timer-d', D + 'px');
 
 
@@ -57630,10 +57785,7 @@ function paceAroPisoInterior(dial, radio) {
 
 
 
-
-
-
-
+    if (aroEntero) {setVar('--pace-activities-overlap', '0px');setVar('--pace-dial-corte', '0px');return;}
 
 
 
@@ -57673,6 +57825,7 @@ function paceAroPisoInterior(dial, radio) {
     var widthCap = isDesktop ? WIDTH_CAP : WIDTH_CAP_MOBILE;
     var dFloor = isDesktop ? D_FLOOR : D_FLOOR_MOBILE;
     var horario = isDesktop && paceAroHorarioAbierto();
+    var aroEntero = !isDesktop && !!document.querySelector('[data-pace-activitybar][data-pace-ritmo]');
 
 
 
@@ -57705,7 +57858,7 @@ function paceAroPisoInterior(dial, radio) {
     if (horario && paceAroCartaRecordado(clave)) D = Math.min(D, paceAroCartaRecordado(clave));
     if (D < dFloor) D = dFloor;
     D = Math.round(D);
-    applyD(D, dial, horario);
+    applyD(D, dial, horario, aroEntero);
 
 
 
@@ -57758,7 +57911,7 @@ function paceAroPisoInterior(dial, radio) {
 
       if (overPrevio !== null && over >= overPrevio) {
         D = dPrevio;
-        applyD(D, dial, horario);
+        applyD(D, dial, horario, aroEntero);
 
 
 
@@ -57771,7 +57924,7 @@ function paceAroPisoInterior(dial, radio) {
 
 
       D = Math.max(piso, D - Math.ceil(over / 0.84));
-      applyD(D, dial, horario);
+      applyD(D, dial, horario, aroEntero);
     }
 
 
@@ -57783,10 +57936,10 @@ function paceAroPisoInterior(dial, radio) {
       var dAntes = D,sobra = medirOver();
       for (var k = 0; k < 2 && sobra > 1 && D - Math.ceil(sobra / 0.84) >= duro; k++) {
         D -= Math.ceil(sobra / 0.84);
-        applyD(D, dial, horario);
+        applyD(D, dial, horario, aroEntero);
         sobra = medirOver();
       }
-      if (sobra > 1 && D !== dAntes) {D = dAntes;applyD(D, dial, horario);}
+      if (sobra > 1 && D !== dAntes) {D = dAntes;applyD(D, dial, horario, aroEntero);}
 
       if (sobra > 1 && (luego || fila) && modo === 0) return ajustar(1) > 1 ? ajustar(2) : 0;
       if (modo === 1 && sobra > 1) return sobra;

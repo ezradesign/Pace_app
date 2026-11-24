@@ -314,6 +314,10 @@
 .pace-rt-tm-t { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 24px; line-height: 26px; color: var(--ink); margin-top: 5px; }
 /* Sin la fila de Caminos encima, el título es lo primero y no se separa de nada. */
 .pace-rt-tm-t:first-child { margin-top: 0; }
+/* El título y lo que dice el esquema en una fila, sin ganar alto (Ez, V8A): se corta antes lo de la derecha. */
+.pace-rt-tm-tfila { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-top: 5px; } .pace-rt-tm-tfila:first-child { margin-top: 0; }
+.pace-rt-tm-tfila .pace-rt-tm-t { margin-top: 0; flex: 0 0 auto; white-space: nowrap; }
+.pace-rt-tm-dice { flex: 0 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: var(--font-display); font-style: italic; font-size: 15px; line-height: 1.2; color: var(--ink-2); }
 .pace-rt-esquema { display: flex; align-items: center; height: 14px; margin-top: 14px; }
 .pace-rt-esq-seg { flex: 4 1 0; height: 3px; border-radius: 2px; background: var(--paper-3); }
 .pace-rt-esq-comida { flex: 8 1 0; height: 0; border-top: 2px dashed var(--line); }
@@ -343,7 +347,8 @@
    tarjeta de móvil, nunca la cáscara. */
 @media (max-height: 700px) {
   .pace-rt-tj-mov { padding: 0; }
-  .pace-rt-tm-t { margin-top: 3px; }
+  .pace-rt-tm-t, .pace-rt-tm-tfila { margin-top: 3px; }
+  .pace-rt-tm-tfila .pace-rt-tm-t { margin-top: 0; }
   .pace-rt-esquema { margin-top: 4px; }
   .pace-rt-tm-pie { margin-top: 8px; }
 }

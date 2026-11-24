@@ -164,7 +164,7 @@
   // Fija D y, con D ya aplicado (getBoundingClientRect fuerza layout), ancla las
   // Actividades JUSTO bajo el CICLO real → solapamiento seguro y constante,
   // independientemente de la altura del botón (a11y 44px) o del interior.
-  function applyD(D, dial, horario) {
+  function applyD(D, dial, horario, aroEntero) {
     setVar('--pace-timer-d', D + 'px');
     /* Por debajo de D_INTERIOR, lo de dentro se compone como a D_INTERIOR y escala con el aro
        (_responsive.pieles.esc.js, solo en escritorio). Antes de medir el CICLO: lo mueve. */
@@ -215,17 +215,14 @@
        cortan las actividades (home-geometry.horario.js). */
     if (horario) overlap = Math.min(maxOverlap, Math.round(D * PACE_ARO_CANTO_HORARIO) + banda);
     setVar('--pace-activities-overlap', overlap + 'px');
-    /* SE PUBLICA EL CORTE YA RESUELTO, no la banda, y eso NO es comodidad: un
-       custom property SIN REGISTRAR no se computa -- `getPropertyValue` devuelve
-       el TEXTO. Dejando la resta en CSS, el token valia literalmente
-       "max(4px, calc(67px - 32px - 6px))", TimerDial lo leia con parseFloat, le
-       salia NaN y el aro se quedaba dando la vuelta entera. Publicado en px por
-       el motor, el CSS solo elige motor-o-fallback como con los otros dos. */
-    /* El corte se mide desde ABAJO, asi que restar la banda lo BAJA hasta el
-       canto de las tarjetas y SUMAR el aire lo sube por encima, lo justo para que
-       el halo de la bola guia no toque la tarjeta.
-       Con el signo al reves el aro acababa 6 px POR DEBAJO del canto, o sea
-       asomando por los huecos entre tarjetas: 310,3 grados en vez de 295,8. */
+    /* EN EL MÓVIL, CON LA JORNADA, EL ARO ENTERO (Ez, V1 del 24 nov. 2026, «el diseño original»): la
+       tarjeta del día no sube sobre el aro; empieza donde acaba su caja, unos 40 px bajo «Empezar
+       jornada», y el aro no se corta. Si así no cabe, el bucle de ajustar() encoge el aro como siempre. */
+    if (aroEntero) { setVar('--pace-activities-overlap', '0px'); setVar('--pace-dial-corte', '0px'); return; }
+    /* SE PUBLICA EL CORTE YA RESUELTO, no la banda: un custom property sin registrar no se computa
+       (getPropertyValue devuelve el TEXTO) y TimerDial leía NaN. El corte se mide desde ABAJO: restar la
+       banda lo baja hasta el canto de las tarjetas y sumar el aire lo sube lo justo para que el halo de la
+       bola guía no las toque (con el signo al revés el aro asomaba entre tarjetas). */
     setVar('--pace-dial-corte', Math.max(4, overlap - banda + Math.round(AIRE_HALO * D)) + 'px');
   }
 
@@ -261,6 +258,7 @@
     var widthCap = isDesktop ? WIDTH_CAP : WIDTH_CAP_MOBILE;
     var dFloor = isDesktop ? D_FLOOR : D_FLOOR_MOBILE;
     var horario = isDesktop && paceAroHorarioAbierto();
+    var aroEntero = !isDesktop && !!document.querySelector('[data-pace-activitybar][data-pace-ritmo]');
 
     /* La compactación va ANTES de medir: cambia el presupuesto exterior y, por
        tanto, la altura útil que le queda al aro. Depende solo de innerHeight
@@ -293,7 +291,7 @@
     if (horario && paceAroCartaRecordado(clave)) D = Math.min(D, paceAroCartaRecordado(clave));
     if (D < dFloor) D = dFloor;
     D = Math.round(D);
-    applyD(D, dial, horario);
+    applyD(D, dial, horario, aroEntero);
     /* El suelo de movil sube hasta lo que pide el interior, medido con este
        primer D, que es el mayor (ver RADIO_INTERIOR). Nunca por encima de el:
        el techo por ancho manda, y en un telefono de 320 el aro se queda en su
@@ -346,7 +344,7 @@
          unos píxeles de scroll, que la región ya admite por diseño. */
       if (overPrevio !== null && over >= overPrevio) {
         D = dPrevio;
-        applyD(D, dial, horario);
+        applyD(D, dial, horario, aroEntero);
         /* UN reintento, no más: en el siguiente frame el layout ya está
            asentado y la medida vuelve a responder, así que la pasada de después
            sí converge. El contador se reinicia solo cuando una pasada converge
@@ -359,7 +357,7 @@
       // reducir D: la huella vertical del aro tras solapar es ~0.84·D, así que
       // ΔD ≈ over/0.84 acerca el ajuste en una pasada (converge en 1-2).
       D = Math.max(piso, D - Math.ceil(over / 0.84));
-      applyD(D, dial, horario);
+      applyD(D, dial, horario, aroEntero);
     }
 
     /* A UN PASO DE CABER, CABE (regla de Ez: la home del movil sin scroll). Con el bloque terminado,
@@ -371,10 +369,10 @@
       var dAntes = D, sobra = medirOver();
       for (var k = 0; k < 2 && sobra > 1 && D - Math.ceil(sobra / 0.84) >= duro; k++) {
         D -= Math.ceil(sobra / 0.84);
-        applyD(D, dial, horario);
+        applyD(D, dial, horario, aroEntero);
         sobra = medirOver();
       }
-      if (sobra > 1 && D !== dAntes) { D = dAntes; applyD(D, dial, horario); }
+      if (sobra > 1 && D !== dAntes) { D = dAntes; applyD(D, dial, horario, aroEntero); }
       /* Ni en el suelo cabe: recogido, si así cabe; si no, como estaba. */
       if (sobra > 1 && (luego || fila) && modo === 0) return ajustar(1) > 1 ? ajustar(2) : 0;
       if (modo === 1 && sobra > 1) return sobra;

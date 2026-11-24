@@ -27,6 +27,7 @@ var PLURAL = /\{(\w+)\}\s+([\p{L}]{2,})/gu;
 var SUFIJOS = ['uno', 'una', 'one', '1'];
 
 var SIN_SINGULAR = {
+  'move.cuenta.series': 'solo sale si un ejercicio se repite, y entonces hay dos series o más (paceCuentaRutina, ui/SessionPrep.jsx)',
   'premium.compra.pendiente': '{tienda} es Google o Apple, nunca una cifra (PremiumPendiente, ui/PremiumInvitacion.tienda.jsx)',
   'ach.toast.varios': 'solo con dos sellos o más a la vez: con uno dice «Nuevo sello» (selloTextos, ui/Toast.jsx)',
   'premium.fin.sobre.mas': 'solo con más de tres rutinas, y nombra dos: {n} empieza en 2 (premiumFinLista, ui/PremiumFinPrueba.jsx)',

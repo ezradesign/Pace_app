@@ -29,6 +29,10 @@
    Patrón ya usado en FocusTimer para spinners de number input.
    Mantiene los inline styles intactos y sólo reescribe el layout
    a partir del breakpoint móvil. */
+/* La piel de móvil desde 480 px de ancho: cada trozo de la lista de PACE_CORTE_MOVIL con su mínimo. */
+function paceCorteTableta() {
+  return String(PACE_CORTE_MOVIL).split(',').map((q) => '(min-width: 480px) and ' + q.trim()).join(', ');
+}
 if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-responsive-css')) {
   const s = document.createElement('style');
   s.id = 'pace-sidebar-responsive-css';
@@ -82,6 +86,22 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
       [data-pace-sidebar] [data-pace-sidebar-logobar] {
         min-height: 84px !important;
       }
+    }
+    /* LA TABLETA (Ez, V11A del 24 nov. 2026): desde 480 px de ancho, dentro de la piel de móvil, el
+       cajón mide 360 px, como en un móvil grande, y la home queda detrás con un velo que lo cierra. El
+       logo y las filas, a la medida del móvil. Por debajo de 480, pantalla entera como siempre. */
+    [data-pace-cajon-velo] { display: none; }
+    @media ${paceCorteTableta()} {
+      [data-pace-sidebar] {
+        inset: 0 auto 0 0 !important;
+        width: 360px !important;
+        border-right: 1px solid var(--line) !important;
+        box-shadow: 0 0 32px rgba(31, 28, 23, .14) !important;
+      }
+      [data-pace-cajon-velo] { display: block; position: fixed; inset: 0; z-index: 59; background: rgba(31, 28, 23, .18); }
+      [data-pace-sidebar] [data-pace-sidebar-logobar] { overflow: visible !important; margin-left: 0 !important; margin-right: 0 !important; padding: 6px 4px !important; }
+      [data-pace-sidebar] [data-pace-sidebar-logo] { max-width: 200px !important; width: 100% !important; margin: 0 auto !important; }
+      [data-pace-sidebar] [data-pace-sidebar-spacer] { display: none !important; }
     }
     /* s63 (v0.28.4): Compactación sidebar en móviles ≤640px.
        s64 (v0.28.5): márgenes negativos neutralizados para evitar clip lateral.

@@ -279,4 +279,28 @@ function breakLaDeAntesAhora(state, excluir) {
   return breakLaDeAntes(state, eventos, excluir);
 }
 
-Object.assign(window, { breakPozo, breakVetadas, breakProponible, breakElige, breakPropuesta, breakLaDeAntes, breakLaDeAntesAhora });
+/* LA DE «PARA AHORA» DE CADA PALABRA (Ez, V2A del 24 nov. 2026): en la pausa, «Respira», «Estira» y
+   «Mueve» entran en la rutina que su biblioteca pone arriba hoy, no en la biblioteca entera (eran cuatro
+   toques para moverse). La misma regla que la biblioteca sin filtros (LibraryShell): lo abierto y
+   proponible, el pozo de Respira sin avisos de seguridad y, en Respira, «Empieza aquí» hasta la primera
+   respiración. `key` es la de la tarjeta ('extra' es Estira). null si no hay ninguna: abre la biblioteca. */
+function breakAhoraDe(key, state) {
+  try {
+    const puede = (r) => !window.canAccessRoutine || window.canAccessRoutine(r.id);
+    let grupos, pozo;
+    if (key === 'breathe') {
+      const primera = ((state || {}).breatheSessionsTotal || 0) > 0 ? null
+        : (window.getBreatheRoutine && window.getBreatheRoutine(window.BREATHE_PRIMERA_VEZ || 'breathe.coherent.55'));
+      if (primera && puede(primera)) return primera;
+      grupos = window.BREATHE_BIBLIOTECA || window.BREATHE_ROUTINES;
+      pozo = (r) => !r.safety;
+    } else if (key === 'move') grupos = window.MOVE_ROUTINES;
+    else if (key === 'extra') grupos = window.EXTRA_ROUTINES;
+    else return null;
+    if (!grupos || typeof libraryParaAhora !== 'function') return null;
+    const abiertas = libraryProponibles(grupos).filter(puede);
+    return libraryParaAhora(abiertas, typeof todayISO === 'function' ? todayISO() : '', 1, pozo)[0] || null;
+  } catch (e) { return null; }
+}
+
+Object.assign(window, { breakAhoraDe, breakPozo, breakVetadas, breakProponible, breakElige, breakPropuesta, breakLaDeAntes, breakLaDeAntesAhora });

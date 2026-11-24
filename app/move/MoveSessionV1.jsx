@@ -57,7 +57,10 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
 
   /* Una rutina a medias sigue por su paso, con lo hecho (MoveSessionV1.reanudar.jsx). */
   const [rein] = useStateV1(() => (v1VozPrecarga(), cuerpoReanudacion(routine, reanudar)));   // la voz se carga ya, antes del 3, 2, 1
-  const [stage, setStage] = useStateV1('prep');    // 'prep' | 'run' | 'done'
+  /* Una sola cuenta (Ez, V3A del 24 nov.): si el primer paso se coloca, esa cuenta hace de «Prepárate». */
+  const [setupInicial] = useStateV1(() => v1StepSetup(routine, rein.step));
+  const sinPrep = setupInicial.mode === 'auto';
+  const [stage, setStage] = useStateV1(sinPrep ? 'run' : 'prep');    // 'prep' | 'run' | 'done'
   const [prepCount, setPrepCount] = useStateV1(V1_PREP_SECONDS); // s113: prep 5 s (antes 3)
   const [stepIdx, setStepIdx] = useStateV1(rein.step);
   const [phase, setPhase] = useStateV1('place');   // 'place' | 'work' | 'change'
@@ -67,7 +70,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
   /* La pausa se ve y al volver cuenta 3, 2, 1 (Ez, P8 B; MoveSessionV1.parts.jsx). */
   const vuelta = useV1Vuelta(paused, setPaused);
   const autoAbajo = useV1AutoAbajo();   // «Auto», bajo el mando si cabe (Ez, 29 oct.)
-  const [placeLeft, setPlaceLeft] = useStateV1(0);  // cuenta-atrás de colocación
+  const [placeLeft, setPlaceLeft] = useStateV1(sinPrep ? setupInicial.estimatedSeconds : 0);  // cuenta-atrás de colocación
   const [changeLeft, setChangeLeft] = useStateV1(0); // transición auto de lado (s113)
   const sessionStart = useRefV1(rein.startedAt);   // wall-clock: incluye pausas y colocaciones
   // Reps realmente guiadas en la sesión (enmienda R2): registro honesto que
@@ -92,7 +95,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
      de colocarse o de cambiar de lado (con sus +15 s), para el aro del «›». */
   const [pace, setPace] = usePace();
   const auto = pace.cuerpoAuto !== false;
-  const totalesRef = useRefV1({ place: 1, change: 1 });
+  const totalesRef = useRefV1({ place: sinPrep ? setupInicial.estimatedSeconds : 1, change: 1 });
   const esperaRef = useRefV1('');
   const sonadoRef = useRefV1('');
   /* Sin Auto, una cuenta en 0 que espera a «›» no es hacer la rutina: ningún reloj cuenta esa
@@ -206,12 +209,9 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath, reanudar }) {
     if (stage === 'prep' && prepCount > 0 && prepCount <= 3) { try { playSound('move.warn', v1VozCuenta(prepCount, V1_PREP_SECONDS)); } catch (e) {} }
   }, [prepCount]);
 
-  // Relojes por fase — patrón s113: los intervalos SOLO decrementan/incrementan
-  // su contador; los umbrales y side-effects (sonidos, avance, completion)
-  // viven en efectos aparte. Un updater de setState corre DURANTE el render:
-  // disparar ahí la completion (estado global → Sidebar) provocaba el warning
-  // «Cannot update a component while rendering» (pre-existía desde s110; el
-  // motor guiado lo hacía constante al auto-avanzar).
+  // Relojes por fase: los intervalos SOLO cambian su contador; umbrales, sonidos, avance y completion van
+  // en efectos aparte. Un updater de setState corre DURANTE el render: disparar ahí la completion (estado
+  // global → Sidebar) daba «Cannot update a component while rendering».
 
   // Colocación (s111): aire para colocarse, no es el timer (R1). Siempre cuenta sola y se
   // para con la pausa; «siguiente» salta y «+15 s» suma tiempo.
