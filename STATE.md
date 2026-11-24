@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.218.0 · 24 nov. 2026 (el pulido de antes de publicar y el arreglo de la mensual). Los testers tienen la
+**Versión:** v0.219.0 · 24 nov. 2026 (la auditoría a fondo: F1A F2A F3A F5A F6A F7A). Los testers tienen la
 0.205.0. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que no se pueden
 romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
@@ -20,8 +20,8 @@ romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 El orden hasta v1 está en `ROADMAP.md` («Lo que queda hasta v1.0», al día el 23 nov.). El tramo de código está hecho: **la
 fecha de v1 la ponen los 12 testers con sus 14 días seguidos, que aún no han empezado, y las altas de Ez para cobrar.**
 
-1. Subir la 0.218.0 como versión de prueba a Play y a TestFlight: notas y «Qué probar» en
-   `docs/launch/google-play/SUBIDAS.md` (T A de Ez, 23 nov.); el AAB, del artefacto `pace-play-v0.218.0`.
+1. Subir la 0.219.0 como versión de prueba a Play y a TestFlight: las notas y el «Qué probar» de la 0.218.0 en
+   `docs/launch/google-play/SUBIDAS.md` sirven tal cual (T A de Ez, 23 nov.); el AAB, del artefacto `pace-play-v0.219.0`.
 2. Los testers: 12 durante 14 días seguidos (hay 5 o 6; `/beta` y el grupo, listos: `testers.md`).
 3. Las altas: perfil de pagos de Play; acuerdo de apps de pago de Apple (banco, W-8BEN, programa para pequeñas empresas y
    una dirección visible en la UE); los datos del aviso legal (nombre, NIF y contacto), la revisión profesional y Resend
@@ -30,8 +30,10 @@ fecha de v1 la ponen los 12 testers con sus 14 días seguidos, que aún no han e
 
 ## Espera a Ez
 
-- **Subir la 0.218.0** a la prueba interna de Play (y de ahí a la cerrada) y a TestFlight, con las notas de `SUBIDAS.md`.
+- **Subir la 0.219.0** a la prueba interna de Play (y de ahí a la cerrada) y a TestFlight, con las notas de `SUBIDAS.md`.
   «Escríbenos» ya escribe a `hola.ezradesign@gmail.com` (Ez, 24 nov.).
+- **La F4** (la frase de la zona en inglés en la ventana de la pausa; irá como 0.219.1) y las letras de la auditoría de la
+  experiencia (U1-U6): página https://claude.ai/artifact/A5uYmcbADK4kmKnboHC1E8.
 - **Probar en sus aparatos**: la miniventana en su Chrome, el aviso de la web del móvil con la pantalla bloqueada (la 4 del
   móvil, 22 nov.), los pasos de cinco minutos de la página de las apps, lo privado del calendario en Android, la voz de Respira.
 - **Play Console**, al subir la siguiente beta: volver a pegar el párrafo «A tu ritmo» de `docs/launch/google-play/ficha.md`
