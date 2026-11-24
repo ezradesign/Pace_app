@@ -33,7 +33,7 @@ fecha de v1 la ponen los 12 testers con sus 14 días seguidos, que aún no han e
 - **Subir la 0.219.1** a la prueba interna de Play (y de ahí a la cerrada) y a TestFlight, con las notas de `SUBIDAS.md`.
   «Escríbenos» ya escribe a `hola.ezradesign@gmail.com` (Ez, 24 nov.).
 - **La experiencia** (U1A U2A U4A U6A, «todo lo recomendado»), montada en `claude/experiencia-24nov`: su «júntalo» con
-  la CI en verde (será la 0.220.0). **Las V**, a medias en `claude/v-24nov` (el relevo de LEEME dice qué falta).
+  la CI en verde (será la 0.220.0); la prueba que tiraba su CI, arreglada en 4c6df4e. **Las V**, a medias en `claude/v-24nov` (el relevo de LEEME dice qué falta).
 - **Probar en sus aparatos**: la miniventana en su Chrome, el aviso de la web del móvil con la pantalla bloqueada (la 4 del
   móvil, 22 nov.), los pasos de cinco minutos de la página de las apps, lo privado del calendario en Android, la voz de Respira.
 - **Play Console**, al subir la siguiente beta: volver a pegar el párrafo «A tu ritmo» de `docs/launch/google-play/ficha.md`
@@ -46,7 +46,7 @@ fecha de v1 la ponen los 12 testers con sus 14 días seguidos, que aún no han e
   de `codigos-tester.csv`; una segunda copia de las llaves privadas fuera de casa (dónde están, lo sabe Ez). «Avísame»: el
   nombre que firma su privacidad, el KV `pace-avisame` y el token de Web Analytics solo para /premium.
 
-La lista por orden y sin jerga, en la hoja de pasos de cada cuenta (https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 y
+La lista por orden y sin jerga, en `docs/traspaso/hoja-de-ruta-20oct.html` (al día el 24 nov.), que se publica como la hoja de pasos de cada cuenta (https://claude.ai/artifact/5iWBfHE7kD3dUVocdskmb6 y
 https://claude.ai/artifact/EcLj6io4wM9pGjtQ5wd1CT) y la de solo lo pendiente (UkETeVK2Ee97N8kSvupwC8 y LtUEUn4yjYXjyq4AqJEtqV).
 Ez se pierde con mucho abierto: a «¿qué toca?», una sola cosa.
 
