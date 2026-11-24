@@ -91,7 +91,7 @@ for (const h of [640, 718]) for (const letra of LETRAS) {
     const fallos = [];
     fallos.push(...await vigila(await H.abreHome(browser, baseURL, { lang: 'es', w: 360, h, letra, m: DIA_SERVIDO }), ['hoy 10:00–17:00'], 'es, el día servido'));
     /* «Legs: idle today» va en «Luego», que a 360 × 640 con la letra al 115 % la tarjeta ya esconde. */
-    if (h === 718 || letra === 1) fallos.push(...await vigila(await H.abreHome(browser, baseURL, { lang: 'en', w: 360, h, letra, m: PAUSA_ABIERTA }), ['not moved yet'], 'en, la pausa abierta'));
+    if (h === 718 || letra === 1) fallos.push(...await vigila(await H.abreHome(browser, baseURL, { lang: 'en', w: 360, h, letra, m: PAUSA_ABIERTA }), ['yet to move'], 'en, la pausa abierta'));
     expect(fallos).toEqual([]);
   });
 }

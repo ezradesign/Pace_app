@@ -316,7 +316,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.motivo.respira':          'Slow down',
     /* A 360 px tienen que caber en una línea: «Shoulders: not moved today» y «Two hours:
        leave the chair» se partían (medido en la app, docs/traspaso/archivos/series-15oct/). */
-    'ritmo.frase.zona':              '{zona}: not moved yet',   /* «aún sin mover» (Ez, F4A del 24 nov.: «idle» se leía como un estado); «not moved yesterday» no cabía, y ayer sigue «idle» */
+    'ritmo.frase.zona':              '{zona}: yet to move',   /* «aún sin mover» (Ez, F4 del 24 nov.: «idle» se leía como un estado). «not moved yet» se salía 3 px de la fila de la home en Android con la letra al 115 %; ayer sigue «idle», que cabe */
     'ritmo.frase.ayer':              '{zona}: idle yesterday',
     'ritmo.frase.sentado':           '{n} min sitting so far',
     'ritmo.frase.larga':             'Two hours: time to stand',
