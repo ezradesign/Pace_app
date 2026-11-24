@@ -57,16 +57,16 @@ jobs:
       SHA_PROBADO: ${{ github.event.workflow_run.head_sha || github.sha }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '24'
           cache: npm
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
@@ -80,7 +80,7 @@ jobs:
       - run: chmod +x gradlew && ./gradlew assembleDebug --no-daemon
         working-directory: android
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: pace-android-debug
           path: android/app/build/outputs/apk/debug/app-debug.apk
@@ -106,7 +106,7 @@ jobs:
           cp app/build/outputs/bundle/release/app-release.aab "$RUNNER_TEMP/PACE-$VERSION.aab"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: steps.aab.outcome == 'success'
         with:
           name: pace-play-v${{ steps.aab.outputs.version }}

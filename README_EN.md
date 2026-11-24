@@ -86,7 +86,7 @@ npm run verify
 ```
 
 ### Requirements
-Chrome/Edge 90+, Firefox 90+, Safari 14+. Node 18+ for building only.
+Chrome/Edge 90+, Firefox 90+, Safari 14+. Node 24 to build and test (the one in `engines` in `package.json` and in CI).
 
 ---
 
