@@ -3,7 +3,7 @@
  * Ez eligió V2 A: el último bloque cierra el día también en el aro («Jornada cerrada», «Lo que queda
  * del día es tuyo», «Seguir por libre»). Con el día cerrado por la hora y bloques sin hacer solo
  * cambiaba el rótulo («Tu jornada ya terminó»), y debajo quedaba lo de siempre: en el banco de
- * oficina, «Ciclo completado · Empezar otro ciclo» el día que el bloque acabó con el portátil
+ * oficina, «Ciclo completado · Empezar otro bloque» el día que el bloque acabó con el portátil
  * cerrado y «Atención sostenida · Empezar foco» el día que se fue pronto. Es el mismo cierre, con los
  * mismos textos en castellano y en inglés (`aroCerrado`, FocusTimer.jornada.jsx).
  */
@@ -54,7 +54,7 @@ test('cerrado por la hora tras un bloque con la tapa cerrada: «Jornada cerrada�
   await expect(vis(page, '[data-pace-dial-label]'), 'decía «Tu jornada ya terminó»').toHaveText('Jornada cerrada');
   await expect(vis(page, '[data-pace-dial-hasta]')).toHaveText('45 min de foco');
   await expect(vis(page, '[data-pace-dial-subtitle]'), 'decía «Ciclo completado»').toHaveText('Lo que queda del día es tuyo');
-  await expect(vis(page, '[data-pace-cta]'), 'ofrecía «Empezar otro ciclo»').toHaveText('Seguir por libre');
+  await expect(vis(page, '[data-pace-cta]'), 'ofrecía «Empezar otro bloque»').toHaveText('Seguir por libre');
   /* Y seguir por libre es un Foco de los de siempre. */
   await vis(page, '[data-pace-cta]').first().click();
   await expect(vis(page, '[data-pace-dial-label]')).toHaveText('Foco manual');

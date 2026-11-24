@@ -232,5 +232,5 @@ test('la ventana de la pausa de ayer se cierra al cambiar de día, y la de hoy n
   for (let i = 0; i < 28; i++) { await page.clock.fastForward(30 * 60 * 1000); await page.waitForTimeout(20); }
   await expect.poll(() => page.evaluate(() => getState().lastActiveDay), { message: 'GUARD: el día no cambió' }).toBe('Thu Oct 08 2026');
   await expect(ventana, 'la pausa de ayer sigue abierta por la mañana').toHaveCount(0);
-  await expect(page.locator('[data-pace-dial-subtitle]').first(), 'el aro sigue en el «Ciclo completado» de ayer').not.toHaveText('Ciclo completado');
+  await expect(page.locator('[data-pace-dial-subtitle]').first(), 'el aro sigue en el «Bloque terminado» de ayer').not.toHaveText('Bloque terminado');
 });

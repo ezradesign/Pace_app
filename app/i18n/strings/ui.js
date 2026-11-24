@@ -14,12 +14,10 @@
 
 Object.assign(window.PACE_STRINGS.es, {
     // Welcome
-    'welcome.subtitle':              'Un ritmo para tu día',
-    'welcome.cta':                   'Empezar',
     'welcome.greeting':              'Bienvenida',
     'welcome.tagline':               'Antídoto a la silla.',
     'welcome.tagline.sub':           'A tu ritmo.',
-    'welcome.lede':                  'Micro-pausas de foco, respiración, movilidad e hidratación. Sin rachas que castigan.',
+    'welcome.lede':                  'Foco, y pausas cortas para respirar, moverte, estirar y beber agua. Sin rachas que castigan.',   /* el Foco no es una pausa (Ez, U2A del 24 nov.) */
     'welcome.value.local.label':     'Todo local',
     'welcome.value.local.sub':       'en tu navegador',
     'welcome.value.local.sub.app':   'en tu móvil',
@@ -27,10 +25,6 @@ Object.assign(window.PACE_STRINGS.es, {
     'welcome.value.accounts.sub':    'sin registro',
     'welcome.value.free.label':      'Gratis',
     'welcome.value.free.sub':        'lo esencial, siempre',
-    'welcome.intention.label':       '¿Qué quieres cultivar hoy?',
-    'welcome.intention.optional':    'opcional',
-    'welcome.intention.placeholder': 'concentración, calma, movimiento…',
-    'welcome.skip':                  'prefiero saltarlo',
 
     // Support
     'support.meta':                  'Apoya el proyecto',
@@ -58,23 +52,9 @@ Object.assign(window.PACE_STRINGS.es, {
     // Break
 
     // Sidebar
-    'sidebar.section.rhythm':        'Ritmo',
-    'sidebar.section.trail':         'Sendero',
-    'sidebar.section.achievements':  'Logros',
-    'sidebar.achievements.discover': '{n} por descubrir →',
-    'sidebar.streak.day':            'día seguido',
-    'sidebar.streak.days':           'días seguidos',
-    'sidebar.streak.best':           'Mejor: {n} días',
-    'sidebar.status.ontrack':        'En camino',
     'sidebar.collapse.title':        'Colapsar ({k})',
     'sidebar.collapse.aria':         'Colapsar panel',
     'sidebar.logo.title':            '¿Le haces cosquillas?',
-    'sidebar.counter.pomodoros':     'Pomodoros completados hoy',
-    'sidebar.counter.rounds':        'Rondas largas (cada 4 pomodoros)',
-    'sidebar.counter.streak':        'Días activos seguidos',
-    'sidebar.trail.hito':            'hito',
-    'sidebar.trail.hitos':           'hitos',
-    'sidebar.trail.now':             'ahora',
     'sidebar.days':                  'L,M,X,J,V,S,D',
     'sidebar.open.title':            'Abrir panel ({k})',
     'sidebar.open.aria':             'Abrir panel',
@@ -96,10 +76,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'sidebar.agua.deshacer.title':   'Quitar el vaso que acabas de sumar',
     'sidebar.open.module':           'Abrir {m}',
     'sidebar.water.add':             'Añadir un vaso',
-    'sidebar.week':                  'Esta semana',
     'sidebar.week.rhythm':           '{n} días seguidos · tu mejor, {m}',
     'sidebar.week.rhythm.one':       '1 día seguido · tu mejor, {m}',
-    'sidebar.week.none':             'Sin días todavía · tu mejor, {m}',
     'sidebar.week.rhythm.sin':       '{n} días seguidos',
     'sidebar.week.rhythm.one.sin':   '1 día seguido',
     'sidebar.week.open':             'Ver la semana en Estadísticas',
@@ -122,10 +100,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'sidebar.mine':                  'Tus rutinas',
     'sidebar.latest':                'Último logro',
     'sidebar.collection':            'Ver la colección',
-    'sidebar.support':               'Apoyar PACE',
     'sidebar.empty':                 'Tu día empieza en blanco. Lo que hagas se queda aquí.',
-    'sidebar.trail.hour.start':      '6h',
-    'sidebar.trail.hour.end':        '22h',
 
     // Welcome lang toggle
     'welcome.lang.toggle.toEn':      'Cambiar a English',
@@ -169,7 +144,7 @@ Object.assign(window.PACE_STRINGS.es, {
     // PWA (s102): aviso fin de Foco + update prompt + enlaces legales
 
     'notify.focus.title':            'Foco completado',
-    'notify.focus.body':             'Ciclo cerrado. Elige tu micro-pausa.',
+    'notify.focus.body':             'Bloque terminado. Elige tu pausa.',   /* Ez, U1A del 24 nov. */
     /* El fin de la pausa en el móvil, con su propio sonido (auditoría externa 4.F2, 12 nov. 2026),
        y los nombres de sus dos canales en los ajustes de Android. */
     'notify.pausa.title':            'Pausa terminada',
@@ -208,17 +183,14 @@ Object.assign(window.PACE_STRINGS.es, {
 
     // Premium (gating de contenido · bloque Contenido+Premium F3)
     'premium.seal':                  'Premium',
-    'premium.soon':                  'Pronto',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
     // Welcome
-    'welcome.subtitle':              'A rhythm for your day',
-    'welcome.cta':                   'Start',
     'welcome.greeting':              'Welcome',
     'welcome.tagline':               'The antidote to sitting.',
     'welcome.tagline.sub':           'At your pace.',
-    'welcome.lede':                  'Micro-breaks for focus, breathing, mobility and hydration. No streaks that punish you.',
+    'welcome.lede':                  'Focus, and short breaks to breathe, move, stretch and drink water. No streaks that punish you.',
     'welcome.value.local.label':     'Stored locally',
     'welcome.value.local.sub':       'in your browser',
     'welcome.value.local.sub.app':   'on your phone',
@@ -226,10 +198,6 @@ Object.assign(window.PACE_STRINGS.en, {
     'welcome.value.accounts.sub':    'no sign-up',
     'welcome.value.free.label':      'Free',
     'welcome.value.free.sub':        'the essentials, always',
-    'welcome.intention.label':       'What do you want to cultivate today?',
-    'welcome.intention.optional':    'optional',
-    'welcome.intention.placeholder': 'focus, calm, movement…',
-    'welcome.skip':                  'skip for now',
 
     // Support
     'support.meta':                  'Support the project',
@@ -257,23 +225,9 @@ Object.assign(window.PACE_STRINGS.en, {
     // Break
 
     // Sidebar
-    'sidebar.section.rhythm':        'Rhythm',
-    'sidebar.section.trail':         'Trail',
-    'sidebar.section.achievements':  'Achievements',
-    'sidebar.achievements.discover': '{n} to discover →',
-    'sidebar.streak.day':            'day in a row',
-    'sidebar.streak.days':           'days in a row',
-    'sidebar.streak.best':           'Best: {n} days',
-    'sidebar.status.ontrack':        'On track',
     'sidebar.collapse.title':        'Collapse ({k})',
     'sidebar.collapse.aria':         'Collapse panel',
     'sidebar.logo.title':            'Give the cow a tickle?',
-    'sidebar.counter.pomodoros':     'Pomodoros completed today',
-    'sidebar.counter.rounds':        'Long rounds (every 4 pomodoros)',
-    'sidebar.counter.streak':        'Active days in a row',
-    'sidebar.trail.hito':            'milestone',
-    'sidebar.trail.hitos':           'milestones',
-    'sidebar.trail.now':             'now',
     'sidebar.days':                  'Mo,Tu,We,Th,Fr,Sa,Su',
     'sidebar.open.title':            'Open panel ({k})',
     'sidebar.open.aria':             'Open panel',
@@ -293,10 +247,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'sidebar.agua.deshacer.title':   'Remove the glass you just added',
     'sidebar.open.module':           'Open {m}',
     'sidebar.water.add':             'Add a glass',
-    'sidebar.week':                  'This week',
     'sidebar.week.rhythm':           '{n} days in a row · your best, {m}',
     'sidebar.week.rhythm.one':       '1 day in a row · your best, {m}',
-    'sidebar.week.none':             'No days yet · your best, {m}',
     'sidebar.week.rhythm.sin':       '{n} days in a row',
     'sidebar.week.rhythm.one.sin':   '1 day in a row',
     'sidebar.week.open':             'See the week in Stats',
@@ -319,10 +271,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'sidebar.mine':                  'Your routines',
     'sidebar.latest':                'Latest achievement',
     'sidebar.collection':            'See the collection',
-    'sidebar.support':               'Support PACE',
     'sidebar.empty':                 'Your day starts blank. Whatever you do stays here.',
-    'sidebar.trail.hour.start':      '6h',
-    'sidebar.trail.hour.end':        '22h',
 
     // Welcome lang toggle
     'welcome.lang.toggle.toEn':      'Switch to English',
@@ -365,7 +314,7 @@ Object.assign(window.PACE_STRINGS.en, {
     // PWA (s102): focus end alert + update prompt + legal links
 
     'notify.focus.title':            'Focus complete',
-    'notify.focus.body':             'Focus complete. Choose your break.',
+    'notify.focus.body':             'Block done. Choose your break.',
     'notify.pausa.title':            'Break over',
     'notify.pausa.body':             'Back to Focus when you’re ready.',
     'notify.pausa.ritmo':            'Next up: block {n} of {total}.',
@@ -398,5 +347,4 @@ Object.assign(window.PACE_STRINGS.en, {
 
     // Premium (content gating · Content+Premium block F3)
     'premium.seal':                  'Premium',
-    'premium.soon':                  'Soon',
 });

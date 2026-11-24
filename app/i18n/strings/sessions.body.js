@@ -29,12 +29,10 @@ Object.assign(window.PACE_STRINGS.es, {
     // Move Library
     'lib.move.title':                  'Mueve',
     'lib.move.subtitle':               'Calistenia y fuerza. Corto y discreto, casi siempre sin material.',
-    'lib.move.meta':                   'Cuerpo activo',
 
     // Extra Library
     'lib.extra.title':                 'Estira',
     'lib.extra.subtitle':              'Movilidad y estiramientos. Antídoto a la silla.',
-    'lib.extra.meta':                  'Afloja tensión',
 
     /* Intensidad y nivel tecnico (§29.2 del audit). Son DOS ejes distintos y
        no se mezclan: un ejercicio puede ser tecnicamente sencillo pero intenso,
@@ -172,7 +170,6 @@ Object.assign(window.PACE_STRINGS.es, {
 
     // Contrato de pasos v1 (s110 · B2.2 · método s111 · guiado s113)
     'session.place':                   'Colócate',
-    'session.beginStep':               'Empezar',
     'session.beginNow':                'Empezar ya',
     'session.moreTime':                'Más tiempo',
     'session.placeCountdown':          'para empezar',
@@ -188,7 +185,6 @@ Object.assign(window.PACE_STRINGS.es, {
     'move.cambio.otraPierna':          'Otra pierna',
     'session.sideChange':              'Cambia de lado',
     'session.sideNext':                'Ahora: {side}',
-    'session.skip':                    'Saltar',
     'session.restLabel':               'Descanso',
     'move.reps':                       'reps',
     'move.placeHint':                  'Colócate sin prisa · arranca solo',
@@ -234,12 +230,10 @@ Object.assign(window.PACE_STRINGS.en, {
     // Move Library
     'lib.move.title':                  'Move',
     'lib.move.subtitle':               'Calisthenics and strength. Short and discreet, mostly equipment-free.',
-    'lib.move.meta':                   'Get moving',
 
     // Extra Library
     'lib.extra.title':                 'Stretch',
     'lib.extra.subtitle':              'Mobility and stretching. The antidote to sitting.',
-    'lib.extra.meta':                  'Release tension',
 
     'lib.intensity.gentle':            'Gentle',
     'lib.intensity.moderate':          'Moderate',
@@ -344,7 +338,6 @@ Object.assign(window.PACE_STRINGS.en, {
 
     // Step contract v1 (s110 · B2.2 · method s111 · guided s113)
     'session.place':                   'Get set',
-    'session.beginStep':               'Start',
     'session.beginNow':                'Start now',
     'session.moreTime':                'More time',
     'session.placeCountdown':          'to start',
@@ -358,7 +351,6 @@ Object.assign(window.PACE_STRINGS.en, {
     'move.cambio.otraPierna':          'Other leg',
     'session.sideChange':              'Switch sides',
     'session.sideNext':                'Now: {side}',
-    'session.skip':                    'Skip',
     'session.restLabel':               'Rest',
     'move.reps':                       'reps',
     'move.placeHint':                  'Get set, no rush · starts on its own',

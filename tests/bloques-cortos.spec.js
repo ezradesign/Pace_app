@@ -88,7 +88,7 @@ test('4c · sin día, con el aro a 10 y «a mi ritmo», los bloques se juntan: i
   const errores = capturarErrores(page);
   await abrir(page, context, {});
   expect(await page.evaluate(() => ritmoPlan(getState()))).toBeNull();
-  expect(await bloque(page, 10)).toEqual({ ventana: 0, invita: 0, cta: 'Empezar otro ciclo' });
+  expect(await bloque(page, 10)).toEqual({ ventana: 0, invita: 0, cta: 'Empezar otro bloque' });
   expect(await bloque(page, 10)).toEqual({ ventana: 0, invita: 1, cta: 'Ver ejercicio' });
   await visible(page, '[data-pace-invita-seguir]').click();
   await page.clock.fastForward(10 * 60 * 1000 + 2000);
@@ -97,7 +97,7 @@ test('4c · sin día, con el aro a 10 y «a mi ritmo», los bloques se juntan: i
   await expect(visible(page, '[data-pace-invita]')).toHaveCount(0);
   /* la pausa pone la cuenta a cero: el bloque siguiente vuelve a juntarse */
   await page.keyboard.press('Escape');
-  expect(await bloque(page, 10)).toEqual({ ventana: 0, invita: 0, cta: 'Empezar otro ciclo' });
+  expect(await bloque(page, 10)).toEqual({ ventana: 0, invita: 0, cta: 'Empezar otro bloque' });
   expect(errores).toEqual([]);
 });
 

@@ -7,7 +7,7 @@
  * el aro vuelve al foco; una pausa elegida a mano en la barra sigue como estaba. Contra
  * v0.174.0 fallan las dos primeras.
  * TRAMPA: el bloque se acaba justo a su hora y se espera a la ventana (`terminarBloque`). Con
- * la suite entera caía en «Empezar otro ciclo»: era el tic del reloj que cae entre un reinicio
+ * la suite entera caía en «Empezar otro bloque»: era el tic del reloj que cae entre un reinicio
  * y el pintado (useCountdown, tests/aro-modo-identidad.spec.js), no la espera.
  */
 'use strict';

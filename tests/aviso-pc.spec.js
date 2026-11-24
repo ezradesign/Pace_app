@@ -74,7 +74,7 @@ test('aviso-pc · 1A · con el reloj frenado de una pestaña oculta, el final ll
   const fin = await page.evaluate(() => JSON.parse(localStorage.getItem('pace.timer.v1')).endsAt);
   await context.clock.fastForward(CINCO - 10000);
   await context.clock.runFor(12000);
-  await expect(cta(page), 'el Foco no acabó a su hora: esperaba al siguiente tic frenado').toHaveText('Empezar otro ciclo', { timeout: 3000 });
+  await expect(cta(page), 'el Foco no acabó a su hora: esperaba al siguiente tic frenado').toHaveText('Empezar otro bloque', { timeout: 3000 });
   await esperarEnPagina(page, () => window.__avisos.length === 1);
   const [aviso] = await page.evaluate(() => window.__avisos);
   expect(aviso.cuando - fin, 'el aviso llegó tarde').toBeLessThan(3000);
@@ -116,7 +116,7 @@ test('aviso-pc · 1C · si lo estabas mirando, la pestaña no dice «terminado»
   await empezarFoco(page);
   await context.clock.fastForward(CINCO + 2000);
   await context.clock.runFor(1500);
-  await expect(cta(page)).toHaveText('Empezar otro ciclo');
+  await expect(cta(page)).toHaveText('Empezar otro bloque');
   await expect(page).toHaveTitle('PACE · Foco · Cuerpo');
 });
 
@@ -141,7 +141,7 @@ test('aviso-pc · campana · al acabar el Foco la campana da tres toques', async
   await page.evaluate(() => { window.__contar = true; });
   await context.clock.fastForward(CINCO + 2000);
   await context.clock.runFor(1500);
-  await expect(cta(page)).toHaveText('Empezar otro ciclo');
+  await expect(cta(page)).toHaveText('Empezar otro bloque');
   const golpes = await page.evaluate(() => window.__golpes.slice().sort((a, b) => a - b));
   /* Un toque son tres tonos casi a la vez; los toques se separan más de medio segundo. */
   const toques = golpes.filter((g, i) => i === 0 || g - golpes[i - 1] > 0.5).length;
@@ -215,14 +215,14 @@ test('aviso-pc · 2B · la tira cuenta el Foco, «Pausar» y «Continuar» manda
   await page.evaluate(() => paceMiniAbrir());
   expect(await page.evaluate(() => window.__pipPedido), 'la tira mide 300 × 84').toEqual({ width: 300, height: 84 });
   await expect(tira(page)).toContainText(/0[45]:\d\d/);
-  await expect(tira(page)).toContainText('Foco · Ciclo 1 / 4');
+  await expect(tira(page)).toContainText('Foco · Bloque 1 de 4');
   await tira(page).getByRole('button', { name: 'Pausar' }).click();
   await expect(cta(page), '«Pausar» de la tira no pausó el Foco').toHaveText('Continuar');
   await tira(page).getByRole('button', { name: 'Continuar' }).click();
   await expect(cta(page)).toHaveText('Pausar');
   await context.clock.fastForward(CINCO + 2000);
   await context.clock.runFor(1500);
-  await expect(cta(page)).toHaveText('Empezar otro ciclo');
+  await expect(cta(page)).toHaveText('Empezar otro bloque');
   await expect(tira(page)).toHaveAttribute('data-fin', '');
   await expect(tira(page)).toContainText('Foco terminado');
 });
@@ -343,7 +343,7 @@ test('jornada · la tira habla como el aro: «Foco · Bloque 1 de N», no «Cicl
   await irAlArtefacto(page);
   await cta(page).click();
   await expect(tira(page)).toContainText(/Foco · Bloque 1 de \d+/);
-  await expect(tira(page)).not.toContainText('Ciclo');
+  await expect(tira(page)).not.toContainText('Bloque 1 de 4');
 });
 
 test('jornada · al acabar el bloque sin mirar PACE, la tira dice «Foco terminado» hasta que vuelves; luego, la pausa sin botón', async ({ page, context }) => {

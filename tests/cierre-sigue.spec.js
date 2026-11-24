@@ -2,7 +2,7 @@
  * ================================================================================
  * Auditoría fable-9nov, propuesta 2 (app/ui/SessionDone.sigue.jsx). Solo cuando el ejercicio
  * venía de una pausa:
- *  · por libre, «Empezar el ciclo 2» arranca el Foco y «Volver al inicio» vuelve sin arrancar;
+ *  · por libre, «Empezar el bloque 2» arranca el Foco y «Volver al inicio» vuelve sin arrancar;
  *  · con jornada, «Volver · te quedan N min de pausa» (N, lo que de verdad queda) vuelve con la
  *    pausa corriendo y «Empezar ya el bloque 2» la corta y arranca el bloque;
  *  · cuando no venía de una pausa, como antes: solo «Volver al inicio».
@@ -70,12 +70,12 @@ const sinPisar = (page) => page.evaluate(() => {
   return mal;
 });
 
-test('por libre: «Empezar el ciclo 2» arranca el Foco siguiente', async ({ page, context }) => {
+test('por libre: «Empezar el bloque 2» arranca el Foco siguiente', async ({ page, context }) => {
   const errores = capturarErrores(page);
   await cierreLibre(page, context);
   const caja = page.locator(SIGUE);
   await expect(caja).toHaveAttribute('data-pace-cierre-sigue', 'libre');
-  await expect(caja.locator('button').first()).toHaveText('Empezar el ciclo 2');
+  await expect(caja.locator('button').first()).toHaveText('Empezar el bloque 2');
   await expect(caja.locator('[data-pace-cierre-otra]')).toHaveText('Volver al inicio');
   await caja.locator('button').first().click();
   await expect(page.locator('[data-pace-session-root]')).toHaveCount(0);
@@ -84,15 +84,15 @@ test('por libre: «Empezar el ciclo 2» arranca el Foco siguiente', async ({ pag
   expect(errores).toEqual([]);
 });
 
-test('por libre: «Volver al inicio» vuelve sin arrancar nada, y en inglés dice «Start cycle 2»', async ({ page, context }) => {
+test('por libre: «Volver al inicio» vuelve sin arrancar nada, y en inglés dice «Start block 2»', async ({ page, context }) => {
   await cierreLibre(page, context);
   await page.evaluate(() => window.setState({ lang: 'en' }));
-  await expect(page.locator(SIGUE + ' button').first()).toHaveText('Start cycle 2');
+  await expect(page.locator(SIGUE + ' button').first()).toHaveText('Start block 2');
   await expect(page.locator(SIGUE + ' [data-pace-cierre-otra]')).toHaveText('Back to Home');
   await page.evaluate(() => window.setState({ lang: 'es' }));
   await page.locator(SIGUE + ' [data-pace-cierre-otra]').click();
   await expect(page.locator('[data-pace-session-root]')).toHaveCount(0);
-  await expect(cta(page)).toHaveText('Empezar otro ciclo');
+  await expect(cta(page)).toHaveText('Empezar otro bloque');
 });
 
 test('con jornada: «Volver · te quedan N min de pausa» con los minutos de verdad, y «Empezar ya el bloque 2» lo arranca', async ({ page, context }) => {

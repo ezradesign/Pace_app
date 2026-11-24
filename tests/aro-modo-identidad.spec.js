@@ -182,7 +182,7 @@ test('CONTROL · el Foco de 5 empezado desde cero acaba a los 5 minutos y cuenta
 /* EL TIC QUE CAE EN EL HUECO (28 oct. 2026). Al cambiar de reloj con uno en marcha, el reinicio deja
    `endsAt` en null antes de que React quite el tic de cada segundo, y `Date.now() >= null` es verdadero:
    un tic que cayera en ese hueco daba el reloj por acabado y llamaba a `onComplete`. Con el PC cargado el
-   hueco crece: «Cambiar» con la pausa del día en marcha dejaba «Empezar otro ciclo» en vez de «Empezar
+   hueco crece: «Cambiar» con la pausa del día en marcha dejaba «Empezar otro bloque» en vez de «Empezar
    foco» (ritmo-pausa-libre, la mitad de las veces con la CPU frenada 16 veces), y cambiar los minutos con
    un bloque en marcha podía dar por hecho el bloque que se dejaba. Aquí el tic se manda a mano en el
    hueco: lo que escucha `visibilitychange` es el mismo `check` del intervalo. Rojo contra v0.184.0. */

@@ -15,6 +15,16 @@
 
 const PACE_NOVEDADES = [
   {
+    id: 'foco-en-bloques',
+    desde: '2026-11-24',
+    es: [
+      'El Foco a mano también cuenta en bloques, como la jornada: «Bloque 1 de 4».',
+    ],
+    en: [
+      'Manual Focus counts in blocks too, like your workday: “Block 1 of 4”.',
+    ],
+  },
+  {
     id: 'junto-a-la-mesa',
     desde: '2026-11-24',
     es: [

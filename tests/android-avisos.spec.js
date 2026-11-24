@@ -120,7 +120,7 @@ test.describe('A1 · una sola campana al acabar el bloque', () => {
     await alFondo(page);
     await esperarEnPagina(page, () => !!window.__nativo.puestos[1]);
     await acabarBloque(context);
-    await expect(cta(page)).toHaveText('Empezar otro ciclo');
+    await expect(cta(page)).toHaveText('Empezar otro bloque');
     expect(await campanasDeFin(page), 'con el aviso de Android puesto, PACE también tocó la campana').toBe(0);
     await alVolver(page);
     await context.clock.runFor(1500);
@@ -138,7 +138,7 @@ test.describe('A1 · una sola campana al acabar el bloque', () => {
     const otra = await context.newPage();
     await otra.goto(RUTA_ARTEFACTO);
     await otra.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
-    await expect(otra.locator('[data-pace-cta]')).toHaveText('Empezar otro ciclo');
+    await expect(otra.locator('[data-pace-cta]')).toHaveText('Empezar otro bloque');
     await otra.waitForTimeout(300);
     expect(await campanasDeFin(otra), 'al abrir PACE, el bloque que ya avisó Android volvió a sonar').toBe(0);
   });
@@ -148,7 +148,7 @@ test.describe('A1 · una sola campana al acabar el bloque', () => {
     await empezarFoco(page);
     await alFondo(page);
     await acabarBloque(context);
-    await expect(cta(page)).toHaveText('Empezar otro ciclo');
+    await expect(cta(page)).toHaveText('Empezar otro bloque');
     expect(await cuantas(page, 'schedule'), 'programó un aviso sin permiso').toBe(0);
     expect(await campanasDeFin(page), 'sin aviso de Android no sonó nadie').toBe(1);
   });
@@ -157,7 +157,7 @@ test.describe('A1 · una sola campana al acabar el bloque', () => {
     await abrir(page, context);
     await empezarFoco(page);
     await acabarBloque(context);
-    await expect(cta(page)).toHaveText('Empezar otro ciclo');
+    await expect(cta(page)).toHaveText('Empezar otro bloque');
     expect(await campanasDeFin(page)).toBe(1);
     expect(await nativo(page, 'puestos')).toEqual({});
   });
@@ -240,7 +240,7 @@ test.describe('A3 · puesto solo cuando Android lo confirma', () => {
     await alFondo(page);
     await esperarEnPagina(page, () => window.__nativo.llamadas.filter((l) => l.metodo === 'schedule').length === 2);
     await acabarBloque(context);
-    await expect(cta(page)).toHaveText('Empezar otro ciclo');
+    await expect(cta(page)).toHaveText('Empezar otro bloque');
     expect(await campanasDeFin(page), 'sin aviso de Android, PACE tenía que sonar').toBe(1);
   });
 });
@@ -392,6 +392,6 @@ test.describe('el aviso de fin dice lo que viene', () => {
     await alFondo(page);
     await esperarEnPagina(page, () => !!window.__nativo.puestos[1]);
     const [aviso] = await programados(page);
-    expect([aviso.title, aviso.body]).toEqual(['Foco completado', 'Ciclo cerrado. Elige tu micro-pausa.']);
+    expect([aviso.title, aviso.body]).toEqual(['Foco completado', 'Bloque terminado. Elige tu pausa.']);
   });
 });

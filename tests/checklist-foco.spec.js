@@ -82,7 +82,7 @@ test('el Pomodoro cuenta, se pausa, se reanuda y al terminar abre el BreakMenu',
   await expect(menu.getByRole('button', { name: 'Ahora no', exact: true })).toBeVisible();
 
   /* El ciclo queda cerrado: el CTA de la home ya ofrece el siguiente. */
-  await expect(page.getByRole('button', { name: 'Empezar otro ciclo', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Empezar otro bloque', exact: true })).toBeVisible();
 
   expect(errores).toEqual([]);
 });
