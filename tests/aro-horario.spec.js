@@ -52,7 +52,7 @@ function medir(page) {
     const caja = v('[data-pace-ritmo-panel] .pace-rt-panel') || v('[data-pace-activitybar-chip]');
     let ciclo = null;
     for (const n of dial.querySelectorAll('span, div')) {
-      if (/\b(ciclo|cycle)\b/i.test(n.textContent || '')) { const b = paceCaja(n).bottom; if (ciclo == null || b > ciclo) ciclo = b; }
+      if (n.matches('[data-pace-ciclo]') || n.querySelector('[data-pace-ciclo]')) { const b = paceCaja(n).bottom; if (ciclo == null || b > ciclo) ciclo = b; }
     }
     const D = parseFloat(cs.getPropertyValue('--pace-timer-d'));
     const techo = ciclo == null ? Math.round(D * 0.16) : Math.max(0, Math.round(paceCaja(dial).bottom - ciclo - 4));

@@ -2546,7 +2546,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'focus.minutes.grupo': 'Minutos del bloque de foco',
   'focus.minutes.n': '{n} minutos',
   'focus.cycleOf': 'Bloque {n} de 4',
-  'focus.cycleNext': 'Siguiente · Bloque {n} de 4',
+  'focus.cycleNext': 'Luego · Bloque {n} de 4',
   'focus.exacta': 'Avisos a su hora ›',
   'focus.exacta.aria': 'Avisos a su hora: abre el ajuste de Android',
   'focus.min': 'Min',
@@ -57366,11 +57366,13 @@ function paceHomeFilaNombres(body) {
 
 
 
-function paceAroCicloAbajo(dial, re) {
+
+
+function paceAroCicloAbajo(dial, sel) {
   var best = null;
   var nodes = dial.querySelectorAll('span, div');
   for (var i = 0; i < nodes.length; i++) {
-    if (re.test(nodes[i].textContent || '')) {
+    if (nodes[i].matches(sel) || nodes[i].querySelector(sel)) {
       var b = paceCaja(nodes[i]).bottom;
       if (best == null || b > best) best = b;
     }
@@ -57555,7 +57557,7 @@ function paceAroPisoInterior(dial, radio) {
 
   var SQUEEZE_START = 700;
   var SQUEEZE_FULL = 610;
-  var CICLO_RE = /\b(ciclo|cycle)\b/i;
+  var CICLO_SEL = '[data-pace-ciclo]';
 
   var rafId = 0;
   var ro = null;
@@ -57568,7 +57570,7 @@ function paceAroPisoInterior(dial, radio) {
   }
 
 
-  function cicloBottomWithin(dial) {return paceAroCicloAbajo(dial, CICLO_RE);}
+  function cicloBottomWithin(dial) {return paceAroCicloAbajo(dial, CICLO_SEL);}
   function pisoInterior(dial) {return paceAroPisoInterior(dial, RADIO_INTERIOR);}
 
 

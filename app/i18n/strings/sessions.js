@@ -59,7 +59,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'focus.minutes.grupo':             'Minutos del bloque de foco',
     'focus.minutes.n':                 '{n} minutos',
     'focus.cycleOf':                   'Bloque {n} de 4',   /* «bloque», como la jornada (Ez, U1A del 24 nov.) */
-    'focus.cycleNext':                 'Siguiente · Bloque {n} de 4',
+    'focus.cycleNext':                 'Luego · Bloque {n} de 4',   /* «Siguiente · Bloque 2 de 4» llegaba al ancho del aro y lo hacía crecer 25 px; «Luego», como la tarjeta del día */
     'focus.exacta':                    'Avisos a su hora ›',
     'focus.exacta.aria':               'Avisos a su hora: abre el ajuste de Android',
     'focus.min':                       'Min',

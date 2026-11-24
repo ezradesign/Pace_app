@@ -86,13 +86,15 @@ function paceHomeFilaNombres(body) {
   }
 }
 
-/* Localiza los puntos CICLO por texto (i18n: «Ciclo N/4» / «Cycle N/4») y toma el borde
-   inferior más bajo entre las coincidencias. Sin hook JSX. */
-function paceAroCicloAbajo(dial, re) {
+/* Localiza la fila de los puntos del Foco por su marca (`data-pace-ciclo`, que va siempre, también
+   oculta) y toma el borde inferior más bajo entre ella y lo que la envuelve dentro del aro. Antes se
+   buscaba por la palabra «ciclo»/«cycle», y al decir «bloque» (Ez, U1A del 24 nov. 2026) el motor
+   dejó de encontrarla y el aro cambió de tamaño: la marca no depende del idioma ni del nombre. */
+function paceAroCicloAbajo(dial, sel) {
   var best = null;
   var nodes = dial.querySelectorAll('span, div');
   for (var i = 0; i < nodes.length; i++) {
-    if (re.test(nodes[i].textContent || '')) {
+    if (nodes[i].matches(sel) || nodes[i].querySelector(sel)) {
       var b = paceCaja(nodes[i]).bottom;
       if (best == null || b > best) best = b;
     }
