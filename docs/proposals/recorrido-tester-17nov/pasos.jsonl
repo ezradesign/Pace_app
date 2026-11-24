@@ -1,0 +1,470 @@
+{"cmd":"abrir","t":"2026-11-23T08:52:00+01:00","limpio":true}
+{"cmd":"foto","n":"d1-01-bienvenida-1"}
+{"cmd":"toca","nombre":"^Comenzar$"}
+{"cmd":"foto","n":"d1-02-bienvenida-2"}
+{"cmd":"toca","nombre":"^Continuar$"}
+{"cmd":"foto","n":"d1-03-bienvenida-3"}
+{"cmd":"toca","nombre":"^Comenzar$"}
+{"cmd":"foto","n":"d1-04-visita-1"}
+{"cmd":"toca","nombre":"Siguiente","exacto":true}
+{"cmd":"foto","n":"d1-05-visita-2"}
+{"cmd":"toca","nombre":"Siguiente","exacto":true}
+{"cmd":"foto","n":"d1-06-visita-3"}
+{"cmd":"toca","nombre":"Siguiente","exacto":true}
+{"cmd":"foto","n":"d1-07-visita-4"}
+{"cmd":"toca","nombre":"Entendido","exacto":true,"espera":1200}
+{"cmd":"foto","n":"d1-08-home-primera"}
+{"cmd":"hora"}
+{"cmd":"oido"}
+{"cmd":"errores"}
+{"cmd":"toca","nombre":"Preparar jornada","espera":1200}
+{"cmd":"foto","n":"d1-09-preparar"}
+{"cmd":"toca","nombre":"Hoy es distinto","espera":1000}
+{"cmd":"foto","n":"d1-10-hoy-distinto"}
+{"cmd":"js","code":"Array.from(document.querySelectorAll(`button`)).filter(b=>b.getClientRects().length && b.matches(`:hover`)).map(b=>b.innerText.slice(0,20))"}
+{"cmd":"toca","nombre":"^Jornada entera","espera":1200}
+{"cmd":"foto","n":"d1-11-jornada-elegida"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Ver todo","espera":1000}
+{"cmd":"foto","n":"d1-11b-ver-todo"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"js","code":"(()=>{const b=Array.from(document.querySelectorAll(`button`)).find(x=>x.innerText.trim()===`Al calendario`&&x.getClientRects().length);b&&b.scrollIntoView({block:`end`});return !!b})()"}
+{"cmd":"foto","n":"d1-11c-ver-todo-final"}
+{"cmd":"toca","nombre":"^Al calendario$","espera":1200}
+{"cmd":"foto","n":"d1-11d-calendario"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"oido"}
+{"cmd":"errores"}
+{"cmd":"toca","nombre":"^Listo$","n":-1}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"toca","nombre":"Empezar jornada","espera":1500}
+{"cmd":"foto","n":"d1-12-foco-empieza"}
+{"cmd":"oido"}
+{"cmd":"salta","ms":2580000}
+{"cmd":"foto","n":"d1-13-foco-a-mitad"}
+{"cmd":"espera","ms":120000}
+{"cmd":"foto","n":"d1-14-pausa-ventana"}
+{"cmd":"texto"}
+{"cmd":"oido"}
+{"cmd":"hora"}
+{"cmd":"errores"}
+{"cmd":"toca","nombre":"Hacer la pausa","n":-1,"espera":1500}
+{"cmd":"foto","n":"d1-15-pausa-ficha"}
+{"cmd":"toca","nombre":"^Empezar$","n":-1,"espera":1200}
+{"cmd":"foto","n":"d1-16-pausa-prepara"}
+{"cmd":"espera","ms":12000}
+{"cmd":"foto","n":"d1-17-pausa-ejercicio"}
+{"cmd":"espera","ms":24000}
+{"cmd":"foto","n":"d1-18-pausa-descanso"}
+{"cmd":"texto"}
+{"cmd":"espera","ms":40000}
+{"cmd":"foto","n":"d1-19-pausa-cierre"}
+{"cmd":"texto"}
+{"cmd":"espera","ms":16000}
+{"cmd":"texto"}
+{"cmd":"hora"}
+{"cmd":"oido"}
+{"cmd":"foto","n":"d1-19-pausa-cierre"}
+{"cmd":"toca","nombre":"^Sí$","espera":800}
+{"cmd":"foto","n":"d1-20-te-ayudo-si"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"^Volver","espera":1500}
+{"cmd":"foto","n":"d1-21-home-pausa-corriendo"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"oido"}
+{"cmd":"toca","nombre":"Abrir panel","espera":800}
+{"cmd":"foto","n":"d1-22-panel"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"toca","nombre":"Añadir un vaso","espera":900}
+{"cmd":"foto","n":"d1-23-un-vaso"}
+{"cmd":"texto"}
+{"cmd":"oido"}
+{"cmd":"oido"}
+{"cmd":"js","code":"(()=>{const r=[];for(const e of document.querySelectorAll(`*`)){if(e.children.length===0&&/Nuevo sello/.test(e.textContent)&&e.getClientRects().length){const b=e.getBoundingClientRect();let z=[];for(let a=e;a;a=a.parentElement){const s=getComputedStyle(a);if(s.zIndex!==`auto`||s.position===`fixed`)z.push(a.tagName+`:`+s.position+`:`+s.zIndex+`:`+(a.getAttribute(`data-pace-sidebar`)!==null?`sidebar`:``)+Array.from(a.attributes).filter(x=>x.name.startsWith(`data-pace`)).map(x=>x.name).join(`,`))}r.push({t:e.textContent,top:Math.round(b.top),z})}}return r})()"}
+{"cmd":"toca","nombre":"Colapsar panel","espera":800}
+{"cmd":"js","code":"(document.querySelector(`[data-pace-sello-aro]`)||{}).innerText"}
+{"cmd":"espera","ms":5000}
+{"cmd":"js","code":"(document.querySelector(`[data-pace-sello-aro]`)||{}).innerText"}
+{"cmd":"espera","ms":10000}
+{"cmd":"js","code":"(document.querySelector(`[data-pace-sello-aro]`)||{}).innerText"}
+{"cmd":"foto","n":"d1-24-home-otro-sello"}
+{"cmd":"oido"}
+{"cmd":"espera","ms":200000}
+{"cmd":"foto","n":"d1-25-pausa-acaba"}
+{"cmd":"texto"}
+{"cmd":"oido"}
+{"cmd":"hora"}
+{"cmd":"toca","nombre":"Empezar bloque 2","espera":1000}
+{"cmd":"espera","ms":60000}
+{"cmd":"toca","nombre":"Ver logros","espera":1000}
+{"cmd":"foto","n":"d1-26-logros"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"toca","nombre":"Cerrar","n":-1,"espera":600}
+{"cmd":"toca","nombre":"Abrir ajustes","espera":1000}
+{"cmd":"foto","n":"d1-27-ajustes-1"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"js","code":"Notification.permission"}
+{"cmd":"toca","nombre":"Escuchar","espera":1000}
+{"cmd":"foto","n":"d1-28-ajustes-escuchar"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"oido"}
+{"cmd":"toca","nombre":"Copias, borrar","espera":1000}
+{"cmd":"foto","n":"d1-29-ajustes-datos"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Cerrar","n":-1,"espera":600}
+{"cmd":"salta","ms":2460000}
+{"cmd":"espera","ms":120000}
+{"cmd":"foto","n":"d1-30-pausa2-ventana"}
+{"cmd":"texto"}
+{"cmd":"oido"}
+{"cmd":"hora"}
+{"cmd":"espera","ms":62000}
+{"cmd":"foto","n":"d1-30-pausa2-ventana"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"^Ahora no$","n":-1,"espera":1000}
+{"cmd":"foto","n":"d1-31-pausa2-ahora-no"}
+{"cmd":"texto"}
+{"cmd":"oido"}
+{"cmd":"js","code":"(()=>{const s=JSON.parse(localStorage.getItem(`pace.state.v2`));const a=s.achievements||{};return Object.entries(a).map(([k,v])=>k+` `+new Date(v.unlockedAt||v).toLocaleTimeString(`es-ES`)+` `+JSON.stringify(v).slice(0,80))})()"}
+{"cmd":"espera","ms":4000}
+{"cmd":"js","code":"(document.querySelector(`[data-pace-sello-aro]`)||{}).innerText||`-`"}
+{"cmd":"espera","ms":4000}
+{"cmd":"js","code":"(document.querySelector(`[data-pace-sello-aro]`)||{}).innerText||`-`"}
+{"cmd":"espera","ms":4000}
+{"cmd":"js","code":"(document.querySelector(`[data-pace-sello-aro]`)||{}).innerText||`-`"}
+{"cmd":"espera","ms":4000}
+{"cmd":"js","code":"(document.querySelector(`[data-pace-sello-aro]`)||{}).innerText||`-`"}
+{"cmd":"oido"}
+{"cmd":"espera","ms":280000}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Empezar bloque 3","espera":1000}
+{"cmd":"salta","ms":2580000}
+{"cmd":"espera","ms":30000}
+{"cmd":"foto","n":"d1-32-pausa-larga-ventana"}
+{"cmd":"texto"}
+{"cmd":"oido"}
+{"cmd":"espera","ms":95000}
+{"cmd":"foto","n":"d1-32-pausa-larga-ventana"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"oido"}
+{"cmd":"toca","nombre":"Hacer la pausa","n":-1,"espera":1500}
+{"cmd":"foto","n":"d1-33-respira-ficha"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"espera","ms":8000}
+{"cmd":"foto","n":"d1-34-respira"}
+{"cmd":"texto"}
+{"cmd":"espera","ms":60000}
+{"cmd":"texto"}
+{"cmd":"oido"}
+{"cmd":"espera","ms":60000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":60000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":60000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":60000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":60000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":60000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"foto","n":"d1-35-respira-cierre"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"oido"}
+{"cmd":"toca","nombre":"Un poco","espera":600}
+{"cmd":"toca","nombre":"Seguir con Estira","espera":1500}
+{"cmd":"foto","n":"d1-36-estira-empieza"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"espera","ms":12000}
+{"cmd":"foto","n":"d1-37-estira"}
+{"cmd":"texto"}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"foto","n":"d1-38-estira-cierre"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"oido"}
+{"cmd":"toca","nombre":"^Volver","espera":1500}
+{"cmd":"foto","n":"d1-39-home-1130"}
+{"cmd":"texto"}
+{"cmd":"oido"}
+{"cmd":"cerrar"}
+{"cmd":"abrir","t":"2026-11-23T16:10:00+01:00"}
+{"cmd":"foto","n":"d1-40-vuelve-1610"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"oido"}
+{"cmd":"errores"}
+{"cmd":"espera","ms":3000}
+{"cmd":"foto","n":"d1-40-vuelve-1610"}
+{"cmd":"js","code":"(()=>{const b=Array.from(document.querySelectorAll(`button`)).find(x=>x.innerText.trim()===`Empezar bloque 4`);let o=[];for(let a=b;a;a=a.parentElement){const s=getComputedStyle(a);if(+s.opacity<1||s.filter!==`none`)o.push(a.tagName+` op=`+s.opacity+` f=`+s.filter+` `+Array.from(a.attributes).filter(x=>x.name.startsWith(`data-pace`)).map(x=>x.name).join(`,`))}return o})()"}
+{"cmd":"toca","nombre":"Empezar bloque 4","espera":1000}
+{"cmd":"salta","ms":2580000}
+{"cmd":"espera","ms":130000}
+{"cmd":"foto","n":"d1-41-cierre-ventana"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"oido"}
+{"cmd":"toca","nombre":"Hacer la pausa","n":-1,"espera":1500}
+{"cmd":"espera","ms":10000}
+{"cmd":"foto","n":"d1-42-suspiro"}
+{"cmd":"texto"}
+{"cmd":"espera","ms":40000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":40000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":40000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":40000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"foto","n":"d1-43-suspiro-cierre"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"toca","nombre":"Volver al inicio","espera":3000}
+{"cmd":"foto","n":"d1-44-jornada-cerrada"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"oido"}
+{"cmd":"cerrar"}
+{"cmd":"abrir","t":"2026-11-23T21:30:00+01:00"}
+{"cmd":"espera","ms":2500}
+{"cmd":"foto","n":"d1-45-noche"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"oido"}
+{"cmd":"cerrar"}
+{"cmd":"abrir","t":"2026-11-24T08:45:00+01:00"}
+{"cmd":"espera","ms":2500}
+{"cmd":"foto","n":"d2-01-martes"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"oido"}
+{"cmd":"hora"}
+{"cmd":"toca","nombre":"Preparar jornada","espera":1200}
+{"cmd":"foto","n":"d2-02-preparar"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Preparar jornada","n":-1,"espera":1500}
+{"cmd":"foto","n":"d2-03-dia-servido"}
+{"cmd":"texto"}
+{"cmd":"oido"}
+{"cmd":"toca","nombre":"Ver todo","espera":1000}
+{"cmd":"foto","n":"d2-04-ver-todo"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Cerrar","n":-1,"espera":600}
+{"cmd":"toca","nombre":"Abrir panel","espera":900}
+{"cmd":"foto","n":"d2-05-panel"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Colapsar panel","espera":600}
+{"cmd":"salta","ms":840000}
+{"cmd":"toca","nombre":"Empezar jornada","espera":1000}
+{"cmd":"salta","ms":2580000}
+{"cmd":"espera","ms":130000}
+{"cmd":"foto","n":"d2-06-pausa1-ventana"}
+{"cmd":"texto"}
+{"cmd":"oido"}
+{"cmd":"js","code":"(document.querySelector(`[data-pace-sello-aro]`)||{}).innerText||`-`"}
+{"cmd":"toca","nombre":"Ya la hice por mi cuenta","espera":1200}
+{"cmd":"foto","n":"d2-07-ya-la-hice"}
+{"cmd":"texto"}
+{"cmd":"oido"}
+{"cmd":"espera","ms":290000}
+{"cmd":"toca","nombre":"Empezar bloque 2","espera":1000}
+{"cmd":"salta","ms":2580000}
+{"cmd":"espera","ms":130000}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Cerrar","n":-1,"espera":800}
+{"cmd":"foto","n":"d2-08-pausa2-cerrada"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"^OTRA$","espera":1000}
+{"cmd":"foto","n":"d2-09-otra"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"toca","nombre":"Hacer la pausa","n":-1,"espera":1500}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"^Empezar$","n":-1,"espera":1500}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"espera","ms":30000}
+{"cmd":"js","code":"!!document.querySelector(`[data-pace-session-done]`)"}
+{"cmd":"foto","n":"d2-10-cierre"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"^No$","espera":800}
+{"cmd":"foto","n":"d2-11-no-porque"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"toca","nombre":"^Volver","espera":1200}
+{"cmd":"cerrar"}
+{"cmd":"abrir","t":"2026-11-24T17:40:00+01:00"}
+{"cmd":"espera","ms":2500}
+{"cmd":"foto","n":"d2-12-vuelve-1740"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"oido"}
+{"cmd":"toca","nombre":"Ver estadísticas","espera":1200}
+{"cmd":"foto","n":"d2-13-estadisticas"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"js","code":"(()=>{const s=JSON.parse(localStorage.getItem(`pace.state.v2`));const r=s.ritmo||{};return {dia:JSON.stringify(r.dia).slice(0,600),keys:Object.keys(s).filter(k=>/hist|sesion|session|log|hechas/i.test(k)),hist:JSON.stringify(s.history||s.sessionsLog||``).slice(-700)}})()"}
+{"cmd":"cerrar"}
+{"cmd":"abrir","t":"2026-11-25T12:30:00+01:00"}
+{"cmd":"espera","ms":2500}
+{"cmd":"foto","n":"d3-01-miercoles-1230"}
+{"cmd":"texto"}
+{"cmd":"oido"}
+{"cmd":"cerrar"}
+{"cmd":"abrir","t":"2026-11-26T08:50:00+01:00"}
+{"cmd":"espera","ms":2500}
+{"cmd":"foto","n":"d3-02-jueves"}
+{"cmd":"texto"}
+{"cmd":"oido"}
+{"cmd":"toca","nombre":"Abrir panel","espera":900}
+{"cmd":"foto","n":"d3-03-jueves-panel"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Colapsar panel","espera":600}
+{"cmd":"toca","nombre":"Preparar jornada","espera":1000}
+{"cmd":"toca","nombre":"Preparar jornada","n":-1,"espera":1200}
+{"cmd":"foto","n":"d3-04-jueves-dia"}
+{"cmd":"toca","nombre":"Ver todo","espera":1000}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Cerrar","n":-1,"espera":600}
+{"cmd":"toca","nombre":"Abrir ajustes","espera":900}
+{"cmd":"toca","nombre":"Tu semana","espera":1000}
+{"cmd":"foto","n":"d3-05-tu-semana"}
+{"cmd":"texto"}
+{"cmd":"cerrar"}
+{"cmd":"abrir","t":"2026-11-30T08:50:00+01:00"}
+{"cmd":"espera","ms":2500}
+{"cmd":"foto","n":"d8-01-lunes-siguiente"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"oido"}
+{"cmd":"toca","nombre":"^Vale","espera":1000}
+{"cmd":"foto","n":"d8-02-tras-la-carta"}
+{"cmd":"texto"}
+{"cmd":"cerrar"}
+{"cmd":"abrir","t":"2026-11-23T08:52:00+01:00","lang":"en","perfil":"en","limpio":true}
+{"cmd":"foto","n":"en-01-welcome"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"toca","nombre":"^Start$"}
+{"cmd":"foto","n":"en-02-week"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"toca","nombre":"^Continue$"}
+{"cmd":"foto","n":"en-03-complete"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"espera","ms":1500}
+{"cmd":"foto","n":"en-03-complete"}
+{"cmd":"toca","nombre":"^Start$","espera":1500}
+{"cmd":"foto","n":"en-04-tour-1"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"toca","nombre":"Skip the tour","espera":1500}
+{"cmd":"foto","n":"en-05-home"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Plan (my|the) ?day|Prepare|Plan","espera":1200}
+{"cmd":"foto","n":"en-06-prepare"}
+{"cmd":"texto"}
+{"cmd":"botones"}
+{"cmd":"toca","nombre":"Plan my day","n":-1,"espera":1500}
+{"cmd":"foto","n":"en-07-day-served"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Start (the|my|your)? ?(work)?day","espera":1000}
+{"cmd":"salta","ms":2580000}
+{"cmd":"espera","ms":130000}
+{"cmd":"foto","n":"en-08-break-window"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Take the break","n":-1,"espera":1500}
+{"cmd":"foto","n":"en-09-exercise-card"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"^Start$","n":-1,"espera":1200}
+{"cmd":"espera","ms":14000}
+{"cmd":"foto","n":"en-10-runner"}
+{"cmd":"texto"}
+{"cmd":"espera","ms":75000}
+{"cmd":"foto","n":"en-11-close"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"^Yes$","espera":800}
+{"cmd":"toca","nombre":"^Back","espera":1500}
+{"cmd":"foto","n":"en-12-home-break"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Open settings","espera":1000}
+{"cmd":"foto","n":"en-13-settings"}
+{"cmd":"texto"}
+{"cmd":"toca","nombre":"Close","n":-1,"espera":600}
+{"cmd":"cerrar"}
+{"cmd":"abrir","t":"2026-11-23T16:10:00+01:00","lang":"en","perfil":"en"}
+{"cmd":"espera","ms":2500}
+{"cmd":"foto","n":"en-14-back-1610"}
+{"cmd":"texto"}
+{"cmd":"cerrar"}
+{"cmd":"abrir","t":"2026-11-23T17:40:00+01:00","lang":"en","perfil":"en"}
+{"cmd":"espera","ms":2500}
+{"cmd":"foto","n":"en-15-day-closed"}
+{"cmd":"texto"}
+{"cmd":"cerrar"}
+{"cmd":"abrir","t":"2026-11-30T08:52:00+01:00","h":640}
+{"cmd":"espera","ms":2500}
+{"cmd":"foto","n":"p640-01-home"}
+{"cmd":"js","code":"document.scrollingElement.scrollHeight-innerHeight"}
+{"cmd":"toca","nombre":"Preparar jornada","espera":1000}
+{"cmd":"foto","n":"p640-02-preparar"}
+{"cmd":"toca","nombre":"Preparar jornada","n":-1,"espera":1500}
+{"cmd":"foto","n":"p640-03-dia"}
+{"cmd":"js","code":"document.scrollingElement.scrollHeight-innerHeight"}
+{"cmd":"botones"}
+{"cmd":"toca","nombre":"Empezar jornada","espera":1000}
+{"cmd":"salta","ms":2580000}
+{"cmd":"espera","ms":130000}
+{"cmd":"foto","n":"p640-04-pausa"}
+{"cmd":"botones"}
+{"cmd":"toca","nombre":"Hacer la pausa","n":-1,"espera":1500}
+{"cmd":"foto","n":"p640-05-ficha"}
+{"cmd":"js","code":"(()=>{const c=Array.from(document.querySelectorAll(`[role=dialog],[data-pace-modal-card]`)).filter(e=>e.getClientRects().length).pop();if(!c)return null;const all=[c,...c.querySelectorAll(`*`)].filter(e=>e.scrollHeight>e.clientHeight+2&&/(auto|scroll)/.test(getComputedStyle(e).overflowY));return all.map(e=>e.scrollHeight-e.clientHeight)})()"}
+{"cmd":"abrir","t":"2026-11-23T08:52:00+01:00","perfil":"es-b","limpio":true}
+{"cmd":"toca","nombre":"^Comenzar$"}
+{"cmd":"foto","n":"d1-02-bienvenida-2"}
+{"cmd":"cerrar"}
+{"cmd":"abrir","t":"2026-11-23T08:52:00+01:00","lang":"en","perfil":"en-b","limpio":true}
+{"cmd":"toca","nombre":"^Start$"}
+{"cmd":"foto","n":"en-02-week"}
+{"cmd":"cerrar"}
