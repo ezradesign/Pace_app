@@ -15,15 +15,23 @@
 
 const PACE_NOVEDADES = [
   {
+    id: 'pausa-directa',
+    desde: '2026-11-25',
+    es: [
+      'En la pausa, Respira, Estira y Mueve entran directos en una rutina; «Ver otras» abre la biblioteca.',
+    ],
+    en: [
+      'In a break, Breathe, Stretch and Move go straight into a routine; “More from” opens the library.',
+    ],
+  },
+  {
     id: 'foco-en-bloques',
     desde: '2026-11-24',
     es: [
       'El Foco a mano también cuenta en bloques, como la jornada: «Bloque 1 de 4».',
-      'En la pausa, Respira, Estira y Mueve entran directos en una rutina; «Ver otras» abre la biblioteca.',
     ],
     en: [
       'Manual Focus counts in blocks too, like your workday: “Block 1 of 4”.',
-      'In a break, Breathe, Stretch and Move go straight into a routine; “More from” opens the library.',
     ],
   },
   {

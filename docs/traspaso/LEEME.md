@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar PACE sin preguntarle a Ez lo
 que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir. Se actualiza en cada hito (regla en `CLAUDE.md`).
-Última actualización: 24 nov. 2026, con la 0.219.1 en `main`. Los relevos de
+Última actualización: 24 nov. 2026, 23:00, con la 0.220.0 en `main`. Los relevos de
 antes del 20 nov., en `docs/archive/LEEME_TRASPASO_HASTA_19NOV.md` (D4 A de Ez, 23 nov.).
 
 ## El arranque, en una pantalla
@@ -25,7 +25,20 @@ antes del 20 nov., en `docs/archive/LEEME_TRASPASO_HASTA_19NOV.md` (D4 A de Ez, 
 - **Frase de arranque para la otra cuenta:** «Eres la coordinadora de PACE. Lee CLAUDE.md, STATE.md y el arranque de
   docs/traspaso/LEEME.md, y sigue desde el primer bloque de relevo. Nunca juntes nada en main sin mi sí.»
 
-## AL RELEVO (24 nov., cuenta EcLj6; 5 h y semana al ~10 %): empieza aquí
+## AL RELEVO (24 nov., 23:00, la cuenta del proyecto «Pace App»): empieza aquí; manda sobre lo de abajo
+
+- **`main` = 0.220.0**: la experiencia (U1A U2A U4A U6A; U3B y U5B como están). Ez, 24 nov., 22:59: «Si, haz todo lo que tengas
+  que hacer, deja todo limpio y ordenado» a «¿Junto la experiencia?». La CI de la rama, en verde con 4c6df4e.
+- **Las V, montadas todas en `claude/v-24nov` (PR 7) y sin juntar**: V1, V2A, V3A, V5A, V6A, V7B, V8A, V9A, V10A y V11A (V4C como
+  estaba). Qué es cada una, con fotos, en el PR y en `docs/audits/v-24nov/` de la rama. Antes de su «júntalo», Ez mira «Hoy,
+  jueves» en el móvil (V8A) y oye «Colócate», que la primera vez puede llegar hasta medio segundo tarde (V3A).
+- **La prueba que tiraba su CI, `voz-cuerpo-fila` fila-4**, no era de las V: esperaba solo a la toma de la cuenta atrás y pedía
+  los números, que van en otra. Arreglada en `main` por el hilo de la auditoría (5a5d7dde, PR 8); la rama de las V la recibe al
+  juntar `main` en ella.
+- **Espera a Ez:** qué versión sube a Play y a TestFlight (la 0.220.0 ya, o la que lleve las V), y las dos cosas de las V.
+- **Regla de Ez (24 nov.):** al 85 % de uso, todo registrado y subido, y un prompt listo para pegar en la otra cuenta.
+
+## AL RELEVO (24 nov., cuenta EcLj6; 5 h y semana al ~10 %)
 
 - **`main` = 0.218.0** (Ez, 24 nov.: «Júntalo»; suite entera sobre la rama, 2033 en verde): el pulido de antes de publicar con las letras
   de Ez del 23 nov. («1A + 2A + … + 10A + D1A + D2A + D3B + D4A + D5A + D6B + D7A + LA + TA»; página «Pulido antes de
@@ -48,8 +61,6 @@ antes del 20 nov., en `docs/archive/LEEME_TRASPASO_HASTA_19NOV.md` (D4 A de Ez, 
 - **Auditoría de la experiencia (24 nov.)**, página https://claude.ai/artifact/A5uYmcbADK4kmKnboHC1E8: seis puntos, U1-U6
   («ciclo» y «bloque», «micro-pausas de foco», el móvil de `og-pace.jpg`, «vez.» sola, el lema del logo y 38 textos sin
   pantalla). Nada tocado; espera sus letras.
-- **Espera a Ez:** subir la 0.219.1 a Play y a TestFlight; las notas de la 0.218.0 de `docs/launch/google-play/SUBIDAS.md`
-  sirven tal cual (T A).
 - **Siguiente (Ez, 24 nov.: «sigamos haciendo repaso, auditoría, mejoras en profundidad»):** una auditoría a fondo (móvil,
   tableta y ordenador; es y en; claro y oscuro; flujos largos y accesibilidad), con página de letras antes de tocar nada.
 

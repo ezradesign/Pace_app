@@ -70,7 +70,7 @@ gateable es la sesión, no el ejercicio suelto (ver `CONTENT.md`).
 > [`STATE.md`](./STATE.md) fija el presente y la sesión siguiente. La base del giro es la
 > auditoría externa [`audit-externa-v0.133.1.md`](./docs/audits/audit-externa-v0.133.1.md).
 
-### Lo que queda hasta v1.0 (24 nov. 2026, `main` en la 0.219.1)
+### Lo que queda hasta v1.0 (24 nov. 2026, `main` en la 0.220.0)
 
 **La dirección.** v1.0 es la primera versión de pago, a la vez en la web, en Android y en iPhone: 2,99 € al mes con siete días
 de prueba o 19,99 € de por vida, sin cuentas y con los datos en el aparato. Lo ya hecho sigue abierto para quien lo usaba. Antes
@@ -84,9 +84,9 @@ El tramo 1 está hecho. Lo que queda es de Ez (las altas y los testers) y, al fi
 |---|---|---|---|
 | **1 · Cerrar la versión de prueba** | La 0.198.0, lo contestado (aro, V1 B, V2 B, D-10 B, D-8 A), la cola de las auditorías «antes de v1» (valoración, aviso de fin de pausa, nota del fin de la semana de prueba, `robots.txt`, `sitemap.xml` y el título, el tope de la red, los cambios de lado), las dos pasadas de Fable y la sexta | Claude | **Hecho**, de la 0.198.0 a la 0.212.0 (11-19 nov.) |
 | | `guardar()` de una pieza en el cobro mensual (`claude/guardar-atomico-166e3f`) | Claude | **Juntado** en la rama de la 0.218.0 (D7 A de Ez, 23 nov.) |
-| | El pulido de antes de publicar (auditoría del 23 nov.: 1A a 10A) | Claude | **Juntado**: 0.218.0, y la auditoría a fondo del 24 nov. en la 0.219.0 y la 0.219.1 |
+| | El pulido de antes de publicar (auditoría del 23 nov.: 1A a 10A) | Claude | **Juntado**: 0.218.0, y la auditoría a fondo del 24 nov. en la 0.219.0 y la 0.219.1, y la experiencia en la 0.220.0 |
 | | La revisión de un fisioterapeuta que `CONTENT.md` pide antes de v1 (Fondos en silla y los ejercicios aparcados) | Ez | Sin empezar |
-| **2 · La prueba con testers** | Subir la versión de prueba a la prueba cerrada de Play y a TestFlight. Tienen la 0.205.0 (en revisión desde el 15 nov.); la siguiente sale de la 0.219.1, con las notas de la 0.218.0 (T A de Ez, 23 nov.) | Ez, con el archivo que le prepara Claude | Espera a Ez |
+| **2 · La prueba con testers** | Subir la versión de prueba a la prueba cerrada de Play y a TestFlight. Tienen la 0.205.0 (en revisión desde el 15 nov.); la siguiente, la 0.220.0 o la que lleve las V (lo elige Ez), con las notas de la 0.218.0 (T A de Ez, 23 nov.) | Ez, con el archivo que le prepara Claude | Espera a Ez |
 | | Reunir 12 testers durante 14 días seguidos (hay 5 o 6) y pedir el acceso a producción | Ez | La cuenta no ha empezado |
 | **3 · Cobrar: las altas de Ez** | Perfil de pagos de Play → la compra de Android, restaurar y los códigos de los testers | Ez el alta | **El código está** (0.211.0, apagado hasta el alta); falta el alta y probarlo con un tester con licencia |
 | | Acuerdo de apps de pago de Apple → la compra de Apple, «Restaurar compras», la ficha y la revisión | Ez el alta | **El código está** (0.211.0, apagado hasta el alta); falta el alta y una cuenta de prueba en TestFlight |
