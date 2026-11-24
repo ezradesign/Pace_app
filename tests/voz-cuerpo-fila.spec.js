@@ -45,7 +45,14 @@ async function prepararVoz(page, context, op) {
   await page.clock.install({ time: new Date('2026-11-17T10:00:00+01:00') });
   await irAlArtefacto(page);
   await page.mouse.click(2, 700);
-  await expect.poll(() => page.evaluate(() => window.paceVozCuerpoIntenta('c3', 1)), { timeout: 15000 }).toBe(true);
+  /* Una palabra de cada una de las cuatro tomas (cuenta, números, avisos y lados): se descodifican cada una
+     a su ritmo, y con solo la de la cuenta lista los números aún iban a madera si «numeros.mp3» bajaba
+     despacio (fila-4 cayó así en el CI el 24 nov.; se reproduce retrasando esa toma 4 s). Después se calla y
+     se vacía la fila: la prueba empieza sin lo que sonó aquí. */
+  for (const palabra of ['c3', 'n2', 'colocate', 'izquierda']) {
+    await expect.poll(() => page.evaluate((w) => window.paceVozCuerpoIntenta(w, 5), palabra), { timeout: 15000 }).toBe(true);
+  }
+  await page.evaluate(() => window.paceVozCuerpoCalla());
   await page.evaluate(() => {
     const fuentes = []; const llamadas = [];
     const param = () => ({ value: 1, setValueAtTime() {}, linearRampToValueAtTime() {}, cancelScheduledValues() {}, exponentialRampToValueAtTime() {} });
