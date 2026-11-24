@@ -20,10 +20,13 @@ async function enV1SinPrueba(context) {
     Object.defineProperty(window, 'PREMIUM_ABIERTO_HASTA_V1', { configurable: true, get: () => false, set: () => {} });
   });
   const ahora = Date.now();
+  /* `finVisto` es CUÁNDO se vio la nota del fin de la semana (state-paso-v1.js): con un `true` la app
+     la da por no vista y la abre a los 1,5 s de cargar. Si la página recargaba antes, la nota salía
+     en mitad de la prueba y el diálogo abierto la tumbaba (6 de 80 pasadas, también en main). */
   await sembrar(context, {
     sidebarCollapsed: false, lastActiveDay: new Date().toDateString(), _historyMigrated: true,
     _weeklyStatsReindexed_v0_28_8: true, _historyRecalculated_v0_28_8: true,
-    pasoV1: { at: ahora - 10 * DIA, hasta: ahora - 3 * DIA, previo: true, rutinas: [], avisado: true, finVisto: true },
+    pasoV1: { at: ahora - 10 * DIA, hasta: ahora - 3 * DIA, previo: true, rutinas: [], avisado: true, finVisto: ahora - 3 * DIA },
   });
 }
 
