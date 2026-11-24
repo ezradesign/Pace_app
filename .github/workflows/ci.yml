@@ -26,4 +26,4 @@ jobs:
       - if: steps.cache-chromium.outputs.cache-hit != 'true'
         run: npx playwright install chromium webkit
       - name: Medir
-        run: npx playwright test tests/diag-ahora-no.spec.js --project=chromium --reporter=list
+        run: npx playwright test tests/diag-ahora-no.spec.js tests/pulido-23nov.spec.js tests/ritmo-pregunta-movil.spec.js tests/home-sin-scroll.spec.js --project=chromium --reporter=list
