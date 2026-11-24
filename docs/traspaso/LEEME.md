@@ -29,6 +29,10 @@ antes del 20 nov., en `docs/archive/LEEME_TRASPASO_HASTA_19NOV.md` (D4 A de Ez, 
 
 - **`main` = 0.220.0**: la experiencia (U1A U2A U4A U6A; U3B y U5B como están). Ez, 24 nov., 22:59: «Si, haz todo lo que tengas
   que hacer, deja todo limpio y ordenado» a «¿Junto la experiencia?». La CI de la rama, en verde con 4c6df4e.
+- **La revisión visual (M1–M12)**: Ez eligió M5A (en el móvil, todas las ventanas como hoja desde abajo, Ajustes con velo) y M12A
+  (iconos de trazo en el reproductor); el resto, como está. Montadas en `claude/project-thread-37sjmk` (su PR), sin juntar.
+  Segunda ronda, más ambiciosa (E1–E8, las láminas de la hora en la home, la jornada como sendero, sellos…), esperando letras:
+  https://claude.ai/artifact/SZFFzdrvgdAW8QpmYFvaR4 (copia en la carpeta del proyecto, `revision-visual-24nov/segunda-ronda/`).
 - **Las V, montadas todas en `claude/v-24nov` (PR 7) y sin juntar**: V1, V2A, V3A, V5A, V6A, V7B, V8A, V9A, V10A y V11A (V4C como
   estaba). Qué es cada una, con fotos, en el PR y en `docs/audits/v-24nov/` de la rama. Antes de su «júntalo», Ez mira «Hoy,
   jueves» en el móvil (V8A) y oye «Colócate», que la primera vez puede llegar hasta medio segundo tarde (V3A).

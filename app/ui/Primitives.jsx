@@ -330,6 +330,9 @@ if (!_paceAnimStyle) {
   s.textContent = `
     @keyframes pace-fade-in { from { opacity: 0 } to { opacity: 1 } }
     @keyframes pace-slide-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    /* La hoja crece desde su borde de abajo y no se desliza: así nunca asoma fuera de la
+       pantalla mientras entra (las pruebas que miden lo que cabe la miden al abrirse). */
+    @keyframes pace-hoja-sube { from { opacity: .6; transform: scale(.97); transform-origin: 50% 100%; } to { opacity: 1; transform: scale(1); transform-origin: 50% 100%; } }
     @keyframes pace-pulse { 0%, 100% { opacity: 0.4 } 50% { opacity: 1 } }
   `;
   document.head.appendChild(s);
@@ -345,7 +348,11 @@ if (!_paceAnimStyle) {
 
    Breakpoint único: 640px (coherente con main.jsx y Sidebar.jsx).
 
-   En móvil el modal:
+   En móvil el modal es una HOJA DESDE ABAJO, igual en todas las ventanas (M5A, Ez, 24 nov.
+   2026): pegada al borde de abajo y a los lados, esquinas de arriba de 20 px, el asa arriba,
+   la × en el mismo sitio y el mismo velo que Ajustes (TweaksPanel.support.jsx). Antes cada
+   una flotaba a 12 px de los bordes y Ajustes no tenía velo.
+   Lo de antes:
    - Pasa de card centrada 85vh a sheet pegada a los bordes
      (backdrop padding 24→12).
    - Ancho ocupa 100% menos el padding del backdrop; el
@@ -366,19 +373,28 @@ if (!_paceModalResponsive) {
   s.textContent = `
     @media (max-width: 640px) {
       [data-pace-modal-backdrop] {
-        padding: 12px !important;
-        place-items: end center !important;
+        padding: 24px 0 0 !important;
+        place-items: end stretch !important;
       }
       [data-pace-modal-card] {
         max-width: 100% !important;
         max-height: calc(100vh - 24px) !important;
         max-height: calc(100dvh - 24px) !important;
         padding: var(--s-5) !important;
-        border-radius: var(--r-md) !important;
+        padding-bottom: calc(var(--s-5) + env(safe-area-inset-bottom, 0px)) !important;
+        border-radius: var(--r-lg) var(--r-lg) 0 0 !important;
+        border-left: 0 !important;
+        border-right: 0 !important;
+        border-bottom: 0 !important;
+        animation: pace-hoja-sube 300ms var(--ease) !important;
+      }
+      [data-pace-modal-card]::before, [data-pace-tweaks-panel]::before {
+        content: ''; position: absolute; top: 7px; left: 50%; width: 36px; height: 4px;
+        margin-left: -18px; border-radius: 2px; background: var(--line-2); opacity: .8; pointer-events: none;
       }
       [data-pace-modal-close] {
-        top: 10px !important;
-        right: 10px !important;
+        top: 12px !important;
+        right: 12px !important;
         width: 36px !important;
         height: 36px !important;
         font-size: 22px !important;
@@ -407,11 +423,31 @@ const PACE_ICONO_RE = /^([←→❚▶|]+)\s+(.*)$|^(.*?)\s+([←→❚▶|]+)$/
 function paceSinIcono(texto) {
   return String(texto || '').replace(/[←→❚▶|]/g, '').trim();
 }
+/* El símbolo se dibuja con el trazo fino de los iconos de la cabecera (M12A, Ez, 24 nov. 2026):
+   los signos de texto (❚❚, ▶|) cambiaban de forma y de grosor según el sistema. */
+const PACE_ICONO_TRAZOS = {
+  '❚❚': 'M9 6.5v11M15 6.5v11',
+  '▶': 'M8.5 6.5v11l9-5.5z',
+  '▶|': 'M7 6.5v11l8.5-5.5zM17.5 6.5v11',
+  '←': 'M19 12H5m5.5-5.5L5 12l5.5 5.5',
+  '→': 'M5 12h14m-5.5-5.5L19 12l-5.5 5.5',
+};
+function PaceIconoTrazo({ simbolo }) {
+  const d = PACE_ICONO_TRAZOS[simbolo];
+  if (!d) return <span aria-hidden="true">{simbolo}</span>;
+  return (
+    <svg data-pace-icono-trazo={simbolo} aria-hidden="true" viewBox="0 0 24 24" width="15" height="15"
+      style={{ verticalAlign: '-3px', flex: 'none', fill: 'none', stroke: 'currentColor', strokeWidth: 1.6,
+        strokeLinecap: 'round', strokeLinejoin: 'round' }}>
+      <path d={d} />
+    </svg>
+  );
+}
 function PaceConIcono({ texto }) {
   const m = String(texto || '').match(PACE_ICONO_RE);
   if (!m) return texto || null;
-  if (m[1]) return <React.Fragment><span aria-hidden="true">{m[1]}</span> {m[2]}</React.Fragment>;
-  return <React.Fragment>{m[3]} <span aria-hidden="true">{m[4]}</span></React.Fragment>;
+  if (m[1]) return <React.Fragment><PaceIconoTrazo simbolo={m[1]} /> {m[2]}</React.Fragment>;
+  return <React.Fragment>{m[3]} <PaceIconoTrazo simbolo={m[4]} /></React.Fragment>;
 }
 
-Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic, letraDe, rellenoDeBarra, paceSinIcono, PaceConIcono });
+Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic, letraDe, rellenoDeBarra, paceSinIcono, PaceConIcono, PaceIconoTrazo });

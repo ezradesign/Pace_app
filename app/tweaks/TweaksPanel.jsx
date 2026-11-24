@@ -262,7 +262,11 @@ function TweaksPanel({ open, onClose }) {
      Patch funcional (no closure): clics rápidos leen siempre el goal fresco. */
   const ponerGoal = (d) => set(s => ({ ...s, water: { ...s.water, goal: Math.max(4, Math.min(12, (s.water.goal || 8) + d)) } }));
 
+  /* El velo solo se ve en el móvil (TweaksPanel.support.jsx): allí Ajustes es la misma hoja
+     desde abajo que las demás ventanas, y tocar fuera la cierra (M5A, Ez, 24 nov. 2026). */
   return (
+    <React.Fragment>
+    <div data-pace-tweaks-velo aria-hidden="true" onClick={onClose} />
     <div ref={panelRef} data-pace-tweaks-panel data-pace-aj-vista={vistaDatos ? 'datos' : undefined}
       data-pace-aj-bajo={bajo ? '' : undefined} role="dialog" aria-labelledby="pace-aj-titulo" tabIndex={-1} style={{
       outline: 'none',
@@ -415,6 +419,7 @@ function TweaksPanel({ open, onClose }) {
         {t(typeof paceEsNativo === 'function' && paceEsNativo() ? 'settings.reset.cuerpo.app' : 'settings.reset.cuerpo')}
       </AjustesAviso>
     </div>
+    </React.Fragment>
   );
 }
 

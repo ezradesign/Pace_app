@@ -358,9 +358,12 @@
 }
 @media ${PACE_CORTE_MOVIL} {
   /* En un teléfono la biblioteca ES la pantalla: el margen del modal deja de
-     ser un marco y pasa a ser una mordida de 42 px al contenido. */
-  [data-pace-modal-backdrop]:has(.pace-lib) { padding: 8px !important; }
-  [data-pace-modal-card]:has(.pace-lib) { padding: 16px 16px 20px !important; }
+     ser un marco y pasa a ser una mordida de 42 px al contenido. Es la misma hoja
+     desde abajo que las demás ventanas (M5A), con 8 px de velo arriba. */
+  [data-pace-modal-backdrop]:has(.pace-lib) { padding: 8px 0 0 !important; place-items: end stretch !important; }
+  [data-pace-modal-card]:has(.pace-lib) { padding: 16px 16px calc(20px + env(safe-area-inset-bottom, 0px)) !important;
+    border-radius: var(--r-lg) var(--r-lg) 0 0 !important; border-left: 0 !important; border-right: 0 !important;
+    border-bottom: 0 !important; max-width: 100% !important; }
 }
 `;
   document.head.appendChild(s);

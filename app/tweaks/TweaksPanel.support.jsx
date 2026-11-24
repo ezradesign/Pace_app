@@ -169,9 +169,8 @@ if (!_paceAjustesCss) {
    backdrop oscuro de fondo (que no hay — TweaksPanel no tiene
    overlay) deje ver que la home sigue viva detrás.
 
-   Nota: TweaksPanel no tiene backdrop, pero eso también es
-   coherente con que se use como "afinador" mientras la app sigue
-   funcionando. Se conserva la filosofía.
+   EN EL MÓVIL LLEVA VELO (M5A, Ez, 24 nov. 2026): el mismo que las demás ventanas, y tocarlo
+   cierra. En el ordenador sigue sin velo: allí es un afinador al lado de la app viva.
 
    SIN SCROLL EN EL MÓVIL (Ez, 2A del 22 oct. 2026). A 72 dvh pedía 218 px
    de scroll en la web y 287 en Android a 360×730. Ahora «Tus datos» se
@@ -192,8 +191,15 @@ if (!_paceTweaksResponsive) {
   const s = document.createElement('style');
   s.id = 'pace-tweaks-responsive-css';
   s.textContent = `
+    [data-pace-tweaks-velo] { display: none; }
     @media (max-width: 640px) {
+      [data-pace-tweaks-velo] {
+        display: block; position: fixed; inset: 0; z-index: 79;
+        background: rgba(31, 28, 23, 0.28); backdrop-filter: blur(3px);
+        animation: pace-fade-in 200ms ease;
+      }
       [data-pace-tweaks-panel] {
+        animation: pace-hoja-sube 300ms var(--ease) !important;
         left: 0 !important;
         right: 0 !important;
         bottom: 0 !important;
@@ -204,7 +210,7 @@ if (!_paceTweaksResponsive) {
         border-left: 0 !important;
         border-right: 0 !important;
         border-bottom: 0 !important;
-        padding: 16px 18px 24px !important;
+        padding: 16px 18px calc(24px + env(safe-area-inset-bottom, 0px)) !important;
         box-shadow: 0 -8px 32px rgba(31, 28, 23, 0.18) !important;
       }
       [data-pace-tweaks-panel] .pace-aj-solo-movil { display: inline-block; }
