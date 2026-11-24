@@ -1,7 +1,7 @@
 # PACE · Estado
 
-**Versión:** v0.217.0 en `main`; la 0.218.0 (el pulido del 23 nov. y el arreglo de la mensual) espera el «júntalo» de Ez en
-`claude/pulido-23nov`. Los testers tienen la 0.205.0. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que no se pueden
+**Versión:** v0.218.0 · 24 nov. 2026 (el pulido de antes de publicar y el arreglo de la mensual). Los testers tienen la
+0.205.0. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que no se pueden
 romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -20,8 +20,8 @@ romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 El orden hasta v1 está en `ROADMAP.md` («Lo que queda hasta v1.0», al día el 23 nov.). El tramo de código está hecho: **la
 fecha de v1 la ponen los 12 testers con sus 14 días seguidos, que aún no han empezado, y las altas de Ez para cobrar.**
 
-1. Juntar la 0.218.0 (Ez: «júntalo»). Después, la siguiente versión de prueba para Play y TestFlight, con su «Qué probar»
-   en `docs/launch/google-play/SUBIDAS.md` (T A de Ez, 23 nov.).
+1. Subir la 0.218.0 como versión de prueba a Play y a TestFlight: notas y «Qué probar» en
+   `docs/launch/google-play/SUBIDAS.md` (T A de Ez, 23 nov.); el AAB, del artefacto `pace-play-v0.218.0`.
 2. Los testers: 12 durante 14 días seguidos (hay 5 o 6; `/beta` y el grupo, listos: `testers.md`).
 3. Las altas: perfil de pagos de Play; acuerdo de apps de pago de Apple (banco, W-8BEN, programa para pequeñas empresas y
    una dirección visible en la UE); los datos del aviso legal (nombre, NIF y contacto), la revisión profesional y Resend
@@ -30,8 +30,8 @@ fecha de v1 la ponen los 12 testers con sus 14 días seguidos, que aún no han e
 
 ## Espera a Ez
 
-- **El «júntalo» de la 0.218.0** y **la dirección de contacto** para «Escríbenos» (9A: va en `PACE_CONTACTO`,
-  `app/tweaks/TweaksData.jsx`; vacía, no sale).
+- **Subir la 0.218.0** a la prueba interna de Play (y de ahí a la cerrada) y a TestFlight, con las notas de `SUBIDAS.md`.
+  «Escríbenos» ya escribe a `hola.ezradesign@gmail.com` (Ez, 24 nov.).
 - **Probar en sus aparatos**: la miniventana en su Chrome, el aviso de la web del móvil con la pantalla bloqueada (la 4 del
   móvil, 22 nov.), los pasos de cinco minutos de la página de las apps, lo privado del calendario en Android, la voz de Respira.
 - **Play Console**, al subir la siguiente beta: volver a pegar el párrafo «A tu ritmo» de `docs/launch/google-play/ficha.md`

@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar PACE sin preguntarle a Ez lo
 que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir. Se actualiza en cada hito (regla en `CLAUDE.md`).
-Última actualización: 24 nov. 2026, con la 0.218.0 en `claude/pulido-23nov` esperando el «júntalo» de Ez. Los relevos de
+Última actualización: 24 nov. 2026, con la 0.218.0 en `main`. Los relevos de
 antes del 20 nov., en `docs/archive/LEEME_TRASPASO_HASTA_19NOV.md` (D4 A de Ez, 23 nov.).
 
 ## El arranque, en una pantalla
@@ -27,14 +27,18 @@ antes del 20 nov., en `docs/archive/LEEME_TRASPASO_HASTA_19NOV.md` (D4 A de Ez, 
 
 ## AL RELEVO (24 nov., cuenta EcLj6; 5 h y semana al ~10 %): empieza aquí
 
-- **`main` = 0.217.0.** En `claude/pulido-23nov` (subida), la 0.218.0 por cerrar: el pulido de antes de publicar con las letras
+- **`main` = 0.218.0** (Ez, 24 nov.: «Júntalo»; suite entera sobre la rama, 2033 en verde): el pulido de antes de publicar con las letras
   de Ez del 23 nov. («1A + 2A + … + 10A + D1A + D2A + D3B + D4A + D5A + D6B + D7A + LA + TA»; página «Pulido antes de
   publicar», https://claude.ai/artifact/Y8ndbMvWmgGQ5S85y8N1CP). Montadas las diez de la app (`tests/pulido-23nov.spec.js`,
   calibrada en rojo contra la 0.217.0), juntada `claude/guardar-atomico-166e3f` (D7) y puestos al día STATE, ROADMAP, este
   archivo y las reglas sustituidas (D1, D2, D4, D5). D3 B: el relevo al 90 % sigue. D6 B: borrar el reloj de barra, el
   analógico y el «orgánico» después de v1.
-- **Espera a Ez:** el «júntalo» de la 0.218.0 y la dirección de «Escríbenos» (9A; `PACE_CONTACTO` vacía, no sale). Después,
-  T A: la siguiente versión de prueba para Play y TestFlight con su «Qué probar».
+- «Escríbenos» escribe a `hola.ezradesign@gmail.com` (Ez, 24 nov.), compuesto al ejecutarse para que Cloudflare no lo
+  reescriba (fila nueva arriba de las reglas técnicas). Las 37 copias de trabajo y las ramas viejas, autorizadas por Ez para
+  quitarlas (copia de todas en `backups/ramas-24nov-2026.bundle`).
+- **Espera a Ez:** subir la 0.218.0 a Play y a TestFlight con las notas de `docs/launch/google-play/SUBIDAS.md` (T A).
+- **Siguiente (Ez, 24 nov.: «sigamos haciendo repaso, auditoría, mejoras en profundidad»):** una auditoría a fondo (móvil,
+  tableta y ordenador; es y en; claro y oscuro; flujos largos y accesibilidad), con página de letras antes de tocar nada.
 
 ## AL RELEVO (23 nov., cuenta EcLj6; semana al 98-100 %, se repone el martes 24 a las 14:00): empieza aquí
 
