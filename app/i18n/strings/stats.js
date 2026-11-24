@@ -80,8 +80,6 @@ Object.assign(window.PACE_STRINGS.es, {
     'stats.month.total.breathe':       'Respira',
     'stats.month.total.move':          'Cuerpo',
     'stats.month.total.water':         'vasos',
-    'stats.month.empty':               'Sin actividad',
-    'stats.month.coming':              'Próximamente',
     'stats.month.tooltip.focus':       'min foco',
     'stats.month.tooltip.breathe':     'min respira',
     'stats.month.tooltip.move':        'min cuerpo',
@@ -106,7 +104,6 @@ Object.assign(window.PACE_STRINGS.es, {
 
     // Caminos stats -- sesion 54
     'stats.tab.paths':                 'Caminos',
-    'stats.paths.title':               'Caminos',
     'stats.paths.total':               'Total completados',
     'stats.paths.currentStreak':       'Racha actual',
     'stats.paths.bestStreak':          'Mejor racha',
@@ -182,8 +179,6 @@ Object.assign(window.PACE_STRINGS.en, {
     'stats.month.total.breathe':       'Breathe',
     'stats.month.total.move':          'Movement',
     'stats.month.total.water':         'glasses',
-    'stats.month.empty':               'No activity',
-    'stats.month.coming':              'Coming soon',
     'stats.month.tooltip.focus':       'min of Focus',
     'stats.month.tooltip.breathe':     'min in Breathe',
     'stats.month.tooltip.move':        'min of movement',
@@ -208,7 +203,6 @@ Object.assign(window.PACE_STRINGS.en, {
 
     // Paths stats -- session 54
     'stats.tab.paths':                 'Paths',
-    'stats.paths.title':               'Paths',
     'stats.paths.total':               'Total completed',
     'stats.paths.currentStreak':       'Current streak',
     'stats.paths.bestStreak':          'Best streak',

@@ -2,7 +2,7 @@
  * ================================================================================
  * Con el mismo bloque abierto en dos pestañas solo una lo cuenta (el candado de
  * FocusTimer.pestanas.jsx), y esa abría la pausa aunque estuviera de fondo: la que tenías delante
- * se quedaba en «Empezar otro ciclo». Ez: «En la que estás mirando». La pausa se abre en la
+ * se quedaba en «Otro bloque». Ez: «En la que estás mirando». La pausa se abre en la
  * pestaña visible y, si no lo está ninguna, en la primera que vuelva al frente; el bloque sigue
  * contando una sola vez.
  *

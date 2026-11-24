@@ -47,7 +47,7 @@ function useAvisosNativos({ state, running, endsAt, pausaRitmo, enPausaRitmo, t,
 /* Sin «Alarmas y recordatorios», Android puede retrasar el aviso unos minutos, y en una pausa de 5
    se nota. Hoy se ofrece en Ajustes; además, UNA vez en la vida de la instalación
    (`exactaOfrecida`), al empezar un Foco con el aviso encendido, sale una línea en la fila de
-   «Ciclo 1 / 4», que en ese momento no dice nada: ni tapa ni mueve nada (Ez rechaza lo que se pone
+   «Bloque 1 de 4», que en ese momento no dice nada: ni tapa ni mueve nada (Ez rechaza lo que se pone
    encima). Al tocarla se abre el ajuste de Android y al volver se va; si no se toca, se va al acabar
    ese Foco. Nunca abre el ajuste sin un toque. Su texto no dice «ciclo»: el motor del aro busca esa
    fila por esa palabra (home-geometry.js). */

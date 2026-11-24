@@ -1482,7 +1482,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
         </div>
       </div>
       <section>
-        <h2><span lang="es">Cinco maneras de parar</span><span lang="en">Five ways to take a break</span></h2>
+        <h2><span lang="es">El Foco y cuatro maneras de parar</span><span lang="en">Focus, and four ways to take a break</span></h2>
         <ul class="pl-mods">
           <li><b><i style="background:var(--l-focus)"></i><span lang="es">Foco</span><span lang="en">Focus</span></b><span><span lang="es">Pomodoro, pausas y aviso</span><span lang="en">Pomodoro, breaks and reminders</span></span></li>
           <li><b><i style="background:var(--l-breathe)"></i><span lang="es">Respira</span><span lang="en">Breathe</span></b><span><span lang="es">técnicas guiadas, con voz</span><span lang="en">guided techniques, with voice</span></span></li>
@@ -2124,6 +2124,8 @@ Object.assign(window, { PACE_CORTE_MAX, PACE_CORTE_MOVIL, PACE_CORTE_ESC, paceEs
 
 
 
+
+
 window.PACE_STRINGS = { es: {}, en: {} };
 })();
 </script>
@@ -2145,12 +2147,10 @@ window.PACE_STRINGS = { es: {}, en: {} };
 
 Object.assign(window.PACE_STRINGS.es, {
 
-  'welcome.subtitle': 'Un ritmo para tu día',
-  'welcome.cta': 'Empezar',
   'welcome.greeting': 'Bienvenida',
   'welcome.tagline': 'Antídoto a la silla.',
   'welcome.tagline.sub': 'A tu ritmo.',
-  'welcome.lede': 'Micro-pausas de foco, respiración, movilidad e hidratación. Sin rachas que castigan.',
+  'welcome.lede': 'Foco, y pausas cortas para respirar, moverte, estirar y beber agua. Sin rachas que castigan.',
   'welcome.value.local.label': 'Todo local',
   'welcome.value.local.sub': 'en tu navegador',
   'welcome.value.local.sub.app': 'en tu móvil',
@@ -2158,10 +2158,6 @@ Object.assign(window.PACE_STRINGS.es, {
   'welcome.value.accounts.sub': 'sin registro',
   'welcome.value.free.label': 'Gratis',
   'welcome.value.free.sub': 'lo esencial, siempre',
-  'welcome.intention.label': '¿Qué quieres cultivar hoy?',
-  'welcome.intention.optional': 'opcional',
-  'welcome.intention.placeholder': 'concentración, calma, movimiento…',
-  'welcome.skip': 'prefiero saltarlo',
 
 
   'support.meta': 'Apoya el proyecto',
@@ -2189,23 +2185,9 @@ Object.assign(window.PACE_STRINGS.es, {
 
 
 
-  'sidebar.section.rhythm': 'Ritmo',
-  'sidebar.section.trail': 'Sendero',
-  'sidebar.section.achievements': 'Logros',
-  'sidebar.achievements.discover': '{n} por descubrir →',
-  'sidebar.streak.day': 'día seguido',
-  'sidebar.streak.days': 'días seguidos',
-  'sidebar.streak.best': 'Mejor: {n} días',
-  'sidebar.status.ontrack': 'En camino',
   'sidebar.collapse.title': 'Colapsar ({k})',
   'sidebar.collapse.aria': 'Colapsar panel',
   'sidebar.logo.title': '¿Le haces cosquillas?',
-  'sidebar.counter.pomodoros': 'Pomodoros completados hoy',
-  'sidebar.counter.rounds': 'Rondas largas (cada 4 pomodoros)',
-  'sidebar.counter.streak': 'Días activos seguidos',
-  'sidebar.trail.hito': 'hito',
-  'sidebar.trail.hitos': 'hitos',
-  'sidebar.trail.now': 'ahora',
   'sidebar.days': 'L,M,X,J,V,S,D',
   'sidebar.open.title': 'Abrir panel ({k})',
   'sidebar.open.aria': 'Abrir panel',
@@ -2227,10 +2209,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'sidebar.agua.deshacer.title': 'Quitar el vaso que acabas de sumar',
   'sidebar.open.module': 'Abrir {m}',
   'sidebar.water.add': 'Añadir un vaso',
-  'sidebar.week': 'Esta semana',
   'sidebar.week.rhythm': '{n} días seguidos · tu mejor, {m}',
   'sidebar.week.rhythm.one': '1 día seguido · tu mejor, {m}',
-  'sidebar.week.none': 'Sin días todavía · tu mejor, {m}',
   'sidebar.week.rhythm.sin': '{n} días seguidos',
   'sidebar.week.rhythm.one.sin': '1 día seguido',
   'sidebar.week.open': 'Ver la semana en Estadísticas',
@@ -2253,10 +2233,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'sidebar.mine': 'Tus rutinas',
   'sidebar.latest': 'Último logro',
   'sidebar.collection': 'Ver la colección',
-  'sidebar.support': 'Apoyar PACE',
   'sidebar.empty': 'Tu día empieza en blanco. Lo que hagas se queda aquí.',
-  'sidebar.trail.hour.start': '6h',
-  'sidebar.trail.hour.end': '22h',
 
 
   'welcome.lang.toggle.toEn': 'Cambiar a English',
@@ -2300,7 +2277,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
 
   'notify.focus.title': 'Foco completado',
-  'notify.focus.body': 'Ciclo cerrado. Elige tu micro-pausa.',
+  'notify.focus.body': 'Bloque terminado. Elige tu pausa.',
 
 
   'notify.pausa.title': 'Pausa terminada',
@@ -2338,18 +2315,15 @@ Object.assign(window.PACE_STRINGS.es, {
   'guardar.entendido': 'Entendido',
 
 
-  'premium.seal': 'Premium',
-  'premium.soon': 'Pronto'
+  'premium.seal': 'Premium'
 });
 
 Object.assign(window.PACE_STRINGS.en, {
 
-  'welcome.subtitle': 'A rhythm for your day',
-  'welcome.cta': 'Start',
   'welcome.greeting': 'Welcome',
   'welcome.tagline': 'The antidote to sitting.',
   'welcome.tagline.sub': 'At your pace.',
-  'welcome.lede': 'Micro-breaks for focus, breathing, mobility and hydration. No streaks that punish you.',
+  'welcome.lede': 'Focus, and short breaks to breathe, move, stretch and drink water. No streaks that punish you.',
   'welcome.value.local.label': 'Stored locally',
   'welcome.value.local.sub': 'in your browser',
   'welcome.value.local.sub.app': 'on your phone',
@@ -2357,10 +2331,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'welcome.value.accounts.sub': 'no sign-up',
   'welcome.value.free.label': 'Free',
   'welcome.value.free.sub': 'the essentials, always',
-  'welcome.intention.label': 'What do you want to cultivate today?',
-  'welcome.intention.optional': 'optional',
-  'welcome.intention.placeholder': 'focus, calm, movement…',
-  'welcome.skip': 'skip for now',
 
 
   'support.meta': 'Support the project',
@@ -2388,23 +2358,9 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
 
-  'sidebar.section.rhythm': 'Rhythm',
-  'sidebar.section.trail': 'Trail',
-  'sidebar.section.achievements': 'Achievements',
-  'sidebar.achievements.discover': '{n} to discover →',
-  'sidebar.streak.day': 'day in a row',
-  'sidebar.streak.days': 'days in a row',
-  'sidebar.streak.best': 'Best: {n} days',
-  'sidebar.status.ontrack': 'On track',
   'sidebar.collapse.title': 'Collapse ({k})',
   'sidebar.collapse.aria': 'Collapse panel',
   'sidebar.logo.title': 'Give the cow a tickle?',
-  'sidebar.counter.pomodoros': 'Pomodoros completed today',
-  'sidebar.counter.rounds': 'Long rounds (every 4 pomodoros)',
-  'sidebar.counter.streak': 'Active days in a row',
-  'sidebar.trail.hito': 'milestone',
-  'sidebar.trail.hitos': 'milestones',
-  'sidebar.trail.now': 'now',
   'sidebar.days': 'Mo,Tu,We,Th,Fr,Sa,Su',
   'sidebar.open.title': 'Open panel ({k})',
   'sidebar.open.aria': 'Open panel',
@@ -2424,10 +2380,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.agua.deshacer.title': 'Remove the glass you just added',
   'sidebar.open.module': 'Open {m}',
   'sidebar.water.add': 'Add a glass',
-  'sidebar.week': 'This week',
   'sidebar.week.rhythm': '{n} days in a row · your best, {m}',
   'sidebar.week.rhythm.one': '1 day in a row · your best, {m}',
-  'sidebar.week.none': 'No days yet · your best, {m}',
   'sidebar.week.rhythm.sin': '{n} days in a row',
   'sidebar.week.rhythm.one.sin': '1 day in a row',
   'sidebar.week.open': 'See the week in Stats',
@@ -2450,10 +2404,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.mine': 'Your routines',
   'sidebar.latest': 'Latest achievement',
   'sidebar.collection': 'See the collection',
-  'sidebar.support': 'Support PACE',
   'sidebar.empty': 'Your day starts blank. Whatever you do stays here.',
-  'sidebar.trail.hour.start': '6h',
-  'sidebar.trail.hour.end': '22h',
 
 
   'welcome.lang.toggle.toEn': 'Switch to English',
@@ -2496,7 +2447,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
   'notify.focus.title': 'Focus complete',
-  'notify.focus.body': 'Focus complete. Choose your break.',
+  'notify.focus.body': 'Block done. Choose your break.',
   'notify.pausa.title': 'Break over',
   'notify.pausa.body': 'Back to Focus when you’re ready.',
   'notify.pausa.ritmo': 'Next up: block {n} of {total}.',
@@ -2528,8 +2479,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'guardar.entendido': 'Got it',
 
 
-  'premium.seal': 'Premium',
-  'premium.soon': 'Soon'
+  'premium.seal': 'Premium'
 });
 })();
 </script>
@@ -2559,7 +2509,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'session.prep': 'Prepárate',
   'session.startNow': 'Empezar ahora',
   'session.backToHome': 'Volver al inicio',
-  'session.sigue.ciclo': 'Empezar el ciclo {n}',
+  'session.sigue.ciclo': 'Empezar el bloque {n}',
   'session.sigue.pausa': 'Volver · te quedan {min} min de pausa',
   'session.sigue.pausa.uno': 'Volver · te queda 1 min de pausa',
   'session.next': 'Siguiente',
@@ -2575,7 +2525,6 @@ Object.assign(window.PACE_STRINGS.es, {
   'session.hold': 'Retén sin aire',
   'session.breatheAgain': 'Respirar de nuevo',
   'session.holdCue': 'Pulsa cuando sientas la necesidad de respirar.',
-  'session.minutes': 'minutos',
   'session.seconds': 'segundos',
   'session.hint': 'Espacio pausar · Esc salir',
   'session.resume': '▶ Reanudar',
@@ -2596,9 +2545,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'focus.minutes.custom.title': 'Minutos personalizados (5–180)',
   'focus.minutes.grupo': 'Minutos del bloque de foco',
   'focus.minutes.n': '{n} minutos',
-  'focus.cycle': 'Ciclo',
-  'focus.cycleOf': 'Ciclo {n} / 4',
-  'focus.cycleNext': 'Siguiente · Ciclo {n} / 4',
+  'focus.cycleOf': 'Bloque {n} de 4',
+  'focus.cycleNext': 'Luego · Bloque {n} de 4',
   'focus.exacta': 'Avisos a su hora ›',
   'focus.exacta.aria': 'Avisos a su hora: abre el ajuste de Android',
   'focus.min': 'Min',
@@ -2622,8 +2570,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'mini.abrir': 'Miniventana',
   'mini.abrir.aria': 'Abrir la miniventana, encima de todas las ventanas',
   'focus.continue': 'Continuar',
-  'focus.startAnother': 'Empezar otro ciclo',
-  'focus.cycleComplete': 'Ciclo completado',
+  'focus.startAnother': 'Otro bloque',
+  'focus.cycleComplete': 'Bloque terminado',
   'focus.manual.label': 'Foco manual',
   'focus.mode.focus': 'Foco',
   'focus.mode.pause': 'Pausa corta',
@@ -2671,7 +2619,6 @@ Object.assign(window.PACE_STRINGS.es, {
 
 
   'lib.tag': 'Biblioteca',
-  'lib.routines': 'Rutinas',
 
 
   'lib.breathe.title': 'Respiración',
@@ -2789,7 +2736,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'session.prep': 'Get ready',
   'session.startNow': 'Start now',
   'session.backToHome': 'Back to Home',
-  'session.sigue.ciclo': 'Start cycle {n}',
+  'session.sigue.ciclo': 'Start block {n}',
   'session.sigue.pausa': 'Back · {min} min of break left',
   'session.sigue.pausa.uno': 'Back · 1 min of break left',
   'session.next': 'Next',
@@ -2805,7 +2752,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'session.hold': 'Hold after exhaling',
   'session.breatheAgain': 'Breathe again',
   'session.holdCue': 'Press when you feel the need to breathe.',
-  'session.minutes': 'minutes',
   'session.seconds': 'seconds',
   'session.hint': 'Space to pause · Esc to exit',
   'session.resume': '▶ Resume',
@@ -2826,9 +2772,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'focus.minutes.custom.title': 'Custom duration (5–180 min)',
   'focus.minutes.grupo': 'Focus block minutes',
   'focus.minutes.n': '{n} minutes',
-  'focus.cycle': 'Cycle',
-  'focus.cycleOf': 'Cycle {n} / 4',
-  'focus.cycleNext': 'Next · Cycle {n} / 4',
+  'focus.cycleOf': 'Block {n} of 4',
+  'focus.cycleNext': 'Next · Block {n} of 4',
   'focus.exacta': 'Alerts on time ›',
   'focus.exacta.aria': 'Alerts on time: opens the Android setting',
   'focus.min': 'Min',
@@ -2847,8 +2792,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'mini.abrir': 'Mini window',
   'mini.abrir.aria': 'Open the mini window, on top of every window',
   'focus.continue': 'Continue',
-  'focus.startAnother': 'Start another cycle',
-  'focus.cycleComplete': 'Cycle complete',
+  'focus.startAnother': 'Another block',
+  'focus.cycleComplete': 'Block done',
   'focus.manual.label': 'Manual Focus',
   'focus.mode.focus': 'Focus',
   'focus.mode.pause': 'Short break',
@@ -2895,7 +2840,6 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
   'lib.tag': 'Library',
-  'lib.routines': 'Routines',
 
 
   'lib.breathe.title': 'Breathing',
@@ -3040,12 +2984,10 @@ Object.assign(window.PACE_STRINGS.es, {
 
   'lib.move.title': 'Mueve',
   'lib.move.subtitle': 'Calistenia y fuerza. Corto y discreto, casi siempre sin material.',
-  'lib.move.meta': 'Cuerpo activo',
 
 
   'lib.extra.title': 'Estira',
   'lib.extra.subtitle': 'Movilidad y estiramientos. Antídoto a la silla.',
-  'lib.extra.meta': 'Afloja tensión',
 
 
 
@@ -3183,7 +3125,6 @@ Object.assign(window.PACE_STRINGS.es, {
 
 
   'session.place': 'Colócate',
-  'session.beginStep': 'Empezar',
   'session.beginNow': 'Empezar ya',
   'session.moreTime': 'Más tiempo',
   'session.placeCountdown': 'para empezar',
@@ -3199,7 +3140,6 @@ Object.assign(window.PACE_STRINGS.es, {
   'move.cambio.otraPierna': 'Otra pierna',
   'session.sideChange': 'Cambia de lado',
   'session.sideNext': 'Ahora: {side}',
-  'session.skip': 'Saltar',
   'session.restLabel': 'Descanso',
   'move.reps': 'reps',
   'move.placeHint': 'Colócate sin prisa · arranca solo',
@@ -3245,12 +3185,10 @@ Object.assign(window.PACE_STRINGS.en, {
 
   'lib.move.title': 'Move',
   'lib.move.subtitle': 'Calisthenics and strength. Short and discreet, mostly equipment-free.',
-  'lib.move.meta': 'Get moving',
 
 
   'lib.extra.title': 'Stretch',
   'lib.extra.subtitle': 'Mobility and stretching. The antidote to sitting.',
-  'lib.extra.meta': 'Release tension',
 
   'lib.intensity.gentle': 'Gentle',
   'lib.intensity.moderate': 'Moderate',
@@ -3355,7 +3293,6 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
   'session.place': 'Get set',
-  'session.beginStep': 'Start',
   'session.beginNow': 'Start now',
   'session.moreTime': 'More time',
   'session.placeCountdown': 'to start',
@@ -3369,7 +3306,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.cambio.otraPierna': 'Other leg',
   'session.sideChange': 'Switch sides',
   'session.sideNext': 'Now: {side}',
-  'session.skip': 'Skip',
   'session.restLabel': 'Rest',
   'move.reps': 'reps',
   'move.placeHint': 'Get set, no rush · starts on its own',
@@ -3631,8 +3567,6 @@ Object.assign(window.PACE_STRINGS.es, {
   'stats.month.total.breathe': 'Respira',
   'stats.month.total.move': 'Cuerpo',
   'stats.month.total.water': 'vasos',
-  'stats.month.empty': 'Sin actividad',
-  'stats.month.coming': 'Próximamente',
   'stats.month.tooltip.focus': 'min foco',
   'stats.month.tooltip.breathe': 'min respira',
   'stats.month.tooltip.move': 'min cuerpo',
@@ -3657,7 +3591,6 @@ Object.assign(window.PACE_STRINGS.es, {
 
 
   'stats.tab.paths': 'Caminos',
-  'stats.paths.title': 'Caminos',
   'stats.paths.total': 'Total completados',
   'stats.paths.currentStreak': 'Racha actual',
   'stats.paths.bestStreak': 'Mejor racha',
@@ -3733,8 +3666,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'stats.month.total.breathe': 'Breathe',
   'stats.month.total.move': 'Movement',
   'stats.month.total.water': 'glasses',
-  'stats.month.empty': 'No activity',
-  'stats.month.coming': 'Coming soon',
   'stats.month.tooltip.focus': 'min of Focus',
   'stats.month.tooltip.breathe': 'min in Breathe',
   'stats.month.tooltip.move': 'min of movement',
@@ -3759,7 +3690,6 @@ Object.assign(window.PACE_STRINGS.en, {
 
 
   'stats.tab.paths': 'Paths',
-  'stats.paths.title': 'Paths',
   'stats.paths.total': 'Total completed',
   'stats.paths.currentStreak': 'Current streak',
   'stats.paths.bestStreak': 'Best streak',
@@ -3793,7 +3723,6 @@ Object.assign(window.PACE_STRINGS.es, {
   'ach.cat.secretos': 'Secretos',
   'ach.cat.estacionales': 'Estacionales',
   'ach.seal.secret': 'Secreto',
-  'ach.seal.discover': 'Por descubrir',
   'ach.toast.new': 'Nuevo sello',
   'ach.toast.varios': '{n} sellos nuevos',
   'ach.toast.mas.uno': '{t} y uno más',
@@ -3815,7 +3744,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.cat.secretos': 'Secrets',
   'ach.cat.estacionales': 'Seasonal',
   'ach.seal.secret': 'Secret',
-  'ach.seal.discover': 'To discover',
   'ach.toast.new': 'New stamp',
   'ach.toast.varios': '{n} new stamps',
   'ach.toast.mas.uno': '{t} and one more',
@@ -4038,7 +3966,6 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.copia.ayer': 'Última copia: ayer.',
   'settings.copia.hace': 'Última copia: hace {n} días.',
   'settings.copia.safari': 'Sin instalar, Safari puede borrar lo guardado si pasas una semana sin abrir PACE.',
-  'settings.license': 'Licencia',
   'settings.license.soon': 'pronto',
   'settings.foot': 'Todo vive en este navegador y no se sincroniza con otros.',
   'settings.foot.app': 'Todo vive en este móvil y no se sincroniza con otros.',
@@ -4162,7 +4089,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.copia.ayer': 'Last copy: yesterday.',
   'settings.copia.hace': 'Last copy: {n} days ago.',
   'settings.copia.safari': 'If PACE isn’t installed, Safari may erase your data after a week without opening it.',
-  'settings.license': 'License',
   'settings.license.soon': 'soon',
   'settings.foot': "Everything lives in this browser and doesn't sync with others.",
   'settings.foot.app': "Everything lives on this phone and doesn't sync with others.",
@@ -4258,14 +4184,14 @@ Object.assign(window.PACE_STRINGS.es, {
   'premium.trial.keep': 'Seguir con la prueba',
   'premium.onb.titulo': 'PACE es gratis.',
   'premium.onb.lede': 'Si un día quieres más, PACE completo añade:',
-  'premium.onb.precios': '{vida} una vez, o {mes} al mes con {dias} días gratis.',
+  'premium.onb.precios': '{vida}\u00a0una\u00a0vez, o {mes} al mes con {dias} días gratis.',
   'premium.onb.probar': 'Probar {dias} días gratis',
   'premium.onb.vida': 'Prefiero pagarlo una vez, {vida}',
   'premium.onb.vida.sola': 'Un solo pago de {vida}, para siempre.',
   'premium.onb.comprar': 'Comprar, {vida}',
   'premium.onb.aviso': 'Te avisamos dos días antes de que acabe la prueba.',
   'premium.onb.abierto.lede': 'Y mientras está en pruebas, PACE completo también está abierto para todos:',
-  'premium.onb.abierto.precios': 'Después, {mes} al mes con {dias} días gratis, o {vida} una vez.',
+  'premium.onb.abierto.precios': 'Después, {mes} al mes con {dias} días gratis, o {vida}\u00a0una\u00a0vez.',
   'premium.onb.abierto.aviso': 'Cuando salga a la venta tendrás tu semana de prueba, y las rutinas que ya hayas hecho se te quedan.',
   'premium.code.lost': '¿Lo has perdido? Recupéralo con tu correo',
   'premium.compra.error': 'No se ha podido abrir la compra. Prueba otra vez.',
@@ -4294,7 +4220,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'premium.v1.despues': 'Pronto podrás tenerlo aquí.',
 
 
-  'premium.onb.precios.sin': '{vida} una vez, o {mes} al mes.',
+  'premium.onb.precios.sin': '{vida}\u00a0una\u00a0vez, o {mes} al mes.',
   'premium.onb.mes': '{mes} al mes',
   'premium.donde.play': 'Google Play',
   'premium.donde.apple': 'tu cuenta de Apple',
@@ -4373,14 +4299,14 @@ Object.assign(window.PACE_STRINGS.en, {
   'premium.trial.keep': 'Continue trial',
   'premium.onb.titulo': 'PACE is free.',
   'premium.onb.lede': 'If one day you want more, PACE Complete adds:',
-  'premium.onb.precios': '{vida} once, or {mes} a month with {dias} days free.',
+  'premium.onb.precios': '{vida}\u00a0once, or {mes} a month with {dias} days free.',
   'premium.onb.probar': 'Try {dias} days free',
   'premium.onb.vida': 'I’d rather pay once: {vida}',
   'premium.onb.vida.sola': 'One payment of {vida} for lifetime access.',
   'premium.onb.comprar': 'Buy for {vida}',
   'premium.onb.aviso': 'We will remind you two days before the trial ends.',
   'premium.onb.abierto.lede': 'And while it’s in testing, PACE Complete is open to everyone too:',
-  'premium.onb.abierto.precios': 'Then, {mes} a month with {dias} days free, or {vida} once.',
+  'premium.onb.abierto.precios': 'Then, {mes} a month with {dias} days free, or {vida}\u00a0once.',
   'premium.onb.abierto.aviso': 'When it goes on sale you get your trial week, and the routines you have already done stay yours.',
   'premium.code.lost': 'Lost it? Get it back with your email',
   'premium.compra.error': 'Checkout couldn’t open. Try again.',
@@ -4407,7 +4333,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'premium.fin.ver': 'See PACE Complete',
   'premium.fin.linea': 'Your trial week ended on {fecha}: anything with a padlock is now part of PACE Complete.',
   'premium.v1.despues': 'You’ll be able to get it here soon.',
-  'premium.onb.precios.sin': '{vida} once, or {mes} a month.',
+  'premium.onb.precios.sin': '{vida}\u00a0once, or {mes} a month.',
   'premium.onb.mes': '{mes} a month',
   'premium.donde.play': 'Google Play',
   'premium.donde.apple': 'your Apple account',
@@ -31296,6 +31222,16 @@ Object.assign(window, { paceSobreApuntar, paceSobreLista, paceSobreHoy, PaceSobr
 
 const PACE_NOVEDADES = [
 {
+  id: 'foco-en-bloques',
+  desde: '2026-11-24',
+  es: [
+  'El Foco a mano también cuenta en bloques, como la jornada: «Bloque 1 de 4».'],
+
+  en: [
+  'Manual Focus counts in blocks too, like your workday: “Block 1 of 4”.']
+
+},
+{
   id: 'junto-a-la-mesa',
   desde: '2026-11-24',
   es: [
@@ -57430,11 +57366,13 @@ function paceHomeFilaNombres(body) {
 
 
 
-function paceAroCicloAbajo(dial, re) {
+
+
+function paceAroCicloAbajo(dial, sel) {
   var best = null;
   var nodes = dial.querySelectorAll('span, div');
   for (var i = 0; i < nodes.length; i++) {
-    if (re.test(nodes[i].textContent || '')) {
+    if (nodes[i].matches(sel) || nodes[i].querySelector(sel)) {
       var b = paceCaja(nodes[i]).bottom;
       if (best == null || b > best) best = b;
     }
@@ -57619,7 +57557,7 @@ function paceAroPisoInterior(dial, radio) {
 
   var SQUEEZE_START = 700;
   var SQUEEZE_FULL = 610;
-  var CICLO_RE = /\b(ciclo|cycle)\b/i;
+  var CICLO_SEL = '[data-pace-ciclo]';
 
   var rafId = 0;
   var ro = null;
@@ -57632,7 +57570,7 @@ function paceAroPisoInterior(dial, radio) {
   }
 
 
-  function cicloBottomWithin(dial) {return paceAroCicloAbajo(dial, CICLO_RE);}
+  function cicloBottomWithin(dial) {return paceAroCicloAbajo(dial, CICLO_SEL);}
   function pisoInterior(dial) {return paceAroPisoInterior(dial, RADIO_INTERIOR);}
 
 

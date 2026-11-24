@@ -228,7 +228,7 @@ test.describe('V2 · el último bloque cierra el día también en el aro', () =>
     await expect(vis(page, '[data-pace-dial-label]'), 'el aro decía «Foco manual»').toHaveText('Jornada cerrada');
     await expect(vis(page, '[data-pace-dial-hasta]')).toHaveText('45 min de foco');
     await expect(vis(page, '[data-pace-dial-subtitle]'), 'decía «Ciclo completado»').toHaveText('Lo que queda del día es tuyo');
-    await expect(vis(page, '[data-pace-cta]'), 'ofrecía «Empezar otro ciclo»').toHaveText('Seguir por libre');
+    await expect(vis(page, '[data-pace-cta]'), 'ofrecía «Otro bloque»').toHaveText('Seguir por libre');
     expect(errores).toEqual([]);
   });
 

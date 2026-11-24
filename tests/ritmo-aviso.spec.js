@@ -83,12 +83,12 @@ test('con el dia servido, el aviso nombra la pausa y dice cuando vuelves', async
 test('por libre, y con la pestaña delante, nada cambia', async ({ context, page }) => {
   await preparar(context, page, { ritmo: { libre: true } });
   const avisos = await terminarBloque(page, 'Empezar foco');
-  expect(avisos).toEqual([{ title: 'Foco completado', body: 'Ciclo cerrado. Elige tu micro-pausa.' }]);
+  expect(avisos).toEqual([{ title: 'Foco completado', body: 'Bloque terminado. Elige tu pausa.' }]);
 
   /* Control: con la pestaña VISIBLE no hay aviso del sistema (s102). */
   await page.keyboard.press('Escape');
   await page.evaluate(() => { window.__avisos = []; });
-  const visibles = await terminarBloque(page, 'Empezar otro ciclo', false);
+  const visibles = await terminarBloque(page, 'Otro bloque', false);
   expect(visibles, 'con la app delante no debe avisar el sistema').toEqual([]);
 });
 

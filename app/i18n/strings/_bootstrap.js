@@ -6,8 +6,10 @@
    achievements.js) inyectan keys via Object.assign sobre
    window.PACE_STRINGS.{es,en}.
 
-   strings-content.js sigue siendo el patch final EN de contenido
-   (rutinas Move/Breathe/Extra), cargado al final de la cadena i18n.
+   El inglés del contenido (rutinas de Respira, Mueve y Estira, y los
+   logros) vive en app/i18n/content/, que carga al final de la cadena i18n.
+   Cada clave, en un solo sitio (verify.claves.js), y ninguna sin una
+   pantalla que la pida (verify.sinpantalla.js).
 
    Carga ANTES de cualquier otro archivo i18n del split.
 */
