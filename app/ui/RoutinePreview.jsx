@@ -258,8 +258,14 @@ function RoutinePreview({ routine, kind = 'move', onStart, onClose }) {
           {t('preview.aviso')}
         </p>
 
-        {/* El relleno en el hondo del módulo: con su color, «Empezar» daba 3,4 a 1 en Mueve (Ez, 3B). */}
+        {/* El relleno en el hondo del módulo: con su color, «Empezar» daba 3,4 a 1 en Mueve (Ez, 3B).
+            FIJO ABAJO (Ez, F2A del 24 nov. 2026): con cinco pasos, a 360 × 640, quedaba bajo el borde y
+            había que deslizar para encontrarlo. Se pega al fondo de la ventana y la lista pasa por detrás;
+            la sombra del color del papel la difumina por arriba y tapa el margen de abajo. Si todo cabe,
+            no se mueve. */}
         <button onClick={onStart} data-pace-cta style={{
+          position: 'sticky', bottom: 0, zIndex: 2,
+          boxShadow: '0 -14px 14px -2px var(--paper), 0 12px 0 12px var(--paper)',
           width: '100%', marginTop: 6, padding: '13px 20px',
           background: letraDe(accent), color: 'var(--paper)', border: 'none',
           borderRadius: 'var(--r-pill)', cursor: 'pointer', minHeight: 44,

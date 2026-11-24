@@ -3,8 +3,10 @@
  * La auditoría del 16 oct. midió que `--ink-3`, el color de casi todos los rótulos
  * de 9 a 12 px («BIBLIOTECAS», «HOY», «3 SERIES · 12·10·8 REPS», la versión del
  * pie), daba 3,2:1 sobre el crema y 3,0:1 en la barra lateral. Ez eligió, viendo
- * fotos, un punto intermedio (#77705F): 4,2 y 3,9. En oscuro ya daba 7,4. Esta
- * prueba lee los colores que pinta la app y cae si el gris vuelve a aclararse.
+ * fotos, un punto intermedio (#77705F): 4,2 y 3,9. En oscuro ya daba 7,4. La auditoría a
+ * fondo del 24 nov. contó 1.155 sitios a 3,9 sobre las tarjetas, y Ez eligió (F5A) un gris un
+ * 9 % más oscuro (#6C6656): 4,9 en el crema y 4,5 en las tarjetas y la barra. Esta prueba lee
+ * los colores que pinta la app y cae si el gris vuelve a aclararse.
  */
 'use strict';
 
@@ -26,12 +28,12 @@ function contraste(page) {
   });
 }
 
-test('en claro, el gris de los rótulos da al menos 4,2:1 en el crema y 3,85:1 en la barra lateral', async ({ page, context }) => {
+test('en claro, el gris de los rótulos da al menos 4,5:1 en el crema, en las tarjetas y en la barra lateral', async ({ page, context }) => {
   await sembrar(context, { palette: 'crema' });
   await irAlArtefacto(page);
   const c = await contraste(page);
-  expect(c.papel).toBeGreaterThanOrEqual(4.2);
-  expect(c.lateral).toBeGreaterThanOrEqual(3.85);
+  expect(c.papel).toBeGreaterThanOrEqual(4.5);
+  expect(c.lateral).toBeGreaterThanOrEqual(4.5);
 });
 
 test('en oscuro, el gris de los rótulos sigue por encima de 4,5:1', async ({ page, context }) => {

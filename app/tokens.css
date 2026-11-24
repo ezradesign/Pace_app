@@ -32,7 +32,7 @@
   --ink-2: #4A453C;
   /* Rótulos y metadatos de 9 a 12 px. #8A8372 daba 3,2:1 sobre --paper y 3,0:1 en la
      barra lateral; Ez eligió el 16 oct., viendo fotos, un punto intermedio: 4,2 y 3,9. */
-  --ink-3: #77705F;
+  --ink-3: #6C6656;   /* 4,9:1 en el crema y 4,5 en las tarjetas (Ez, F5A del 24 nov. 2026; antes #77705F) */
   --line: #C9C0A8;
   --line-2: #B8AD8E;
 

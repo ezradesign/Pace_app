@@ -15,6 +15,18 @@
 
 const PACE_NOVEDADES = [
   {
+    id: 'junto-a-la-mesa',
+    desde: '2026-11-24',
+    es: [
+      'Sin plan, la pausa te propone solo lo que cabe junto a la mesa: nada de suelo.',
+      'En «Antes de empezar», el botón «Empezar» se ve siempre, también en las rutinas largas.',
+    ],
+    en: [
+      'Without a plan, the break only suggests what fits at your desk: nothing on the floor.',
+      'In «Before you start», the «Start» button is always in view, even in long routines.',
+    ],
+  },
+  {
     id: 'ahora-no',
     desde: '2026-11-24',
     es: [

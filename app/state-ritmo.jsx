@@ -148,13 +148,9 @@ function ritmoPozos(s, iso) {
     });
     return out;
   };
+  /* «Junto a la mesa» (library-rules.js), la misma regla que la pausa por libre. */
   var cabe = function (r) {
-    if (!r || r.safety || r.requiresFloor) return false;
-    /* La silla con respaldo (`chair`) es la de trabajar, como la mesa y la pared: quien usa «A tu
-       ritmo» ya está en su sitio. La que se carga sin ruedas (`stableChair`) sí es material. */
-    var mesa = function (e) { return (e === 'stableDesk' || e === 'wall' || e === 'chair') && (r.level || 'accessible') === 'accessible'; };
-    if ((r.equipment || []).some(function (e) { return !mesa(e) && !/Optional$/.test(e); })) return false;
-    if (typeof libraryConRetencion === 'function' && libraryConRetencion(r)) return false;
+    if (!libraryJuntoALaMesa(r)) return false;
     return !window.canAccessRoutine || window.canAccessRoutine(r.id);
   };
   var varia = typeof puedeVariar === 'function' && puedeVariar();

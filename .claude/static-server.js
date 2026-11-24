@@ -20,6 +20,7 @@ var MIME = {
   '.json': 'application/json; charset=utf-8',
   '.webmanifest': 'application/manifest+json; charset=utf-8',
   '.png':  'image/png',
+  '.jpg':  'image/jpeg',   /* la imagen de la vista previa al compartir (og-pace.jpg, F7A del 24 nov. 2026) */
   '.svg':  'image/svg+xml',
   '.ico':  'image/x-icon',
   '.webp': 'image/webp',

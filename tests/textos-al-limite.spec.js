@@ -11,7 +11,8 @@
  * que agranda su caja, un texto que se sale o una fila que salta). Corre en Windows y en el CI de
  * Linux, así que vale para los dos. Al montarlo quedaban 7 px o más en los dos, salvo «Legs: idle today»
  * (4,1 px en Windows y 5,5 en Linux, a 360 × 718 al 115 %). Fuera: las filas «Siguiente: … · Auto», cuyo texto
- * cambia en cada paso, y «Muévete» al 115 %, que aún se sale unos 10 px en Linux.
+ * cambia en cada paso, y «Mueve» al 115 %, que se sale 1,3 px en Windows («Muévete», hasta la F3A de Ez del
+ * 24 nov., unos 10 en Linux).
  * Mutante: con «Talón apoyado. Baja solo hasta donde controles.», la de Caderas de pie cae (1,9 px
  * en Windows); con «Lo que suena al respirar», la de Ajustes cae en Linux (3,0 px).
  */
@@ -113,9 +114,9 @@ for (const lang of ['es', 'en']) {
 for (const lang of ['es', 'en']) for (const letra of LETRAS) {
   test('la pausa (' + lang + ', letra ' + letra + '): su frase y la fila de las otras actividades aguantan ' + TOPE + ' px', async ({ browser }) => {
     const baseURL = test.info().project.use.baseURL;
-    /* «Muévete» con la letra al 115 % se sale aún unos 10 px en Linux (antes de la 7A, más): no cabe sin cambiar
-       la fila, así que aquí solo con la letra normal, donde la 7A lo metió dentro. */
-    const solo = lang === 'es' ? ['=Elige tu pausa.'].concat(letra === 1 ? ['=Muévete'] : []) : ['=Move'];
+    /* «Mueve» (Ez, F3A del 24 nov. 2026; antes «Muévete», que se salía unos 10 px en Linux) con la letra al
+       115 % aún se sale 1,3 px en Windows: no cabe sin cambiar la fila, así que aquí solo con la letra normal. */
+    const solo = lang === 'es' ? ['=Elige tu pausa.'].concat(letra === 1 ? ['=Mueve'] : []) : ['=Move'];
     expect(await vigila(await H.abrePausa(browser, baseURL, { lang, letra }), solo, 'la pausa')).toEqual([]);
   });
 }

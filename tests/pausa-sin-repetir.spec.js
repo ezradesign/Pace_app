@@ -47,7 +47,7 @@ test('con el vaso propuesto, Hidrátate no sale otra vez abajo', async ({ page, 
   const m = modal(page);
   await expect(m.locator('[data-pace-break-prop]')).toContainText('Hidrátate');
   await expect(m.getByRole('button', { name: 'Hidrátate', exact: true })).toHaveCount(0);
-  for (const nombre of ['Respira', 'Estira', 'Muévete']) {
+  for (const nombre of ['Respira', 'Estira', 'Mueve']) {
     await expect(m.getByRole('button', { name: nombre, exact: true }), nombre + ' tiene que seguir abajo').toHaveCount(1);
   }
 });
@@ -59,7 +59,7 @@ test('con una rutina de Estira propuesta, su puerta no se repite y las otras tre
   await expect(m.locator('[data-pace-break-prop]')).toContainText('Estira');
   await expect(m.getByRole('button', { name: 'Estira', exact: true })).toHaveCount(0);
   const otras = [];
-  for (const nombre of ['Hidrátate', 'Respira', 'Muévete']) {
+  for (const nombre of ['Hidrátate', 'Respira', 'Mueve']) {
     const b = m.getByRole('button', { name: nombre, exact: true });
     await expect(b, nombre + ' tiene que seguir abajo').toHaveCount(1);
     otras.push(await b.boundingBox());
@@ -124,7 +124,7 @@ test('a 360×640 las tres caben en una línea', async ({ page, context }) => {
   await hastaLaPausa(page, 35, new Date('2026-10-09T10:00:00+02:00'));
   const m = modal(page);
   const tops = [];
-  for (const nombre of ['Hidrátate', 'Respira', 'Muévete']) {
+  for (const nombre of ['Hidrátate', 'Respira', 'Mueve']) {
     tops.push(Math.round((await m.getByRole('button', { name: nombre, exact: true }).boundingBox()).y));
   }
   expect(Math.max(...tops) - Math.min(...tops), 'a 360 px se parten en dos líneas: ' + tops.join(', ')).toBeLessThanOrEqual(2);

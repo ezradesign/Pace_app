@@ -19,7 +19,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'break.breathe.desc':            '2 min para volver al centro',
     'break.stretch.label':           'Estira',
     'break.stretch.desc':            'Afloja la tensión',
-    'break.move.label':              'Muévete',
+    'break.move.label':              'Mueve',   /* como en la home, las bibliotecas y el cajón (Ez, F3A del 24 nov. 2026; antes «Muévete») */
     'break.move.desc':               'Antídoto rápido a la silla',
     'break.water.label':             'Hidrátate',
     'break.water.desc':              'Un vaso ahora',

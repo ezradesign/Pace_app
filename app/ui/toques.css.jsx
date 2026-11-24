@@ -11,8 +11,8 @@
    crece 7 y no pisa a la otra. Ningún botón de la lista usaba ya `::before`; los que llevan
    `::after` (el pomo del interruptor, la flecha de «Tus rutinas») lo conservan.
 
-   SOLO EN EL MÓVIL Y CON DEDO: con ratón, la zona de siempre.
-   Lo vigila tests/toques-movil.spec.js. */
+   EN EL MÓVIL Y CON DEDO, todo esto; con ratón, solo lo que no llegaba a 24 px (el bloque de abajo).
+   Lo vigilan tests/toques-movil.spec.js y tests/fondo-24nov.spec.js. */
 (function () {
   if (document.getElementById('pace-toques-css')) return;
   var s = document.createElement('style');
@@ -60,6 +60,22 @@
       /* Foco, Pausa y Larga, arriba en los móviles altos (390 x 844 y más): 26 px de caja y 12 libres
          hasta la tarjeta de debajo en la más justa; crecen 7 arriba y 6 abajo. */
       [data-pace-tabs] > button::before { inset: -7px 0 -6px; }
+    }
+    /* EN EL ORDENADOR, CON RATÓN (Ez, F6A del 24 nov. 2026): la auditoría a fondo midió enlaces de 14 a
+       17 px de alto («Ajustar el horario», «Cambiar», «Al calendario», «Ahora no», «Ponle ritmo al día»,
+       el pie de Ajustes), la fila del agua de la barra (21) y el interruptor «Comer hoy» (22 x 12). Crecen
+       hasta 24 px, el mínimo para apuntar, con la misma zona invisible del móvil y sin cambiar cómo se
+       ven. Los enlaces de la cabecera estrecha llevan la píldora «Hoy voy por libre» 4 px encima: crecen
+       5, y la píldora, que va después en el DOM, se queda entera su caja. */
+    @media (min-width: 641px) and (pointer: fine) {
+      .pace-rt-enlace, .pace-aj-pie a, [data-pace-hoy-celda] { position: relative; }
+      .pace-rt-enlace::before, .pace-aj-pie a::before, [data-pace-hoy-celda]::before,
+      .pace-rt-mini-int[data-pace-ritmo-comes]::before { content: ''; position: absolute; }
+      .pace-rt-enlace::before, .pace-aj-pie a::before { inset: -5px -2px; }
+      [data-pace-hoy-celda]::before { inset: -2px 0; }
+      /* «Comer hoy» va en la primera línea de la frase del horario: 5 px debajo está el selector de la hora
+         de la siguiente, que se queda su caja; encima solo hay texto, así que crece hacia arriba. */
+      .pace-rt-mini-int[data-pace-ritmo-comes]::before { inset: -9px -1px -6px; }
     }
   `;
   document.head.appendChild(s);
