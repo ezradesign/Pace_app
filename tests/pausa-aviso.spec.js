@@ -254,7 +254,7 @@ test.describe('android · el fin del Foco con la campana de PACE', () => {
     await esperarEnPagina(page, () => !!window.__nativo.puestos[1]);
     await context.clock.fastForward(25 * 60 * 1000 + 2000);
     await context.clock.runFor(1500);
-    await expect(cta(page)).toHaveText('Empezar otro bloque');
+    await expect(cta(page)).toHaveText('Otro bloque');
     await alVolver(page);
     await context.clock.runFor(1500);
     expect(await sonidos(page, 'pomodoro.end'), 'la campana sonó dos veces: el aviso y PACE').toBe(0);

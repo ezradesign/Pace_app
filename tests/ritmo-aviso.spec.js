@@ -88,7 +88,7 @@ test('por libre, y con la pestaña delante, nada cambia', async ({ context, page
   /* Control: con la pestaña VISIBLE no hay aviso del sistema (s102). */
   await page.keyboard.press('Escape');
   await page.evaluate(() => { window.__avisos = []; });
-  const visibles = await terminarBloque(page, 'Empezar otro bloque', false);
+  const visibles = await terminarBloque(page, 'Otro bloque', false);
   expect(visibles, 'con la app delante no debe avisar el sistema').toEqual([]);
 });
 

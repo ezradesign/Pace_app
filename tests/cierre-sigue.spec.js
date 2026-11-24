@@ -92,7 +92,7 @@ test('por libre: «Volver al inicio» vuelve sin arrancar nada, y en inglés dic
   await page.evaluate(() => window.setState({ lang: 'es' }));
   await page.locator(SIGUE + ' [data-pace-cierre-otra]').click();
   await expect(page.locator('[data-pace-session-root]')).toHaveCount(0);
-  await expect(cta(page)).toHaveText('Empezar otro bloque');
+  await expect(cta(page)).toHaveText('Otro bloque');
 });
 
 test('con jornada: «Volver · te quedan N min de pausa» con los minutos de verdad, y «Empezar ya el bloque 2» lo arranca', async ({ page, context }) => {

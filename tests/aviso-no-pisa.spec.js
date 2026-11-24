@@ -83,7 +83,7 @@ for (const plataforma of ['android', 'ios']) {
     /* El bloque 1 acaba en el fondo: el sistema lo entrega y se queda en la bandeja. */
     await context.clock.fastForward(BLOQUE + 2000);
     await context.clock.runFor(1500);
-    await expect(cta(page)).toHaveText('Empezar otro bloque');
+    await expect(cta(page)).toHaveText('Otro bloque');
     await alVolver(page);
     /* Al volver se abre la ventana de la pausa: «Ahora no», y otro bloque. */
     await page.getByRole('button', { name: 'Ahora no', exact: true }).click();
@@ -143,7 +143,7 @@ test('aviso-no-pisa · web · cada bloque avisa con su etiqueta y el aviso nuevo
     await expect(cta(page)).toHaveText('Pausar');
     await context.clock.fastForward(5 * 60 * 1000 + 2000);
     await context.clock.runFor(1500);
-    await expect(cta(page)).toHaveText('Empezar otro bloque');
+    await expect(cta(page)).toHaveText('Otro bloque');
     await esperarEnPagina(page, (k) => window.__avisos.length === k, n);
   }
   const avisos = await page.evaluate(() => window.__avisos);

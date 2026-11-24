@@ -83,7 +83,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'mini.abrir':                      'Miniventana',
     'mini.abrir.aria':                 'Abrir la miniventana, encima de todas las ventanas',
     'focus.continue':                  'Continuar',
-    'focus.startAnother':              'Empezar otro bloque',
+    'focus.startAnother':              'Otro bloque',   /* «Empezar otro bloque» se partía en dos líneas en el botón del aro (tope 169 px) y empujaba la home */
     'focus.cycleComplete':             'Bloque terminado',  
     'focus.manual.label':              'Foco manual',
     'focus.mode.focus':                'Foco',
@@ -305,7 +305,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'mini.abrir':                      'Mini window',
     'mini.abrir.aria':                 'Open the mini window, on top of every window',
     'focus.continue':                  'Continue',
-    'focus.startAnother':              'Start another block',
+    'focus.startAnother':              'Another block',
     'focus.cycleComplete':             'Block done',    
     'focus.manual.label':              'Manual Focus',
     'focus.mode.focus':                'Focus',

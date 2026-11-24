@@ -114,7 +114,7 @@ test.describe('A1 · en el iPhone, una sola campana al acabar el bloque', () => 
     await alFondo(page);
     await esperarEnPagina(page, () => !!window.__nativo.puestos[1]);
     await acabarBloque(context);
-    await expect(cta(page)).toHaveText('Empezar otro bloque');
+    await expect(cta(page)).toHaveText('Otro bloque');
     expect(await campanasDeFin(page), 'con el aviso de iOS puesto, PACE también tocó la campana').toBe(0);
     await alVolver(page);
     await context.clock.runFor(1500);
@@ -131,7 +131,7 @@ test.describe('A1 · en el iPhone, una sola campana al acabar el bloque', () => 
     const otra = await context.newPage();
     await otra.goto(RUTA_ARTEFACTO);
     await otra.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
-    await expect(otra.locator('[data-pace-cta]')).toHaveText('Empezar otro bloque');
+    await expect(otra.locator('[data-pace-cta]')).toHaveText('Otro bloque');
     await otra.waitForTimeout(300);
     expect(await campanasDeFin(otra), 'al abrir PACE, el bloque que ya avisó iOS volvió a sonar').toBe(0);
   });
@@ -141,7 +141,7 @@ test.describe('A1 · en el iPhone, una sola campana al acabar el bloque', () => 
     await empezarFoco(page);
     await alFondo(page);
     await acabarBloque(context);
-    await expect(cta(page)).toHaveText('Empezar otro bloque');
+    await expect(cta(page)).toHaveText('Otro bloque');
     expect(await cuantas(page, 'schedule'), 'programó un aviso sin permiso').toBe(0);
     expect(await campanasDeFin(page), 'sin aviso de iOS no sonó nadie').toBe(1);
   });
@@ -150,7 +150,7 @@ test.describe('A1 · en el iPhone, una sola campana al acabar el bloque', () => 
     await abrir(page, context);
     await empezarFoco(page);
     await acabarBloque(context);
-    await expect(cta(page)).toHaveText('Empezar otro bloque');
+    await expect(cta(page)).toHaveText('Otro bloque');
     expect(await campanasDeFin(page)).toBe(1);
     expect(await nativo(page, 'puestos')).toEqual({});
   });
@@ -233,7 +233,7 @@ test.describe('A3 · en el iPhone, puesto solo cuando iOS lo confirma', () => {
     await alFondo(page);
     await esperarEnPagina(page, () => window.__nativo.llamadas.filter((l) => l.metodo === 'schedule').length === 2);
     await acabarBloque(context);
-    await expect(cta(page)).toHaveText('Empezar otro bloque');
+    await expect(cta(page)).toHaveText('Otro bloque');
     expect(await campanasDeFin(page), 'sin aviso de iOS, PACE tenía que sonar').toBe(1);
   });
 });
@@ -324,7 +324,7 @@ test.describe('D-10 · en el iPhone, el aviso de fin de Foco suena con la campan
     });
     expect(archivo, 'el sonido que nombra el aviso no está junto a la app').toEqual({ ok: true, cabecera: 'WAVE' });
     await acabarBloque(context);
-    await expect(cta(page)).toHaveText('Empezar otro bloque');
+    await expect(cta(page)).toHaveText('Otro bloque');
     expect(await campanasDeFin(page), 'con el aviso sonando, PACE tocó también su campana').toBe(0);
     await alVolver(page);
     await context.clock.runFor(1500);
@@ -342,7 +342,7 @@ test.describe('D-10 · en el iPhone, el aviso de fin de Foco suena con la campan
     const otra = await context.newPage();
     await otra.goto(RUTA_ARTEFACTO);
     await otra.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
-    await expect(otra.locator('[data-pace-cta]')).toHaveText('Empezar otro bloque');
+    await expect(otra.locator('[data-pace-cta]')).toHaveText('Otro bloque');
     await otra.waitForTimeout(300);
     expect(await campanasDeFin(otra), 'al abrir PACE, el bloque que ya sonó en el aviso volvió a sonar').toBe(0);
   });

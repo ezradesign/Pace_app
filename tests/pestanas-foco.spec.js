@@ -48,7 +48,7 @@ test('foco-6 · si las dos pestañas llegan al final, el bloque cuenta una vez',
   await expect.poll(() => b.evaluate(() => getState().cycle)).toBe(1);
   expect(await a.evaluate(() => getState().totalFocusMin), 'el bloque contó dos veces').toBe(25);
   await expect.poll(() => focosContados(a)).toBe(1);
-  /* Solo la que lo cuenta abre la pausa; la otra se queda en «Empezar otro bloque». */
+  /* Solo la que lo cuenta abre la pausa; la otra se queda en «Otro bloque». */
   const abiertas = (await pausaAbierta(a).count()) + (await pausaAbierta(b).count());
   expect(abiertas, 'la pausa se abrió en las dos pestañas').toBe(1);
 });

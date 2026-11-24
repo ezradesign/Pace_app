@@ -103,7 +103,7 @@ for (const orden of Object.keys(ORDENES)) {
     await expect.poll(() => b.evaluate(() => getState().cycle)).toBe(1);
     /* …empieza Y y lo termina. */
     await b.keyboard.press('Escape');
-    await expect(cta(b)).toHaveText('Empezar otro bloque');
+    await expect(cta(b)).toHaveText('Otro bloque');
     await cta(b).click();
     await expect(cta(b)).toHaveText('Pausar');
     await context.clock.fastForward(25 * MIN);
