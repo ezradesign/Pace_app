@@ -36,6 +36,11 @@ antes del 20 nov., en `docs/archive/LEEME_TRASPASO_HASTA_19NOV.md` (D4 A de Ez, 
 - «Escríbenos» escribe a `hola.ezradesign@gmail.com` (Ez, 24 nov.), compuesto al ejecutarse para que Cloudflare no lo
   reescriba (fila nueva arriba de las reglas técnicas). Las 37 copias de trabajo y las ramas viejas, autorizadas por Ez para
   quitarlas (copia de todas en `backups/ramas-24nov-2026.bundle`).
+- El primer CI de la 0.218.0 salió rojo: a 360 px, en Linux (= Android), «Ahora no» y «Hoy voy por libre» no cabían con el
+  título por 0,01 px (en Windows sobraban 2,8). Medido en `claude/diag-ahora-no-24nov` (no se junta) y arreglado en `main`
+  (huecos y letra un pelo más juntos por debajo de 370 px; sobran ~10 px en Linux): CI 45379289073 en verde entero.
+- **Auditoría a fondo (24 nov.)**, página https://claude.ai/artifact/1agCtKgFivrUXaHgdRLajp: 268 pantallas sin errores ni
+  desbordes; ocho hallazgos (F1-F8) y G1 (las 114 ramas de GitHub, cuyo borrado paró el control de permisos). Espera sus letras.
 - **Espera a Ez:** subir la 0.218.0 a Play y a TestFlight con las notas de `docs/launch/google-play/SUBIDAS.md` (T A).
 - **Siguiente (Ez, 24 nov.: «sigamos haciendo repaso, auditoría, mejoras en profundidad»):** una auditoría a fondo (móvil,
   tableta y ordenador; es y en; claro y oscuro; flujos largos y accesibilidad), con página de letras antes de tocar nada.
