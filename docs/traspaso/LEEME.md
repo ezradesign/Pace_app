@@ -38,6 +38,17 @@ antes del 20 nov., en `docs/archive/LEEME_TRASPASO_HASTA_19NOV.md` (D4 A de Ez, 
 - **Espera a Ez:** qué versión sube a Play y a TestFlight (la 0.220.0 ya, o la que lleve las V), y las dos cosas de las V.
 - **Regla de Ez (24 nov.):** al 85 % de uso, todo registrado y subido, y un prompt listo para pegar en la otra cuenta.
 
+## AL RELEVO (24 nov., noche): la auditoría profunda, montada con el «Sí a todo» de Ez
+
+- Página: https://claude.ai/artifact/XPWzwT2rUrPFbKtBsrKAGs (13 hallazgos, H1-H13). Ez: «Sí a todo» = H1A H2A H3A H6A H7A
+  H8A H10A H11A H12A. Juntado el PR #8 (la prueba `fila-4`, que solo esperaba la toma de la cuenta, y las trazas del CI).
+  En el PR siguiente, desde `claude/project-thread-6ate4b`: TestFlight espera al CI en verde, acciones de GitHub en Node 24,
+  `npm audit fix`, `engines` (Node 24), seis archivos troceados sin cambiar nada (comprobado al píxel) y las reglas nuevas
+  de CLAUDE.md (juntar solo por PR con el CI en verde; lo pesado, a Releases). Cerrado el #5 de Dependabot.
+- **Espera a Ez:** activar la regla de la rama `main` en GitHub (los clics, en el hilo de la auditoría) y borrar las cinco
+  ramas que sobran (`fondo-24nov`, `state-hoja-24nov`, `diag-ahora-no-24nov`, `diag-f4-24nov`, `diag-fondo-24nov`): desde
+  la nube no se pueden borrar. Sus commits están en `/mnt/project-files/auditorias/ramas-borradas-24nov.txt`.
+
 ## AL RELEVO (24 nov., cuenta EcLj6; 5 h y semana al ~10 %)
 
 - **`main` = 0.218.0** (Ez, 24 nov.: «Júntalo»; suite entera sobre la rama, 2033 en verde): el pulido de antes de publicar con las letras

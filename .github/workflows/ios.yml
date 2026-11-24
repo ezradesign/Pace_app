@@ -38,9 +38,9 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '24'
           cache: npm
@@ -76,7 +76,7 @@ jobs:
         working-directory: ios/App/build/Build/Products/Debug-iphonesimulator
         run: zip -qry "$RUNNER_TEMP/PACE-simulador.zip" App.app
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: pace-ios-simulador
           path: ${{ runner.temp }}/PACE-simulador.zip
@@ -97,6 +97,10 @@ jobs:
     if: github.event_name == 'workflow_dispatch'
     runs-on: macos-latest
     timeout-minutes: 45
+    # actions: read, para mirar el CI de este commit (el paso de abajo).
+    permissions:
+      contents: read
+      actions: read
     env:
       ASC_KEY_ID: ${{ secrets.PACE_ASC_KEY_ID }}
       ASC_ISSUER_ID: ${{ secrets.PACE_ASC_ISSUER_ID }}
@@ -104,15 +108,31 @@ jobs:
       APPLE_TEAM: ${{ secrets.PACE_APPLE_TEAM }}
 
     steps:
+      # Como Android (android.yml solo compila un CI en verde): al iPhone no sube un commit
+      # que el CI no haya probado entero. Auditoria del 24 nov. 2026 (H3A de Ez): la subida
+      # es a mano y antes subia lo que hubiera, aunque main estuviera en rojo. Si el CI de
+      # este commit aun corre, se espera a que acabe y se vuelve a lanzar.
+      - name: el CI de este commit, en verde
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          verdes=$(gh api "repos/${{ github.repository }}/actions/workflows/ci.yml/runs?head_sha=${{ github.sha }}&per_page=20" \
+            --jq '[.workflow_runs[] | select(.conclusion == "success")] | length')
+          if [ "${verdes:-0}" -lt 1 ]; then
+            echo "::error::El CI de ${{ github.sha }} no esta en verde (o aun corre): no se sube a TestFlight. Espera al verde y vuelve a lanzarlo."
+            exit 1
+          fi
+          echo "CI en verde para ${{ github.sha }}."
+
       - name: comprobar que estan los cuatro secretos
         run: |
           for v in ASC_KEY_ID ASC_ISSUER_ID ASC_KEY APPLE_TEAM; do
             test -n "${!v}" || { echo "::error::Falta el secreto PACE_$v (docs/launch/app-store/guia.html, punto 4)"; exit 1; }
           done
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '24'
           cache: npm

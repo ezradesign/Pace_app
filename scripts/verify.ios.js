@@ -288,6 +288,11 @@ function chequeaTienda(ctx, archivoIcono) {
   if (!/CODE_SIGNING_ALLOWED=NO/.test(flujo) || !/branches: \[main/.test(flujo)) {
     malas.push('el workflow iOS ya no compila sin firmar en cada push a main');
   }
+  /* H3A de Ez (24 nov. 2026): a TestFlight solo sube un commit con el CI en verde, como el AAB de Android. */
+  var subida = flujo.split(/\n  testflight:/)[1] || '';
+  if (!/actions: read/.test(subida) || !/workflows\/ci\.yml\/runs\?head_sha=/.test(subida) || !/conclusion == "success"/.test(subida)) {
+    malas.push('la subida a TestFlight ya no mira que el CI de su commit este en verde');
+  }
   if (malas.length) {
     malas.forEach(function (m) { ctx.falla('ios: ' + m); });
   } else {

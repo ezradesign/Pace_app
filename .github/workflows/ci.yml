@@ -63,16 +63,15 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         # El historial entero: verify comprueba que todos los commits los firma Ez
         # (scripts/verify.autoria.js), y con la copia superficial solo vería el último.
         with:
           fetch-depth: 0
 
-      # Node 24 = el del desarrollo local (v24.15.0). `package.json` no declara
-      # `engines`, asi que la version vive aqui: si algun dia se anade ese campo,
-      # este numero se alinea con el.
-      - uses: actions/setup-node@v4
+      # Node 24 = el del desarrollo local (v24.15.0) y el de `engines` en
+      # `package.json` (desde el 24 nov. 2026): si uno cambia, el otro tambien.
+      - uses: actions/setup-node@v5
         with:
           node-version: '24'
           cache: npm
@@ -185,9 +184,9 @@ jobs:
     timeout-minutes: 25
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '24'
           cache: npm
@@ -241,7 +240,7 @@ jobs:
       # de Safari (9 oct. 2026): una cache guardada solo con Chromium no lo trae.
       - name: Cache de Chromium y WebKit
         id: cache-chromium
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/ms-playwright
           key: playwright-webkit-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
@@ -266,7 +265,7 @@ jobs:
       # con el mismo nombre en una matriz chocan.
       - name: Guardar las trazas si fallo (test-results, con su trace.zip)
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: playwright-report-${{ matrix.trozo }}
           path: test-results/
@@ -298,9 +297,9 @@ jobs:
       image: mcr.microsoft.com/playwright:v1.62.1-noble
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '24'
           cache: npm
@@ -313,7 +312,7 @@ jobs:
 
       - name: Guardar las trazas si fallo (test-results, con su trace.zip)
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: playwright-report-safari
           path: test-results/

@@ -209,6 +209,9 @@
        .support: `applyTheme(_state)` se llama en el CUERPO de state-core. El
        estado va por PARAMETRO -- alli todavia no existe ningun store. -->
   <script type="text/babel" src="app/state-core.palette.jsx"></script>
+  <!-- state-core.default (auditoría del 24 nov.): el estado de fábrica. ANTES de state-core: loadState()
+       lo mezcla al evaluarse. -->
+  <script type="text/babel" src="app/state-core.default.js"></script>
   <script type="text/babel" src="app/state-core.jsx"></script>
   <!-- state-core.toast (s198): el buzon de avisos, cortado de state-core.jsx por
        un punto al pasar este de 500 lineas. Nadie lo llama al evaluarse. -->
@@ -519,6 +522,7 @@
   <script type="text/babel" src="app/move/MoveSessionV1.reanudar.jsx"></script>
   <!-- Lo que montó la maqueta del 29 oct. («Con una basta» y la pausa), que no cabía en el runner. -->
   <script type="text/babel" src="app/move/MoveSessionV1.parts.jsx"></script>
+  <script type="text/babel" src="app/move/MoveSessionV1.cierre.jsx"></script>
   <script type="text/babel" src="app/move/MoveSessionV1.jsx"></script>
   <!-- El dato de Estira, troceado en s178 por la regla §1 (ExtraModule.jsx llegó a 553
        líneas). EL ORDEN ES CONTRATO: `extra.data.js` declara `EXTRA_ROUTINES` y
@@ -615,6 +619,7 @@
        fondo y el primer Camino. Orden interno: helper → piezas → orquestador.
        main.jsx lo monta. -->
   <script type="text/babel" data-presets="env,react" src="app/onboarding/pickFirstPath.js"></script>
+  <script type="text/babel" src="app/onboarding/Onboarding.styles.js"></script>
   <script type="text/babel" src="app/onboarding/OnboardingScreens.jsx"></script>
   <script type="text/babel" src="app/onboarding/OnboardingCompleto.jsx"></script>
   <script type="text/babel" src="app/onboarding/Onboarding.jsx"></script>
@@ -655,7 +660,9 @@
                         main.jsx (s160) renderiza el orden de lectura equivocado.
        Se partio por UN punto y no sacando bloques de en medio para que el orden
        de las reglas fuera identico; comprobado en navegador. -->
+  <script type="text/babel" src="app/main/_responsive.luz.js"></script>
   <script type="text/babel" src="app/main/_responsive.atmosfera.js"></script>
+  <script type="text/babel" src="app/main/_responsive.sol.js"></script>
   <script type="text/babel" src="app/main/_responsive.js"></script>
   <script type="text/babel" src="app/main/_responsive.pieles.js"></script>
   <!-- La piel de ESCRITORIO, cortada de la anterior en s197 al pasar de 500 lineas.
@@ -668,6 +675,7 @@
        los que la shell le pide cosas al root. Cargan antes que su consumidor. -->
   <script type="text/babel" src="app/main/SidebarHandle.jsx"></script>
   <script type="text/babel" src="app/main/main.eventos.jsx"></script>
+  <script type="text/babel" src="app/main/main.atajos.jsx"></script>
   <script type="text/babel" src="app/main.jsx"></script>
   <!-- Ayudante de geometría de la HOME DESKTOP (s126): dimensiona el aro (D) y
        ancla las Actividades bajo el CICLO para reproducir la composición v0.64
