@@ -1519,7 +1519,9 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
       <section class="pl-dos">
         <div>
           <h2><span lang="es">Tu calendario, si tú lo pides</span><span lang="en">Your calendar, if you ask</span></h2>
-          <p><span lang="es">Con «Al calendario», PACE añade tu día de «A tu ritmo» a tu calendario, como libre y privado. Si se lo pides, mira a qué horas estás ocupado hoy y coloca tus pausas alrededor; solo guarda esas horas, en tu dispositivo. Nada de tu calendario pasa por un servidor de PACE.</span><span lang="en">With «To calendar», PACE adds your «At your pace» day to your calendar, as free and private. If you ask, it checks when you are busy today and places your breaks around it; it only keeps those times, on your device. Nothing from your calendar goes through a PACE server.</span> <a href="/privacy"><span lang="es">Privacidad</span><span lang="en">Privacy</span></a>.</p>
+          <!-- Leer las reuniones, en la web, pide las altas de Google y Microsoft (docs/CALENDARIO_ALTAS.md); hasta
+               entonces la frase dice dónde funciona ya: en las apps, con el calendario del móvil (Ez, 10A del 23 nov. 2026). -->
+          <p><span lang="es">Con «Al calendario», PACE añade tu día de «A tu ritmo» a tu calendario, como libre y privado. En Android y en el iPhone, si se lo pides, mira a qué horas estás ocupado hoy y coloca tus pausas alrededor; solo guarda esas horas, en tu dispositivo. Nada de tu calendario pasa por un servidor de PACE.</span><span lang="en">With «To calendar», PACE adds your «At your pace» day to your calendar, as free and private. On Android and iPhone, if you ask, it checks when you are busy today and places your breaks around it; it only keeps those times, on your device. Nothing from your calendar goes through a PACE server.</span> <a href="/privacy"><span lang="es">Privacidad</span><span lang="en">Privacy</span></a>.</p>
         </div>
         <div>
           <h2><span lang="es">Android e iPhone</span><span lang="en">Android and iPhone</span></h2>
@@ -2659,7 +2661,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
 
   'lib.breathe.title': 'Respiración',
-  'lib.breathe.subtitle': 'Breathwork guiado: pranayamas, coherencia, rondas.',
+  'lib.breathe.subtitle': 'Respiración guiada: pranayamas, coherencia, rondas.',
 
 
 
@@ -2698,7 +2700,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'hydrate.more': 'Un vaso más',
   'hydrate.vaso.lleno': 'Vaso {n} de {total}, lleno',
   'hydrate.vaso.vacio': 'Vaso {n} de {total}, vacío',
-  'hydrate.tip.label': 'Tip:',
+  'hydrate.tip.label': 'Consejo:',
   'hydrate.tip': 'Llena una botella de 500 ml por la mañana y otra después de comer. Dos botellas = 4 vasos. Hecho.',
 
 
@@ -3571,6 +3573,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'stats.hoy.vasos.de': 'de {m} vasos',
   'stats.hoy.libre': 'Por libre',
   'stats.hoy.vacio': 'Hoy aún no hay pausas en PACE.',
+  'stats.semana.vacio': 'Esta semana aún no hay pausas en PACE.',
   'stats.hoy.suelta': 'Además, por tu cuenta',
   'stats.cerrado': 'Es parte de PACE completo',
   'stats.tab.week': 'Semana',
@@ -3672,6 +3675,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'stats.hoy.vasos.de': 'of {m} glasses',
   'stats.hoy.libre': 'Unplanned',
   'stats.hoy.vacio': 'No PACE breaks yet today.',
+  'stats.semana.vacio': 'No PACE breaks yet this week.',
   'stats.hoy.suelta': 'Also, on your own',
   'stats.cerrado': 'Part of PACE Complete',
   'stats.tab.week': 'Week',
@@ -4026,6 +4030,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.foot.app': 'Todo vive en este móvil y no se sincroniza con otros.',
   'settings.legal.safety': 'Seguridad',
   'settings.legal.privacy': 'Privacidad',
+  'settings.contacto': 'Escríbenos',
   'settings.msg.exported': 'Copia descargada.',
   'settings.msg.exported.app': 'Copia lista: elige dónde guardarla.',
   'settings.msg.export.err': 'No se pudo exportar.',
@@ -4149,6 +4154,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.foot.app': "Everything lives on this phone and doesn't sync with others.",
   'settings.legal.safety': 'Safety',
   'settings.legal.privacy': 'Privacy',
+  'settings.contacto': 'Write to us',
   'settings.msg.exported': 'Copy downloaded.',
   'settings.msg.exported.app': 'Copy ready. Choose where to save it.',
   'settings.msg.export.err': 'Could not export.',
@@ -4627,6 +4633,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'ritmo.fuera': 'Tu jornada ya terminó',
   'ritmo.nocabe': 'Ya no cabe hoy',
   'ritmo.libre': 'Hoy voy por libre',
+  'ritmo.ahoraNo': 'Ahora no',
   'ritmo.volver': 'Ponle ritmo al día',
   'ritmo.cambiar': 'Cambiar',
   'ritmo.otra': 'Otra',
@@ -4836,6 +4843,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.fuera': 'Your workday is over',
   'ritmo.nocabe': 'No longer fits today',
   'ritmo.libre': 'No plan today',
+  'ritmo.ahoraNo': 'Not now',
   'ritmo.volver': 'Give your day a rhythm',
   'ritmo.cambiar': 'Change',
   'ritmo.otra': 'Another',
@@ -15683,6 +15691,15 @@ function ritmoAbrirPregunta() {
 
 
 
+
+function ritmoAhoraNo() {
+  ritmoGuardar(function () {return { pregunta: null, distinto: null };});
+}
+
+
+
+
+
 function ritmoPrimeraSemana(s, fecha) {
   var desde = s && s.ritmo && s.ritmo.semanaDesde;
   var hace = desde && typeof ritmoDiasEntre === 'function' ? ritmoDiasEntre(desde, fecha || ritmoHoy()) : null;
@@ -15704,9 +15721,9 @@ function ritmoNombreDia(diaSemana, t) {
 
 Object.assign(window, {
   RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, ritmoTramoCon, ritmoOcupadoDe,
-  ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoNombreDia, ritmoTituloHabitual, ritmoPrimeraSemana
+  ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoAhoraNo, ritmoNombreDia, ritmoTituloHabitual, ritmoPrimeraSemana
 });
-;Object.assign(window, { RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, RITMO_TRAMO_PAR, ritmoTramoCon, ritmoOcupadoDe, ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoPrimeraSemana, ritmoTituloHabitual, ritmoNombreDia });
+;Object.assign(window, { RITMO_TIPOS_DIA, RITMO_SEMANA_DEFECTO, ritmoSemanaTipoDe, ritmoTipoSiguiente, ritmoHorarioCon, RITMO_TRAMO_PAR, ritmoTramoCon, ritmoOcupadoDe, ritmoGuardarSemana, ritmoHabitual, ritmoComenzarHabitual, ritmoDistinto, ritmoAbrirPregunta, ritmoAhoraNo, ritmoPrimeraSemana, ritmoTituloHabitual, ritmoNombreDia });
 })();
 </script>
   <!-- La pausa entera (14 oct. 2026): sus platos seguidos y el aro que la cuenta. -->
@@ -31253,6 +31270,18 @@ Object.assign(window, { paceSobreApuntar, paceSobreLista, paceSobreHoy, PaceSobr
 
 const PACE_NOVEDADES = [
 {
+  id: 'ahora-no',
+  desde: '2026-11-24',
+  es: [
+  '«¿Cuánto trabajas hoy?» tiene «Ahora no»: cierra la pregunta y vuelven Respira, Estira, Mueve e Hidrátate.',
+  'Las cifras de Estadísticas y Logros se leen mejor, y una semana vacía lo dice.'],
+
+  en: [
+  '“How long are you working today?” has “Not now”: it closes the question and brings back Breathe, Stretch, Move and Hydrate.',
+  'Numbers in Stats and Achievements read better, and an empty week says so.']
+
+},
+{
   id: 'barra-deshacer-vaso',
   desde: '2026-11-23',
   es: [
@@ -33286,12 +33315,8 @@ Object.assign(window, {
 }
 .pace-lib-ctx .pace-lib-pre { color: var(--premium-deep); }
 .pace-lib-ctx .pace-lib-soon { color: var(--premium-deep); font-weight: 500; }
-/* La tira: la capitular a 62 px y el resto a 20. El 55 % de opacidad NO valía
-   -- el usuario no los registraba y reportó «sólo muestra un glifo». Si no se
-   leen, no están. */
-.pace-lib-tira { display: flex; gap: 5px; align-items: center; margin: 7px 0 0; opacity: .75; }
+/* La capitular, a 62 px. Sin la tira de los demás glifos a 20 px (Ez, 5A del 23 nov. 2026). */
 .pace-lib-cap { flex-shrink: 0; margin-top: 2px; color: var(--tone); }
-.pace-lib-tira, .pace-lib-tira * { color: var(--tone); }
 .pace-lib-pie {
   margin-top: 7px; font-size: 10.5px; letter-spacing: .1em;
   text-transform: uppercase; color: var(--ink-3);
@@ -33408,11 +33433,10 @@ Object.assign(window, {
      Ahora el margen lo llevan los BLOQUES; los rotulos conservan sus 11 px. */
   .pace-lib-lateral > :not(.pace-lib-lateral-tit) { margin-bottom: 26px; }
   .pace-lib-lateral > :last-child { margin-bottom: 0; }
-  /* en el lateral la tarjeta se compacta: sin descripción, sin series y sin
-     tira -- el lateral orienta, no es catálogo */
+  /* en el lateral la tarjeta se compacta: sin descripción y sin series -- el
+     lateral orienta, no es catálogo */
   .pace-lib-lateral .pace-lib-card p,
-  .pace-lib-lateral .pace-lib-card .pace-lib-pie,
-  .pace-lib-lateral .pace-lib-tira { display: none; }
+  .pace-lib-lateral .pace-lib-card .pace-lib-pie { display: none; }
   .pace-lib-lateral .pace-lib-card h4 { font-size: 17px; }
 }
 /* Las piezas que existen en las DOS pieles pero sólo se pintan en una. Se
@@ -33471,7 +33495,6 @@ Object.assign(window, {
 </script>
   <script>
 ;(function () {
-
 
 
 
@@ -33610,11 +33633,6 @@ function RoutineCard(_ref) {let { routine, color, onClick, variant = 'body' } = 
     React.createElement("b", null, cifra), React.createElement("u", null, t('lib.min')),
     trozos.map((x) => React.createElement("em", { key: x.k, className: x.cls }, x.candado && React.createElement(PaceCandado, null), x.txt))
     ),
-    glifos.length > 1 &&
-    React.createElement("div", { className: "pace-lib-tira", "aria-hidden": "true" },
-    glifos.slice(1).map((g) => React.createElement(ExerciseGlyph, { key: g, id: g, size: 20 }))
-    ),
-
     series &&
     React.createElement("div", { className: "pace-lib-pie" },
     series.ejercicios ?
@@ -42069,7 +42087,8 @@ function HydrateTracker(_ref) {let { open, onClose } = _ref;
 
 
     React.createElement("div", { "data-pace-hidr-acciones": true, style: { display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' } },
-    React.createElement(Button, { variant: "secondary", onClick: () => addWaterGlass(-1), icon: "\u2212", size: "md", style: { whiteSpace: 'nowrap' } }, t('hydrate.less')),
+
+    React.createElement(Button, { variant: "secondary", onClick: () => addWaterGlass(-1), disabled: today <= 0, icon: "\u2212", size: "md", style: { whiteSpace: 'nowrap' } }, t('hydrate.less')),
 
     React.createElement(Button, { onClick: () => {addWaterGlass(1);try {playSound(today < goal && today + 1 >= goal ? 'hydrate.goal' : 'hydrate.sip');} catch (e) {}}, icon: "+", size: "md",
       style: { background: 'var(--hydrate-deep)', borderColor: 'var(--hydrate-deep)', whiteSpace: 'nowrap' } }, t('hydrate.more'))
@@ -43529,7 +43548,8 @@ function Achievements(_ref) {let { open, onClose } = _ref;
 
     React.createElement("div", { style: { display: 'flex', gap: 20, margin: '8px 0 24px', padding: '16px 20px', background: 'var(--paper-2)', borderRadius: 'var(--r-md)', border: '1px solid var(--line)' } },
     React.createElement("div", { "data-pace-ach-cuenta": true },
-    React.createElement("div", { style: { ...displayItalic, fontSize: 36, fontWeight: 500, lineHeight: 1 } },
+
+    React.createElement("div", { style: { ...displayItalic, fontSize: 36, fontWeight: 500, lineHeight: 1, fontVariantNumeric: 'lining-nums' } },
     unlockedCount, React.createElement("span", { style: { color: 'var(--ink-3)', fontSize: 20 } }, " / ", availableCount)
     ),
     React.createElement(Meta, { style: { marginTop: 4 } }, t('ach.collected'))
@@ -43717,7 +43737,9 @@ const statsTotalesStyles = {
     borderRadius: 'var(--r-md)'
   },
   franja: { position: 'absolute', top: 0, left: 0, right: 0, height: 3 },
-  cifra: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 22, fontWeight: 500, lineHeight: 1 },
+
+
+  cifra: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 22, fontWeight: 500, lineHeight: 1, fontVariantNumeric: 'lining-nums' },
   unidad: { fontSize: 10, color: 'var(--ink-3)', marginTop: 2 }
 };
 
@@ -43834,6 +43856,8 @@ function WeekView(_ref3) {let { state } = _ref3;
         key: s.key, label: s.label, color: s.color, valor: s.total,
         unidad: s.total === 1 && s.unit1 ? s.unit1 : s.unit
       })) }),
+
+    series.every((s) => !s.total) && React.createElement("p", { className: "pace-sh-vacio", "data-pace-semana-vacio": true }, t('stats.semana.vacio')),
 
 
 
@@ -46252,6 +46276,7 @@ function paceConLogroDeLaCopia(s) {
 }
 
 function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
+  const contacto = typeof window.PACE_CONTACTO === 'string' ? window.PACE_CONTACTO.trim() : '';
   const { t, tn, lang } = useT();
   const [st] = usePace();
   const [msg, setMsg] = useStateTD(null);
@@ -46338,11 +46363,21 @@ function TweaksDataSection(_ref) {let { onReset, isWeb } = _ref;
 
     React.createElement("div", { className: "pace-aj-pie" },
     React.createElement("span", null, t(typeof paceEsNativo === 'function' && paceEsNativo() ? 'settings.foot.app' : 'settings.foot')),
+    (isWeb || contacto) &&
+    React.createElement("span", { "data-pace-aj-legal": true },
+    contacto &&
+    React.createElement(React.Fragment, null,
+    React.createElement("a", { href: 'mailto:' + contacto, "data-pace-aj-contacto": true, title: contacto }, t('settings.contacto')),
+    isWeb && React.createElement("span", { style: { margin: '0 5px' } }, "\xB7")
+    ),
+
     isWeb &&
-    React.createElement("span", null,
+    React.createElement(React.Fragment, null,
     React.createElement("a", { href: paceEnlaceLegal('/safety', lang), target: "_blank", rel: "noopener" }, t('settings.legal.safety')),
     React.createElement("span", { style: { margin: '0 5px' } }, "\xB7"),
     React.createElement("a", { href: paceEnlaceLegal('/privacy', lang), target: "_blank", rel: "noopener" }, t('settings.legal.privacy'))
+    )
+
     )
 
     )
@@ -46377,7 +46412,15 @@ function UploadIcon() {
 }
 
 
-Object.assign(window, { TweaksDataSection, paceDescargarCopia, paceDescargarRescate });
+
+
+
+
+
+
+const PACE_CONTACTO = ['hola.ezradesign', 'gmail.com'].join('@');
+
+Object.assign(window, { TweaksDataSection, paceDescargarCopia, paceDescargarRescate, PACE_CONTACTO });
 ;Object.assign(window, { paceBajarJSON, paceDiaArchivo, paceDescargarCopia, paceDescargarRescate, paceConLogroDeLaCopia, TweaksDataSection, DownloadIcon, UploadIcon });
 })();
 </script>
@@ -51088,8 +51131,10 @@ const onboardingStyles = {
     color: 'var(--ink)',
     display: 'flex', flexDirection: 'column',
     isolation: 'isolate',
-    overflow: 'hidden',
-    animation: 'pace-fade-in 320ms ease'
+    overflow: 'hidden'
+
+
+
   },
   header: {
     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -51856,6 +51901,12 @@ Object.assign(window, { OnbVisita, paceVisitaSitio });
    compacta del panel estrecho de escritorio. */
 .pace-rt-preg .pace-rt-titulo { font-size: 20px; line-height: 23px; }
 .pace-rt-preg .pace-rt-mov-cab .pace-rt-enlace { padding: 16px 0 12px; margin: -16px 0 -12px auto; position: relative; z-index: 2; }
+/* «Ahora no» y «Hoy voy por libre» van juntos en la fila del título (Ez, 2A del 23 nov. 2026). Con los
+   huecos de antes (12 + 14 px) a 360 px no cabían por 1 px y bajaban de línea; con 8 + 10 sobran 7, y la
+   letra es la de la app en todas partes. En inglés el título ya ocupa su fila y bajan los dos juntos. */
+.pace-rt-preg .pace-rt-mov-cab { column-gap: 8px; }
+.pace-rt-cab-acc { display: flex; align-items: baseline; column-gap: 10px; margin-left: auto; }
+.pace-rt-preg .pace-rt-mov-cab .pace-rt-cab-acc .pace-rt-enlace { margin-left: 0; }
 .pace-rt-dia { display: grid; grid-template-columns: 1fr auto 1fr; grid-template-rows: 20px 14px 12px; row-gap: 3px; margin-top: 9px; }
 .pace-rt-dia > :nth-child(3n+2) { justify-content: center; }
 .pace-rt-dia > :nth-child(3n) { justify-content: flex-end; }
@@ -52601,6 +52652,31 @@ function RitmoLibre(_ref) {let { enlace } = _ref;
 
 
 
+const RITMO_REABRIR = '[data-pace-ritmo-comienza], [data-pace-ritmo-ajustar], [data-pace-ritmo-volver]';
+function RitmoAhoraNo() {
+  const { t } = useT();
+  const cerrar = () => {
+    ritmoAhoraNo();
+    requestAnimationFrame(() => {
+      const b = [...document.querySelectorAll(RITMO_REABRIR)].find((x) => paceCaja(x).width > 0);
+      if (b) b.focus({ preventScroll: true });
+    });
+  };
+  return React.createElement("button", { type: "button", className: "pace-rt-enlace", "data-pace-ritmo-ahorano": true, onClick: cerrar }, t('ritmo.ahoraNo'));
+}
+
+
+
+
+function ritmoMediaCabeHoy(horario) {
+  const m = horario && horario.media;
+  if (!m) return true;
+  return ritmoAhora() + (m.salida - m.inicio) <= 24 * 60;
+}
+
+
+
+
 
 
 
@@ -52634,7 +52710,7 @@ function RitmoChips(_ref2) {let { state, editarMedia, tuyo } = _ref2;
     RITMO_OPCIONES_UI.map((op) => {
       const m = ritmoMenu(state, op, null, null);
       const vacia = ritmoOpcionVacia(op, m);
-      if (horas && op === 'media' && vacia) {
+      if (horas && op === 'media' && vacia && ritmoMediaCabeHoy(horario)) {
         return (
           React.createElement("div", { key: op, className: "pace-rt-chip pace-rt-chip-horas", "data-pace-ritmo-opcion": op, "data-pace-ritmo-media-horas": true },
           React.createElement("button", { type: "button", className: "pace-rt-chip-nombre", "aria-haspopup": "dialog", "data-pace-ritmo-media-abrir": true,
@@ -52710,7 +52786,7 @@ function RitmoPregunta(_ref3) {let { state } = _ref3;
     React.createElement("div", { className: "pace-rt-sub pace-rt-frase" }, frase),
     React.createElement("div", { className: "pace-rt-sub pace-rt-frase", "data-pace-ritmo-frase-media": true }, fraseMedia)
     ),
-    React.createElement("div", { className: "pace-rt-der" }, React.createElement(RitmoLibre, null))
+    React.createElement("div", { className: "pace-rt-der" }, React.createElement(RitmoAhoraNo, null), React.createElement(RitmoLibre, null))
     ),
     H ?
     React.createElement("div", { className: "pace-rt-habitual-fila", "data-pace-ritmo-estado": "habitual", "data-pace-ritmo-habitual": H.opcion },
@@ -52728,7 +52804,7 @@ function RitmoPregunta(_ref3) {let { state } = _ref3;
     React.createElement("div", { className: "pace-rt-panel pace-rt-mov pace-rt-preg", "data-pace-ritmo-estado": "pregunta" },
     React.createElement("div", { className: "pace-rt-mov-cab" },
     React.createElement("div", { className: "pace-rt-titulo" }, t('ritmo.pregunta')),
-    React.createElement(RitmoLibre, { enlace: true })
+    React.createElement("span", { className: "pace-rt-cab-acc" }, React.createElement(RitmoAhoraNo, null), React.createElement(RitmoLibre, { enlace: true }))
     ),
     React.createElement(RitmoDiaLinea, { horario: R.horario }),
     React.createElement(RitmoChips, { state: state, editarMedia: true })
@@ -52944,10 +53020,10 @@ function RitmoHecho(_ref0) {let { plan } = _ref0;
 }
 
 Object.assign(window, {
-  RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub, ritmoNoCabe, ritmoOpcionVacia,
+  RitmoLibre, RitmoAhoraNo, ritmoMediaCabeHoy, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub, ritmoNoCabe, ritmoOpcionVacia,
   RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho
 });
-;Object.assign(window, { RITMO_OPCIONES_UI, RitmoLibre, RitmoSobre, RitmoChips, ritmoNoCabe, ritmoOpcionVacia, ritmoSub, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho });
+;Object.assign(window, { RITMO_OPCIONES_UI, RitmoLibre, RitmoAhoraNo, ritmoMediaCabeHoy, RitmoSobre, RitmoChips, ritmoNoCabe, ritmoOpcionVacia, ritmoSub, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho });
 })();
 </script>
   <script>

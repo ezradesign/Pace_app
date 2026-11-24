@@ -35,7 +35,9 @@ const statsTotalesStyles = {
     borderRadius: 'var(--r-md)',
   },
   franja: { position: 'absolute', top: 0, left: 0, right: 0, height: 3 },
-  cifra: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 22, fontWeight: 500, lineHeight: 1 },
+  /* Números de altura completa (Ez, 3A del 23 nov. 2026): la serif trae los de estilo antiguo, que
+     miden lo que una minúscula, y el primer día, con todo a cero, se leía «o min». */
+  cifra: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 22, fontWeight: 500, lineHeight: 1, fontVariantNumeric: 'lining-nums' },
   unidad: { fontSize: 10, color: 'var(--ink-3)', marginTop: 2 },
 };
 
@@ -152,6 +154,8 @@ function WeekView({ state }) {
         key: s.key, label: s.label, color: s.color, valor: s.total,
         unidad: s.total === 1 && s.unit1 ? s.unit1 : s.unit,
       }))} />
+      {/* LA SEMANA VACÍA LO DICE, como «Hoy» (Ez, 8A del 23 nov. 2026): sin nada, solo había rayas. */}
+      {series.every(s => !s.total) && <p className="pace-sh-vacio" data-pace-semana-vacio>{t('stats.semana.vacio')}</p>}
 
       {/* Una columna en el móvil y dos en el escritorio (Foco · Respira / Cuerpo · Hidrátate);
           el eje de los días, una vez por columna. */}

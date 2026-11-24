@@ -6,16 +6,15 @@
    tocarla obligaba a abrir el módulo de Respira.
 
    LO QUE ES, decidido mirando doce maquetas en s173 y una más en s174:
-     capitular a 62 px + el resto de glifos a 20 (variante «C1»)
+     capitular a 62 px, y nada más de dibujo (Ez, 5A del 23 nov. 2026: la tira con
+       el resto de glifos a 20 px se leía como un trazo suelto, y a 32 tampoco; la
+       línea de series ya dice cuántos ejercicios son)
      nivel en PILL junto al nombre
      descripción a DOS líneas -- caben las 28 sin recortar (mediana 61
        caracteres, la mayor 84)
      línea de contexto en CURSIVA display con TODO el cómo-se-hace: dónde, con
        qué, «por lado» y Premium; la cifra de minutos en EB Garamond
      línea de series SÓLO cuando dice series y repeticiones -- 8 de 28
-
-   EL 55 % DE OPACIDAD EN LA TIRA NO VALÍA: el usuario no los registraba y
-   reportó «sólo muestra un glifo». Si no se leen, no están. Van al 75 %.
 
    VARIANTE `breathe`: SIN capitular. Sus 20 rutinas no declaran `position`,
    `equipment` ni `level` (medido 20 de 20 en s174), así que no hay dibujo, ni
@@ -83,7 +82,7 @@ function RoutineCard({ routine, color, onClick, variant = 'body' }) {
   }
   if (isPremium) trozos.push({ k: 'premium', txt: t('lib.premium'), cls: 'pace-lib-pre', candado: isLocked });
 
-  /* ── la tira de glifos ────────────────────────────────────────────────── */
+  /* ── el dibujo: la capitular, del primer glifo ───────────────────────── */
   const sinArte = variant === 'breathe' || esViaje;
   const glifos = (sinArte || !window.libraryGlifos) ? [] : window.libraryGlifos(routine);
   const series = (sinArte || !window.librarySeries) ? null : window.librarySeries(routine);
@@ -137,11 +136,6 @@ function RoutineCard({ routine, color, onClick, variant = 'body' }) {
           <b>{cifra}</b><u>{t('lib.min')}</u>
           {trozos.map(x => <em key={x.k} className={x.cls}>{x.candado && <PaceCandado />}{x.txt}</em>)}
         </div>
-        {glifos.length > 1 && (
-          <div className="pace-lib-tira" aria-hidden="true">
-            {glifos.slice(1).map(g => <ExerciseGlyph key={g} id={g} size={20} />)}
-          </div>
-        )}
         {series && (
           <div className="pace-lib-pie">
             {series.ejercicios

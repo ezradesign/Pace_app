@@ -23,7 +23,7 @@
 
 const crypto = require('crypto');
 const { test, expect } = require('@playwright/test');
-const { importar, DIA, ENLACE, almacen, env: envCobro, leerCodigo } = require('./cobro.helpers');
+const { importar, DIA, ENLACE, almacen, aLaVez, env: envCobro, evento, aviso, leerCodigo, mesDespues } = require('./cobro.helpers');
 
 const LLAVE = 'rk_test_' + crypto.randomBytes(12).toString('hex');
 const env = (kv) => envCobro(kv, { STRIPE_LECTURA: LLAVE });
@@ -122,6 +122,23 @@ test.describe('/api/recuperar', () => {
     const r = await recuperar.onRequestPost({ request: pedir({ correo: 'mes@compra.es', recibo: 'A1B2C3D4-0001' }), env: env(almacen({ 'baja:sub_1AbCdEf': '1761600000' })) });
     expect(r.status).toBe(410);
     expect((await r.json()).motivo).toBe('terminada');
+  });
+
+  /* Revisión de ChatGPT del 5 nov.: dos renovaciones a la vez no dejan el código más corto (cobro-a-la-vez.spec.js). */
+  test('la mensual con dos renovaciones a la vez: el código que más dura, escriba la que escriba la última', async () => {
+    conStripe(STRIPE);
+    const stripe = await importar('functions/api/stripe.js');
+    const S = Math.floor(Date.now() / 1000) - 3600, MES1 = mesDespues(S), MES2 = mesDespues(MES1), MES3 = mesDespues(MES2);
+    const factura = (id, inicio, fin) => evento('invoice.paid', { id, object: 'invoice', amount_paid: 299, billing_reason: 'subscription_cycle',
+      parent: { subscription_details: { subscription: 'sub_1AbCdEf' } }, lines: { data: [{ period: { start: inicio, end: fin } }] } });
+    const manda = (kv, ev) => stripe.onRequestPost({ request: aviso(ev), env: env(kv) });
+    const kv = almacen();
+    await manda(kv, evento('checkout.session.completed', { id: MENSUAL.id, object: 'checkout.session', mode: 'subscription',
+      payment_status: 'paid', subscription: 'sub_1AbCdEf', payment_link: ENLACE.mesReal }, { created: S }));
+    await aLaVez(kv, (v) => manda(v, factura('in_2', MES1, MES2)), (v) => manda(v, factura('in_3', MES2, MES3)));
+    const r = await recuperar.onRequestPost({ request: pedir({ correo: 'mes@compra.es', recibo: '3002-7781' }), env: env(kv) });
+    expect(r.status).toBe(200);
+    expect(leerCodigo((await r.json()).codigo).datos.expiresAt, 'recuperar dio el mes de antes').toBe(MES3 * 1000 + 3 * DIA);
   });
 
   test('A3 · la mensual sin su código guardado y sin baja no dice «terminada»: dice que aún no se puede', async () => {

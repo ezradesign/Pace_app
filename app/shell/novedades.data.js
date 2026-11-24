@@ -15,6 +15,18 @@
 
 const PACE_NOVEDADES = [
   {
+    id: 'ahora-no',
+    desde: '2026-11-24',
+    es: [
+      '«¿Cuánto trabajas hoy?» tiene «Ahora no»: cierra la pregunta y vuelven Respira, Estira, Mueve e Hidrátate.',
+      'Las cifras de Estadísticas y Logros se leen mejor, y una semana vacía lo dice.',
+    ],
+    en: [
+      '“How long are you working today?” has “Not now”: it closes the question and brings back Breathe, Stretch, Move and Hydrate.',
+      'Numbers in Stats and Achievements read better, and an empty week says so.',
+    ],
+  },
+  {
     id: 'barra-deshacer-vaso',
     desde: '2026-11-23',
     es: [

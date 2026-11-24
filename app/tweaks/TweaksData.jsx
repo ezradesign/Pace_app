@@ -121,6 +121,7 @@ function paceConLogroDeLaCopia(s) {
 }
 
 function TweaksDataSection({ onReset, isWeb }) {
+  const contacto = typeof window.PACE_CONTACTO === 'string' ? window.PACE_CONTACTO.trim() : '';
   const { t, tn, lang } = useT();
   const [st] = usePace();   // la fecha de la última copia, al día en cuanto sale una
   const [msg, setMsg] = useStateTD(null); // {kind, text} para feedback Export/Import
@@ -207,11 +208,21 @@ function TweaksDataSection({ onReset, isWeb }) {
           que resuelva esas rutas. */}
       <div className="pace-aj-pie">
         <span>{t(typeof paceEsNativo === 'function' && paceEsNativo() ? 'settings.foot.app' : 'settings.foot')}</span>
-        {isWeb && (
-          <span>
-            <a href={paceEnlaceLegal('/safety', lang)} target="_blank" rel="noopener">{t('settings.legal.safety')}</a>
-            <span style={{ margin: '0 5px' }}>·</span>
-            <a href={paceEnlaceLegal('/privacy', lang)} target="_blank" rel="noopener">{t('settings.legal.privacy')}</a>
+        {(isWeb || contacto) && (
+          <span data-pace-aj-legal>
+            {contacto && (
+              <React.Fragment>
+                <a href={'mailto:' + contacto} data-pace-aj-contacto title={contacto}>{t('settings.contacto')}</a>
+                {isWeb && <span style={{ margin: '0 5px' }}>·</span>}
+              </React.Fragment>
+            )}
+            {isWeb && (
+              <React.Fragment>
+                <a href={paceEnlaceLegal('/safety', lang)} target="_blank" rel="noopener">{t('settings.legal.safety')}</a>
+                <span style={{ margin: '0 5px' }}>·</span>
+                <a href={paceEnlaceLegal('/privacy', lang)} target="_blank" rel="noopener">{t('settings.legal.privacy')}</a>
+              </React.Fragment>
+            )}
           </span>
         )}
       </div>
@@ -246,4 +257,12 @@ function UploadIcon() {
 }
 
 
-Object.assign(window, { TweaksDataSection, paceDescargarCopia, paceDescargarRescate });
+/* «ESCRÍBENOS» (Ez, 9A del 23 nov. 2026): la dirección para que los testers, y quien pague, cuenten
+   un fallo desde PACE. Va delante de «Seguridad · Privacidad», en la web y en las apps. Es el correo
+   público de PACE, el mismo de privacy.html y de la ficha de Play (Ez, 24 nov.: «sí, pon ese correo»).
+   Vacía, el enlace no sale. VA EN DOS TROZOS a propósito: el JavaScript de la app viaja dentro de
+   index.html y en pacegrass.app Cloudflare cambia cada correo escrito en el HTML por «[email protected]»
+   (la fila de privacy.html en DECISIONES_TECNICAS_VIGENTES.md); compuesto al ejecutarse, no lo ve. */
+const PACE_CONTACTO = ['hola.ezradesign', 'gmail.com'].join('@');
+
+Object.assign(window, { TweaksDataSection, paceDescargarCopia, paceDescargarRescate, PACE_CONTACTO });

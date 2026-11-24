@@ -33,6 +33,31 @@ function RitmoLibre({ enlace }) {
   return <button className={enlace ? 'pace-rt-enlace pace-rt-fuerte' : 'pace-rt-porlibre'} data-pace-ritmo-libre onClick={ritmoPorLibre}>{t('ritmo.libre')}</button>;
 }
 
+/* «Ahora no» (Ez, 2A del 23 nov. 2026), en la cabecera de la pregunta, junto a «Hoy voy por libre»:
+   cierra la pregunta sin ir por libre (ritmoAhoraNo, state-ritmo.support.jsx). El botón se va con la
+   pregunta, así que el foco pasa al que la vuelve a abrir: si no, el teclado se quedaba en el cuerpo. */
+const RITMO_REABRIR = '[data-pace-ritmo-comienza], [data-pace-ritmo-ajustar], [data-pace-ritmo-volver]';
+function RitmoAhoraNo() {
+  const { t } = useT();
+  const cerrar = () => {
+    ritmoAhoraNo();
+    requestAnimationFrame(() => {
+      const b = [...document.querySelectorAll(RITMO_REABRIR)].find((x) => paceCaja(x).width > 0);
+      if (b) b.focus({ preventScroll: true });
+    });
+  };
+  return <button type="button" className="pace-rt-enlace" data-pace-ritmo-ahorano onClick={cerrar}>{t('ritmo.ahoraNo')}</button>;
+}
+
+/* De noche la media jornada ya no cabe ni moviéndola: desde ahora, su duración pasa de la
+   medianoche, que es donde acaba el día (ritmo.regla.js). Entonces su chip del móvil se apaga
+   como en el ordenador, en vez de abrir una hora que no lleva a nada (Ez, 4A del 23 nov. 2026). */
+function ritmoMediaCabeHoy(horario) {
+  const m = horario && horario.media;
+  if (!m) return true;
+  return ritmoAhora() + (m.salida - m.inicio) <= 24 * 60;
+}
+
 /* «Cambiar» y «Al calendario» en la CABECERA del ordenador: en la fila del título si el panel es
    ancho, bajo «Hoy voy por libre» si no (la hoja decide con una container query), y no sobre la
    línea, donde se pisaban con «AHORA» al final del día (s195). Sin el resumen del día («4 h 45 min
@@ -69,7 +94,7 @@ function RitmoChips({ state, editarMedia, tuyo }) {
       {RITMO_OPCIONES_UI.map((op) => {
         const m = ritmoMenu(state, op, null, null);
         const vacia = ritmoOpcionVacia(op, m);
-        if (horas && op === 'media' && vacia) {
+        if (horas && op === 'media' && vacia && ritmoMediaCabeHoy(horario)) {
           return (
             <div key={op} className="pace-rt-chip pace-rt-chip-horas" data-pace-ritmo-opcion={op} data-pace-ritmo-media-horas>
               <button type="button" className="pace-rt-chip-nombre" aria-haspopup="dialog" data-pace-ritmo-media-abrir
@@ -145,7 +170,7 @@ function RitmoPregunta({ state }) {
             <div className="pace-rt-sub pace-rt-frase">{frase}</div>
             <div className="pace-rt-sub pace-rt-frase" data-pace-ritmo-frase-media>{fraseMedia}</div>
           </div>
-          <div className="pace-rt-der"><RitmoLibre /></div>
+          <div className="pace-rt-der"><RitmoAhoraNo /><RitmoLibre /></div>
         </div>
         {H ? (
           <div className="pace-rt-habitual-fila" data-pace-ritmo-estado="habitual" data-pace-ritmo-habitual={H.opcion}>
@@ -163,7 +188,7 @@ function RitmoPregunta({ state }) {
         <div className="pace-rt-panel pace-rt-mov pace-rt-preg" data-pace-ritmo-estado="pregunta">
           <div className="pace-rt-mov-cab">
             <div className="pace-rt-titulo">{t('ritmo.pregunta')}</div>
-            <RitmoLibre enlace />
+            <span className="pace-rt-cab-acc"><RitmoAhoraNo /><RitmoLibre enlace /></span>
           </div>
           <RitmoDiaLinea horario={R.horario} />
           <RitmoChips state={state} editarMedia />
@@ -379,6 +404,6 @@ function RitmoHecho({ plan }) {
 }
 
 Object.assign(window, {
-  RitmoLibre, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub, ritmoNoCabe, ritmoOpcionVacia,
+  RitmoLibre, RitmoAhoraNo, ritmoMediaCabeHoy, RitmoSobre, RitmoChips, RitmoPregunta, RitmoDiaLinea, RitmoFraseMenu, RitmoEscritorio, ritmoSub, ritmoNoCabe, ritmoOpcionVacia,
   RitmoFila, RitmoFilaParada, RitmoMovil, RitmoHecho,
 });

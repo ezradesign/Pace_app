@@ -34,6 +34,7 @@
 
 import { stripeBuscarCompra, stripeEnlaces, STRIPE_MODO_PRUEBA_MS } from '../../cobro/stripe.js';
 import { firmarVenta } from '../../cobro/venta.js';
+import { mensualUltimo } from '../../cobro/mensual.js';
 
 const CORREO = /^[^\s@]{1,64}@[^\s@]+\.[^\s@]{2,}$/;
 const RECIBO = /^[#\sA-Za-z0-9-]{4,40}$/;
@@ -92,7 +93,7 @@ export async function onRequestPost({ request, env }) {
   if (compra.devuelta) return respuesta({ ok: false, motivo: 'devuelta' }, 410);
   if (compra.plan === 'monthly') {
     if (await env.VENTAS.get('baja:' + compra.order)) return respuesta({ ok: false, motivo: 'terminada' }, 410);
-    const ultimo = await env.VENTAS.get('suscripcion:' + compra.order);
+    const ultimo = await mensualUltimo(env.VENTAS, compra.order);
     return ultimo ? respuesta({ ok: true, codigo: ultimo }) : respuesta({ ok: false, motivo: 'pendiente' }, 503);
   }
   const ahora = Date.now();
