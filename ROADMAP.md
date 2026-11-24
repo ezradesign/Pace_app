@@ -70,7 +70,7 @@ gateable es la sesión, no el ejercicio suelto (ver `CONTENT.md`).
 > [`STATE.md`](./STATE.md) fija el presente y la sesión siguiente. La base del giro es la
 > auditoría externa [`audit-externa-v0.133.1.md`](./docs/audits/audit-externa-v0.133.1.md).
 
-### Lo que queda hasta v1.0 (23 nov. 2026, `main` en la 0.217.0 y la 0.218.0 esperando el «júntalo» de Ez)
+### Lo que queda hasta v1.0 (24 nov. 2026, `main` en la 0.219.1)
 
 **La dirección.** v1.0 es la primera versión de pago, a la vez en la web, en Android y en iPhone: 2,99 € al mes con siete días
 de prueba o 19,99 € de por vida, sin cuentas y con los datos en el aparato. Lo ya hecho sigue abierto para quien lo usaba. Antes
@@ -84,9 +84,9 @@ El tramo 1 está hecho. Lo que queda es de Ez (las altas y los testers) y, al fi
 |---|---|---|---|
 | **1 · Cerrar la versión de prueba** | La 0.198.0, lo contestado (aro, V1 B, V2 B, D-10 B, D-8 A), la cola de las auditorías «antes de v1» (valoración, aviso de fin de pausa, nota del fin de la semana de prueba, `robots.txt`, `sitemap.xml` y el título, el tope de la red, los cambios de lado), las dos pasadas de Fable y la sexta | Claude | **Hecho**, de la 0.198.0 a la 0.212.0 (11-19 nov.) |
 | | `guardar()` de una pieza en el cobro mensual (`claude/guardar-atomico-166e3f`) | Claude | **Juntado** en la rama de la 0.218.0 (D7 A de Ez, 23 nov.) |
-| | El pulido de antes de publicar (auditoría del 23 nov.: 1A a 10A) | Claude | En la rama de la 0.218.0, esperando el «júntalo» de Ez |
+| | El pulido de antes de publicar (auditoría del 23 nov.: 1A a 10A) | Claude | **Juntado**: 0.218.0, y la auditoría a fondo del 24 nov. en la 0.219.0 y la 0.219.1 |
 | | La revisión de un fisioterapeuta que `CONTENT.md` pide antes de v1 (Fondos en silla y los ejercicios aparcados) | Ez | Sin empezar |
-| **2 · La prueba con testers** | Subir la versión de prueba a la prueba cerrada de Play y a TestFlight. Tienen la 0.205.0 (en revisión desde el 15 nov.); la siguiente sale de la 0.218.0 (T A de Ez, 23 nov.) | Ez, con el archivo que le prepara Claude | Espera a Ez |
+| **2 · La prueba con testers** | Subir la versión de prueba a la prueba cerrada de Play y a TestFlight. Tienen la 0.205.0 (en revisión desde el 15 nov.); la siguiente sale de la 0.219.1, con las notas de la 0.218.0 (T A de Ez, 23 nov.) | Ez, con el archivo que le prepara Claude | Espera a Ez |
 | | Reunir 12 testers durante 14 días seguidos (hay 5 o 6) y pedir el acceso a producción | Ez | La cuenta no ha empezado |
 | **3 · Cobrar: las altas de Ez** | Perfil de pagos de Play → la compra de Android, restaurar y los códigos de los testers | Ez el alta | **El código está** (0.211.0, apagado hasta el alta); falta el alta y probarlo con un tester con licencia |
 | | Acuerdo de apps de pago de Apple → la compra de Apple, «Restaurar compras», la ficha y la revisión | Ez el alta | **El código está** (0.211.0, apagado hasta el alta); falta el alta y una cuenta de prueba en TestFlight |
@@ -106,7 +106,7 @@ cada pieza.
 | 1-6, 8, 10 | Mueve y Estira; las franjas de Android y los cuatro cambios; la seguridad de PACE completo; cobrar en la web sin Stripe; lo que prometemos sobre los datos; la bienvenida y los Ajustes; la hora y la medianoche | **Hecho**, en `main` (de la 0.175.2 a la 0.181.1, del 23 al 27 oct.) |
 | 7 | Android a fondo: los avisos A1-A4, N4 con el móvil bloqueado, el puente del calendario y lo privado en el calendario del móvil | **Hecho**, en `main` (0.184.0, 28 oct., probada por Ez en su Android) |
 | 9 | «Qué te ayuda» en Estadísticas, lo último de pago dentro de la app | **Hecho**, en `main` (0.183.0, 28 oct., con el «júntalo» de Ez sobre sus fotos) |
-| 11 | La versión de prueba, a la prueba cerrada de Play y a TestFlight a la vez | Tienen la 0.205.0 (en revisión desde el 15 nov.). La siguiente sale de la 0.218.0, con lo que Ez juntó hasta el 23 nov. (T A). Lo que manda es la tabla de arriba |
+| 11 | La versión de prueba, a la prueba cerrada de Play y a TestFlight a la vez | Tienen la 0.205.0 (en revisión desde el 15 nov.). La siguiente sale de la 0.219.1, con lo que Ez juntó hasta el 24 nov. (T A). Lo que manda es la tabla de arriba |
 | 12 | Lo que falta para vender y no espera a nadie: la valoración de Play tras la quinta pausa entera, el paso a v1 sin quitar nada (la semana de prueba con aviso y las rutinas de pago ya hechas, abiertas para siempre), `/recuperar` y la invitación con los botones de compra | **Hecho**, en `main` (0.185.0, 28 oct., con el 1A 2A 3A 4A y el «júntalo» de Ez). Los arreglos del cobro que encontró ChatGPT el 28 oct., también (0.186.0) |
 | 13 | El llavero del calendario | Espera las altas de Ez en Google y Microsoft. Abrir Google Calendar a todo el mundo pide que Google verifique la app, y tarda semanas: v1 sale con el calendario de la web «en pruebas» (Ez, 16 nov.) |
 | 14 | Cobrar en Android: Play Billing, restaurar la compra y los códigos de los testers | El código, en `main` y apagado (0.211.0). Espera el perfil de pagos de Play, que pide el alta de Ez. Se prueba dentro de la prueba cerrada |

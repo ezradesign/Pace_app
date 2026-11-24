@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar PACE sin preguntarle a Ez lo
 que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir. Se actualiza en cada hito (regla en `CLAUDE.md`).
-Última actualización: 24 nov. 2026, con la 0.219.0 en `main`. Los relevos de
+Última actualización: 24 nov. 2026, con la 0.219.1 en `main`. Los relevos de
 antes del 20 nov., en `docs/archive/LEEME_TRASPASO_HASTA_19NOV.md` (D4 A de Ez, 23 nov.).
 
 ## El arranque, en una pantalla
@@ -42,13 +42,13 @@ antes del 20 nov., en `docs/archive/LEEME_TRASPASO_HASTA_19NOV.md` (D4 A de Ez, 
 - **Auditoría a fondo (24 nov.)**, página https://claude.ai/artifact/1agCtKgFivrUXaHgdRLajp (solo se abre desde la cuenta
   que la hizo; desde la de la semana que se repone el martes a las 14:00, no): 268 pantallas sin errores ni desbordes; ocho hallazgos (F1-F8) y G1. **`main` = 0.219.0** con F1A F2A
   F3A F5A F6A F7A (Ez: «F7A F4A y júntalo»; suite entera sobre la rama, 2040 en verde). La F7A es `og-pace.jpg` tal cual.
-  **La F4A está sin montar**: no se sabe qué frase era la A. Medido en Linux (`claude/diag-fondo-24nov`, CI 45390706510),
-  en 187 px a 360: caben «idle today / idle yesterday» (la de ahora), «not moved yet» con «idle yesterday» (la recomendada)
-  y «not moved yet / still yesterday»; «not moved yesterday» se sale 35 px y «unmoved yesterday», 23. Irá como 0.219.1.
+  **La F4, en la 0.219.1**: «{zona}: yet to move» (Ez, 24 nov.); ayer sigue «idle yesterday». La recomendada, «not moved
+  yet», cabía en la ventana de la pausa pero en la fila de la home, con la letra al 115 %, se salía 3 px en Linux
+  (`claude/diag-f4-24nov`, no se junta); la prueba de `fondo-24nov` mide ahora las seis zonas, no solo la del día.
 - **Auditoría de la experiencia (24 nov.)**, página https://claude.ai/artifact/A5uYmcbADK4kmKnboHC1E8: seis puntos, U1-U6
   («ciclo» y «bloque», «micro-pausas de foco», el móvil de `og-pace.jpg`, «vez.» sola, el lema del logo y 38 textos sin
   pantalla). Nada tocado; espera sus letras.
-- **Espera a Ez:** subir la 0.219.0 a Play y a TestFlight; las notas de la 0.218.0 de `docs/launch/google-play/SUBIDAS.md`
+- **Espera a Ez:** subir la 0.219.1 a Play y a TestFlight; las notas de la 0.218.0 de `docs/launch/google-play/SUBIDAS.md`
   sirven tal cual (T A).
 - **Siguiente (Ez, 24 nov.: «sigamos haciendo repaso, auditoría, mejoras en profundidad»):** una auditoría a fondo (móvil,
   tableta y ordenador; es y en; claro y oscuro; flujos largos y accesibilidad), con página de letras antes de tocar nada.

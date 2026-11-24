@@ -166,8 +166,8 @@ sola vez, al final, con todo dentro: `node build-standalone.js` y `node scripts/
 
 ### 0.218.0 (218000), para la prueba interna y después la cerrada
 
-**Si se sube la 0.219.0 (219000)**, estas mismas notas y el «Qué probar» de abajo sirven tal cual: lo que añade (la auditoría a
-fondo del 24 nov.) son retoques que no hace falta contar. El AAB, del artefacto `pace-play-v0.219.0`.
+**Si se sube la 0.219.1 (219001)**, estas mismas notas y el «Qué probar» de abajo sirven tal cual: lo que añade (la auditoría a
+fondo del 24 nov.) son retoques que no hace falta contar. El AAB, del artefacto `pace-play-v0.219.1`.
 
 Preparada el 24 nov. 2026 con la «T A» de Ez (auditoría del 23 nov.). La gente de la cerrada tiene la 0.205.0 (en revisión desde
 el 15 nov.): las notas cuentan lo que notarán desde entonces. El AAB sale del artefacto `pace-play-v0.218.0` de la ejecución de
