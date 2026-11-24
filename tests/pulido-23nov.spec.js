@@ -13,7 +13,7 @@
  *   6A  «Respiración guiada» y «Consejo:», no «Breathwork» y «Tip:».
  *   7A  «Un vaso menos» apagado con 0 vasos.
  *   8A  La semana vacía de Estadísticas lo dice.
- *   9A  «Escríbenos» en «Tus datos», solo cuando hay dirección.
+ *   9A  «Escríbenos» en «Tus datos», con el correo público de PACE (Ez, 24 nov.).
  *   10A La landing dice dónde lee PACE tus reuniones: en Android y en el iPhone.
  *
  * Contra la 0.217.0 falla cada una por su lado.
@@ -166,22 +166,39 @@ test('7A y 8A · «Un vaso menos» apagado a cero, y la semana vacía lo dice ha
   expect(await semanaVacia(), 'con un vaso, la semana ya no está vacía').toBe(0);
 });
 
-test('9A · «Escríbenos» sale en «Tus datos» solo con dirección, y escribe a ella', async ({ page, context }) => {
+test('9A · «Escríbenos» sale en «Tus datos» y escribe al correo de PACE; sin dirección no sale', async ({ page, context }) => {
   await sembrar(context);
   await irAlArtefacto(page);
   await page.getByRole('button', { name: 'Abrir ajustes' }).click();
   await abrirTusDatos(page);
-  await expect(page.locator('.pace-aj-pie a').filter({ hasText: 'Privacidad' })).toBeVisible();
-  await expect(page.locator('[data-pace-aj-contacto]'), 'sin dirección no hay «Escríbenos»').toHaveCount(0);
+  const enlace = page.locator('[data-pace-aj-contacto]');
+  await expect(enlace).toHaveText('Escríbenos');
+  await expect(enlace).toHaveAttribute('href', 'mailto:hola.ezradesign@gmail.com');
+  /* Delante de «Seguridad · Privacidad», en la misma línea del pie. */
+  const fila = await page.evaluate(() => {
+    const caja = (s) => document.querySelector(s).getBoundingClientRect();
+    const c = caja('[data-pace-aj-contacto]');
+    const p = Array.from(document.querySelectorAll('.pace-aj-pie a')).find((a) => a.textContent === 'Privacidad').getBoundingClientRect();
+    return { mismaFila: Math.abs(c.top - p.top) < 4, delante: c.right < p.left };
+  });
+  expect(fila).toEqual({ mismaFila: true, delante: true });
   await page.keyboard.press('Escape');
   await page.locator('[data-pace-tweaks-panel]').waitFor({ state: 'detached' });
 
-  await page.evaluate(() => { window.PACE_CONTACTO = 'hola@ejemplo.test'; });
+  await page.evaluate(() => { window.PACE_CONTACTO = ''; });
   await page.getByRole('button', { name: 'Abrir ajustes' }).click();
   await abrirTusDatos(page);
-  const enlace = page.locator('[data-pace-aj-contacto]');
-  await expect(enlace).toHaveText('Escríbenos');
-  await expect(enlace).toHaveAttribute('href', 'mailto:hola@ejemplo.test');
+  await expect(page.locator('.pace-aj-pie a').filter({ hasText: 'Privacidad' })).toBeVisible();
+  await expect(page.locator('[data-pace-aj-contacto]'), 'sin dirección no hay «Escríbenos»').toHaveCount(0);
+});
+
+/* En pacegrass.app Cloudflare cambia cada correo escrito en el HTML por «[email protected]», salvo entre
+   <!--email_off--> y <!--/email_off-->. El JavaScript de la app va dentro de index.html: el correo de
+   «Escríbenos» se compone al ejecutarse, y fuera de esas marcas no puede aparecer entero. */
+test('9A · el correo no va escrito entero en index.html fuera de <!--email_off-->', async ({ page }) => {
+  const html = await (await page.request.get(RUTA_ARTEFACTO)).text();
+  const fuera = html.replace(/<!--email_off-->[\s\S]*?<!--\/email_off-->/g, '');
+  expect(fuera).not.toMatch(/[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,}/);
 });
 
 test('10A · la landing dice que leer las reuniones es cosa de Android y el iPhone', async ({ page }) => {

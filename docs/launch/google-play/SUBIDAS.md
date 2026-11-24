@@ -164,6 +164,61 @@ Hay dos cosas que aún no están en `main` y las dejarán viejas otra vez: los d
 sellos) y lo que cambie la home con la jornada (`1-jornada`, `2-pausa` y `5-foco-oscuro`). Conviene rehacer las seis una
 sola vez, al final, con todo dentro: `node build-standalone.js` y `node scripts/play/capturas.js`.
 
+### 0.218.0 (218000), para la prueba interna y después la cerrada
+
+Preparada el 24 nov. 2026 con la «T A» de Ez (auditoría del 23 nov.). La gente de la cerrada tiene la 0.205.0 (en revisión desde
+el 15 nov.): las notas cuentan lo que notarán desde entonces. El AAB sale del artefacto `pace-play-v0.218.0` de la ejecución de
+Android del push de la 0.218.0; Ez lo baja y lo sube a la prueba interna, y de ahí a la cerrada. Al subirla, volver a pegar el
+párrafo «A tu ritmo» de `ficha.md` (es y en).
+
+```
+<es-ES>
+Mueve y Estira te guían con voz y vibración: «Colócate», el lado y la cuenta. La pausa te ofrece repetir la de antes. Conecta tu calendario y PACE puede colocar tus pausas entre tus reuniones. En «Tu semana», «Avísame a mi hora de entrada». «¿Cuánto trabajas hoy?» tiene «Ahora no», y un vaso de más se deshace. Para contarme un fallo: Ajustes › Tus datos › Escríbenos. ¡Gracias por probarla!
+</es-ES>
+<es-419>
+Mueve y Estira te guían con voz y vibración: «Colócate», el lado y la cuenta. La pausa te ofrece repetir la de antes. Conecta tu calendario y PACE puede colocar tus pausas entre tus reuniones. En «Tu semana», «Avísame a mi hora de entrada». «¿Cuánto trabajas hoy?» tiene «Ahora no», y un vaso de más se deshace. Para contarme un fallo: Ajustes › Tus datos › Escríbenos. ¡Gracias por probarla!
+</es-419>
+<en-US>
+Move and Stretch guide you with voice and vibration: «Get set», the side and the count. The break offers to repeat your last one. Connect your calendar and PACE can place your breaks between your meetings. In your week, «Remind me at my start time». «How long are you working today?» has «Not now», and an extra glass can be undone. To report a bug: Settings › Your data › Write to us. Thanks for testing!
+</en-US>
+```
+
+### «Qué probar» de TestFlight para la 0.218.0 (218000)
+
+Para el grupo «Testers iPhone», que tiene la 0.205.0.
+
+```
+Lo nuevo desde la 0.205.0:
+• Mueve y Estira te guían con voz y vibración: «Colócate», el lado y la cuenta.
+• La pausa te ofrece repetir la de antes.
+• Tu día, en el Calendario del iPhone, y las pausas colocadas entre tus reuniones.
+• «¿Cuánto trabajas hoy?» tiene «Ahora no», y un vaso de más se deshace.
+• Para contarme un fallo: Ajustes › Tus datos › Escríbenos.
+
+Qué probar, si puedes:
+1. Haz una rutina de Mueve o Estira con el sonido puesto: la voz dice cada paso y el iPhone vibra en los cambios.
+2. En «¿Cuánto trabajas hoy?», toca el enlace del calendario y deja que PACE ponga tu día en el Calendario.
+3. Toca «Escríbenos» y cuéntame cómo te va.
+
+¡Gracias por probarla!
+
+—
+
+New since 0.205.0:
+• Move and Stretch guide you with voice and vibration: «Get set», the side and the count.
+• The break offers to repeat your last one.
+• Your day in the iPhone Calendar, with your breaks placed between your meetings.
+• «How long are you working today?» has «Not now», and an extra glass can be undone.
+• To report a bug: Settings › Your data › Write to us.
+
+What to test, if you can:
+1. Do a Move or Stretch routine with sound on: the voice says each step and the iPhone vibrates on changes.
+2. In «How long are you working today?», tap the calendar link and let PACE put your day in Calendar.
+3. Tap «Write to us» and tell me how it goes.
+
+Thanks for testing!
+```
+
 ### 0.205.0 (205000), para la prueba interna y después la cerrada
 
 Bajado el 14 nov. 2026, con el «Sí, dale» de Ez, a `subidas-play\PACE-0.205.0.aab` (15 672 569 bytes) desde el artefacto

@@ -258,9 +258,11 @@ function UploadIcon() {
 
 
 /* «ESCRÍBENOS» (Ez, 9A del 23 nov. 2026): la dirección para que los testers, y quien pague, cuenten
-   un fallo desde PACE. Va delante de «Seguridad · Privacidad», en la web y en las apps. Mientras esté
-   vacía, el enlace no sale: se pone cuando Ez tenga la dirección de contacto, la misma que pide lo
-   legal (docs/launch/legal-web.md). */
-const PACE_CONTACTO = '';
+   un fallo desde PACE. Va delante de «Seguridad · Privacidad», en la web y en las apps. Es el correo
+   público de PACE, el mismo de privacy.html y de la ficha de Play (Ez, 24 nov.: «sí, pon ese correo»).
+   Vacía, el enlace no sale. VA EN DOS TROZOS a propósito: el JavaScript de la app viaja dentro de
+   index.html y en pacegrass.app Cloudflare cambia cada correo escrito en el HTML por «[email protected]»
+   (la fila de privacy.html en DECISIONES_TECNICAS_VIGENTES.md); compuesto al ejecutarse, no lo ve. */
+const PACE_CONTACTO = ['hola.ezradesign', 'gmail.com'].join('@');
 
 Object.assign(window, { TweaksDataSection, paceDescargarCopia, paceDescargarRescate, PACE_CONTACTO });
