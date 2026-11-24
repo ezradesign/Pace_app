@@ -61,6 +61,10 @@ function estructura(page) {
 /* Un `session.completed` REAL, con la fábrica de la app: el almacén valida y un
    evento hecho a mano se descarta en silencio. La escritura no es síncrona. */
 async function sembrarSesion(page, routineId, modulo) {
+  /* El almacén de eventos abre después de pintar la app, y hasta que no está en lectura y escritura
+     `paceEventsAppend` descarta el evento: la prueba esperaba luego 5 s a algo que no iba a llegar
+     (fallaba a ratos, en Windows 5 de 60 y aquí 1 de 100; en 4 de 75 sesiones aún no estaba listo). */
+  await esperarEnPagina(page, () => window.paceEventsCanWrite && window.paceEventsCanWrite(), null, { timeout: 15000 });
   await page.evaluate(([rid, mod]) => {
     window.paceEventsAppend(window.makeEvent({
       type: 'session.completed', context: 'standalone', runId: window.newEventId(),
