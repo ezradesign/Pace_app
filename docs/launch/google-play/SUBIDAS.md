@@ -166,6 +166,9 @@ sola vez, al final, con todo dentro: `node build-standalone.js` y `node scripts/
 
 ### 0.218.0 (218000), para la prueba interna y después la cerrada
 
+**Si se sube la 0.220.0 (220000)**, estas notas siguen siendo ciertas; lo que añade (el Foco a mano contado en bloques y textos
+retocados) no está en ellas, y contarlo o no lo elige Ez. El AAB, del artefacto `pace-play-v0.220.0`.
+
 **Si se sube la 0.219.1 (219001)**, estas mismas notas y el «Qué probar» de abajo sirven tal cual: lo que añade (la auditoría a
 fondo del 24 nov.) son retoques que no hace falta contar. El AAB, del artefacto `pace-play-v0.219.1`.
 

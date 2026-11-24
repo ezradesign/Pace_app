@@ -145,7 +145,7 @@
      No se compacta nunca por debajo de 610 más de lo ya alcanzado. */
   var SQUEEZE_START = 700;     // ≥ esta altura: compactación CERO
   var SQUEEZE_FULL = 610;      // ≤ esta altura: compactación COMPLETA
-  var CICLO_RE = /\b(ciclo|cycle)\b/i;
+  var CICLO_SEL = '[data-pace-ciclo]';   // la fila de los puntos, por su marca y no por su texto
 
   var rafId = 0;
   var ro = null;
@@ -158,7 +158,7 @@
   }
 
   /* Las medidas que solo leen viven en home-geometry.medidas.js. */
-  function cicloBottomWithin(dial) { return paceAroCicloAbajo(dial, CICLO_RE); }
+  function cicloBottomWithin(dial) { return paceAroCicloAbajo(dial, CICLO_SEL); }
   function pisoInterior(dial) { return paceAroPisoInterior(dial, RADIO_INTERIOR); }
 
   // Fija D y, con D ya aplicado (getBoundingClientRect fuerza layout), ancla las

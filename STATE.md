@@ -1,7 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.219.1 · 24 nov. 2026 (la auditoría a fondo: F1A F2A F3A F5A F6A F7A y la F4). Los testers tienen la
-0.205.0. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que no se pueden
+**Versión:** v0.220.0 · 24 nov. 2026 (la experiencia: U1A U2A U4A U6A). Los testers tienen la 0.205.0. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que no se pueden
 romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -20,8 +19,8 @@ romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 El orden hasta v1 está en `ROADMAP.md` («Lo que queda hasta v1.0», al día el 23 nov.). El tramo de código está hecho: **la
 fecha de v1 la ponen los 12 testers con sus 14 días seguidos, que aún no han empezado, y las altas de Ez para cobrar.**
 
-1. Subir la 0.219.1 como versión de prueba a Play y a TestFlight: las notas y el «Qué probar» de la 0.218.0 en
-   `docs/launch/google-play/SUBIDAS.md` sirven tal cual (T A de Ez, 23 nov.); el AAB, del artefacto `pace-play-v0.219.1`.
+1. Subir la versión de prueba a Play y a TestFlight. Cuál, lo elige Ez: la 0.220.0 ya, o esperar a la que lleve las V. Las
+   notas y el «Qué probar» de la 0.218.0 (`docs/launch/google-play/SUBIDAS.md`) siguen siendo ciertas en la 0.220.0.
 2. Los testers: 12 durante 14 días seguidos (hay 5 o 6; `/beta` y el grupo, listos: `testers.md`).
 3. Las altas: perfil de pagos de Play; acuerdo de apps de pago de Apple (banco, W-8BEN, programa para pequeñas empresas y
    una dirección visible en la UE); los datos del aviso legal (nombre, NIF y contacto), la revisión profesional y Resend
@@ -30,10 +29,11 @@ fecha de v1 la ponen los 12 testers con sus 14 días seguidos, que aún no han e
 
 ## Espera a Ez
 
-- **Subir la 0.219.1** a la prueba interna de Play (y de ahí a la cerrada) y a TestFlight, con las notas de `SUBIDAS.md`.
+- **Elegir qué versión se sube** (0.220.0, o la que lleve las V) y subirla a la prueba interna de Play (y de ahí a la cerrada)
+  y a TestFlight, con las notas de `SUBIDAS.md`.
   «Escríbenos» ya escribe a `hola.ezradesign@gmail.com` (Ez, 24 nov.).
-- **La experiencia** (U1A U2A U4A U6A, «todo lo recomendado»), montada en `claude/experiencia-24nov`: su «júntalo» con
-  la CI en verde (será la 0.220.0); la prueba que tiraba su CI, arreglada en 4c6df4e. **Las V**, a medias en `claude/v-24nov` (el relevo de LEEME dice qué falta).
+- **Las V** (V1, V2A, V3A, V5A, V6A, V7B, V8A, V9A, V10A, V11A; V4C como estaba), montadas en `claude/v-24nov` (PR 7) y sin
+  juntar: mirar «Hoy, jueves» en el móvil (V8A) y oír «Colócate» (V3A), y después su «júntalo».
 - **Probar en sus aparatos**: la miniventana en su Chrome, el aviso de la web del móvil con la pantalla bloqueada (la 4 del
   móvil, 22 nov.), los pasos de cinco minutos de la página de las apps, lo privado del calendario en Android, la voz de Respira.
 - **Play Console**, al subir la siguiente beta: volver a pegar el párrafo «A tu ritmo» de `docs/launch/google-play/ficha.md`

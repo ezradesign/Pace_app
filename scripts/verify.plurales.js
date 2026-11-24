@@ -31,7 +31,6 @@ var SIN_SINGULAR = {
   'ach.toast.varios': 'solo con dos sellos o más a la vez: con uno dice «Nuevo sello» (selloTextos, ui/Toast.jsx)',
   'premium.fin.sobre.mas': 'solo con más de tres rutinas, y nombra dos: {n} empieza en 2 (premiumFinLista, ui/PremiumFinPrueba.jsx)',
   'settings.copia.hace': 'con 0 dice «hoy» y con 1 «ayer» (TweaksData.copia.jsx): «hace» siempre va de 2 días en adelante',
-  'sidebar.streak.best': 'sin uso: ninguna pantalla la lee',
   'sidebar.agua.meta.x': 'la meta de agua va de 4 a 12 (Ajustes, TweaksPanel.jsx)',
   'stats.hoy.vasos.de': 'la meta de agua va de 4 a 12',
   'ritmo.vasos': 'la meta de agua va de 4 a 12 (ritmoMetaVasos, 8 si no hay)',

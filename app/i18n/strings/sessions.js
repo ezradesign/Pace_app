@@ -22,7 +22,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'session.prep':                    'Prepárate',
     'session.startNow':                'Empezar ahora',
     'session.backToHome':              'Volver al inicio',
-    'session.sigue.ciclo':             'Empezar el ciclo {n}',
+    'session.sigue.ciclo':             'Empezar el bloque {n}',  
     'session.sigue.pausa':             'Volver · te quedan {min} min de pausa',
     'session.sigue.pausa.uno':         'Volver · te queda 1 min de pausa',
     'session.next':                    'Siguiente',
@@ -38,7 +38,6 @@ Object.assign(window.PACE_STRINGS.es, {
     'session.hold':                    'Retén sin aire',
     'session.breatheAgain':            'Respirar de nuevo',
     'session.holdCue':                 'Pulsa cuando sientas la necesidad de respirar.',
-    'session.minutes':                 'minutos',
     'session.seconds':                 'segundos',
     'session.hint':                    'Espacio pausar · Esc salir',
     'session.resume':                  '▶ Reanudar',
@@ -59,9 +58,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'focus.minutes.custom.title':      'Minutos personalizados (5–180)',
     'focus.minutes.grupo':             'Minutos del bloque de foco',
     'focus.minutes.n':                 '{n} minutos',
-    'focus.cycle':                     'Ciclo',
-    'focus.cycleOf':                   'Ciclo {n} / 4',
-    'focus.cycleNext':                 'Siguiente · Ciclo {n} / 4',
+    'focus.cycleOf':                   'Bloque {n} de 4',   /* «bloque», como la jornada (Ez, U1A del 24 nov.) */
+    'focus.cycleNext':                 'Luego · Bloque {n} de 4',   /* «Siguiente · Bloque 2 de 4» llegaba al ancho del aro y lo hacía crecer 25 px; «Luego», como la tarjeta del día */
     'focus.exacta':                    'Avisos a su hora ›',
     'focus.exacta.aria':               'Avisos a su hora: abre el ajuste de Android',
     'focus.min':                       'Min',
@@ -85,8 +83,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'mini.abrir':                      'Miniventana',
     'mini.abrir.aria':                 'Abrir la miniventana, encima de todas las ventanas',
     'focus.continue':                  'Continuar',
-    'focus.startAnother':              'Empezar otro ciclo',
-    'focus.cycleComplete':             'Ciclo completado',
+    'focus.startAnother':              'Otro bloque',   /* «Empezar otro bloque» se partía en dos líneas en el botón del aro (tope 169 px) y empujaba la home */
+    'focus.cycleComplete':             'Bloque terminado',  
     'focus.manual.label':              'Foco manual',
     'focus.mode.focus':                'Foco',
     'focus.mode.pause':                'Pausa corta',
@@ -134,7 +132,6 @@ Object.assign(window.PACE_STRINGS.es, {
 
     // Libraries (compartido)
     'lib.tag':                         'Biblioteca',
-    'lib.routines':                    'Rutinas',
 
     // Breathe Library
     'lib.breathe.title':               'Respiración',
@@ -252,7 +249,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'session.prep':                    'Get ready',
     'session.startNow':                'Start now',
     'session.backToHome':              'Back to Home',
-    'session.sigue.ciclo':             'Start cycle {n}',
+    'session.sigue.ciclo':             'Start block {n}',  
     'session.sigue.pausa':             'Back · {min} min of break left',
     'session.sigue.pausa.uno':         'Back · 1 min of break left',
     'session.next':                    'Next',
@@ -268,7 +265,6 @@ Object.assign(window.PACE_STRINGS.en, {
     'session.hold':                    'Hold after exhaling',
     'session.breatheAgain':            'Breathe again',
     'session.holdCue':                 'Press when you feel the need to breathe.',
-    'session.minutes':                 'minutes',
     'session.seconds':                 'seconds',
     'session.hint':                    'Space to pause · Esc to exit',
     'session.resume':                  '▶ Resume',
@@ -289,9 +285,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'focus.minutes.custom.title':      'Custom duration (5–180 min)',
     'focus.minutes.grupo':             'Focus block minutes',
     'focus.minutes.n':                 '{n} minutes',
-    'focus.cycle':                     'Cycle',
-    'focus.cycleOf':                   'Cycle {n} / 4',
-    'focus.cycleNext':                 'Next · Cycle {n} / 4',
+    'focus.cycleOf':                   'Block {n} of 4',
+    'focus.cycleNext':                 'Next · Block {n} of 4',
     'focus.exacta':                    'Alerts on time ›',
     'focus.exacta.aria':               'Alerts on time: opens the Android setting',
     'focus.min':                       'Min',
@@ -310,8 +305,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'mini.abrir':                      'Mini window',
     'mini.abrir.aria':                 'Open the mini window, on top of every window',
     'focus.continue':                  'Continue',
-    'focus.startAnother':              'Start another cycle',
-    'focus.cycleComplete':             'Cycle complete',
+    'focus.startAnother':              'Another block',
+    'focus.cycleComplete':             'Block done',    
     'focus.manual.label':              'Manual Focus',
     'focus.mode.focus':                'Focus',
     'focus.mode.pause':                'Short break',
@@ -358,7 +353,6 @@ Object.assign(window.PACE_STRINGS.en, {
 
     // Libraries (shared)
     'lib.tag':                         'Library',
-    'lib.routines':                    'Routines',
 
     // Breathe Library
     'lib.breathe.title':               'Breathing',

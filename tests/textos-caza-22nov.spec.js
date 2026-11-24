@@ -13,8 +13,8 @@ const { test, expect } = require('@playwright/test');
 const { sembrar, irAlArtefacto, RUTA_ARTEFACTO } = require('./helpers');
 
 const TXT = {
-  es: { estira: 'Estira', ficha: 'Barbilla, omóplatos y pecho. Cuatro gestos contra la silla.', lede: 'Micro-pausas de foco, respiración, movilidad e hidratación. Sin rachas que castigan.' },
-  en: { estira: 'Stretch', ficha: 'Chin, shoulder blades and chest. Four moves against the chair.', lede: 'Micro-breaks for focus, breathing, mobility and hydration. No streaks that punish you.' },
+  es: { estira: 'Estira', ficha: 'Barbilla, omóplatos y pecho. Cuatro gestos contra la silla.', lede: 'Foco, y pausas cortas para respirar, moverte, estirar y beber agua. Sin rachas que castigan.' },
+  en: { estira: 'Stretch', ficha: 'Chin, shoulder blades and chest. Four moves against the chair.', lede: 'Focus, and short breaks to breathe, move, stretch and drink water. No streaks that punish you.' },
 };
 
 for (const lang of ['es', 'en']) {

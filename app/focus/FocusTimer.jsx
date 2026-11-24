@@ -148,7 +148,7 @@ function FocusTimer({ onFinish }) {
     avisarCorreRef.current = false;
     if (state.focusMode === 'foco') avisarPestanas({ tipo: 'corre', id: bloqueRef.current, endsAt, inicio: inicioBloqueRef.current });
   }, [running, endsAt]);
-  /* La home del día nuevo (Ez, 3A del 7 nov. 2026): el «Ciclo completado» de un Foco de ayer se recoge al cambiar de día. */
+  /* La home del día nuevo (Ez, 3A del 7 nov. 2026): el «Bloque terminado» de un Foco de ayer se recoge al cambiar de día. */
   const completadoRef = useRefFT(null);
   useEffectFT(() => { completadoRef.current = status === 'completed' ? state.lastActiveDay : null; }, [status]);
   useEffectFT(() => { if (status === 'completed' && completadoRef.current && completadoRef.current !== state.lastActiveDay) reset(); }, [state.lastActiveDay]);
@@ -234,7 +234,7 @@ function FocusTimer({ onFinish }) {
 
   /* Subtítulo del aro/barra/analógico (s124):
      - modo foco: DESCRIPTOR editorial por DURACIÓN (getFocusDescriptorKey);
-       en 'completed' el feedback «Ciclo completado» REEMPLAZA temporalmente al
+       en 'completed' el feedback «Bloque terminado» REEMPLAZA temporalmente al
        descriptor en el MISMO slot (no añade altura estructural → no toca el
        atardecer de s123).
      - pausa/larga: conservan su copy propio (invariante: copys de pausa). */

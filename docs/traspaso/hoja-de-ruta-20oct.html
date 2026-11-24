@@ -95,7 +95,7 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
 </style>
 <main class="hoja">
   <header>
-    <div class="eyebrow">PACE · versión 0.219.1 · actualizada el 24 de noviembre por la tarde · el código hasta v1, hecho; toca subir la versión de prueba</div>
+    <div class="eyebrow">PACE · versión 0.220.0 · actualizada el 24 de noviembre por la noche · el código hasta v1, hecho; toca subir la versión de prueba</div>
     <h1>Dónde estás y qué toca</h1>
     <p>PACE funciona, y casi todo lo que hace falta para venderlo ya está hecho. <b>La versión 1 es la primera que se puede
       comprar</b>, en la web, en Android y en iPhone. Lo que queda espera sobre todo algo que solo puedes hacer tú: decidir, abrir una
@@ -106,15 +106,15 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <h2>Cómo vamos</h2>
     <p class="nota">Al día el 24 de noviembre. Lo que manda es <code>STATE.md</code>; qué trajo cada versión, <code>CHANGELOG.md</code>.</p>
     <ul class="lista">
-      <li><b>La web va por la 0.219.1</b>, con todo lo que juntaste hasta el 24 de noviembre: el pulido de antes de publicar,
+      <li><b>La web va por la 0.220.0</b>, con todo lo que juntaste hasta el 24 de noviembre: el pulido de antes de publicar,
         la auditoría a fondo y la F4. Tus testers tienen la 0.205.0, en la prueba cerrada de Play y en TestFlight desde el 15.</li>
       <li><b>El código hasta v1 está hecho.</b> La compra de Google Play y de Apple ya está escrita y apagada hasta tus altas
         (0.211.0); el cobro de la web, a prueba, también la mensual (0.218.0). Lo legal, en borrador, espera tus datos.</li>
       <li><b>La fecha de v1 la ponen los testers y tus altas.</b> 12 testers durante 14 días seguidos (tienes 5 o 6, y la
         cuenta no ha empezado) y las altas para cobrar en Google, Apple y Stripe. Desde que la cuenta empiece, v1 puede salir
         en unas tres semanas.</li>
-      <li><b>Dos ramas sin juntar:</b> la experiencia (U1A U2A U4A U6A), lista para tu «júntalo» con GitHub en verde, y las V,
-        a medias. Nada entra en la web sin tu sí.</li>
+      <li><b>Una rama sin juntar:</b> las V, montadas. Te toca mirar dos cosas antes de tu «júntalo»: «Hoy, jueves» en el móvil
+        y el audio «Colócate». Nada entra en la web sin tu sí.</li>
     </ul>
   </section>
 
@@ -123,9 +123,9 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
     <p class="nota">La pongo al día en cada paso. Si tienes la página abierta, se actualiza sola. Si un enlace no abre, es que está en tu otra cuenta.</p>
     <ol class="pasos">
       <li class="paso ahora"><span class="estado">Ahora · lo tuyo, unos 20 minutos · conmigo pantalla a pantalla</span>
-        <span class="t">Subir la 0.219.1 a Play y a TestFlight</span>
-        <span class="c"><span class="quien">Tú la subes; yo te guío.</span> Tus testers tienen la 0.205.0; la 0.219.1 lleva todo lo
-          que juntaste hasta el 24 de noviembre. El archivo de Play sale del artefacto <code>pace-play-v0.219.1</code> de
+        <span class="t">Subir la versión de prueba a Play y a TestFlight</span>
+        <span class="c"><span class="quien">Tú la subes; yo te guío.</span> Tus testers tienen la 0.205.0. Elige cuál subir: la 0.220.0 ya, o
+          esperar a la que lleve las V. El archivo de Play de la 0.220.0 sale del artefacto <code>pace-play-v0.220.0</code> de
           GitHub, y las notas y el «Qué probar» de la 0.218.0 sirven tal cual (<code>docs/launch/google-play/SUBIDAS.md</code>,
           tu T A del 23 de noviembre).
           <ol>
@@ -134,18 +134,18 @@ ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
             <li>De paso, vuelve a pegar el párrafo «A tu ritmo» de <code>docs/launch/google-play/ficha.md</code> en la ficha (es y en).</li>
             <li>En App Store Connect › TestFlight, da la versión al grupo «Testers iPhone».</li>
           </ol></span></li>
-      <li class="paso marcha"><span class="estado">Hecho en su rama · espera tu «júntalo» con GitHub en verde · será la 0.220.0</span>
+      <li class="paso hecho"><span class="estado">Hecho · 24 de noviembre · tú dijiste que sí · en la web, 0.220.0</span>
         <span class="t">La experiencia: U1A, U2A, U4A y U6A</span>
         <span class="c"><span class="quien">Yo, con una sesión</span> (tú: «todo lo recomendado»; U3B y U5B, como están). En la rama
           <code>claude/experiencia-24nov</code>. El Foco a mano cuenta en bloques («Bloque 1 de 4», «Otro bloque», «Luego · Bloque
           2 de 4»), la frase de la bienvenida y la de la landing, «una vez» sin partir, y fuera 38 textos que no salían en ninguna
           pantalla. Su CI cayó por una prueba que no era de la rama (también fallaba a veces en <code>main</code>): arreglada el 24
           de noviembre, 100 de 100 seguidas.</span></li>
-      <li class="paso marcha"><span class="estado">A medias · en su rama, sin probar</span>
+      <li class="paso marcha"><span class="estado">Montadas en su rama · esperan que mires dos cosas y tu «júntalo»</span>
         <span class="t">Las V</span>
-        <span class="c"><span class="quien">Yo, con una sesión.</span> En <code>claude/v-24nov</code>, encima de la experiencia: montadas la
-          V9A, la V10A, la V7B y la V6A, y la V5A a medias. Faltan la V8A, la V11A, la V3A, la V2A y la V1, sus pruebas y un plural
-          que hace fallar <code>verify</code>. La página de las V está en tu otra cuenta: para seguir desde esta, pégamela.</span></li>
+        <span class="c"><span class="quien">Yo, con una sesión.</span> En <code>claude/v-24nov</code>, encima de la experiencia: montadas
+          todas (V4C, como estaba), con fotos en <a href="https://github.com/ezradesign/Pace_app/pull/7">el PR 7</a>. Mira «Hoy,
+          jueves» en el móvil (V8A) y oye «Colócate», que la primera vez puede llegar medio segundo tarde (V3A).</span></li>
       <li class="paso hecho"><span class="estado">Hecho · 24 de noviembre · tú dijiste «júntalo» · en la web, 0.219.0 y 0.219.1</span>
         <span class="t">La auditoría a fondo, con tus letras</span>
         <span class="c"><span class="quien">Yo, con una sesión.</span> F1A a F7A: la pausa por libre propone solo lo que cabe junto a la
@@ -1172,10 +1172,10 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
           <b>D-8 y D-10</b><span>Que el fin del Foco suene en el iPhone y que un Android restaurado no pueda borrar una reunión.</span></div></li>
         <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">3 · Hecho · de la 0.203.0 a la 0.212.0</span>
           <b>Lo que las revisiones marcan «antes de v1»</b><span>Que la quinta pausa de un tester no gaste la única petición de valoración; que el fin de la pausa avise en el móvil, con su sonido; una nota al acabar la semana de prueba; que los buscadores encuentren PACE con un nombre limpio; que con mala conexión no se quede en blanco al abrir; avisar de los cambios de lado dentro de un ejercicio; y unas diez cosas pequeñas más.</span></div></li>
-        <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">4 · Hecho · hasta la 0.219.1</span>
+        <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">4 · Hecho · hasta la 0.220.0</span>
           <b>Las pasadas de Fable, las cazas y las auditorías</b><span>La séptima y la octava (0.199.0 a 0.202.0), la novena de los avisos (0.209.0), las cazas del 19, el 22 y el 23 de noviembre, el pulido de antes de publicar (0.218.0) y la auditoría a fondo (0.219.0 y 0.219.1).</span></div></li>
-        <li><i class="pt yo"></i><div class="que"><span class="estado yo">4 bis · En su rama · la experiencia espera tu «júntalo»; las V, a medias</span>
-          <b>La experiencia y las V</b><span>U1A U2A U4A U6A en <code>claude/experiencia-24nov</code> (será la 0.220.0). Las V, en <code>claude/v-24nov</code>, sin probar.</span></div></li>
+        <li><i class="pt yo"></i><div class="que"><span class="estado yo">4 bis · La experiencia, en la web; las V, en su rama, esperan tu «júntalo»</span>
+          <b>La experiencia y las V</b><span>U1A U2A U4A U6A, en la 0.220.0. Las V, montadas en <code>claude/v-24nov</code>.</span></div></li>
         <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">5 · Hecho · 0.205.0 y 0.218.0</span>
           <b>Lo que solo esperaba un sí</b><span>Los cuatro arreglos pequeños de la sexta revisión y que dos cobros de la mensual a la vez no acorten el código.</span></div></li>
         <li><i class="pt espera"></i><div class="que"><span class="estado espera">6 · Lo tuyo · sin empezar</span>
@@ -1184,7 +1184,7 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
     <div class="grupo"><h3>2 · La prueba con testers</h3>
       <ol class="camino">
         <li><i class="pt espera"></i><div class="que"><span class="estado espera">7 · Ahora · espera a que la subas</span>
-          <b>Subir la versión de prueba a Play y a TestFlight</b><span>Tus testers tienen la 0.205.0 desde el 15 de noviembre. Toca la 0.219.1, con las notas de la 0.218.0.</span></div></li>
+          <b>Subir la versión de prueba a Play y a TestFlight</b><span>Tus testers tienen la 0.205.0 desde el 15 de noviembre. Toca elegir: la 0.220.0, o la que lleve las V. Las notas de la 0.218.0 siguen siendo ciertas en la 0.220.0.</span></div></li>
         <li><i class="pt espera"></i><div class="que"><span class="estado espera">8 · La cuenta no ha empezado</span>
           <b>Doce testers durante 14 días seguidos</b><span>Tienes 5 o 6. Cuando se cumplan los 14 días, se pide a Google el acceso a producción.</span></div></li>
       </ol></div>
@@ -1284,8 +1284,8 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
         <b>Las rutinas de Mueve y Estira, claras</b><span>Cada ejercicio dice dónde y con qué colocarse, también la «silla sin ruedas» de Core silencioso; esperar a «›» con la cuenta en 0 no suma minutos, «Auto» no avanza con la rutina en pausa, los tres aguantes de «Glúteos invisibles» caben en su tiempo y la barra del 4·7·8 acaba cuando acaba. Y lo que elegiste: la flecha que dice lo que hace, la pausa que se ve como pausa, «Con una basta» y tu reparto de la pantalla, con los catorce dibujos nuevos.</span></div></li>
       <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">C · Hecho (0.187.0, 29 oct.)</span>
         <b>«Tus rutinas», tan bien explicadas como el catálogo</b><span>Dicen el material que piden; el constructor ya no queda tapado desde Estira, una sola duración en la tarjeta y en la vista previa, «Zancada con apertura» en inglés, se empiezan con el teclado, al personalizar no se pierden las instrucciones y las tarjetas dicen «Sentado o de pie». Y lo que elegiste: Escape guarda un borrador y «Guardar» dice qué falta.</span></div></li>
-      <li><i class="pt espera"></i><div class="que"><span class="estado espera">11 · La 0.205.0, subida el 15 nov. · toca la 0.219.1</span>
-        <b>La prueba cerrada, con la versión buena</b><span>La 0.205.0 está en la prueba cerrada de Play y en TestFlight desde el 15 de noviembre. La siguiente es la 0.219.1. Lo demás llega como actualizaciones durante los 14 días.</span></div></li>
+      <li><i class="pt espera"></i><div class="que"><span class="estado espera">11 · La 0.205.0, subida el 15 nov. · toca elegir la siguiente</span>
+        <b>La prueba cerrada, con la versión buena</b><span>La 0.205.0 está en la prueba cerrada de Play y en TestFlight desde el 15 de noviembre. La siguiente la eliges tú (la 0.220.0 o la que lleve las V). Lo demás llega como actualizaciones durante los 14 días.</span></div></li>
       <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">12 · Hecho (0.185.0, 28 oct.)</span>
         <b>Lo que falta para vender</b><span>Pedir la valoración en Play y en el iPhone una sola vez, al acabar la quinta pausa entera; que el día de v1 nadie pierda nada (su semana de prueba con aviso y, para siempre, las rutinas de pago que ya hizo); recuperar el código de una compra con el correo y el recibo; y los botones de compra en la invitación.</span></div></li>
       <li><i class="pt hecho"></i><div class="que"><span class="estado hecho">A · Hecho (0.186.0, 29 oct.)</span>
@@ -1340,7 +1340,7 @@ Para cada hallazgo: archivo y línea, el caso paso a paso, qué le pasa a quien 
       cuentas a tu nombre y el gestor.</p>
     <div class="grupo"><h3>1 · Lo que más adelanta v1</h3>
       <ul class="lista">
-        <li><b>La versión de prueba</b>: subir la 0.219.1 a Play (el archivo, del artefacto <code>pace-play-v0.219.1</code>) y darla a tus
+        <li><b>La versión de prueba</b>: subir la que elijas a Play (la 0.220.0: el archivo, del artefacto <code>pace-play-v0.220.0</code>) y darla a tus
           testers de iPhone en TestFlight, con las notas de <code>SUBIDAS.md</code>. Es el «Ahora» de arriba.</li>
         <li><b>Testers de Android</b>: avisar a los tuyos y publicar en LinkedIn, todos a pacegrass.app/beta.
           Hacen falta 12 durante 14 días seguidos (mejor 15, por si alguien se cae); tienes 5 o 6. A cada uno, su enlace de
