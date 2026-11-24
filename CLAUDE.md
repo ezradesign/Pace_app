@@ -32,8 +32,8 @@ ir a tu ritmo). React 18.3.1 sin bundler: Babel standalone en desarrollo (`PACE.
 8. Commit sin línea `Co-Authored-By`, con el porqué en el mensaje y con Ez de autor. Se sube a una rama y se
    abre un PR a `main`: no se junta con el CI en rojo ni sin el «júntalo» de Ez (H2A, 24 nov. 2026). Tres versiones
    se juntaron probadas solo en Windows y dejaron `main` en rojo en Linux, que pinta la letra como Android.
-9. Espera al CI del PR y, después de juntar, al de `main`. No está cerrado hasta que `verify` y los seis trozos de
-   `e2e` salen en verde.
+9. Espera al CI del PR y, después de juntar, al de `main`. No está cerrado hasta que `verify` y
+   los seis trozos de `e2e` salen en verde.
 
 Ya no se escriben diarios de sesión, handoffs ni prompts: la historia es `git log`. Lo anterior está en
 `docs/sessions/` y `docs/archive/`, y no se toca. Lo que haya que vigilar se añade al `verify` o a la
