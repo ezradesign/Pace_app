@@ -97,15 +97,38 @@ function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip, atmosph
    posturas no se nombra ninguna, porque `position` lista las que usa la rutina y no por cuál
    empieza (Caderas · 5 pone primero el suelo y arranca de pie). */
 const PREP_SUELO = ['floor', 'supine', 'halfKneeling'];
+/* LA MISMA CUENTA EN LAS TRES PANTALLAS (Ez, V5A del 24 nov. 2026): los pasos seguidos del mismo ejercicio
+   son UN ejercicio con sus series, como ya los agrupaba la ficha («×2»). Antes la ficha decía «×2»,
+   «Prepárate» «2 pasos» y la rutina «Paso 1 de 2» para dos series de lo mismo. Sin los descansos.
+   Cada grupo: { name, idxs } con los índices de sus pasos en `routine.steps`. */
+function paceGruposRutina(steps) {
+  const grupos = [];
+  (steps || []).forEach((s, i) => {
+    if (!s || s.mode === 'rest') return;
+    const ult = grupos[grupos.length - 1];
+    if (ult && ult.name === s.name && ult.idxs[ult.idxs.length - 1] === paceUltimoNoDescanso(steps, i)) ult.idxs.push(i);
+    else grupos.push({ name: s.name, idxs: [i] });
+  });
+  return grupos;
+}
+/* El paso con trabajo anterior a `i`: dos series separadas por su descanso siguen siendo seguidas. */
+function paceUltimoNoDescanso(steps, i) {
+  for (let j = i - 1; j >= 0; j--) if (steps[j] && steps[j].mode !== 'rest') return j;
+  return -1;
+}
+/* «1 ejercicio», «4 ejercicios», «1 ejercicio, 2 series» o «2 ejercicios, 6 series». */
+function paceCuentaRutina(steps, tn) {
+  const g = paceGruposRutina(steps);
+  const series = g.reduce((a, x) => a + x.idxs.length, 0);
+  const ej = g.length === 1 ? tn('move.cuenta.ejercicios.uno', {}) : tn('move.cuenta.ejercicios', { n: g.length });
+  return g.some((x) => x.idxs.length > 1) ? ej + ', ' + tn('move.cuenta.series', { n: series }) : ej;
+}
 function sessionPrepCopy(routine, tn) {
   const pos = Array.isArray(routine.position) ? routine.position : [];
   const donde = (pos.length && pos.every(p => PREP_SUELO.indexOf(p) !== -1)) ? 'floor'
     : (pos.length === 1 && (pos[0] === 'seated' || pos[0] === 'standing')) ? pos[0]
     : 'any';
-  /* Los pasos son los ejercicios, sin los descansos: los que cuenta el cierre (v1DoneStats) y lista la
-     ficha. Con el descanso, Espalda de pie decía «5 pasos» al empezar y «4 PASOS» al acabar. */
-  const n = routine.steps.filter(s => s.mode !== 'rest').length;
-  return tn('move.prepCopy.' + donde + (n === 1 ? '.uno' : ''), { n });
+  return tn('move.prepCopy.' + donde, { cuenta: paceCuentaRutina(routine.steps, tn) });
 }
 
 /* «Paso 2 de 4» en el runner: los pasos son los ejercicios, sin los descansos, como en «Prepárate» y en el
@@ -114,9 +137,13 @@ function sessionPrepCopy(routine, tn) {
 function sessionPasoCabecera(routine, stepIdx, t, tn) {
   const steps = (routine && routine.steps) || [];
   if (steps[stepIdx] && steps[stepIdx].mode === 'rest') return t('session.restLabel');
-  const total = steps.filter(s => s.mode !== 'rest').length;
-  const current = steps.slice(0, stepIdx + 1).filter(s => s.mode !== 'rest').length;
-  return tn('move.stepCount', { current, total });
+  /* Con series del mismo ejercicio, «Serie 1 de 2»; si no, el ejercicio entre los de la rutina (V5A). */
+  const grupos = paceGruposRutina(steps);
+  const g = grupos.findIndex((x) => x.idxs.indexOf(stepIdx) !== -1);
+  if (g === -1) return tn('move.stepCount', { current: 1, total: Math.max(1, grupos.length) });
+  const idxs = grupos[g].idxs;
+  if (idxs.length > 1) return tn('move.serieCount', { current: idxs.indexOf(stepIdx) + 1, total: idxs.length });
+  return tn('move.stepCount', { current: g + 1, total: grupos.length });
 }
 
-Object.assign(window, { SessionPrep, sessionPrepCopy, sessionPasoCabecera });
+Object.assign(window, { SessionPrep, sessionPrepCopy, sessionPasoCabecera, paceGruposRutina, paceCuentaRutina });

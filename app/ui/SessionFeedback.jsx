@@ -222,7 +222,7 @@ const sessionFeedbackStyles = {
      antes, la pantalla final «mantenía la tipografía estándar» y se veía «un poco cutre». */
   chip: {
     ...displayItalic,
-    padding: '0 22px', minHeight: 42, fontSize: 17, fontWeight: 500,
+    padding: '0 18px', minHeight: 38, fontSize: 16, fontWeight: 500,   /* un paso más pequeñas que lo que sigue (Ez, V6A del 24 nov.) */
     border: '1px solid var(--line-2)',
     borderRadius: 'var(--r-pill)',
     background: 'var(--paper-2)', color: 'var(--ink)',
@@ -289,7 +289,7 @@ if (!_paceSessionFeedbackCss) {
       [data-pace-session-feedback] { margin-top: 2px !important; }
       [data-pace-fb-rule] { margin-bottom: 14px !important; }
       [data-pace-fb-question] { margin-bottom: 12px !important; }
-      [data-pace-fb-chip] { padding: 0 20px !important; }
+      [data-pace-fb-chip] { padding: 0 16px !important; }
     }
     @media (min-width: 641px) and (max-height: 560px) {
       [data-pace-fb-rule] { margin-bottom: 12px !important; }

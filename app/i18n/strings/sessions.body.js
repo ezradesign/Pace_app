@@ -155,15 +155,17 @@ Object.assign(window.PACE_STRINGS.es, {
     'preview.pos.supine':              'Boca arriba',
 
     // Move Session (additional)
-    'move.steps':                      'Pasos',
-    'move.prepCopy.standing':          'De pie. Sin prisa. {n} pasos.',
-    'move.prepCopy.seated':            'En la silla. Sin prisa. {n} pasos.',
-    'move.prepCopy.floor':             'En el suelo. Sin prisa. {n} pasos.',
-    'move.prepCopy.any':               'Sin prisa. {n} pasos.',
-    'move.prepCopy.standing.uno':      'De pie. Sin prisa. 1 paso.',
-    'move.prepCopy.seated.uno':        'En la silla. Sin prisa. 1 paso.',
-    'move.prepCopy.floor.uno':         'En el suelo. Sin prisa. 1 paso.',
-    'move.prepCopy.any.uno':           'Sin prisa. 1 paso.',
+    /* La misma cuenta en la ficha, «Prepárate», la rutina y el final (Ez, V5A del 24 nov. 2026):
+       ejercicios, y series cuando se repite el mismo; palabras enteras y en singular o plural. */
+    'move.steps':                      'Ejercicios',
+    'move.steps.uno':                  'Ejercicio',
+    'move.prepCopy.standing':          'De pie. Sin prisa. {cuenta}.',
+    'move.prepCopy.seated':            'En la silla. Sin prisa. {cuenta}.',
+    'move.prepCopy.floor':             'En el suelo. Sin prisa. {cuenta}.',
+    'move.prepCopy.any':               'Sin prisa. {cuenta}.',
+    'move.cuenta.ejercicios':          '{n} ejercicios',
+    'move.cuenta.ejercicios.uno':      '1 ejercicio',
+    'move.cuenta.series':              '{n} series',
     'move.next.prefix':                'Siguiente:',
     'move.finish':                     'Terminar',
     'move.hint':                       '← → navegar · Espacio pausar · Esc salir',
@@ -220,7 +222,9 @@ Object.assign(window.PACE_STRINGS.es, {
     // Capa editorial (s114): rótulo «Cuídate» + labels de la pantalla final
     'move.careLabel':                  'Cuídate',
     'move.series':                     'Series',
-    'move.repsCount':                  'Reps',
+    'move.series.uno':                 'Serie',
+    'move.repsCount':                  'Repeticiones',
+    'move.repsCount.uno':              'Repetición',
     // El descanso guía (s114): qué serie viene + aviso al final del descanso
     'move.restNext':                   'Luego: {name}',
     'move.restReady':                  'Prepárate para seguir',
@@ -323,15 +327,15 @@ Object.assign(window.PACE_STRINGS.en, {
     'preview.pos.supine':              'Lying face up',
 
     // Move Session (additional)
-    'move.steps':                      'Steps',
-    'move.prepCopy.standing':          'Stand up. No rush. {n} steps.',
-    'move.prepCopy.seated':            'In your chair. No rush. {n} steps.',
-    'move.prepCopy.floor':             'On the floor. No rush. {n} steps.',
-    'move.prepCopy.any':               'No rush. {n} steps.',
-    'move.prepCopy.standing.uno':      'Stand up. No rush. 1 step.',
-    'move.prepCopy.seated.uno':        'In your chair. No rush. 1 step.',
-    'move.prepCopy.floor.uno':         'On the floor. No rush. 1 step.',
-    'move.prepCopy.any.uno':           'No rush. 1 step.',
+    'move.steps':                      'Exercises',
+    'move.steps.uno':                  'Exercise',
+    'move.prepCopy.standing':          'Stand up. No rush. {cuenta}.',
+    'move.prepCopy.seated':            'In your chair. No rush. {cuenta}.',
+    'move.prepCopy.floor':             'On the floor. No rush. {cuenta}.',
+    'move.prepCopy.any':               'No rush. {cuenta}.',
+    'move.cuenta.ejercicios':          '{n} exercises',
+    'move.cuenta.ejercicios.uno':      '1 exercise',
+    'move.cuenta.series':              '{n} sets',
     'move.next.prefix':                'Next:',
     'move.finish':                     'Finish',
     'move.hint':                       '← → to navigate · Space to pause · Esc to exit',
@@ -385,7 +389,9 @@ Object.assign(window.PACE_STRINGS.en, {
     // Editorial layer (s114): «Take care» label + final-screen stat labels
     'move.careLabel':                  'Take care',
     'move.series':                     'Sets',
+    'move.series.uno':                 'Set',
     'move.repsCount':                  'Reps',
+    'move.repsCount.uno':              'Rep',
     // The rest guides (s114): which set is next + heads-up as rest ends
     'move.restNext':                   'Next: {name}',
     'move.restReady':                  'Get ready to continue',

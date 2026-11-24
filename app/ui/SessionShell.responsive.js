@@ -286,6 +286,14 @@
     [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button:not([data-pace-cierre-otra]):hover {
       border-color: var(--ink-3) !important;
     }
+    /* Salvo cuando dice lo que sigue («Empezar el bloque 2», «Tu pausa en…»): relleno, como «Empezar foco»
+       (Ez, V6A del 24 nov.). Con la misma píldora que «Sí · Un poco · No», no destacaba. */
+    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button[data-pace-cierre-sigue-cta] {
+      background: var(--focus-cta) !important; color: var(--paper) !important; border-color: var(--focus-cta) !important;
+    }
+    [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-footer] button[data-pace-cierre-sigue-cta]:hover {
+      filter: brightness(1.08);
+    }
     /* En el cierre, «Salir» va también en la serif itálica, como el resto de la pantalla
        (la A de Ez, 10 oct.). Solo en el cierre: durante la sesión no se ha tocado. */
     [data-pace-session-root]:has([data-pace-session-done]) [data-pace-session-header] button {

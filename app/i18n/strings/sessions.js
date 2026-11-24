@@ -47,6 +47,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
     // Move / Extra (pasos)
     'move.stepCount':                  'Paso {current} de {total}',
+    'move.serieCount':                 'Serie {current} de {total}',   /* dos o más series del mismo ejercicio (V5A) */
     'move.nextStep':                   'Siguiente',
     'move.lastStep':                   'Último paso',
     'move.prev':                       '← Anterior',
@@ -274,6 +275,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
     // Move / Extra (steps)
     'move.stepCount':                  'Step {current} of {total}',
+    'move.serieCount':                 'Set {current} of {total}',
     'move.nextStep':                   'Next',
     'move.lastStep':                   'Last step',
     'move.prev':                       '← Previous',

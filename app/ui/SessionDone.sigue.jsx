@@ -64,7 +64,9 @@ function SessionDoneSigue({ sigue, onExit, estilo }) {
   const otra = libre ? t('session.backToHome') : tn('ritmo.pausa.ya', { n: sigue.n });
   return (
     <div data-pace-cierre-sigue={sigue.tipo} style={sessionDoneSigueStyles.caja}>
-      <Button variant="secondary" onClick={libre ? arrancar : volver} style={estilo}>{cta}</Button>
+      {/* Lo siguiente va relleno, como «Empezar foco» (Ez, V6A del 24 nov.): con la píldora clara de las
+          respuestas, el ojo no sabía dónde ir. El relleno lo pone SessionShell.responsive.js. */}
+      <Button variant="secondary" data-pace-cierre-sigue-cta="" onClick={libre ? arrancar : volver} style={estilo}>{cta}</Button>
       <button type="button" data-pace-cierre-otra onClick={libre ? volver : arrancar} style={sessionDoneSigueStyles.otra}>{otra}</button>
     </div>
   );

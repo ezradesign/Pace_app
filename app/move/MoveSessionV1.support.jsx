@@ -260,18 +260,22 @@ function v1DevCheckDuration(routine, restBetweenSets) {
    ejercicios son los distintos que se hicieron. Sin `hechas`, los pasos de reps hechos. */
 function v1DoneStats(routine, guided, tiempo, t, hechos, hechas) {
   const hecho = (i) => !hechos || !!hechos[i];
-  const ejercicios = routine.steps.filter((s, i) => s.mode !== 'rest' && hecho(i)).length;
+  /* Los ejercicios, como los cuentan la ficha y «Prepárate» (paceGruposRutina, Ez V5A del 24 nov.): dos series
+     del mismo ejercicio son un ejercicio. Los rótulos, en singular o plural y con palabras enteras. */
+  const ejercicios = (typeof paceGruposRutina === 'function' ? paceGruposRutina(routine.steps) : routine.steps.filter((s) => s.mode !== 'rest').map((s, i) => ({ idxs: [i] })))
+    .filter((g) => g.idxs.some(hecho)).length;
+  const rotulo = (k, n) => t(n === 1 ? k + '.uno' : k);
   const series = Number.isFinite(hechas) ? hechas : routine.steps.filter((s, i) => s.mode === 'reps' && hecho(i)).length;
   const planReps = routine.steps.filter(s => s.mode === 'reps').length;
   const stats = [{ label: t('common.time'), value: tiempo }];
   if (planReps > 0 && planReps === routine.steps.filter(s => s.mode !== 'rest').length) {
-    stats.push({ label: t('move.series'), value: String(series) });
-    stats.push({ label: t('move.repsCount'), value: String(guided) });
+    stats.push({ label: rotulo('move.series', series), value: String(series) });
+    stats.push({ label: rotulo('move.repsCount', guided), value: String(guided) });
   } else if (planReps > 0) {
-    stats.push({ label: t('move.steps'), value: String(ejercicios) });
-    stats.push({ label: t('move.repsCount'), value: String(guided) });
+    stats.push({ label: rotulo('move.steps', ejercicios), value: String(ejercicios) });
+    stats.push({ label: rotulo('move.repsCount', guided), value: String(guided) });
   } else {
-    stats.push({ label: t('move.steps'), value: String(ejercicios) });
+    stats.push({ label: rotulo('move.steps', ejercicios), value: String(ejercicios) });
   }
   return stats;
 }

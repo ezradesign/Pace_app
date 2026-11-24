@@ -15,6 +15,8 @@ Object.assign(window.PACE_STRINGS.es, {
 
     // Pantalla 0 — bienvenida (complementa welcome.* de ui.js)
     'onboarding.welcome.cta':          'Comenzar',
+    'onboarding.semana.rotulo':        'Tu semana',        /* V10A de Ez (24 nov.): encima de «¿Cómo es tu semana?» decía «A tu ritmo», antes de saber qué es */
+    'onboarding.completo.cta':         'Entrar en PACE',   /* V10A: el último botón dice a dónde vas; el de la bienvenida sigue «Comenzar» */
     'onboarding.welcome.hint':         'Tres preguntas breves. Medio minuto.',
     /* Traer una copia sin pasar la bienvenida (Ez, N3 A, 8 nov.): abre el aviso de importar de Ajustes. */
     'onboarding.copia':                '¿Tienes una copia?',
@@ -68,18 +70,18 @@ Object.assign(window.PACE_STRINGS.es, {
     'visita.fin':                      'Entendido',
     'visita.aro.titulo':               'El aro',
     'visita.aro.texto':                'Elige los minutos arriba y toca «{boton}»: el aro se llena mientras trabajas.',
-    'visita.aro.pausa':                'Al acabar te propone una pausa corta y, la primera vez, te pide permiso para avisarte aunque estés en otra app.',
+    'visita.aro.pausa':                'Al acabar te propone una pausa y, la primera vez, te pide permiso para avisarte.',   /* V7B de Ez (24 nov.): seis paradas, cada una en una o dos líneas */
     'visita.act.titulo':               'Actividades',
-    'visita.act.texto':                'Respira, Estira y Mueve, con rutinas cortas, e Hidrátate, para tus vasos de agua. Cuando quieras.',
+    'visita.act.texto':                'Respira, Estira y Mueve, con rutinas cortas, e Hidrátate, para el agua. Cuando quieras.',
     'visita.dia.titulo':               'Empieza por tu día',
-    'visita.dia.texto':                'Elige cuánto trabajas hoy y PACE reparte tus pausas por la jornada, cada una a su hora y con qué hacer. Cada mañana te lo propone según tu semana, y «Al calendario» lo lleva a tu calendario.',
+    'visita.dia.texto':                'Elige cuánto trabajas hoy y PACE reparte tus pausas por la jornada.',
     'visita.arriba.titulo':            'Estadísticas y logros',
-    'visita.arriba.texto':             'Lo que has hecho hoy, esta semana y este mes, sin compararte con nadie. Y los sellos, que llegan solos al usar PACE.',
+    'visita.arriba.texto':             'Lo que has hecho, sin compararte con nadie, y los sellos que llegan solos.',
     'visita.cajon.titulo':             'El menú',
     'visita.columna.titulo':           'A la izquierda',
-    'visita.menu.texto':               'Tu semana de un vistazo, el agua de hoy, las bibliotecas de Respira, Estira y Mueve, y tus rutinas.',
+    'visita.menu.texto':               'Tu semana, el agua de hoy, las bibliotecas y tus rutinas.',
     'visita.ajustes.titulo':           'Ajustes',
-    'visita.ajustes.texto':            'El idioma, el sonido, los avisos y tu semana. PACE lo guarda todo en este aparato: en «Tus datos» haces una copia. Aquí repites la visita.',
+    'visita.ajustes.texto':            'Idioma, sonido, avisos y tu semana. En «Tus datos», tu copia; aquí repites la visita.',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -91,6 +93,8 @@ Object.assign(window.PACE_STRINGS.en, {
 
     // Screen 0 — welcome (complements welcome.* in ui.js)
     'onboarding.welcome.cta':          'Start',
+    'onboarding.semana.rotulo':        'Your week',
+    'onboarding.completo.cta':         'Open PACE',
     'onboarding.welcome.hint':         'Three short questions. Half a minute.',
     'onboarding.copia':                'Have a copy?',
     'onboarding.copia.traer':          'Bring it in',
@@ -143,16 +147,16 @@ Object.assign(window.PACE_STRINGS.en, {
     'visita.fin':                      'Got it',
     'visita.aro.titulo':               'The ring',
     'visita.aro.texto':                'Choose the minutes above and tap “{boton}”: the ring fills as you work.',
-    'visita.aro.pausa':                'When it ends, it suggests a short break and, the first time, asks permission to let you know even if you’re in another app.',
+    'visita.aro.pausa':                'When it ends it suggests a break and, the first time, asks to notify you.',
     'visita.act.titulo':               'Activities',
-    'visita.act.texto':                'Try short routines in Breathe, Stretch and Move. Log your water in Hydrate. Whenever you like.',
+    'visita.act.texto':                'Breathe, Stretch and Move, with short routines, and Hydrate for your water. Whenever you like.',
     'visita.dia.titulo':               'Start with your day',
-    'visita.dia.texto':                'Choose how long you work today and PACE spreads your breaks across it, each at its time and with what to do. Each morning it suggests a plan from your week, and “Add to calendar” puts it in your calendar.',
+    'visita.dia.texto':                'Choose how long you work today and PACE spreads your breaks across it.',
     'visita.arriba.titulo':            'Stats and achievements',
-    'visita.arriba.texto':             'What you’ve done today, this week and this month, without comparing you to anyone. And the stamps, which come on their own as you use PACE.',
+    'visita.arriba.texto':             'What you’ve done, without comparing you to anyone, and the stamps that come on their own.',
     'visita.cajon.titulo':             'The menu',
     'visita.columna.titulo':           'On the left',
-    'visita.menu.texto':               'Your week at a glance, today’s water, the Breathe, Stretch and Move libraries, and your routines.',
+    'visita.menu.texto':               'Your week, today’s water, the libraries and your routines.',
     'visita.ajustes.titulo':           'Settings',
-    'visita.ajustes.texto':            'Language, sound, reminders and your week. PACE keeps everything on this device: make a copy in “Your data”. Take the tour again here.',
+    'visita.ajustes.texto':            'Language, sound, reminders and your week. Your copy is in “Your data”; take the tour again here.',
 });

@@ -53,7 +53,7 @@ test('con la tienda cerrada no hay nada que comprar: la bienvenida acaba en PACE
   await expect(page.locator('[data-pace-onb-precios]')).toHaveText('Después, 2,99 € al mes con 7 días gratis, o 19,99 € una vez.');
   await expect(page.locator('[data-pace-onb-v1]')).toHaveText('Cuando salga a la venta tendrás tu semana de prueba, y las rutinas que ya hayas hecho se te quedan.');
   /* Un solo botón: no hay nada que comprar. */
-  await expect(page.locator('[data-pace-onb-comenzar]')).toHaveText('Comenzar');
+  await expect(page.locator('[data-pace-onb-comenzar]')).toHaveText('Entrar en PACE');
   await expect(page.locator('[data-pace-onb-probar], [data-pace-onb-ahora], [data-pace-onb-vida]')).toHaveCount(0);
 
   await page.locator('[data-pace-onb-comenzar]').click();

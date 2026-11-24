@@ -279,7 +279,7 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
         doneCopy={t('move.doneCopy')}
         stats={[
           { label: t('common.time'), value: `${mins}:${String(secs).padStart(2,'0')}` },
-          { label: t('move.steps'),  value: String(routine.steps.length) },
+          { label: t(paceGruposRutina(routine.steps).length === 1 ? 'move.steps.uno' : 'move.steps'),  value: String(paceGruposRutina(routine.steps).length) },   /* como la ficha (V5A) */
         ]}
         rootData={{ 'data-pace-active-sec': activeSecRef.current }}
         buttonStyle={{ background: accent, borderColor: accent }}

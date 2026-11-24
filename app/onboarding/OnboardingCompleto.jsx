@@ -61,7 +61,7 @@ function OnbCompletoPaso({ modo, onFin }) {
       {abierto ? (
         <React.Fragment>
           <button data-pace-cta data-pace-onb-comenzar onClick={() => onFin(null)} style={onboardingStyles.cta}>
-            {t('onboarding.welcome.cta')}
+            {t('onboarding.completo.cta')}
           </button>
           {paceTextoV1('premium.onb.abierto.aviso') && (
             <p data-pace-onb-v1 style={{ ...onbCompletoStyles.aviso, maxWidth: 340 }}>{t(paceTextoV1('premium.onb.abierto.aviso'))}</p>

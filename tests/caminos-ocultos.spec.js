@@ -73,7 +73,7 @@ test('la bienvenida no hace las tres preguntas: tras la semana, «Comenzar» lle
   await expect(bienvenida).not.toContainText('Tres preguntas breves');
   await page.getByRole('button', { name: 'Continuar' }).click();
   await expect(bienvenida).toContainText('PACE es gratis.');
-  await page.getByRole('button', { name: 'Comenzar' }).click();
+  await page.getByRole('button', { name: 'Entrar en PACE' }).click();
   await expect(bienvenida).toHaveCount(0);
   await page.locator('[data-pace-visita-saltar]').click();
 

@@ -174,7 +174,7 @@ function Onboarding() {
           )}
         </div>
         {isQuestion ? <OnbDots total={questions.length} active={qIndex} />
-          : isSemana ? <span className="pace-meta">{t('ritmo.nombre')}</span>
+          : isSemana ? <span className="pace-meta">{t('onboarding.semana.rotulo')}</span>
           : isCompleto ? <span className="pace-meta">{t('premium.name')}</span> : <span />}
         <div style={{ width: 86, display: 'flex', justifyContent: 'flex-end' }}>
           {step === 0 && (

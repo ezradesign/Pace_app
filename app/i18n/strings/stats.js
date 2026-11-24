@@ -12,9 +12,9 @@
 
 Object.assign(window.PACE_STRINGS.es, {
     // Stats
-    'stats.tag':                       'Estadísticas',
-    'stats.title':                     'Ritmo',
-    'stats.subtitle':                  'Métricas suaves. Sin ansiedad, sin comparación.',
+    'stats.tag':                       'Tu actividad',   /* V9A de Ez (24 nov.): el título, como el botón «Ver estadísticas» */
+    'stats.title':                     'Estadísticas',   /* era «Ritmo», casi como «A tu ritmo» */
+    'stats.subtitle':                  'Lo que has hecho, sin compararte con nadie.',
     'stats.unit.min':                  'min',
     'stats.unit.glasses':              'vasos',
     'stats.note.label':                'Nota:',
@@ -116,9 +116,9 @@ Object.assign(window.PACE_STRINGS.es, {
 
 Object.assign(window.PACE_STRINGS.en, {
     // Stats
-    'stats.tag':                       'Stats',
-    'stats.title':                     'Rhythm',
-    'stats.subtitle':                  'A gentle look at your activity. No comparisons.',
+    'stats.tag':                       'Your activity',
+    'stats.title':                     'Stats',
+    'stats.subtitle':                  'What you’ve done, no comparisons.',
     'stats.unit.min':                  'min',
     'stats.unit.glasses':              'glasses',
     'stats.note.label':                'Note:',

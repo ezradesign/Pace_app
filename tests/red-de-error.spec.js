@@ -34,7 +34,7 @@ test('si Estadisticas falla, sale SU aviso y la app sigue: el aro, la barra late
 
   const aviso = page.getByRole('dialog').filter({ hasText: 'Esta parte no ha podido abrirse' });
   await expect(aviso, 'Estadisticas cayo y no salio su aviso').toBeVisible();
-  await expect(aviso).toContainText('Ritmo');
+  await expect(aviso).toContainText('Estadísticas');
   await expect(page.locator('[data-pace-dial-number]'), 'la app entera se desmonto con Estadisticas').toBeVisible();
   await expect(page.locator('[data-pace-sidebar]')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Pausar', exact: true }), 'el bloque en marcha se perdio').toBeVisible();
