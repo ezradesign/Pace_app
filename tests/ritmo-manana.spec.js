@@ -60,7 +60,7 @@ test('móvil: la tarjeta del día de siempre, y «Hoy es distinto» abre la preg
   const errores = capturarErrores(page);
   const tarjeta = vis(page, '[data-pace-ritmo-tarjeta-movil]');
   await expect(tarjeta).toContainText('Jornada entera');
-  await expect(tarjeta).toContainText('como cada jueves');
+  await expect(tarjeta).toContainText('Hoy, jueves');   /* corto en el móvil (V8A) */
 
   await tarjeta.locator('[data-pace-ritmo-distinto]').click();
   await expect(vis(page, '[data-pace-ritmo-estado="pregunta"]')).toBeVisible();
@@ -72,7 +72,7 @@ test('móvil: la tarjeta del día de siempre, y «Hoy es distinto» abre la preg
   /* Al día siguiente la semana vuelve a contestar: «distinto» caduca con la fecha, y desde la
      1A la home vuelve a la tarjeta corta, que dice el día de siempre. */
   await page.clock.fastForward(24 * 60 * 60 * 1000);
-  await expect(vis(page, '[data-pace-ritmo-tarjeta-titulo]')).toHaveText('Hoy, como cada viernes', { timeout: 3000 });
+  await expect(vis(page, '[data-pace-ritmo-tarjeta-titulo]')).toHaveText('Hoy, viernes', { timeout: 3000 });
   expect(errores).toEqual([]);
   await context.close();
 });

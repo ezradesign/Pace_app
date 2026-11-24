@@ -35,16 +35,20 @@ const { sembrar, irAlArtefacto, overlaySuperior } = require('./helpers');
    «la primera»: cada pieza de la biblioteca existe DOS veces en el DOM —lateral
    de escritorio y bloque de móvil— y la hoja apaga la que sobra, así que un
    `querySelector` a secas devuelve la copia apagada, de ancho 0. */
-async function lanzarPrimera(page, boton) {
+/* Con `id`, esa tarjeta: desde la V3A de Ez (24 nov.), si el primer paso se coloca no hay «Prepárate», así
+   que las pruebas de la preparación del cuerpo lanzan «Brazos libres» (Estira), que empieza sin colocación. */
+const CON_PREP = 'move.shoulder.circles';
+async function lanzarPrimera(page, boton, idPedido) {
   await page.getByRole('button', { name: boton }).first().click();
   await page.locator('.pace-lib').waitFor({ state: 'visible' });
-  const id = await page.evaluate(() => {
+  const id = await page.evaluate((pedido) => {
     const b = Array.from(document.querySelectorAll('.pace-lib .pace-lib-hit'))
+      .filter(e => !pedido || e.closest('[data-pace-lib-card]').getAttribute('data-pace-lib-card') === pedido)
       .find(e => e.getBoundingClientRect().width > 0);
     if (!b) return null;
     b.click();
     return b.closest('[data-pace-lib-card]').getAttribute('data-pace-lib-card');
-  });
+  }, idPedido || null);
   expect(id).toBeTruthy();
   await overlaySuperior(page).getByRole('button', { name: 'Empezar', exact: true }).click();
   return id;
@@ -70,10 +74,17 @@ function radiografiaPrep(page) {
 
 test.beforeEach(async ({ context }) => { await sembrar(context); });
 
-for (const [cual, boton] of [['Estira', /^Estira/], ['Mueve', /^Mueve/]]) {
+test('en Mueve, si el primer paso se coloca, la colocación hace de preparación (V3A)', async ({ page }) => {
+  await irAlArtefacto(page);
+  await lanzarPrimera(page, /^Mueve/);
+  await expect(page.locator('[data-pace-v1-kicker]').filter({ visible: true })).toHaveText('Colócate');
+  await expect(page.locator('[data-pace-session-prep]')).toHaveCount(0);
+});
+
+for (const [cual, boton] of [['Estira', /^Estira/]]) {
   test('la preparación de ' + cual + ' es SÓLO el contador, sin glifo', async ({ page }) => {
     await irAlArtefacto(page);
-    await lanzarPrimera(page, boton);
+    await lanzarPrimera(page, boton, CON_PREP);
     const sesion = page.locator('[data-pace-session-root]');
     await expect(sesion.getByText('PREPÁRATE')).toBeVisible();
     const r = await radiografiaPrep(page);
@@ -92,7 +103,7 @@ test('las tres bibliotecas comparten la MISMA preparación', async ({ page }) =>
      se exige es que el cuerpo y la respiración enseñen la misma pantalla, que es
      la decisión de s175 -- y eso sobrevive a que mañana se cambie el 200 px. */
   await irAlArtefacto(page);
-  await lanzarPrimera(page, /^Estira/);
+  await lanzarPrimera(page, /^Estira/, CON_PREP);
   await expect(page.locator('[data-pace-session-root]').getByText('PREPÁRATE')).toBeVisible();
   const cuerpo = await radiografiaPrep(page);
 
@@ -120,7 +131,7 @@ test('no queda ningún clon del vuelo: la transición ya no tiene dónde aterriz
      y no la implementación, así que seguiría mordiendo si alguien reintrodujera
      una transición que deja rastro. */
   await irAlArtefacto(page);
-  await lanzarPrimera(page, /^Estira/);
+  await lanzarPrimera(page, /^Estira/, CON_PREP);
   await expect(page.locator('[data-pace-session-root]').getByText('PREPÁRATE')).toBeVisible();
   await page.waitForTimeout(1200);   /* holgura de sobra: el vuelo de s174 duraba
                                         520 ms y buscaba destino otros ~400 */
@@ -133,7 +144,7 @@ test('no queda ningún clon del vuelo: la transición ya no tiene dónde aterriz
 test('con reduced-motion la sesión entra igual', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await irAlArtefacto(page);
-  await lanzarPrimera(page, /^Estira/);
+  await lanzarPrimera(page, /^Estira/, CON_PREP);
   await expect(page.locator('[data-pace-session-root]').getByText('PREPÁRATE')).toBeVisible();
   expect(await page.locator('[data-pace-vuelo]').count()).toBe(0);
   const r = await radiografiaPrep(page);

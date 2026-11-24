@@ -93,13 +93,12 @@ for (const v of [{ width: 360, height: 640 }, { width: 360, height: 740 }, { wid
           /* Ez: «lo de construir tu día debería ser importante». Va la primera y dice cómo se prepara. */
           expect(m.titulo).toBe('Empieza por tu día');
           expect(m.texto).toContain('Elige cuánto trabajas hoy');
-          expect(m.texto).toContain('«Al calendario» lo lleva a tu calendario');
         }
         if (m.id === 'aro') {
           /* De la B: lo que pasa al acabar el Foco, con el nombre del botón de verdad. */
           expect(m.texto).toContain('toca «Empezar foco»');
           /* El permiso del navegador o del móvil salía de golpe al empezar el primer Foco, sin decir para qué. */
-          expect(m.texto).toContain('Al acabar te propone una pausa corta y, la primera vez, te pide permiso para avisarte aunque estés en otra app.');
+          expect(m.texto).toContain('Al acabar te propone una pausa y, la primera vez, te pide permiso para avisarte.');   /* V7B, 24 nov.: cada parada en una o dos líneas */
         }
         if (m.id === 'arriba') {
           /* Los dos iconos de arriba no tienen nombre a la vista: la visita dice qué son. */
@@ -108,11 +107,11 @@ for (const v of [{ width: 360, height: 640 }, { width: 360, height: 740 }, { wid
         }
         if (m.id === 'ajustes') {
           /* PACE no tiene cuenta: si se borra el navegador o se cambia de móvil, sin copia se pierde todo. */
-          expect(m.texto).toContain('PACE lo guarda todo en este aparato: en «Tus datos» haces una copia.');
+          expect(m.texto).toContain('En «Tus datos», tu copia');
         }
         if (m.id === 'cajon' || m.id === 'columna') {
           expect(m.titulo).toBe(m.id === 'cajon' ? 'El menú' : 'A la izquierda');
-          expect(m.texto).toContain('las bibliotecas de Respira, Estira y Mueve');
+          expect(m.texto).toContain('las bibliotecas');
         }
         await expect(page.locator('[data-pace-visita-siguiente]')).toHaveText(i === ORDEN.length - 1 ? 'Entendido' : 'Siguiente');
         await page.locator('[data-pace-visita-siguiente]').click();

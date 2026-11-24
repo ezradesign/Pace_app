@@ -17,7 +17,7 @@
        encontró una captura antes de subir, no un usuario.
 */
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior } = require('./helpers');
+const { pasarPreparacion, sembrar, irAlArtefacto, capturarErrores, overlaySuperior } = require('./helpers');
 
 /* Abre una rutina del catálogo y pasa la preparación. El click al «Empezar» va acotado al
    modal de arriba: buscando en todo el documento se encuentra antes el «Empezar foco» de la
@@ -34,7 +34,7 @@ async function abrirRutina(page, modulo, nombre) {
     (t.querySelector('.pace-lib-hit') || t).click();
   }, nombre);
   await overlaySuperior(page).getByRole('button', { name: 'Empezar', exact: true }).click();
-  await page.getByRole('button', { name: 'Empezar ahora' }).click();
+  await pasarPreparacion(page);
   await page.locator('[data-pace-v1-body]').first().waitFor({ state: 'visible' });
 }
 
@@ -164,7 +164,7 @@ test('una rutina propia corre en el runner guiado, con «Descanso» como descans
   await expect(preview).toContainText(/\d+(–\d+)? min/);
   await expect(preview).not.toContainText(/undefined/i);
   await preview.getByRole('button', { name: 'Empezar', exact: true }).click();
-  await page.getByRole('button', { name: 'Empezar ahora' }).click();
+  await pasarPreparacion(page);
 
   /* El runner guiado: su mando, su barra de un segmento por paso y el texto del paso. */
   await expect(mando(page), 'la rutina propia no corre en el runner guiado').toBeVisible();

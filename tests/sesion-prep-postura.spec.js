@@ -34,7 +34,7 @@ test('ninguna rutina nombra en su preparación una postura que no tiene', async 
     const suelo = ['floor', 'supine', 'halfKneeling'];
     ['es', 'en'].forEach(lang => {
       const tabla = window.PACE_STRINGS[lang];
-      const tn = (k, v) => String(tabla[k]).split('{n}').join(String(v.n));
+      const tn = (k, v) => String(tabla[k]).replace(/\{(\w+)\}/g, (m, x) => (v && x in v ? String(v[x]) : m));
       const dice = {
         standing: tabla['move.prepCopy.standing'].split('.')[0],
         seated: tabla['move.prepCopy.seated'].split('.')[0],
@@ -55,19 +55,34 @@ test('ninguna rutina nombra en su preparación una postura que no tiene', async 
   expect(malas.out).toEqual([]);
 });
 
+/* Desde la V3A de Ez (24 nov. 2026), si el primer paso se coloca, la colocación hace de «Prepárate» y
+   la pantalla de preparación no sale: se mira que no salga y que la frase, donde sale, diga la postura. */
+async function frasePara(page, nombre) {
+  return page.evaluate((n) => {
+    const tabla = window.PACE_STRINGS.es;
+    const tn = (k, v) => String(tabla[k]).replace(/\{(\w+)\}/g, (m, x) => (v && x in v ? String(v[x]) : m));
+    const r = [].concat(...Object.values(window.MOVE_ROUTINES).map(g => g.items), ...Object.values(window.EXTRA_ROUTINES).map(g => g.items))
+      .find((x) => x.name === n);
+    return window.sessionPrepCopy(r, tn);
+  }, nombre);
+}
+
 test('Estira · «Tronco sentado» se prepara en la silla, como dice su tarjeta', async ({ page }) => {
   const errores = capturarErrores(page);
   await irAlArtefacto(page);
-  const frase = await abrirPreparacion(page, 'Estira', 'Tronco sentado');
-  await expect(frase).toHaveText('En la silla. Sin prisa. 4 pasos.');
+  await abrirPreparacion(page, 'Estira', 'Tronco sentado');
+  await expect(page.locator('[data-pace-v1-body]').filter({ visible: true }), 'empieza por colocarse (V3A)').toBeVisible();
+  await expect(page.locator('[data-pace-session-prep]')).toHaveCount(0);
+  expect(await frasePara(page, 'Tronco sentado')).toBe('En la silla. Sin prisa. 3 ejercicios, 4 series.');
   expect(errores).toEqual([]);
 });
 
 test('Mueve · «Levántate y sube», que es de pie, sigue diciendo «De pie»', async ({ page }) => {
   const errores = capturarErrores(page);
   await irAlArtefacto(page);
-  const frase = await abrirPreparacion(page, 'Mueve', 'Levántate y sube');
-  /* 4 ejercicios y 3 descansos: los pasos son los ejercicios, como en el cierre (recorrido de tester, 18 nov.). */
-  await expect(frase).toHaveText('De pie. Sin prisa. 4 pasos.');
+  await abrirPreparacion(page, 'Mueve', 'Levántate y sube');
+  await expect(page.locator('[data-pace-v1-body]').filter({ visible: true }), 'empieza por colocarse (V3A)').toBeVisible();
+  /* 4 ejercicios y 3 descansos: se cuentan los ejercicios, como en el cierre (recorrido de tester, 18 nov.). */
+  expect(await frasePara(page, 'Levántate y sube')).toMatch(/^De pie\. Sin prisa\. /);
   expect(errores).toEqual([]);
 });

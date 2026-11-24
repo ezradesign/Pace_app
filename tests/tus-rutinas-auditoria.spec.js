@@ -17,7 +17,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { MEDIODIA, sembrar, irAlArtefacto, capturarErrores, overlaySuperior } = require('./helpers');
+const { pasarPreparacion, MEDIODIA, sembrar, irAlArtefacto, capturarErrores, overlaySuperior } = require('./helpers');
 
 const MARCAS = { _weeklyStatsReindexed_v0_28_8: true, _historyRecalculated_v0_28_8: true };
 const sesion = (page) => page.locator('[data-pace-session-root]');
@@ -56,7 +56,7 @@ async function abrirPropia(page, nombre) {
 }
 async function empezar(page, preview) {
   await preview.getByRole('button', { name: 'Empezar', exact: true }).click();
-  await page.getByRole('button', { name: 'Empezar ahora' }).click();
+  await pasarPreparacion(page);
   await expect(mando(page)).toBeVisible();
 }
 async function abrirCatalogo(page, id) {
@@ -230,6 +230,6 @@ test('R6 · una serie hecha y dos saltadas: el cierre dice 1 serie, no 3', async
   await siguiente(page);   // «Terminar antes» sin ninguna
   await expect(sesion(page).locator('[data-pace-session-done]')).toHaveCount(1);
   const cifras = await cifrasDelCierre(page);
-  expect(cifras.Series, 'cuenta las series de la rutina, no las hechas').toBe('1');
-  expect(cifras.Reps).toBe('12');
+  expect(cifras.Serie, 'cuenta las series de la rutina, no las hechas (en singular desde la V5A)').toBe('1');
+  expect(cifras.Repeticiones).toBe('12');
 });

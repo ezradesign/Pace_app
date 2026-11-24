@@ -54,9 +54,10 @@ test('cinco-1 · «Manos y muñecas»: la entrada, colocarse y el cambio de lado
   const palabras = s.map((x) => x.v).filter(Boolean);
   expect(palabras, 'no llegó al segundo lado: ' + palabras.join(' ')).toContain('derecha');
 
-  /* La entrada: tres maderas antes de la primera palabra, que es «Colócate». */
+  /* La entrada: sin «Prepárate», porque el primer paso se coloca y esa cuenta hace de preparación (V3A,
+     24 nov.); lo primero que suena es «Colócate», sin maderas antes. */
   const primera = s.findIndex((x) => x.v);
-  expect(s.slice(0, primera)).toEqual(cuentaMadera);
+  expect(s.slice(0, primera)).toEqual([]);
   expect(s[primera].v).toBe('colocate');
 
   /* Cada cuenta de colocarse (5 s): de su palabra a «Ya» o al lado, tres maderas y nada más. */

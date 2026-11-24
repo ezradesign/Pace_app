@@ -16,7 +16,7 @@
    el primer aserto de altura es el que lo caza.
 */
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior, fijarViewport } = require('./helpers');
+const { pasarPreparacion, sembrar, irAlArtefacto, capturarErrores, overlaySuperior, fijarViewport } = require('./helpers');
 
 async function abrirEn(browser, ancho, alto) {
   const u = test.info().project.use;
@@ -94,7 +94,7 @@ test('el runner abre con el lienzo y su mando cabe en la pantalla', async ({ bro
   await page.locator('.pace-lib').first().waitFor({ state: 'visible' });
   await page.getByRole('heading', { name: 'Fondos en silla', exact: true }).first().click();
   await overlaySuperior(page).getByRole('button', { name: 'Empezar', exact: true }).click();
-  await page.getByRole('button', { name: 'Empezar ahora' }).click();
+  await pasarPreparacion(page);
   await expect(page.locator('[data-pace-v1-mando]')).toBeVisible();
   const m = await page.evaluate(() => {
     const r = document.querySelector('[data-pace-v1-mando]').getBoundingClientRect();

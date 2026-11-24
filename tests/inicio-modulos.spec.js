@@ -60,7 +60,8 @@ test('móvil: con tu semana guardada, la tarjeta dice tu día de siempre y «Com
   await page.clock.install({ time: JUEVES });
   await irAlArtefacto(page);
   await expect(vis(page, '[data-pace-activitybar-chip]')).toHaveCount(4);
-  await expect(vis(page, '[data-pace-ritmo-tarjeta-titulo]')).toHaveText('Hoy, como cada jueves');
+  /* En el móvil el título es corto («Hoy, jueves»): al lado va lo que dice el esquema (V8A, 24 nov.). */
+  await expect(vis(page, '[data-pace-ritmo-tarjeta-titulo]')).toHaveText('Hoy, jueves');
   await expect(vis(page, '[data-pace-ritmo-tarjeta] .pace-rt-tm-nota')).toHaveText('Jornada enteraHoy es distinto');
   await vis(page, '[data-pace-ritmo-comienza]').click();
   await expect.poll(async () => ((await leerRitmo(page)).dia || {}).opcion).toBe('jornada');
@@ -76,11 +77,11 @@ test('ordenador: sin contestar, la loseta «Una hora» sirve el día de un toque
   await expect(vis(page, '[data-pace-ritmo-tarjeta]')).toHaveCount(0);
 });
 
-test('en inglés, con tu semana guardada, la tarjeta dice «Today, like every Thursday»', async ({ page, context }) => {
+test('en inglés, con tu semana guardada, la tarjeta dice «Today, Thursday» (V8A)', async ({ page, context }) => {
   await page.setViewportSize({ width: 360, height: 640 });
   await sembrar(context, { lang: 'en', ritmo: { semanaTipo: SEMANA } });
   await page.clock.install({ time: JUEVES });
   await irAlArtefacto(page);
-  await expect(vis(page, '[data-pace-ritmo-tarjeta-titulo]')).toHaveText('Today, like every Thursday');
+  await expect(vis(page, '[data-pace-ritmo-tarjeta-titulo]')).toHaveText('Today, Thursday');
   await expect(vis(page, '[data-pace-ritmo-tarjeta] .pace-rt-tm-nota')).toHaveText('Full dayToday is different');
 });

@@ -147,7 +147,9 @@ test('sincro-2 · la entrada con el audio aún arrancando: sin voz en la cuenta,
   expect(w.r, '«Colócate» no sonó').toBe(true);
   const visto = enPantalla(r.pantalla, w.suena);
   expect(visto && visto.fase).toBe('place');
-  expect(w.suena - visto.t, '«Colócate» suena ' + (w.suena - visto.t).toFixed(2) + ' s después de verse').toBeLessThan(0.1);
+  /* Sin «Prepárate» (V3A, 24 nov.) la colocación es lo primero que se ve, y el audio que aún arranca no ha tenido
+     los 5 s de la preparación para despertar: «Colócate» puede llegar con el retraso del arranque, no más. */
+  expect(w.suena - visto.t, '«Colócate» suena ' + (w.suena - visto.t).toFixed(2) + ' s después de verse').toBeLessThan(0.5 + 0.1);
 });
 
 test('sincro-3 · una cuenta no sale a medias: si su primera palabra va a madera, todas; y un tic algo tarde no tira la siguiente', async ({ page, context }) => {

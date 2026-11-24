@@ -40,7 +40,7 @@ async function hasta(page, cond, maxSeg) {
   return cond();
 }
 const cierre = (page) => page.locator('[data-pace-session-done]');
-/* Las cifras del cierre por su rótulo («Reps», «Series», «Pasos»). */
+/* Las cifras del cierre por su rótulo («Repeticiones», «Series», «Ejercicios»: palabras enteras desde la V5A). */
 async function cifra(page, rotulo) {
   return cierre(page).evaluate((raiz, r) => {
     const caja = [...raiz.querySelectorAll('[data-pace-session-stat]')]
@@ -194,7 +194,7 @@ test.describe('P6 · «Con una basta», de verdad', () => {
     await basta(page).click();
     await cierre(page).waitFor({ timeout: 10000 });
     expect(await cifra(page, 'Series'), 'el cierre inventa las series saltadas').toBe(2);
-    expect(await cifra(page, 'Reps')).toBe(5 + 6);
+    expect(await cifra(page, 'Repeticiones')).toBe(5 + 6);
     expect((await estado(page)).moveSessionsTotal || 0, 'con una serie de cada, la rutina no contó entera').toBe(1);
     const [ev] = await sesionesHechas(page);
     expect(ev && ev.completionReason).toBe('natural');
@@ -391,8 +391,8 @@ test.describe('B3 · el paso con banda', () => {
       await page.clock.runFor(300);
     }
     await cierre(page).waitFor({ timeout: 10000 });
-    expect(await cifra(page, 'Reps'), 'las 8 aperturas no cuentan en el cierre').toBe(8);
-    expect(await cifra(page, 'Pasos'), 'el remo con banda saltado contó como paso').toBe(2);
+    expect(await cifra(page, 'Repeticiones'), 'las 8 aperturas no cuentan en el cierre').toBe(8);
+    expect(await cifra(page, 'Ejercicios'), 'el remo con banda saltado contó como paso').toBe(2);
     const s = await estado(page);
     expect(s.moveSessionsTotal || 0, 'con el remo con banda saltado, la rutina no contó entera').toBe(1);
     expect(errores).toEqual([]);
@@ -411,7 +411,7 @@ test.describe('B3 · el paso con banda', () => {
     await page.clock.runFor(300);
     expect(await pasoActual(page)).toBe(1);
     expect(await hasta(page, async () => !!(await cierre(page).count()), 200)).toBe(true);
-    expect(await cifra(page, 'Reps')).toBe(3 + 8);
+    expect(await cifra(page, 'Repeticiones')).toBe(3 + 8);
     expect((await estado(page)).moveSessionsTotal || 0, 'terminar antes un paso que se puede saltar cortó la rutina').toBe(1);
     expect(errores).toEqual([]);
   });

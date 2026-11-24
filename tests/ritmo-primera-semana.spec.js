@@ -16,7 +16,8 @@ const LV = ['jornada', 'jornada', 'jornada', 'jornada', 'jornada', 'libre', 'lib
 const JUEVES = new Date('2026-10-08T08:30:00+02:00');
 const vis = (page, sel) => page.locator(sel).filter({ visible: true });
 
-test.use({ viewport: { width: 360, height: 640 }, isMobile: true, hasTouch: true });
+/* En el ordenador: en el móvil el título va corto, «Hoy, jueves», con el esquema al lado (V8A, 24 nov.). */
+test.use({ viewport: { width: 1280, height: 800 } });
 
 async function abrir(page, context, ritmo, lang) {
   await sembrar(context, { sidebarCollapsed: true, lang: lang || 'es', ritmo });

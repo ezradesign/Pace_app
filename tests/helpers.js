@@ -339,7 +339,18 @@ async function terminarBloque(page) {
    siguiente y `hoy()`, que mira el día de Node, lee el de antes. A mediodía, ni lo uno ni lo otro. */
 const MEDIODIA = (() => { const d = new Date(); d.setHours(12, 0, 0, 0); return d; })();
 
+/* Pasa «Prepárate» si sale. Desde la V3A de Ez (24 nov. 2026), si el primer paso de Mueve o Estira se
+   coloca, esa cuenta hace de preparación y «Prepárate» no sale; Respira y los pasos sin colocación la
+   siguen teniendo. Espera a una de las dos pantallas antes de decidir. */
+async function pasarPreparacion(page) {
+  const prep = page.locator('[data-pace-session-prep]').filter({ visible: true });
+  const cuerpo = page.locator('[data-pace-v1-body]').filter({ visible: true });
+  await prep.or(cuerpo).first().waitFor();
+  if (await prep.count()) await page.getByRole('button', { name: /^(Empezar ahora|Start now)$/ }).filter({ visible: true }).first().click();
+}
+
 module.exports = {
+  pasarPreparacion,
   MEDIODIA,
   abrirCajon,
   abrirTusDatos,

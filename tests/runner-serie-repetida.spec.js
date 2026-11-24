@@ -40,7 +40,7 @@ async function hasta(page, cond, maxSeg) {
   for (let i = 0; i < (maxSeg || 120); i++) { if (await cond()) return true; await page.clock.runFor(1000); }
   return cond();
 }
-/* Lo que enseña el cierre: { 'Series': '2', 'Reps': '10', 'Tiempo': ... } */
+/* Lo que enseña el cierre: { 'Series': '2', 'Repeticiones': '10', 'Tiempo': ... } */
 async function cierre(page) {
   await page.locator('[data-pace-session-stats]').waitFor({ timeout: 10000 });
   return page.evaluate(() => Object.fromEntries([...document.querySelectorAll('[data-pace-session-stat]')]
@@ -69,7 +69,7 @@ test('una ejecución normal: dos series de cinco', async ({ page, context }) => 
   await correr(page, false);
   const c = await cierre(page);
   expect(c['Series']).toBe('2');
-  expect(c['Reps']).toBe('10');
+  expect(c['Repeticiones']).toBe('10');
   expect(await sesionesDeMueve(page)).toBe(1);
   expect(errores).toEqual([]);
 });
@@ -83,7 +83,7 @@ test('repetir la primera serie con «Anterior» suma una serie y sus repeticione
   await correr(page, true);
   const c = await cierre(page);
   /* Lo hecho: tres series de cinco. Antes salía «2 series · 15 reps»: las reps sumaban y las series no. */
-  expect(c['Reps'], 'las repeticiones de la serie repetida cuentan').toBe('15');
+  expect(c['Repeticiones'], 'las repeticiones de la serie repetida cuentan').toBe('15');
   expect(c['Series'], 'la serie repetida cuenta como una serie más').toBe('3');
   /* Y lo que decide si la rutina cuenta no cambia: una sola sesión y entera (suma 1, no 0 ni 2). */
   expect(await sesionesDeMueve(page), 'repetir una serie no duplica la sesión ni la quita').toBe(1);

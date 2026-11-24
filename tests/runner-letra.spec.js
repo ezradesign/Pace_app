@@ -11,7 +11,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, overlaySuperior } = require('./helpers');
+const { pasarPreparacion, sembrar, irAlArtefacto, overlaySuperior } = require('./helpers');
 
 const TOPE = 95;
 
@@ -50,7 +50,7 @@ async function abrirPorId(page, modulo, id) {
     (t.querySelector('.pace-lib-hit') || t).click();
   }, id);
   await overlaySuperior(page).getByRole('button', { name: 'Empezar', exact: true }).click();
-  await page.getByRole('button', { name: 'Empezar ahora' }).click();
+  await pasarPreparacion(page);
   await page.locator('[data-pace-v1-body]').first().waitFor({ state: 'visible' });
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(500);

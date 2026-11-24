@@ -29,7 +29,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, overlaySuperior, fijarViewport } = require('./helpers');
+const { pasarPreparacion, sembrar, irAlArtefacto, overlaySuperior, fijarViewport } = require('./helpers');
 
 async function hastaElCierre(page, context, { extra, modulo, rutina, empezarAhora }) {
   await sembrar(context, extra);
@@ -40,7 +40,7 @@ async function hastaElCierre(page, context, { extra, modulo, rutina, empezarAhor
   const empezar = overlaySuperior(page).getByRole('button', { name: /^(Empezar|Start)$/ });
   if (await empezar.count()) await empezar.click();
   const sesion = page.locator('[data-pace-session-root]');
-  if (empezarAhora) await sesion.getByRole('button', { name: empezarAhora }).click();
+  if (empezarAhora) await pasarPreparacion(page);   /* sin «Prepárate» si el primer paso se coloca (V3A) */
   const done = sesion.locator('[data-pace-session-done]');
   for (let s = 0; s < 500 && !(await done.count()); s++) { await page.clock.fastForward(1000); await page.waitForTimeout(8); }
   await expect(done, 'GUARD: la sesión no llegó al cierre').toHaveCount(1);

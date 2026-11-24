@@ -235,6 +235,7 @@
   /* `modo` 0: todo a la vista; 1: recogido (home-geometry.medidas.js): sin «Luego» o Actividades en una
      fila en el móvil (Ez 1 A2 y B), la línea del día solo con horas en el ordenador (A); 2: a la vista,
      porque recogido tampoco cabía. Devuelve lo que aún desborda (móvil, o el día en el ordenador). */
+  var conCorte = false;   // el aro entero de la V1 no cabía: esta pasada, con el corte
   function ajustar(modo) {
     /* s128: el motor corre AHORA también en móvil/tablet. isDesktop solo elige las
        CONSTANTES (la rama Desktop queda byte-idéntica); el resto del cálculo es
@@ -258,7 +259,7 @@
     var widthCap = isDesktop ? WIDTH_CAP : WIDTH_CAP_MOBILE;
     var dFloor = isDesktop ? D_FLOOR : D_FLOOR_MOBILE;
     var horario = isDesktop && paceAroHorarioAbierto();
-    var aroEntero = !isDesktop && !!document.querySelector('[data-pace-activitybar][data-pace-ritmo]');
+    var aroEntero = !isDesktop && !conCorte && !!document.querySelector('[data-pace-activitybar][data-pace-ritmo]');
 
     /* La compactación va ANTES de medir: cambia el presupuesto exterior y, por
        tanto, la altura útil que le queda al aro. Depende solo de innerHeight
@@ -373,6 +374,8 @@
         sobra = medirOver();
       }
       if (sobra > 1 && D !== dAntes) { D = dAntes; applyD(D, dial, horario, aroEntero); }
+      /* Si el aro entero no cabe ni en el suelo, antes que recoger «Luego» o pedir scroll, el corte de siempre. */
+      if (sobra > 1 && aroEntero) { conCorte = true; try { return ajustar(modo); } finally { conCorte = false; } }
       /* Ni en el suelo cabe: recogido, si así cabe; si no, como estaba. */
       if (sobra > 1 && (luego || fila) && modo === 0) return ajustar(1) > 1 ? ajustar(2) : 0;
       if (modo === 1 && sobra > 1) return sobra;

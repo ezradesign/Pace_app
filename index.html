@@ -57802,6 +57802,7 @@ function paceAroPisoInterior(dial, radio) {
 
 
 
+  var conCorte = false;
   function ajustar(modo) {
 
 
@@ -57825,7 +57826,7 @@ function paceAroPisoInterior(dial, radio) {
     var widthCap = isDesktop ? WIDTH_CAP : WIDTH_CAP_MOBILE;
     var dFloor = isDesktop ? D_FLOOR : D_FLOOR_MOBILE;
     var horario = isDesktop && paceAroHorarioAbierto();
-    var aroEntero = !isDesktop && !!document.querySelector('[data-pace-activitybar][data-pace-ritmo]');
+    var aroEntero = !isDesktop && !conCorte && !!document.querySelector('[data-pace-activitybar][data-pace-ritmo]');
 
 
 
@@ -57940,6 +57941,8 @@ function paceAroPisoInterior(dial, radio) {
         sobra = medirOver();
       }
       if (sobra > 1 && D !== dAntes) {D = dAntes;applyD(D, dial, horario, aroEntero);}
+
+      if (sobra > 1 && aroEntero) {conCorte = true;try {return ajustar(modo);} finally {conCorte = false;}}
 
       if (sobra > 1 && (luego || fila) && modo === 0) return ajustar(1) > 1 ? ajustar(2) : 0;
       if (modo === 1 && sobra > 1) return sobra;

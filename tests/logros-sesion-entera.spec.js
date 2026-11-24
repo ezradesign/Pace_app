@@ -11,7 +11,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { MEDIODIA, sembrar, capturarErrores, irAlArtefacto, overlaySuperior } = require('./helpers');
+const { pasarPreparacion, MEDIODIA, sembrar, capturarErrores, irAlArtefacto, overlaySuperior } = require('./helpers');
 
 const MARCAS = { _weeklyStatsReindexed_v0_28_8: true, _historyRecalculated_v0_28_8: true };
 
@@ -72,7 +72,7 @@ test('Respira: «Terminar» a mitad suma los minutos pero no da logros; entera, 
   await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirRespira(page, '4·7·8');
-  await sesion(page).getByRole('button', { name: 'Empezar ahora' }).click();
+  await pasarPreparacion(page);
   await segundos(page, 35);
   await sesion(page).getByRole('button', { name: /Terminar/ }).click();
   await expect(sesion(page)).toContainText('Sesión completada');
@@ -87,7 +87,7 @@ test('Respira: «Terminar» a mitad suma los minutos pero no da logros; entera, 
   await volverAlInicio(page);
 
   await abrirRespira(page, '4·7·8');
-  await sesion(page).getByRole('button', { name: 'Empezar ahora' }).click();
+  await pasarPreparacion(page);
   await hastaQueAcabe(page, 150);
   s = await leerEstado(page);
   expect(Object.keys(s.achievements || {}), 'entera no dio «Primer aliento»').toContain('first.breath');
@@ -101,7 +101,7 @@ test('Estira: cortar los pasos suma los minutos pero no da logros; entera, sí',
   await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Estira', 'move.neck.3');
-  await sesion(page).getByRole('button', { name: 'Empezar ahora' }).click();
+  await pasarPreparacion(page);
   await segundos(page, 40);
   await hastaElCierreACortes(page);
   await expect(sesion(page).locator('[data-pace-sin-contar]'), 'GUARD: con 40 s y trabajo, cuenta').toHaveCount(0);
@@ -113,7 +113,7 @@ test('Estira: cortar los pasos suma los minutos pero no da logros; entera, sí',
   await volverAlInicio(page);
 
   await abrirCuerpo(page, 'Estira', 'move.neck.3');
-  await sesion(page).getByRole('button', { name: 'Empezar ahora' }).click();
+  await pasarPreparacion(page);
   await hastaQueAcabe(page, 400);
   s = await leerEstado(page);
   expect(Object.keys(s.achievements || {}), 'entera no dio «Primer estirón»').toContain('first.stretch');
@@ -125,7 +125,7 @@ test('Mueve: «Siguiente» a mitad de un paso suma los minutos pero no da logros
   await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Mueve', 'extra.calves');
-  await sesion(page).getByRole('button', { name: 'Empezar ahora' }).click();
+  await pasarPreparacion(page);
   await segundos(page, 40);
   await hastaElCierreACortes(page);
   const s = await leerEstado(page);

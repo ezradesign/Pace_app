@@ -30,7 +30,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, capturarErrores, irAlArtefacto, overlaySuperior } = require('./helpers');
+const { pasarPreparacion, sembrar, capturarErrores, irAlArtefacto, overlaySuperior } = require('./helpers');
 
 test.beforeEach(async ({ context }) => { await sembrar(context); });
 
@@ -187,7 +187,7 @@ test('el descanso entre series pinta la figura que respira, no las dos barras', 
 
   await abrirPreview(page);
   await overlaySuperior(page).getByRole('button', { name: 'Empezar', exact: true }).click();
-  await page.getByRole('button', { name: 'Empezar ahora' }).click();
+  await pasarPreparacion(page);
   await page.getByRole('button', { name: 'Empezar ya' }).click();
   await page.getByRole('button', { name: 'Terminar serie' }).click();
   await expect(page.locator('[data-pace-v1-name]')).toHaveText('Descanso');

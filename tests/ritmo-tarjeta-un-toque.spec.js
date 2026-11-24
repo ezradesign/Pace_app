@@ -29,7 +29,7 @@ test('con tu semana, «Preparar jornada» sirve el día de un toque', async ({ p
   const errores = capturarErrores(page);
   await abrir(page, context, { ritmo: { semanaTipo: LV } });
   const tarjeta = vis(page, '[data-pace-ritmo-tarjeta-movil]');
-  await expect(tarjeta.locator('[data-pace-ritmo-tarjeta-titulo]')).toHaveText('Hoy, como cada jueves');
+  await expect(tarjeta.locator('[data-pace-ritmo-tarjeta-titulo]')).toHaveText('Hoy, jueves');   /* corto en el móvil (V8A) */
   await tarjeta.locator('[data-pace-ritmo-comienza]').click();
   await expect(vis(page, '[data-pace-ritmo-estado="menu"]')).toBeVisible();
   await expect(vis(page, '[data-pace-ritmo-estado="habitual"]')).toHaveCount(0);

@@ -6,7 +6,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, overlaySuperior, MEDIODIA } = require('./helpers');
+const { pasarPreparacion, sembrar, irAlArtefacto, overlaySuperior, MEDIODIA } = require('./helpers');
 
 const cabecera = (page) => page.evaluate(() => {
   const raiz = document.querySelector('[data-pace-session-root]');
@@ -25,7 +25,7 @@ test('Espalda de pie: «Paso 1 de 4» y, en el descanso, «Descanso»', async ({
   await page.locator('.pace-lib').waitFor({ state: 'visible' });
   await page.getByRole('heading', { name: 'Espalda de pie' }).click();
   await overlaySuperior(page).getByRole('button', { name: 'Empezar', exact: true }).click();
-  await page.getByRole('button', { name: 'Empezar ahora' }).click();
+  await pasarPreparacion(page);
   await expect.poll(() => cabecera(page)).toBe('Paso 1 de 4');
   const pasos = await page.evaluate(() => Object.values(window.EXTRA_ROUTINES).flatMap((g) => g.items)
     .find((r) => r.name === 'Espalda de pie').steps.map((s) => s.mode));

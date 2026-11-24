@@ -52,14 +52,13 @@ async function abrirPaso(browser, { id, i }, { lang, alto, letra, extra }) {
   await page.locator('[data-pace-v1-raiz]').first().waitFor({ timeout: 20000 });
   const ahora = await page.evaluate(() => Date.now());
   await page.clock.pauseAt(ahora + 1000);
-  /* Hasta el paso `i` trabajando, por «Paso N de M» / «Step N of M». Ese número cuenta los ejercicios, sin
-     los descansos (sessionPasoCabecera): el paso `i` es el ejercicio número `objetivo`. */
-  const objetivo = await page.evaluate(({ id, i }) => window.resolveBodyRoutine(id).routine.steps.slice(0, i + 1).filter((s) => s.mode !== 'rest').length - 1, { id, i });
+  /* Hasta el paso `i` trabajando, por `data-pace-v1-paso` (el índice con los descansos): la cabecera ya no
+     sirve, porque con series del mismo ejercicio dice «Serie 1 de 2» (V5A, 24 nov.). */
+  const objetivo = i;
   for (let k = 0; k < 600; k++) {
     const r = await page.evaluate(() => {
       const raiz = [...document.querySelectorAll('[data-pace-v1-raiz]')].find((e) => e.getBoundingClientRect().width > 0);
-      const meta = [...document.querySelectorAll('[data-pace-session-root] *')].find((e) => e.children.length === 0 && /^(Paso|Step) \d+ (de|of) \d+$/.test(e.textContent.trim()));
-      return { fase: raiz && raiz.getAttribute('data-pace-v1-fase'), n: meta ? +meta.textContent.match(/\d+/)[0] - 1 : -1 };
+      return { fase: raiz && raiz.getAttribute('data-pace-v1-fase'), n: raiz ? +raiz.getAttribute('data-pace-v1-paso') : -1 };
     });
     if (r.n === objetivo && r.fase === 'work') break;
     /* De 5 en 5 s por los pasos de antes; ya en el suyo, de segundo en segundo hasta que trabaja. */

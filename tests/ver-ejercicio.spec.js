@@ -138,8 +138,9 @@ test('«Empezar» lleva a la pantalla de ejercicio con ese ejercicio solo («Pas
   const sesion = page.locator('[data-pace-session-root]');
   await expect(sesion).toHaveCount(1);
   await expect(page.locator('[data-pace-hacerla]')).toHaveCount(0);
-  /* su rutina vale sentado o de pie: la frase general, en singular (antes, «1 pasos») */
-  await expect(sesion.locator('[data-pace-session-prep-copy]')).toHaveText('Sin prisa. 1 paso.');
+  /* el ejercicio se coloca, así que esa cuenta hace de «Prepárate» (Ez, V3A del 24 nov.) */
+  await expect(page.locator('[data-pace-v1-kicker]').filter({ visible: true })).toHaveText('Colócate');
+  await expect(sesion.locator('[data-pace-session-prep]')).toHaveCount(0);
   await expect(sesion.locator('[data-pace-session-title]')).toHaveText('Elevación de talones');
 
   await segundos(page, 12);
@@ -191,7 +192,7 @@ test('en inglés: «See exercise», y la hoja y la pantalla de ejercicio con el 
   await page.locator('[data-pace-hacerla-empezar]').click();
   const sesion = page.locator('[data-pace-session-root]');
   await expect(sesion.locator('[data-pace-session-title]')).toHaveText(nombre);
-  await expect(sesion.locator('[data-pace-session-prep-copy]')).toHaveText('No rush. 1 step.');
+  await expect(page.locator('[data-pace-v1-kicker]').filter({ visible: true })).toHaveText('Get set');
   expect(errores).toEqual([]);
 });
 

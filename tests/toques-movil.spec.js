@@ -59,8 +59,8 @@ test('bienvenida, home, barra y biblioteca', async ({ page, context }) => {
   await exigir(page, '[data-pace-semana-saltar]', 34, '«Ahora no, quiero probar primero»');
   /* Detrás, PACE completo y la visita guiada (Ez, 2A y 1C del 27 oct.). */
   await page.getByRole('button', { name: /^Continuar$/ }).click();
-  await exigir(page, '[data-pace-onb-comenzar]', 40, '«Comenzar» de PACE completo');
-  await page.getByRole('button', { name: /^Comenzar$/ }).click();
+  await exigir(page, '[data-pace-onb-comenzar]', 40, '«Entrar en PACE» de PACE completo');
+  await page.getByRole('button', { name: /^Entrar en PACE$/ }).click();   /* V10A de Ez (24 nov.) */
   await page.locator('[data-pace-visita]').waitFor();
   await exigir(page, '[data-pace-visita-saltar]', 40, '«Saltar la visita»');
   await exigir(page, '[data-pace-visita-siguiente]', 40, '«Siguiente» de la visita');

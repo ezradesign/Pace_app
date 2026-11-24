@@ -19,7 +19,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { MEDIODIA, sembrar, capturarErrores, irAlArtefacto, overlaySuperior } = require('./helpers');
+const { pasarPreparacion, MEDIODIA, sembrar, capturarErrores, irAlArtefacto, overlaySuperior } = require('./helpers');
 
 const MARCAS = { _weeklyStatsReindexed_v0_28_8: true, _historyRecalculated_v0_28_8: true };
 
@@ -233,7 +233,7 @@ test('«Terminar» a los pocos segundos no cuenta, y el cierre dice «Sesión si
   /* Tres veces seguidas: antes daban tres logros (Primer aliento, explorar Box, Lluvia). */
   for (let i = 0; i < 3; i++) {
     await abrirRespira(page, 'Box 4·4·4·4');
-    await sesion(page).getByRole('button', { name: 'Empezar ahora' }).click();
+    await pasarPreparacion(page);
     await segundos(page, 4);
     await sesion(page).getByRole('button', { name: /Terminar/ }).click();
     await expect(sesion(page).locator('[data-pace-sin-contar]'), 'el cierre no dice que no ha contado').toHaveCount(1);
@@ -251,7 +251,7 @@ test('«Terminar» a los pocos segundos no cuenta, y el cierre dice «Sesión si
 
   /* Con medio minuto, sí. */
   await abrirRespira(page, 'Box 4·4·4·4');
-  await sesion(page).getByRole('button', { name: 'Empezar ahora' }).click();
+  await pasarPreparacion(page);
   await segundos(page, 31);
   await sesion(page).getByRole('button', { name: /Terminar/ }).click();
   await expect(sesion(page)).toContainText('Sesión completada');
@@ -263,7 +263,7 @@ test('saltar todos los pasos de Estira no cuenta ni hace el plan del día', asyn
   await page.clock.install({ time: MEDIODIA });
   await irAlArtefacto(page);
   await abrirCuerpo(page, 'Estira', 'extra.posture.set');
-  await sesion(page).getByRole('button', { name: 'Empezar ahora' }).click();
+  await pasarPreparacion(page);
   await hastaElCierre(page);
   await expect(sesion(page).locator('[data-pace-sin-contar]'), 'saltarlo todo dice «completado»').toHaveCount(1);
   const s = await leerEstado(page);

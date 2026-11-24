@@ -7,7 +7,7 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior } = require('./helpers');
+const { pasarPreparacion, sembrar, irAlArtefacto, capturarErrores, overlaySuperior } = require('./helpers');
 
 function propia(id, nombre, pasos) {
   return { id, name: nombre, steps: pasos.map(([name, dur]) => ({ name, dur, cue: 'Despacio.' })),
@@ -171,7 +171,7 @@ for (const [lang, txt] of [['es', { empezar: 'Empezar', ahora: 'Empezar ahora', 
     await irAlArtefacto(page);
     const preview = await abrirPropia(page, 'Brazos', txt.modulo);
     await preview.getByRole('button', { name: txt.empezar, exact: true }).click();
-    await page.getByRole('button', { name: txt.ahora }).click();
+    await pasarPreparacion(page);   /* el primero se coloca: sin «Prepárate» (V3A) */
     const raiz = page.locator('[data-pace-session-root]');
     await expect(raiz.locator('[data-pace-v1-mando]')).toBeVisible();
     /* El primero también se coloca antes de empezar (B4), con la frase de su ficha. */

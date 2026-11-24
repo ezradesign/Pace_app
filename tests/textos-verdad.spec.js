@@ -56,13 +56,14 @@ test('cada rutina de cuerpo que dice cuántos pasos o movimientos tiene, dice lo
 test('«Prepárate» cuenta los pasos como el cierre: sin el descanso', async ({ page, context }) => {
   await abrir(page, context);
   const r = await page.evaluate(() => {
-    const t = (k, v) => String(window.PACE_STRINGS.es[k]).replace('{n}', v.n);
+    const t = (k, v) => String(window.PACE_STRINGS.es[k]).replace(/\{(\w+)\}/g, (m, x) => (v && x in v ? v[x] : m));
     const espalda = Object.values(window.EXTRA_ROUTINES).flatMap((g) => g.items).find((x) => x.name === 'Espalda de pie');
     return { copia: sessionPrepCopy(espalda, t), ejercicios: espalda.steps.filter((s) => s.mode !== 'rest').length,
              todos: espalda.steps.length };
   });
   expect(r.todos, 'GUARD: Espalda de pie lleva un descanso entre sus pasos').toBeGreaterThan(r.ejercicios);
-  expect(r.copia).toContain(r.ejercicios + ' pasos');
+  /* «4 ejercicios» desde la V5A (24 nov.): ejercicio y series donde las hay. */
+  expect(r.copia).toContain(r.ejercicios + ' ejercicios');
 });
 test('en la pausa larga de «Dos horas: sal de la silla», Respira no empieza con «Siéntate cómodo»', async ({ page, context }) => {
   /* Martes 24 nov. a las 11:17: tres bloques hechos y la pausa larga abierta. */

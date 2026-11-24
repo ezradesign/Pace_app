@@ -92,18 +92,15 @@ test('Mueve: la biblioteca abre, el Preview precede a la sesion y los pasos corr
   await expect(preview.getByText('LOS PASOS')).toBeVisible();
   await preview.getByRole('button', { name: 'Empezar', exact: true }).click();
 
-  /* COUNTDOWN: la preparacion descuenta de verdad. Se mide dos veces y se exige
-     que BAJE — un numero fijo pintado tambien pasaria un `toBeVisible`. */
+  /* Sin «Prepárate»: el primer paso se coloca, y esa cuenta hace de preparación (Ez, V3A del 24 nov.).
+     La cuenta baja de verdad: se mide dos veces y se exige que BAJE. */
   const sesion = page.locator('[data-pace-session-root]');
-  await expect(sesion.getByText('PREPÁRATE')).toBeVisible();
-  const prep = sesion.locator('[data-pace-session-prep-num]');
-  const antes = Number(await prep.innerText());
-  expect(Number.isFinite(antes)).toBe(true);
-  await expect.poll(async () => Number(await prep.innerText())).toBeLessThan(antes);
-
-  /* PASOS: el runner v1 pinta nombre, indicacion y en que punto va. */
-  await sesion.getByRole('button', { name: 'Empezar ahora' }).click();
   await expect(page.locator('[data-pace-v1-name]')).toHaveText('Flexiones inclinadas');
+  await expect(sesion.locator('[data-pace-session-prep]')).toHaveCount(0);
+  const cuenta = page.locator('[data-pace-v1-num]').first();
+  const antes = Number(await cuenta.innerText());
+  expect(Number.isFinite(antes)).toBe(true);
+  await expect.poll(async () => Number(await cuenta.innerText())).toBeLessThan(antes);
   await expect(page.locator('[data-pace-v1-cue]')).not.toBeEmpty();
   await expect(page.locator('[data-pace-v1-kicker]')).toHaveText('Colócate');
   await expect(page.locator('[data-pace-v1-progress]')).toContainText('Siguiente');

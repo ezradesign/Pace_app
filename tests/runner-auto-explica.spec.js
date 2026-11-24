@@ -22,8 +22,11 @@ const LETRA = {
   en: { on: 'PACE sets the pace and moves on to the next step.', off: 'Go at your pace and tap › to continue.', prep: 'At your pace · you decide when to continue.' },
 };
 
+/* Con «Prepárate»: desde la V3A de Ez (24 nov.), si el primer paso se coloca no sale, así que las pruebas de
+   su línea usan «Brazos libres» (Estira), que empieza sin colocación. */
+const CON_PREP = 'move.shoulder.circles';
 async function abrirRutina(page, id) {
-  await page.getByRole('button', { name: /^(Mueve|Move)/ }).first().click();
+  await page.getByRole('button', { name: id.startsWith('move.') ? /^(Estira|Stretch)/ : /^(Mueve|Move)/ }).first().click();
   await page.locator('.pace-lib').locator('visible=true').first().waitFor();
   await page.waitForTimeout(500);
   await page.evaluate((i) => [...document.querySelectorAll('[data-pace-lib-card="' + i + '"] .pace-lib-hit')]
@@ -59,7 +62,7 @@ test('al empezar con «Auto» apagado, «Prepárate» lleva su línea', async ({
   await page.clock.install({ time: new Date('2026-10-08T10:00:00+02:00') });
   const errores = capturarErrores(page);
   await irAlArtefacto(page);
-  await abrirRutina(page, 'extra.desk.pushups');
+  await abrirRutina(page, CON_PREP);
   await page.locator('[data-pace-session-prep]').waitFor();
   await expect(page.locator('[data-pace-v1-prep-auto]')).toHaveText(LETRA.es.prep);
   expect(errores).toEqual([]);
@@ -69,7 +72,7 @@ test('con «Auto» encendido, «Prepárate» no lleva nada más', async ({ page,
   await sembrar(context);
   await page.clock.install({ time: new Date('2026-10-08T10:00:00+02:00') });
   await irAlArtefacto(page);
-  await abrirRutina(page, 'extra.desk.pushups');
+  await abrirRutina(page, CON_PREP);
   await page.locator('[data-pace-session-prep]').waitFor();
   await expect(page.locator('[data-pace-v1-prep-auto]')).toHaveCount(0);
 });
@@ -105,10 +108,10 @@ test('en inglés, las mismas tres líneas', async ({ page, context }) => {
   await sembrar(context, { lang: 'en', cuerpoAuto: false });
   await page.clock.install({ time: new Date('2026-10-08T10:00:00+02:00') });
   await irAlArtefacto(page);
-  await abrirRutina(page, 'extra.desk.pushups');
+  await abrirRutina(page, CON_PREP);
   await page.locator('[data-pace-session-prep]').waitFor();
   await expect(page.locator('[data-pace-v1-prep-auto]')).toHaveText(LETRA.en.prep);
-  expect(await hasta(page, async () => (await fase(page)) === 'place', 12)).toBe(true);
+  expect(await hasta(page, async () => ['place', 'work'].includes(await fase(page)), 12)).toBe(true);
   await pastilla(page).click();   // Auto, encendido
   await expect(aviso(page)).toHaveText(LETRA.en.on);
   await page.clock.runFor(4500);
@@ -160,7 +163,7 @@ for (const [lang, ancho, alto] of [['es', 360, 730], ['es', 360, 640], ['es', 12
     await page.setViewportSize({ width: ancho, height: alto });
     await page.clock.install({ time: new Date('2026-10-08T10:00:00+02:00') });
     await irAlArtefacto(page);
-    await abrirRutina(page, 'extra.desk.pushups');
+    await abrirRutina(page, CON_PREP);
     await page.locator('[data-pace-session-prep]').waitFor();
     await page.waitForTimeout(300);
     const m = await page.evaluate(() => {
