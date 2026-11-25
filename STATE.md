@@ -3,6 +3,13 @@
 **Versión:** v0.220.0 · 24 nov. 2026 (la experiencia: U1A U2A U4A U6A). Los testers tienen la 0.205.0. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que no se pueden
 romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
+## Punto de partida (25 nov.)
+
+Ez limpió el proyecto para retomar desde lo publicado: **`main` = 0.220.0** más el arreglo de `ritmo.spec` (ef0e2be, CI en
+verde). No hay más ramas ni PRs abiertos. Lo que no entró (las V, M5A/M12A, las tiendas 0.221.0, los diagnósticos) quedó
+guardado en etiquetas `archive/*-25nov` (lista en `docs/traspaso/LEEME.md`); nada de eso cuenta como pendiente salvo que
+Ez lo pida. La dirección siguiente es la **«A»**: avisos durante la jornada sin pulsar nada (en diseño, sin código).
+
 ## Dónde estamos
 
 - **Web** en https://pacegrass.app, publicada desde `dist/` (`node scripts/web-dist.js`). La raíz tiene dos caras
@@ -19,7 +26,7 @@ romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 El orden hasta v1 está en `ROADMAP.md` («Lo que queda hasta v1.0», al día el 23 nov.). El tramo de código está hecho: **la
 fecha de v1 la ponen los 12 testers con sus 14 días seguidos, que aún no han empezado, y las altas de Ez para cobrar.**
 
-1. Subir la versión de prueba a Play y a TestFlight. Cuál, lo elige Ez: la 0.220.0 ya, o esperar a la que lleve las V. Las
+1. Subir la 0.220.0 de prueba a Play y a TestFlight. Las
    notas y el «Qué probar» de la 0.218.0 (`docs/launch/google-play/SUBIDAS.md`) siguen siendo ciertas en la 0.220.0.
 2. Los testers: 12 durante 14 días seguidos (hay 5 o 6; `/beta` y el grupo, listos: `testers.md`).
 3. Las altas: perfil de pagos de Play; acuerdo de apps de pago de Apple (banco, W-8BEN, programa para pequeñas empresas y
@@ -29,11 +36,9 @@ fecha de v1 la ponen los 12 testers con sus 14 días seguidos, que aún no han e
 
 ## Espera a Ez
 
-- **Elegir qué versión se sube** (0.220.0, o la que lleve las V) y subirla a la prueba interna de Play (y de ahí a la cerrada)
-  y a TestFlight, con las notas de `SUBIDAS.md`.
+- **La «A»**: elegir las reglas de los avisos (R1-R6) antes de montar nada.
+- **Subir la 0.220.0** a la prueba interna de Play (y de ahí a la cerrada) y a TestFlight, con las notas de `SUBIDAS.md`.
   «Escríbenos» ya escribe a `hola.ezradesign@gmail.com` (Ez, 24 nov.).
-- **Las V** (V1, V2A, V3A, V5A, V6A, V7B, V8A, V9A, V10A, V11A; V4C como estaba), montadas en `claude/v-24nov` (PR 7) y sin
-  juntar: mirar «Hoy, jueves» en el móvil (V8A) y oír «Colócate» (V3A), y después su «júntalo».
 - **Probar en sus aparatos**: la miniventana en su Chrome, el aviso de la web del móvil con la pantalla bloqueada (la 4 del
   móvil, 22 nov.), los pasos de cinco minutos de la página de las apps, lo privado del calendario en Android, la voz de Respira.
 - **Play Console**, al subir la siguiente beta: volver a pegar el párrafo «A tu ritmo» de `docs/launch/google-play/ficha.md`
