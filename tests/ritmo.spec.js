@@ -36,12 +36,15 @@
  *    `new Date(2026, 8, 17, 9, 0)` vale 9:00 en mi maquina y 11:00 en el CI
  *    (runner en UTC), que es como salieron rojas tres pruebas de aqui con la
  *    suite entera verde en local.
- *  · Un `fastForward` grande no abre la pausa: de minuto en minuto (s187).
+ *  · Un `fastForward` grande no abre la pausa, y de minuto en minuto se pasa: con
+ *    la máquina cargada la ventana tarda más que la espera de cada vuelta, el reloj
+ *    da un minuto de más y la pausa sale a las 10:31. `terminarBloque` salta justo
+ *    al final que guardó el motor y espera a la ventana con el reloj de verdad.
  */
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior, pulsarComienza, ponerHora } = require('./helpers');
+const { sembrar, irAlArtefacto, capturarErrores, overlaySuperior, pulsarComienza, ponerHora, terminarBloque } = require('./helpers');
 
 const NUEVE = new Date('2026-09-17T09:00:00+02:00');   /* 9:00 en Madrid (CEST) */
 const FECHA = '2026-09-17';
@@ -153,11 +156,7 @@ test('al terminar un bloque, la pausa propone el plato del menú y el aro avanza
   });
   await page.getByRole('button', { name: 'Empezar jornada', exact: true }).click();
   await page.waitForTimeout(250);
-  for (let i = 0; i < 50; i++) {
-    await page.clock.fastForward(60 * 1000);
-    await page.waitForTimeout(60);
-    if (await page.locator('[data-pace-break-shortcut]').count()) break;
-  }
+  await terminarBloque(page);
   const prop = page.locator('[data-pace-break-prop]');
   /* la frase de las series (Ez, 15 oct. 2026): la primera pausa, de pie, mueve las piernas */
   await expect(prop).toContainText('Piernas: aún sin mover');
@@ -201,11 +200,7 @@ test('la línea sigue al aro: el tramo se rellena, al acabar «Ahora» es la par
   expect(relleno, 'el tramo no se rellena con el bloque').toBeLessThan(0.30);
 
   /* acaba: la pausa propone (como siempre) y detrás AHORA es la parada */
-  for (let i = 0; i < 50; i++) {
-    await page.clock.fastForward(60 * 1000);
-    await page.waitForTimeout(60);
-    if (await page.locator('[data-pace-break-shortcut]').count()) break;
-  }
+  await terminarBloque(page);
   await page.keyboard.press('Escape');
   await expect(parada).toHaveClass(/pace-rt-ahora/);
   await expect(parada).toContainText('Ahora');
@@ -239,11 +234,7 @@ test('empezar el bloque 2 veinte minutos tarde recoloca el resto del día: comid
 
   await page.getByRole('button', { name: 'Empezar jornada', exact: true }).click();
   await page.waitForTimeout(250);
-  for (let i = 0; i < 50; i++) {
-    await page.clock.fastForward(60 * 1000);
-    await page.waitForTimeout(60);
-    if (await page.locator('[data-pace-break-shortcut]').count()) break;
-  }
+  await terminarBloque(page);
   await page.keyboard.press('Escape');
   await page.clock.fastForward(25 * 60 * 1000);   /* son las 10:10: veinte minutos tarde para el bloque 2 */
   await page.waitForTimeout(200);
