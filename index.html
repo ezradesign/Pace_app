@@ -21910,9 +21910,10 @@ if (!_paceAnimStyle) {
   s.textContent = `
     @keyframes pace-fade-in { from { opacity: 0 } to { opacity: 1 } }
     @keyframes pace-slide-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-    /* La hoja crece desde su borde de abajo y no se desliza: así nunca asoma fuera de la
-       pantalla mientras entra (las pruebas que miden lo que cabe la miden al abrirse). */
-    @keyframes pace-hoja-sube { from { opacity: .6; transform: scale(.97); transform-origin: 50% 100%; } to { opacity: 1; transform: scale(1); transform-origin: 50% 100%; } }
+    /* La hoja entra solo fundiéndose, sin moverse ni crecer: deslizada asomaba por debajo de la
+       pantalla, y escalada medía un 3 % menos mientras entraba (una fila de Ajustes de 34 px daba
+       33 al abrirse). Lo que se mide o se toca al abrir tiene ya su sitio y su tamaño. */
+    @keyframes pace-hoja-sube { from { opacity: .4; } to { opacity: 1; } }
     @keyframes pace-pulse { 0%, 100% { opacity: 0.4 } 50% { opacity: 1 } }
   `;
   document.head.appendChild(s);
