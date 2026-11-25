@@ -36,7 +36,7 @@
 class PaceRed extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { error: null };
+    this.state = { error: null, fallo: null };
     this.reiniciar = this.reiniciar.bind(this);
     this.cerrar = this.cerrar.bind(this);
   }
@@ -51,14 +51,19 @@ class PaceRed extends React.Component {
         error, info && info.componentStack ? info.componentStack.split('\n').slice(0, 4).join('\n') : '');
     } catch (e) {}
     window.paceUltimoFallo = { cuando: Date.now(), donde: this.props.nombre || this.props.modo || null,
-      mensaje: String((error && error.message) || error).slice(0, 200) };
+      mensaje: String((error && error.message) || error).slice(0, 200),
+      /* Solo los nombres de los tres componentes de arriba: dicen dónde, sin datos de nadie. */
+      piezas: info && info.componentStack ? (info.componentStack.match(/at (\w+)/g) || []).slice(0, 3).map((x) => x.slice(3)).join(' < ') : '' };
+    /* El aviso se pinta ANTES de este método (getDerivedStateFromError): se vuelve a pintar con el
+       fallo para que «Cuéntanoslo» lo lleve. */
+    this.setState({ fallo: window.paceUltimoFallo });
   }
 
   componentDidUpdate(prev) {
-    if (this.state.error && prev.abierto !== this.props.abierto) this.setState({ error: null });
+    if (this.state.error && prev.abierto !== this.props.abierto) this.setState({ error: null, fallo: null });
   }
 
-  reiniciar() { this.setState({ error: null }); }
+  reiniciar() { this.setState({ error: null, fallo: null }); }
 
   cerrar() {
     if (typeof this.props.onCerrar === 'function') {
@@ -78,12 +83,12 @@ class PaceRed extends React.Component {
        vea: medido) no levanta un aviso que nadie ha pedido: calla, y al abrirla
        `abierto` cambia, la red se reinicia y se vuelve a intentar. */
     if (this.props.abierto === false) return null;
-    if (modo === 'global') return <PaceRedGlobal />;
-    return <PaceRedParte nombre={this.props.nombre} onCerrar={this.cerrar} />;
+    if (modo === 'global') return <PaceRedGlobal fallo={this.state.fallo} />;
+    return <PaceRedParte nombre={this.props.nombre} onCerrar={this.cerrar} fallo={this.state.fallo} />;
   }
 }
 
-function PaceRedParte({ nombre, onCerrar }) {
+function PaceRedParte({ nombre, onCerrar, fallo }) {
   const { t } = useT();
   return (
     <Modal open={true} onClose={onCerrar} maxWidth={560} tagLabel={nombre || undefined} ariaLabel={t('red.parte.titulo')}>
@@ -94,12 +99,13 @@ function PaceRedParte({ nombre, onCerrar }) {
           <button type="button" onClick={onCerrar} style={paceRedStyles.lleno}>{t('red.cerrar')}</button>
           <button type="button" onClick={() => location.reload()} style={paceRedStyles.hueco}>{t('red.recargar')}</button>
         </div>
+        <PaceRedContar fallo={fallo} />
       </div>
     </Modal>
   );
 }
 
-function PaceRedGlobal() {
+function PaceRedGlobal({ fallo } = {}) {
   const { t } = useT();
   const logo = document.getElementById('pace-logo-src');
   const movil = typeof paceEsMovil === 'function' ? paceEsMovil() : false;
@@ -114,8 +120,48 @@ function PaceRedGlobal() {
           {t('red.global.copia')}
         </button>
         <p style={paceRedStyles.pie}>{t('red.global.pie')}</p>
+        <PaceRedContar centrado fallo={fallo} />
       </div>
     </div>
+  );
+}
+
+/* «CUÉNTANOSLO» (Ez, L5A del 25 nov. 2026, «PACE, listo para las tiendas»). El panel de Play solo cuenta
+   los cierres de Android, no lo que falla dentro de la app, y PACE no rastrea nada: sin esto, un fallo que
+   solo pasa en un móvil no llega a Ez. Abre el correo de la persona con la versión, el aparato, la pantalla
+   y el error; lo lee y lo envía ella, o no. Ni el texto del error ni los nombres de los componentes llevan
+   datos suyos. El enlace es el mismo `mailto:` que «Escríbenos» (TweaksData.jsx), que ya abre el correo
+   también en las apps. */
+function paceRedCorreo(lang, fallo) {
+  const f = fallo || window.paceUltimoFallo || {};
+  let plataforma = 'web';
+  try { if (typeof pacePlataformaNativa === 'function' && pacePlataformaNativa()) plataforma = pacePlataformaNativa(); } catch (e) {}
+  const version = typeof PACE_VERSION === 'string' ? PACE_VERSION : '?';
+  const ua = (navigator.userAgent || '').replace(/\s+/g, ' ').slice(0, 160);
+  let pantalla = '?';
+  try { pantalla = Math.round(paceLienzoAncho()) + '×' + Math.round(paceLienzoAlto()); } catch (e) {}
+  const en = lang === 'en';
+  const asunto = 'PACE ' + version + ' · ' + (en ? 'something went wrong' : 'algo se ha torcido');
+  const cuerpo = [
+    en ? 'What were you doing when it happened? (optional)' : '¿Qué estabas haciendo cuando pasó? (si quieres)',
+    '', '', '— — —',
+    'PACE ' + version + ' · ' + plataforma + ' · ' + pantalla,
+    (en ? 'Where: ' : 'Dónde: ') + (f.donde || '?') + (f.piezas ? ' (' + f.piezas + ')' : ''),
+    'Error: ' + (f.mensaje || '?'),
+    ua,
+  ].join('\n');
+  const contacto = typeof PACE_CONTACTO === 'string' ? PACE_CONTACTO : '';
+  return 'mailto:' + contacto + '?subject=' + encodeURIComponent(asunto) + '&body=' + encodeURIComponent(cuerpo);
+}
+
+function PaceRedContar({ centrado, fallo }) {
+  const { t, lang } = useT();
+  if (typeof PACE_CONTACTO !== 'string' || !PACE_CONTACTO) return null;
+  return (
+    <p data-pace-red-contar style={{ ...paceRedStyles.pie, marginTop: 0, textAlign: centrado ? 'center' : 'left' }}>
+      <a href={paceRedCorreo(lang, fallo)} style={{ color: 'var(--ink-2)', textUnderlineOffset: 3 }}>{t('red.contar')}</a>
+      {' · '}{t('red.contar.nota')}
+    </p>
   );
 }
 
@@ -134,4 +180,4 @@ const paceRedStyles = {
   pie: { margin: '6px 0 0', fontSize: 11.5, color: 'var(--ink-3)', maxWidth: 320 },
 };
 
-Object.assign(window, { PaceRed, PaceRedParte, PaceRedGlobal, paceRedStyles });
+Object.assign(window, { PaceRed, PaceRedParte, PaceRedGlobal, PaceRedContar, paceRedCorreo, paceRedStyles });

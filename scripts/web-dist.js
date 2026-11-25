@@ -34,7 +34,8 @@ const OUT = path.join(ROOT, 'dist');
    una página y sirve `index.html` (la app entera, más de 2 MB) con un 200 en cualquier ruta que no
    existe; con él, sirve esa página con su 404 (auditoría externa del 16 nov. 2026). */
 /* `og-pace.jpg`: la imagen de la vista previa al compartir (Ez, F7A del 24 nov. 2026), solo en la web. */
-const WEB_ARCHIVOS = ['sw.js', '_headers', 'calendario.html', 'robots.txt', 'sitemap.xml', 'manifest.en.webmanifest', '404.html', 'og-pace.jpg'];
+/* `support.html`: la página de ayuda, la URL de soporte que piden las tiendas (Ez, L1A del 25 nov. 2026). */
+const WEB_ARCHIVOS = ['sw.js', '_headers', 'calendario.html', 'robots.txt', 'sitemap.xml', 'manifest.en.webmanifest', '404.html', 'og-pace.jpg', 'support.html'];
 const WEB_CARPETAS = ['premium', 'beta', 'gracias', 'recuperar', 'desistir'];
 
 /* Lo que va en `dist/`, en rutas relativas a la raiz. */

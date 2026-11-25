@@ -7,4 +7,13 @@
     <!-- El canal del aviso fijo con el movil bloqueado (PaceAvisoFijo), en los ajustes de Android. -->
     <string name="pace_canal_foco">Focus in progress</string>
     <string name="pace_canal_foco_texto">What is left of the focus block, with the phone locked. It makes no sound.</string>
+    <!-- Los atajos del icono (res/xml/shortcuts.xml). -->
+    <string name="pace_atajo_foco">Focus</string>
+    <string name="pace_atajo_foco_largo">Go to the Pomodoro</string>
+    <string name="pace_atajo_respira">Breathe</string>
+    <string name="pace_atajo_respira_largo">Open the breathing library</string>
+    <string name="pace_atajo_estira">Stretch</string>
+    <string name="pace_atajo_estira_largo">Open the mobility library</string>
+    <string name="pace_atajo_agua">Hydrate</string>
+    <string name="pace_atajo_agua_largo">Open the water log</string>
 </resources>

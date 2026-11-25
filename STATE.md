@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.220.0 · 24 nov. 2026 (la experiencia: U1A U2A U4A U6A). Los testers tienen la 0.205.0. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que no se pueden
+**Versión:** v0.221.0 · 25 nov. 2026 en `claude/project-thread-a856we`, sin juntar (lo de las tiendas: `/support`, «Cuéntanoslo» y los atajos del icono); `main`, en la 0.220.0 (la experiencia). Los testers tienen la 0.205.0. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que no se pueden
 romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Dónde estamos
@@ -28,6 +28,10 @@ fecha de v1 la ponen los 12 testers con sus 14 días seguidos, que aún no han e
 4. El día de v1: apagar `PREMIUM_ABIERTO_HASTA_V1`, quitar «Da de pastar a la vaca» y probar comprar, restaurar y cancelar.
 
 ## Espera a Ez
+
+- **Lo de las tiendas** (0.221.0, rama `claude/project-thread-a856we`): su «júntalo»; la letra de las capturas (L3, maqueta
+  https://claude.ai/artifact/VUQg6kADtyMXo9caS56NVT); 15 o 16 testers con las tres preguntas de `docs/launch/google-play/produccion.md`;
+  la prueba con VoiceOver y TalkBack (`docs/launch/accesibilidad.md`). La URL de soporte de las tiendas es `https://pacegrass.app/support`.
 
 - **Elegir qué versión se sube** (0.220.0, o la que lleve las V) y subirla a la prueba interna de Play (y de ahí a la cerrada)
   y a TestFlight, con las notas de `SUBIDAS.md`.

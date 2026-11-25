@@ -1,3 +1,8 @@
 /* Lo que dice la pregunta de iOS al pedir el calendario (Ez, 4A del 16 nov. 2026). Info.plist lleva la misma en castellano. */
 "NSCalendarsFullAccessUsageDescription" = "PACE reads when your meetings are so it can place your breaks around them, and adds your day to your calendar. It doesn’t keep titles or attendees.";
 "NSCalendarsUsageDescription" = "PACE reads when your meetings are so it can place your breaks around them, and adds your day to your calendar. It doesn’t keep titles or attendees.";
+/* Los atajos del icono (Info.plist, UIApplicationShortcutItems; Ez, L7A del 25 nov. 2026). */
+"Foco" = "Focus";
+"Respira" = "Breathe";
+"Estira" = "Stretch";
+"Hidrátate" = "Hydrate";

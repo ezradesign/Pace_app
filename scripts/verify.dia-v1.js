@@ -31,7 +31,7 @@ var HABLA_V1 = /\bv1\b|\bversi[oó]n 1\b/i;
    pruebas», «cuando salga a la venta». Solo para el censo de la app: lo de antes de v1 sigue en la
    lista aunque ya no diga «v1». No caza el «En pruebas.» del calendario, que es otra cosa. */
 var HABLA_V1_SIN_NOMBRE = /salga a la venta|mientras est[aá] en pruebas|goes on sale|while it[’']?s in testing/i;
-var PAGINAS = ['privacy.html', 'safety.html', 'calendario.html', 'premium/index.html', 'beta/index.html',
+var PAGINAS = ['privacy.html', 'safety.html', 'support.html', 'calendario.html', 'premium/index.html', 'beta/index.html',
   'gracias/index.html', 'recuperar/index.html', 'desistir/index.html',
   'legal/aviso-legal/index.html', 'legal/condiciones/index.html', 'legal/desistimiento/index.html'];
 var VACIOS = /^(area|base|br|col|embed|hr|img|input|link|meta|source|track|wbr)$/i;

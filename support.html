@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ayuda · PACE</title>
+<meta name="description" content="Ayuda de PACE: cambiar de móvil, los avisos, recuperar o cancelar PACE completo, tus datos y cómo escribirnos.">
+<!-- La página de soporte que piden las tiendas (Ez, L1A del 25 nov. 2026: la App Store exige una URL de
+     soporte y no vale solo el correo). Es la dirección que va en App Store Connect y en Play Console:
+     https://pacegrass.app/support. Como safety.html: autocontenida, sin peticiones fuera, español arriba
+     e inglés abajo (#en). Responde lo que PACE, sin cuentas ni servidor, va a oír siempre. Si cambia un
+     nombre de Ajustes (settings.sec.*, settings.data.*, premium.*), cambia aquí también. -->
+<style>
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4;
+    --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #6F6858;
+    --line: #C9C0A8; --focus: #3E5A3A; --breathe: #C97A5D;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #1d1a14; --paper-2: #26211a;
+      --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+      --line: #4d4536; --focus: #7A9A6D; --breathe: #D99477;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0;
+    background: var(--paper); color: var(--ink);
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 15px; line-height: 1.65;
+  }
+  main { max-width: 640px; margin: 0 auto; padding: 48px 24px 64px; }
+  .kicker {
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-3); font-weight: 500; margin-bottom: 8px;
+  }
+  h1, h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic; font-weight: 500; line-height: 1.1;
+    color: var(--ink); margin: 0 0 16px;
+  }
+  h1 { font-size: 40px; }
+  h2 { font-size: 22px; margin-top: 34px; }
+  p { color: var(--ink-2); margin: 0 0 14px; }
+  strong { color: var(--ink); font-weight: 600; }
+  ul { margin: 0 0 14px; padding-left: 20px; color: var(--ink-2); }
+  li { margin-bottom: 6px; }
+  .contacto {
+    border: 1px solid var(--line); border-left: 3px solid var(--focus);
+    background: var(--paper-2); border-radius: 8px;
+    padding: 14px 18px; margin: 20px 0;
+  }
+  .contacto p { margin: 0; }
+  .correo { font-size: 17px; color: var(--ink); font-weight: 600; user-select: all; overflow-wrap: anywhere; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  .footer {
+    margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-3); display: flex; justify-content: space-between;
+    flex-wrap: wrap; gap: 8px;
+  }
+  a { color: var(--focus); }
+  .cabeza { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .cabeza a { text-transform: none; letter-spacing: 0.02em; font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <!-- ================= ES ================= -->
+  <section lang="es">
+    <div class="kicker cabeza"><span>PACE · Foco · Cuerpo</span><a href="#en" lang="en" hreflang="en">English ↓</a></div>
+    <h1>Ayuda</h1>
+
+    <p>PACE no tiene cuentas ni servidor: lo que haces se queda en tu móvil o en tu navegador. Por eso casi
+    todo se arregla desde la propia app. Aquí van las preguntas que más llegan.</p>
+
+    <div class="contacto">
+      <p>¿No está aquí? Escríbenos. Contesta una persona, normalmente en uno o dos días.</p>
+      <p class="correo">hola.ezradesign@gmail.com</p>
+    </div>
+
+    <h2>Cambio de móvil. ¿Pierdo lo que llevo?</h2>
+    <p>No, si te llevas una copia. En el móvil de antes: <strong>Ajustes › Tus datos › Exportar una copia</strong>,
+    y guárdala donde la encuentres (tu correo, tu nube). En el nuevo, al abrir PACE por primera vez, pulsa
+    <strong>«¿Tienes una copia? Tráela»</strong>, o luego en <strong>Ajustes › Tus datos › Importar una copia</strong>.
+    Lo que hay en el móvil nuevo se cambia por la copia.</p>
+
+    <h2>No me llega el aviso al terminar el Foco</h2>
+    <ul>
+      <li>Mira que <strong>Ajustes › Sesiones › Aviso al terminar</strong> esté encendido. Si dice que están
+      desactivados, actívalos en los ajustes del móvil, en Notificaciones de PACE.</li>
+      <li>En Android, enciende también <strong>«Que el aviso llegue a su hora»</strong>. Sin eso, Android
+      puede retrasarlo unos minutos. Si tu móvil ahorra batería con fuerza, quita a PACE de la optimización de batería.</li>
+      <li>En el iPhone, con el interruptor de silencio puesto, el aviso llega sin sonido.</li>
+      <li>En la web, el aviso necesita el permiso de notificaciones del navegador, y la pestaña tiene que seguir abierta.</li>
+    </ul>
+
+    <h2>Compré PACE completo y no lo veo</h2>
+    <ul>
+      <li><strong>En Android o en el iPhone:</strong> abre PACE completo y pulsa <strong>«Restaurar compras»</strong>,
+      con la misma cuenta de Google Play o de Apple con la que compraste.</li>
+      <li><strong>En la web:</strong> tu compra va en un código. Si lo has perdido, pídelo de nuevo en
+      <a href="/recuperar">pacegrass.app/recuperar</a> con el correo de la compra.</li>
+    </ul>
+
+    <h2>Cancelar la prueba o la suscripción</h2>
+    <ul>
+      <li><strong>Android:</strong> Google Play › tu perfil › Pagos y suscripciones › Suscripciones › PACE.</li>
+      <li><strong>iPhone:</strong> Ajustes del iPhone › tu nombre › Suscripciones › PACE.</li>
+      <li><strong>Web:</strong> en PACE, <strong>Ajustes › Gestionar la suscripción</strong>.</li>
+    </ul>
+    <p>Si cancelas durante los 7 días de prueba, no se cobra nada. PACE te avisa dos días antes de que acabe.</p>
+
+    <h2>Devoluciones</h2>
+    <p>Las compras en Google Play y en la App Store las devuelve cada tienda, con sus normas: pídelo desde tu
+    historial de compras de Google Play o en <strong>reportaproblem.apple.com</strong>. Las de la web, escríbenos
+    al correo de arriba.</p>
+
+    <h2>Tus datos</h2>
+    <p>PACE no los envía a ningún sitio, no hay analítica ni anuncios. Para borrarlo todo:
+    <strong>Ajustes › Tus datos › Borrar todos mis datos</strong>, o desinstala la app. Lo explica entero la
+    <a href="/privacy">política de privacidad</a>.</p>
+
+    <h2>Respiración y ejercicios</h2>
+    <p>PACE no da consejo médico. Las técnicas intensas de Respira llevan siempre su aviso antes de empezar.
+    Léete la <a href="/safety">página de seguridad</a> si tienes alguna condición médica.</p>
+  </section>
+
+  <hr>
+
+  <!-- ================= EN ================= -->
+  <section lang="en" id="en">
+    <div class="kicker">English</div>
+    <h1>Help</h1>
+
+    <p>PACE has no accounts and no server: what you do stays on your phone or in your browser. So almost
+    everything is fixed from inside the app. Here are the questions we hear most.</p>
+
+    <div class="contacto">
+      <p>Not here? Write to us. A person answers, usually within a day or two.</p>
+      <p class="correo">hola.ezradesign@gmail.com</p>
+    </div>
+
+    <h2>New phone. Do I lose my history?</h2>
+    <p>Not if you take a copy with you. On the old phone: <strong>Settings › Your data › Export a copy</strong>,
+    and keep it somewhere you'll find it (your email, your cloud). On the new one, the first time you open PACE,
+    tap <strong>“Have a copy? Bring it in”</strong>, or later <strong>Settings › Your data › Import a copy</strong>.
+    What's on the new phone is replaced by the copy.</p>
+
+    <h2>The end-of-Focus alert doesn't arrive</h2>
+    <ul>
+      <li>Check that <strong>Settings › Sessions › Alert at the end</strong> is on. If it says they're turned
+      off, turn on PACE notifications in your phone's settings.</li>
+      <li>On Android, also turn on <strong>“Get the alert on time”</strong>. Without it, Android may delay it a
+      few minutes. If your phone saves battery aggressively, take PACE out of battery optimization.</li>
+      <li>On iPhone, with the silent switch on, the alert arrives without sound.</li>
+      <li>On the web, the alert needs the browser's notification permission, and the tab must stay open.</li>
+    </ul>
+
+    <h2>I bought PACE Complete and I don't see it</h2>
+    <ul>
+      <li><strong>On Android or iPhone:</strong> open PACE Complete and tap <strong>“Restore purchases”</strong>,
+      with the same Google Play or Apple account you bought it with.</li>
+      <li><strong>On the web:</strong> your purchase comes as a code. If you lost it, request it again at
+      <a href="/recuperar">pacegrass.app/recuperar</a> with the email you bought it with.</li>
+    </ul>
+
+    <h2>Cancel the trial or the subscription</h2>
+    <ul>
+      <li><strong>Android:</strong> Google Play › your profile › Payments &amp; subscriptions › Subscriptions › PACE.</li>
+      <li><strong>iPhone:</strong> iPhone Settings › your name › Subscriptions › PACE.</li>
+      <li><strong>Web:</strong> in PACE, <strong>Settings › Manage subscription</strong>.</li>
+    </ul>
+    <p>If you cancel during the 7-day trial, you're not charged. PACE reminds you two days before it ends.</p>
+
+    <h2>Refunds</h2>
+    <p>Google Play and App Store purchases are refunded by each store, under its own rules: ask from your Google
+    Play order history or at <strong>reportaproblem.apple.com</strong>. For web purchases, write to the email above.</p>
+
+    <h2>Your data</h2>
+    <p>PACE doesn't send it anywhere; there's no analytics and no ads. To delete everything:
+    <strong>Settings › Your data › Delete all my data</strong>, or uninstall the app. The
+    <a href="/privacy">privacy policy</a> explains it in full.</p>
+
+    <h2>Breathing and exercises</h2>
+    <p>PACE does not give medical advice. The intense Breathe techniques always show their safety notice before
+    starting. Read the <a href="/safety#en">safety page</a> if you have any medical condition.</p>
+  </section>
+
+  <div class="footer">
+    <span>Pace · by @ezradesign</span>
+    <span><a href="/" data-pace-volver>Volver a la app</a><span data-pace-volver> · </span><a href="/privacy" data-pace-otra-legal>Privacidad</a></span>
+  </div>
+</main>
+<script>
+/* Abierta desde las apps (?app=1, como safety.html): sin «Volver a la app», que llevaba a la landing con
+   la compra de la web, y el enlace a la otra página legal conserva la marca. */
+(function () {
+  if (!/[?&]app=1(&|$)/.test(location.search)) return;
+  document.querySelectorAll('[data-pace-volver]').forEach(function (e) { e.remove(); });
+  document.querySelectorAll('[data-pace-otra-legal]').forEach(function (a) { a.setAttribute('href', a.getAttribute('href') + '?app=1'); });
+})();
+</script>
+</body>
+</html>

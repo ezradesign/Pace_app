@@ -15,14 +15,21 @@ function usePaceIrA(abrirBiblioteca, abrirAgua) {
   // re-dispare. 'focus' solo asegura el modo foco: el home YA es el Pomodoro
   // y auto-arrancar un timer sin gesto sería una sorpresa, no una ayuda. Y lo pide a la barra de
   // arriba (TopBar.jsx), que con una pausa empezada pregunta antes de cortarla, como su pestaña.
+  /* Y los atajos del icono en las apps (Ez, L7A del 25 nov. 2026): llegan como `pace://go/…`
+     (app/ui/nativo.atajos.js), en frío o con PACE ya abierta, y abren lo mismo. */
   useEffectAtajos(() => {
+    const irA = (go) => {
+      if (go === 'breathe' || go === 'move' || go === 'stretch') abrirBiblioteca(go === 'stretch' ? 'extra' : go);   // Estira es 'extra' (ids cruzados)
+      else if (go === 'hydrate') abrirAgua();
+      else if (go === 'focus') paceAtajoFoco();
+    };
     let go = null;
     try { go = new URLSearchParams(window.location.search).get('go'); } catch (e) {}
-    if (!go) return;
-    if (go === 'breathe' || go === 'move' || go === 'stretch') abrirBiblioteca(go === 'stretch' ? 'extra' : go);   // Estira es 'extra' (ids cruzados)
-    else if (go === 'hydrate') abrirAgua();
-    else if (go === 'focus') paceAtajoFoco();
-    try { window.history.replaceState(null, '', window.location.pathname); } catch (e) {}
+    if (go) {
+      irA(go);
+      try { window.history.replaceState(null, '', window.location.pathname); } catch (e) {}
+    }
+    return typeof paceNativoAtajos === 'function' ? paceNativoAtajos(irA) : undefined;
   }, []);
 
 }

@@ -3,4 +3,13 @@
 <resources>
     <string name="pace_canal_foco">Foco en marcha</string>
     <string name="pace_canal_foco_texto">Lo que queda del bloque de Foco, con el móvil bloqueado. No suena.</string>
+    <!-- Los atajos del icono (res/xml/shortcuts.xml), como los de manifest.webmanifest. -->
+    <string name="pace_atajo_foco">Foco</string>
+    <string name="pace_atajo_foco_largo">Ir al Pomodoro</string>
+    <string name="pace_atajo_respira">Respira</string>
+    <string name="pace_atajo_respira_largo">Abrir la biblioteca de respiración</string>
+    <string name="pace_atajo_estira">Estira</string>
+    <string name="pace_atajo_estira_largo">Abrir la biblioteca de movilidad</string>
+    <string name="pace_atajo_agua">Hidrátate</string>
+    <string name="pace_atajo_agua_largo">Abrir el registro de vasos</string>
 </resources>

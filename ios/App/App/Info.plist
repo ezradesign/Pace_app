@@ -66,6 +66,44 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<!-- Los atajos al mantener pulsado el icono (Ez, L7A del 25 nov. 2026): los mismos de la web
+	     (manifest.webmanifest, ?go=). SceneDelegate.swift los pasa a la app como pace://go/<tipo>, y
+	     app/ui/nativo.atajos.js abre lo mismo que ?go=. El título va en castellano y en.lproj lo traduce. -->
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.ezradesign.pace.focus</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Foco</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>timer</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.ezradesign.pace.breathe</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Respira</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>wind</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.ezradesign.pace.stretch</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Estira</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>figure.flexibility</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.ezradesign.pace.hydrate</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Hidrátate</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>drop</string>
+		</dict>
+	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 </dict>

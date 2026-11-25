@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar PACE sin preguntarle a Ez lo
 que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir. Se actualiza en cada hito (regla en `CLAUDE.md`).
-Última actualización: 24 nov. 2026, 23:00, con la 0.220.0 en `main`. Los relevos de
+Última actualización: 25 nov. 2026, con la 0.220.0 en `main` y lo de las tiendas (0.221.0) en su rama. Los relevos de
 antes del 20 nov., en `docs/archive/LEEME_TRASPASO_HASTA_19NOV.md` (D4 A de Ez, 23 nov.).
 
 ## El arranque, en una pantalla
@@ -24,6 +24,20 @@ antes del 20 nov., en `docs/archive/LEEME_TRASPASO_HASTA_19NOV.md` (D4 A de Ez, 
   (privacidad y ficha de Play).
 - **Frase de arranque para la otra cuenta:** «Eres la coordinadora de PACE. Lee CLAUDE.md, STATE.md y el arranque de
   docs/traspaso/LEEME.md, y sigue desde el primer bloque de relevo. Nunca juntes nada en main sin mi sí.»
+
+## AL RELEVO (25 nov., la cuenta del proyecto «Pace App»): lo de las tiendas, en su rama
+
+- **«PACE, listo para las tiendas»** (revisión del 24 nov., página https://claude.ai/artifact/Juso3mzNSJSmmht3g514J9): Ez
+  eligió todas las recomendadas (25 nov.). Montadas como **0.221.0 en `claude/project-thread-a856we`**, sin juntar: `/support`
+  (L1A), «Cuéntanoslo» en las pantallas de error (L5A), los atajos del icono en las apps (L7A) y los textos de
+  `docs/launch/` (L2A `google-play/produccion.md`, L4A `app-store/ficha.md`, L6A `cifras.md`, L8A `accesibilidad.md`, L9A
+  `dia-de-v1.md`, que lleva también L10A, L11A y L12A, los tres para después de v1). Si otra rama junta antes con la 0.221.0,
+  esta se renumera al juntar.
+- **L3, las capturas, esperan su letra**: maqueta en https://claude.ai/artifact/VUQg6kADtyMXo9caS56NVT (A con la lámina de la
+  hora, recomendada; B liso; C solo iPhone). Con la letra, se sacan a tamaño real con `scripts/play/capturas.js`.
+- **Espera a Ez, de lo de las tiendas:** la letra de L3; reunir 15 o 16 testers y mandar las tres preguntas
+  (`produccion.md`); pegar la ficha de Apple cuando tenga la cuenta; la prueba de VoiceOver y TalkBack (`accesibilidad.md`);
+  y poner `https://pacegrass.app/support` como URL de soporte en App Store Connect.
 
 ## AL RELEVO (24 nov., 23:00, la cuenta del proyecto «Pace App»): empieza aquí; manda sobre lo de abajo
 

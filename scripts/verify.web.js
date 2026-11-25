@@ -25,7 +25,7 @@ var os = require('os');
 var path = require('path');
 
 var NECESARIOS = ['index.html', 'sw.js', '_headers', 'calendario.html', 'premium/index.html', 'beta/index.html', 'gracias/index.html', 'recuperar/index.html', 'desistir/index.html',
-                  'privacy.html', 'safety.html', 'manifest.webmanifest', 'manifest.en.webmanifest', 'robots.txt', 'sitemap.xml', '404.html'];
+                  'privacy.html', 'safety.html', 'support.html', 'manifest.webmanifest', 'manifest.en.webmanifest', 'robots.txt', 'sitemap.xml', '404.html'];
 /* Lo que está en la raíz y no se publica a propósito: el de desarrollo y el export. */
 var NO_SE_PUBLICA = ['PACE.html', 'PACE_standalone.html'];
 /* Carpetas que se generan (fuera de git) y no son páginas de la web. */

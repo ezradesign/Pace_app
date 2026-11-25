@@ -2307,6 +2307,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'red.global.empezar': 'Volver a empezar',
   'red.global.copia': 'Descargar una copia de tus datos',
   'red.global.pie': 'Si se repite, guarda la copia: con ella se puede recuperar.',
+  'red.contar': 'Cuéntanoslo',
+  'red.contar.nota': 'abre tu correo con la versión y el error, y lo envías tú',
   'update.msg': 'Hay una versión nueva de PACE',
   'update.cta': 'Actualizar',
   'update.applying': 'Actualizando…',
@@ -2471,6 +2473,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'red.global.empezar': 'Start again',
   'red.global.copia': 'Download a copy of your data',
   'red.global.pie': 'If this happens again, keep the copy. It may help recover your data.',
+  'red.contar': 'Tell us',
+  'red.contar.nota': 'opens your email with the version and the error, and you send it',
   'update.msg': 'A new version of PACE is ready',
   'update.cta': 'Update',
   'update.applying': 'Updating…',
@@ -7938,7 +7942,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.220.0';
+const PACE_VERSION = 'v0.221.0';
 
 
 
@@ -21339,6 +21343,56 @@ Object.assign(window, { paceEntradaAvisos, paceEntradaPoner, paceEntradaEncender
 ;Object.assign(window, { PACE_ENTRADA_PRIMER_ID, PACE_ENTRADA_DIAS, PACE_ENTRADA_CANAL, PACE_ENTRADA_CANAL_MUDO, PACE_ENTRADA_CANAL_VIEJO, PACE_ENTRADA_SONIDO, PACE_ENTRADA_SONIDO_IOS, paceEntradaTexto, PACE_ENTRADA_MADRUGADA, ritmoEntradaPrimera, paceEntradaAvisos, PACE_ENTRADA_CLAVE, _paceEntrada, paceEntradaLeer, paceEntradaGuardar, paceEntradaPoner, paceEntradaNotificacion, paceEntradaCanales, paceEntradaExacta, paceEntradaPonerYa, PACE_ENTRADA_TOPE_MS, paceEntradaQuitar, paceEntradaEncender });
 })();
 </script>
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   nativo.atajos.js — LOS ATAJOS DEL ICONO EN LAS APPS (Ez, L7A del 25 nov. 2026)
+   ============================================================
+   Al mantener pulsado el icono de PACE salen Foco, Respira, Estira e Hidrátate, como en la web
+   instalada (manifest.webmanifest, ?go=). Android los declara en res/xml/shortcuts.xml y el iPhone
+   en Info.plist (SceneDelegate.swift los traduce). Los dos abren PACE con `pace://go/<tipo>`, que el
+   complemento App de Capacitor da a la web como `appUrlOpen` y GUARDA hasta que alguien escucha: así
+   también llega el de un arranque en frío, aunque la web monte después. No se usa `getLaunchUrl`,
+   que tras «Volver a empezar» (una recarga) devolvería el mismo atajo y lo abriría otra vez.
+   Lo que se abre es lo mismo que con ?go= (`usePaceIrA`, main/main.atajos.jsx): ningún atajo empieza
+   una sesión solo.
+
+   `var`/`function` a proposito (un `const` no cruza la IIFE del artefacto).
+   ============================================================ */
+
+var PACE_ATAJOS = ['focus', 'breathe', 'move', 'stretch', 'hydrate'];
+
+
+function paceAtajoDeUrl(url) {
+  var m = /^pace:\/\/go\/([a-z]+)\/?$/.exec(String(url || ''));
+  return m && PACE_ATAJOS.indexOf(m[1]) !== -1 ? m[1] : null;
+}
+
+
+
+function paceNativoAtajos(irA) {
+  var app = typeof paceNativoPlugin === 'function' ? paceNativoPlugin('App') : null;
+  if (!app || typeof app.addListener !== 'function') return function () {};
+  var asa = null,fuera = false;
+  try {
+    var r = app.addListener('appUrlOpen', function (d) {
+      var tipo = paceAtajoDeUrl(d && d.url);
+      if (tipo) {try {irA(tipo);} catch (e) {}}
+    });
+
+    if (r && typeof r.then === 'function') r.then(function (a) {if (fuera) {try {a.remove();} catch (e) {}} else asa = a;}, function () {});else
+    asa = r;
+  } catch (e) {}
+  return function () {fuera = true;try {if (asa && asa.remove) asa.remove();} catch (e) {}};
+}
+
+Object.assign(window, { paceAtajoDeUrl, paceNativoAtajos });
+;Object.assign(window, { PACE_ATAJOS, paceAtajoDeUrl, paceNativoAtajos });
+})();
+</script>
   <!-- valoracion: la ventana de la tienda para valorar PACE, una vez, tras la quinta pausa
        entera (Ez, 15 oct.). La llaman las complete*Session; habla con la tienda por nativo. -->
   <script>
@@ -22126,7 +22180,7 @@ Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, di
 class PaceRed extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { error: null };
+    this.state = { error: null, fallo: null };
     this.reiniciar = this.reiniciar.bind(this);
     this.cerrar = this.cerrar.bind(this);
   }
@@ -22141,14 +22195,19 @@ class PaceRed extends React.Component {
       error, info && info.componentStack ? info.componentStack.split('\n').slice(0, 4).join('\n') : '');
     } catch (e) {}
     window.paceUltimoFallo = { cuando: Date.now(), donde: this.props.nombre || this.props.modo || null,
-      mensaje: String(error && error.message || error).slice(0, 200) };
+      mensaje: String(error && error.message || error).slice(0, 200),
+
+      piezas: info && info.componentStack ? (info.componentStack.match(/at (\w+)/g) || []).slice(0, 3).map((x) => x.slice(3)).join(' < ') : '' };
+
+
+    this.setState({ fallo: window.paceUltimoFallo });
   }
 
   componentDidUpdate(prev) {
-    if (this.state.error && prev.abierto !== this.props.abierto) this.setState({ error: null });
+    if (this.state.error && prev.abierto !== this.props.abierto) this.setState({ error: null, fallo: null });
   }
 
-  reiniciar() {this.setState({ error: null });}
+  reiniciar() {this.setState({ error: null, fallo: null });}
 
   cerrar() {
     if (typeof this.props.onCerrar === 'function') {
@@ -22168,12 +22227,12 @@ class PaceRed extends React.Component {
 
 
     if (this.props.abierto === false) return null;
-    if (modo === 'global') return React.createElement(PaceRedGlobal, null);
-    return React.createElement(PaceRedParte, { nombre: this.props.nombre, onCerrar: this.cerrar });
+    if (modo === 'global') return React.createElement(PaceRedGlobal, { fallo: this.state.fallo });
+    return React.createElement(PaceRedParte, { nombre: this.props.nombre, onCerrar: this.cerrar, fallo: this.state.fallo });
   }
 }
 
-function PaceRedParte(_ref) {let { nombre, onCerrar } = _ref;
+function PaceRedParte(_ref) {let { nombre, onCerrar, fallo } = _ref;
   const { t } = useT();
   return (
     React.createElement(Modal, { open: true, onClose: onCerrar, maxWidth: 560, tagLabel: nombre || undefined, ariaLabel: t('red.parte.titulo') },
@@ -22183,13 +22242,14 @@ function PaceRedParte(_ref) {let { nombre, onCerrar } = _ref;
     React.createElement("div", { style: { display: 'flex', gap: 10, marginTop: 6, flexWrap: 'wrap' } },
     React.createElement("button", { type: "button", onClick: onCerrar, style: paceRedStyles.lleno }, t('red.cerrar')),
     React.createElement("button", { type: "button", onClick: () => location.reload(), style: paceRedStyles.hueco }, t('red.recargar'))
-    )
+    ),
+    React.createElement(PaceRedContar, { fallo: fallo })
     )
     ));
 
 }
 
-function PaceRedGlobal() {
+function PaceRedGlobal() {let { fallo } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   const { t } = useT();
   const logo = document.getElementById('pace-logo-src');
   const movil = typeof paceEsMovil === 'function' ? paceEsMovil() : false;
@@ -22203,8 +22263,48 @@ function PaceRedGlobal() {
     React.createElement("button", { type: "button", onClick: () => {if (typeof paceDescargarCopia === 'function') paceDescargarCopia();}, style: paceRedStyles.enlace },
     t('red.global.copia')
     ),
-    React.createElement("p", { style: paceRedStyles.pie }, t('red.global.pie'))
+    React.createElement("p", { style: paceRedStyles.pie }, t('red.global.pie')),
+    React.createElement(PaceRedContar, { centrado: true, fallo: fallo })
     )
+    ));
+
+}
+
+
+
+
+
+
+
+function paceRedCorreo(lang, fallo) {
+  const f = fallo || window.paceUltimoFallo || {};
+  let plataforma = 'web';
+  try {if (typeof pacePlataformaNativa === 'function' && pacePlataformaNativa()) plataforma = pacePlataformaNativa();} catch (e) {}
+  const version = typeof PACE_VERSION === 'string' ? PACE_VERSION : '?';
+  const ua = (navigator.userAgent || '').replace(/\s+/g, ' ').slice(0, 160);
+  let pantalla = '?';
+  try {pantalla = Math.round(paceLienzoAncho()) + '×' + Math.round(paceLienzoAlto());} catch (e) {}
+  const en = lang === 'en';
+  const asunto = 'PACE ' + version + ' · ' + (en ? 'something went wrong' : 'algo se ha torcido');
+  const cuerpo = [
+  en ? 'What were you doing when it happened? (optional)' : '¿Qué estabas haciendo cuando pasó? (si quieres)',
+  '', '', '— — —',
+  'PACE ' + version + ' · ' + plataforma + ' · ' + pantalla,
+  (en ? 'Where: ' : 'Dónde: ') + (f.donde || '?') + (f.piezas ? ' (' + f.piezas + ')' : ''),
+  'Error: ' + (f.mensaje || '?'),
+  ua].
+  join('\n');
+  const contacto = typeof PACE_CONTACTO === 'string' ? PACE_CONTACTO : '';
+  return 'mailto:' + contacto + '?subject=' + encodeURIComponent(asunto) + '&body=' + encodeURIComponent(cuerpo);
+}
+
+function PaceRedContar(_ref2) {let { centrado, fallo } = _ref2;
+  const { t, lang } = useT();
+  if (typeof PACE_CONTACTO !== 'string' || !PACE_CONTACTO) return null;
+  return (
+    React.createElement("p", { "data-pace-red-contar": true, style: { ...paceRedStyles.pie, marginTop: 0, textAlign: centrado ? 'center' : 'left' } },
+    React.createElement("a", { href: paceRedCorreo(lang, fallo), style: { color: 'var(--ink-2)', textUnderlineOffset: 3 } }, t('red.contar')),
+    ' · ', t('red.contar.nota')
     ));
 
 }
@@ -22224,8 +22324,8 @@ const paceRedStyles = {
   pie: { margin: '6px 0 0', fontSize: 11.5, color: 'var(--ink-3)', maxWidth: 320 }
 };
 
-Object.assign(window, { PaceRed, PaceRedParte, PaceRedGlobal, paceRedStyles });
-;Object.assign(window, { PaceRedParte, PaceRedGlobal });
+Object.assign(window, { PaceRed, PaceRedParte, PaceRedGlobal, PaceRedContar, paceRedCorreo, paceRedStyles });
+;Object.assign(window, { PaceRedParte, PaceRedGlobal, paceRedCorreo, PaceRedContar });
 })();
 </script>
   <!-- Reloj de tiempo activo compartido (s170): expone window.useActiveClock.
@@ -56802,14 +56902,21 @@ function usePaceIrA(abrirBiblioteca, abrirAgua) {
 
 
 
+
+
   useEffectAtajos(() => {
+    const irA = (go) => {
+      if (go === 'breathe' || go === 'move' || go === 'stretch') abrirBiblioteca(go === 'stretch' ? 'extra' : go);else
+      if (go === 'hydrate') abrirAgua();else
+      if (go === 'focus') paceAtajoFoco();
+    };
     let go = null;
     try {go = new URLSearchParams(window.location.search).get('go');} catch (e) {}
-    if (!go) return;
-    if (go === 'breathe' || go === 'move' || go === 'stretch') abrirBiblioteca(go === 'stretch' ? 'extra' : go);else
-    if (go === 'hydrate') abrirAgua();else
-    if (go === 'focus') paceAtajoFoco();
-    try {window.history.replaceState(null, '', window.location.pathname);} catch (e) {}
+    if (go) {
+      irA(go);
+      try {window.history.replaceState(null, '', window.location.pathname);} catch (e) {}
+    }
+    return typeof paceNativoAtajos === 'function' ? paceNativoAtajos(irA) : undefined;
   }, []);
 
 }

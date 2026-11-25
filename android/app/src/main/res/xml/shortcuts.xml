@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Los atajos al mantener pulsado el icono (Ez, L7A del 25 nov. 2026): los mismos de la web
+     (manifest.webmanifest, ?go=). Cada uno abre PACE con pace://go/<tipo>; el complemento App lo da a
+     la web como `appUrlOpen` y app/ui/nativo.atajos.js abre lo mismo que ?go=. Con la clase explícita
+     no hace falta filtro de intent: ninguna otra app puede abrir PACE con esa dirección. -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut android:shortcutId="focus" android:enabled="true" android:icon="@mipmap/ic_launcher_round"
+        android:shortcutShortLabel="@string/pace_atajo_foco" android:shortcutLongLabel="@string/pace_atajo_foco_largo">
+        <intent android:action="android.intent.action.VIEW" android:data="pace://go/focus"
+            android:targetPackage="com.ezradesign.pace" android:targetClass="com.ezradesign.pace.MainActivity" />
+    </shortcut>
+    <shortcut android:shortcutId="breathe" android:enabled="true" android:icon="@mipmap/ic_launcher_round"
+        android:shortcutShortLabel="@string/pace_atajo_respira" android:shortcutLongLabel="@string/pace_atajo_respira_largo">
+        <intent android:action="android.intent.action.VIEW" android:data="pace://go/breathe"
+            android:targetPackage="com.ezradesign.pace" android:targetClass="com.ezradesign.pace.MainActivity" />
+    </shortcut>
+    <shortcut android:shortcutId="stretch" android:enabled="true" android:icon="@mipmap/ic_launcher_round"
+        android:shortcutShortLabel="@string/pace_atajo_estira" android:shortcutLongLabel="@string/pace_atajo_estira_largo">
+        <intent android:action="android.intent.action.VIEW" android:data="pace://go/stretch"
+            android:targetPackage="com.ezradesign.pace" android:targetClass="com.ezradesign.pace.MainActivity" />
+    </shortcut>
+    <shortcut android:shortcutId="hydrate" android:enabled="true" android:icon="@mipmap/ic_launcher_round"
+        android:shortcutShortLabel="@string/pace_atajo_agua" android:shortcutLongLabel="@string/pace_atajo_agua_largo">
+        <intent android:action="android.intent.action.VIEW" android:data="pace://go/hydrate"
+            android:targetPackage="com.ezradesign.pace" android:targetClass="com.ezradesign.pace.MainActivity" />
+    </shortcut>
+</shortcuts>
