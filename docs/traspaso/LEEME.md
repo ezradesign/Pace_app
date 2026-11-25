@@ -2,7 +2,7 @@
 
 Este archivo es para un Claude que empieza de cero, en esta cuenta o en otra, y tiene que retomar PACE sin preguntarle a Ez lo
 que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir. Se actualiza en cada hito (regla en `CLAUDE.md`).
-Última actualización: 24 nov. 2026, 23:00, con la 0.220.0 en `main`. Los relevos de
+Última actualización: 25 nov. 2026, con la 0.220.0 en `main` y el proyecto limpio de ramas. Los relevos de
 antes del 20 nov., en `docs/archive/LEEME_TRASPASO_HASTA_19NOV.md` (D4 A de Ez, 23 nov.).
 
 ## El arranque, en una pantalla
@@ -24,6 +24,36 @@ antes del 20 nov., en `docs/archive/LEEME_TRASPASO_HASTA_19NOV.md` (D4 A de Ez, 
   (privacidad y ficha de Play).
 - **Frase de arranque para la otra cuenta:** «Eres la coordinadora de PACE. Lee CLAUDE.md, STATE.md y el arranque de
   docs/traspaso/LEEME.md, y sigue desde el primer bloque de relevo. Nunca juntes nada en main sin mi sí.»
+
+## AL RELEVO (25 nov.): el proyecto, limpio; se retoma desde `main`. Manda sobre todo lo de abajo
+
+- Ez, 25 nov.: «Deja todo el proyecto limpio de ramas y cosas pendientes, que vamos a retomar desde donde estaba publicado».
+- **Punto de partida: `main` = 0.220.0** más el arreglo de `ritmo.spec` (ef0e2be), lo publicado en https://pacegrass.app,
+  con la CI en verde. No queda ninguna rama más que `main` ni PRs abiertos: se cerraron sin juntar el 7 (las V), el 10
+  (M5A y M12A) y el 12 (tiendas, 0.221.0). Los bloques de relevo de abajo son historia: lo que dicen «sin juntar» o «espera
+  a Ez» sobre esas ramas ya no está pendiente.
+- **Lo archivado**, por si Ez quiere recuperar algo (`git checkout -b <rama> <etiqueta>`):
+
+  | Etiqueta | Commit | Qué era |
+  |---|---|---|
+  | `archive/v-24nov-25nov` | 26bf657 | Las V (PR 7), sin juntar |
+  | `archive/project-thread-37sjmk-25nov` | 8cb949f | M5A y M12A de la revisión visual (PR 10), sin juntar |
+  | `archive/project-thread-a856we-25nov` | 1f193da | 0.221.0, lo que piden las tiendas (PR 12), sin juntar |
+  | `archive/diag-ahora-no-24nov-25nov` | 0ba68bd | Diagnóstico de «Ahora no» a 360 px (no se juntaba) |
+  | `archive/diag-f4-24nov-25nov` | 6b6eca9 | Diagnóstico de la F4 en Linux (no se juntaba) |
+  | `archive/diag-fondo-24nov-25nov` | 2bf535a | Diagnóstico de la auditoría a fondo (no se juntaba) |
+  | `archive/dependabot-multi-7f73b8225b-25nov` | 9a7a088 | Dependabot: minimatch y rimraf |
+  | `archive/experiencia-24nov-25nov` | 4c6df4e | Ya en `main` |
+  | `archive/fondo-24nov-25nov` | 9010b20 | Ya en `main` |
+  | `archive/project-thread-6ate4b-25nov` | 3d0b43d | Ya en `main` |
+  | `archive/state-hoja-24nov-25nov` | 8800e30 | Ya en `main` |
+
+  La vista previa de las E (E1A, E5A, E7A) nunca se subió como rama: su diff está en la carpeta del proyecto,
+  `revision-visual-24nov/vista-previa-e/e-prueba-sobre-ccdf3db.diff`.
+- **Lo siguiente: la «A»**, avisos durante la jornada sin pulsar nada (Ez, 25 nov.: «La A puede estar bien si la
+  implementamos con lógica»). Está en diseño: reglas en https://claude.ai/artifact/3wtczSdUizJZQuj8pbHkbN, con R1-R6 por
+  elegir. No se monta nada antes de sus letras.
+- **Espera a Ez, además:** subir la 0.220.0 a Play y a TestFlight, y lo de `STATE.md` («Espera a Ez»).
 
 ## AL RELEVO (24 nov., 23:00, la cuenta del proyecto «Pace App»): empieza aquí; manda sobre lo de abajo
 
