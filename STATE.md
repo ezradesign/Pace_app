@@ -1,6 +1,6 @@
 # PACE · Estado
 
-**Versión:** v0.220.0 · 24 nov. 2026 (la experiencia: U1A U2A U4A U6A). Los testers tienen la 0.205.0. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que no se pueden
+**Versión:** v0.221.0 · 26 nov. 2026, en la rama `claude/primera-impresion-26nov` hasta el «júntalo» de Ez (la primera impresión: el aro lleva la jornada, los precios tras la primera pausa, la visita en tres paradas). En `main`, la 0.220.0. Los testers tienen la 0.205.0. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que no se pueden
 romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
 ## Punto de partida (25 nov.)
