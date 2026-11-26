@@ -157,7 +157,7 @@ function aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empez
    día llega contestado (`ritmoHabitual`), pero el aro seguía en «Foco manual · Empezar foco» y la
    jornada esperaba abajo tras «Preparar jornada»: dos botones, y ganaba el de arriba, al revés de lo
    que dice la visita. Ahora, mientras ese día no está elegido y el aro está parado, el aro ya es la
-   jornada: «Tu jornada, hasta las 17:00» arriba (una línea sola: con dos, en 1280×800 el botón caía
+   jornada: «Hasta las 17:00» arriba (una línea sola: con dos, en 1280×800 el botón caía
    sobre «Actividades»), los minutos del primer bloque si
    empezaras ahora y «Empezar jornada», que elige el día (`ritmoComenzarHabitual`, lo mismo que
    «Preparar jornada») y arranca el bloque en el mismo toque. Debajo, «o un foco suelto de 25 min»,
@@ -178,7 +178,7 @@ function aroPrevia(state, t, tn) {
   const dur = typeof ritmoDurSiEmpiezas === 'function' ? ritmoDurSiEmpiezas(p, ritmoAhoraExacto()) : null;
   const min = Math.max(1, Math.round(dur || p.actual.dur || 0));
   return {
-    hasta: tn('ritmo.aro.hasta', { h: ritmoHora(p.m.hasta) }),
+    hasta: tn('ritmo.hasta', { h: ritmoHora(p.m.hasta) }),   // «Hasta las 17:00»: «Tu jornada, hasta las 17:00» partía en dos líneas a 360 px
     empezar: t('ritmo.aro.empezar'),
     min,
   };
@@ -200,7 +200,7 @@ function useAroPrevia({ previa, aro, state, status, empezar, tn }) {
   return {
     empezar: () => { pedido.current = true; ritmoComenzarHabitual(); },
     suelto: previa ? (
-      <button type="button" className="pace-aro-seguir" data-pace-aro-suelto onClick={empezar}>
+      <button type="button" className="pace-aro-seguir" data-pace-aro-suelto onClick={empezar} style={{ padding: 0, font: 'inherit', lineHeight: 'inherit' }}>
         {tn('ritmo.aro.suelto', { n: state.focusMinutes })}
       </button>
     ) : null,

@@ -67,13 +67,11 @@ test('la bienvenida no hace las tres preguntas: tras la semana, «Comenzar» lle
 
   await page.getByRole('button', { name: 'Comenzar' }).click();
   /* La semana sí se pregunta: es de «A tu ritmo», no de los Caminos
-     (onboarding-semana.spec.js). Detrás va PACE completo, abierto hasta v1 (Ez, 2A del
-     27 oct.), y su «Comenzar» lleva a la home: ni preguntas ni primer Camino. */
+     (onboarding-semana.spec.js). Es la última (Ez, 26 nov. 2026: PACE completo sale tras la
+     primera pausa) y su «Comenzar» lleva a la home: ni preguntas ni primer Camino. */
   await expect(bienvenida).toContainText('¿Cómo es tu semana?');
   await expect(bienvenida).not.toContainText('Tres preguntas breves');
-  await page.getByRole('button', { name: 'Continuar' }).click();
-  await expect(bienvenida).toContainText('PACE es gratis.');
-  await page.getByRole('button', { name: 'Comenzar' }).click();
+  await page.locator('[data-pace-semana-guardar]').click();
   await expect(bienvenida).toHaveCount(0);
   await page.locator('[data-pace-visita-saltar]').click();
 
