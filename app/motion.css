@@ -209,6 +209,9 @@ input, textarea { font-family: inherit; color: inherit; }
 .pace-display-italic { font-family: var(--font-display); font-style: italic; }
 .pace-meta {
   font-size: var(--size-meta);
+  /* A 12 px (Ez, pulido del 26 nov. 2026), la línea mide lo que medía a 11: 16 px. Un píxel más bajo
+     «Actividades» basta para que a 360 × 640 las actividades se pongan en fila (home-sin-scroll). */
+  line-height: 1.33;
   letter-spacing: var(--track-meta);
   text-transform: uppercase;
   color: var(--ink-3);

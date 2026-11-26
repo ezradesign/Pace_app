@@ -892,6 +892,9 @@ input, textarea { font-family: inherit; color: inherit; }
 .pace-display-italic { font-family: var(--font-display); font-style: italic; }
 .pace-meta {
   font-size: var(--size-meta);
+  /* A 12 px (Ez, pulido del 26 nov. 2026), la línea mide lo que medía a 11: 16 px. Un píxel más bajo
+     «Actividades» basta para que a 360 × 640 las actividades se pongan en fila (home-sin-scroll). */
+  line-height: 1.33;
   letter-spacing: var(--track-meta);
   text-transform: uppercase;
   color: var(--ink-3);
@@ -27385,8 +27388,11 @@ const timerDialStyles = {
     maxWidth: '70%'
   },
   modeLabel: {
-    fontSize: 11,
-    letterSpacing: '0.26em',
+
+
+
+    fontSize: 12,
+    letterSpacing: '0.19em',
     textTransform: 'uppercase',
     color: 'var(--ink-3)',
     marginBottom: 10,
@@ -34373,7 +34379,7 @@ function AroFila(_ref2) {let { cycle, cycleLabel, oculta, fila } = _ref2;
         background: cycle % 4 > i ? 'var(--focus)' : 'var(--line-2)'
       } })
     ),
-    React.createElement("span", { "data-pace-ciclo": true, style: { ...callado, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 } }, cycleLabel)
+    React.createElement("span", { "data-pace-ciclo": true, style: { ...callado, fontSize: 12, lineHeight: 1.2, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 } }, cycleLabel)
     ));
 
 }
@@ -56089,7 +56095,7 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
         scale: var(--pace-dial-escala, 1);
       }
       [data-pace-dial-fit] [data-pace-dial-label] {
-        font-size: clamp(12px, calc(var(--pace-timer-d, 360px) * 0.028), 15px) !important;
+        font-size: clamp(9px, calc(var(--pace-timer-d, 360px) * 0.028), 15px) !important;   /* 9 px aquí sí: solo con el navegador ampliado (150-175 %), que ya la pinta a 13-16 px */
         margin-bottom: clamp(4px, calc(var(--pace-timer-d, 360px) * 0.026), 15px) !important;
       }
       [data-pace-dial-fit] [data-pace-dial-number] {
