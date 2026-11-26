@@ -69,13 +69,17 @@ function MinutesPicker({ value, onChange }) {
   };
 
   /* El lector de pantalla oía «15, botón» y no sabía cuál estaba puesto: cada cifra lleva su
-     unidad y su estado, y el grupo dice qué se elige. «Min» ya lo dice el grupo. */
+     unidad y su estado, y el grupo dice qué se elige. «Min» ya lo dice el grupo.
+     «MIN» ES UN RÓTULO, NO UNA OPCIÓN (Ez, 26 nov. 2026, auditoría de la primera impresión): en
+     negrita y con una raya fina que lo separa de las cifras. Mide lo mismo que antes (7 + 1 + 2
+     = los 10 px de margen que tenía), así que la fila no crece a 320 px. */
   return (
     <div data-pace-minutos role="group" aria-label={t('focus.minutes.grupo')}
       style={{ display: 'flex', gap: 4, alignItems: 'center', justifyContent: 'center' }}>
-      <span aria-hidden="true" style={{
+      <span aria-hidden="true" data-pace-minutos-rotulo style={{
         fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase',
-        color: 'var(--ink-3)', marginRight: 10, fontWeight: 500,
+        color: 'var(--ink-2)', fontWeight: 700,
+        paddingRight: 7, borderRight: '1px solid var(--line-2)', marginRight: 2, lineHeight: '14px',
       }}>{t('focus.min')}</span>
       {presets.map(m => (
         <button key={m} data-pace-toque onClick={() => { onChange(m); setEditing(false); }}

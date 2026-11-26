@@ -133,6 +133,7 @@ Object.assign(window.PACE_STRINGS.es, {
     /* Bajo el rótulo del aro: de qué es la hora, que se leía como el final del bloque (Ez, 5A del 8 nov. 2026). */
     'ritmo.aro.hasta':               'Tu jornada, hasta las {h}',
     'ritmo.aro.empezar':             'Empezar jornada',
+    'ritmo.aro.suelto':              'o un foco suelto de {n} min',
     'ritmo.aro.siguiente':           'Empezar bloque {n}',
     /* El aro como paso actual (Ez, 5 nov. 2026: 1A; focus/FocusTimer.jornada.jsx) */
     'ritmo.aro.hacerPausa':          'Hacer la pausa',
@@ -335,6 +336,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'ritmo.aro.bloque':              'Block {n} of {m}',
     'ritmo.aro.hasta':               'Your day, until {h}',
     'ritmo.aro.empezar':             'Start the day',
+    'ritmo.aro.suelto':              'or a single {n}-minute focus',
     'ritmo.aro.siguiente':           'Start block {n}',
     'ritmo.aro.hacerPausa':          'Take the break',
     'ritmo.aro.pausar':              'Pause Focus',

@@ -89,7 +89,11 @@ function Onboarding() {
      es de «A tu ritmo» y no de los Caminos), con los Caminos sus tres preguntas y el
      primer Camino, y PACE completo al final si toca (OnboardingCompleto.jsx). Contar
      pasos a pelo confundía la semana con la primera pregunta. */
-  const modoCompleto = typeof paceBienvenidaCompleto === 'function' ? paceBienvenidaCompleto() : null;
+  /* PACE COMPLETO YA NO CIERRA LA BIENVENIDA (Ez, 26 nov. 2026, auditoría de la primera impresión: «la
+     que tú recomiendes»): hablaba de precios a quien aún no había hecho ni una pausa. Sale una vez al
+     terminar la primera pausa entera, en su pantalla final (PremiumTrasPausa, SessionDone). La rama
+     `completo` se queda para cuando haga falta otra vez: hoy ninguna lista la pide. */
+  const modoCompleto = null;
   const pantallas = ['bienvenida', 'semana']
     .concat(conCaminos ? questions.map((_, iq) => 'q' + iq) : [])
     .concat(conCaminos ? ['primer'] : [])
@@ -129,6 +133,8 @@ function Onboarding() {
     const now = Date.now();
     const patch = {
       firstSeen: now,
+      /* Los precios, tras la primera pausa (PremiumTrasPausa.jsx): esta bienvenida ya no los enseña. */
+      premiumTrasPausa: 'pendiente',
       /* completedAt = "el flujo se cerró"; los campos null significan
          pregunta saltada (pickFirstPath ya lo contempla). */
       profile: { ...draft, completedAt: now },

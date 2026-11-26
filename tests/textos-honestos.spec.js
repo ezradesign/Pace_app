@@ -40,8 +40,7 @@ test('1 · la bienvenida deja probar primero; en Ajustes el botón sigue diciend
     .toEqual(['Not now, I’ll try it first', 'You can set it up later in Settings.']);
 
   /* En Ajustes el mismo botón quita la semana guardada: ahí «Ahora no» diría otra cosa. */
-  await page.locator('[data-pace-semana-saltar]').click();
-  await page.locator('[data-pace-onb-comenzar]').click();
+  await page.locator('[data-pace-semana-saltar]').click();   // sin PACE completo detrás (26 nov.): derecho a la visita
   await page.locator('[data-pace-visita-saltar]').click();
   await page.evaluate(() => ritmoSemanaAbrir());
   await expect(vis(page, '[data-pace-semana-saltar]')).toHaveText('Cada semana es distinta');

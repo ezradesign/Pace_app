@@ -30,10 +30,18 @@ const { useState: useStateVIS, useEffect: useEffectVIS, useLayoutEffect: useLayo
 
 /* Tu día va la primera (Ez, 19 nov. 2026: «lo de construir tu día debería ser importante»): quien
    salta la visita en cuanto sale ya sabe que el día se prepara, y es lo que da sentido al resto. */
+/* TRES PARADAS (Ez, 26 nov. 2026, auditoría de la primera impresión: «vale, pero el usuario tiene que
+   comprender cómo usar la app»): llegaban seis justo después de la bienvenida. Se quedan las que hacen
+   falta para empezar hoy (el día, el aro y la pausa, lo demás) y la última nombra lo de arriba y dónde
+   se hace la copia. Estadísticas y Logros se explican solos con su subtítulo («Métricas suaves…»,
+   «Sellos de libreta de campo…»), y Ajustes repite la visita entera. Las paradas de antes siguen aquí
+   abajo, fuera de la lista, por si vuelven. */
 const PACE_VISITA_PARADAS = [
   { id: 'dia', sel: '[data-pace-ritmo-tarjeta], [data-pace-ritmo-panel]' },
   { id: 'aro', sel: '[data-pace-dial-ring]', redonda: true },
-  { id: 'act', sel: '[data-pace-activitybar-grid]' },
+  { id: 'act', sel: '[data-pace-activitybar-grid]', texto: 'resto' },
+];
+const PACE_VISITA_PARADAS_ANTES = [
   { id: 'arriba', sel: '[data-pace-topbar-stats]', y: '[data-pace-topbar-logros]' },
   { id: 'cajon', sel: '[data-pace-sidebar-open]', redonda: true, texto: 'menu' },
   { id: 'columna', sel: '[data-pace-sidebar]', texto: 'menu' },
@@ -85,6 +93,13 @@ function paceVisitaSitio(h, ancho, alto, vw, vh) {
   if (h.left + h.width + G + ancho <= vw - M) return { left: h.left + h.width + G, top: encaja(medio) };
   if (h.left - G - ancho >= M) return { left: h.left - G - ancho, top: encaja(medio) };
   return { left, top: vh - M - alto };
+}
+
+/* El botón del aro tal como se lee: con el día preparado, «Empezar jornada» (FocusTimer.jornada.jsx). */
+function paceVisitaBoton(t) {
+  const b = document.querySelector('[data-pace-home-body] [data-pace-cta]') || document.querySelector('[data-pace-cta]');
+  const txt = b && (b.textContent || '').trim();
+  return txt || t('focus.start');
 }
 
 function OnbVisita() {
@@ -156,7 +171,7 @@ function OnbVisita() {
           <div className="pace-meta">{tn('visita.paso', { n: paso + 1, total: paradas.length })}</div>
           <h2 id="pace-visita-titulo" style={onbVisitaStyles.titulo}>{t('visita.' + parada.id + '.titulo')}</h2>
           <p id="pace-visita-texto" style={onbVisitaStyles.texto}>
-            {parada.id === 'aro' ? tn('visita.aro.texto', { boton: t('focus.start') }) : t('visita.' + (parada.texto || parada.id) + '.texto')}
+            {parada.id === 'aro' ? tn('visita.aro.texto', { boton: paceVisitaBoton(t) }) : t('visita.' + (parada.texto || parada.id) + '.texto')}
             {/* De la B (la pista de la home): lo que pasa al acabar el Foco, que la C no contaba. */}
             {parada.id === 'aro' ? ' ' + t('visita.aro.pausa') : null}
           </p>
@@ -217,4 +232,4 @@ if (!document.getElementById('pace-visita-css')) {
   document.head.appendChild(s);
 }
 
-Object.assign(window, { OnbVisita, paceVisitaSitio });
+Object.assign(window, { OnbVisita, paceVisitaSitio, PACE_VISITA_PARADAS_ANTES });

@@ -445,6 +445,8 @@ function PaceApp() {
       {/* La invitación a PACE completo se gestiona sola (pace:open-premium) y va
           al final para quedar encima de la biblioteca desde la que se abre. */}
       {red(null, true, null, <PremiumInvitacion />)}
+      {/* PACE completo tras la primera pausa (PremiumTrasPausa.jsx): la pantalla que cerraba la bienvenida. */}
+      {red(null, true, null, <PremiumCompletoHoja />)}
 
       {/* ========== TOASTS ========== */}
       <PaceRed modo="silencio"><ToastHost /></PaceRed>

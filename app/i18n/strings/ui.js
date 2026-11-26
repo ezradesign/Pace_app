@@ -237,7 +237,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'sidebar.hoy.focus':             '{x} of focus',
     'sidebar.hoy.breathe':           '{x} breathing',
     'sidebar.hoy.body':              '{x} moving',
-    'sidebar.agua.ninguno':          'Zero glasses of {m}',
+    'sidebar.agua.ninguno':          'None of {m} glasses',
     'sidebar.agua.de':               '{x} of {m}',
     'sidebar.agua.meta':             '{x} today',
     'sidebar.agua.meta.x':           'All {m} glasses',

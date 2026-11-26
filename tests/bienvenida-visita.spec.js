@@ -1,14 +1,14 @@
 /* PACE · la visita guiada por la home (Ez, 1C del 27 oct. 2026)
  * ==========================================
- * Al cerrar la bienvenida, cuatro paradas sobre la home de verdad: el aro, Actividades,
- * tu día y Ajustes, con «Siguiente» y «Saltar la visita» (app/onboarding/OnboardingVisita.jsx).
+ * Al cerrar la bienvenida, tres paradas sobre la home de verdad (Ez, 26 nov. 2026): tu día, el
+ * aro y Actividades, que nombra también lo de arriba, con «Siguiente» y «Saltar la visita» (app/onboarding/OnboardingVisita.jsx).
  * De la B (la pista de la home) entra lo que la C no contaba: que al acabar el Foco PACE
  * propone una pausa. Se repite desde Ajustes («Visita guiada ›»).
  *
  * Lo que se vigila: que cada parada enseñe lo que dice (el hueco rodea su sitio), que la
  * tarjeta quepa en la ventana sin tapar lo que enseña, que sea un diálogo de verdad (foco
  * dentro, Tab que da la vuelta, Escape, sin atajos detrás) y que una parada cuyo sitio no se
- * ve se salte y la cuenta lo diga. PACE completo al final de la bienvenida, en
+ * ve se salte y la cuenta lo diga. PACE completo, tras la primera pausa, en
  * compra-tienda.spec.js; el Atrás de Android, en android-nativo.spec.js.
  */
 'use strict';
@@ -28,14 +28,25 @@ const SITIO = {
   ajustes: ['[data-pace-topbar-ajustes]'],
 };
 /* El menú es el botón de las tres rayas en el móvil y la columna de la izquierda en el ordenador. */
-const ORDEN_MOVIL = ['dia', 'aro', 'act', 'arriba', 'cajon', 'ajustes'];
-const ORDEN_PC = ['dia', 'aro', 'act', 'arriba', 'columna', 'ajustes'];
+/* Tres paradas (Ez, 26 nov. 2026: «el usuario tiene que comprender cómo usar la app»): tu día, el
+   aro y Actividades, que también nombra lo de arriba (estadísticas, logros y Ajustes). Las de antes
+   (arriba, el menú, Ajustes) siguen en PACE_VISITA_PARADAS_ANTES, sin enseñarse. */
+const ORDEN_MOVIL = ['dia', 'aro', 'act'];
+const ORDEN_PC = ['dia', 'aro', 'act'];
 
-async function hastaLaVisita(page) {
+/* Un sábado: la semana de la bienvenida (lunes a viernes) no propone jornada y el aro dice
+   «Empezar foco». Un jueves a las 10:05, el aro ya es la jornada: «Empezar jornada». */
+const SABADO = new Date('2026-11-28T10:05:00+01:00');
+const JUEVES = new Date('2026-11-26T10:05:00+01:00');
+
+async function hastaLaVisita(page, cuando = SABADO) {
+  await page.clock.install({ time: cuando });
   await page.goto(RUTA_ARTEFACTO);   // sin sembrar: primera vez de la vida
   await page.locator('[role=dialog] [data-pace-cta]').click();
+  /* Sin la pantalla de PACE completo (Ez, 26 nov.: los precios, tras la primera pausa): la semana
+     es la última y lleva derecho a la visita. */
+  await expect(page.locator('[data-pace-semana-guardar]')).toHaveText(/^(Comenzar|Start)$/);
   await page.locator('[data-pace-semana-guardar]').click();
-  await page.locator('[data-pace-onb-comenzar]').click();
   await page.locator(VISITA).waitFor({ state: 'visible' });
 }
 
@@ -101,18 +112,12 @@ for (const v of [{ width: 360, height: 640 }, { width: 360, height: 740 }, { wid
           /* El permiso del navegador o del móvil salía de golpe al empezar el primer Foco, sin decir para qué. */
           expect(m.texto).toContain('Al acabar te propone una pausa corta y, la primera vez, te pide permiso para avisarte aunque estés en otra app.');
         }
-        if (m.id === 'arriba') {
-          /* Los dos iconos de arriba no tienen nombre a la vista: la visita dice qué son. */
-          expect(m.titulo).toBe('Estadísticas y logros');
-          expect(m.texto).toContain('sin compararte con nadie');
-        }
-        if (m.id === 'ajustes') {
-          /* PACE no tiene cuenta: si se borra el navegador o se cambia de móvil, sin copia se pierde todo. */
-          expect(m.texto).toContain('PACE lo guarda todo en este aparato: en «Tus datos» haces una copia.');
-        }
-        if (m.id === 'cajon' || m.id === 'columna') {
-          expect(m.titulo).toBe(m.id === 'cajon' ? 'El menú' : 'A la izquierda');
-          expect(m.texto).toContain('las bibliotecas de Respira, Estira y Mueve');
+        if (m.id === 'act') {
+          /* La última dice también lo de arriba: los iconos no tienen nombre a la vista, y sin copia
+             de «Tus datos» un móvil nuevo lo pierde todo. */
+          expect(m.titulo).toBe('Actividades');
+          expect(m.texto).toContain('Respira, Estira y Mueve, con rutinas cortas');
+          expect(m.texto).toContain('Arriba, tus estadísticas, tus logros y los Ajustes, donde haces la copia de tus datos y repites esta visita.');
         }
         await expect(page.locator('[data-pace-visita-siguiente]')).toHaveText(i === ORDEN.length - 1 ? 'Entendido' : 'Siguiente');
         await page.locator('[data-pace-visita-siguiente]').click();
@@ -128,6 +133,16 @@ for (const v of [{ width: 360, height: 640 }, { width: 360, height: 740 }, { wid
     });
   });
 }
+
+test('un día de trabajo, la parada del aro nombra «Empezar jornada», que es lo que dice el botón', async ({ page }) => {
+  await hastaLaVisita(page, JUEVES);
+  await page.locator('[data-pace-visita-siguiente]').click();
+  const m = await medirParada(page);
+  expect(m.id).toBe('aro');
+  expect(m.texto).toContain('toca «Empezar jornada»');
+  await page.locator('[data-pace-visita-saltar]').click();
+  await expect(page.locator('[data-pace-home-body] [data-pace-cta]')).toHaveText('Empezar jornada');
+});
 
 test('la visita es un diálogo: el foco entra, Tab no sale, los atajos callan y Escape la cierra', async ({ page }) => {
   await hastaLaVisita(page);
@@ -165,7 +180,7 @@ test('desde Ajustes, «Visita guiada» la repite; una parada cuyo sitio no se ve
   await expect(page.locator('[data-pace-tweaks-panel]'), 'Ajustes se quedó abierto debajo de la visita').toHaveCount(0);
   await page.locator(VISITA).waitFor({ state: 'visible' });
 
-  const quedan = ORDEN_PC.filter((id) => id !== 'act');
+  const quedan = ORDEN_PC.filter((id) => id !== 'act');   // tu día y el aro
   const vistas = [];
   for (let i = 0; i < quedan.length; i++) {
     const m = await medirParada(page);
@@ -199,7 +214,7 @@ test.describe('en inglés', () => {
 test.describe('en inglés a 360 × 640', () => {
   test.use({ locale: 'en-GB', viewport: { width: 360, height: 640 } });
 
-  test('las seis paradas caben sin tapar lo que enseñan', async ({ page }) => {
+  test('las tres paradas caben sin tapar lo que enseñan', async ({ page }) => {
     await hastaLaVisita(page);
     for (let i = 0; i < ORDEN_MOVIL.length; i++) {
       const m = await medirParada(page);

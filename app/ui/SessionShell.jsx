@@ -410,6 +410,9 @@ function SessionDone({
           maxWidth: 400, margin: '0 auto 36px', lineHeight: 1.5,
         }}>{doneCopy}</p>
         {feedback}
+        {/* PACE completo, una vez, tras la primera pausa entera (PremiumTrasPausa.jsx). Solo fuera de un
+            Camino, donde va `feedback`, y nunca si la pausa no contó. */}
+        {feedback && !sinContar && typeof PremiumTrasPausa === 'function' ? <PremiumTrasPausa /> : null}
       </div>
     </SessionShell>
   );

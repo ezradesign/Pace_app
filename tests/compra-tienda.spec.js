@@ -2,11 +2,12 @@
  * ==========================================
  * Toda compra pasa por `app/state-entitlement.jsx` (paceTiendaAbierta, paceTiendaPlanes,
  * paceComprar), con una tienda por canal (`app/state-compra.js`). Hoy las dos están
- * vacías y nada enseña un botón de compra: mientras PACE completo está abierto hasta v1, la
- * bienvenida acaba en su pantalla con lo que costará después y un solo botón (Ez, 2A del
- * 27 oct.; `paceBienvenidaCompleto`). Con la tienda abierta, la bienvenida enseña PACE completo una vez, al final, con los
- * dos precios de la tienda y «Ahora no» igual de grande que «Probar 7 días gratis»
- * (opción A de Ez, https://claude.ai/artifact/AvME9EqcMHXhywx43vEdKG).
+ * vacías y nada enseña un botón de compra: mientras PACE completo está abierto hasta v1, su
+ * pantalla dice lo que costará después, con un solo botón (Ez, 2A del 27 oct.;
+ * `paceBienvenidaCompleto`). Con la tienda abierta, los dos precios de la tienda y «Ahora no» igual
+ * de grande que «Probar 7 días gratis» (opción A de Ez, https://claude.ai/artifact/AvME9EqcMHXhywx43vEdKG).
+ * Desde el 26 nov. 2026 esa pantalla no cierra la bienvenida: sale una vez, tras la primera pausa
+ * entera, desde «Ver qué incluye» (PremiumTrasPausa.jsx).
  *
  * Para abrir la tienda de la web basta con poner sus dos enlaces de pago: la prueba lo
  * hace en el objeto que lee la app (`PACE_TIENDA_WEB.enlaces`), antes de pasar de la
@@ -15,7 +16,9 @@
 'use strict';
 
 const { test, expect } = require('@playwright/test');
-const { capturarErrores, RUTA_ARTEFACTO, CLAVE_ESTADO, abrirTusDatos } = require('./helpers');
+const { capturarErrores, RUTA_ARTEFACTO, CLAVE_ESTADO, abrirTusDatos, sembrar, irAlArtefacto, overlaySuperior, acabarBienvenida } = require('./helpers');
+
+const HOJA_COMPLETO = '[data-pace-completo-hoja]';
 
 async function abrirTiendaWeb(page, mes) {
   await page.evaluate((enlaceMes) => {
@@ -29,8 +32,28 @@ async function hastaLaSemana(page) {
   await page.locator('[role=dialog] [data-pace-cta]').waitFor({ state: 'visible' });
 }
 
-test('con la tienda cerrada no hay nada que comprar: la bienvenida acaba en PACE completo abierto hasta v1', async ({ page }) => {
+/* La pantalla de PACE completo, como la abre «Ver qué incluye» de la tarjeta tras la primera pausa
+   (el camino entero, en la primera prueba de abajo). */
+async function abrirCompleto(page) {
+  await page.evaluate(() => window.paceAbrirCompleto());
+  await page.locator(HOJA_COMPLETO).waitFor({ state: 'visible' });
+}
+
+/* La primera pausa entera, como la hace quien acaba de llegar: Escritorio express desde Estira. */
+async function primeraPausa(page) {
+  await page.getByRole('button', { name: /^Estira/ }).first().click();
+  await overlaySuperior(page).getByRole('heading', { name: 'Escritorio express', exact: true }).filter({ visible: true }).first().click();
+  const empezar = overlaySuperior(page).getByRole('button', { name: /^Empezar$/ });
+  if (await empezar.count()) await empezar.first().click();
+  const done = page.locator('[data-pace-session-done]');
+  for (let s = 0; s < 500 && !(await done.count()); s++) { await page.clock.fastForward(1000); await page.waitForTimeout(8); }
+  await expect(done, 'GUARD: la sesión no llegó al cierre').toHaveCount(1);
+}
+
+test('con la tienda cerrada no hay nada que comprar: la bienvenida no habla de PACE completo, y tras la primera pausa sale una vez, abierto hasta v1', async ({ page }) => {
+  test.setTimeout(90_000);
   const errores = capturarErrores(page);
+  await page.clock.install({ time: new Date('2026-11-28T12:00:00+01:00') });
   await hastaLaSemana(page);
 
   const tienda = await page.evaluate(async () => ({
@@ -42,56 +65,70 @@ test('con la tienda cerrada no hay nada que comprar: la bienvenida acaba en PACE
   }));
   expect(tienda).toEqual({ canal: 'web', abierta: false, planes: [], compra: { ok: false, motivo: 'cerrada' }, bienvenida: 'abierto' });
 
+  /* Ez, 26 nov. 2026: los precios, después de probar. La semana vuelve a ser la última. */
   await page.locator('[role=dialog] [data-pace-cta]').click();
-  /* La semana ya no es la última (Ez, 2A del 27 oct.): detrás va PACE completo. */
-  await expect(page.locator('[data-pace-semana-guardar]')).toHaveText('Continuar');
-  await page.locator('[data-pace-semana-guardar]').click();
-
-  /* Lo que es verdad hoy: abierto para todos, lo que costará y lo que se queda al llegar v1. */
-  await expect(page.getByRole('heading', { name: 'PACE es gratis.' })).toBeVisible();
-  await expect(page.locator('[role=dialog][data-pace-scene-card]')).toContainText('Y mientras está en pruebas, PACE completo también está abierto para todos:');
-  await expect(page.locator('[data-pace-onb-precios]')).toHaveText('Después, 2,99 € al mes con 7 días gratis, o 19,99 € una vez.');
-  await expect(page.locator('[data-pace-onb-v1]')).toHaveText('Cuando salga a la venta tendrás tu semana de prueba, y las rutinas que ya hayas hecho se te quedan.');
-  /* Un solo botón: no hay nada que comprar. */
-  await expect(page.locator('[data-pace-onb-comenzar]')).toHaveText('Comenzar');
-  await expect(page.locator('[data-pace-onb-probar], [data-pace-onb-ahora], [data-pace-onb-vida]')).toHaveCount(0);
-
-  await page.locator('[data-pace-onb-comenzar]').click();
-  await expect(page.locator('[role=dialog][data-pace-scene-card]')).toHaveCount(0);
-  const visto = await page.evaluate((clave) => JSON.parse(localStorage.getItem(clave)).firstSeen, CLAVE_ESTADO);
-  expect(typeof visto).toBe('number');
-  /* Y detrás, la visita guiada por la home (bienvenida-visita.spec.js). */
-  await expect(page.locator('[data-pace-visita]')).toBeVisible();
-  expect(errores).toEqual([]);
-});
-
-test('sin precios en la tienda del canal no se dice ningún importe, y sin «abierto hasta v1» la bienvenida acaba en la semana', async ({ page }) => {
-  await hastaLaSemana(page);
-  /* Como en Android antes de Play Billing: la tienda aún no tiene sus precios. */
-  await page.evaluate(() => { window.PACE_TIENDA_WEB.precios = {}; });
-  await page.locator('[role=dialog] [data-pace-cta]').click();
-  await page.locator('[data-pace-semana-guardar]').click();
-  await expect(page.locator('[data-pace-onb-comenzar]')).toBeVisible();
-  await expect(page.locator('[data-pace-onb-precios]')).toHaveCount(0);
-  await expect(page.locator('[data-pace-onb-v1]')).toBeVisible();
-
-  /* El día que se cierre lo abierto hasta v1 sin tienda en el canal, no queda nada que enseñar. */
-  await page.evaluate(() => { window.PREMIUM_ABIERTO_HASTA_V1 = false; });
-  await page.locator('[data-pace-toque]').filter({ hasText: 'Atrás' }).click();
   await expect(page.locator('[data-pace-semana-guardar]')).toHaveText('Comenzar');
   await page.locator('[data-pace-semana-guardar]').click();
   await expect(page.locator('[role=dialog][data-pace-scene-card]')).toHaveCount(0);
-  await expect(page.locator('[data-pace-onb-comenzar]')).toHaveCount(0);
+  await expect(page.locator('[data-pace-onb-comenzar], [data-pace-onb-precios]')).toHaveCount(0);
+  await acabarBienvenida(page);
+
+  /* La primera pausa entera: debajo de «¿Te ayudó?», la tarjeta, sin precios. */
+  await primeraPausa(page);
+  const tarjeta = page.locator('[data-pace-premium-tras-pausa]');
+  await expect(tarjeta).toContainText('Esto es PACE gratis');
+  await expect(tarjeta).toContainText('PACE completo añade las rutinas más profundas, las tuyas propias y una semana a tu medida.');
+  expect(await page.evaluate(() => /19,99|2,99/.test(document.body.innerText)), 'un precio en el cierre').toBe(false);
+  await tarjeta.getByRole('button', { name: 'Ver qué incluye' }).click();
+
+  /* Lo que es verdad hoy: abierto para todos, lo que costará y lo que se queda al llegar v1. */
+  const hoja = page.locator(HOJA_COMPLETO);
+  await expect(hoja.getByRole('heading', { name: 'PACE es gratis.' })).toBeVisible();
+  await expect(hoja).toContainText('Y mientras está en pruebas, PACE completo también está abierto para todos:');
+  await expect(hoja.locator('[data-pace-onb-precios]')).toHaveText('Después, 2,99 € al mes con 7 días gratis, o 19,99 € una vez.');
+  await expect(hoja.locator('[data-pace-onb-v1]')).toHaveText('Cuando salga a la venta tendrás tu semana de prueba, y las rutinas que ya hayas hecho se te quedan.');
+  /* Un solo botón: no hay nada que comprar, y no empieza nada. */
+  await expect(hoja.locator('[data-pace-onb-comenzar]')).toHaveText('Entendido');
+  await expect(hoja.locator('[data-pace-onb-probar], [data-pace-onb-ahora], [data-pace-onb-vida]')).toHaveCount(0);
+  await hoja.locator('[data-pace-onb-comenzar]').click();
+  await expect(hoja).toHaveCount(0);
+
+  /* Una vez: la segunda pausa ya no la enseña. */
+  expect(await page.evaluate(() => window.getState().premiumTrasPausa)).toBe('vista');
+  expect(errores).toEqual([]);
 });
 
-test('con la tienda abierta, el último paso enseña los dos precios y «Ahora no» cierra para siempre', async ({ page }) => {
-  const errores = capturarErrores(page);
-  await hastaLaSemana(page);
-  await abrirTiendaWeb(page);
+test('quien ya usaba PACE (sin la marca de esta versión) no ve la tarjeta; Escape cierra la pantalla', async ({ page, context }) => {
+  await sembrar(context);
+  await irAlArtefacto(page);
+  expect(await page.evaluate(() => window.premiumTrasPausaToca(window.getState())), 'la vio quien ya pasó por los precios en su bienvenida').toBe(false);
+  expect(await page.evaluate(() => window.premiumTrasPausaToca(Object.assign({}, window.getState(), { premiumTrasPausa: 'pendiente' })))).toBe(true);
+  /* Con PACE completo ya suyo, tampoco. */
+  await page.evaluate(() => { window.PREMIUM_ABIERTO_HASTA_V1 = false; });
+  expect(await page.evaluate(() => window.premiumTrasPausaToca(Object.assign({}, window.getState(), { premiumTrasPausa: 'pendiente' }))), 'CONTROL: sin tienda ni abierto, nada que enseñar').toBe(false);
+  await page.evaluate(() => { window.PREMIUM_ABIERTO_HASTA_V1 = true; });
+  await abrirCompleto(page);
+  await page.keyboard.press('Escape');
+  await expect(page.locator(HOJA_COMPLETO)).toHaveCount(0);
+});
 
-  await page.locator('[role=dialog] [data-pace-cta]').click();
-  await expect(page.locator('[data-pace-semana-guardar]')).toHaveText('Continuar');
-  await page.locator('[data-pace-semana-guardar]').click();
+test('sin precios en la tienda del canal no se dice ningún importe', async ({ page, context }) => {
+  await sembrar(context);
+  await irAlArtefacto(page);
+  /* Como en Android antes de Play Billing: la tienda aún no tiene sus precios. */
+  await page.evaluate(() => { window.PACE_TIENDA_WEB.precios = {}; });
+  await abrirCompleto(page);
+  await expect(page.locator('[data-pace-onb-comenzar]')).toBeVisible();
+  await expect(page.locator('[data-pace-onb-precios]')).toHaveCount(0);
+  await expect(page.locator('[data-pace-onb-v1]')).toBeVisible();
+});
+
+test('con la tienda abierta, la pantalla enseña los dos precios y «Ahora no» la cierra', async ({ page, context }) => {
+  const errores = capturarErrores(page);
+  await sembrar(context);
+  await irAlArtefacto(page);
+  await abrirTiendaWeb(page);
+  await abrirCompleto(page);
 
   await expect(page.getByRole('heading', { name: 'PACE es gratis.' })).toBeVisible();
   /* Los precios, los de la tienda y escritos en el idioma de la app. */
@@ -108,27 +145,18 @@ test('con la tienda abierta, el último paso enseña los dos precios y «Ahora n
   expect(Math.abs(a.height - b.height)).toBeLessThan(1);
 
   await ahora.click();
-  await expect(page.locator('[role=dialog][data-pace-scene-card]')).toHaveCount(0);
-  /* «Ahora no» no compra: detrás va la visita guiada. */
-  await expect(page.locator('[data-pace-visita]')).toBeVisible();
-  const visto = await page.evaluate((clave) => JSON.parse(localStorage.getItem(clave)).firstSeen, CLAVE_ESTADO);
-  expect(typeof visto).toBe('number');
-
-  /* Se enseña UNA vez: al volver, la app abre en la home. */
-  await page.reload();
-  await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
-  await expect(page.locator('[data-pace-onb-probar]')).toHaveCount(0);
+  await expect(page.locator(HOJA_COMPLETO)).toHaveCount(0);
   expect(errores).toEqual([]);
 });
 
 test.describe('en un móvil en inglés', () => {
   test.use({ locale: 'en-GB', viewport: { width: 360, height: 740 } });
 
-  test('a 360 px los dos botones van uno sobre otro, igual de anchos, con el precio en inglés', async ({ page }) => {
-    await hastaLaSemana(page);
+  test('a 360 px los dos botones van uno sobre otro, igual de anchos, con el precio en inglés', async ({ page, context }) => {
+    await sembrar(context, { lang: 'en' });
+    await irAlArtefacto(page);
     await abrirTiendaWeb(page);
-    await page.locator('[role=dialog] [data-pace-cta]').click();
-    await page.locator('[data-pace-semana-guardar]').click();
+    await abrirCompleto(page);
 
     await expect(page.locator('[data-pace-onb-precios]')).toHaveText('€19.99 once, or €2.99 a month with 7 days free.');
     const [a, b] = [await page.locator('[data-pace-onb-probar]').boundingBox(), await page.locator('[data-pace-onb-ahora]').boundingBox()];
@@ -138,21 +166,14 @@ test.describe('en un móvil en inglés', () => {
   });
 });
 
-test('«Probar 7 días gratis» cierra la bienvenida y lleva a la página de pago del plan al mes', async ({ page }) => {
-  await page.clock.install({ time: new Date('2026-10-08T12:00:00+02:00') });
-  await hastaLaSemana(page);
+test('«Probar 7 días gratis» cierra la pantalla y lleva a la página de pago del plan al mes', async ({ page, context }) => {
+  await sembrar(context);
+  await irAlArtefacto(page);
   await abrirTiendaWeb(page);
-  await page.locator('[role=dialog] [data-pace-cta]').click();
-  await page.locator('[data-pace-semana-guardar]').click();
+  await abrirCompleto(page);
   await page.locator('[data-pace-onb-probar]').click();
-
   await expect.poll(() => page.evaluate(() => location.hash)).toBe('#tienda-mes');
-  /* La compra sigue en la página de Stripe: no se abre la visita encima. Con el reloj de la página y
-     no con 700 ms reales: con la máquina cargada, la visita podía salir después del aserto (la octava, nº 21). */
-  await page.clock.runFor(2000);
-  await expect(page.locator('[data-pace-visita]')).toHaveCount(0);
-  const visto = await page.evaluate((clave) => JSON.parse(localStorage.getItem(clave)).firstSeen, CLAVE_ESTADO);
-  expect(typeof visto).toBe('number');
+  await expect(page.locator(HOJA_COMPLETO)).toHaveCount(0);
 });
 
 /* Y NINGUNA PANTALLA SE LO OFRECE (la octava, nº 11 y prueba 10, 12 nov. 2026): antes esto solo

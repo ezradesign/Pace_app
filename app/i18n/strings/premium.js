@@ -14,6 +14,11 @@ Object.assign(window.PACE_STRINGS.es, {
     'premium.name':                  'PACE completo',
     'premium.part':                  'Es parte de PACE completo.',
     'premium.locked.aria':           'Cerrada · es parte de PACE completo',
+    // Una vez, al terminar la primera pausa (PremiumTrasPausa.jsx)
+    'premium.tras.titulo':           'Esto es PACE gratis',
+    'premium.tras.texto':            'PACE completo añade las rutinas más profundas, las tuyas propias y una semana a tu medida.',
+    'premium.tras.ver':              'Ver qué incluye',
+    'premium.tras.ahoraNo':          'Ahora no',
     'premium.inc.routines':          'Las rutinas más profundas',
     'premium.inc.routines.d':        'Respira, Mueve, Estira',
     'premium.inc.custom':            'Tus propias rutinas',
@@ -129,6 +134,11 @@ Object.assign(window.PACE_STRINGS.en, {
     'premium.name':                  'PACE Complete',
     'premium.part':                  'Part of PACE Complete.',
     'premium.locked.aria':           'Locked · part of PACE Complete',
+    // Once, at the end of the first break (PremiumTrasPausa.jsx)
+    'premium.tras.titulo':           'This is PACE, free',
+    'premium.tras.texto':            'PACE Complete adds more in-depth routines, your own routines and a week made for you.',
+    'premium.tras.ver':              'See what’s included',
+    'premium.tras.ahoraNo':          'Not now',
     'premium.inc.routines':          'More in-depth routines',
     'premium.inc.routines.d':        'Breathe, Move, Stretch',
     'premium.inc.custom':            'Your own routines',

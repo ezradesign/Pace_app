@@ -204,18 +204,20 @@ function FocusTimer({ onFinish }) {
      00:00 se queda: allí la etiqueta sigue siendo la del bloque terminado. */
   const aro = state.focusMode === 'foco' && typeof ritmoAro === 'function' ? ritmoAro(state, t, tn) : null;   // s192 «A tu ritmo»: «Bloque 2 de 8» (state-ritmo.jsx)
   const comidaAro = useAroComida(state, aro, status); const cerrada = !comidaAro && !aro && state.focusMode === 'foco' && status !== 'running' && status !== 'paused' && typeof aroCerrado === 'function' ? aroCerrado(state, t, tn) : null;   // pasada la salida (FocusTimer.jornada.jsx)
+  /* El día de tu semana, aún sin elegir, ya en el aro (Ez, A del 26 nov.; FocusTimer.jornada.jsx). */
+  const previa = !aro && !comidaAro && !cerrada && status === 'idle' && typeof aroPrevia === 'function' ? aroPrevia(state, t, tn) : null;
   const siguienteDelPlan = status === 'completed' && !!aro;
-  const mostrado = comidaAro ? comidaAro.queda : siguienteDelPlan ? durationSec : remaining;   // en plena comida, lo que queda de ella (1A del 22 nov.)
+  const mostrado = comidaAro ? comidaAro.queda : previa ? previa.min * 60 : siguienteDelPlan ? durationSec : remaining;   // en plena comida, lo que queda de ella (1A del 22 nov.)
   const mins = Math.floor(mostrado / 60);
   const secs = mostrado % 60;
   const totalSec = comidaAro ? Math.max(1, mostrado) : durationSec;   // la comida no dibuja arco
-  const progress = 1 - (mostrado / totalSec);
+  const progress = previa ? 0 : 1 - (mostrado / totalSec);
 
   /* Rótulo DENTRO del círculo. En modo foco es "Foco manual" (s122): etiqueta
      el temporizador como el flujo MANUAL, distinto del Camino guiado, sin
      ocupar una línea extra fuera del aro (decisión del usuario: la etiqueta
      vive dentro del círculo, no como kicker suelto). Pausa/Larga sin cambio. */
-  const modeLabel = comidaAro ? t('ritmo.comida') : aro ? aro.label : cerrada ? cerrada.label : state.focusMode === 'foco' ? t('focus.manual.label')
+  const modeLabel = comidaAro ? t('ritmo.comida') : aro ? aro.label : previa ? previa.hasta : cerrada ? cerrada.label : state.focusMode === 'foco' ? t('focus.manual.label')
                   : enPausaRitmo && pausaRitmo.cierre ? t('ritmo.aro.cierre') : state.focusMode === 'pausa' ? t('focus.mode.pause')
                   : t('focus.mode.long');
 
@@ -225,6 +227,7 @@ function FocusTimer({ onFinish }) {
   const [minPendiente, setMinPendiente] = useStateFT(null);
   const elegirMinutos = (v) => {
     if (isFocoMode && (status === 'running' || status === 'paused') && v !== state.focusMinutes) { setMinPendiente(v); return; }
+    if (previa && typeof ritmoComenzarHabitual === 'function') ritmoComenzarHabitual();   // minutos en la vista previa: el día, con ellos
     set({ focusMinutes: v });
     if (isFocoMode && typeof ritmoElegirMinutos === 'function') ritmoElegirMinutos(v);   // con el día servido, se queda (2A)
   };
@@ -241,6 +244,7 @@ function FocusTimer({ onFinish }) {
   const subtitle = comidaAro ? t('ritmo.comida.lejos') : bloques.subtitulo ? bloques.subtitulo
     : enPausaRitmo ? (pausaRitmo.cierre ? t('ritmo.cierre.luego') : tn('ritmo.pausa.luego', { n: pausaRitmo.n, m: pausaRitmo.de }))
     : aro && aroPausaTerminada(state) ? t('ritmo.aro.pausaTerminada') : cerrada && cerrada.sub ? cerrada.sub
+    : previa ? null
     : isFocoMode
     ? (isCompleted ? t('focus.cycleComplete') : t(getFocusDescriptorKey(state.focusMinutes)))
     : state.focusMode === 'pausa' ? t('focus.subtitle.pause')
@@ -295,6 +299,7 @@ function FocusTimer({ onFinish }) {
     restore(pausaRitmo.hasta);
   }, [enPausaRitmo, pausaHuerfana, pausaRitmo && pausaRitmo.hasta, status]);
   const seguirTrasPausaRef = useRefFT(false);
+  const conPrevia = useAroPrevia({ previa, aro, state, status, empezar: handleNormalStart, tn });   // FocusTimer.jornada.jsx
   const empezarYa = () => { seguirTrasPausaRef.current = !pausaRitmo.cierre; reset(); ritmoPausaAcabada(); };   // tras el cierre no hay bloque: cierra la jornada
   useEffectFT(() => {
     if (!seguirTrasPausaRef.current || state.focusMode !== 'foco' || status !== 'idle') return;
@@ -316,18 +321,11 @@ function FocusTimer({ onFinish }) {
     return () => window.removeEventListener('pace:ritmo-seguir', alSeguir);
   });
 
-  /* Etiqueta + acción del botón principal por ESTADO del motor (s124, SIN
-     glifos). Basado en `status` (no en remaining===totalSec) para que pausar
-     dentro del primer segundo muestre «Continuar» y no «Empezar foco»:
-       running   -> «Pausar» (contorno)
-       completed -> arranca otro bloque (fix del inerte)
-       paused    -> «Continuar»
-       idle      -> «Empezar foco». */
-  /* s166: la etiqueta de ARRANQUE depende del MODO, no solo del motor. En
-     Pausa y Larga el boton decia 'Empezar foco' sobre un reloj que no es de
-     foco (lo vio el usuario en la web). Una sola constante para los dos sitios
-     donde se arranca -- idle y completed -- porque separarlas fue justo como
-     nacio el desajuste. */
+  /* Etiqueta + acción del botón principal por ESTADO del motor, no por remaining===totalSec: pausar
+     en el primer segundo dice «Continuar». running «Pausar» · completed otro bloque · paused
+     «Continuar» · idle «Empezar foco», o «Empezar jornada» con el día en vista previa. La de ARRANQUE
+     depende además del MODO (en Pausa y Larga decía «Empezar foco»): una sola constante para idle y
+     completed, porque separarlas fue como nació aquel desajuste. */
   const startLabel = aro ? aro.empezar : isFocoMode ? t('focus.start') : t('focus.startPause');
 
   let ctaLabel, ctaAction;
@@ -343,6 +341,9 @@ function FocusTimer({ onFinish }) {
   } else if (status === 'paused') {
     ctaLabel = t('focus.continue');
     ctaAction = handleNormalStart;
+  } else if (previa) {
+    ctaLabel = previa.empezar;
+    ctaAction = conPrevia.empezar;
   } else {
     ctaLabel = startLabel;
     ctaAction = handleNormalStart;
@@ -364,7 +365,7 @@ function FocusTimer({ onFinish }) {
     ? tn('focus.cycleNext', { n: cycleN })
     : tn('focus.cycleOf', { n: cycleN });
   /* Con la jornada cerrada la fila tampoco va: «Siguiente · Ciclo 4 / 4» no decía nada (Ez, 1A del 8 nov. 2026). */
-  const cycleDotsEl = <AroFila cycle={state.cycle} cycleLabel={cycleLabel} oculta={!!aro || enPausaRitmo || !!cerrada} fila={ofertaExacta || jornada.fila} />;
+  const cycleDotsEl = <AroFila cycle={state.cycle} cycleLabel={cycleLabel} oculta={!!aro || enPausaRitmo || !!cerrada || !!previa} fila={ofertaExacta || jornada.fila} />;
 
   /* Bloque de controles + ciclo inyectado DENTRO del aro (layout ref. usuario).
      Para otros estilos se renderiza debajo en un bloque aparte. */
@@ -423,7 +424,7 @@ function FocusTimer({ onFinish }) {
          las pills de MinutesPicker); el gap:14 del root aplica igual a ambos,
          asi el aro queda en la MISMA posicion en los tres modos. */}
       {state.focusMode === 'foco' ? (
-        <MinutesPicker value={state.focusMinutes} onChange={elegirMinutos} />
+        <MinutesPicker value={previa ? previa.min : state.focusMinutes} onChange={elegirMinutos} />
       ) : (
         <div aria-hidden="true" style={{ height: 26 }} />
       )}
@@ -451,7 +452,7 @@ function FocusTimer({ onFinish }) {
           mode={state.focusMode}
           modeLabel={modeLabel}
           hasta={comidaAro ? tn('ritmo.hasta', { h: ritmoHora(comidaAro.hasta) }) : aro ? aro.hasta : cerrada ? cerrada.hecho : null}
-          subtitle={subtitle}
+          subtitle={previa ? conPrevia.suelto : subtitle}
           inner={isAro ? innerForAro : null}
           running={running}
           fitHeight={isAro}
