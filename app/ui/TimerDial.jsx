@@ -432,8 +432,11 @@ const timerDialStyles = {
     maxWidth: '70%',
   },
   modeLabel: {
-    fontSize: 11,
-    letterSpacing: '0.26em',
+    /* 12 px, el mínimo de lectura (Ez, pulido del 26 nov. 2026), con menos aire entre letras para
+       que «Foco manual» mida a lo ancho lo que medía a 11: el motor de la home dimensiona el aro
+       por la esquina más lejana del interior. Lo mismo hace la fila del bloque. */
+    fontSize: 12,
+    letterSpacing: '0.19em',
     textTransform: 'uppercase',
     color: 'var(--ink-3)',
     marginBottom: 10,

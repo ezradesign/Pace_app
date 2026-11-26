@@ -188,7 +188,7 @@
   --size-h3: 20px;
   --size-body: 15px;
   --size-sm: 13px;
-  --size-meta: 11px;
+  --size-meta: 12px;   /* 12 px, el mínimo de lectura de la app (Ez, pulido del 26 nov. 2026; antes 11) */
 
   --lh-tight: 1.1;
   --lh-normal: 1.45;

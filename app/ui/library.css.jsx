@@ -174,7 +174,7 @@
 }
 .pace-lib-ctx u {
   font-family: var(--font-ui); font-style: normal; text-decoration: none;
-  font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+  font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
   color: var(--ink-3); margin-left: 1px;
 }
 /* EL SEPARADOR CUELGA DEL TROZO ANTERIOR, y no del siguiente. Dos defectos de

@@ -233,7 +233,7 @@ test('las tres puertas abren su biblioteca, también la de Estira', async ({ pag
   await page.setViewportSize({ width: 1280, height: 900 });
   await sembrar(context, ABIERTA);
   await irAlArtefacto(page);
-  for (const [destino, titulo, etiqueta] of [['breathe', 'Respiración', 'Abrir Respira'], ['stretch', 'Estira', 'Abrir Estira'], ['move', 'Mueve', 'Abrir Mueve']]) {
+  for (const [destino, titulo, etiqueta] of [['breathe', 'Respira', 'Abrir Respira'], ['stretch', 'Estira', 'Abrir Estira'], ['move', 'Mueve', 'Abrir Mueve']]) {
     const puerta = sb(page).getByRole('button', { name: etiqueta });
     await expect(puerta).toHaveAttribute('data-pace-biblioteca', destino);
     await puerta.click();

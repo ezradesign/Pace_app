@@ -320,7 +320,7 @@
         font-size: 15px !important;
       }
       [data-pace-activitybar-chip] [data-pace-chip-sub] {
-        font-size: 11px !important;
+        font-size: 12px !important;
       }
       /* Con la letra grande, si la home no cabe, «Luego» queda en «Ver todo» (Ez, 1 A2;
          la marca la pone el motor, home-geometry.medidas.js). display:none: sin foco ni lector. */

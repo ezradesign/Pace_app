@@ -134,7 +134,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'lib.tag':                         'Biblioteca',
 
     // Breathe Library
-    'lib.breathe.title':               'Respiración',
+    'lib.breathe.title':               'Respira',
     'lib.breathe.subtitle':            'Respiración guiada: pranayamas, coherencia, rondas.',
 
     // CUERPO (Mueve/Estira) -> strings/sessions.body.js  (s148)
@@ -355,7 +355,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'lib.tag':                         'Library',
 
     // Breathe Library
-    'lib.breathe.title':               'Breathing',
+    'lib.breathe.title':               'Breathe',
     'lib.breathe.subtitle':            'Guided breathwork: pranayamas, coherence, rounds.',
 
     // BODY (Move/Stretch) -> strings/sessions.body.js  (s148)

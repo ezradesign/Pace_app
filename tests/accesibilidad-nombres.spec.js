@@ -101,7 +101,7 @@ test.describe('los diálogos tienen nombre', () => {
   test('la biblioteca de Respira se llama como su título, y sus filtros separan la cifra', async ({ page }) => {
     await irAlArtefacto(page);
     await page.getByRole('button', { name: /^Respira/ }).click();
-    const biblioteca = page.getByRole('dialog', { name: 'Respiración', exact: true });
+    const biblioteca = page.getByRole('dialog', { name: 'Respira', exact: true });
     await expect(biblioteca).toBeVisible();
     const chip = biblioteca.locator('.pace-lib-chip').filter({ visible: true }).filter({ hasText: 'Sin retención' });
     await expect(chip).toHaveAccessibleName(/^Sin retención \(\d+\)$/);
@@ -140,7 +140,7 @@ test('en inglés, la biblioteca y el aviso de la apnea se llaman en inglés', as
   await sembrar(context, { lang: 'en', soundOn: false });
   await irAlArtefacto(page);
   await page.getByRole('button', { name: /^Breathe/ }).click();
-  await expect(page.getByRole('dialog', { name: 'Breathing', exact: true })).toBeVisible();
+  await expect(page.getByRole('dialog', { name: 'Breathe', exact: true })).toBeVisible();
   await page.locator('.pace-lib [data-pace-lib-card="breathe.co2"] h4 button').filter({ visible: true }).click();
   await expect(page.getByRole('dialog', { name: /^Before you start · CO₂/ })).toBeVisible();
 });

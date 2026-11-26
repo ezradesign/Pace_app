@@ -42,7 +42,7 @@ const BREATHE_ROUTINES = {
     items: [
       { id: 'breathe.coherent.55', tag: 'BAL', code: 'Coherencia', name: 'Coherente 5·5', desc: 'Ritmo constante de cinco y cinco. Pensada para encontrar un compás estable.', min: 5, pattern: 'coherent', cycle: [5,0,5,0] },
       { id: 'breathe.coherent.66', tag: 'BAL', code: 'Coherencia', name: 'Coherente 6·6', desc: 'Versión más profunda. 5 ciclos por minuto.', min: 10, pattern: 'coherent', cycle: [6,0,6,0] },
-      { id: 'breathe.coherent.432', tag: 'BAL', code: 'Coherencia', name: 'Coherente 432 Hz', desc: 'Coherencia 6·6 sobre un drone de fondo. Inmersiva.', min: 10, pattern: 'coherent', cycle: [6,0,6,0], drone: true, access: 'premium' },
+      { id: 'breathe.coherent.432', tag: 'BAL', code: 'Coherencia', name: 'Coherente 432 Hz', desc: 'Coherencia 6·6 sobre un zumbido grave de fondo.', min: 10, pattern: 'coherent', cycle: [6,0,6,0], drone: true, access: 'premium' },
     ]
   },
   relajacion: {
@@ -52,7 +52,7 @@ const BREATHE_ROUTINES = {
       /* Cuatro ciclos (1:16): su autor pide 4 seguidos el primer mes, y en 3 min eran 9.
          Con `min: 1` la sesión acaba al cerrar el cuarto, el primero que pasa del minuto. */
       { id: 'breathe.478', tag: 'REL', code: 'Relajación', name: '4·7·8', desc: 'Exhalación larga, cuatro ciclos. Pensada para soltar el día y preparar el descanso.', min: 1, pattern: 'pattern', cycle: [4,7,8,0] },
-      { id: 'breathe.physiological', tag: 'REL', code: 'Relajación', name: 'Suspiro fisiológico', desc: 'Doble inhalación + exhalación larga. Reset rápido.', min: 2, pattern: 'physiological' },
+      { id: 'breathe.physiological', tag: 'REL', code: 'Relajación', name: 'Suspiro fisiológico', desc: 'Doble inhalación y exhalación larga. Calma en dos minutos.', min: 2, pattern: 'physiological' },
       { id: 'breathe.exhale.46', tag: 'REL', code: 'Relajación', name: 'Exhalación 4·6', desc: 'Exhala más largo de lo que inhalas. Freno suave.', min: 6, pattern: 'coherent', cycle: [4,0,6,0] },
       { id: 'breathe.yin', tag: 'REL', code: 'Relajación', name: 'Rítmica yin', desc: 'Ritmo suave con reposo tras exhalar.', min: 8, pattern: 'yin' },
     ]

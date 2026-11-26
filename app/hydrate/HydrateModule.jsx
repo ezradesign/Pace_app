@@ -31,7 +31,9 @@ function HydrateTracker({ open, onClose }) {
               aspectRatio: '1/1.3',
               background: i < today ? 'var(--hydrate-soft)' : 'transparent',
               border: `1.5px solid ${i < today ? 'var(--hydrate)' : 'var(--line)'}`,
-              borderRadius: 'var(--r-sm)',
+              /* Con forma de vaso y sin número: la cifra ya está arriba, en grande, y numerados
+                 parecían casillas de un formulario (Ez, pulido del 26 nov. 2026, 5). */
+              borderRadius: '3px 3px 10px 10px',
               display: 'grid', placeItems: 'end center',
               padding: '0 0 8px',
               fontSize: 10,
@@ -49,7 +51,6 @@ function HydrateTracker({ open, onClose }) {
                 borderTop: '1px solid var(--hydrate)',
               }} />
             )}
-            <span style={{ zIndex: 1 }}>{i + 1}</span>
           </button>
         ))}
       </div>
