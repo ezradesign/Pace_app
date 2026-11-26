@@ -193,6 +193,10 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
        como era. */
     [data-pace-sidebar] [data-pace-capsula] { box-shadow: inset 0 0 0 1px var(--line); }
     [data-pace-sidebar] [data-futuro="1"] [data-pace-capsula] { opacity: .55; }
+    /* Un día sin nada es un punto al pie, no una cápsula vacía, que parecía un campo de formulario
+       (Ez, pulido del 26 nov. 2026, 5). La caja no cambia: solo se pinta distinto. */
+    [data-pace-sidebar] [data-pace-capsula]:empty { box-shadow: none; background: radial-gradient(circle at 50% calc(100% - 3px), var(--line-2) 2.5px, transparent 3px); }
+    [data-pace-sidebar] [data-hoy="1"] [data-pace-capsula]:empty { background: radial-gradient(circle at 50% calc(100% - 3px), var(--ink-3) 2.5px, transparent 3px); }
     [data-pace-sidebar] [data-pace-capsula-relleno] { display: block; flex: none; border-radius: 3.5px; background: var(--focus); opacity: .55; }
     [data-pace-sidebar] [data-hoy="1"] [data-pace-capsula-relleno] { background: var(--focus); opacity: 1; }
     @supports (background: color-mix(in oklab, red, blue)) {

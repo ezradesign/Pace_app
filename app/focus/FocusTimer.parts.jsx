@@ -74,7 +74,7 @@ function MinutesPicker({ value, onChange }) {
     <div data-pace-minutos role="group" aria-label={t('focus.minutes.grupo')}
       style={{ display: 'flex', gap: 4, alignItems: 'center', justifyContent: 'center' }}>
       <span aria-hidden="true" style={{
-        fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase',
+        fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase',
         color: 'var(--ink-3)', marginRight: 10, fontWeight: 500,
       }}>{t('focus.min')}</span>
       {presets.map(m => (
@@ -135,7 +135,7 @@ function MinutesPicker({ value, onChange }) {
             marginLeft: 6,
             padding: '4px 4px',
             minWidth: 0,
-            fontSize: 10,
+            fontSize: 12,
             letterSpacing: '0.18em',
             textTransform: 'uppercase',
             color: 'var(--ink-3)',

@@ -94,7 +94,7 @@
         scale: var(--pace-dial-escala, 1);
       }
       [data-pace-dial-fit] [data-pace-dial-label] {
-        font-size: clamp(9px, calc(var(--pace-timer-d, 360px) * 0.028), 15px) !important;
+        font-size: clamp(12px, calc(var(--pace-timer-d, 360px) * 0.028), 15px) !important;
         margin-bottom: clamp(4px, calc(var(--pace-timer-d, 360px) * 0.026), 15px) !important;
       }
       [data-pace-dial-fit] [data-pace-dial-number] {

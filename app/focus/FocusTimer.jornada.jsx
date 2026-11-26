@@ -167,7 +167,7 @@ function AroFila({ cycle, cycleLabel, oculta, fila }) {
           background: (cycle % 4) > i ? 'var(--focus)' : 'var(--line-2)',
         }} />
       ))}
-      <span data-pace-ciclo style={{ ...callado, fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 }}>{cycleLabel}</span>
+      <span data-pace-ciclo style={{ ...callado, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 }}>{cycleLabel}</span>
     </div>
   );
 }

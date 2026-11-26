@@ -510,7 +510,7 @@ html[data-pace-landing-idioma="en"] #pace-landing [lang="es"] { display: none !i
   --size-h3: 20px;
   --size-body: 15px;
   --size-sm: 13px;
-  --size-meta: 11px;
+  --size-meta: 12px;   /* 12 px, el mínimo de lectura de la app (Ez, pulido del 26 nov. 2026; antes 11) */
 
   --lh-tight: 1.1;
   --lh-normal: 1.45;
@@ -1108,6 +1108,27 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
    `[data-pace-reveal] > *` aquí arriba, y gana por ORDEN. Si se reordenan
    los dos `<link>`, la escena del Camino vuelve a entrar con el escalonado.
    ============================================================ */
+
+/* CON EL FOCO EN MARCHA, LO DEMÁS SE CALLA (Ez, pulido del 26 nov. 2026, 3B). Mientras corre un bloque
+   de Foco (no una pausa: ahí las actividades son lo que toca), las actividades, la tarjeta o el panel del día y los
+   minutos bajan al 38 % y la barra lateral al 55 %. No se esconden ni se mueven: la pausa activa sigue a
+   un toque, y al pasar el ratón o llegar con el tabulador vuelven enteras. Solo opacidad, así que el
+   motor de la home mide lo mismo. Al pausar o terminar, todo vuelve. */
+:is([data-pace-activitybar], [data-pace-spc], [data-pace-minutos]) {
+  transition: opacity 600ms var(--ease, ease);
+}
+body:has([data-pace-timer-wrap][data-pace-modo="foco"] [data-pace-dial-running]) :is([data-pace-activitybar], [data-pace-spc], [data-pace-minutos]) {
+  opacity: .38;
+}
+/* La barra lateral, solo en el ordenador: en el móvil es un cajón que se abre a propósito. */
+@media (min-width: 769px) {
+  body:has([data-pace-timer-wrap][data-pace-modo="foco"] [data-pace-dial-running]) [data-pace-sidebar] {
+    opacity: .55;
+  }
+}
+body:has([data-pace-timer-wrap][data-pace-modo="foco"] [data-pace-dial-running]) :is([data-pace-activitybar], [data-pace-spc], [data-pace-minutos], [data-pace-sidebar]):is(:hover, :focus-within) {
+  opacity: 1;
+}
 
   </style>
   <!-- CSS de Caminos (s148): SenderoBar + escena ilustrada + variante lg +
@@ -2621,7 +2642,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'lib.tag': 'Biblioteca',
 
 
-  'lib.breathe.title': 'Respiración',
+  'lib.breathe.title': 'Respira',
   'lib.breathe.subtitle': 'Respiración guiada: pranayamas, coherencia, rondas.',
 
 
@@ -2842,7 +2863,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'lib.tag': 'Library',
 
 
-  'lib.breathe.title': 'Breathing',
+  'lib.breathe.title': 'Breathe',
   'lib.breathe.subtitle': 'Guided breathwork: pranayamas, coherence, rounds.',
 
 
@@ -5396,7 +5417,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'breathe.478.desc': 'Long exhale, four cycles. Meant to let go of the day and ease into rest.',
   'breathe.478.code': 'Relaxation',
   'breathe.physiological.name': 'Physiological Sigh',
-  'breathe.physiological.desc': 'Double inhale + long exhale. Quick reset.',
+  'breathe.physiological.desc': 'Double inhale and a long exhale. Calm in two minutes.',
   'breathe.physiological.code': 'Relaxation',
   'breathe.nadi.shodhana.name': 'Nadi Shodhana',
   'breathe.nadi.shodhana.desc': 'Alternate nostril breathing, from the yoga tradition. Meant to settle your attention.',
@@ -5419,7 +5440,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'breathe.co2.desc': 'Exhale and hold with empty lungs. Breathe in whenever you need to.',
   'breathe.co2.code': 'Balance',
   'breathe.coherent.432.name': 'Coherent 432 Hz',
-  'breathe.coherent.432.desc': 'Coherence 6·6 over a background drone. Immersive.',
+  'breathe.coherent.432.desc': 'Coherence 6·6 over a low background hum.',
   'breathe.coherent.432.code': 'Coherence',
   'breathe.exhale.46.name': 'Exhale 4·6',
   'breathe.exhale.46.desc': 'Exhale longer than you inhale. A gentle brake.',
@@ -28134,7 +28155,7 @@ function MinutesPicker(_ref) {let { value, onChange } = _ref;
     React.createElement("div", { "data-pace-minutos": true, role: "group", "aria-label": t('focus.minutes.grupo'),
       style: { display: 'flex', gap: 4, alignItems: 'center', justifyContent: 'center' } },
     React.createElement("span", { "aria-hidden": "true", style: {
-        fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase',
+        fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase',
         color: 'var(--ink-3)', marginRight: 10, fontWeight: 500
       } }, t('focus.min')),
     presets.map((m) =>
@@ -28195,7 +28216,7 @@ function MinutesPicker(_ref) {let { value, onChange } = _ref;
         marginLeft: 6,
         padding: '4px 4px',
         minWidth: 0,
-        fontSize: 10,
+        fontSize: 12,
         letterSpacing: '0.18em',
         textTransform: 'uppercase',
         color: 'var(--ink-3)',
@@ -29386,6 +29407,10 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
        como era. */
     [data-pace-sidebar] [data-pace-capsula] { box-shadow: inset 0 0 0 1px var(--line); }
     [data-pace-sidebar] [data-futuro="1"] [data-pace-capsula] { opacity: .55; }
+    /* Un día sin nada es un punto al pie, no una cápsula vacía, que parecía un campo de formulario
+       (Ez, pulido del 26 nov. 2026, 5). La caja no cambia: solo se pinta distinto. */
+    [data-pace-sidebar] [data-pace-capsula]:empty { box-shadow: none; background: radial-gradient(circle at 50% calc(100% - 3px), var(--line-2) 2.5px, transparent 3px); }
+    [data-pace-sidebar] [data-hoy="1"] [data-pace-capsula]:empty { background: radial-gradient(circle at 50% calc(100% - 3px), var(--ink-3) 2.5px, transparent 3px); }
     [data-pace-sidebar] [data-pace-capsula-relleno] { display: block; flex: none; border-radius: 3.5px; background: var(--focus); opacity: .55; }
     [data-pace-sidebar] [data-hoy="1"] [data-pace-capsula-relleno] { background: var(--focus); opacity: 1; }
     @supports (background: color-mix(in oklab, red, blue)) {
@@ -33313,7 +33338,7 @@ Object.assign(window, {
 }
 .pace-lib-ctx u {
   font-family: var(--font-ui); font-style: normal; text-decoration: none;
-  font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+  font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
   color: var(--ink-3); margin-left: 1px;
 }
 /* EL SEPARADOR CUELGA DEL TROZO ANTERIOR, y no del siguiente. Dos defectos de
@@ -34348,7 +34373,7 @@ function AroFila(_ref2) {let { cycle, cycleLabel, oculta, fila } = _ref2;
         background: cycle % 4 > i ? 'var(--focus)' : 'var(--line-2)'
       } })
     ),
-    React.createElement("span", { "data-pace-ciclo": true, style: { ...callado, fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 } }, cycleLabel)
+    React.createElement("span", { "data-pace-ciclo": true, style: { ...callado, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 } }, cycleLabel)
     ));
 
 }
@@ -35218,7 +35243,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
 
-    React.createElement("div", { style: focusStyles.timerWrap, "data-pace-timer-wrap": true },
+    React.createElement("div", { style: focusStyles.timerWrap, "data-pace-timer-wrap": true, "data-pace-modo": state.focusMode },
 
 
 
@@ -35903,7 +35928,7 @@ const BREATHE_ROUTINES = {
     items: [
     { id: 'breathe.coherent.55', tag: 'BAL', code: 'Coherencia', name: 'Coherente 5·5', desc: 'Ritmo constante de cinco y cinco. Pensada para encontrar un compás estable.', min: 5, pattern: 'coherent', cycle: [5, 0, 5, 0] },
     { id: 'breathe.coherent.66', tag: 'BAL', code: 'Coherencia', name: 'Coherente 6·6', desc: 'Versión más profunda. 5 ciclos por minuto.', min: 10, pattern: 'coherent', cycle: [6, 0, 6, 0] },
-    { id: 'breathe.coherent.432', tag: 'BAL', code: 'Coherencia', name: 'Coherente 432 Hz', desc: 'Coherencia 6·6 sobre un drone de fondo. Inmersiva.', min: 10, pattern: 'coherent', cycle: [6, 0, 6, 0], drone: true, access: 'premium' }]
+    { id: 'breathe.coherent.432', tag: 'BAL', code: 'Coherencia', name: 'Coherente 432 Hz', desc: 'Coherencia 6·6 sobre un zumbido grave de fondo.', min: 10, pattern: 'coherent', cycle: [6, 0, 6, 0], drone: true, access: 'premium' }]
 
   },
   relajacion: {
@@ -35913,7 +35938,7 @@ const BREATHE_ROUTINES = {
 
 
     { id: 'breathe.478', tag: 'REL', code: 'Relajación', name: '4·7·8', desc: 'Exhalación larga, cuatro ciclos. Pensada para soltar el día y preparar el descanso.', min: 1, pattern: 'pattern', cycle: [4, 7, 8, 0] },
-    { id: 'breathe.physiological', tag: 'REL', code: 'Relajación', name: 'Suspiro fisiológico', desc: 'Doble inhalación + exhalación larga. Reset rápido.', min: 2, pattern: 'physiological' },
+    { id: 'breathe.physiological', tag: 'REL', code: 'Relajación', name: 'Suspiro fisiológico', desc: 'Doble inhalación y exhalación larga. Calma en dos minutos.', min: 2, pattern: 'physiological' },
     { id: 'breathe.exhale.46', tag: 'REL', code: 'Relajación', name: 'Exhalación 4·6', desc: 'Exhala más largo de lo que inhalas. Freno suave.', min: 6, pattern: 'coherent', cycle: [4, 0, 6, 0] },
     { id: 'breathe.yin', tag: 'REL', code: 'Relajación', name: 'Rítmica yin', desc: 'Ritmo suave con reposo tras exhalar.', min: 8, pattern: 'yin' }]
 
@@ -42085,7 +42110,9 @@ function HydrateTracker(_ref) {let { open, onClose } = _ref;
         aspectRatio: '1/1.3',
         background: i < today ? 'var(--hydrate-soft)' : 'transparent',
         border: `1.5px solid ${i < today ? 'var(--hydrate)' : 'var(--line)'}`,
-        borderRadius: 'var(--r-sm)',
+
+
+        borderRadius: '3px 3px 10px 10px',
         display: 'grid', placeItems: 'end center',
         padding: '0 0 8px',
         fontSize: 10,
@@ -42101,9 +42128,8 @@ function HydrateTracker(_ref) {let { open, onClose } = _ref;
         position: 'absolute', inset: 0, top: '40%',
         background: 'var(--hydrate-soft)',
         borderTop: '1px solid var(--hydrate)'
-      } }),
+      } })
 
-    React.createElement("span", { style: { zIndex: 1 } }, i + 1)
     )
     )
     ),
@@ -46790,15 +46816,15 @@ if (!_paceAjustesCss) {
     .pace-aj-sec-accion:disabled { opacity: .38; cursor: default; }
     /* La línea pequeña de «Suena detrás» cabe en el alto de la fila (34 px en el móvil): con la de
        las demás filas la hoja crecía 4 px, y en Android a 360×730 ya está en el 79 %. */
-    [data-pace-aj-fila="bg"] .pace-aj-sub { font-size: 11px; line-height: 1; margin-top: 1px; }
+    [data-pace-aj-fila="bg"] .pace-aj-sub { font-size: 12px; line-height: 1; margin-top: 1px; }
     /* 6 px y no 10 entre «Suena detrás» y sus botones: en Linux, que pinta la letra como Android, «Lo que suena al
        respirar» los bajaba a otra línea por 1 px y Ajustes pedía scroll a 1280 × 720 (Ez, 2A del 20 nov.). */
     [data-pace-aj-fila="bg"] { column-gap: 6px; }
-    .pace-aj-nota { font-size: 10.5px; color: var(--ink-3); letter-spacing: .1px; line-height: 1.45; margin: -2px 0 6px; }
+    .pace-aj-nota { font-size: 12px; color: var(--ink-3); letter-spacing: .1px; line-height: 1.3; margin: -2px 0 6px; }
 
     /* pildoras: pista de papel-2 sin borde, la elegida en tinta */
     .pace-aj-pista { display: inline-flex; gap: 2px; padding: 2px; border-radius: 999px; background: var(--paper-2); flex: 0 0 auto; }
-    .pace-aj-pild { padding: 4px 9px; min-height: 24px; font-family: var(--font-ui); font-size: 11px; color: var(--ink-2); border-radius: 999px; letter-spacing: .2px; display: inline-flex; align-items: center; gap: 6px; transition: ${TWEAKS_PILL_TRANSITION}; }
+    .pace-aj-pild { padding: 4px 9px; min-height: 24px; font-family: var(--font-ui); font-size: 12px; color: var(--ink-2); border-radius: 999px; letter-spacing: .2px; display: inline-flex; align-items: center; gap: 6px; transition: ${TWEAKS_PILL_TRANSITION}; }
     .pace-aj-pild[aria-pressed="true"] { background: var(--ink); color: var(--paper); font-weight: 500; }
     .pace-aj-pild:disabled { opacity: .4; cursor: default; }
     .pace-aj-fila[data-atenuada] .pace-aj-pild:disabled { opacity: 1; }
@@ -46836,8 +46862,8 @@ if (!_paceAjustesCss) {
     .pace-aj-accion:has(.pace-aj-sub-accion) { min-height: 40px; }
     /* La copia recordada (TweaksData.copia.jsx): la línea pequeña de «Exportar una copia», fuera del botón. */
     .pace-aj-copia { font-family: var(--font-display); font-style: italic; font-size: 12px; line-height: 1.3; color: var(--ink-3); margin: -4px 26px 7px 0; letter-spacing: .1px; }
-    .pace-aj-msg { font-size: 10.5px; font-family: var(--font-display); font-style: italic; text-align: center; margin: 6px 0; letter-spacing: .1px; }
-    .pace-aj-pie { display: flex; justify-content: space-between; gap: 10px; font-size: 10.5px; color: var(--ink-3); letter-spacing: .2px; margin-top: 12px; }
+    .pace-aj-msg { font-size: 12px; font-family: var(--font-display); font-style: italic; text-align: center; margin: 6px 0; letter-spacing: .1px; }
+    .pace-aj-pie { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; color: var(--ink-3); letter-spacing: .2px; margin-top: 12px; }
     .pace-aj-pie a { color: var(--ink-3); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 1px; }
   `;
   document.head.appendChild(s);
@@ -55920,7 +55946,7 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
         font-size: 15px !important;
       }
       [data-pace-activitybar-chip] [data-pace-chip-sub] {
-        font-size: 11px !important;
+        font-size: 12px !important;
       }
       /* Con la letra grande, si la home no cabe, «Luego» queda en «Ver todo» (Ez, 1 A2;
          la marca la pone el motor, home-geometry.medidas.js). display:none: sin foco ni lector. */
@@ -56063,7 +56089,7 @@ Object.assign(window, { RitmoHome, RitmoVuelta });
         scale: var(--pace-dial-escala, 1);
       }
       [data-pace-dial-fit] [data-pace-dial-label] {
-        font-size: clamp(9px, calc(var(--pace-timer-d, 360px) * 0.028), 15px) !important;
+        font-size: clamp(12px, calc(var(--pace-timer-d, 360px) * 0.028), 15px) !important;
         margin-bottom: clamp(4px, calc(var(--pace-timer-d, 360px) * 0.026), 15px) !important;
       }
       [data-pace-dial-fit] [data-pace-dial-number] {

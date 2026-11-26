@@ -434,7 +434,7 @@ function FocusTimer({ onFinish }) {
           escrito a fuego mientras la corona sí viajaba, y como el suelo era la
           capa de mayor superficie el resultado era que «el color siempre parece
           el mismo» — con el Pomodoro parado incluido. */}
-      <div style={focusStyles.timerWrap} data-pace-timer-wrap>
+      <div style={focusStyles.timerWrap} data-pace-timer-wrap data-pace-modo={state.focusMode}>
         {/* EL SOL (s157, rehecho en s158). Nodo puramente decorativo anclado al
             centro del aro que NO lleva el clip-path del marco: por eso la luz
             puede irradiar hacia fuera sin que nadie la corte en recto. Sus dos

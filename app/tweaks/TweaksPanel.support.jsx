@@ -101,15 +101,15 @@ if (!_paceAjustesCss) {
     .pace-aj-sec-accion:disabled { opacity: .38; cursor: default; }
     /* La línea pequeña de «Suena detrás» cabe en el alto de la fila (34 px en el móvil): con la de
        las demás filas la hoja crecía 4 px, y en Android a 360×730 ya está en el 79 %. */
-    [data-pace-aj-fila="bg"] .pace-aj-sub { font-size: 11px; line-height: 1; margin-top: 1px; }
+    [data-pace-aj-fila="bg"] .pace-aj-sub { font-size: 12px; line-height: 1; margin-top: 1px; }
     /* 6 px y no 10 entre «Suena detrás» y sus botones: en Linux, que pinta la letra como Android, «Lo que suena al
        respirar» los bajaba a otra línea por 1 px y Ajustes pedía scroll a 1280 × 720 (Ez, 2A del 20 nov.). */
     [data-pace-aj-fila="bg"] { column-gap: 6px; }
-    .pace-aj-nota { font-size: 10.5px; color: var(--ink-3); letter-spacing: .1px; line-height: 1.45; margin: -2px 0 6px; }
+    .pace-aj-nota { font-size: 12px; color: var(--ink-3); letter-spacing: .1px; line-height: 1.3; margin: -2px 0 6px; }
 
     /* pildoras: pista de papel-2 sin borde, la elegida en tinta */
     .pace-aj-pista { display: inline-flex; gap: 2px; padding: 2px; border-radius: 999px; background: var(--paper-2); flex: 0 0 auto; }
-    .pace-aj-pild { padding: 4px 9px; min-height: 24px; font-family: var(--font-ui); font-size: 11px; color: var(--ink-2); border-radius: 999px; letter-spacing: .2px; display: inline-flex; align-items: center; gap: 6px; transition: ${TWEAKS_PILL_TRANSITION}; }
+    .pace-aj-pild { padding: 4px 9px; min-height: 24px; font-family: var(--font-ui); font-size: 12px; color: var(--ink-2); border-radius: 999px; letter-spacing: .2px; display: inline-flex; align-items: center; gap: 6px; transition: ${TWEAKS_PILL_TRANSITION}; }
     .pace-aj-pild[aria-pressed="true"] { background: var(--ink); color: var(--paper); font-weight: 500; }
     .pace-aj-pild:disabled { opacity: .4; cursor: default; }
     .pace-aj-fila[data-atenuada] .pace-aj-pild:disabled { opacity: 1; }
@@ -147,8 +147,8 @@ if (!_paceAjustesCss) {
     .pace-aj-accion:has(.pace-aj-sub-accion) { min-height: 40px; }
     /* La copia recordada (TweaksData.copia.jsx): la línea pequeña de «Exportar una copia», fuera del botón. */
     .pace-aj-copia { font-family: var(--font-display); font-style: italic; font-size: 12px; line-height: 1.3; color: var(--ink-3); margin: -4px 26px 7px 0; letter-spacing: .1px; }
-    .pace-aj-msg { font-size: 10.5px; font-family: var(--font-display); font-style: italic; text-align: center; margin: 6px 0; letter-spacing: .1px; }
-    .pace-aj-pie { display: flex; justify-content: space-between; gap: 10px; font-size: 10.5px; color: var(--ink-3); letter-spacing: .2px; margin-top: 12px; }
+    .pace-aj-msg { font-size: 12px; font-family: var(--font-display); font-style: italic; text-align: center; margin: 6px 0; letter-spacing: .1px; }
+    .pace-aj-pie { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; color: var(--ink-3); letter-spacing: .2px; margin-top: 12px; }
     .pace-aj-pie a { color: var(--ink-3); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 1px; }
   `;
   document.head.appendChild(s);

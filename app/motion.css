@@ -425,3 +425,24 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
    `[data-pace-reveal] > *` aquí arriba, y gana por ORDEN. Si se reordenan
    los dos `<link>`, la escena del Camino vuelve a entrar con el escalonado.
    ============================================================ */
+
+/* CON EL FOCO EN MARCHA, LO DEMÁS SE CALLA (Ez, pulido del 26 nov. 2026, 3B). Mientras corre un bloque
+   de Foco (no una pausa: ahí las actividades son lo que toca), las actividades, la tarjeta o el panel del día y los
+   minutos bajan al 38 % y la barra lateral al 55 %. No se esconden ni se mueven: la pausa activa sigue a
+   un toque, y al pasar el ratón o llegar con el tabulador vuelven enteras. Solo opacidad, así que el
+   motor de la home mide lo mismo. Al pausar o terminar, todo vuelve. */
+:is([data-pace-activitybar], [data-pace-spc], [data-pace-minutos]) {
+  transition: opacity 600ms var(--ease, ease);
+}
+body:has([data-pace-timer-wrap][data-pace-modo="foco"] [data-pace-dial-running]) :is([data-pace-activitybar], [data-pace-spc], [data-pace-minutos]) {
+  opacity: .38;
+}
+/* La barra lateral, solo en el ordenador: en el móvil es un cajón que se abre a propósito. */
+@media (min-width: 769px) {
+  body:has([data-pace-timer-wrap][data-pace-modo="foco"] [data-pace-dial-running]) [data-pace-sidebar] {
+    opacity: .55;
+  }
+}
+body:has([data-pace-timer-wrap][data-pace-modo="foco"] [data-pace-dial-running]) :is([data-pace-activitybar], [data-pace-spc], [data-pace-minutos], [data-pace-sidebar]):is(:hover, :focus-within) {
+  opacity: 1;
+}
