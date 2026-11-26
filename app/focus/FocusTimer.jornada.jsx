@@ -152,6 +152,61 @@ function aroJornada({ state, t, tn, aro, enPausaRitmo, pausaRitmo, status, empez
   };
 }
 
+/* EL DÍA PREPARADO VA AL ARO (Ez, A del 26 nov. 2026, auditoría de la primera impresión,
+   docs: https://claude.ai/artifact/HJjYh8srNKNGGp7UBa3S3J). Con tu semana guardada, cada mañana tu
+   día llega contestado (`ritmoHabitual`), pero el aro seguía en «Foco manual · Empezar foco» y la
+   jornada esperaba abajo tras «Preparar jornada»: dos botones, y ganaba el de arriba, al revés de lo
+   que dice la visita. Ahora, mientras ese día no está elegido y el aro está parado, el aro ya es la
+   jornada: «Tu jornada, hasta las 17:00» arriba (una línea sola: con dos, en 1280×800 el botón caía
+   sobre «Actividades»), los minutos del primer bloque si
+   empezaras ahora y «Empezar jornada», que elige el día (`ritmoComenzarHabitual`, lo mismo que
+   «Preparar jornada») y arranca el bloque en el mismo toque. Debajo, «o un foco suelto de 25 min»,
+   el Foco de siempre con tus minutos, sin tocar el día. ES UNA VISTA PREVIA: no escribe nada hasta
+   que se toca, como la línea de la tarjeta (RitmoManana.jsx). El plan se calcula sobre una copia del
+   estado con el día puesto como lo pondría `ritmoElegir`. Devuelve null si no toca. */
+function aroPrevia(state, t, tn) {
+  if (state.focusMode !== 'foco' || typeof ritmoHabitual !== 'function' || typeof ritmoPlan !== 'function') return null;
+  const H = ritmoHabitual(state);
+  if (!H) return null;
+  const R = ritmoDe(state);
+  if (R.dia || R.libre || !R.horario) return null;
+  const dia = { fecha: ritmoHoy(), opcion: H.opcion, desde: Math.max(R.horario.inicio, ritmoAhora()),
+                cicloBase: Number(state.cycle) || 0, cambios: {}, pausa: null };
+  let p = null;
+  try { p = ritmoPlan(Object.assign({}, state, { ritmo: Object.assign({}, state.ritmo || {}, { dia, libre: null }) })); } catch (e) { return null; }
+  if (!p || !p.actual || p.cerrado) return null;
+  const dur = typeof ritmoDurSiEmpiezas === 'function' ? ritmoDurSiEmpiezas(p, ritmoAhoraExacto()) : null;
+  const min = Math.max(1, Math.round(dur || p.actual.dur || 0));
+  return {
+    hasta: tn('ritmo.aro.hasta', { h: ritmoHora(p.m.hasta) }),
+    empezar: t('ritmo.aro.empezar'),
+    min,
+  };
+}
+
+/* «Empezar jornada» desde la vista previa elige el día y, en cuanto el aro ya es la jornada (con los
+   minutos de su bloque puestos por `ritmoSincronizar`), arranca, como «Empezar ya el bloque N». Y la
+   línea bajo el reloj (el hueco del subtítulo; en la fila de abajo no cabía en móvil):
+   «o un foco suelto de 25 min», el Foco de siempre, que no toca el día. */
+const { useRef: useRefAroP, useEffect: useEffectAroP } = React;
+function useAroPrevia({ previa, aro, state, status, empezar, tn }) {
+  const pedido = useRefAroP(false);
+  useEffectAroP(() => {
+    if (!pedido.current) return;
+    if (!aro || state.focusMode !== 'foco' || status !== 'idle') { if (!previa) pedido.current = false; return; }
+    pedido.current = false;
+    empezar();
+  });
+  return {
+    empezar: () => { pedido.current = true; ritmoComenzarHabitual(); },
+    suelto: previa ? (
+      <button type="button" className="pace-aro-seguir" data-pace-aro-suelto onClick={empezar}>
+        {tn('ritmo.aro.suelto', { n: state.focusMinutes })}
+      </button>
+    ) : null,
+  };
+}
+
 /* La fila de debajo del botón: el ciclo por libre y, con plan, su sitio guardado, ocupado
    o no por la línea de la jornada. */
 function AroFila({ cycle, cycleLabel, oculta, fila }) {
@@ -187,4 +242,4 @@ function AroFila({ cycle, cycleLabel, oculta, fila }) {
   document.head.appendChild(s);
 })();
 
-Object.assign(window, { aroJornada, aroComida, useAroComida, aroEnlaceEstilo, aroPausaTerminada, aroPlatoPendiente, aroDespues, aroCerrado, AroFila });
+Object.assign(window, { aroPrevia, useAroPrevia, aroJornada, aroComida, useAroComida, aroEnlaceEstilo, aroPausaTerminada, aroPlatoPendiente, aroDespues, aroCerrado, AroFila });

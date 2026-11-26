@@ -23,11 +23,14 @@
    Sin escena: como «¿Cómo es tu semana?». Lo que dice «hasta v1» pasa por la lista del día de v1
    (`paceTextoV1`, state-entitlement.jsx): cambia a la vez que el interruptor.
 
+   DESDE EL 26 NOV. 2026 YA NO CIERRA LA BIENVENIDA: sale una vez, tras la primera pausa entera, desde
+   su tarjeta (PremiumTrasPausa.jsx), en su propia hoja (`fuera`: «Entendido» en vez de «Comenzar»).
+
    `onFin(plan)`: null es «Ahora no» o «Comenzar»; 'mes' o 'vida', la compra. La
    bienvenida se cierra antes de comprar, porque la compra de la web sigue en la página
    de Stripe y al volver no debe salir otra vez. */
 
-function OnbCompletoPaso({ modo, onFin }) {
+function OnbCompletoPaso({ modo, onFin, fuera }) {
   const { t, tn, lang } = useT();
   const abierto = modo === 'abierto';
   const planes = abierto ? paceTiendaPrecios(lang) : paceTiendaPlanes(lang);
@@ -61,7 +64,7 @@ function OnbCompletoPaso({ modo, onFin }) {
       {abierto ? (
         <React.Fragment>
           <button data-pace-cta data-pace-onb-comenzar onClick={() => onFin(null)} style={onboardingStyles.cta}>
-            {t('onboarding.welcome.cta')}
+            {t(fuera ? 'visita.fin' : 'onboarding.welcome.cta')}
           </button>
           {paceTextoV1('premium.onb.abierto.aviso') && (
             <p data-pace-onb-v1 style={{ ...onbCompletoStyles.aviso, maxWidth: 340 }}>{t(paceTextoV1('premium.onb.abierto.aviso'))}</p>

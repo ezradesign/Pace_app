@@ -2370,7 +2370,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.hoy.focus': '{x} of focus',
   'sidebar.hoy.breathe': '{x} breathing',
   'sidebar.hoy.body': '{x} moving',
-  'sidebar.agua.ninguno': 'Zero glasses of {m}',
+  'sidebar.agua.ninguno': 'None of {m} glasses',
   'sidebar.agua.de': '{x} of {m}',
   'sidebar.agua.meta': '{x} today',
   'sidebar.agua.meta.x': 'All {m} glasses',
@@ -4139,6 +4139,11 @@ Object.assign(window.PACE_STRINGS.es, {
   'premium.name': 'PACE completo',
   'premium.part': 'Es parte de PACE completo.',
   'premium.locked.aria': 'Cerrada · es parte de PACE completo',
+
+  'premium.tras.titulo': 'Esto es PACE gratis',
+  'premium.tras.texto': 'PACE completo añade las rutinas más profundas, las tuyas propias y una semana a tu medida.',
+  'premium.tras.ver': 'Ver qué incluye',
+  'premium.tras.ahoraNo': 'Ahora no',
   'premium.inc.routines': 'Las rutinas más profundas',
   'premium.inc.routines.d': 'Respira, Mueve, Estira',
   'premium.inc.custom': 'Tus propias rutinas',
@@ -4254,6 +4259,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'premium.name': 'PACE Complete',
   'premium.part': 'Part of PACE Complete.',
   'premium.locked.aria': 'Locked · part of PACE Complete',
+
+  'premium.tras.titulo': 'This is PACE, free',
+  'premium.tras.texto': 'PACE Complete adds more in-depth routines, your own routines and a week made for you.',
+  'premium.tras.ver': 'See what’s included',
+  'premium.tras.ahoraNo': 'Not now',
   'premium.inc.routines': 'More in-depth routines',
   'premium.inc.routines.d': 'Breathe, Move, Stretch',
   'premium.inc.custom': 'Your own routines',
@@ -4438,6 +4448,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'visita.aro.texto': 'Elige los minutos arriba y toca «{boton}»: el aro se llena mientras trabajas.',
   'visita.aro.pausa': 'Al acabar te propone una pausa corta y, la primera vez, te pide permiso para avisarte aunque estés en otra app.',
   'visita.act.titulo': 'Actividades',
+  'visita.resto.texto': 'Respira, Estira y Mueve, con rutinas cortas, e Hidrátate, cuando quieras. Arriba, tus estadísticas, tus logros y los Ajustes, donde haces la copia de tus datos y repites esta visita.',
   'visita.act.texto': 'Respira, Estira y Mueve, con rutinas cortas, e Hidrátate, para tus vasos de agua. Cuando quieras.',
   'visita.dia.titulo': 'Empieza por tu día',
   'visita.dia.texto': 'Elige cuánto trabajas hoy y PACE reparte tus pausas por la jornada, cada una a su hora y con qué hacer. Cada mañana te lo propone según tu semana, y «Al calendario» lo lleva a tu calendario.',
@@ -4513,6 +4524,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'visita.aro.texto': 'Choose the minutes above and tap “{boton}”: the ring fills as you work.',
   'visita.aro.pausa': 'When it ends, it suggests a short break and, the first time, asks permission to let you know even if you’re in another app.',
   'visita.act.titulo': 'Activities',
+  'visita.resto.texto': 'Short routines in Breathe, Stretch and Move, and Hydrate for your water, whenever you like. Up top, your stats, your achievements and Settings, where you back up your data and take this tour again.',
   'visita.act.texto': 'Try short routines in Breathe, Stretch and Move. Log your water in Hydrate. Whenever you like.',
   'visita.dia.titulo': 'Start with your day',
   'visita.dia.texto': 'Choose how long you work today and PACE spreads your breaks across it, each at its time and with what to do. Each morning it suggests a plan from your week, and “Add to calendar” puts it in your calendar.',
@@ -4663,6 +4675,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
   'ritmo.aro.hasta': 'Tu jornada, hasta las {h}',
   'ritmo.aro.empezar': 'Empezar jornada',
+  'ritmo.aro.suelto': 'o un foco suelto de {n} min',
   'ritmo.aro.siguiente': 'Empezar bloque {n}',
 
   'ritmo.aro.hacerPausa': 'Hacer la pausa',
@@ -4865,6 +4878,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ritmo.aro.bloque': 'Block {n} of {m}',
   'ritmo.aro.hasta': 'Your day, until {h}',
   'ritmo.aro.empezar': 'Start the day',
+  'ritmo.aro.suelto': 'or a single {n}-minute focus',
   'ritmo.aro.siguiente': 'Start block {n}',
   'ritmo.aro.hacerPausa': 'Take the break',
   'ritmo.aro.pausar': 'Pause Focus',
@@ -7938,7 +7952,7 @@ const LS_KEY = 'pace.state.v2';
 
 
 
-const PACE_VERSION = 'v0.220.0';
+const PACE_VERSION = 'v0.221.0';
 
 
 
@@ -22822,7 +22836,10 @@ function SessionDone(_ref4)
         fontSize: 18, color: 'var(--ink-2)',
         maxWidth: 400, margin: '0 auto 36px', lineHeight: 1.5
       } }, doneCopy),
-    feedback
+    feedback,
+
+
+    feedback && !sinContar && typeof PremiumTrasPausa === 'function' ? React.createElement(PremiumTrasPausa, null) : null
     )
     ));
 
@@ -26607,6 +26624,124 @@ Object.assign(window, { PremiumInvitacion, PremiumAvisoPrueba, PremiumPasoV1, Pa
 ;Object.assign(window, { premiumPruebaPorAvisar, PaceCandado, paceAbrirPremium, PremiumInvitacion, premiumEnlaceRecuperar, premiumPasoV1Rutina, PremiumPasoV1, PremiumAvisoPrueba });
 })();
 </script>
+  <!-- PACE completo, una vez, en la pantalla final de la primera pausa. -->
+  <script>
+;(function () {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const { useState: useStatePTP, useEffect: useEffectPTP } = React;
+
+function premiumTrasPausaToca(s) {
+  if (!s || s.premiumTrasPausa !== 'pendiente') return false;
+  return typeof paceBienvenidaCompleto === 'function' && !!paceBienvenidaCompleto();
+}
+
+function PremiumTrasPausa() {
+  const { t } = useT();
+
+  const [toca] = useStatePTP(() => {try {return premiumTrasPausaToca(getState());} catch (e) {return false;}});
+  const [cerrada, setCerrada] = useStatePTP(false);
+  useEffectPTP(() => {
+    if (toca) {try {setState({ premiumTrasPausa: 'vista' });} catch (e) {}}
+  }, [toca]);
+  if (!toca || cerrada) return null;
+  return (
+    React.createElement("div", { "data-pace-premium-tras-pausa": true, style: premiumTrasPausaStyles.caja },
+    React.createElement("div", { style: premiumTrasPausaStyles.titulo }, t('premium.tras.titulo')),
+    React.createElement("p", { style: premiumTrasPausaStyles.texto }, t('premium.tras.texto')),
+    React.createElement("div", { style: premiumTrasPausaStyles.fila },
+    React.createElement("button", { type: "button", "data-pace-premium-tras-ahora-no": true, onClick: () => setCerrada(true), style: premiumTrasPausaStyles.ahoraNo },
+    t('premium.tras.ahoraNo')
+    ),
+    React.createElement("button", { type: "button", "data-pace-premium-tras-ver": true, onClick: () => {setCerrada(true);paceAbrirCompleto();}, style: premiumTrasPausaStyles.ver },
+    t('premium.tras.ver')
+    )
+    )
+    ));
+
+}
+
+const premiumTrasPausaStyles = {
+  caja: { margin: '20px auto 0', maxWidth: 400, padding: '12px 16px 6px', textAlign: 'left',
+    background: 'var(--paper-2)', border: '1px solid var(--line)', borderRadius: 'var(--r-md)' },
+  titulo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 18, fontWeight: 500, color: 'var(--ink)' },
+  texto: { fontSize: 13, lineHeight: 1.45, color: 'var(--ink-2)', margin: '4px 0 0' },
+  fila: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, marginTop: 4 },
+
+  ahoraNo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 15, color: 'var(--ink-3)',
+    background: 'none', border: 0, padding: 0, minHeight: 44, cursor: 'pointer' },
+  ver: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 15, color: 'var(--focus)',
+    background: 'none', border: 0, padding: 0, minHeight: 44, cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: 3 }
+};
+
+
+
+
+
+function paceAbrirCompleto() {
+  try {window.dispatchEvent(new CustomEvent('pace:open-completo'));} catch (e) {}
+}
+
+function PremiumCompletoHoja() {
+  const { t } = useT();
+  const [modo, setModo] = useStatePTP(null);
+  useEffectPTP(() => {
+    const abrir = () => {const m = typeof paceBienvenidaCompleto === 'function' ? paceBienvenidaCompleto() : null;if (m) setModo(m);};
+    window.addEventListener('pace:open-completo', abrir);
+    return () => window.removeEventListener('pace:open-completo', abrir);
+  }, []);
+  useEffectPTP(() => {
+    if (!modo) return;
+    const esc = (e) => {if (e.key === 'Escape') {e.stopPropagation();setModo(null);}};
+    window.addEventListener('keydown', esc, true);
+    return () => window.removeEventListener('keydown', esc, true);
+  }, [modo]);
+  if (!modo) return null;
+  const fin = (plan) => {
+    setModo(null);
+    if (plan && typeof paceComprar === 'function') Promise.resolve(paceComprar(plan)).then((r) => {
+      if (r && !r.fuera && (r.ok || r.motivo === 'pendiente')) paceAbrirPremium({ resultado: r });
+    }, () => {});
+  };
+  return (
+    React.createElement("div", { "data-pace-completo-hoja": true, role: "dialog", "aria-modal": "true", "aria-label": t('premium.name'), style: onboardingStyles.root },
+    React.createElement("div", { style: onboardingStyles.header },
+    React.createElement("span", { style: { width: 86 } }),
+    React.createElement("span", { className: "pace-meta" }, t('premium.name')),
+    React.createElement("span", { style: { width: 86 } })
+    ),
+    React.createElement("div", { style: onboardingStyles.scroll },
+    React.createElement("div", { "data-pace-reveal": true, style: onboardingStyles.column },
+    React.createElement(OnbCompletoPaso, { modo: modo, onFin: fin, fuera: true })
+    )
+    )
+    ));
+
+}
+
+Object.assign(window, { PremiumTrasPausa, premiumTrasPausaToca, PremiumCompletoHoja, paceAbrirCompleto });
+;Object.assign(window, { premiumTrasPausaToca, PremiumTrasPausa, paceAbrirCompleto, PremiumCompletoHoja });
+})();
+</script>
   <!-- La nota del fin de la semana de prueba de v1: la hoja y la línea de la biblioteca. -->
   <script>
 ;(function () {
@@ -28130,12 +28265,16 @@ function MinutesPicker(_ref) {let { value, onChange } = _ref;
 
 
 
+
+
+
   return (
     React.createElement("div", { "data-pace-minutos": true, role: "group", "aria-label": t('focus.minutes.grupo'),
       style: { display: 'flex', gap: 4, alignItems: 'center', justifyContent: 'center' } },
-    React.createElement("span", { "aria-hidden": "true", style: {
+    React.createElement("span", { "aria-hidden": "true", "data-pace-minutos-rotulo": true, style: {
         fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase',
-        color: 'var(--ink-3)', marginRight: 10, fontWeight: 500
+        color: 'var(--ink-2)', fontWeight: 700,
+        paddingRight: 7, borderRight: '1px solid var(--line-2)', marginRight: 2, lineHeight: '14px'
       } }, t('focus.min')),
     presets.map((m) =>
     React.createElement("button", { key: m, "data-pace-toque": true, onClick: () => {onChange(m);setEditing(false);},
@@ -31241,6 +31380,18 @@ Object.assign(window, { paceSobreApuntar, paceSobreLista, paceSobreHoy, PaceSobr
 
 const PACE_NOVEDADES = [
 {
+  id: 'aro-lleva-la-jornada',
+  desde: '2026-11-26',
+  es: [
+  'Los días de trabajo, el aro ya trae tu jornada: «Empezar jornada» y arranca el primer bloque.',
+  'Si solo quieres un rato, debajo tienes «o un foco suelto».'],
+
+  en: [
+  'On workdays, the ring now brings your day: “Start the day” starts the first block.',
+  'If you only want a while, below there’s “or a single focus”.']
+
+},
+{
   id: 'foco-en-bloques',
   desde: '2026-11-24',
   es: [
@@ -34335,7 +34486,62 @@ function aroJornada(_ref) {let { state, t, tn, aro, enPausaRitmo, pausaRitmo, st
 
 
 
-function AroFila(_ref2) {let { cycle, cycleLabel, oculta, fila } = _ref2;
+
+
+
+
+
+
+
+
+
+
+function aroPrevia(state, t, tn) {
+  if (state.focusMode !== 'foco' || typeof ritmoHabitual !== 'function' || typeof ritmoPlan !== 'function') return null;
+  const H = ritmoHabitual(state);
+  if (!H) return null;
+  const R = ritmoDe(state);
+  if (R.dia || R.libre || !R.horario) return null;
+  const dia = { fecha: ritmoHoy(), opcion: H.opcion, desde: Math.max(R.horario.inicio, ritmoAhora()),
+    cicloBase: Number(state.cycle) || 0, cambios: {}, pausa: null };
+  let p = null;
+  try {p = ritmoPlan(Object.assign({}, state, { ritmo: Object.assign({}, state.ritmo || {}, { dia, libre: null }) }));} catch (e) {return null;}
+  if (!p || !p.actual || p.cerrado) return null;
+  const dur = typeof ritmoDurSiEmpiezas === 'function' ? ritmoDurSiEmpiezas(p, ritmoAhoraExacto()) : null;
+  const min = Math.max(1, Math.round(dur || p.actual.dur || 0));
+  return {
+    hasta: tn('ritmo.aro.hasta', { h: ritmoHora(p.m.hasta) }),
+    empezar: t('ritmo.aro.empezar'),
+    min
+  };
+}
+
+
+
+
+
+const { useRef: useRefAroP, useEffect: useEffectAroP } = React;
+function useAroPrevia(_ref2) {let { previa, aro, state, status, empezar, tn } = _ref2;
+  const pedido = useRefAroP(false);
+  useEffectAroP(() => {
+    if (!pedido.current) return;
+    if (!aro || state.focusMode !== 'foco' || status !== 'idle') {if (!previa) pedido.current = false;return;}
+    pedido.current = false;
+    empezar();
+  });
+  return {
+    empezar: () => {pedido.current = true;ritmoComenzarHabitual();},
+    suelto: previa ?
+    React.createElement("button", { type: "button", className: "pace-aro-seguir", "data-pace-aro-suelto": true, onClick: empezar },
+    tn('ritmo.aro.suelto', { n: state.focusMinutes })
+    ) :
+    null
+  };
+}
+
+
+
+function AroFila(_ref3) {let { cycle, cycleLabel, oculta, fila } = _ref3;
   const fuera = oculta || !!fila;
   const callado = fuera ? { visibility: 'hidden' } : null;
   return (
@@ -34368,8 +34574,8 @@ function AroFila(_ref2) {let { cycle, cycleLabel, oculta, fila } = _ref2;
   document.head.appendChild(s);
 })();
 
-Object.assign(window, { aroJornada, aroComida, useAroComida, aroEnlaceEstilo, aroPausaTerminada, aroPlatoPendiente, aroDespues, aroCerrado, AroFila });
-;Object.assign(window, { aroPlatoPendiente, aroPausaTerminada, aroDespues, aroCerrado, aroComida, useAroComida, aroJornada, AroFila });
+Object.assign(window, { aroPrevia, useAroPrevia, aroJornada, aroComida, useAroComida, aroEnlaceEstilo, aroPausaTerminada, aroPlatoPendiente, aroDespues, aroCerrado, AroFila });
+;Object.assign(window, { aroPlatoPendiente, aroPausaTerminada, aroDespues, aroCerrado, aroComida, useAroComida, aroJornada, aroPrevia, useAroPrevia, AroFila });
 })();
 </script>
   <!-- Los avisos del móvil: el fin del bloque y el fin de la pausa. Antes de FocusTimer.jsx. -->
@@ -34988,18 +35194,20 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
   const aro = state.focusMode === 'foco' && typeof ritmoAro === 'function' ? ritmoAro(state, t, tn) : null;
   const comidaAro = useAroComida(state, aro, status);const cerrada = !comidaAro && !aro && state.focusMode === 'foco' && status !== 'running' && status !== 'paused' && typeof aroCerrado === 'function' ? aroCerrado(state, t, tn) : null;
+
+  const previa = !aro && !comidaAro && !cerrada && status === 'idle' && typeof aroPrevia === 'function' ? aroPrevia(state, t, tn) : null;
   const siguienteDelPlan = status === 'completed' && !!aro;
-  const mostrado = comidaAro ? comidaAro.queda : siguienteDelPlan ? durationSec : remaining;
+  const mostrado = comidaAro ? comidaAro.queda : previa ? previa.min * 60 : siguienteDelPlan ? durationSec : remaining;
   const mins = Math.floor(mostrado / 60);
   const secs = mostrado % 60;
   const totalSec = comidaAro ? Math.max(1, mostrado) : durationSec;
-  const progress = 1 - mostrado / totalSec;
+  const progress = previa ? 0 : 1 - mostrado / totalSec;
 
 
 
 
 
-  const modeLabel = comidaAro ? t('ritmo.comida') : aro ? aro.label : cerrada ? cerrada.label : state.focusMode === 'foco' ? t('focus.manual.label') :
+  const modeLabel = comidaAro ? t('ritmo.comida') : aro ? aro.label : previa ? previa.hasta : cerrada ? cerrada.label : state.focusMode === 'foco' ? t('focus.manual.label') :
   enPausaRitmo && pausaRitmo.cierre ? t('ritmo.aro.cierre') : state.focusMode === 'pausa' ? t('focus.mode.pause') :
   t('focus.mode.long');
 
@@ -35009,6 +35217,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   const [minPendiente, setMinPendiente] = useStateFT(null);
   const elegirMinutos = (v) => {
     if (isFocoMode && (status === 'running' || status === 'paused') && v !== state.focusMinutes) {setMinPendiente(v);return;}
+    if (previa && typeof ritmoComenzarHabitual === 'function') ritmoComenzarHabitual();
     set({ focusMinutes: v });
     if (isFocoMode && typeof ritmoElegirMinutos === 'function') ritmoElegirMinutos(v);
   };
@@ -35025,6 +35234,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   const subtitle = comidaAro ? t('ritmo.comida.lejos') : bloques.subtitulo ? bloques.subtitulo :
   enPausaRitmo ? pausaRitmo.cierre ? t('ritmo.cierre.luego') : tn('ritmo.pausa.luego', { n: pausaRitmo.n, m: pausaRitmo.de }) :
   aro && aroPausaTerminada(state) ? t('ritmo.aro.pausaTerminada') : cerrada && cerrada.sub ? cerrada.sub :
+  previa ? null :
   isFocoMode ?
   isCompleted ? t('focus.cycleComplete') : t(getFocusDescriptorKey(state.focusMinutes)) :
   state.focusMode === 'pausa' ? t('focus.subtitle.pause') :
@@ -35079,6 +35289,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
     restore(pausaRitmo.hasta);
   }, [enPausaRitmo, pausaHuerfana, pausaRitmo && pausaRitmo.hasta, status]);
   const seguirTrasPausaRef = useRefFT(false);
+  const conPrevia = useAroPrevia({ previa, aro, state, status, empezar: handleNormalStart, tn });
   const empezarYa = () => {seguirTrasPausaRef.current = !pausaRitmo.cierre;reset();ritmoPausaAcabada();};
   useEffectFT(() => {
     if (!seguirTrasPausaRef.current || state.focusMode !== 'foco' || status !== 'idle') return;
@@ -35105,13 +35316,6 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
 
-
-
-
-
-
-
-
   const startLabel = aro ? aro.empezar : isFocoMode ? t('focus.start') : t('focus.startPause');
 
   let ctaLabel, ctaAction;
@@ -35127,6 +35331,9 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   } else if (status === 'paused') {
     ctaLabel = t('focus.continue');
     ctaAction = handleNormalStart;
+  } else if (previa) {
+    ctaLabel = previa.empezar;
+    ctaAction = conPrevia.empezar;
   } else {
     ctaLabel = startLabel;
     ctaAction = handleNormalStart;
@@ -35148,7 +35355,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
   tn('focus.cycleNext', { n: cycleN }) :
   tn('focus.cycleOf', { n: cycleN });
 
-  const cycleDotsEl = React.createElement(AroFila, { cycle: state.cycle, cycleLabel: cycleLabel, oculta: !!aro || enPausaRitmo || !!cerrada, fila: ofertaExacta || jornada.fila });
+  const cycleDotsEl = React.createElement(AroFila, { cycle: state.cycle, cycleLabel: cycleLabel, oculta: !!aro || enPausaRitmo || !!cerrada || !!previa, fila: ofertaExacta || jornada.fila });
 
 
 
@@ -35207,7 +35414,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
     state.focusMode === 'foco' ?
-    React.createElement(MinutesPicker, { value: state.focusMinutes, onChange: elegirMinutos }) :
+    React.createElement(MinutesPicker, { value: previa ? previa.min : state.focusMinutes, onChange: elegirMinutos }) :
 
     React.createElement("div", { "aria-hidden": "true", style: { height: 26 } }),
 
@@ -35235,7 +35442,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
       mode: state.focusMode,
       modeLabel: modeLabel,
       hasta: comidaAro ? tn('ritmo.hasta', { h: ritmoHora(comidaAro.hasta) }) : aro ? aro.hasta : cerrada ? cerrada.hecho : null,
-      subtitle: subtitle,
+      subtitle: previa ? conPrevia.suelto : subtitle,
       inner: isAro ? innerForAro : null,
       running: running,
       fitHeight: isAro,
@@ -50823,7 +51030,10 @@ Object.assign(window, {
 
 
 
-function OnbCompletoPaso(_ref) {let { modo, onFin } = _ref;
+
+
+
+function OnbCompletoPaso(_ref) {let { modo, onFin, fuera } = _ref;
   const { t, tn, lang } = useT();
   const abierto = modo === 'abierto';
   const planes = abierto ? paceTiendaPrecios(lang) : paceTiendaPlanes(lang);
@@ -50857,7 +51067,7 @@ function OnbCompletoPaso(_ref) {let { modo, onFin } = _ref;
     abierto ?
     React.createElement(React.Fragment, null,
     React.createElement("button", { "data-pace-cta": true, "data-pace-onb-comenzar": true, onClick: () => onFin(null), style: onboardingStyles.cta },
-    t('onboarding.welcome.cta')
+    t(fuera ? 'visita.fin' : 'onboarding.welcome.cta')
     ),
     paceTextoV1('premium.onb.abierto.aviso') &&
     React.createElement("p", { "data-pace-onb-v1": true, style: { ...onbCompletoStyles.aviso, maxWidth: 340 } }, t(paceTextoV1('premium.onb.abierto.aviso')))
@@ -51034,7 +51244,11 @@ function Onboarding() {
 
 
 
-  const modoCompleto = typeof paceBienvenidaCompleto === 'function' ? paceBienvenidaCompleto() : null;
+
+
+
+
+  const modoCompleto = null;
   const pantallas = ['bienvenida', 'semana'].
   concat(conCaminos ? questions.map((_, iq) => 'q' + iq) : []).
   concat(conCaminos ? ['primer'] : []).
@@ -51074,6 +51288,8 @@ function Onboarding() {
     const now = Date.now();
     const patch = {
       firstSeen: now,
+
+      premiumTrasPausa: 'pendiente',
 
 
       profile: { ...draft, completedAt: now }
@@ -51345,10 +51561,18 @@ const { useState: useStateVIS, useEffect: useEffectVIS, useLayoutEffect: useLayo
 
 
 
+
+
+
+
+
+
 const PACE_VISITA_PARADAS = [
 { id: 'dia', sel: '[data-pace-ritmo-tarjeta], [data-pace-ritmo-panel]' },
 { id: 'aro', sel: '[data-pace-dial-ring]', redonda: true },
-{ id: 'act', sel: '[data-pace-activitybar-grid]' },
+{ id: 'act', sel: '[data-pace-activitybar-grid]', texto: 'resto' }];
+
+const PACE_VISITA_PARADAS_ANTES = [
 { id: 'arriba', sel: '[data-pace-topbar-stats]', y: '[data-pace-topbar-logros]' },
 { id: 'cajon', sel: '[data-pace-sidebar-open]', redonda: true, texto: 'menu' },
 { id: 'columna', sel: '[data-pace-sidebar]', texto: 'menu' },
@@ -51400,6 +51624,13 @@ function paceVisitaSitio(h, ancho, alto, vw, vh) {
   if (h.left + h.width + G + ancho <= vw - M) return { left: h.left + h.width + G, top: encaja(medio) };
   if (h.left - G - ancho >= M) return { left: h.left - G - ancho, top: encaja(medio) };
   return { left, top: vh - M - alto };
+}
+
+
+function paceVisitaBoton(t) {
+  const b = document.querySelector('[data-pace-home-body] [data-pace-cta]') || document.querySelector('[data-pace-cta]');
+  const txt = b && (b.textContent || '').trim();
+  return txt || t('focus.start');
 }
 
 function OnbVisita() {
@@ -51471,7 +51702,7 @@ function OnbVisita() {
     React.createElement("div", { className: "pace-meta" }, tn('visita.paso', { n: paso + 1, total: paradas.length })),
     React.createElement("h2", { id: "pace-visita-titulo", style: onbVisitaStyles.titulo }, t('visita.' + parada.id + '.titulo')),
     React.createElement("p", { id: "pace-visita-texto", style: onbVisitaStyles.texto },
-    parada.id === 'aro' ? tn('visita.aro.texto', { boton: t('focus.start') }) : t('visita.' + (parada.texto || parada.id) + '.texto'),
+    parada.id === 'aro' ? tn('visita.aro.texto', { boton: paceVisitaBoton(t) }) : t('visita.' + (parada.texto || parada.id) + '.texto'),
 
     parada.id === 'aro' ? ' ' + t('visita.aro.pausa') : null
     )
@@ -51532,8 +51763,8 @@ if (!document.getElementById('pace-visita-css')) {
   document.head.appendChild(s);
 }
 
-Object.assign(window, { OnbVisita, paceVisitaSitio });
-;Object.assign(window, { paceVisitaElemento, paceVisitaHueco, paceVisitaSitio, OnbVisita });
+Object.assign(window, { OnbVisita, paceVisitaSitio, PACE_VISITA_PARADAS_ANTES });
+;Object.assign(window, { paceVisitaElemento, paceVisitaHueco, paceVisitaSitio, paceVisitaBoton, OnbVisita });
 })();
 </script>
   <!-- «A tu ritmo» (s192): el panel del día que ocupa el sitio de Actividades
@@ -57291,6 +57522,8 @@ function PaceApp() {
 
 
     red(null, true, null, React.createElement(PremiumInvitacion, null)),
+
+    red(null, true, null, React.createElement(PremiumCompletoHoja, null)),
 
 
     React.createElement(PaceRed, { modo: "silencio" }, React.createElement(ToastHost, null)),

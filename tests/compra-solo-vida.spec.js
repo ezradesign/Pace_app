@@ -4,7 +4,7 @@
  * Lo que vigila:
  *   · la tienda de la web ofrece SOLO los planes que tienen enlace: con `enlaces.vida` puesto y
  *     `enlaces.mes` en null está lista y vende un plan, y el mensual vuelve solo al ponerle enlace;
- *   · lo que enseña planes (la bienvenida y la invitación) dice un solo pago y compra ese plan, sin
+ *   · lo que enseña planes (la pantalla de PACE completo y la invitación) dice un solo pago y compra ese plan, sin
  *     prueba, sin aviso de dos días y sin un botón del mensual que no llevaría a ningún sitio;
  *   · lo que costará después (`paceTiendaPrecios`, la bienvenida de «abierto hasta v1») sigue diciendo
  *     los dos, porque el mensual llega con v1;
@@ -40,9 +40,11 @@ async function hastaLaSemana(page) {
   await page.locator('[role=dialog] [data-pace-cta]').waitFor({ state: 'visible' });
 }
 
+/* La pantalla de PACE completo: desde el 26 nov. 2026 no cierra la bienvenida, sale tras la primera
+   pausa desde «Ver qué incluye» (PremiumTrasPausa.jsx; el camino entero, en compra-tienda.spec.js). */
+const HOJA_COMPLETO = '[data-pace-completo-hoja]';
 async function alUltimoPaso(page) {
-  await page.locator('[role=dialog] [data-pace-cta]').click();
-  await page.locator('[data-pace-semana-guardar]').click();
+  await page.evaluate(() => window.paceAbrirCompleto());
   await expect(page.getByRole('heading', { name: /^(PACE es gratis\.|PACE is free\.)$/ })).toBeVisible();
 }
 
@@ -113,14 +115,15 @@ test.describe('la tienda de la web ofrece solo lo que tiene enlace', () => {
   });
 });
 
-test.describe('la bienvenida con solo el de por vida', () => {
-  test('un solo pago, «Comprar» y «Ahora no» iguales, sin prueba ni aviso, y el arranque dice que todo está abierto', async ({ page }) => {
+test.describe('PACE completo con solo el de por vida', () => {
+  test('un solo pago, «Comprar» y «Ahora no» iguales, sin prueba ni aviso, y el arranque dice que todo está abierto', async ({ page, context }) => {
     const errores = capturarErrores(page);
-    await hastaLaSemana(page);
+    await sembrar(context);
+    await irAlArtefacto(page);
     await ponerEnlaces(page, SOLO_VIDA);
     await alUltimoPaso(page);
 
-    const tarjeta = page.locator('[role=dialog][data-pace-scene-card]');
+    const tarjeta = page.locator(HOJA_COMPLETO);
     /* Hasta v1 todo sigue abierto para todos, y la bienvenida lo dice antes de pedir nada. */
     await expect(tarjeta).toContainText('Y mientras está en pruebas, PACE completo también está abierto para todos:');
     await expect(page.locator('[data-pace-onb-precios]')).toHaveText('Un solo pago de 19,99 €, para siempre.');
@@ -138,34 +141,32 @@ test.describe('la bienvenida con solo el de por vida', () => {
 
     await ahora.click();
     await expect(tarjeta).toHaveCount(0);
-    const visto = await page.evaluate((clave) => JSON.parse(localStorage.getItem(clave)).firstSeen, CLAVE_ESTADO);
-    expect(typeof visto).toBe('number');
-    await expect(page.locator('[data-pace-visita]')).toBeVisible();
     expect(errores).toEqual([]);
   });
 
-  test('«Comprar» cierra la bienvenida y lleva al pago de por vida, y solo al de por vida', async ({ page }) => {
-    await hastaLaSemana(page);
+  test('«Comprar» cierra la pantalla y lleva al pago de por vida, y solo al de por vida', async ({ page, context }) => {
+    await sembrar(context);
+    await irAlArtefacto(page);
     await ponerEnlaces(page, SOLO_VIDA);
     await alUltimoPaso(page);
     await page.locator('[data-pace-onb-vida]').click();
     await expect.poll(() => page.evaluate(() => location.hash)).toBe('#tienda-vida');
-    /* La compra sigue en la página de Stripe: no se abre la visita encima. */
-    await page.waitForTimeout(700);
-    await expect(page.locator('[data-pace-visita]')).toHaveCount(0);
+    await expect(page.locator(HOJA_COMPLETO)).toHaveCount(0);
   });
 
-  test('cuando todo deja de estar abierto, el arranque es el de siempre', async ({ page }) => {
-    await hastaLaSemana(page);
+  test('cuando todo deja de estar abierto, el arranque es el de siempre', async ({ page, context }) => {
+    await sembrar(context);
+    await irAlArtefacto(page);
     await ponerEnlaces(page, SOLO_VIDA);
     await page.evaluate(() => { window.PREMIUM_ABIERTO_HASTA_V1 = false; });
     await alUltimoPaso(page);
-    await expect(page.locator('[role=dialog][data-pace-scene-card]')).toContainText('Si un día quieres más, PACE completo añade:');
+    await expect(page.locator(HOJA_COMPLETO)).toContainText('Si un día quieres más, PACE completo añade:');
     await expect(page.locator('[data-pace-onb-precios]')).toHaveText('Un solo pago de 19,99 €, para siempre.');
   });
 
-  test('con el mensual vuelto a abrir, la bienvenida es la de los dos planes', async ({ page }) => {
-    await hastaLaSemana(page);
+  test('con el mensual vuelto a abrir, la bienvenida es la de los dos planes', async ({ page, context }) => {
+    await sembrar(context);
+    await irAlArtefacto(page);
     await ponerEnlaces(page, LOS_DOS);
     await page.evaluate(() => { window.PREMIUM_ABIERTO_HASTA_V1 = false; });
     await alUltimoPaso(page);
@@ -174,9 +175,10 @@ test.describe('la bienvenida con solo el de por vida', () => {
     await expect(page.locator('[data-pace-onb-vida]')).toHaveText('Prefiero pagarlo una vez, 19,99 €');
   });
 
-  test('el enlace de pago es el de la tienda: un pago de mentira servido por page.route recibe a quien compra', async ({ page }) => {
+  test('el enlace de pago es el de la tienda: un pago de mentira servido por page.route recibe a quien compra', async ({ page, context }) => {
     await page.route('https://buy.stripe.example/**', (r) => r.fulfill({ contentType: 'text/html', body: '<title>Pago de prueba</title><p>pago</p>' }));
-    await hastaLaSemana(page);
+    await sembrar(context);
+    await irAlArtefacto(page);
     await ponerEnlaces(page, { vida: 'https://buy.stripe.example/test_vida', mes: null });
     await alUltimoPaso(page);
     await page.locator('[data-pace-onb-vida]').click();
@@ -185,11 +187,12 @@ test.describe('la bienvenida con solo el de por vida', () => {
   });
 });
 
-test.describe('la bienvenida con solo el de por vida, en un móvil en inglés', () => {
+test.describe('PACE completo con solo el de por vida, en un móvil en inglés', () => {
   test.use({ locale: 'en-GB', viewport: { width: 360, height: 740 } });
 
-  test('a 360 px los dos botones van uno sobre otro, igual de anchos, con el precio en inglés', async ({ page }) => {
-    await hastaLaSemana(page);
+  test('a 360 px los dos botones van uno sobre otro, igual de anchos, con el precio en inglés', async ({ page, context }) => {
+    await sembrar(context, { lang: 'en' });
+    await irAlArtefacto(page);
     await ponerEnlaces(page, SOLO_VIDA);
     await alUltimoPaso(page);
     await expect(page.locator('[data-pace-onb-precios]')).toHaveText('One payment of €19.99 for lifetime access.');
@@ -332,13 +335,16 @@ for (const plataforma of ['android', 'ios']) {
       expect(landingVisible).toBe(false);
     });
 
-    test('la bienvenida acaba en «Comenzar», sin ningún botón de compra', async ({ page, context }) => {
+    test('ni la bienvenida ni la pantalla de PACE completo enseñan un botón de compra', async ({ page, context }) => {
       await comoApp(context, plataforma);
       await page.goto(RUTA_ARTEFACTO);
       await page.locator('[role=dialog] [data-pace-cta]').waitFor({ state: 'visible' });
       await ponerEnlaces(page, LOS_DOS);
       await page.locator('[role=dialog] [data-pace-cta]').click();
+      await expect(page.locator('[data-pace-semana-guardar]')).toHaveText('Comenzar');
       await page.locator('[data-pace-semana-guardar]').click();
+      await page.locator('[data-pace-visita-saltar]').click();
+      await page.evaluate(() => window.paceAbrirCompleto());
       await expect(page.locator('[data-pace-onb-comenzar]')).toBeVisible();
       await expect(page.locator('[data-pace-onb-vida], [data-pace-onb-probar], [data-pace-onb-ahora], [data-pace-onb-precios]')).toHaveCount(0);
     });

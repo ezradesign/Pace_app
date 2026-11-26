@@ -142,16 +142,14 @@ test.describe('en Android', () => {
     expect(errores).toEqual([]);
   });
 
-  test('la bienvenida acaba en PACE completo abierto hasta v1, sin importes (Play aún no los da), y atrás cierra la visita', async ({ page, context }) => {
+  /* Sin la pantalla de PACE completo al final (Ez, 26 nov. 2026: los precios, tras la primera pausa). */
+  test('la bienvenida acaba en la semana, sin ningún importe, y atrás cierra la visita', async ({ page, context }) => {
     await comoAndroid(context);
     const errores = capturarErrores(page);
     await page.goto(RUTA_ARTEFACTO);
     await page.getByRole('button', { name: 'Comenzar' }).click();
     await page.locator('[data-pace-semana-guardar]').click();
-    await expect(page.locator('[data-pace-onb-comenzar]')).toBeVisible();
-    await expect(page.locator('[data-pace-onb-v1]')).toBeVisible();
-    await expect(page.locator('[data-pace-onb-precios]'), 'dijo un importe que Play no ha dado').toHaveCount(0);
-    await page.locator('[data-pace-onb-comenzar]').click();
+    await expect(page.locator('[data-pace-onb-comenzar], [data-pace-onb-precios]')).toHaveCount(0);
 
     const visita = page.locator('[role=dialog][data-pace-visita]');
     await visita.waitFor({ state: 'visible' });

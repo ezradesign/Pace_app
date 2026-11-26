@@ -15,6 +15,18 @@
 
 const PACE_NOVEDADES = [
   {
+    id: 'aro-lleva-la-jornada',
+    desde: '2026-11-26',
+    es: [
+      'Los días de trabajo, el aro ya trae tu jornada: «Empezar jornada» y arranca el primer bloque.',
+      'Si solo quieres un rato, debajo tienes «o un foco suelto».',
+    ],
+    en: [
+      'On workdays, the ring now brings your day: “Start the day” starts the first block.',
+      'If you only want a while, below there’s “or a single focus”.',
+    ],
+  },
+  {
     id: 'foco-en-bloques',
     desde: '2026-11-24',
     es: [

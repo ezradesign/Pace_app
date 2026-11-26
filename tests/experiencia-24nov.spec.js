@@ -28,11 +28,12 @@ for (const [lang, aro, fin] of [['es', 'Bloque 1 de 4', 'Bloque terminado'], ['e
   });
 }
 
-test('U4A · a 375 px, «19,99 € una vez.» va en la misma línea que el precio', async ({ page }) => {
+test('U4A · a 375 px, «19,99 € una vez.» va en la misma línea que el precio', async ({ page, context }) => {
   await page.setViewportSize({ width: 375, height: 812 });
-  await page.goto(RUTA_ARTEFACTO);
-  await page.locator('[role=dialog] [data-pace-cta]').click();
-  await page.locator('[data-pace-semana-guardar]').click();
+  await sembrar(context);
+  await irAlArtefacto(page);
+  /* La pantalla de PACE completo, que desde el 26 nov. 2026 sale tras la primera pausa. */
+  await page.evaluate(() => window.paceAbrirCompleto());
   const precios = page.locator('[data-pace-onb-precios]');
   await expect(precios).toContainText('una vez');
   const r = await precios.evaluate((el) => {

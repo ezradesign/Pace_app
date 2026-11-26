@@ -236,12 +236,11 @@ async function aceptarAvisosPace(page) {
   return textos;
 }
 
-/* DESPUÉS DE «¿CÓMO ES TU SEMANA?» van PACE completo, abierto hasta v1, y la visita guiada por
-   la home (Ez, 2A y 1C del 27 oct. 2026). Las pruebas que no son de ellas pasan por las dos
-   como quien tiene prisa: «Comenzar» y «Saltar la visita». Las suyas: compra-tienda.spec.js y
+/* DESPUÉS DE «¿CÓMO ES TU SEMANA?» va la visita guiada por la home (Ez, 1C del 27 oct. 2026). PACE
+   completo ya no cierra la bienvenida (Ez, 26 nov. 2026: sale tras la primera pausa, PremiumTrasPausa).
+   Las pruebas que no son de ella la pasan como quien tiene prisa: «Saltar la visita». La suya:
    bienvenida-visita.spec.js. */
 async function acabarBienvenida(page) {
-  await page.locator('[data-pace-onb-comenzar]').click();
   await page.locator('[data-pace-visita-saltar]').click();
   await page.locator('[data-pace-visita]').waitFor({ state: 'detached' });
 }

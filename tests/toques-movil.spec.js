@@ -57,10 +57,8 @@ test('bienvenida, home, barra y biblioteca', async ({ page, context }) => {
   await page.getByRole('button', { name: /^Comenzar$/ }).click();
   await exigir(page, '[data-pace-scene-card] [data-pace-toque]', 40, '«← Atrás»');
   await exigir(page, '[data-pace-semana-saltar]', 34, '«Ahora no, quiero probar primero»');
-  /* Detrás, PACE completo y la visita guiada (Ez, 2A y 1C del 27 oct.). */
-  await page.getByRole('button', { name: /^Continuar$/ }).click();
-  await exigir(page, '[data-pace-onb-comenzar]', 40, '«Comenzar» de PACE completo');
-  await page.getByRole('button', { name: /^Comenzar$/ }).click();
+  /* Detrás, la visita guiada (PACE completo ya no va aquí: Ez, 26 nov. 2026). */
+  await page.locator('[data-pace-semana-guardar]').click();
   await page.locator('[data-pace-visita]').waitFor();
   await exigir(page, '[data-pace-visita-saltar]', 40, '«Saltar la visita»');
   await exigir(page, '[data-pace-visita-siguiente]', 40, '«Siguiente» de la visita');
@@ -70,6 +68,13 @@ test('bienvenida, home, barra y biblioteca', async ({ page, context }) => {
   await exigir(page, '[data-pace-hoy-celda]', 40, '«+ vaso» de la barra');
   await page.locator('aside[data-pace-sidebar]').getByRole('button', { name: /Abrir Mueve/ }).click();
   await exigir(page, '.pace-lib-link', 28, '«Tus rutinas»');
+});
+
+test('la pantalla de PACE completo, fuera de la bienvenida: «Entendido»', async ({ page, context }) => {
+  await sembrar(context);
+  await irAlArtefacto(page);
+  await page.evaluate(() => window.paceAbrirCompleto());
+  await exigir(page, '[data-pace-onb-comenzar]', 40, '«Entendido» de PACE completo');
 });
 
 test('ajustes, estadísticas y apoyo', async ({ page, context }) => {
