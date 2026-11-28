@@ -5,6 +5,10 @@ que ya se decidió. Junto con `CLAUDE.md` y `STATE.md`, basta para seguir. Se ac
 Última actualización: 25 nov. 2026, con la 0.220.0 en `main` y el proyecto limpio de ramas. Los relevos de
 antes del 20 nov., en `docs/archive/LEEME_TRASPASO_HASTA_19NOV.md` (D4 A de Ez, 23 nov.).
 
+## Relevo más reciente · Desktop (28 nov. 2026)
+
+En `feat/desktop`, leer primero [desktop-28nov.md](desktop-28nov.md): mandato de Ez, prototipos, límites, decisiones, arquitectura y pasos pendientes para Windows/macOS. Solo documentación autorizada; no tocar `main` ni implementar sin aprobación. El relevo histórico de abajo se conserva.
+
 ## El arranque, en una pantalla
 
 - **Qué es PACE.** App de pausas activas para quien trabaja sentado: Foco (Pomodoro), Respira, Mueve, Estira, Hidrátate, logros

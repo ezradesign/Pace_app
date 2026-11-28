@@ -3,6 +3,10 @@
 **Versión:** v0.220.0 · 24 nov. 2026 (la experiencia: U1A U2A U4A U6A). Los testers tienen la 0.205.0. Qué trajo cada versión: `CHANGELOG.md`. Las reglas que no se pueden
 romper: `docs/product/DECISIONES_TECNICAS_VIGENTES.md`.
 
+## Relevo Desktop (28 nov. 2026)
+
+Ez autorizó `feat/desktop` desde `main`, solo documentación inicial. La dirección prioritaria es PACE Desktop para Windows y macOS con núcleo común y acompañamiento autónomo. Leer [el relevo Desktop](docs/traspaso/desktop-28nov.md) antes de diseñar o implementar. Web y móvil se conservan; no hay cambios de código ni decisión definitiva Electron/Tauri. La historia del 25 nov. de abajo describe el punto de partida de `main`.
+
 ## Punto de partida (25 nov.)
 
 Ez limpió el proyecto para retomar desde lo publicado: **`main` = 0.220.0** más el arreglo de `ritmo.spec` (ef0e2be, CI en
